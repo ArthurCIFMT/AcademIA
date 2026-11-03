@@ -148,4 +148,3 @@ Responda preferencialmente em até oito linhas, informando:
 
 O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
 segurança, decisões arquiteturais ou testes não executados.
-
