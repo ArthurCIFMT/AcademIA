@@ -17,7 +17,9 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 ## Contexto obrigatório
 
 - `AGENTS.md`
-- `docs/prompts/00-prompt-mestre.md`
+- `docs/prompts/00-contexto-de-execucao.md`
+- `docs/prompts/00-contrato-operacional.md`
+- `docs/testes/estrategia.md`
 - todo o conteúdo de `docs/requisitos/`
 - `docs/arquitetura/modulos.md`
 - `docs/arquitetura/rastreabilidade.md`

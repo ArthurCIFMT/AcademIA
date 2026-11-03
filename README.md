@@ -12,7 +12,11 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 - [Macrorequisitos de IA e RAG](docs/requisitos/macrorequisitos-ia-rag.md)
 - [Módulos](docs/arquitetura/modulos.md)
 - [Prompt mestre](docs/prompts/00-prompt-mestre.md)
+- [Contexto de execução](docs/prompts/00-contexto-de-execucao.md)
 - [Manifesto dos prompts](docs/prompts/README.md)
+- [Comparação com o modelo do professor](docs/prompts/comparacao-modelo-professor.md)
+- [Estratégia de testes](docs/testes/estrategia.md)
 
-O desenvolvimento é incremental e guiado por `AGENTS.md`, pelo prompt mestre e
-por um prompt operacional executado de cada vez.
+O mestre produz o plano. A implementação incremental usa `AGENTS.md`, o contexto
+de execução, o contrato comum e um prompt operacional escolhido de cada vez.
+Os 59 cartões foram redigidos; a criação da documentação não implementa o sistema.

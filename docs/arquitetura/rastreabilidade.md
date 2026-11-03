@@ -1,5 +1,8 @@
 # Matriz inicial de rastreabilidade
 
+Veja também a [rastreabilidade dos cartões](rastreabilidade-prompts.md), que liga
+cada prompt aos requisitos e módulos. Associação de prompt não comprova execução.
+
 ## Cobertura por módulo
 
 | Módulo | Requisitos funcionais | Regras de negócio | Macrorequisitos |

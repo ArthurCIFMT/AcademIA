@@ -72,6 +72,10 @@ containerização final.
 
 ## Restrições permanentes
 
+Gates complementares no manifesto: GATE-07 (reservas), GATE-08 (contrato facial,
+limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
+correspondente e não precisam bloquear a redação dos prompts.
+
 - Containerização não pode ser antecipada por prompts de fundação ou MVP.
 - Pagamento automático não pode bloquear matrícula manual e controle de acesso.
 - Agentes de IA são papéis sob um orquestrador; não implicam microserviços.

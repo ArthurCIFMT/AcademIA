@@ -17,7 +17,8 @@ gates efetivamente confirmados.
 ## Contexto obrigatório
 
 - `AGENTS.md`
-- `docs/prompts/00-prompt-mestre.md`
+- `docs/prompts/00-contexto-de-execucao.md`
+- `docs/prompts/00-contrato-operacional.md`
 - ADRs com status `PROPOSTA`
 - tabela de decisão criada por FND-02A
 - `docs/prompts/README.md`
@@ -58,10 +59,13 @@ gates efetivamente confirmados.
 
 ## Critérios de aceite
 
-- GATE-01, GATE-03, GATE-05 e GATE-06 estão fechados antes de FND-03/FND-04.
+- GATE-01, GATE-03, GATE-05 e GATE-06 estão fechados antes de FND-04.
+- GATE-02 e GATE-03 estão fechados antes do modelo lógico de FND-03.
 - GATE-02 está fechado antes de IAM-01.
 - GATE-04 está fechado antes de RAG-01/AI-01.
-- MRF08–MRF15 possuem estado formal.
+- MRF08–MRF15 possuem estado formal: aprovado, rejeitado ou pendente explícito.
+- Gates adiados não impedem concluir o checkpoint documental, mas continuam
+  bloqueando os cartões dependentes.
 - Decisões aceitas estão consistentes entre ADRs, `AGENTS.md` e manifesto.
 
 ## Testes obrigatórios

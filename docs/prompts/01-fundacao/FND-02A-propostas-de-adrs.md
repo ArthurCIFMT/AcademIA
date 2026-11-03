@@ -17,7 +17,8 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 ## Contexto obrigatório
 
 - `AGENTS.md`
-- `docs/prompts/00-prompt-mestre.md`
+- `docs/prompts/00-contexto-de-execucao.md`
+- `docs/prompts/00-contrato-operacional.md`
 - `docs/arquitetura/decisoes-iniciais.md`
 - `docs/requisitos/contexto-e-escopo.md`
 - `docs/requisitos/requisitos-nao-funcionais.md`
@@ -47,9 +48,10 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 
 ## Implementação obrigatória
 
-1. Propor ADRs para stack Python, identidade, tenancy, banco vetorial,
+1. Propor ADRs para stack Python, ferramentas de teste, identidade, tenancy, banco vetorial,
    LLM/embeddings, designação de instrutor, aprovação da IA, política Git,
-   dependências locais e governança do corpus.
+   dependências locais e governança do corpus. Decisões tardias de acesso e
+   pagamentos podem permanecer pendentes nos gates correspondentes.
 2. Incluir recomendação existente como opção preferencial quando aplicável.
 3. Preparar uma tabela de decisão curta para o checkpoint FND-02B.
 4. Atualizar o manifesto sem fechar gates.

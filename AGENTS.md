@@ -17,6 +17,7 @@ requisitos para preencher lacunas: registre a dúvida ou a decisão necessária.
 - `docs/requisitos/`: requisitos funcionais, macrorequisitos e regras de negócio.
 - `docs/arquitetura/`: modelo de dados e decisões arquiteturais.
 - `docs/prompts/`: prompt mestre, prompts operacionais e ordem de execução.
+- `docs/testes/`: estratégia, comandos reais e evidências de verificação.
 - Este arquivo: regras permanentes para agentes que trabalham no repositório.
 
 Quando houver conflito, o prompt operacional define o escopo da tarefa, mas não
@@ -105,6 +106,8 @@ necessária para sua entrega.
 
 ## Testes
 
+- Consulte `docs/testes/estrategia.md` e resolva as suites nos comandos reais de
+  `docs/testes/comandos.md`. Scaffolds registram os comandos quando os criam.
 - Regras de negócio alteradas devem possuir testes unitários.
 - Fluxos entre banco e API devem possuir testes de integração quando aplicável.
 - Contratos REST e JSON devem ser validados.

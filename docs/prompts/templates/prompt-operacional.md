@@ -5,7 +5,7 @@
 - Fase: `<fase>`
 - Estado inicial: `PRONTO | BLOQUEADO`
 - Dependências: `<IDs>`
-- Requisitos: `<RF-*>`, `<RN-*>`, `<MRF*>`
+- Requisitos: `<RF-*>`, `<RN-*>`, `<RNF-*>`, `<MRF*>`
 - Módulos: `<MOD-*>`
 - Próximo prompt desbloqueado: `<ID ou nenhum>`
 
@@ -16,7 +16,9 @@ Descreva uma única capacidade coesa e verificável.
 ## Contexto obrigatório
 
 - `AGENTS.md`
-- `docs/prompts/00-prompt-mestre.md`
+- `docs/prompts/00-contexto-de-execucao.md`
+- `docs/prompts/00-contrato-operacional.md`
+- `docs/testes/estrategia.md` e `docs/testes/comandos.md`
 - `<requisitos, ADRs e contratos específicos>`
 
 ## Pré-condições
@@ -56,7 +58,9 @@ Descreva uma única capacidade coesa e verificável.
 
 ## Testes obrigatórios
 
-- Comandos exatos já existentes no repositório.
+- Suites pertinentes e cenários específicos da entrega.
+- Resolver suites em comandos reais de `docs/testes/comandos.md`.
+- Durante scaffold, criar e registrar os comandos nesta própria entrega.
 - Testes unitários, integração, contrato ou interface necessários.
 - Resultado mínimo esperado.
 
@@ -79,5 +83,5 @@ Descreva uma única capacidade coesa e verificável.
 
 ## Relatório final
 
-Siga `AGENTS.md` e o prompt mestre: resultado, arquivos, testes, riscos e próximo
+Siga `AGENTS.md` e o contexto de execução: resultado, arquivos, testes, riscos e próximo
 prompt, sem ocultar falhas ou testes não executados.

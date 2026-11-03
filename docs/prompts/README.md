@@ -1,165 +1,178 @@
 # Manifesto dos prompts
 
-## Finalidade
+## Organização e uso
 
-Este diretório contém o prompt mestre, o template obrigatório e a sequência de
-prompts operacionais do projeto. Um prompt operacional deve produzir uma entrega
-coesa, verificável e compatível com o estado atual do repositório.
+- [Mestre de planejamento](00-prompt-mestre.md): produz plano em chat, até 40 linhas.
+- [Contexto de execução](00-contexto-de-execucao.md): acompanha a tarefa escolhida.
+- [Contrato operacional](00-contrato-operacional.md): regras comuns dos cartões.
+- [Comparação com o professor](comparacao-modelo-professor.md).
+- [Estratégia de testes](../testes/estrategia.md) e [comandos](../testes/comandos.md).
 
-## Como executar
+Foram redigidos 59 prompts operacionais. P00 representa a preparação Git já
+concluída. Os cartões escritos são documentos revisáveis; nenhum módulo funcional
+foi implementado pela criação desses arquivos.
 
-1. Leia `AGENTS.md`.
-2. Leia `00-prompt-mestre.md`.
-3. Confirme que todas as dependências do prompt operacional estão concluídas.
-4. Execute somente um prompt operacional por vez.
-5. Rode os testes e verificações indicados.
-6. Atualize a rastreabilidade e o estado neste manifesto.
-7. Faça a operação Git autorizada pelo prompt.
+Leia AGENTS.md, contexto, contrato e cartão; resolva dependências/ADRs antes de
+executar. O mestre de planejamento não é uma segunda tarefa a executar junto.
+Cada cartão inclui módulo, requisitos, escopo, entregáveis, aceite e testes.
 
-## Estados
+## Estados e redação
 
-- `PLANEJADO`: identificado, mas o texto operacional ainda pode depender de gates.
-- `PRONTO`: texto completo e dependências documentais disponíveis.
-- `EM_EXECUCAO`: uma entrega está em andamento.
-- `BLOQUEADO`: depende de decisão ou estado externo.
-- `CONCLUIDO`: critérios e testes registrados.
-- `DISPENSADO`: retirado do escopo com justificativa.
+- PRONTO: dependências satisfeitas para iniciar a tarefa.
+- BLOQUEADO: texto existe, mas faltam dependências ou decisões para executar.
+- EM_EXECUCAO: implementação em andamento.
+- CONCLUIDO: critérios/testes e evidência registrados.
+- DISPENSADO: fora da entrega por decisão explícita.
 
-O estado descreve a **execução**, não a existência do texto. Um prompt pode ter
-texto completo e permanecer `BLOQUEADO` até suas dependências serem concluídas.
+Decisões abertas não impedem redigir os prompts. Antes de executar cada cartão,
+atualize caminhos, contratos e comandos pelos ADRs/scaffolds aceitos. Não confunda
+redação com aprovação da tecnologia ou conclusão do módulo.
 
-## Gates de decisão e de fase
+## Gates
 
-| ID | Condição de fechamento | Estado | Evidência esperada |
+| ID | Condição de fechamento | Evidência | Estado |
 |---|---|---|---|
-| GATE-01 | Stack Python e ferramentas aceitas | ABERTO | ADRs aceitos |
-| GATE-02 | Estratégia de identidade/autenticação aceita | ABERTO | ADR aceito |
-| GATE-03 | Academia única ou multitenancy definido | ABERTO | ADR aceito |
-| GATE-04 | Banco vetorial, provedores, corpus, bloqueios e MRF08–MRF15 decididos | ABERTO | ADRs e requisitos atualizados |
-| GATE-05 | Política Git definida | ABERTO | ADR aceito |
-| GATE-06 | Execução local das dependências antes do Docker definida | ABERTO | ADR e guia local |
-| GATE-07 | Reserva/capacidade de aulas confirmada no escopo | ABERTO | RF/RN aprovados ou dispensa registrada |
-| PG-01 | MVP funcional e testes críticos aprovados | ABERTO | relatório de aceite do MVP |
-| PG-02 | Todos os módulos selecionados para a entrega final concluídos/dispensados | ABERTO | manifesto e rastreabilidade atualizados |
+| GATE-01 | Stack Python e ferramentas | ADRs aceitos | ABERTO |
+| GATE-02 | Identidade e recuperação de credenciais | ADR aceito | ABERTO |
+| GATE-03 | Academia única ou múltipla | ADR aceito | ABERTO |
+| GATE-04 | Banco vetorial, provedores, corpus, políticas e MRF08–MRF15 | ADRs e requisitos aprovados | ABERTO |
+| GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
+| GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
+| GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
+| GATE-08 | Contrato facial, limites de matrícula e alternativa manual | Contrato/políticas aceitos antes do módulo | ABERTO |
+| GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
+| PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01, ACS-06, EQP-01, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
+| PG-02 | Escopo selecionado final concluído ou dispensado | Manifesto, decisões e matriz de aceite | ABERTO |
+
+Gates de IA e pagamentos são fechados antes desses módulos, sem impedir o trabalho
+independente de fundação. FND-02B registra escolhas e pendências; não declara escolhas
+adiadas como aprovadas. PG-01 exige testes do MVP e PG-03 também exige maioria dos
+módulos antes de INF-01, conforme orientação do professor.
 
 ## Registro de execuções
 
 | ID | Estado | Evidência |
 |---|---|---|
-| P00 | CONCLUIDO | Commits `a17b993` e `528a25c` no repositório remoto. |
+| P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 
-## Ordem e dependências
+Acrescente linha por tarefa realmente executada com comandos, resultado e commit
+ou link de relatório. A numeração das seções não substitui as dependências.
 
-### Fundação
+## Fundação
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| P00 | Repositório, `AGENTS.md` e `.gitignore` | — | CONCLUIDO |
-| FND-01 | Validar RF, RN, RNF, MRF e glossário | P00 | PRONTO |
-| FND-02A | Elaborar propostas de ADR | FND-01 | BLOQUEADO |
-| FND-02B | Aprovar ADRs e fechar gates | FND-02A | BLOQUEADO |
-| FND-03 | Revisar MER e modelo lógico | FND-02B | BLOQUEADO |
-| FND-04 | Scaffold do backend | FND-03, GATE-01, GATE-03, GATE-06 | PLANEJADO |
-| FND-05 | PostgreSQL, ORM e migrations | FND-04 | PLANEJADO |
-| FND-06 | Contratos REST, erros e testes base | FND-04 | PLANEJADO |
-| FND-07 | Scaffold do frontend | FND-02B | PLANEJADO |
-| FND-08 | Auditoria e eventos básicos | FND-05, FND-06 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [FND-01](01-fundacao/FND-01-fontes-de-verdade.md) | Validar fontes, normalizações e glossário | MOD-00–MOD-12 | P00 | PRONTO |
+| [FND-02A](01-fundacao/FND-02A-propostas-de-adrs.md) | Propor decisões arquiteturais | MOD-00 | FND-01 | BLOQUEADO |
+| [FND-02B](01-fundacao/FND-02B-aprovacao-dos-gates.md) | Registrar escolhas e fechar gates aplicáveis | MOD-00 | FND-02A | BLOQUEADO |
+| [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-02, GATE-03 | BLOQUEADO |
+| [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | BLOQUEADO |
+| [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | BLOQUEADO |
+| [FND-06](01-fundacao/FND-06.md) | Convenções REST, contratos e testes de API | MOD-00 | FND-04, FND-05 | BLOQUEADO |
+| [FND-07](01-fundacao/FND-07.md) | Scaffold React, TypeScript e Vite | MOD-00 | FND-02B | BLOQUEADO |
+| [FND-08](01-fundacao/FND-08.md) | Auditoria e eventos duráveis mínimos | MOD-00, MOD-12 | FND-05, FND-06 | BLOQUEADO |
 
-### Identidade e pessoas
+## MVP — identidade, pessoas e comunicação
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| IAM-01 | Adaptador de autenticação/OIDC | FND-06, GATE-02 | PLANEJADO |
-| IAM-02 | Usuário, papéis e perfis | FND-05, IAM-01 | PLANEJADO |
-| IAM-03 | Políticas de autorização | IAM-02 | PLANEJADO |
-| IAM-04 | Sessão e rotas protegidas no frontend | FND-07, IAM-01 | PLANEJADO |
-| PES-01 | Funcionários | IAM-02, IAM-03 | PLANEJADO |
-| PES-02 | Clientes | IAM-02, IAM-03 | PLANEJADO |
-| PES-03 | Designação cliente–instrutor | PES-01, PES-02 | PLANEJADO |
-| NTF-01 | Notificações e e-mail abstraído | FND-08 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [IAM-01](02-identidade-pessoas/IAM-01.md) | Adaptador de autenticação | MOD-01 | FND-06, GATE-02, GATE-06 | BLOQUEADO |
+| [IAM-02](02-identidade-pessoas/IAM-02.md) | Usuário, papéis e perfis de domínio | MOD-01 | FND-05, IAM-01 | BLOQUEADO |
+| [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | BLOQUEADO |
+| [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | BLOQUEADO |
+| [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | BLOQUEADO |
+| [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08 | BLOQUEADO |
+| [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08 | BLOQUEADO |
+| [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | BLOQUEADO |
+| [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02 | BLOQUEADO |
 
-### Onboarding e avaliação
+## MVP — onboarding e avaliações
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| ONB-02 | Onboarding versionado | PES-02, FND-05 | PLANEJADO |
-| ONB-01 | Convite e token seguro | ONB-02, NTF-01 | PLANEJADO |
-| ONB-03 | Formulário responsivo | ONB-01, ONB-02, IAM-04 | PLANEJADO |
-| ONB-04 | Avaliação e acesso por designação | ONB-02, PES-03 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [ONB-02](03-onboarding/ONB-02.md) | Persistência do onboarding e avaliações versionadas | MOD-03 | PES-02, FND-05 | BLOQUEADO |
+| [ONB-01](03-onboarding/ONB-01.md) | Convite e acesso por link seguro | MOD-03, MOD-12 | ONB-02, NTF-01 | BLOQUEADO |
+| [ONB-03](03-onboarding/ONB-03.md) | Formulário e consulta responsivos do onboarding | MOD-03 | ONB-01, ONB-02, IAM-04 | BLOQUEADO |
+| [ONB-04](03-onboarding/ONB-04.md) | Avaliação profissional e acesso por designação | MOD-02, MOD-03 | ONB-02, PES-03, IAM-04 | BLOQUEADO |
 
-### Exercícios, fichas e matrícula mínima
+## MVP — exercícios e fichas
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| TRN-01 | Catálogo de exercícios | FND-05, IAM-03 | PLANEJADO |
-| TRN-02 | Ficha manual e versionamento | TRN-01, ONB-02, PES-03 | PLANEJADO |
-| TRN-03 | Revisão e aprovação profissional | TRN-02, PES-03 | PLANEJADO |
-| TRN-04 | Visualização da ficha pelo cliente | TRN-03, IAM-04 | PLANEJADO |
-| MEM-01 | Plano e matrícula manual | FND-05, PES-02 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04 | FND-05, IAM-03, IAM-04 | BLOQUEADO |
+| [TRN-02](04-treinos/TRN-02.md) | Ficha manual e versões imutáveis | MOD-04 | TRN-01, ONB-02, PES-03 | BLOQUEADO |
+| [TRN-03](04-treinos/TRN-03.md) | Workflow de revisão e aprovação da ficha | MOD-04, MOD-02, MOD-12 | TRN-02, PES-03, NTF-01 | BLOQUEADO |
+| [TRN-04](04-treinos/TRN-04.md) | Ficha atual no celular e exportação autorizada | MOD-04 | TRN-03, IAM-04 | BLOQUEADO |
 
-### IA e RAG
+## MVP — RAG, IA e aceite integrado
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| RAG-01 | Corpus e metadados | FND-03, FND-05, GATE-04 | PLANEJADO |
-| RAG-02 | Cliente do banco vetorial | FND-04, FND-06, RAG-01 | PLANEJADO |
-| RAG-03 | Extração PDF/TXT | FND-04, RAG-01 | PLANEJADO |
-| RAG-04 | Chunking, embeddings e indexação | FND-05, RAG-02, RAG-03 | PLANEJADO |
-| RAG-05 | Recuperação, filtros e citações | RAG-04 | PLANEJADO |
-| AI-01 | Triagem e políticas estruturadas | ONB-04, GATE-04 | PLANEJADO |
-| AI-02 | Schemas e orquestrador | AI-01, RAG-05 | PLANEJADO |
-| AI-03 | Geração de proposta | AI-02, TRN-02 | PLANEJADO |
-| AI-04 | Submeter proposta ao workflow profissional e avisar instrutor | AI-03, TRN-03, NTF-01 | PLANEJADO |
-| AI-05 | Chat e adaptação versionada | AI-04, TRN-04 | PLANEJADO |
-| AI-06 | Avaliação automatizada da IA | AI-01, AI-02, AI-03, AI-04, AI-05 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [RAG-01](05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | BLOQUEADO |
+| [RAG-02](05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | BLOQUEADO |
+| [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | BLOQUEADO |
+| [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
+| [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
+| [AI-01](05-ia-rag/AI-01.md) | Triagem clínica e regras de restrição | MOD-06 | ONB-04, TRN-01, GATE-04 | BLOQUEADO |
+| [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts de execução da IA e orquestrador | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
+| [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04 | AI-02, TRN-02 | BLOQUEADO |
+| [AI-04](05-ia-rag/AI-04.md) | Submissão à revisão e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
+| [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04 | BLOQUEADO |
+| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
+| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, TRN-04, AI-06 | BLOQUEADO |
 
-### Controle de acesso
+## Pós-MVP — matrícula e controle de acesso
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| ACS-01 | Referência biométrica | PES-02, IAM-03 | PLANEJADO |
-| ACS-02 | Contrato do evento facial externo | FND-06, ACS-01 | PLANEJADO |
-| ACS-03 | Motor de decisão de acesso | ACS-02, MEM-01 | PLANEJADO |
-| ACS-04 | Liberação manual auditada | ACS-03, FND-08 | PLANEJADO |
-| ACS-05 | Frequência e lotação | ACS-03 | PLANEJADO |
-| ACS-06 | Interfaces de acesso e lotação | ACS-05, FND-07 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [MEM-01](06-acesso/MEM-01.md) | Planos e matrícula manual mínima | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | BLOQUEADO |
+| [ACS-01](06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, GATE-08 | BLOQUEADO |
+| [ACS-02](06-acesso/ACS-02.md) | Endpoint de eventos faciais externos | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
+| [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01 | BLOQUEADO |
+| [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
+| [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |
+| [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | BLOQUEADO |
 
-### Módulos complementares
+## Pós-MVP — complementares
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| EQP-01 | Equipamentos | IAM-03, FND-07 | PLANEJADO |
-| AUL-01 | Agenda de aulas | IAM-03, FND-07 | PLANEJADO |
-| AUL-02 | Reservas e capacidade, se aprovadas | AUL-01, GATE-07 | BLOQUEADO |
-| DSH-01 | Dashboard-base | PES-02, ACS-05, MEM-01 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [EQP-01](07-complementares/EQP-01.md) | Equipamentos administrativos e catálogo público | MOD-10 | IAM-03, IAM-04 | BLOQUEADO |
+| [AUL-01](07-complementares/AUL-01.md) | Agenda de aulas por ocorrências | MOD-09 | IAM-03, IAM-04 | BLOQUEADO |
+| [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
+| [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | BLOQUEADO |
 
-### Financeiro tardio
+## Financeiro tardio
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| FIN-01 | Cobranças e consulta | MEM-01 | PLANEJADO |
-| FIN-02 | Pagamento externo idempotente | FIN-01 | PLANEJADO |
-| FIN-03 | Indicadores financeiros | FIN-02, DSH-01 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [FIN-01](08-financeiro/FIN-01.md) | Cobranças e consulta financeira | MOD-08 | MEM-01, IAM-04 | BLOQUEADO |
+| [FIN-02](08-financeiro/FIN-02.md) | Compra e confirmação por gateway | MOD-08 | FIN-01, NTF-01, GATE-09 | BLOQUEADO |
+| [FIN-03](08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | BLOQUEADO |
 
-### Infraestrutura final
+## Infraestrutura final
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| INF-01 | Dockerfiles frontend/backend | PG-01 | PLANEJADO |
-| INF-02 | Compose dos serviços | INF-01 | PLANEJADO |
-| INF-03 | Redes, volumes e healthchecks | INF-02 | PLANEJADO |
-| INF-04 | Teste integrado e documentação | INF-03 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [INF-01](09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | BLOQUEADO |
+| [INF-02](09-infraestrutura/INF-02.md) | Compose dos serviços selecionados | MOD-00 | INF-01 | BLOQUEADO |
+| [INF-03](09-infraestrutura/INF-03.md) | Rede, volumes e restrição de exposição | MOD-00 | INF-02 | BLOQUEADO |
+| [INF-04](09-infraestrutura/INF-04.md) | Instalação e teste integrado em Docker | MOD-00 | INF-03, TST-01 | BLOQUEADO |
 
-### Validação final
+## Validação final
 
-| ID | Entrega | Depende de | Estado |
-|---|---|---|---|
-| VAL-01 | Rastreabilidade final | PG-02 | PLANEJADO |
-| VAL-02 | Aceitação e segurança | VAL-01 | PLANEJADO |
-| VAL-03 | Documentação e demonstração | VAL-02, INF-04 | PLANEJADO |
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [VAL-01](10-validacao-final/VAL-01.md) | Rastreabilidade e escopo final | MOD-00–MOD-12 | PG-02 | BLOQUEADO |
+| [VAL-02](10-validacao-final/VAL-02.md) | Aceitação e regressão dos módulos finais | MOD-00–MOD-12 conforme escopo | VAL-01 | BLOQUEADO |
+| [VAL-03](10-validacao-final/VAL-03.md) | Documentação e roteiro de demonstração acadêmica | MOD-00 | VAL-02, INF-04 | BLOQUEADO |
 
-## Regra para criação dos próximos textos
+## Fronteira do MVP
 
-Os textos completos de prompts de implementação devem ser escritos após FND-02B e
-FND-03, evitando congelar framework, autenticação, tenancy ou banco vetorial por
-suposição. O manifesto já reserva IDs, ordem e critérios mínimos de saída.
+Fundação + IAM + PES + NTF + ONB + TRN + RAG + AI + TST-01 compõem o MVP proposto.
+O cenário central vai do cadastro à ficha aprovada, incluindo bloqueio, ficha
+manual e adaptação versionada. MEM/ACS e demais módulos entram após esse aceite.
+A matriz detalhada do MVP está na estratégia de testes e nos cartões.
+AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
+INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.

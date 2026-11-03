@@ -4,7 +4,7 @@
 
 - Fase: Fundação de dados
 - Estado inicial: BLOQUEADO até FND-02B
-- Dependências: FND-01, FND-02B
+- Dependências: FND-01, FND-02B, GATE-02, GATE-03
 - Requisitos: RF-01–RF-35, RN-01–RN-36, MRF03–MRF12
 - Módulos: MOD-01–MOD-12
 - Próximo prompt desbloqueado: FND-04 e FND-07
@@ -17,7 +17,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 ## Contexto obrigatório
 
 - `AGENTS.md`
-- `docs/prompts/00-prompt-mestre.md`
+- `docs/prompts/00-contexto-de-execucao.md`
+- `docs/prompts/00-contrato-operacional.md`
 - todos os requisitos e ADRs aceitos
 - `docs/arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png`
 - `docs/arquitetura/modulos.md`
@@ -58,7 +59,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 
 ## Implementação obrigatória
 
-1. Catalogar entidades, atributos conceituais e ownership por módulo.
+1. Extrair a fonte XML/draw.io embutida no PNG para facilitar leitura, preservando
+   o original. Catalogar entidades, atributos conceituais e ownership por módulo.
 2. Corrigir cardinalidades e duplicações do MER inicial.
 3. Documentar chaves, unicidades e invariantes importantes.
 4. Descrever máquinas de estado de onboarding, ficha, matrícula e acesso.
