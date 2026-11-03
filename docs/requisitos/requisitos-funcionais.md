@@ -1,0 +1,330 @@
+# Requisitos funcionais
+
+## Convenções
+
+- Os IDs originais foram preservados.
+- RF-24 e RF-25 permanecem separados: cálculo e apresentação são capacidades
+  distintas.
+- RF-34 e RF-35 foram acrescentados a partir das solicitações explícitas sobre
+  designação de instrutor e aprovação das propostas da IA.
+- Mudanças de redação não alteram o propósito original.
+
+## Usuários, clientes e funcionários
+
+### RF-01 — Cadastrar cliente
+
+Permitir que usuário administrativo registre novo cliente e o vincule a um e-mail.
+
+- CA-01.1: dados obrigatórios válidos criam cliente com identificador único.
+- CA-01.2: e-mail associado a outra conta ativa é rejeitado.
+- CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
+
+### RF-02 — Consultar e pesquisar clientes
+
+Permitir que usuários administrativos localizem e consultem clientes.
+
+- CA-02.1: usuário autorizado lista clientes.
+- CA-02.2: pesquisa por nome ou e-mail retorna correspondências.
+- CA-02.3: usuário sem autorização não consulta dados de terceiros.
+
+### RF-03 — Atualizar e alterar estado do cliente
+
+Permitir alteração cadastral e ativação ou desativação do cliente.
+
+- CA-03.1: alterações válidas persistem após nova consulta.
+- CA-03.2: cliente desativado deixa de ser usuário habilitado.
+- CA-03.3: desativação não apaga o histórico.
+- CA-03.4: cliente elegível à biometria precisa de foto facial válida.
+
+### RF-04 — Autenticar usuário
+
+Identificar cliente ou funcionário antes de acessar áreas protegidas.
+
+- CA-04.1: credenciais válidas de usuário ativo iniciam sessão.
+- CA-04.2: credenciais inválidas não iniciam sessão.
+- CA-04.3: rota protegida sem sessão válida retorna não autenticado.
+
+### RF-05 — Autorizar funções conforme papéis
+
+Aplicar permissões de cliente, administrador, atendente e instrutor.
+
+- CA-05.1: cliente não acessa funções administrativas.
+- CA-05.2: administrador acessa as operações previstas.
+- CA-05.3: chamada direta a API proibida também é rejeitada.
+
+### RF-06 — Recuperar acesso por e-mail
+
+Permitir recuperação de conta vinculada a e-mail.
+
+- CA-06.1: solicitação válida inicia o envio da recuperação.
+- CA-06.2: token expirado ou utilizado é recusado.
+- CA-06.3: após recuperação, o usuário autentica com a nova credencial.
+- Observação: infraestrutura SMTP em contêiner pertence à fase final de Docker.
+
+### RF-07 — Cadastrar funcionário
+
+Permitir cadastro básico de funcionário.
+
+- CA-07.1: administrador cria funcionário com dados obrigatórios.
+- CA-07.2: funcionário recebe identificador único.
+- CA-07.3: duplicidade incompatível de conta ou e-mail é recusada.
+
+### RF-08 — Consultar, atualizar e desativar funcionário
+
+Manter dados e estado de funcionários.
+
+- CA-08.1: administrador lista e consulta funcionários.
+- CA-08.2: alterações válidas persistem.
+- CA-08.3: funcionário desativado perde permissões, preservando histórico.
+
+## Onboarding e avaliações
+
+### RF-09 — Enviar convite de onboarding por e-mail
+
+Enviar ao cliente cadastrado um link seguro para o primeiro onboarding.
+
+- CA-09.1: convite é enviado ao e-mail vinculado.
+- CA-09.2: link referencia o onboarding do cliente correto.
+- CA-09.3: falha de envio é registrada como falha.
+
+### RF-10 — Acessar onboarding por link seguro
+
+Abrir o formulário correspondente a partir do convite recebido.
+
+- CA-10.1: token válido abre o formulário correto.
+- CA-10.2: token inválido ou expirado é rejeitado.
+- CA-10.3: token não abre onboarding de outro cliente.
+
+### RF-11 — Registrar dados físicos
+
+Registrar os dados físicos e funcionais previstos no formulário aprovado.
+
+- CA-11.1: campos físicos previstos podem ser persistidos.
+- CA-11.2: campos obrigatórios são validados.
+- CA-11.3: formulário editável recupera corretamente dados salvos.
+
+### RF-12 — Registrar medicações e condições de saúde
+
+Registrar queixas, medicações, lesões e condições informadas pelo cliente.
+
+- CA-12.1: formulário separa queixas, medicações e histórico relevante.
+- CA-12.2: dados ficam associados somente ao cliente correto.
+- CA-12.3: usuário sem permissão não acessa esses dados por interface ou API.
+
+### RF-13 — Validar e concluir onboarding
+
+Concluir o formulário somente após o preenchimento obrigatório.
+
+- CA-13.1: formulário obrigatório incompleto não é concluído.
+- CA-13.2: conclusão registra estado e data/hora.
+- CA-13.3: a IA identifica a existência de onboarding válido.
+
+### RF-14 — Consultar o próprio onboarding
+
+Permitir ao cliente revisar os dados que informou.
+
+- CA-14.1: cliente autenticado consulta somente o próprio onboarding.
+- CA-14.2: valores exibidos correspondem aos persistidos.
+- CA-14.3: consulta de outro cliente é bloqueada.
+
+## Fichas de treino e IA
+
+### RF-15 — Gerar proposta de ficha utilizando IA
+
+Gerar proposta inicial com base no onboarding e em conhecimento recuperado.
+
+- CA-15.1: onboarding não concluído impede a geração.
+- CA-15.2: chamada bem-sucedida produz proposta estruturada e persistível.
+- CA-15.3: proposta pertence exclusivamente ao cliente correto.
+- CA-15.4: caso bloqueado pela política de saúde não recebe proposta de treino.
+- CA-15.5: proposta utiliza a versão identificada do onboarding.
+- CA-15.6: proposta não se torna ativa antes da aprovação prevista no fluxo.
+
+### RF-16 — Visualizar ficha de treino atual
+
+Exibir ao cliente sua ficha vigente em formato utilizável, especialmente no celular.
+
+- CA-16.1: cliente visualiza sua versão atual, ativa e aprovada.
+- CA-16.2: cliente sem ficha recebe estado vazio adequado.
+- CA-16.3: cliente não consulta ficha de terceiro.
+- CA-16.4: visualização é utilizável em celular.
+
+### RF-17 — Persistir e versionar a ficha
+
+Manter a ficha e criar nova versão quando uma alteração for aprovada.
+
+- CA-17.1: primeira ficha cria versão inicial.
+- CA-17.2: alteração aprovada cria versão posterior e atualiza a vigente.
+- CA-17.3: versão atual permanece após nova consulta.
+- CA-17.4: versão aprovada ou histórica não é modificada retroativamente.
+
+### RF-18 — Conversar com assistente de IA
+
+Disponibilizar chat contextualizado sobre o treino do próprio cliente.
+
+- CA-18.1: cliente autenticado envia mensagem e recebe resposta.
+- CA-18.2: assistente recebe somente o contexto autorizado do cliente.
+- CA-18.3: mensagens de clientes diferentes não se misturam.
+- CA-18.4: indisponibilidade do provedor gera erro controlado.
+
+### RF-19 — Propor alteração dinâmica de treino via IA
+
+Propor adaptação quando dor, limitação ou condição interferir no treino.
+
+- CA-19.1: dor ou limitação relatada gera adaptação contextualizada.
+- CA-19.2: adaptação cria nova proposta, sujeita à aprovação.
+- CA-19.3: partes não relacionadas não são apagadas.
+- CA-19.4: versão aprovada permanece após nova autenticação.
+
+## Biometria, acesso e frequência
+
+### RF-20 — Receber evento de uso de catraca externa
+
+Disponibilizar endpoint REST para o resultado de identificação facial externa.
+
+- CA-20.1: requisição autenticada e válida segue o JSON documentado.
+- CA-20.2: JSON inválido retorna erro de validação.
+- CA-20.3: aplicação não implementa o algoritmo facial da catraca.
+- CA-20.4: mesmo identificador externo não cria duplicidade.
+
+### RF-21 — Verificar identidade e habilitação para acesso
+
+Associar a identidade externa e executar separadamente as regras de autorização.
+
+- CA-21.1: identidade externa conhecida é associada ao cliente.
+- CA-21.2: identidade desconhecida produz decisão de negação apropriada.
+- CA-21.3: cliente desativado não é tratado como habilitado.
+- CA-21.4: correspondência facial somente é aceita quando atinge o limiar
+  configurado, inicialmente definido como no mínimo 95%.
+
+### RF-22 — Inserir referência biométrica do cliente
+
+Permitir que funcionário autorizado cadastre a referência facial do cliente.
+
+- CA-22.1: foto atende aos critérios técnicos configurados.
+- CA-22.2: nova referência substitui a anterior conforme política definida.
+- CA-22.3: somente funcionário autorizado altera a referência.
+
+### RF-23 — Registrar entrada, saída e frequência
+
+Persistir eventos de acesso utilizados como histórico de frequência.
+
+- CA-23.1: entrada válida cria registro de entrada.
+- CA-23.2: saída válida cria registro de saída.
+- CA-23.3: evento repetido não é contado duas vezes.
+- CA-23.4: registros possuem data/hora e cliente relacionados.
+
+### RF-24 — Calcular lotação atual
+
+Derivar a quantidade de pessoas presentes a partir dos eventos válidos.
+
+- CA-24.1: entrada válida incrementa uma vez.
+- CA-24.2: saída válida decrementa uma vez.
+- CA-24.3: evento duplicado não altera novamente o total.
+- CA-24.4: valor nunca é negativo.
+
+### RF-25 — Exibir lotação atual
+
+Mostrar aos usuários a quantidade atual de pessoas na academia.
+
+- CA-25.1: página apresenta o valor calculado.
+- CA-25.2: nova consulta reflete eventos processados.
+- CA-25.3: informação é legível em celular.
+
+## Planos, matrícula e financeiro
+
+### RF-26 — Registrar e atualizar situação de cobrança
+
+Manter controle básico de cobranças por cliente.
+
+- CA-26.1: usuário autorizado registra competência, vencimento e situação.
+- CA-26.2: atualização persiste.
+- CA-26.3: cobrança pertence ao cliente correto.
+
+### RF-27 — Consultar situação de cobrança
+
+Permitir consulta autorizada da situação financeira já registrada.
+
+- CA-27.1: usuário autorizado consulta registros do cliente.
+- CA-27.2: cliente pode visualizar a própria situação quando disponível.
+- CA-27.3: cliente não consulta cobrança de terceiro.
+
+### RF-31 — Comprar e manter plano de academia
+
+Permitir que um plano seja associado à conta por matrícula com validade definida.
+
+- CA-31.1: pagamento confirmado pela integração pode ativar ou renovar matrícula.
+- CA-31.2: matrícula possui início, término e estado consultáveis.
+- CA-31.3: matrícula vencida deixa de ser válida sem apagar o histórico.
+- Observação: automação de pagamento é fase tardia; matrícula manual é anterior.
+
+## Dashboard, aulas e equipamentos
+
+### RF-28 — Disponibilizar dashboard administrativo
+
+Apresentar página administrativa consolidando informações do sistema.
+
+- CA-28.1: somente perfil autorizado acessa o dashboard.
+- CA-28.2: página consolida indicadores dos módulos implementados, incluindo
+  quantidade de clientes assinantes e funcionários, faturamento por períodos e
+  histórico de acesso por dias/horas quando essas fontes estiverem disponíveis.
+- CA-28.3: falha de indicador não expõe dados indevidos.
+
+### RF-29 — Exibir indicadores consolidados
+
+Apresentar indicadores provenientes dos módulos implementados.
+
+- CA-29.1: exibe ao menos clientes ativos, histórico semanal de frequência e
+  lotação atual.
+- CA-29.2: quando disponíveis, exibe faturamento/receita mensal, anual e total.
+- Observação: sem despesas cadastradas, o sistema não denomina receita como lucro.
+
+### RF-30 — Gerenciar agenda de aulas
+
+Permitir que usuário administrativo mantenha dias e horários das aulas.
+
+- CA-30.1: administrador cria aula com identificação, data e horário.
+- CA-30.2: ocorrência pode ser alterada ou retirada.
+- CA-30.3: mudanças aparecem na visualização correspondente.
+
+### RF-32 — Gerenciar equipamentos
+
+Cadastrar, consultar, atualizar e desativar equipamentos da academia.
+
+- CA-32.1: usuário autorizado cadastra nome e situação.
+- CA-32.2: equipamento pode possuir imagem.
+- CA-32.3: cadastro permanece disponível em nova consulta.
+- CA-32.4: usuário autorizado altera informações.
+- CA-32.5: equipamento desativado não aparece como disponível ao cliente.
+
+### RF-33 — Consultar equipamentos disponíveis
+
+Permitir que visitantes ou clientes consultem equipamentos ativos e suas imagens.
+
+- CA-33.1: interface lista equipamentos ativos.
+- CA-33.2: apresenta nome e imagem quando cadastrada.
+- CA-33.3: apresenta informações adicionais disponíveis.
+- CA-33.4: equipamento desativado não aparece.
+- CA-33.5: listagem é utilizável em celular.
+
+## Designação e revisão profissional
+
+### RF-34 — Designar instrutor responsável ao cliente
+
+Vincular cada cliente a um instrutor principal vigente, preservando substituições.
+
+- CA-34.1: administrador designa instrutor ativo a um cliente.
+- CA-34.2: substituição encerra o vínculo anterior sem apagar o histórico.
+- CA-34.3: somente funcionário com papel de instrutor pode ser responsável.
+- CA-34.4: sistema identifica inequivocamente o instrutor principal vigente.
+
+### RF-35 — Revisar e aprovar proposta de treino
+
+Comunicar propostas ao instrutor responsável e permitir sua decisão profissional.
+
+- CA-35.1: nova proposta gera evento/aviso ao instrutor designado e aparece em
+  uma fila consultável; falha de aviso fica registrada sem perder a pendência.
+- CA-35.2: instrutor pode modificar, aprovar ou rejeitar com parecer.
+- CA-35.3: decisão registra instrutor e data/hora.
+- CA-35.4: somente proposta aprovada pode se tornar ficha ativa.
+- CA-35.5: rejeição ou pedido de ajuste preserva proposta e motivo no histórico.
