@@ -47,10 +47,14 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
 - Um usuário pode acumular papéis de cliente, administrador, atendente e instrutor.
 - Cliente e funcionário são perfis de domínio vinculados à identidade.
 - A designação cliente–instrutor preserva histórico e responsabilidade.
+- A instalação e os cadastros possuem caminho de bootstrap/primeiro acesso,
+  distinto do link de onboarding.
 - O onboarding e as avaliações fornecem contexto versionado para o treino.
 - Exercícios formam catálogo; prescrição pertence ao item da ficha.
 - A IA produz propostas, nunca ativa ou altera silenciosamente ficha aprovada.
 - O instrutor designado revisa, modifica, aprova ou rejeita propostas.
+- Aprovação verifica contexto, designação e versão-base atuais conforme política
+  definida; mudança relevante exige revalidação antes de ativar.
 - Dados de clientes diferentes nunca compartilham contexto de IA.
 - O RAG recupera somente documentos e versões aprovados.
 - Regras críticas e numéricas são validadas por código, não somente por LLM/RAG.

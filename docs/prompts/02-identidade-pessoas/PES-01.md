@@ -4,7 +4,7 @@
 
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: IAM-02, IAM-03, IAM-04, FND-08.
+- Dependências: IAM-02, IAM-03, IAM-04, FND-08, NTF-01.
 - Requisitos: RF-07, RF-08; RN-01, RN-03, RN-04, RN-26, RN-33.
 - Módulos: MOD-01.
 
@@ -30,12 +30,16 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Criar API e telas administrativas de listagem, cadastro, atualização e inativação.
 2. Atribuir papéis operacionais conforme política; manter histórico e auditoria.
 3. Evitar cadastro parcial quando criação de identidade ou perfil falhar.
+4. Fechar primeiro acesso pelo mecanismo escolhido em IAM-02; se houver convite,
+   registrar envio/expiração e recuperação de falha pelo adapter de notificações.
 
 ## Critérios de aceite
 
 - Administrador cadastra e reencontra funcionário por nova consulta.
 - E-mail duplicado/dados inválidos não deixam perfil parcial.
 - Funcionário inativado perde operações e histórico permanece.
+- Funcionário recém-cadastrado consegue estabelecer credencial/sessão pelo fluxo
+  documentado, sem gerar outra identidade para a mesma pessoa.
 
 ## Testes obrigatórios
 

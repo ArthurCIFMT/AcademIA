@@ -11,6 +11,8 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 - [Registro de normalização](docs/requisitos/registro-de-normalizacao.md)
 - [Macrorequisitos de IA e RAG](docs/requisitos/macrorequisitos-ia-rag.md)
 - [Módulos](docs/arquitetura/modulos.md)
+- [Revisão da cobertura dos módulos](docs/arquitetura/revisao-modulos.md)
+- [Análise do MER original, preservado](docs/arquitetura/revisao-mer.md)
 - [Prompt mestre](docs/prompts/00-prompt-mestre.md)
 - [Contexto de execução](docs/prompts/00-contexto-de-execucao.md)
 - [Manifesto dos prompts](docs/prompts/README.md)

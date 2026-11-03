@@ -4,7 +4,7 @@
 
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: IAM-02, IAM-03, IAM-04, FND-08.
+- Dependências: IAM-02, IAM-03, IAM-04, FND-08, NTF-01.
 - Requisitos: RF-01, RF-02, RF-03; RN-01, RN-04, RN-05, RN-33.
 - Módulos: MOD-01.
 
@@ -30,12 +30,16 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Criar API/telas para cadastrar, pesquisar por nome/e-mail, consultar, atualizar e inativar clientes.
 2. Distinguir estado da conta de matrícula, biometria e elegibilidade.
 3. Permitir cadastro inicial antes de biometria e onboarding conforme modelo aceito.
+4. Integrar o primeiro acesso escolhido em IAM-02. Distinguir convite de credencial
+   de link de onboarding e permitir recuperar provisionamento/envio com falha.
 
 ## Critérios de aceite
 
 - Cadastro válido retorna identificador e persiste após recarregar.
 - Duplicidade ou validação rejeitada não cria dados parciais.
 - Cliente não consulta terceiro; inativar preserva histórico.
+- Cliente cadastrado realiza o primeiro login pelo mecanismo documentado sem
+  cadastro duplicado; token de onboarding não abre sessão geral por si só.
 
 ## Testes obrigatórios
 

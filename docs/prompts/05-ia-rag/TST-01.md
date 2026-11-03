@@ -27,7 +27,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Configurar E2E e percorrer cadastro, designação, convite, onboarding, proposta IA, aviso, revisão e ficha atual.
+1. Configurar E2E e percorrer instalação vazia/bootstrap, primeiro acesso,
+   cadastro, designação, convite, onboarding, proposta IA, aviso, revisão e ficha atual.
 2. Exercitar também ficha manual, recuperação, rejeição, bloqueio e acesso indevido.
 3. Registrar aceite do MVP PG-01 somente com critérios e evidências por requisito.
 
@@ -36,6 +37,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Fluxo completo persiste após logout/login e recarga.
 - Caso bloqueado não chega à ficha ativa; instrutor alheio e cliente alheio são recusados.
 - Execução local reproduzível passa; serviço real obrigatório ausente mantém aceite pendente.
+- Repetir bootstrap não duplica administrador e usuário convidado consegue o
+  primeiro login; mudança de restrição durante revisão exige revalidação prevista.
 
 ## Testes obrigatórios
 

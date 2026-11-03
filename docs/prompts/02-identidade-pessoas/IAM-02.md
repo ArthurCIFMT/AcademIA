@@ -21,6 +21,8 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 - `backend/app/modules/identity/**`
 - `backend/app/modules/people/**`
 - `backend/tests/identity/**`
+- `backend/scripts/**`
+- `docs/instalacao/**`
 - `database/**`
 
 Documentação, migrations e caminhos equivalentes seguem o contrato comum.
@@ -30,12 +32,19 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Modelar usuário, papéis acumuláveis e perfis cliente/funcionário conforme modelo lógico.
 2. Garantir UUID, e-mail normalizado e identificador do provedor conforme regras aceitas.
 3. Validar estado local em requisições para que inativação revogue acesso mesmo com token ainda válido.
+4. Definir e implementar bootstrap idempotente do primeiro administrador conforme
+   a identidade escolhida, com segredo/configuração externos e sem endpoint público
+   de autoelevação. Documentar instalação vazia e primeiro login.
+5. Expor o fluxo de provisionamento/primeiro acesso reutilizado pelos cadastros,
+   distinguindo identidade externa, conta local e convite de onboarding.
 
 ## Critérios de aceite
 
 - Mesmo usuário pode ser cliente e instrutor sem duplicar a identidade.
 - Unicidade é aplicada pelo banco, inclusive em requisições concorrentes.
 - Usuário inativado não acessa rota protegida com token anterior.
+- Instalação vazia permite primeiro administrador autenticável; repetir bootstrap
+  não duplica identidade nem inclui senha padrão fixa no repositório.
 
 ## Testes obrigatórios
 

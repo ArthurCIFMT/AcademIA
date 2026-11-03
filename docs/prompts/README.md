@@ -2,11 +2,14 @@
 
 ## Organização e uso
 
-- [Mestre de planejamento](00-prompt-mestre.md): produz plano em chat, até 40 linhas.
+- [Mestre de planejamento](00-prompt-mestre.md): produz plano completo em chat,
+  com resumo e detalhamento; o limite didático de 40 linhas foi retirado.
 - [Contexto de execução](00-contexto-de-execucao.md): acompanha a tarefa escolhida.
 - [Contrato operacional](00-contrato-operacional.md): regras comuns dos cartões.
 - [Comparação com o professor](comparacao-modelo-professor.md).
 - [Estratégia de testes](../testes/estrategia.md) e [comandos](../testes/comandos.md).
+- [Revisão dos módulos](../arquitetura/revisao-modulos.md) e
+  [análise do MER preservado](../arquitetura/revisao-mer.md).
 
 Foram redigidos 59 prompts operacionais. P00 representa a preparação Git já
 concluída. Os cartões escritos são documentos revisáveis; nenhum módulo funcional
@@ -82,10 +85,10 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | BLOQUEADO |
 | [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | BLOQUEADO |
 | [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | BLOQUEADO |
-| [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08 | BLOQUEADO |
-| [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08 | BLOQUEADO |
+| [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
+| [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
 | [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | BLOQUEADO |
-| [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02 | BLOQUEADO |
+| [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02, IAM-04 | BLOQUEADO |
 
 ## MVP — onboarding e avaliações
 

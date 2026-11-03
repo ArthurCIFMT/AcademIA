@@ -30,12 +30,17 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Implementar fila, edição integral, parecer, aprovação, rejeição e ajustes.
 2. Centralizar workflow para rascunhos manuais e propostas futuras da IA.
 3. Ativar versão aprovada atomicamente, substituindo anterior e emitindo eventos de aviso.
+4. Definir política de atualidade e conferir snapshot de avaliação/restrições,
+   designação e versão-base antes de aprovar. Mudança relevante exige reavaliação
+   ou nova proposta conforme essa política, sem sobrescrever silenciosamente.
 
 ## Critérios de aceite
 
 - Instrutor vigente designado aprova; instrutor não designado é recusado.
 - Dois pedidos concorrentes não deixam duas fichas atuais.
 - Rejeição preserva proposta e motivo; aprovação identifica autor/revisor e instante.
+- Proposta baseada em restrições ou versão-base superadas recebe o tratamento
+  previsto antes da ativação; aprovação não contorna bloqueio de segurança.
 
 ## Testes obrigatórios
 

@@ -5,11 +5,14 @@ cada prompt aos requisitos e módulos. Associação de prompt não comprova exec
 
 ## Cobertura por módulo
 
+A tabela indica cobertura e colaboração. O proprietário de cada dado/workflow é
+definido em modulos.md; participar de um requisito não transfere seu ownership.
+
 | Módulo | Requisitos funcionais | Regras de negócio | Macrorequisitos |
 |---|---|---|---|
 | MOD-00 | Transversal | RN-23, RN-32, RN-33 | Critérios técnicos transversais |
 | MOD-01 | RF-01–RF-08 | RN-01–RN-05, RN-11, RN-28 | MRF12 |
-| MOD-02 | RF-09, RF-34, RF-35 | RN-12, RN-14, RN-26, RN-31 | MRF10 |
+| MOD-02 | RF-34; apoio a RF-35 pela designação | RN-11, RN-31, RN-33 | Apoio a MRF10 |
 | MOD-03 | RF-09–RF-14 | RN-11, RN-13, RN-21, RN-23, RN-32, RN-33 | MRF03, MRF08 |
 | MOD-04 | RF-15–RF-17, RF-19, RF-35 | RN-14–RN-20, RN-31, RN-33 | MRF05–MRF07, MRF09, MRF10 |
 | MOD-05 | — | RN-15, RN-23, RN-29, RN-30 | MRF01, MRF02, MRF11, MRF15 |

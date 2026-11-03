@@ -4,7 +4,7 @@
 
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: FND-08, IAM-02.
+- Dependências: FND-08, IAM-02, IAM-04.
 - Requisitos: RF-09, RF-35; RN-23, RN-26, RN-27; RNF-09, RNF-17.
 - Módulos: MOD-12.
 

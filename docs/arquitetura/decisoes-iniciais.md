@@ -27,14 +27,14 @@
 
 | ID | Recomendação | Justificativa resumida |
 |---|---|---|
-| REC-001 | Monólito modular. | Escopo acadêmico e transações relacionais. |
+| REC-001 | Monólito modular já vigente em AGENTS.md; formalizar em ADR. | Evitar divergência entre regra atual e registro de decisão. |
 | REC-002 | FastAPI + Pydantic. | Python, OpenAPI e validação tipada. |
 | REC-003 | SQLAlchemy + Alembic. | ORM e migrations explícitas. |
 | REC-004 | Keycloak/OIDC. | Identidade e credenciais fora do domínio. |
 | REC-005 | Qdrant. | Banco vetorial especializado e configurável. |
 | REC-006 | Academia única no MVP. | Evita isolamento multitenant prematuro. |
 | REC-007 | Um instrutor principal ativo por cliente. | Responsabilidade inequívoca com histórico. |
-| REC-008 | Aprovação obrigatória do instrutor. | Responsabilidade humana antes da ativação. |
+| REC-008 | Aprovação profissional já confirmada em DEC-009; detalhar política. | Falta decidir substituição e atualidade da proposta, não a necessidade da revisão. |
 | REC-009 | Armazenar timestamps em UTC/ISO 8601. | Consistência e rastreabilidade. |
 | REC-010 | Objetos tipados internamente; JSON nas fronteiras. | Evita serialização artificial dentro do monólito. |
 

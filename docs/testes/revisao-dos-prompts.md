@@ -6,7 +6,7 @@ Pacote de planejamento AcademIA: mestre, contexto, contrato, 59 cartões,
 manifesto e estratégia de testes. Esta revisão não executa os cartões nem testa
 uma aplicação implementada.
 
-## Verificações
+## Verificações da versão anterior
 
 - Mestre de planejamento: 39 linhas e saída limitada a 40 linhas.
 - Cartões: 59 arquivos e 59 entradas correspondentes no manifesto.
@@ -17,6 +17,20 @@ uma aplicação implementada.
 - Testes de aplicação continuam pendentes de implementação/configuração.
 - Docker depende do aceite do MVP e da maioria dos módulos.
 - Diff revisado com git diff --check, incluindo arquivos novos depois do stage.
+
+## Revisão ampliada posterior
+
+O responsável solicitou um mestre completo e análise dos módulos/MER. O limite
+didático de 40 linhas foi removido; a contagem anterior é evidência histórica,
+não restrição atual. Os 59 cartões foram mantidos.
+
+- Módulos: cobertura suficiente, com refinamentos de ownership e fluxo.
+- Mestre: fluxos, estados, fontes, testes, marcos, gates e saída detalhados.
+- Cartões afetados: bootstrap/primeiro acesso, atualidade da proposta e
+  dependência da interface de notificações.
+- MER: análise em relatório separado; o PNG/XML original permanece inalterado.
+- Verificações atuais: links, IDs, correspondência manifesto/cartões,
+  dependências/ciclos, diff e hash do MER.
 
 ## Limitações conhecidas
 
