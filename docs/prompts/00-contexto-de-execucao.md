@@ -60,8 +60,9 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
 - O RAG recupera somente documentos e versões aprovados.
 - Regras críticas e numéricas são validadas por código, não somente por LLM/RAG.
 - Reconhecimento facial por API real é separado da autorização e da catraca fictícia.
-- Pagamento confirmado → matrícula pelo atendente → foto de referência → nova
-  captura facial → decisão → simulador externo. Gateway financeiro continua tardio.
+- Matrícula pelo atendente, sem pagamento obrigatório → foto de referência → nova
+  captura facial → decisão → simulador externo. Financeiro continua tardio e não
+  bloqueia matrícula nem acesso acadêmico com matrícula válida.
 - Consulte `docs/arquitetura/fluxos-atualizados.md` para os contratos e estados.
 - Docker é fase final, depois do MVP e da maioria dos módulos.
 

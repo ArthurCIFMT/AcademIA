@@ -79,7 +79,7 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | E-mail | SMTP ou API por adapter | Execução local antes do Docker |
 | Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
-| Financeiro | Pagamento confirmado → matrícula pelo atendente; gateway tardio | GATE-08/GATE-09 |
+| Matrícula/financeiro | Atendente matricula sem pagamento obrigatório; financeiro tardio e independente | GATE-08/GATE-09 |
 | Biometria | API facial real; Amazon Rekognition recomendado, ainda não aprovado | GATE-08 |
 | Catraca acadêmica | Serviço externo fictício com comandos e passagem simulada | GATE-08 |
 
@@ -188,7 +188,7 @@ silenciosamente a ficha atual e nunca mistura contextos de dois clientes.
 
 ### 7.5 Biometria, matrícula e catraca
 
-Pagamento confirmado (registro manual inicial) → atendente matricula → captura e
+Atendente matricula sem pagamento obrigatório → captura e
 cadastro da foto de referência → nova captura facial → API real de reconhecimento →
 identidade resolvida pelo backend → decisão por conta, matrícula, validade,
 modalidade e limites → comando autenticado à API externa fictícia de catraca →
@@ -201,8 +201,9 @@ distinta de confiança de detecção/qualidade. Limiar inicial de 95 não é acu
 Tentativa, decisão e passagem são conceitos distintos. Eventos duplicados,
 desconhecidos, negados, fora de ordem e falhas precisam de comportamento definido.
 A alternativa manual registra responsável e motivo e segue política explícita.
-Pagamento confirmado pode ser registrado manualmente para adiar o gateway;
-matrícula continua sendo ação do atendente. Callback facial/foto não libera sozinho.
+Matrícula/renovação é ação do atendente e não exige pagamento/comprovante nem
+módulo financeiro. Registro manual de pagamento é opcional e tardio; callback
+facial/foto não libera sozinho.
 Teste real do provedor é necessário para comprovar biometria; mock testa contratos.
 
 ### 7.6 Complementos administrativos
@@ -211,8 +212,9 @@ Planeje equipamentos ativos/inativos, ocorrências de aula, lotação e indicado
 Reservas/capacidade dependem de GATE-07 e requisito complementar aprovado.
 Dashboard usa dados de módulos entregues e diferencia erro parcial de ausência de
 dados. Sem despesas, não apresente receita/faturamento como lucro.
-Gateway posterior confirma pagamento por evento idempotente; atendente continua
-responsável por matricular/renovar. Webhook não matricula automaticamente.
+Gateway posterior registra pagamento por evento idempotente; atendente continua
+responsável por matricular/renovar independentemente desse registro. Webhook não
+matricula automaticamente nem bloqueia matrícula/acesso por falta de pagamento.
 
 ## 8. Dados, invariantes e análise do MER
 
@@ -233,8 +235,8 @@ No plano, represente ao menos:
 - conversa/mensagens isoladas por cliente;
 - evento externo, decisão de acesso e passagem, sem exigir cliente conhecido
   para registrar uma tentativa desconhecida;
-- confirmação de pagamento ligada à matrícula/assinatura, com validade, limites
-  e autoria do atendente; referência facial externa e comandos/passagens simuladas;
+- matrícula/assinatura com validade, limites e autoria do atendente, sem vínculo
+  obrigatório com pagamento; referência facial externa e comandos/passagens simuladas;
 - autoria de ações críticas, avisos e auditoria preservados.
 
 Não imponha uma tabela por substantivo. Uma proposta pode ser estado de uma versão;
@@ -310,8 +312,8 @@ Reserva, multiacademia, sessões executadas de treino e relação exercício–e
 só entram na medida em que forem confirmadas.
 
 Docker/Compose requer PG-01 e PG-03. Escolhas de IA não devem bloquear cadastro
-e treino manual; escolha de gateway não bloqueia confirmação manual e matrícula
-pelo atendente após pagamento confirmado.
+e treino manual; matrícula pelo atendente e acesso acadêmico não dependem do
+financeiro, inclusive de confirmação manual de pagamento.
 A entrega final ainda exige rastreabilidade, regressão e roteiro acadêmico.
 
 ## 12. Fragmentação dos prompts operacionais
@@ -348,7 +350,7 @@ Planeje testes durante cada entrega, não apenas no encerramento:
 
 Inclua usuários distintos, instrutor não designado, duplicidade, concorrência,
 mudança de onboarding durante geração/revisão e falha de provedor/aviso.
-Na extensão de acesso, teste pagamento → matrícula → referência → nova captura
+Na extensão de acesso, teste matrícula sem pagamento → referência → nova captura
 com provedor facial real → decisão → API fictícia → passagem simulada idempotente.
 IA requer casos sintéticos rotulados e políticas/fontes aceitas.
 Diferencie doubles de unitários, teste real de integração e avaliação do modelo.

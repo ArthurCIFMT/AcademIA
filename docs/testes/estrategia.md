@@ -67,8 +67,10 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
 - Aceite/rejeição identifica versão e responsável; rejeição continua visível e
   não bloqueia consulta/chat; versão alterada não herda aceite anterior.
 - Cliente sem instrutor designado mantém consulta/chat; pendência de revisão é explícita.
-- Pagamento confirmado manualmente não cria matrícula sozinho; atendente autorizado
-  matricula depois, enquanto pendência/recusa de pagamento impede essa operação.
+- Atendente autorizado matricula/renova sem pagamento ou comprovante; matrícula
+  funciona com estado financeiro ausente, pendente/recusado e gateway indisponível.
+- Cliente com matrícula válida usa o fluxo facial sem consulta financeira obrigatória;
+  usuário sem permissão, matrícula ausente/vencida e limites inválidos continuam recusados.
 - Cadastro biométrico exige matrícula; nova captura é comparada pelo serviço facial
   real com a referência, incluindo outra pessoa, ausência de rosto e baixa qualidade.
 - Mock facial testa contratos/regras; aceite biométrico requer evidência do provedor

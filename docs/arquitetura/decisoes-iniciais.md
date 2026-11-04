@@ -19,7 +19,7 @@
 | DEC-007 | Usuário pode acumular papéis. | Relação usuário–papel N:N e perfis específicos. |
 | DEC-008 | Cliente deve ser designado a instrutor. | Vínculo histórico com responsável principal. |
 | DEC-009 | Cliente consulta treino e conversa com IA sem aceite prévio. | Parecer posterior do instrutor é separado da publicação tecnicamente validada. |
-| DEC-010 | Pagamento confirmado precede matrícula pelo atendente. | Confirmação manual inicial; integração financeira automática tardia. |
+| DEC-010 | Atendente matricula/renova sem exigir pagamento confirmado. | Financeiro tardio e independente da matrícula e do acesso acadêmico. |
 | DEC-011 | Docker fica depois do MVP. | Desenvolvimento local é requisito anterior. |
 | DEC-012 | Repositório remoto é `ArthurCIFMT/AcademIA`. | Entregas autorizadas devem ser sincronizadas. |
 | DEC-013 | Reconhecimento facial real e catraca fictícia por API externa. | Não há hardware; mocks isolados não comprovam reconhecimento. |
@@ -76,12 +76,13 @@ containerização final.
 ## Restrições permanentes
 
 Gates complementares no manifesto: GATE-07 (reservas), GATE-08 (API facial real,
-matrícula após pagamento, simulador de catraca, limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
+matrícula manual independente de pagamento, simulador de catraca, limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
 correspondente e não precisam bloquear a redação dos prompts.
 
 - Containerização não pode ser antecipada por prompts de fundação ou MVP.
-- Gateway tardio não bloqueia a fase de acesso: confirmação manual auditada de
-  pagamento antecede matrícula pelo atendente; não dispensar pagamento confirmado.
+- Matrícula pelo atendente não exige pagamento nem registro financeiro, manual ou
+  automatizado. O acesso acadêmico verifica matrícula e regras próprias; pagamento
+  não é um pré-requisito. Eventual bloqueio financeiro futuro exige decisão explícita.
 - Agentes de IA são papéis sob um orquestrador; não implicam microserviços.
 - Regras críticas não ficam exclusivamente em prompts ou documentos vetoriais.
 - A base RAG não recebe literatura inventada pelo agente.

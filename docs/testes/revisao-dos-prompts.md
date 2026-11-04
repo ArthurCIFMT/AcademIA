@@ -48,9 +48,11 @@ Pacote atual: 61 cartões, 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.
 As contagens anteriores neste relatório são históricas.
 
 - Publicação e parecer profissional separados; consulta/chat antes do aceite.
-- Matrícula pelo atendente após confirmação de pagamento, manual inicialmente.
+- Matrícula pelo atendente sem pagamento obrigatório; substitui a pré-condição
+  financeira da revisão anterior por correção explícita do responsável.
 - API facial real proposta, com catraca externa fictícia; aceite facial não usa só mock.
-- MEM-00 e ACS-07 acrescentados; manifesto, dependências e rastreabilidade atualizados.
+- MEM-00 é financeiro tardio/opcional e não é dependência de MEM-01; ACS-07 mantém
+  catraca fictícia. Manifesto, dependências e rastreabilidade atualizados.
 - Verificação executada: 86 documentos, 61 cartões/entradas no manifesto e 455
   links locais válidos; seções obrigatórias e dependências coerentes, sem ciclos.
 - IDs únicos confirmados: 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.

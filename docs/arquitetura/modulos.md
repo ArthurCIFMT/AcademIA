@@ -10,7 +10,7 @@
 | MOD-05 | Base de conhecimento RAG | Documentos, chunking, embeddings, busca e evidências. |
 | MOD-06 | IA e adaptação | Triagem, regras, agentes, geração, revisão automática, chat e propostas. |
 | MOD-07 | Biometria e acesso | API facial real, referência/captura, decisão, simulador externo de catraca, frequência e lotação. |
-| MOD-08 | Planos, matrícula e financeiro | Confirmação manual de pagamento, matrícula pelo atendente, validade/limites e integração financeira tardia. |
+| MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
 | MOD-09 | Agenda e reservas | Aulas, capacidade e eventual reserva. |
 | MOD-10 | Equipamentos | Cadastro administrativo e consulta de equipamentos ativos. |
 | MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
@@ -20,7 +20,7 @@
 
 Os 13 módulos cobrem o escopo pedido. As lacunas identificadas são refinamentos de
 fluxo, e não justificam novos módulos: publicação independente de parecer,
-biometria real com catraca fictícia, confirmação de pagamento e matrícula pelo atendente.
+biometria real com catraca fictícia e matrícula pelo atendente independente de pagamento.
 Os [fluxos atualizados](fluxos-atualizados.md) prevalecem sobre a política antiga de
 aprovação como pré-condição.
 Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao-mer.md).
@@ -40,8 +40,8 @@ Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao
 - MOD-06 gera conteúdo e decisões técnicas por contrato; MOD-04 publica conteúdo
   validado com parecer PENDENTE, sem esperar aceite humano.
 - MOD-07 separa API facial real, autorização interna e API externa fictícia de catraca.
-- MOD-08 confirma pagamento (manual inicialmente), permite matrícula pelo atendente
-  e fornece validade ao motor de acesso; confirmação isolada não matricula.
+- MOD-08 permite matrícula pelo atendente sem depender de pagamento e fornece
+  validade ao motor de acesso. Registros financeiros são uma capacidade posterior.
 - MOD-12 entrega avisos e registra auditoria, mas não se torna proprietário das
   entidades nem do workflow de origem.
 - A exportação pertence ao módulo dono do dado, com a mesma autorização da consulta.

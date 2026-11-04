@@ -28,7 +28,7 @@ O [manifesto](../prompts/README.md) registra dependências e execução.
 | [TRN-02](../prompts/04-treinos/TRN-02.md) | MOD-04 | RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33 |
 | [TRN-03](../prompts/04-treinos/TRN-03.md) | MOD-04, MOD-02, MOD-12 | RF-17, RF-35; RN-12, RN-14, RN-16, RN-17, RN-18, RN-31 |
 | [TRN-04](../prompts/04-treinos/TRN-04.md) | MOD-04 | RF-16, RF-17; RN-05, RN-28; MRF07 |
-| [MEM-00](../prompts/06-acesso/MEM-00.md) | MOD-08 | RF-26 parcialmente, RF-31; RN-04, RN-27, RN-33 |
+| [MEM-00](../prompts/06-acesso/MEM-00.md) (financeiro tardio/opcional) | MOD-08 | RF-26 parcialmente; RN-04, RN-27, RN-33 |
 | [ACS-07](../prompts/06-acesso/ACS-07.md) | MOD-07 | RF-37; RN-06, RN-09, RN-32; RNF-04, RNF-17 |
 | [MEM-01](../prompts/06-acesso/MEM-01.md) | MOD-08 | RF-31 parcialmente; RN-22, RN-35, RN-36 |
 | [RAG-01](../prompts/05-ia-rag/RAG-01.md) | MOD-05 | MRF01, MRF11, MRF15; RN-23, RN-28 |

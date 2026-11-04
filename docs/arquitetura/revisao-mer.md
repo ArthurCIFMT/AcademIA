@@ -123,7 +123,7 @@ As fontes e critérios de gravidade continuam pendentes de decisão aprovada.
 | REGISTRO_ACESSO está obrigatoriamente ligado a cliente | Separar evento recebido, identidade/decisão e passagem; desconhecido também pode ser registrado | Antes de ACS-02/ACS-03 |
 | Registro só possui tipo, data/hora e status | Acrescentar origem, confiança, motivo, correlação, identificador e, quando aplicável, autor de liberação manual | Controle de acesso |
 | BIOMETRIA admite até uma referência por cliente | Referência da API real, estado técnico, matrícula prévia e autor; validar captura nova no reconhecimento | ACS-01/ACS-02 |
-| ASSINATURA já liga cliente, plano e validade | Pode ser matrícula; incluir confirmação de pagamento, atendente, modalidade, limites e histórico | MEM-00/MEM-01 |
+| ASSINATURA já liga cliente, plano e validade | Pode ser matrícula; incluir atendente, modalidade, limites e histórico, sem exigir relação com pagamento | MEM-01 |
 | Não há comando/retorno da catraca simulada | Representar correlação, validade e idempotência; comando aceito é distinto de passagem simulada | ACS-07/ACS-03 |
 | AULA DE GINÁSTICA usa dia_semana e horas | Acrescentar data de ocorrência ou separar aula/ocorrência, conforme RF-30 | AUL-01 |
 | EQUIPAMENTO já possui situação e imagem | Base cobre cadastro/consulta; relação com exercício é opcional | EQP-01 |

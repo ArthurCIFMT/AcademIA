@@ -19,7 +19,7 @@ derivados pendentes de validação e reservas continuam condicionais.
 | MOD-05 | MRF01/MRF02 e evidências do corpus | Aprovação documental, reindexação versionada e recuperação verificável |
 | MOD-06 | RF-15/RF-18/RF-19 e agentes | Triagem, políticas, execução/chat e submissão ao workflow de MOD-04 |
 | MOD-07 | RF-20–RF-25/RF-36/RF-37 e RN-06–RN-10/RN-35/RN-36 | API facial real; decisão separada e passagem em catraca fictícia |
-| MOD-08 | RF-26/RF-27/RF-31 | Confirmação de pagamento → matrícula pelo atendente; gateway tardio |
+| MOD-08 | RF-26/RF-27/RF-31 | Matrícula pelo atendente sem pagamento obrigatório; financeiro tardio |
 | MOD-09 | RF-30 e RN-25 condicional | Aula e ocorrência; reserva só após aceite do requisito complementar |
 | MOD-10 | RF-32/RF-33 | Cadastro e disponibilidade; uso na seleção da IA é melhoria proposta |
 | MOD-11 | RF-28/RF-29 | Indicadores por contratos; financeiro disponível depois, sem cálculo de lucro |
@@ -84,4 +84,5 @@ proposta, revisão e RAG antes de criar migrations.
 
 A revisão posterior incorporou as correções do responsável em
 [fluxos atualizados](fluxos-atualizados.md), sem criar módulos adicionais.
-Foram acrescentados os cartões MEM-00 (confirmação manual) e ACS-07 (catraca fictícia).
+Foram acrescentados os cartões MEM-00 (registro financeiro opcional e tardio) e
+ACS-07 (catraca fictícia). MEM-01 não depende de MEM-00 nem de pagamento.

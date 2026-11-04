@@ -25,7 +25,7 @@
 | RN-21 | Avaliações possuem data e responsável para evolução cronológica. | Avaliação |
 | RN-22 | Somente planos ativos originam novas matrículas. | Planos |
 | RN-23 | Informações sensíveis não aparecem desnecessariamente em logs. | Dados sensíveis |
-| RN-24 | Eventual bloqueio por inadimplência pertence ao motor de acesso, não ao reconhecimento facial. | Financeiro/Acesso |
+| RN-24 | No escopo acadêmico, ausência de pagamento não bloqueia matrícula nem acesso com matrícula válida. Eventual bloqueio financeiro futuro exige decisão explícita e pertence ao motor de acesso, não ao reconhecimento facial. | Financeiro/Acesso |
 | RN-25 | Aula com limite não excede capacidade sem exceção autorizada. | Agenda |
 | RN-26 | Alterações críticas de permissão, biometria e configuração geram aviso. | Notificação |
 | RN-27 | Autor de ação problemática não apaga livremente a própria evidência. | Auditoria |

@@ -54,11 +54,12 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 
 ## Fluxo posterior de matrícula e acesso
 
-Pagamento confirmado (registro manual inicial) → atendente registra matrícula →
+Atendente autorizado registra matrícula sem exigir pagamento →
 funcionário captura/cadastra foto válida → nova captura usa reconhecimento facial
 real → motor verifica conta, matrícula, validade, modalidade e limites → API externa
 fictícia simula catraca → passagem simulada confirmada gera frequência.
-Gateway de pagamento permanece tardio; pagamento sozinho não matricula.
+Financeiro permanece tardio e independente: nenhum pagamento/comprovante é
+obrigatório para matricular. Acesso depende da matrícula e das regras do plano.
 Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 
 ## Fora do MVP inicial
@@ -85,7 +86,7 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 | Parecer profissional | Avaliação PENDENTE, ACEITO ou REJEITADO, separada da publicação e da consulta/chat. |
 | RAG | Recuperação de evidências documentais para contextualizar a geração. |
 | Corpus | Conjunto versionado de documentos autorizados para o RAG. |
-| Matrícula | Vínculo entre cliente e plano, criado pelo atendente após confirmação de pagamento, com validade própria. |
+| Matrícula | Vínculo entre cliente e plano, criado pelo atendente sem exigir pagamento, com validade própria e responsável identificado. |
 | Reconhecimento | Associação facial produzida por serviço externo. |
 | Autorização de acesso | Decisão do sistema após identidade, matrícula e regras de acesso. |
 

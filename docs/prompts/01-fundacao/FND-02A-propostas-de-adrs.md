@@ -50,7 +50,7 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 
 1. Propor ADRs para stack Python, ferramentas de teste, identidade, tenancy, banco vetorial,
    LLM/embeddings, designação, publicação/parecer posterior, API facial real,
-   confirmação de pagamento/matrícula, catraca fictícia, política Git,
+   matrícula independente de pagamento, catraca fictícia, financeiro tardio, política Git,
    dependências locais e governança do corpus. Decisões tardias de acesso e
    pagamentos podem permanecer pendentes nos gates correspondentes.
 2. Incluir recomendação existente como opção preferencial quando aplicável.

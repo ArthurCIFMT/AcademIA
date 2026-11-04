@@ -50,8 +50,8 @@ necessária para sua entrega.
   aceite prévio do instrutor. Chat e parecer profissional são independentes.
 - O instrutor designado pode aceitar, rejeitar ou modificar o treino posteriormente;
   cada parecer identifica a versão avaliada, o responsável e a data.
-- Pagamento confirmado antecede matrícula realizada pelo atendente; a confirmação
-  pode ser registrada manualmente antes da integração financeira tardia.
+- O atendente autorizado pode matricular e renovar o cliente sem pagamento
+  confirmado. Matrícula e acesso acadêmico não dependem do módulo financeiro.
 - Reconhecimento facial usa API real; a catraca será uma API externa fictícia.
 - Usar banco vetorial especializado para o RAG, mantendo dados operacionais no
   PostgreSQL.

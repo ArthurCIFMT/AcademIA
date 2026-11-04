@@ -4,7 +4,7 @@
 
 - Fase: Pós-MVP / base do acesso.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: FND-05, PES-02, IAM-04, MEM-00, GATE-08.
+- Dependências: FND-05, PES-02, IAM-04, GATE-08.
 - Requisitos: RF-31 parcialmente; RN-22, RN-35, RN-36.
 - Módulos: MOD-08.
 
@@ -28,7 +28,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Criar plano ativo/inativo e matrícula pelo atendente com início, término,
-   modalidade, limites e vínculo à confirmação de pagamento de MEM-00.
+   modalidade, limites e atendente responsável, sem exigir registro financeiro.
 2. Definir unidade/janela dos acessos e regra de expiração com responsável antes de codificar.
 3. Expor consulta de validade por contrato ao módulo de acesso.
 
@@ -36,13 +36,16 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Plano inativo não origina matrícula nova.
 - Matrícula inexistente, futura ou vencida não é retornada como válida.
-- Matrícula/renovação registra atendente e preserva histórico; pagamento confirmado
-  é pré-condição, mesmo sem gateway. Pagamento sozinho nunca matricula.
-- Falta de confirmação, cliente errado ou funcionário sem permissão impede matrícula.
+- Matrícula/renovação registra atendente e preserva histórico sem exigir pagamento,
+  comprovante, MEM-00 ou serviço financeiro disponível.
+- Ausência de pagamento e estados pendente/recusado não impedem matrícula manual.
+- Cliente errado ou funcionário sem permissão impede matrícula; cliente não se
+  matricula sozinho. Validade e regras do plano continuam obrigatórias.
 
 ## Testes obrigatórios
 
-BE com relógio controlado; INT; API; FE; DB.
+BE com relógio controlado; INT; API; FE; DB. Incluir matrícula/renovação sem registro
+financeiro, com pagamento pendente/recusado e serviço financeiro indisponível.
 
 Resolva as suites em [comandos reais](../../testes/comandos.md) antes de executá-las.
 A [estratégia de testes](../../testes/estrategia.md) define ambiente, dados e evidências.

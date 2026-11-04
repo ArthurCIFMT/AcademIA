@@ -33,20 +33,24 @@ A política para escolher qual versão permanece atual após rejeição ainda de
 definida, preservando essas permissões; não inventar uma retirada automática.
 Conteúdo publicado é imutável. Parecer refere-se a uma versão e não passa para outra.
 
-## Pagamento, matrícula e cadastro facial
+## Matrícula e cadastro facial sem pagamento obrigatório
 
-Fluxo confirmado: cliente cadastrado → pagamento confirmado → matrícula registrada
-por atendente → captura/cadastro da foto de referência → nova captura para acesso.
+Fluxo confirmado: cliente cadastrado → atendente autorizado registra matrícula
+sem exigir pagamento → captura/cadastro da foto de referência → nova captura para acesso.
 
-O gateway de pagamento permanece na fase tardia. Recomendação para o primeiro
-ensaio: funcionário autorizado registra confirmação manual com cliente, valor,
-data, método, referência/comprovante e autor (MEM-00); atendente matricula depois
-(MEM-01). Confirmação isolada não cria matrícula, mesmo quando vier de webhook.
-A forma exata de comprovação e as permissões são fechadas em GATE-08.
+A matrícula manual (MEM-01) deve funcionar sem registro financeiro, comprovante,
+gateway ou execução de MEM-00. Atendente escolhe plano ativo, validade, modalidade
+e limites; o sistema registra responsável e histórico, inclusive nas renovações.
+Ausência de pagamento, pagamento pendente/recusado ou falha do serviço financeiro
+não impedem essa operação nem invalidam automaticamente uma matrícula vigente.
 
-Conta ativa, pagamento confirmado, matrícula válida e referência facial são estados
-diferentes. Um cadastro não significa autorização de entrada. Matrícula contém plano,
-validade, modalidade e limites; vencimento não apaga histórico nem referência.
+Financeiro permanece na fase tardia. MEM-00 é opcional para registrar pagamentos,
+sem criar pré-requisito para MEM-01. Gateway/webhook futuro atualiza situação
+financeira, sem matricular automaticamente ou introduzir bloqueio de acesso.
+
+Conta ativa, matrícula válida e referência facial são estados diferentes. Um
+cadastro não significa autorização de entrada. Matrícula contém plano, validade,
+modalidade e limites; vencimento não apaga histórico nem referência.
 Funcionário autorizado pode substituir a foto, mantendo auditoria e retirando
 a referência anterior conforme política. Cliente não troca sua própria biometria.
 
@@ -117,7 +121,9 @@ de passagem simulada → frequência/lotação. Liberação manual continua audi
 ## Evidências de aceite
 
 - Treino e chat acessíveis com parecer PENDENTE; aceite/rejeição posterior por versão.
-- Confirmação de pagamento sem matrícula não libera entrada.
+- Atendente matricula/renova sem pagamento e sem módulo financeiro disponível.
+- Cliente com matrícula válida e referência facial passa pelas regras de acesso
+  mesmo sem pagamento; matrícula ausente/vencida continua negando entrada.
 - Cadastro facial depois da matrícula e reconhecimento com captura distinta.
 - Rosto conhecido/desconhecido, baixa qualidade, múltiplos rostos e falha do provedor.
 - Matrícula ausente/vencida e limite excedido negam entrada mesmo com rosto reconhecido.
@@ -126,5 +132,5 @@ de passagem simulada → frequência/lotação. Liberação manual continua audi
 - Catraca e passagens continuam explicitamente simuladas, sem hardware físico.
 
 IDs afetados: RF-15–RF-19, RF-22, RF-31, RF-35–RF-37; TRN-02–04, AI-03–05,
-TST-01, MEM-00/01, ACS-01–03/07 e FIN-02. São refinamentos de MOD-04/06/07/08,
+TST-01, MEM-01, ACS-01–03/07, MEM-00 (financeiro opcional) e FIN-02. São refinamentos de MOD-04/06/07/08,
 sem necessidade de criar outro módulo de domínio.

@@ -29,7 +29,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Definir adapter para API facial real e critérios de qualidade em GATE-08;
    Amazon Rekognition é recomendação a decidir, não escolha já aceita.
-2. Exigir cliente matriculado após pagamento confirmado; funcionário captura ou
+2. Exigir cliente matriculado, sem exigir pagamento; funcionário captura ou
    envia foto, verifica exatamente um rosto e cadastra referência no provedor.
 3. Criar upload protegido/referência externa, substituição atômica e descarte conforme regra aprovada.
 4. Registrar autor e aviso sem copiar imagem em auditoria.

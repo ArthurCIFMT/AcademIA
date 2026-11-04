@@ -40,6 +40,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Sem matrícula/vencida, modalidade incompatível ou limite excedido nega entrada.
 - Reconhecimento válido sozinho não permite acesso.
+- Matrícula vigente permite seguir as regras de acesso sem pagamento registrado
+  e sem consulta obrigatória ao módulo financeiro.
 - Concorrência não ultrapassa limite; recusa e falha externa não contam presença.
 
 ## Testes obrigatórios

@@ -47,7 +47,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - `EXERCICIO` não armazena séries/carga específicas de prescrição.
 - Validação técnica, publicação e parecer profissional por versão são dimensões
   independentes; consulta/chat não dependem de aceite.
-- Confirmação de pagamento precede matrícula pelo atendente e cadastro facial.
+- Matrícula pelo atendente independe de pagamento e precede cadastro facial;
+  eventual vínculo financeiro é opcional.
 - Referência facial externa, nova captura e comando/passagem simulada são distinguíveis.
 - Reconhecimento externo e decisão de acesso são registros separados.
 - Cobrança pode possuir múltiplas tentativas de pagamento.
@@ -79,8 +80,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Um instrutor principal vigente pode ser garantido sem perder vínculos antigos.
 - Uma única ficha vigente por cliente pode ser garantida.
 - Idempotência de eventos externos possui chave identificável.
-- O modelo exige confirmação de pagamento para matrícula pelo atendente, sem
-  obrigar gateway; confirmação manual inicial mantém autoria e vínculo.
+- O modelo permite matrícula pelo atendente sem pagamento/comprovante nem módulo
+  financeiro; validade, plano e autoria permanecem obrigatórios.
 - Pontos ainda desconhecidos estão marcados, não inventados.
 
 ## Testes obrigatórios

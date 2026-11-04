@@ -35,7 +35,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Critérios de aceite
 
 - Roteiro reproduz cadastro até treino e chat antes do parecer, avaliação posterior
-  e caso bloqueado; extensão de acesso demonstra pagamento/matrícula e biometria real.
+  e caso bloqueado; extensão de acesso demonstra matrícula sem pagamento e biometria real.
 - README aponta comandos reais e fontes de documentação atualizadas.
 - Limitações e módulos adiados estão explícitos e coerentes com a matriz.
 

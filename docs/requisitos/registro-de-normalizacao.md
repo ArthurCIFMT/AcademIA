@@ -13,7 +13,7 @@ prompts de implementação.
 | RF-21/CA-21.4 | Limiar inicial de correspondência de 95%, separado da detecção/qualidade. | Não equivale à acurácia de 95%; a métrica é mapeada pelo adapter facial. |
 | RF-24/RF-25 | Mantidos separados. | Cálculo de domínio e exibição são capacidades testáveis distintas. |
 | RF-28/RF-29 | “Lucro” passou a faturamento/receita. | Sem despesas não existe cálculo de lucro. |
-| RF-31 | Pagamento confirmado precede matrícula realizada pelo atendente. | Correção explícita; registro manual inicial permite adiar gateway sem dispensar confirmação. |
+| RF-31 | Atendente matricula/renova sem exigir pagamento confirmado, comprovante ou módulo financeiro. | Correção explícita do responsável para o projeto acadêmico; substitui a exigência anterior. |
 | RF-34/RF-35 | Designação preservada; avaliação profissional agora posterior e independente. | Solicitações posteriores do responsável; rejeição permanece identificada sem ocultar treino/chat. |
 | RF-36/RF-37 | Acrescentados reconhecimento facial real e API de catraca fictícia. | Solicitação explícita: referência após matrícula, captura nova, decisão e passagem simulada. |
 | MRF01 | Remoção genérica de caracteres virou preservação semântica. | Símbolos e unidades podem ser relevantes para o conteúdo. |

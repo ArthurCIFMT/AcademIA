@@ -209,7 +209,7 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
 ### RF-22 — Inserir referência biométrica do cliente
 
 Permitir que funcionário autorizado capture/cadastre a referência facial após
-pagamento confirmado e matrícula registrada pelo atendente.
+matrícula registrada pelo atendente, sem exigir pagamento confirmado.
 
 - CA-22.1: cliente já matriculado possui foto com exatamente um rosto e qualidade
   conforme critérios técnicos do provedor; imagem inválida não cria referência.
@@ -264,13 +264,16 @@ Permitir consulta autorizada da situação financeira já registrada.
 
 Permitir que um plano seja associado à conta por matrícula com validade definida.
 
-- CA-31.1: pagamento confirmado é pré-condição para o atendente matricular ou
-  renovar o cliente; pagamento isolado não cria nem ativa matrícula automaticamente.
+- CA-31.1: atendente autorizado cria ou renova matrícula sem exigir pagamento
+  confirmado, comprovante ou existência do módulo financeiro.
 - CA-31.2: matrícula possui início, término e estado consultáveis.
 - CA-31.3: matrícula vencida deixa de ser válida sem apagar o histórico.
-- CA-31.4: na fase inicial, funcionário autorizado registra a confirmação de pagamento
-  com autor, data e referência/comprovante; gateway e checkout ficam para depois.
-- CA-31.5: pagamento pendente/recusado e usuário sem permissão não permitem matrícula.
+- CA-31.4: registro de pagamentos, gateway e checkout são capacidades posteriores;
+  não são pré-condições da matrícula manual no escopo acadêmico.
+- CA-31.5: usuário sem permissão não matricula; ausência de pagamento, pendência
+  financeira ou indisponibilidade do gateway não bloqueiam a ação do atendente.
+- CA-31.6: matrícula manual registra responsável, início, término e plano ativo;
+  falta de pagamento não invalida automaticamente uma matrícula vigente.
 
 ## Dashboard, aulas e equipamentos
 
