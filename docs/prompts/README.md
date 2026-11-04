@@ -7,11 +7,13 @@
 - [Contexto de execução](00-contexto-de-execucao.md): acompanha a tarefa escolhida.
 - [Contrato operacional](00-contrato-operacional.md): regras comuns dos cartões.
 - [Comparação com o professor](comparacao-modelo-professor.md).
+- [Fluxos atualizados](../arquitetura/fluxos-atualizados.md): treino antes do parecer,
+  pagamento/matrícula, API facial real e catraca fictícia.
 - [Estratégia de testes](../testes/estrategia.md) e [comandos](../testes/comandos.md).
 - [Revisão dos módulos](../arquitetura/revisao-modulos.md) e
   [análise do MER preservado](../arquitetura/revisao-mer.md).
 
-Foram redigidos 59 prompts operacionais. P00 representa a preparação Git já
+Foram redigidos 61 prompts operacionais. P00 representa a preparação Git já
 concluída. Os cartões escritos são documentos revisáveis; nenhum módulo funcional
 foi implementado pela criação desses arquivos.
 
@@ -42,7 +44,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
-| GATE-08 | Contrato facial, limites de matrícula e alternativa manual | Contrato/políticas aceitos antes do módulo | ABERTO |
+| GATE-08 | API facial real, confirmação manual de pagamento/matrícula, simulador de catraca, limites e alternativa manual | Contrato/políticas aceitos antes do módulo | ABERTO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01, ACS-06, EQP-01, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
@@ -105,7 +107,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 |---|---|---|---|---|
 | [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04 | FND-05, IAM-03, IAM-04 | BLOQUEADO |
 | [TRN-02](04-treinos/TRN-02.md) | Ficha manual e versões imutáveis | MOD-04 | TRN-01, ONB-02, PES-03 | BLOQUEADO |
-| [TRN-03](04-treinos/TRN-03.md) | Workflow de revisão e aprovação da ficha | MOD-04, MOD-02, MOD-12 | TRN-02, PES-03, NTF-01 | BLOQUEADO |
+| [TRN-03](04-treinos/TRN-03.md) | Publicação e avaliação posterior da ficha | MOD-04, MOD-02, MOD-12 | TRN-02, PES-03, NTF-01 | BLOQUEADO |
 | [TRN-04](04-treinos/TRN-04.md) | Ficha atual no celular e exportação autorizada | MOD-04 | TRN-03, IAM-04 | BLOQUEADO |
 
 ## MVP — RAG, IA e aceite integrado
@@ -120,7 +122,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [AI-01](05-ia-rag/AI-01.md) | Triagem clínica e regras de restrição | MOD-06 | ONB-04, TRN-01, GATE-04 | BLOQUEADO |
 | [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts de execução da IA e orquestrador | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
 | [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04 | AI-02, TRN-02 | BLOQUEADO |
-| [AI-04](05-ia-rag/AI-04.md) | Submissão à revisão e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
+| [AI-04](05-ia-rag/AI-04.md) | Publicação ao cliente e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04 | BLOQUEADO |
 | [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
 | [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, TRN-04, AI-06 | BLOQUEADO |
@@ -129,10 +131,12 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [MEM-01](06-acesso/MEM-01.md) | Planos e matrícula manual mínima | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | BLOQUEADO |
-| [ACS-01](06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, GATE-08 | BLOQUEADO |
-| [ACS-02](06-acesso/ACS-02.md) | Endpoint de eventos faciais externos | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
-| [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01 | BLOQUEADO |
+| [MEM-00](06-acesso/MEM-00.md) | Confirmação manual de pagamento antes da matrícula | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | BLOQUEADO |
+| [MEM-01](06-acesso/MEM-01.md) | Planos e matrícula manual mínima | MOD-08 | FND-05, PES-02, IAM-04, MEM-00, GATE-08 | BLOQUEADO |
+| [ACS-01](06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | BLOQUEADO |
+| [ACS-02](06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
+| [ACS-07](06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | BLOQUEADO |
+| [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
 | [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
 | [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |
 | [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | BLOQUEADO |
@@ -174,8 +178,9 @@ ou link de relatório. A numeração das seções não substitui as dependência
 ## Fronteira do MVP
 
 Fundação + IAM + PES + NTF + ONB + TRN + RAG + AI + TST-01 compõem o MVP proposto.
-O cenário central vai do cadastro à ficha aprovada, incluindo bloqueio, ficha
-manual e adaptação versionada. MEM/ACS e demais módulos entram após esse aceite.
+O cenário central vai do cadastro ao treino publicado e chat antes do parecer,
+com avaliação posterior, bloqueio de saúde, ficha manual e adaptação versionada.
+MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
 AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
 INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.

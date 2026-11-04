@@ -13,11 +13,11 @@
 | RN-09 | Liberação manual que contorne regra normal registra responsável e motivo. | Controle de acesso |
 | RN-10 | Dados biométricos são tratados separadamente dos cadastrais comuns. | Dados sensíveis |
 | RN-11 | Informações médicas, lesões e restrições não ficam disponíveis sem necessidade funcional. | Dados sensíveis |
-| RN-12 | Sugestões da IA podem ser vistas por instrutores para avaliação. | IA |
+| RN-12 | Cliente pode consultar treino e conversar com a IA sem aceite prévio; instrutor pode avaliar e aceitar/rejeitar posteriormente. | IA |
 | RN-13 | IA não cria sugestão de treino para caso grave de saúde definido pela política. | IA/Treino |
 | RN-14 | Instrutor pode modificar integralmente uma sugestão. | IA/Treino |
 | RN-15 | Restrições do cliente prevalecem sobre otimizações sugeridas pela IA. | IA/Treino |
-| RN-16 | IA não modifica silenciosamente ficha aprovada. | IA/Treino |
+| RN-16 | IA não modifica silenciosamente conteúdo publicado; validações técnicas precedem publicação e parecer profissional é independente. | IA/Treino |
 | RN-17 | Alteração proposta pela IA cria nova proposta/versão. | IA/Treino |
 | RN-18 | Treinos históricos não são alterados retroativamente ao atualizar a ficha atual. | Histórico |
 | RN-19 | Falha da IA não impede montagem manual pelo instrutor. | Disponibilidade |

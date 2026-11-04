@@ -28,12 +28,14 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Preparar instalação, comandos, perfis sintéticos e roteiro de demonstração.
-2. Explicar módulos entregues, fluxo dos agentes, corpus, aprovação e limitações conhecidas.
+2. Explicar módulos, agentes, corpus, publicação/parecer posterior, API facial
+   real e catraca fictícia, conforme escopo entregue e limitações conhecidas.
 3. Referenciar modelo atual e histórico sem expor segredos ou dados reais.
 
 ## Critérios de aceite
 
-- Roteiro reproduz cadastro até ficha aprovada e caso bloqueado.
+- Roteiro reproduz cadastro até treino e chat antes do parecer, avaliação posterior
+  e caso bloqueado; extensão de acesso demonstra pagamento/matrícula e biometria real.
 - README aponta comandos reais e fontes de documentação atualizadas.
 - Limitações e módulos adiados estão explícitos e coerentes com a matriz.
 

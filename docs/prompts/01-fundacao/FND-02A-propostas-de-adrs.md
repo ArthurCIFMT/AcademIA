@@ -49,7 +49,8 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 ## Implementação obrigatória
 
 1. Propor ADRs para stack Python, ferramentas de teste, identidade, tenancy, banco vetorial,
-   LLM/embeddings, designação de instrutor, aprovação da IA, política Git,
+   LLM/embeddings, designação, publicação/parecer posterior, API facial real,
+   confirmação de pagamento/matrícula, catraca fictícia, política Git,
    dependências locais e governança do corpus. Decisões tardias de acesso e
    pagamentos podem permanecer pendentes nos gates correspondentes.
 2. Incluir recomendação existente como opção preferencial quando aplicável.

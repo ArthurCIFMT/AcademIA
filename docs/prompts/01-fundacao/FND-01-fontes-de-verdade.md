@@ -5,7 +5,7 @@
 - Fase: Fundação documental
 - Estado inicial: PRONTO
 - Dependências: P00
-- Requisitos: RF-01–RF-35, RN-01–RN-36, RNF-01–RNF-17, MRF01–MRF15
+- Requisitos: RF-01–RF-37, RN-01–RN-36, RNF-01–RNF-17, MRF01–MRF15
 - Módulos: MOD-00–MOD-12
 - Próximo prompt desbloqueado: FND-02A
 
@@ -63,7 +63,8 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 ## Critérios de aceite
 
 - Nenhum ID fornecido desaparece.
-- RF-34 e RF-35 possuem origem explícita.
+- RF-34–RF-37 e as mudanças em publicação/parecer, matrícula e biometria possuem
+  origem explícita nas solicitações do responsável.
 - MRF08–MRF15 permanecem identificados como derivados até validação.
 - Restrições técnicas, testes e firewall estão representados como RNFs.
 - Pagamento e Docker estão corretamente posicionados em fases tardias.

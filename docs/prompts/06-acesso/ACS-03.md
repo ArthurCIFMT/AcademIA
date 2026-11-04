@@ -4,8 +4,8 @@
 
 - Fase: Pós-MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: ACS-02, MEM-01.
-- Requisitos: RF-21; RN-06, RN-07, RN-24, RN-35, RN-36.
+- Dependências: ACS-02, MEM-01, ACS-07.
+- Requisitos: RF-21, RF-36, RF-37; RN-06, RN-07, RN-24, RN-35, RN-36.
 - Módulos: MOD-07, MOD-08.
 
 ## Objetivo e contexto
@@ -19,6 +19,7 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 ## Escopo permitido
 
 - `backend/app/modules/access/authorization/**`
+- `backend/app/modules/access/integrations/turnstile/**`
 - `backend/app/contracts/memberships/**`
 - `backend/tests/access/**`
 - `database/**`
@@ -30,6 +31,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Aplicar identidade, conta, matrícula, validade, modalidade e limite por contrato.
 2. Definir semântica de evento: tentativa/decisão é distinta de passagem confirmada pela catraca.
 3. Retornar código de decisão e registrar regra/instante utilizados.
+4. Enviar comando autenticado/idempotente à API fictícia de ACS-07, com validade
+   e correlação; confirmação de comando não significa passagem.
+5. Receber passagem simulada autenticada e correlacionada com autorização válida;
+   timeout, negação ou repetição não gera sucesso nem registro duplicado.
 
 ## Critérios de aceite
 
@@ -39,7 +44,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Testes obrigatórios
 
-BE com tabela de decisão e relógio; INT; API com casos limite.
+BE com tabela de decisão e relógio; INT; API; troca HTTP real com o simulador,
+incluindo negação, expiração, timeout e comando/passagem repetidos.
 
 Resolva as suites em [comandos reais](../../testes/comandos.md) antes de executá-las.
 A [estratégia de testes](../../testes/estrategia.md) define ambiente, dados e evidências.

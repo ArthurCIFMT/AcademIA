@@ -2,7 +2,7 @@
 
 ## Objeto da revisão
 
-Pacote de planejamento AcademIA: mestre, contexto, contrato, 59 cartões,
+Pacote de planejamento AcademIA: mestre, contexto, contrato, 61 cartões,
 manifesto e estratégia de testes. Esta revisão não executa os cartões nem testa
 uma aplicação implementada.
 
@@ -41,3 +41,18 @@ MRF08–MRF15 continuam derivados sujeitos a aceite. AUL-02 continua opcional.
 
 O manifesto guarda o estado da execução de cada tarefa, independentemente da
 existência deste relatório de revisão.
+
+## Atualização de treino, matrícula e biometria
+
+Pacote atual: 61 cartões, 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.
+As contagens anteriores neste relatório são históricas.
+
+- Publicação e parecer profissional separados; consulta/chat antes do aceite.
+- Matrícula pelo atendente após confirmação de pagamento, manual inicialmente.
+- API facial real proposta, com catraca externa fictícia; aceite facial não usa só mock.
+- MEM-00 e ACS-07 acrescentados; manifesto, dependências e rastreabilidade atualizados.
+- Verificação executada: 86 documentos, 61 cartões/entradas no manifesto e 455
+  links locais válidos; seções obrigatórias e dependências coerentes, sem ciclos.
+- IDs únicos confirmados: 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.
+- git diff --check passou; hash SHA-256 do PNG original preservado.
+- Nenhum teste de aplicação executado: documentação e prompts não implementam módulos.

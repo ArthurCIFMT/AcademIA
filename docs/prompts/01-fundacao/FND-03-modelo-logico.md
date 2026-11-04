@@ -5,7 +5,7 @@
 - Fase: Fundação de dados
 - Estado inicial: BLOQUEADO até FND-02B
 - Dependências: FND-01, FND-02B, GATE-02, GATE-03
-- Requisitos: RF-01–RF-35, RN-01–RN-36, MRF03–MRF12
+- Requisitos: RF-01–RF-37, RN-01–RN-36, MRF03–MRF12
 - Módulos: MOD-01–MOD-12
 - Próximo prompt desbloqueado: FND-04 e FND-07
 
@@ -43,9 +43,12 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Designação cliente–instrutor preserva histórico.
 - Estados de conta, matrícula, biometria e elegibilidade são distintos.
 - Onboarding/avaliações e fichas possuem versionamento necessário.
-- Ficha aprovada não é modificada retroativamente.
+- Conteúdo de ficha publicada não é modificado retroativamente.
 - `EXERCICIO` não armazena séries/carga específicas de prescrição.
-- Proposta de IA, revisão profissional e ficha ativa são estados distinguíveis.
+- Validação técnica, publicação e parecer profissional por versão são dimensões
+  independentes; consulta/chat não dependem de aceite.
+- Confirmação de pagamento precede matrícula pelo atendente e cadastro facial.
+- Referência facial externa, nova captura e comando/passagem simulada são distinguíveis.
 - Reconhecimento externo e decisão de acesso são registros separados.
 - Cobrança pode possuir múltiplas tentativas de pagamento.
 - Corpus vetorial referencia fontes; dados pessoais permanecem operacionais.
@@ -76,7 +79,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Um instrutor principal vigente pode ser garantido sem perder vínculos antigos.
 - Uma única ficha vigente por cliente pode ser garantida.
 - Idempotência de eventos externos possui chave identificável.
-- O modelo não exige pagamento automático para matrícula manual.
+- O modelo exige confirmação de pagamento para matrícula pelo atendente, sem
+  obrigar gateway; confirmação manual inicial mantém autoria e vínculo.
 - Pontos ainda desconhecidos estão marcados, não inventados.
 
 ## Testes obrigatórios
@@ -95,8 +99,9 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 
 ## Condições de interrupção
 
-Pare se ADR de tenancy, identidade ou aprovação de ficha continuar aberto, pois
-essas decisões alteram materialmente o modelo.
+Pare na parte afetada se ADR de tenancy/identidade ou política material de
+publicação/parecer continuar aberto. Não reintroduza aceite como pré-condição:
+a consulta e o chat anteriores ao parecer já foram confirmados.
 
 ## Git
 

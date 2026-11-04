@@ -48,7 +48,7 @@ validada. Corpus, política de bloqueio e resultados esperados precisam de revis
 do responsável. Registre modelo, embeddings, parâmetros e versões.
 Inclua dados insuficientes, caso bloqueado, restrição, contradição, falha de provedor,
 instrução maliciosa documental e tentativa de consultar outro cliente.
-Os casos críticos esperados bloqueiam geração/ativação em 100% da suíte definida.
+Os casos críticos esperados bloqueiam geração/publicação em 100% da suíte definida.
 Isso é um critério de regressão desse conjunto, não garantia clínica universal.
 Métricas de relevância e demais limiares devem ser definidos antes da avaliação.
 Medir p95 de busca <= 2 s com volume, hardware, amostra e consultas documentados;
@@ -59,4 +59,19 @@ não confundir latência vetorial com o tempo completo do LLM.
 Por entrega, registrar comandos reais, ambiente, resultados, falhas, testes não
 executados e requisito coberto. Percentual de cobertura sozinho não é aceite.
 Não testar apenas o caminho feliz. A suíte crítica do MVP inclui isolamento por
-cliente, instrutor não designado, bloqueio de saúde e versão ativa imutável.
+cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imutável.
+
+## Cenários acrescentados pela revisão de fluxo
+
+- Cliente lê treino e usa chat com parecer PENDENTE, antes de qualquer aceite.
+- Aceite/rejeição identifica versão e responsável; rejeição continua visível e
+  não bloqueia consulta/chat; versão alterada não herda aceite anterior.
+- Cliente sem instrutor designado mantém consulta/chat; pendência de revisão é explícita.
+- Pagamento confirmado manualmente não cria matrícula sozinho; atendente autorizado
+  matricula depois, enquanto pendência/recusa de pagamento impede essa operação.
+- Cadastro biométrico exige matrícula; nova captura é comparada pelo serviço facial
+  real com a referência, incluindo outra pessoa, ausência de rosto e baixa qualidade.
+- Mock facial testa contratos/regras; aceite biométrico requer evidência do provedor
+  real configurado. Não publicar fotos nem credenciais nos relatórios.
+- API fictícia de catraca recebe decisão autenticada, rejeita comando expirado e
+  separa confirmação do comando da passagem simulada; replay não duplica presença.

@@ -30,11 +30,13 @@ Leia, nesta ordem:
    e [rastreabilidade dos cartões](../arquitetura/rastreabilidade-prompts.md).
 7. [MER original](../arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png)
    e [análise do MER](../arquitetura/revisao-mer.md); o relatório não é um novo MER.
-8. [Manifesto](README.md), [estratégia de testes](../testes/estrategia.md)
+8. [Fluxos atualizados](../arquitetura/fluxos-atualizados.md), incluindo parecer,
+   matrícula, API facial real e catraca fictícia.
+9. [Manifesto](README.md), [estratégia de testes](../testes/estrategia.md)
    e [registro de comandos](../testes/comandos.md).
 
 Inspecione arquivos, estado Git e evidências para distinguir textos escritos de
-tarefas executadas. Existem 59 cartões operacionais redigidos; isso, por si só,
+tarefas executadas. Existem 61 cartões operacionais redigidos; isso, por si só,
 não demonstra módulos, migrations, testes ou integração funcionando.
 
 Priorize a solicitação atual do responsável e AGENTS.md. Requisitos e ADRs aceitos
@@ -77,7 +79,9 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | E-mail | SMTP ou API por adapter | Execução local antes do Docker |
 | Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
-| Financeiro | Matrícula manual antes da catraca; pagamento automático tardio | GATE-08/GATE-09 |
+| Financeiro | Pagamento confirmado → matrícula pelo atendente; gateway tardio | GATE-08/GATE-09 |
+| Biometria | API facial real; Amazon Rekognition recomendado, ainda não aprovado | GATE-08 |
+| Catraca acadêmica | Serviço externo fictício com comandos e passagem simulada | GATE-08 |
 
 FastAPI, Pydantic, SQLAlchemy, Alembic, Keycloak e Qdrant são recomendações onde
 ainda não houver escolha aceita. Não os transforme em obrigatórios por repetição.
@@ -91,7 +95,8 @@ Planeje operações por papel e por recurso, não apenas por página:
 - Administrador: usuários, papéis e designações conforme matriz de permissões.
 - Atendente: cadastros e operações administrativas explicitamente permitidas.
 - Instrutor: clientes designados, avaliações, montagem/revisão e aprovação de fichas.
-- Cliente: próprio onboarding, ficha aprovada, chat e funções compartilhadas.
+- Cliente: próprio onboarding, treino publicado e chat sem aceite prévio do
+  instrutor; parecer posterior e funções compartilhadas.
 - Visitante: somente consultas explicitamente públicas, como catálogo de equipamentos.
 
 Inclua o bootstrap do primeiro administrador em instalação vazia e o primeiro
@@ -127,7 +132,8 @@ capacidade do domínio sem proprietário; uma entidade nova não exige módulo n
 
 Auditoria/notificações são capacidades transversais disponíveis cedo, não uma
 etapa dependente da conclusão de todos os outros módulos.
-MOD-04 controla aprovação; MOD-06 submete proposta; MOD-12 entrega o aviso.
+MOD-04 controla publicação e parecer; MOD-06 fornece conteúdo validado por
+contrato; MOD-12 entrega o aviso. Cliente vê o treino e usa chat antes do parecer.
 MOD-03 emite convite de onboarding e MOD-12 realiza o envio.
 Exportações pertencem ao módulo dono dos dados, com autorização correspondente.
 Componentes não acessam tabelas/repositórios internos de outro módulo diretamente.
@@ -146,15 +152,17 @@ falha de envio e cliente sem responsável. Preserve dados/histórico existentes.
 ### 7.2 Ficha manual
 
 Instrutor autorizado consulta avaliação → seleciona catálogo ativo → prescreve
-itens/dias → salva rascunho → revisa/aprova → ativa versão → cliente consulta.
+itens/dias → salva rascunho → valida e publica versão → cliente consulta.
 
-Falha da IA não impede esse fluxo. Edição de versão aprovada cria nova versão.
+Falha da IA não impede esse fluxo. Publicação identifica o instrutor autor e pode
+registrar seu parecer. Edição de conteúdo publicado cria nova versão.
 
 ### 7.3 Geração de treino com IA e RAG
 
 Pedido autorizado → snapshot do cliente → triagem → decisão de segurança →
 recuperação documental → biomecânica → periodização → validação determinística →
-revisor automático → proposta → fila/aviso ao instrutor → revisão/decisão humana.
+revisor automático → validação técnica final → publicação com parecer PENDENTE →
+cliente consulta/conversa → fila/aviso ao instrutor → avaliação humana posterior.
 
 Triagem combina análise dos dados informados com políticas estruturadas aprovadas.
 Estados de dados insuficientes, bloqueio ou necessidade de avaliação profissional
@@ -162,32 +170,40 @@ impedem geração enquanto não houver política e condição válida para pross
 Critérios de caso grave e eventuais liberações não são inventados pelo agente.
 A resposta da IA não é diagnóstico nem autorização médica autônoma.
 
-Ao aprovar, confirme se onboarding/restrições, designação e versão-base continuam
-compatíveis com a proposta. Mudança relevante exige reavaliação conforme política
-definida antes da implementação. Não revogue bloqueio pela simples aprovação textual
-do revisor automático ou do instrutor, nem suspenda ficha vigente sem regra definida.
+Antes de publicar, confira onboarding/restrições e versão-base. Mudança relevante
+exige revalidação conforme política definida. O parecer posterior identifica a
+versão avaliada, o instrutor e o instante; nova versão não herda aceite. Aceitar
+ou rejeitar não condiciona leitura/chat. Não revogue bloqueio pela simples aprovação
+textual de um agente ou instrutor. Falha de aviso não impede publicação/consulta.
+Cliente sem designação mantém consulta/chat e uma pendência explícita de revisão.
 
 ### 7.4 Chat e adaptação
 
 Mensagem do próprio cliente → contexto autorizado da ficha e onboarding →
 nova triagem quando surgir dor/limitação → resposta contextual ou nova proposta →
-mesmo workflow profissional → nova ficha vigente após aprovação.
+validações técnicas → nova versão publicada com parecer PENDENTE → avaliação posterior.
 
 Preserve trechos não relacionados e versões históricas. A conversa nunca altera
 silenciosamente a ficha atual e nunca mistura contextos de dois clientes.
 
 ### 7.5 Biometria, matrícula e catraca
 
-Cadastro da referência facial → evento autenticado do serviço externo →
-identificação/confiança → decisão de acesso por matrícula, validade, modalidade
-e limites → retorno ao serviço → confirmação de passagem → frequência/lotação.
+Pagamento confirmado (registro manual inicial) → atendente matricula → captura e
+cadastro da foto de referência → nova captura facial → API real de reconhecimento →
+identidade resolvida pelo backend → decisão por conta, matrícula, validade,
+modalidade e limites → comando autenticado à API externa fictícia de catraca →
+confirmação de passagem simulada → frequência/lotação.
 
-O sistema integra reconhecimento externo. O limiar inicial documentado é de 95%
-para a confiança informada pelo serviço; ele não mede a precisão do algoritmo.
+Reconhecimento é real; apenas o equipamento físico é substituído por um serviço
+fictício. Recomende API e contrato antes de implementar (Amazon Rekognition é
+candidato em GATE-08). Foto válida exige um rosto; pontuação de correspondência é
+distinta de confiança de detecção/qualidade. Limiar inicial de 95 não é acurácia de 95%.
 Tentativa, decisão e passagem são conceitos distintos. Eventos duplicados,
 desconhecidos, negados, fora de ordem e falhas precisam de comportamento definido.
 A alternativa manual registra responsável e motivo e segue política explícita.
-Matrícula manual permite testar acesso antes de pagamento automatizado.
+Pagamento confirmado pode ser registrado manualmente para adiar o gateway;
+matrícula continua sendo ação do atendente. Callback facial/foto não libera sozinho.
+Teste real do provedor é necessário para comprovar biometria; mock testa contratos.
 
 ### 7.6 Complementos administrativos
 
@@ -195,7 +211,8 @@ Planeje equipamentos ativos/inativos, ocorrências de aula, lotação e indicado
 Reservas/capacidade dependem de GATE-07 e requisito complementar aprovado.
 Dashboard usa dados de módulos entregues e diferencia erro parcial de ausência de
 dados. Sem despesas, não apresente receita/faturamento como lucro.
-Pagamento posterior confirma/renova matrícula por evento externo idempotente.
+Gateway posterior confirma pagamento por evento idempotente; atendente continua
+responsável por matricular/renovar. Webhook não matricula automaticamente.
 
 ## 8. Dados, invariantes e análise do MER
 
@@ -209,14 +226,15 @@ No plano, represente ao menos:
 - designação histórica e responsável principal vigente conforme regra aceita;
 - avaliações/onboarding versionados e snapshot usado por cada geração;
 - exercício de catálogo separado da prescrição de item/dia/cadência;
-- proposta, revisão, aprovação e versão vigente com autoria e datas;
-- uma ficha atual por cliente e histórico aprovado imutável;
+- validação técnica, publicação, parecer por versão, autoria e datas separados;
+- uma ficha atual por cliente e conteúdo publicado/histórico imutável;
 - execução da IA, decisão de triagem, contexto, evidências e falhas rastreáveis;
 - corpus/documento/versão/ingestão/fragmento e identificadores do banco vetorial;
 - conversa/mensagens isoladas por cliente;
 - evento externo, decisão de acesso e passagem, sem exigir cliente conhecido
   para registrar uma tentativa desconhecida;
-- matrícula/assinatura com validade e limites independentemente de pagamento;
+- confirmação de pagamento ligada à matrícula/assinatura, com validade, limites
+  e autoria do atendente; referência facial externa e comandos/passagens simuladas;
 - autoria de ações críticas, avisos e auditoria preservados.
 
 Não imponha uma tabela por substantivo. Uma proposta pode ser estado de uma versão;
@@ -245,7 +263,8 @@ pertencer ao provedor; com autenticação local precisam do fluxo correspondente
 - Agentes recebem tarefas delimitadas e retornam JSON validado com IDs do catálogo.
 - Políticas críticas e limites numéricos passam por código.
 - Orquestrador controla estado, timeout, repetição e limite de ciclos.
-- Modelos não escrevem diretamente ficha ativa nem recebem acesso amplo ao banco.
+- Modelos não escrevem diretamente no banco; backend valida/publica por contrato
+  sem atribuir aceite profissional ao modelo.
 - Fontes recuperadas são evidências; instruções contidas nelas não governam o agente.
 - Registre versões e resultados necessários à auditoria, sem raciocínio interno.
 
@@ -256,7 +275,7 @@ dos prompts internos dos agentes que serão criados/versionados no código do pr
 
 Proponha máquinas de estado sem congelar enumerações ainda pendentes.
 Diferencie conta, cadastro, matrícula, referência biométrica, elegibilidade de acesso,
-estado da geração, estado da proposta, decisão profissional e envio de aviso.
+estado da geração, publicação, parecer profissional por versão e envio de aviso.
 
 Para cada integração/operação longa, defina no plano:
 
@@ -264,7 +283,7 @@ Para cada integração/operação longa, defina no plano:
 - timeout, repetição, cancelamento se exigido e retorno de erro;
 - consistência em falha parcial e estratégia de idempotência;
 - retomada sem duplicar e sem perder proposta/aviso;
-- prevenção de duas aprovações atuais, duas designações principais ou excesso de vagas;
+- prevenção de duas versões atuais, duas designações principais ou excesso de vagas;
 - política para proposta baseada em dados anteriores e troca de responsável.
 
 Use soluções proporcionais ao projeto. Worker/outbox só se justifica pela
@@ -279,9 +298,9 @@ Mantenha o MVP proposto e apresente marcos internos para torná-lo executável:
 | Fundação | Requisitos/decisões/modelo revisados; aplicação local e testes base |
 | Identidade e atendimento | Bootstrap, primeiro acesso, cadastros, papéis e designação |
 | Onboarding | Convite, anamnese, consulta, avaliações e versões |
-| Treino manual | Catálogo, editor, revisão, versão aprovada e consulta móvel |
-| RAG e IA | Corpus, recuperação, triagem, agentes e proposta com evidências |
-| Revisão integrada | Fila, aviso ao instrutor e aprovação com validação de atualidade |
+| Treino manual | Catálogo, editor, versão publicada imutável e consulta móvel |
+| RAG e IA | Corpus, recuperação, triagem, agentes e treino publicado com evidências |
+| Avaliação integrada | Fila/aviso, parecer posterior por versão e cliente com acesso anterior ao parecer |
 | Chat e aceite | Adaptação versionada e teste ponta a ponta do MVP |
 
 Biometria/catraca, matrícula mínima, equipamentos, aulas e dashboard são extensões
@@ -291,12 +310,13 @@ Reserva, multiacademia, sessões executadas de treino e relação exercício–e
 só entram na medida em que forem confirmadas.
 
 Docker/Compose requer PG-01 e PG-03. Escolhas de IA não devem bloquear cadastro
-e treino manual; escolha de pagamento não bloqueia matrícula manual.
+e treino manual; escolha de gateway não bloqueia confirmação manual e matrícula
+pelo atendente após pagamento confirmado.
 A entrega final ainda exige rastreabilidade, regressão e roteiro acadêmico.
 
 ## 12. Fragmentação dos prompts operacionais
 
-Reutilize IDs estáveis e dependências do manifesto. Não refaça os 59 cartões nem
+Reutilize IDs estáveis e dependências do manifesto. Não refaça os 61 cartões nem
 renumere etapas sem necessidade. Identifique os afetados por esta revisão e
 proponha alterações ou um cartão adicional somente quando houver entrega ausente.
 
@@ -323,11 +343,13 @@ Planeje testes durante cada entrega, não apenas no encerramento:
 | Migrations | Banco vazio, evolução e preservação de dados |
 | RAG | Extração, chunking, filtros, fontes, relevância e latência |
 | IA | Triagem, restrições, abstenção, JSON, contexto e falhas |
-| E2E | Instalação/primeiro acesso até ficha aprovada e adaptações |
+| E2E | Instalação/primeiro acesso, treino e chat antes do parecer, avaliação posterior e adaptações |
 | Infraestrutura | Build, rede, persistência e healthchecks na fase final |
 
 Inclua usuários distintos, instrutor não designado, duplicidade, concorrência,
-mudança de onboarding durante revisão e falha de provedor/aviso.
+mudança de onboarding durante geração/revisão e falha de provedor/aviso.
+Na extensão de acesso, teste pagamento → matrícula → referência → nova captura
+com provedor facial real → decisão → API fictícia → passagem simulada idempotente.
 IA requer casos sintéticos rotulados e políticas/fontes aceitas.
 Diferencie doubles de unitários, teste real de integração e avaliação do modelo.
 JSON válido não demonstra qualidade do treino; teste com mock não comprova

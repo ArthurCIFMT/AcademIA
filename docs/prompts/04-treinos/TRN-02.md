@@ -29,7 +29,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Permitir ao instrutor designado montar rascunho por dias/itens com catálogo, séries, repetições, cadência e intervalo.
 2. Criar versionamento, referência à avaliação/onboarding e autoria por versão.
-3. Oferecer editor funcional; edição de versão aprovada gera novo rascunho.
+3. Oferecer editor e publicação com validações de domínio; edição de versão publicada gera novo rascunho.
+4. Separar conteúdo publicado imutável do parecer profissional por versão.
 
 ## Critérios de aceite
 
@@ -47,7 +48,7 @@ Execute também lint/tipos/build afetados e `git diff --check`.
 
 ## Fora do escopo e interrupção
 
-Geração automática e ativação antes do workflow de aprovação.
+Geração automática por IA ou aceite profissional obrigatório para o cliente consultar treino.
 Dependência/gate aberto ou contrato material ausente impede executar a parte afetada.
 Informe a informação que falta; não improvise dados para obter aceite.
 

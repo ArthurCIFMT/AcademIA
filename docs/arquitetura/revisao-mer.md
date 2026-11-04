@@ -1,5 +1,10 @@
 # Análise do MER original — sem alteração do diagrama
 
+Este relatório incorpora a correção posterior: publicação do treino independe do
+parecer do instrutor, reconhecimento facial é real e a catraca é fictícia. Somente
+o relatório mudou; o diagrama e seu XML embutido permanecem iguais.
+Veja [fluxos atualizados](fluxos-atualizados.md).
+
 ## Método e preservação
 
 Fonte: [PNG original do responsável](modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png).
@@ -31,22 +36,23 @@ evoluída; não exige redesenhar o domínio do zero.
 | Usuário especializa cliente e funcionário, sem explicitar sobreposição | Esclarecer perfis opcionais e possibilidade de coexistirem na mesma identidade; garantir vínculo estável | RF-01/RF-04/RF-07 |
 | Não há vínculo histórico cliente–instrutor | Acrescentar designação com início/fim, responsável principal, ator da atribuição e status | RF-34 |
 | CLIENTE–ONBOARDING está 1 : 0..1 | Permitir reavaliação/versionamento e contexto identificável de cada geração; distinguir onboarding inicial de avaliações | RF-11–RF-15, RN-21, MRF03 |
-| VERSAO_FICHA só tem id, número, criação, ativa, origem e motivo | Acrescentar autoria, estado do workflow e revisão/decisão com instrutor, parecer e datas | RF-17/RF-35, RN-31 |
+| VERSAO_FICHA só tem id, número, criação, ativa, origem e motivo | Acrescentar autoria, publicação e parecer por versão como dimensões independentes, com responsável e datas | RF-17/RF-35, RN-31 |
 | EXERCÍCIO contém ordem, séries, tempo_descanso, carga e observação | Transferir prescrições específicas para ITEM_FICHA; catálogo guarda características do movimento | RN-20, MRF05/MRF07 |
 | ITEM_FICHA não representa dia/microciclo/cadência | Acrescentar esses dados ou uma estrutura de dia/organização equivalente | MRF07 |
 | AJUSTA liga INTERACAO_IA diretamente a ITEM_FICHA, sem cardinalidade junto ao item | Relacionar execução a proposta/nova versão e, se útil, aos itens afetados; preservar itens aprovados históricos | RF-19, RN-16–RN-18 |
 | Não há corpus/documentos/versões/ingestão/evidências | Acrescentar metadados e relações de proveniência; os vetores ficam no banco especializado | MRF01/MRF02 e derivados MRF11/MRF15 |
 | INTERACAO_IA só possui mensagem, resposta, instante e tipo | Representar solicitação/execução, estado, decisão de triagem, política/modelo/prompts e falhas | RF-15/RF-18/RF-19, MRF04–MRF06 |
 
-### Designação, aprovação e ficha vigente
+### Designação, publicação, parecer e ficha vigente
 
 Uma possível relação de designação liga CLIENTE e FUNCIONÁRIO com papel de
 instrutor, preservando quem era responsável em cada período. A regra de um
 principal ativo precisa ter garantia de integridade.
 
 A revisão profissional pode ser uma entidade vinculada à VERSAO_FICHA. Não é
-obrigatório criar uma entidade PROPOSTA separada: uma versão com estado de proposta,
-rascunho, rejeição e aprovação pode atender ao fluxo.
+obrigatório criar uma entidade PROPOSTA separada: conteúdo versionado com estados
+separados de geração, publicação e parecer pode atender ao fluxo. Aceite não
+condiciona visibilidade/chat; nova versão não herda parecer anterior.
 É necessário distinguir autor, gerador automático e profissional revisor.
 
 Uma entidade-raiz FICHA pode facilitar a identidade/versionamento, mas não é
@@ -54,7 +60,8 @@ obrigatória se a relação cliente–versões e a versão atual forem inequívo
 A ativação de uma versão deve preservar a anterior e impedir duas atuais.
 
 Cada proposta deve identificar avaliação/onboarding e versão-base usados.
-Na aprovação, comparar a atualidade desses dados e a designação vigente.
+Na publicação, comparar a atualidade do contexto; no parecer posterior, registrar
+instrutor designado e versão avaliada.
 Política de revalidação precisa ser definida antes de implementar essa regra.
 
 ### Relação INSTRUCAO
@@ -115,8 +122,9 @@ As fontes e critérios de gravidade continuam pendentes de decisão aprovada.
 |---|---|---|
 | REGISTRO_ACESSO está obrigatoriamente ligado a cliente | Separar evento recebido, identidade/decisão e passagem; desconhecido também pode ser registrado | Antes de ACS-02/ACS-03 |
 | Registro só possui tipo, data/hora e status | Acrescentar origem, confiança, motivo, correlação, identificador e, quando aplicável, autor de liberação manual | Controle de acesso |
-| BIOMETRIA admite até uma referência por cliente | Manter uma ativa, com referência externa, estado técnico e autor da substituição | ACS-01 |
-| ASSINATURA já liga cliente, plano e validade | Pode cumprir a função de matrícula; incluir modalidade, limites, janela de uso e histórico pertinente | MEM-01 |
+| BIOMETRIA admite até uma referência por cliente | Referência da API real, estado técnico, matrícula prévia e autor; validar captura nova no reconhecimento | ACS-01/ACS-02 |
+| ASSINATURA já liga cliente, plano e validade | Pode ser matrícula; incluir confirmação de pagamento, atendente, modalidade, limites e histórico | MEM-00/MEM-01 |
+| Não há comando/retorno da catraca simulada | Representar correlação, validade e idempotência; comando aceito é distinto de passagem simulada | ACS-07/ACS-03 |
 | AULA DE GINÁSTICA usa dia_semana e horas | Acrescentar data de ocorrência ou separar aula/ocorrência, conforme RF-30 | AUL-01 |
 | EQUIPAMENTO já possui situação e imagem | Base cobre cadastro/consulta; relação com exercício é opcional | EQP-01 |
 | COBRANÇA–PAGAMENTO está 1 : 0..1 | Prever múltiplas tentativas/transações e confirmação idempotente por provedor | Financeiro tardio |
@@ -136,7 +144,7 @@ somente metadados de ação, respeitando a regra de descarte fornecida.
    vigente definido pela política.
 3. Um cliente pode ter múltiplas avaliações/snapshots.
 4. Uma versão usa itens de exercícios e pode ter várias decisões/revisões históricas.
-5. Uma versão aprovada possui itens; rascunho vazio exige discutir a atual
+5. Uma versão publicada possui itens; rascunho vazio exige discutir a atual
    cardinalidade mínima 1..N entre VERSAO_FICHA e ITEM_FICHA.
 6. Uma execução da IA aponta aos dados, políticas e fontes que utilizou.
 7. Uma cobrança pode exigir múltiplas tentativas, ainda que apenas uma seja efetivada.

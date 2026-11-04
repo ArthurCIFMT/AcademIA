@@ -51,15 +51,18 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
   distinto do link de onboarding.
 - O onboarding e as avaliações fornecem contexto versionado para o treino.
 - Exercícios formam catálogo; prescrição pertence ao item da ficha.
-- A IA produz propostas, nunca ativa ou altera silenciosamente ficha aprovada.
-- O instrutor designado revisa, modifica, aprova ou rejeita propostas.
-- Aprovação verifica contexto, designação e versão-base atuais conforme política
-  definida; mudança relevante exige revalidação antes de ativar.
+- O backend publica treino validado e o cliente pode consultá-lo e usar o chat
+  sem aceite prévio do instrutor. Validação técnica não é aceite profissional.
+- O instrutor designado aceita/rejeita posteriormente; modificação cria versão.
+- Publicação verifica onboarding/restrições e versão-base; parecer identifica a
+  versão avaliada e não é herdado por novas versões.
 - Dados de clientes diferentes nunca compartilham contexto de IA.
 - O RAG recupera somente documentos e versões aprovados.
 - Regras críticas e numéricas são validadas por código, não somente por LLM/RAG.
-- Reconhecimento facial externo e autorização de entrada são etapas distintas.
-- Matrícula manual mínima precede controle de acesso; pagamentos são tardios.
+- Reconhecimento facial por API real é separado da autorização e da catraca fictícia.
+- Pagamento confirmado → matrícula pelo atendente → foto de referência → nova
+  captura facial → decisão → simulador externo. Gateway financeiro continua tardio.
+- Consulte `docs/arquitetura/fluxos-atualizados.md` para os contratos e estados.
 - Docker é fase final, depois do MVP e da maioria dos módulos.
 
 ### Arquitetura permanente

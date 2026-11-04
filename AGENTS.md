@@ -46,8 +46,13 @@ necessária para sua entrega.
   administrador, atendente e instrutor.
 - Manter perfis específicos de cliente e funcionário vinculados ao usuário.
 - Preservar o histórico da designação de clientes a instrutores.
-- Uma ficha gerada por IA é uma proposta e precisa do fluxo de revisão definido
-  nos requisitos antes de se tornar ativa.
+- Treino validado tecnicamente pode ser publicado e consultado pelo cliente sem
+  aceite prévio do instrutor. Chat e parecer profissional são independentes.
+- O instrutor designado pode aceitar, rejeitar ou modificar o treino posteriormente;
+  cada parecer identifica a versão avaliada, o responsável e a data.
+- Pagamento confirmado antecede matrícula realizada pelo atendente; a confirmação
+  pode ser registrada manualmente antes da integração financeira tardia.
+- Reconhecimento facial usa API real; a catraca será uma API externa fictícia.
 - Usar banco vetorial especializado para o RAG, mantendo dados operacionais no
   PostgreSQL.
 - Deixar pagamentos e cobrança automatizada para uma fase posterior.
@@ -98,7 +103,8 @@ necessária para sua entrega.
 - Somente documentos aprovados podem compor a base ativa do RAG.
 - Dados de clientes diferentes jamais podem compartilhar o mesmo contexto.
 - Saídas de IA devem obedecer a JSON Schema e passar por validação de domínio.
-- A IA não ativa nem altera silenciosamente uma ficha aprovada.
+- O backend publica somente conteúdo validado; a IA não grava diretamente no banco
+  nem atribui aceite profissional. Conteúdo publicado é imutável; mudanças criam versão.
 - Bloqueios e restrições críticas não podem depender apenas de texto generativo.
 - Falha da IA não pode impedir a criação manual de uma ficha pelo instrutor.
 - Registre modelo, versão do prompt, fontes recuperadas e resultado do fluxo sem

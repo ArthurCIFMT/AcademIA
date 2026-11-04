@@ -18,10 +18,12 @@
 | DEC-006 | RAG com banco vetorial especializado. | Conhecimento separado dos dados operacionais. |
 | DEC-007 | Usuário pode acumular papéis. | Relação usuário–papel N:N e perfis específicos. |
 | DEC-008 | Cliente deve ser designado a instrutor. | Vínculo histórico com responsável principal. |
-| DEC-009 | Proposta da IA passa por instrutor. | IA não ativa ficha diretamente. |
-| DEC-010 | Pagamento automatizado é tardio. | Matrícula manual mínima antecede a catraca. |
+| DEC-009 | Cliente consulta treino e conversa com IA sem aceite prévio. | Parecer posterior do instrutor é separado da publicação tecnicamente validada. |
+| DEC-010 | Pagamento confirmado precede matrícula pelo atendente. | Confirmação manual inicial; integração financeira automática tardia. |
 | DEC-011 | Docker fica depois do MVP. | Desenvolvimento local é requisito anterior. |
 | DEC-012 | Repositório remoto é `ArthurCIFMT/AcademIA`. | Entregas autorizadas devem ser sincronizadas. |
+| DEC-013 | Reconhecimento facial real e catraca fictícia por API externa. | Não há hardware; mocks isolados não comprovam reconhecimento. |
+| DEC-014 | Cadastro da foto após matrícula pelo atendente. | Referência vinculada ao cliente matriculado e autor da operação. |
 
 ## Recomendações a formalizar em ADR
 
@@ -34,9 +36,10 @@
 | REC-005 | Qdrant. | Banco vetorial especializado e configurável. |
 | REC-006 | Academia única no MVP. | Evita isolamento multitenant prematuro. |
 | REC-007 | Um instrutor principal ativo por cliente. | Responsabilidade inequívoca com histórico. |
-| REC-008 | Aprovação profissional já confirmada em DEC-009; detalhar política. | Falta decidir substituição e atualidade da proposta, não a necessidade da revisão. |
+| REC-008 | Separar publicação, validação técnica e parecer por versão. | Não condicionar consulta/chat ao aceite; explicitar tratamento da atualidade e de rejeição. |
 | REC-009 | Armazenar timestamps em UTC/ISO 8601. | Consistência e rastreabilidade. |
 | REC-010 | Objetos tipados internamente; JSON nas fronteiras. | Evita serialização artificial dentro do monólito. |
+| REC-011 | Amazon Rekognition como API facial candidata. | Cadastro de referências e busca por nova imagem; sujeito a GATE-08, conta e orçamento de teste. |
 
 ## Decisões abertas que funcionam como gates
 
@@ -72,12 +75,13 @@ containerização final.
 
 ## Restrições permanentes
 
-Gates complementares no manifesto: GATE-07 (reservas), GATE-08 (contrato facial,
-limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
+Gates complementares no manifesto: GATE-07 (reservas), GATE-08 (API facial real,
+matrícula após pagamento, simulador de catraca, limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
 correspondente e não precisam bloquear a redação dos prompts.
 
 - Containerização não pode ser antecipada por prompts de fundação ou MVP.
-- Pagamento automático não pode bloquear matrícula manual e controle de acesso.
+- Gateway tardio não bloqueia a fase de acesso: confirmação manual auditada de
+  pagamento antecede matrícula pelo atendente; não dispensar pagamento confirmado.
 - Agentes de IA são papéis sob um orquestrador; não implicam microserviços.
 - Regras críticas não ficam exclusivamente em prompts ou documentos vetoriais.
 - A base RAG não recebe literatura inventada pelo agente.

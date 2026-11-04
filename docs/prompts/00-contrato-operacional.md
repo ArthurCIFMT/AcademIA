@@ -46,7 +46,8 @@ Não invente regras clínicas, fontes ou parâmetros financeiros para destravar 
 
 Respeite ownership entre módulos. Inclua migration para novos invariantes, sem
 alterar migrations aplicadas. Atualize também o modelo textual e dicionário quando
-o requisito mudar. Não apague o MER original. Histórico aprovado é preservado.
+o requisito mudar. Não apague o MER original. Conteúdo publicado/histórico é
+preservado; parecer profissional não condiciona consulta e chat.
 
 ## Git e relatório
 

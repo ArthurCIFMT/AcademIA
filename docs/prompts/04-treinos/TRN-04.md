@@ -26,13 +26,14 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Expor ficha ativa aprovada e tela por dias/microciclos.
+1. Expor versão atual publicada e parecer separado na tela por dias/microciclos.
 2. Mostrar exercício, cadência, séries, repetições, intervalo e observações.
 3. Disponibilizar exportação JSON consolidada autenticada; outro formato depende de requisito.
 
 ## Critérios de aceite
 
-- Cliente vê somente ficha própria aprovada; sem ficha recebe estado vazio.
+- Cliente vê ficha própria publicada com parecer PENDENTE, ACEITO ou REJEITADO;
+  sem ficha recebe estado vazio. Nenhum desses pareceres impede consulta/chat.
 - Trocar ID na consulta/exportação não revela treino de terceiro.
 - Prescrição e versão exibidas correspondem ao banco e são legíveis em celular.
 
@@ -46,7 +47,7 @@ Execute também lint/tipos/build afetados e `git diff --check`.
 
 ## Fora do escopo e interrupção
 
-Exibir proposta pendente como ficha vigente.
+Ocultar treino publicado ou bloquear chat por falta de aceite profissional.
 Dependência/gate aberto ou contrato material ausente impede executar a parte afetada.
 Informe a informação que falta; não improvise dados para obter aceite.
 

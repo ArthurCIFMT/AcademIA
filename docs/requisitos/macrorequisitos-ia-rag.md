@@ -44,7 +44,8 @@ Coordenar estado entre agentes especialistas sob controle central.
 
 - Fluxo controlado: triagem → biomecânica → periodização → revisor.
 - Timeout, tentativas e limite máximo de ciclos.
-- Agentes retornam JSON tipado e não ativam ficha diretamente.
+- Agentes retornam JSON tipado; o backend valida e publica o treino, sem atribuir
+  aceite profissional nem conceder acesso direto dos modelos ao banco.
 
 ### MRF05 — Geração delimitada por regras
 
@@ -63,15 +64,16 @@ Revisar redundâncias, conflitos e inconsistências da proposta.
 - Revisor pode rejeitar e devolver feedback ao orquestrador.
 - Ciclos de correção possuem limite.
 - Tentativas e rejeições são persistidas para auditoria.
-- Somente proposta validada segue para revisão profissional.
+- Somente conteúdo validado é publicado ao cliente e encaminhado à avaliação
+  posterior do instrutor. Validação automática não equivale a aceite profissional.
 
 ### MRF07 — Disponibilização estruturada da ficha
 
-Renderizar ficha aprovada por microciclos/dias.
+Renderizar ficha publicada por microciclos/dias, sem exigir aceite prévio do instrutor.
 
 - Mapear exercício, cadência, séries, repetições e demais prescrições.
 - Disponibilizar API e exportação autorizada do consolidado.
-- Exibir apenas versão ativa e aprovada ao cliente.
+- Exibir versão publicada e parecer profissional separadamente, inclusive PENDENTE.
 
 ## Requisitos derivados pendentes de validação
 
@@ -86,10 +88,11 @@ gerado nos três primeiros estados, e a explicação não constitui diagnóstico
 Aplicar regras determinísticas a exercícios, volume e intensidade depois da
 geração. Falha de validação impede avanço, e políticas são versionadas.
 
-### MRF10 — Revisão e aprovação profissional
+### MRF10 — Avaliação profissional posterior
 
-Permitir que instrutor designado modifique, aprove ou rejeite uma proposta,
-registrando responsável, parecer e data/hora. Aprovação cria versão imutável.
+Permitir que instrutor designado aceite ou rejeite uma versão, registrando
+responsável, parecer e data/hora. Modificação cria nova versão. Consulta e chat
+independem desse aceite; conteúdo publicado permanece imutável.
 
 ### MRF11 — Evidências e rastreabilidade
 
@@ -110,7 +113,8 @@ isolamento, validade do JSON, recuperação e latência.
 ### MRF14 — Chat e adaptação de ficha
 
 Nova dor ou limitação relatada no chat reexecuta a triagem e pode criar uma nova
-proposta. A ficha ativa nunca é alterada silenciosamente.
+versão validada, publicada com parecer PENDENTE. Consulta/chat não dependem de
+aceite profissional; a prescrição anterior nunca é reescrita silenciosamente.
 
 ### MRF15 — Segurança e governança do corpus
 

@@ -6,11 +6,11 @@
 | MOD-01 | Identidade e pessoas | Usuários, papéis, clientes, funcionários, autenticação e autorização. |
 | MOD-02 | Designação profissional | Vínculo cliente–instrutor, responsabilidade vigente e histórico. |
 | MOD-03 | Onboarding e avaliações | Convites, dados físicos/saúde, avaliações versionadas e conclusão. |
-| MOD-04 | Exercícios e fichas | Catálogo, ficha manual, itens, versões, histórico e aprovação. |
+| MOD-04 | Exercícios e fichas | Catálogo, prescrição, publicação, versões imutáveis e parecer profissional posterior. |
 | MOD-05 | Base de conhecimento RAG | Documentos, chunking, embeddings, busca e evidências. |
 | MOD-06 | IA e adaptação | Triagem, regras, agentes, geração, revisão automática, chat e propostas. |
-| MOD-07 | Biometria e acesso | Referência facial, eventos externos, decisão, frequência e lotação. |
-| MOD-08 | Planos, matrícula e financeiro | Plano, matrícula, validade, limites, cobrança e pagamento tardio. |
+| MOD-07 | Biometria e acesso | API facial real, referência/captura, decisão, simulador externo de catraca, frequência e lotação. |
+| MOD-08 | Planos, matrícula e financeiro | Confirmação manual de pagamento, matrícula pelo atendente, validade/limites e integração financeira tardia. |
 | MOD-09 | Agenda e reservas | Aulas, capacidade e eventual reserva. |
 | MOD-10 | Equipamentos | Cadastro administrativo e consulta de equipamentos ativos. |
 | MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
@@ -19,8 +19,10 @@
 ## Resultado da revisão de cobertura
 
 Os 13 módulos cobrem o escopo pedido. As lacunas identificadas são refinamentos de
-fluxo, e não justificam novos módulos: bootstrap/primeiro acesso, atualidade da
-proposta antes da aprovação e dependências da interface de notificações.
+fluxo, e não justificam novos módulos: publicação independente de parecer,
+biometria real com catraca fictícia, confirmação de pagamento e matrícula pelo atendente.
+Os [fluxos atualizados](fluxos-atualizados.md) prevalecem sobre a política antiga de
+aprovação como pré-condição.
 Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao-mer.md).
 
 ## Limites principais
@@ -31,18 +33,20 @@ Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao
   estado das fichas.
 - MOD-03 é proprietário do onboarding e avaliações; expõe somente contextos
   autorizados e versionados.
-- MOD-04 é proprietário do catálogo, versões, workflow de revisão e decisão de
-  aprovação/rejeição. Antes de ativar uma proposta, verifica compatibilidade com
-  avaliação/restrições e versão-base segundo política de atualidade definida.
+- MOD-04 é proprietário do catálogo, versões, publicação e parecer por versão.
+  Valida contexto/restrições antes de publicar. Parecer posterior não condiciona
+  a consulta ou o chat e não reescreve o conteúdo publicado.
 - MOD-05 é proprietário do corpus e da recuperação, não de dados pessoais.
-- MOD-06 cria propostas e decisões de fluxo, nunca uma ficha ativa diretamente.
-- MOD-07 separa reconhecimento externo de autorização interna.
-- MOD-08 fornece estado de matrícula ao motor de acesso.
+- MOD-06 gera conteúdo e decisões técnicas por contrato; MOD-04 publica conteúdo
+  validado com parecer PENDENTE, sem esperar aceite humano.
+- MOD-07 separa API facial real, autorização interna e API externa fictícia de catraca.
+- MOD-08 confirma pagamento (manual inicialmente), permite matrícula pelo atendente
+  e fornece validade ao motor de acesso; confirmação isolada não matricula.
 - MOD-12 entrega avisos e registra auditoria, mas não se torna proprietário das
   entidades nem do workflow de origem.
 - A exportação pertence ao módulo dono do dado, com a mesma autorização da consulta.
-- MOD-06 submete propostas de IA ao workflow de MOD-04 e solicita aviso por
-  MOD-12; não duplica o mecanismo de aprovação.
+- MOD-06 publica por contrato de MOD-04 e solicita aviso por MOD-12 para avaliação
+  posterior; não duplica estado de publicação nem atribui aceite profissional.
 
 ## Dependências essenciais
 
@@ -71,11 +75,17 @@ O manifesto registra o grafo exato por cartão.
 
 ## Estados globais recomendados
 
-### Proposta/ficha
+### Publicação e parecer de treino (dimensões independentes)
 
-`RASCUNHO` → `AGUARDANDO_REVISAO` → `EM_REVISAO` → `APROVADA` → `ATIVA`
+Publicação: `RASCUNHO` → `PUBLICADO` → `SUBSTITUIDO`.
 
-Saídas alternativas: `AJUSTES_SOLICITADOS`, `REJEITADA`, `SUBSTITUIDA`.
+Parecer por versão publicada: `PENDENTE` → `ACEITO` ou `REJEITADO`.
+
+Validação técnica da geração tem estado próprio. Publicar exige validações técnicas,
+mas não aceite profissional; publicação torna conteúdo visível. Nova versão começa
+com parecer PENDENTE e preserva a anterior. Rejeição permanece visível; política
+para escolher a versão atual após rejeição ainda precisa de definição explícita,
+sem transformar aceite em barreira de consulta/chat.
 
 ### Triagem de IA
 

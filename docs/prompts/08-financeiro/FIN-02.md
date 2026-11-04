@@ -30,13 +30,15 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Escolher gateway/sandbox e contrato antes de codificar; registrar política de validade/renovação/cancelamento.
 2. Criar checkout e webhook autenticado com idempotência, tentativas e vínculo externo.
-3. Ativar/renovar matrícula apenas por confirmação validada; tratar falhas e evento fora de ordem.
+3. Registrar confirmação de pagamento validada pelo mesmo contrato de MEM-00;
+   tratar falhas/eventos fora de ordem. Matrícula/renovação exige ação do atendente.
 
 ## Critérios de aceite
 
 - Retorno visual do navegador não ativa matrícula por si.
-- Webhook duplicado não renova duas vezes; assinatura inválida é rejeitada.
-- Pagamento recusado/pendente não libera acesso; confirmação válida altera matrícula uma vez.
+- Webhook duplicado não duplica confirmação; assinatura inválida é rejeitada.
+- Pagamento recusado/pendente não permite matrícula; confirmação válida habilita
+  ação do atendente, mas não cria/renova matrícula nem libera acesso sozinha.
 
 ## Testes obrigatórios
 

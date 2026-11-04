@@ -2,7 +2,7 @@
 
 ## Estado do documento
 
-- Versão: 0.1
+- Versão: 0.2
 - Data de consolidação: 2026-11-03
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
@@ -20,7 +20,7 @@
 
 - O projeto é acadêmico, não um produto comercial em produção.
 - O MVP deve priorizar usuários, clientes, funcionários, designação de instrutor,
-  onboarding, exercícios, fichas manuais, IA/RAG e aprovação profissional.
+  onboarding, exercícios, fichas manuais, IA/RAG, chat e avaliação profissional posterior.
 - Cobrança e integração automática de pagamentos ficam para fase tardia.
 - Dockerfiles e Docker Compose ficam para depois do MVP e da maioria dos módulos.
 - O código deve permanecer executável localmente antes da containerização.
@@ -46,10 +46,20 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 3. O cliente recebe convite e conclui o onboarding.
 4. O instrutor pode criar uma ficha manualmente.
 5. O RAG recupera conhecimento de uma base documental aprovada.
-6. A IA analisa o onboarding, aplica a triagem e cria apenas uma proposta.
-7. O instrutor designado revisa, modifica, aprova ou rejeita a proposta.
-8. Somente uma versão aprovada pode se tornar a ficha vigente do cliente.
-9. Alterações posteriores, inclusive pelo chat, criam nova proposta/versão.
+6. A IA analisa o onboarding; triagem e validações técnicas precedem a publicação.
+7. O treino validado fica disponível ao cliente com parecer profissional PENDENTE.
+8. O cliente consulta o treino e conversa com a IA sem aceite prévio do instrutor.
+9. O instrutor designado avalia posteriormente, aceita/rejeita ou cria versão modificada.
+10. Alterações posteriores, inclusive pelo chat, geram nova versão e novo parecer pendente.
+
+## Fluxo posterior de matrícula e acesso
+
+Pagamento confirmado (registro manual inicial) → atendente registra matrícula →
+funcionário captura/cadastra foto válida → nova captura usa reconhecimento facial
+real → motor verifica conta, matrícula, validade, modalidade e limites → API externa
+fictícia simula catraca → passagem simulada confirmada gera frequência.
+Gateway de pagamento permanece tardio; pagamento sozinho não matricula.
+Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 
 ## Fora do MVP inicial
 
@@ -71,10 +81,11 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 | Onboarding | Coleta inicial de dados físicos, funcionais e de saúde informados. |
 | Avaliação | Registro datado e atribuível que acompanha a evolução do cliente. |
 | Ficha | Plano de treino versionado composto por itens de exercício. |
-| Proposta de IA | Versão não ativa, sujeita a validações e aprovação do instrutor. |
+| Proposta/treino de IA | Conteúdo gerado sujeito a validações técnicas; publicado sem aceite prévio e com parecer posterior por versão. |
+| Parecer profissional | Avaliação PENDENTE, ACEITO ou REJEITADO, separada da publicação e da consulta/chat. |
 | RAG | Recuperação de evidências documentais para contextualizar a geração. |
 | Corpus | Conjunto versionado de documentos autorizados para o RAG. |
-| Matrícula | Vínculo vigente entre cliente e plano; independe do mecanismo de pagamento. |
+| Matrícula | Vínculo entre cliente e plano, criado pelo atendente após confirmação de pagamento, com validade própria. |
 | Reconhecimento | Associação facial produzida por serviço externo. |
 | Autorização de acesso | Decisão do sistema após identidade, matrícula e regras de acesso. |
 

@@ -3,7 +3,7 @@
 ## Resultado
 
 Os 13 módulos MOD-00 a MOD-12 são suficientes para o escopo atual do AcademIA.
-A revisão cruzou RF-01–RF-35, RN-01–RN-36, RNF-01–RNF-17 e MRF01–MRF15.
+A revisão cruzou RF-01–RF-37, RN-01–RN-36, RNF-01–RNF-17 e MRF01–MRF15.
 Cobertura de planejamento não é evidência de implementação. MRF08–MRF15 continuam
 derivados pendentes de validação e reservas continuam condicionais.
 
@@ -15,11 +15,11 @@ derivados pendentes de validação e reservas continuam condicionais.
 | MOD-01 | RF-01–RF-08, identidades, clientes e funcionários | Bootstrap do administrador e primeiro acesso sem duplicar identidade |
 | MOD-02 | RF-34 e colaboração na revisão | Somente designação e responsabilidade vigente/histórica |
 | MOD-03 | RF-09–RF-14, RN-21 e MRF03 | Convite, avaliação e snapshot; não limitar evolução a um formulário mutável |
-| MOD-04 | RF-16/RF-17/RF-35, catálogo e ficha manual | Dono da proposta, versão, revisão e aprovação; verificar atualidade antes de ativar |
+| MOD-04 | RF-16/RF-17/RF-35, catálogo e ficha manual | Dono da publicação, versão e parecer posterior; consulta/chat independem de aceite |
 | MOD-05 | MRF01/MRF02 e evidências do corpus | Aprovação documental, reindexação versionada e recuperação verificável |
 | MOD-06 | RF-15/RF-18/RF-19 e agentes | Triagem, políticas, execução/chat e submissão ao workflow de MOD-04 |
-| MOD-07 | RF-20–RF-25 e RN-06–RN-10/RN-35/RN-36 | Separar evento, identificação, decisão e passagem confirmada |
-| MOD-08 | RF-26/RF-27/RF-31 | Matrícula manual antecede catraca; cobrança automática é tardia |
+| MOD-07 | RF-20–RF-25/RF-36/RF-37 e RN-06–RN-10/RN-35/RN-36 | API facial real; decisão separada e passagem em catraca fictícia |
+| MOD-08 | RF-26/RF-27/RF-31 | Confirmação de pagamento → matrícula pelo atendente; gateway tardio |
 | MOD-09 | RF-30 e RN-25 condicional | Aula e ocorrência; reserva só após aceite do requisito complementar |
 | MOD-10 | RF-32/RF-33 | Cadastro e disponibilidade; uso na seleção da IA é melhoria proposta |
 | MOD-11 | RF-28/RF-29 | Indicadores por contratos; financeiro disponível depois, sem cálculo de lucro |
@@ -38,11 +38,12 @@ O mecanismo depende de GATE-02; não se presume senha temporária fixa nem conta
 duplicada. Esses itens são refinamentos para tornar RF-01/RF-04/RF-07 executáveis,
 e não funcionalidades comerciais adicionais.
 
-### Atualidade da proposta antes da aprovação
+### Atualidade do contexto antes da publicação
 
 Uma proposta pode estar correta para o snapshot usado e ficar desatualizada quando
-o onboarding muda. TRN-03/AI-04 devem verificar versão-base, restrições e designação
-vigente antes de ativar. O tratamento exato de alteração relevante é uma política
+o onboarding muda. TRN-03/AI-04 devem verificar versão-base e restrições antes de
+publicar; o parecer posterior identifica a versão e o instrutor designado.
+O tratamento exato de alteração relevante é uma política
 a definir; simples igualdade do JSON não é critério clínico.
 Não se presume suspensão automática da ficha já ativa por qualquer edição cadastral.
 
@@ -55,7 +56,7 @@ IAM-02. Acrescentar IAM-04 fecha a dependência sem introduzir ciclo.
 
 MOD-12 é transversal e começa em FND-08/NTF-01. Não deve aparecer no grafo como
 dependente da conclusão de todos os módulos. A fonte das decisões é:
-MOD-02 para designação, MOD-03 para avaliação, MOD-04 para aprovação, MOD-05 para
+MOD-02 para designação, MOD-03 para avaliação, MOD-04 para publicação/parecer, MOD-05 para
 corpus, MOD-06 para execução da IA e MOD-12 para entrega do aviso/auditoria.
 Exportação autorizada permanece no módulo dono do recurso.
 
@@ -63,7 +64,7 @@ Exportação autorizada permanece no módulo dono do recurso.
 
 O MVP proposto é amplo, mas coerente com a IA como objetivo acadêmico central.
 Seus marcos são fundação → identidade/designação → onboarding → treino manual →
-RAG/geração → revisão integrada → chat e aceite E2E. Esta revisão não retirou
+RAG/geração → publicação e chat → parecer posterior e aceite E2E. Esta revisão não retirou
 chat nem qualquer requisito do MVP silenciosamente.
 
 Matrícula/catraca, equipamentos, aulas e dashboard são extensões planejadas.
@@ -80,3 +81,7 @@ Reserva, multiacademia e sessão executada de treino exigem escopo confirmado.
 Essas opções podem ser úteis, mas não são pré-condições para o núcleo pedido.
 A próxima modelagem deve priorizar dados necessários a designação, avaliação,
 proposta, revisão e RAG antes de criar migrations.
+
+A revisão posterior incorporou as correções do responsável em
+[fluxos atualizados](fluxos-atualizados.md), sem criar módulos adicionais.
+Foram acrescentados os cartões MEM-00 (confirmação manual) e ACS-07 (catraca fictícia).

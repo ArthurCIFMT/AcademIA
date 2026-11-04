@@ -4,7 +4,7 @@
 
 - Fase: Pós-MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: PES-02, IAM-04, NTF-01, GATE-08.
+- Dependências: PES-02, IAM-04, NTF-01, MEM-01, GATE-08.
 - Requisitos: RF-03, RF-22; RN-10, RN-26, RN-34.
 - Módulos: MOD-07.
 
@@ -27,19 +27,23 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Definir contrato com serviço facial e critérios de qualidade antes de aceitar foto.
-2. Criar upload protegido/referência externa, substituição atômica e descarte conforme regra aprovada.
-3. Registrar autor e aviso sem copiar imagem em auditoria.
+1. Definir adapter para API facial real e critérios de qualidade em GATE-08;
+   Amazon Rekognition é recomendação a decidir, não escolha já aceita.
+2. Exigir cliente matriculado após pagamento confirmado; funcionário captura ou
+   envia foto, verifica exatamente um rosto e cadastra referência no provedor.
+3. Criar upload protegido/referência externa, substituição atômica e descarte conforme regra aprovada.
+4. Registrar autor e aviso sem copiar imagem em auditoria.
 
 ## Critérios de aceite
 
-- Funcionário autorizado cadastra; cliente não substitui referência própria pela API.
+- Funcionário autorizado cadastra após matrícula; cliente não substitui referência própria pela API.
+- Foto sem rosto/com vários rostos ou qualidade insuficiente é recusada.
 - Nova foto válida substitui a antiga; falha externa mantém referência anterior consistente.
 - Conteúdo biométrico não é público nem aparece em relatórios comuns.
 
 ## Testes obrigatórios
 
-BE; INT; API; FE com serviço simulado e contrato externo.
+BE; INT; API; FE com doubles e contrato; ensaio real de cadastro no provedor aceito.
 
 Resolva as suites em [comandos reais](../../testes/comandos.md) antes de executá-las.
 A [estratégia de testes](../../testes/estrategia.md) define ambiente, dados e evidências.

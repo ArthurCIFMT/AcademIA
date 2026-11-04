@@ -36,7 +36,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Outra instalação reproduz a aplicação a partir do repositório e instruções.
 - Dados sobrevivem reinício; migrations não duplicam estruturas.
-- Mesmo fluxo de aprovação/isolation passa no ambiente containerizado.
+- Consulta/chat antes do parecer, avaliação posterior e isolamento passam no
+  ambiente containerizado; simulador continua identificado como fictício.
 
 ## Testes obrigatórios
 

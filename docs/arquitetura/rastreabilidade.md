@@ -17,7 +17,7 @@ definido em modulos.md; participar de um requisito não transfere seu ownership.
 | MOD-04 | RF-15–RF-17, RF-19, RF-35 | RN-14–RN-20, RN-31, RN-33 | MRF05–MRF07, MRF09, MRF10 |
 | MOD-05 | — | RN-15, RN-23, RN-29, RN-30 | MRF01, MRF02, MRF11, MRF15 |
 | MOD-06 | RF-15, RF-18, RF-19 | RN-12–RN-19, RN-29, RN-30 | MRF04–MRF06, MRF08–MRF14 |
-| MOD-07 | RF-20–RF-25 | RN-06–RN-10, RN-24, RN-26, RN-34–RN-36 | — |
+| MOD-07 | RF-20–RF-25, RF-36, RF-37 | RN-06–RN-10, RN-24, RN-26, RN-34–RN-36 | — |
 | MOD-08 | RF-26, RF-27, RF-31 | RN-22, RN-24, RN-35, RN-36 | — |
 | MOD-09 | RF-30 | RN-25 | — |
 | MOD-10 | RF-32, RF-33 | — | — |

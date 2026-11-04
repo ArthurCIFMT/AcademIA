@@ -6,7 +6,9 @@
 - RF-24 e RF-25 permanecem separados: cálculo e apresentação são capacidades
   distintas.
 - RF-34 e RF-35 foram acrescentados a partir das solicitações explícitas sobre
-  designação de instrutor e aprovação das propostas da IA.
+  designação de instrutor e avaliação posterior dos treinos da IA.
+- RF-36 e RF-37 explicitam reconhecimento facial real e catraca fictícia,
+  conforme solicitação posterior; não há hardware físico neste projeto.
 - Mudanças de redação não alteram o propósito original.
 
 ## Usuários, clientes e funcionários
@@ -138,31 +140,36 @@ Gerar proposta inicial com base no onboarding e em conhecimento recuperado.
 - CA-15.3: proposta pertence exclusivamente ao cliente correto.
 - CA-15.4: caso bloqueado pela política de saúde não recebe proposta de treino.
 - CA-15.5: proposta utiliza a versão identificada do onboarding.
-- CA-15.6: proposta não se torna ativa antes da aprovação prevista no fluxo.
+- CA-15.6: após triagem e validações técnicas, o treino é publicado e fica visível
+  ao cliente com parecer profissional PENDENTE, sem exigir aceite prévio.
 
 ### RF-16 — Visualizar ficha de treino atual
 
 Exibir ao cliente sua ficha vigente em formato utilizável, especialmente no celular.
 
-- CA-16.1: cliente visualiza sua versão atual, ativa e aprovada.
+- CA-16.1: cliente visualiza a versão atual publicada com parecer PENDENTE, ACEITO
+  ou REJEITADO exibido separadamente; ausência de aceite não impede consulta.
 - CA-16.2: cliente sem ficha recebe estado vazio adequado.
 - CA-16.3: cliente não consulta ficha de terceiro.
 - CA-16.4: visualização é utilizável em celular.
 
 ### RF-17 — Persistir e versionar a ficha
 
-Manter a ficha e criar nova versão quando uma alteração for aprovada.
+Manter a ficha e criar nova versão quando uma alteração validada for publicada.
 
 - CA-17.1: primeira ficha cria versão inicial.
-- CA-17.2: alteração aprovada cria versão posterior e atualiza a vigente.
+- CA-17.2: alteração publicada cria versão posterior e atualiza a vigente sem
+  depender de aceite profissional; nova versão começa com parecer PENDENTE.
 - CA-17.3: versão atual permanece após nova consulta.
-- CA-17.4: versão aprovada ou histórica não é modificada retroativamente.
+- CA-17.4: conteúdo de versão publicada ou histórica não é modificado retroativamente;
+  pareceres são registros separados e não reescrevem a prescrição.
 
 ### RF-18 — Conversar com assistente de IA
 
 Disponibilizar chat contextualizado sobre o treino do próprio cliente.
 
-- CA-18.1: cliente autenticado envia mensagem e recebe resposta.
+- CA-18.1: cliente autenticado envia mensagem e recebe resposta sem exigir aceite
+  do instrutor, inclusive quando ainda não possui ficha avaliada.
 - CA-18.2: assistente recebe somente o contexto autorizado do cliente.
 - CA-18.3: mensagens de clientes diferentes não se misturam.
 - CA-18.4: indisponibilidade do provedor gera erro controlado.
@@ -172,9 +179,11 @@ Disponibilizar chat contextualizado sobre o treino do próprio cliente.
 Propor adaptação quando dor, limitação ou condição interferir no treino.
 
 - CA-19.1: dor ou limitação relatada gera adaptação contextualizada.
-- CA-19.2: adaptação cria nova proposta, sujeita à aprovação.
+- CA-19.2: adaptação passa novamente pela triagem/validações e, quando válida,
+  é publicada em nova versão com parecer PENDENTE; aceite prévio não é necessário.
 - CA-19.3: partes não relacionadas não são apagadas.
-- CA-19.4: versão aprovada permanece após nova autenticação.
+- CA-19.4: versão publicada permanece após nova autenticação; versões anteriores
+  e pareceres permanecem rastreáveis.
 
 ## Biometria, acesso e frequência
 
@@ -199,9 +208,11 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
 
 ### RF-22 — Inserir referência biométrica do cliente
 
-Permitir que funcionário autorizado cadastre a referência facial do cliente.
+Permitir que funcionário autorizado capture/cadastre a referência facial após
+pagamento confirmado e matrícula registrada pelo atendente.
 
-- CA-22.1: foto atende aos critérios técnicos configurados.
+- CA-22.1: cliente já matriculado possui foto com exatamente um rosto e qualidade
+  conforme critérios técnicos do provedor; imagem inválida não cria referência.
 - CA-22.2: nova referência substitui a anterior conforme política definida.
 - CA-22.3: somente funcionário autorizado altera a referência.
 
@@ -253,10 +264,13 @@ Permitir consulta autorizada da situação financeira já registrada.
 
 Permitir que um plano seja associado à conta por matrícula com validade definida.
 
-- CA-31.1: pagamento confirmado pela integração pode ativar ou renovar matrícula.
+- CA-31.1: pagamento confirmado é pré-condição para o atendente matricular ou
+  renovar o cliente; pagamento isolado não cria nem ativa matrícula automaticamente.
 - CA-31.2: matrícula possui início, término e estado consultáveis.
 - CA-31.3: matrícula vencida deixa de ser válida sem apagar o histórico.
-- Observação: automação de pagamento é fase tardia; matrícula manual é anterior.
+- CA-31.4: na fase inicial, funcionário autorizado registra a confirmação de pagamento
+  com autor, data e referência/comprovante; gateway e checkout ficam para depois.
+- CA-31.5: pagamento pendente/recusado e usuário sem permissão não permitem matrícula.
 
 ## Dashboard, aulas e equipamentos
 
@@ -318,13 +332,41 @@ Vincular cada cliente a um instrutor principal vigente, preservando substituiç�
 - CA-34.3: somente funcionário com papel de instrutor pode ser responsável.
 - CA-34.4: sistema identifica inequivocamente o instrutor principal vigente.
 
-### RF-35 — Revisar e aprovar proposta de treino
+### RF-35 — Registrar avaliação posterior do treino pelo instrutor
 
 Comunicar propostas ao instrutor responsável e permitir sua decisão profissional.
 
 - CA-35.1: nova proposta gera evento/aviso ao instrutor designado e aparece em
   uma fila consultável; falha de aviso fica registrada sem perder a pendência.
-- CA-35.2: instrutor pode modificar, aprovar ou rejeitar com parecer.
+- CA-35.2: instrutor pode aceitar ou rejeitar com parecer; modificação cria nova versão.
 - CA-35.3: decisão registra instrutor e data/hora.
-- CA-35.4: somente proposta aprovada pode se tornar ficha ativa.
-- CA-35.5: rejeição ou pedido de ajuste preserva proposta e motivo no histórico.
+- CA-35.4: consulta do treino e chat estão disponíveis ao cliente antes do parecer;
+  o aceite profissional não é pré-condição de publicação.
+- CA-35.5: rejeição preserva versão, motivo e acesso do cliente ao conteúdo e chat.
+- CA-35.6: parecer aplica-se somente à versão avaliada; nova versão não herda aceite.
+
+## Integração facial e catraca acadêmica
+
+### RF-36 — Reconhecer cliente por nova captura facial
+
+Comparar uma nova captura com referências cadastradas usando API facial real,
+sem implementar algoritmo de reconhecimento no AcademIA.
+
+- CA-36.1: captura com um rosto é enviada pelo backend ao provedor configurado.
+- CA-36.2: identidade é resolvida pelo vínculo externo local e pontuação de
+  correspondência; identidade alegada pelo navegador não determina o cliente.
+- CA-36.3: rosto desconhecido, ambiguidade, baixa similaridade, imagem inválida
+  ou falha do provedor não resultam em identificação positiva automática.
+- CA-36.4: aceite da integração inclui cadastro e comparação reais; mock comprova
+  contratos e regras, mas não comprova funcionamento da biometria facial.
+
+### RF-37 — Integrar API externa fictícia de catraca
+
+Enviar decisão de acesso a um serviço simulador separado, sem catraca física.
+
+- CA-37.1: comando JSON autenticado identifica requisição, decisão, direção e validade.
+- CA-37.2: simulador recebe ALLOW/DENY e registra resultado sem movimento físico.
+- CA-37.3: recebimento do comando é distinto de confirmação de passagem simulada;
+  somente esta última pode gerar frequência/lotação, conforme decisão válida.
+- CA-37.4: repetição, expiração, negação e falha não duplicam nem inventam entrada.
+- CA-37.5: evidências distinguem reconhecimento real e passagem simulada.
