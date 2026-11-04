@@ -80,7 +80,7 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
 | Matrícula/financeiro | Atendente matricula sem pagamento obrigatório; financeiro tardio e independente | GATE-08/GATE-09 |
-| Biometria | API facial real; Amazon Rekognition recomendado, ainda não aprovado | GATE-08 |
+| Biometria | CompreFace confirmado; versão, hospedagem, contrato e ensaio ainda pendentes | GATE-08 |
 | Catraca acadêmica | Serviço externo fictício com comandos e passagem simulada | GATE-08 |
 
 FastAPI, Pydantic, SQLAlchemy, Alembic, Keycloak e Qdrant são recomendações onde
@@ -176,6 +176,10 @@ versão avaliada, o instrutor e o instante; nova versão não herda aceite. Acei
 ou rejeitar não condiciona leitura/chat. Não revogue bloqueio pela simples aprovação
 textual de um agente ou instrutor. Falha de aviso não impede publicação/consulta.
 Cliente sem designação mantém consulta/chat e uma pendência explícita de revisão.
+Rejeitar a ficha vigente mantém sua consulta. Quando uma ficha posterior também
+é rejeitada, excluir o conteúdo da rejeitada anterior e manter a nova, conforme
+CA-35.7/CA-35.8: auditoria e treinos executados preservados; repetição/parecer
+atrasado não apaga a mais recente. Gerar ou aceitar ficha não dispara exclusão.
 
 ### 7.4 Chat e adaptação
 
@@ -185,6 +189,10 @@ validações técnicas → nova versão publicada com parecer PENDENTE → avali
 
 Preserve trechos não relacionados e versões históricas. A conversa nunca altera
 silenciosamente a ficha atual e nunca mistura contextos de dois clientes.
+Adaptação a condição de saúde exige evidência pertinente recuperada do corpus
+aprovado, vinculada à recomendação; sem suporte ou com conflito não resolvido,
+abster-se de gerar/publicar a adaptação. Conteúdo rejeitado excluído conforme
+RF-35 não volta ao contexto ativo por histórico, cache ou exportação.
 
 ### 7.5 Biometria, matrícula e catraca
 
@@ -195,9 +203,12 @@ modalidade e limites → comando autenticado à API externa fictícia de catraca
 confirmação de passagem simulada → frequência/lotação.
 
 Reconhecimento é real; apenas o equipamento físico é substituído por um serviço
-fictício. Recomende API e contrato antes de implementar (Amazon Rekognition é
-candidato em GATE-08). Foto válida exige um rosto; pontuação de correspondência é
-distinta de confiança de detecção/qualidade. Limiar inicial de 95 não é acurácia de 95%.
+fictício. Usar CompreFace (DEC-015); fechar contrato e hospedagem em GATE-08.
+Foto válida exige um rosto; subjects[].similarity é diferente da confiança de
+detecção/qualidade. Limiar inicial 0,95 na escala 0–1 não é acurácia de 95%.
+Guardar subject/image_id e manter x-api-key somente no backend. A distribuição
+oficial usa Docker: instância externa ou decisão de execução com o professor
+deve resolver GATE-06/08, sem antecipar containerização do AcademIA.
 Tentativa, decisão e passagem são conceitos distintos. Eventos duplicados,
 desconhecidos, negados, fora de ordem e falhas precisam de comportamento definido.
 A alternativa manual registra responsável e motivo e segue política explícita.
@@ -260,7 +271,8 @@ pertencer ao provedor; com autenticação local precisam do fluxo correspondente
 - Chunking respeita limites do modelo e proveniência.
 - Embeddings usam lotes, tentativas limitadas e retomada idempotente.
 - Troca de modelo/dimensão não mistura vetores incompatíveis.
-- Busca usa top-K/cosseno, filtros e limiar definido; pouca evidência admite abstenção.
+- Busca usa top-K/cosseno e filtros; adaptação por saúde sem evidência pertinente
+  recuperada exige abstenção, não uma prescrição baseada na memória do modelo.
 - Dados identificadores não são necessários para buscar conhecimento genérico.
 - Agentes recebem tarefas delimitadas e retornam JSON validado com IDs do catálogo.
 - Políticas críticas e limites numéricos passam por código.

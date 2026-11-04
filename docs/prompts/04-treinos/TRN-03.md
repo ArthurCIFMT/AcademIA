@@ -33,8 +33,13 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
    edição integral cria nova versão, nunca altera conteúdo publicado.
 4. Conferir snapshot/restrições e versão-base antes de publicar; mudança relevante
    exige revalidação. Parecer aplica-se somente à versão avaliada.
-5. Garantir uma versão atual por cliente atomicamente. Definir política para versão
-   atual após rejeição sem impedir consulta ao conteúdo ou chat pela ausência de aceite.
+5. Garantir uma versão atual por cliente atomicamente. Rejeitar a vigente mantém
+   consulta/chat. Ao rejeitar uma ficha posterior, excluir conteúdo/itens da
+   rejeitada anterior e manter a nova rejeitada (CA-35.7/CA-35.8), retirando o
+   conteúdo antigo de API, exportações e contexto ativo/cache de chat.
+6. Preservar metadados de auditoria e snapshots de treinos executados. Aplicar
+   exclusão/troca idempotente e transacional; parecer atrasado não elimina a mais
+   recente. Gerar/publicar ou aceitar ficha não dispara exclusão.
 
 ## Critérios de aceite
 
@@ -43,6 +48,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Dois pedidos concorrentes não deixam duas fichas atuais.
 - Rejeição preserva versão visível e motivo; aceite identifica revisor e instante.
 - Nova versão começa PENDENTE e não herda aceite da versão anterior.
+- A rejeitada fica visível até rejeição de versão posterior: A rejeitada → B
+  publicada PENDENTE mantém A; rejeitar B exclui conteúdo de A e conserva B.
+- Aceite de B, falha de geração, replay e parecer fora de ordem não apagam A
+  indevidamente; concorrência não mantém duas rejeitadas nem elimina auditoria.
 - Conteúdo baseado em restrições/versão-base superadas é revalidado antes de
   publicar; parecer profissional não contorna bloqueio de segurança.
 

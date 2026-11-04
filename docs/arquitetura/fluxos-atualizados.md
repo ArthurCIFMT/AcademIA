@@ -13,7 +13,7 @@ O MER original permanece preservado e será revisado em FND-03.
 5. Instrutor designado recebe aviso/fila e pode aceitar ou rejeitar a versão, com
    parecer, responsável e data; também pode modificar integralmente criando nova versão.
 6. Adaptação pelo chat passa novamente pela triagem/validações, cria nova versão
-   publicada e novo parecer PENDENTE. Versões anteriores permanecem preservadas.
+   publicada e novo parecer PENDENTE. Versões anteriores seguem a retenção de RF-35.
 
 Publicação e parecer são dimensões independentes:
 
@@ -29,9 +29,19 @@ Chat pode funcionar sem ficha avaliada; ausência de ficha não permite inventar
 Cliente sem instrutor mantém consulta/chat, com pendência de designação para revisão.
 Falha de aviso não desfaz publicação nem perde a tarefa de avaliação.
 Rejeição deve aparecer ao cliente, com motivo, e não ocultar conteúdo ou bloquear chat.
-A política para escolher qual versão permanece atual após rejeição ainda deve ser
-definida, preservando essas permissões; não inventar uma retirada automática.
+Rejeitar a ficha vigente não a oculta: ela permanece atual e consultável. Apenas
+quando uma ficha posterior também é rejeitada, excluir o conteúdo da rejeitada
+anterior e manter a nova rejeitada. Gerar/publicar ou aceitar uma nova ficha não
+dispara a exclusão. Não apagar fichas aceitas nem treinos já executados; manter
+metadados de auditoria, sem reexpor o conteúdo excluído em API, exportação ou chat.
+Aplicar exclusão e troca atomicamente, com idempotência e ordem de versões;
+parecer atrasado não elimina a rejeitada mais recente (CA-35.7/CA-35.8).
 Conteúdo publicado é imutável. Parecer refere-se a uma versão e não passa para outra.
+
+Adaptação por saúde exige evidência pertinente recuperada do corpus aprovado e
+vinculada à recomendação. Falta de suporte, população/condição incompatível ou
+conflito não resolvido retorna abstenção; não gerar/publicar adaptação nem
+substituir evidência pela memória do modelo. Regras de bloqueio continuam prevalecendo.
 
 ## Matrícula e cadastro facial sem pagamento obrigatório
 
@@ -54,28 +64,25 @@ modalidade e limites; vencimento não apaga histórico nem referência.
 Funcionário autorizado pode substituir a foto, mantendo auditoria e retirando
 a referência anterior conforme política. Cliente não troca sua própria biometria.
 
-## API de reconhecimento facial — recomendação pendente
+## API de reconhecimento facial — CompreFace confirmado
 
-Recomenda-se Amazon Rekognition como candidato ao adapter facial (REC-011/GATE-08),
-por oferecer cadastro de referências em coleção e busca por imagem. A escolha ainda
-não está aprovada; comparar disponibilidade de conta, região e orçamento antes do módulo.
-Não foram criadas coleções, provisionados recursos ou realizadas chamadas pagas.
+CompreFace é a escolha confirmada em DEC-015. GATE-08 ainda define versão/modelo,
+hospedagem, critérios de captura, contratos e ensaio real; não reabre o fornecedor.
 
-Se aceita, a integração deverá:
-
-- Validar exatamente um rosto com DetectFaces antes de cadastrar ou buscar;
-  limitar MaxFaces a 1 não basta para recusar imagens com vários rostos.
-- Cadastrar referência com IndexFaces e filtro de qualidade; associar FaceId ao
-  UUID local do cliente, sem usar nome/e-mail como identificador externo.
-- Buscar uma nova captura com SearchFacesByImage, resolver FaceId no backend e
-  tratar resultado desconhecido ou ambíguo como não identificado.
-- Usar Similarity como pontuação de correspondência, separada da confiança de
-  detecção do rosto. Limiar inicial de 95, na escala 0–100, precisa de calibração;
-  ele não demonstra acurácia de 95% nem probabilidade de identidade correta.
-- Substituir referências com controle de falha parcial e limpeza por DeleteFaces,
-  sem abandonar referências antigas pesquisáveis após conclusão da substituição.
-- Manter credenciais somente no backend e fora do Git, com permissões necessárias
-  ao adapter, limites de requisição e timeouts.
+- Validar exatamente um rosto antes de cadastrar ou reconhecer, usando detecção
+  do provedor com limiar definido; limitar a resposta a um resultado não comprova
+  que havia apenas um rosto na imagem.
+- Cadastrar com POST /api/v1/recognition/faces?subject=..., usando identificador
+  opaco associado ao cliente, e guardar image_id para controle de substituição.
+- Comparar nova captura com POST /api/v1/recognition/recognize e resolver subject
+  no backend; resultado desconhecido ou ambíguo não é identificação positiva.
+- Usar subjects[].similarity na escala 0–1, com limiar inicial 0,95 (95 na tela).
+  box.probability/det_prob_threshold dizem respeito à detecção, não à correspondência.
+  O limiar exige calibração; 0,95 não comprova acurácia de 95%.
+- Substituir a referência com compensação de falhas parciais e exclusão do exemplo
+  anterior por DELETE /api/v1/recognition/faces/{image_id}; o serviço aceita vários
+  exemplos, mas o projeto mantém uma referência ativa conforme RF-22.
+- Manter x-api-key somente no backend, fora do Git, com timeout e limites de uso.
 
 Os vetores faciais pertencem ao serviço biométrico; não são documentos do RAG nem
 devem compartilhar a coleção vetorial de literatura. Foto e metadados biométricos
@@ -84,11 +91,13 @@ A busca deve testar outra captura da pessoa, e não apenas reenviar a foto cadas
 Cadastro e busca por imagem não incluem prova de vida; eventual exigência será
 decisão adicional explícita, sem presumir que comparação de fotos a oferece.
 
-Fontes técnicas: [IndexFaces](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_IndexFaces.html),
-[SearchFacesByImage](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_SearchFacesByImage.html),
-[DetectFaces](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DetectFaces.html),
-[DeleteFaces](https://docs.aws.amazon.com/rekognition/latest/APIReference/API_DeleteFaces.html)
-e [limiares de similaridade](https://docs.aws.amazon.com/rekognition/latest/dg/thresholds-collections.html).
+Fontes técnicas: [REST CompreFace](https://github.com/exadel-inc/CompreFace/blob/master/docs/Rest-API-description.md)
+e [limiar de similaridade](https://github.com/exadel-inc/CompreFace/blob/master/docs/Face-Recognition-Similarity-Threshold.md).
+
+A distribuição oficial do serviço usa Docker/Compose. Para manter Docker do
+AcademIA no final, preferir instância externa já disponível; se não houver,
+registrar com o professor a decisão de execução antes de ACS-01/ACS-02. A escolha
+do fornecedor não antecipa Docker nem aprova uma exceção de infraestrutura.
 
 ## Catraca fictícia — serviço externo de teste
 

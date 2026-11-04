@@ -56,6 +56,8 @@ e das políticas estruturadas, usando o RAG como evidência.
 - Limites numéricos passam por validação determinística.
 - Saída segue JSON Schema estrito.
 - Exercícios são referenciados pelo catálogo do sistema.
+- Adaptação por condição de saúde só é gerada com evidência pertinente recuperada
+  do corpus aprovado, aplicável à condição, população e intervenção propostas.
 
 ### MRF06 — Auditoria automática por revisor
 
@@ -74,6 +76,8 @@ Renderizar ficha publicada por microciclos/dias, sem exigir aceite prévio do in
 - Mapear exercício, cadência, séries, repetições e demais prescrições.
 - Disponibilizar API e exportação autorizada do consolidado.
 - Exibir versão publicada e parecer profissional separadamente, inclusive PENDENTE.
+- Rejeitada continua visível; quando outra ficha posterior também é rejeitada,
+  seu conteúdo substitui o da rejeitada anterior conforme RF-35.
 
 ## Requisitos derivados pendentes de validação
 
@@ -85,19 +89,24 @@ gerado nos três primeiros estados, e a explicação não constitui diagnóstico
 
 ### MRF09 — Motor de restrições estruturadas
 
-Aplicar regras determinísticas a exercícios, volume e intensidade depois da
-geração. Falha de validação impede avanço, e políticas são versionadas.
+Aplicar restrições antes da seleção e validar por código exercícios, volume e
+intensidade depois da geração. Falha impede avanço; políticas são versionadas.
 
 ### MRF10 — Avaliação profissional posterior
 
 Permitir que instrutor designado aceite ou rejeite uma versão, registrando
 responsável, parecer e data/hora. Modificação cria nova versão. Consulta e chat
-independem desse aceite; conteúdo publicado permanece imutável.
+independem desse aceite; conteúdo publicado não é reescrito. Quando uma ficha
+posterior também é rejeitada, excluir o conteúdo da rejeitada anterior conforme
+RF-35, mantendo auditoria e registros de treinos executados.
 
 ### MRF11 — Evidências e rastreabilidade
 
 Vincular recomendações a documento, versão, página/seção e fragmento recuperado.
-Ausência de evidência suficiente deve permitir abstenção.
+Adaptação a condição de saúde exige evidência pertinente recuperada do corpus
+aprovado; ausência, inadequação ou conflito não resolvido obriga abstenção e impede
+gerar/publicar essa adaptação. Score de similaridade ou citação sem suporte não
+comprovam adequação; manter a relação entre recomendação e evidência utilizada.
 
 ### MRF12 — Isolamento de contexto
 
@@ -113,8 +122,12 @@ isolamento, validade do JSON, recuperação e latência.
 ### MRF14 — Chat e adaptação de ficha
 
 Nova dor ou limitação relatada no chat reexecuta a triagem e pode criar uma nova
-versão validada, publicada com parecer PENDENTE. Consulta/chat não dependem de
+versão somente com evidência pertinente recuperada e validações de domínio,
+publicada com parecer PENDENTE. Sem suporte, explicar abstenção sem modificar
+a ficha. Consulta/chat não dependem de
 aceite profissional; a prescrição anterior nunca é reescrita silenciosamente.
+Excluir conteúdo de ficha rejeitada substituída do contexto ativo conforme RF-35;
+histórico de mensagens não deve reintroduzi-lo como prescrição vigente.
 
 ### MRF15 — Segurança e governança do corpus
 

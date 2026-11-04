@@ -10,6 +10,8 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 - [Requisitos não funcionais](docs/requisitos/requisitos-nao-funcionais.md)
 - [Registro de normalização](docs/requisitos/registro-de-normalizacao.md)
 - [Macrorequisitos de IA e RAG](docs/requisitos/macrorequisitos-ia-rag.md)
+- [Funcionamento da IA/RAG e fichas rejeitadas](docs/arquitetura/funcionamento-ia-rag.md)
+- [Acervo bibliográfico para o RAG](materiais/rag/README.md)
 - [Módulos](docs/arquitetura/modulos.md)
 - [Fluxos atualizados: treino, matrícula e biometria](docs/arquitetura/fluxos-atualizados.md)
 - [Revisão da cobertura dos módulos](docs/arquitetura/revisao-modulos.md)

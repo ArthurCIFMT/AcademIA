@@ -31,6 +31,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 2. Criar versionamento, referência à avaliação/onboarding e autoria por versão.
 3. Oferecer editor e publicação com validações de domínio; edição de versão publicada gera novo rascunho.
 4. Separar conteúdo publicado imutável do parecer profissional por versão.
+5. Prever a exclusão de conteúdo da rejeitada anterior em RF-35, sem quebrar
+   auditoria, numeração de versões ou snapshots de treinos executados.
 
 ## Critérios de aceite
 

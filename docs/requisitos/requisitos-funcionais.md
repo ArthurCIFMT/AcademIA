@@ -142,6 +142,9 @@ Gerar proposta inicial com base no onboarding e em conhecimento recuperado.
 - CA-15.5: proposta utiliza a versão identificada do onboarding.
 - CA-15.6: após triagem e validações técnicas, o treino é publicado e fica visível
   ao cliente com parecer profissional PENDENTE, sem exigir aceite prévio.
+- CA-15.7: prescrição adaptada a condição de saúde exige evidência pertinente
+  recuperada do corpus aprovado, vinculada à recomendação; ausência ou conflito
+  não resolvido impede gerar/publicar essa adaptação e retorna justificativa.
 
 ### RF-16 — Visualizar ficha de treino atual
 
@@ -163,6 +166,9 @@ Manter a ficha e criar nova versão quando uma alteração validada for publicad
 - CA-17.3: versão atual permanece após nova consulta.
 - CA-17.4: conteúdo de versão publicada ou histórica não é modificado retroativamente;
   pareceres são registros separados e não reescrevem a prescrição.
+- CA-17.5: a exclusão da ficha rejeitada anterior segue CA-35.7; não apaga
+  auditoria nem registros/snapshots de treinos já executados. Número de versão
+  excluída não é reutilizado.
 
 ### RF-18 — Conversar com assistente de IA
 
@@ -178,12 +184,16 @@ Disponibilizar chat contextualizado sobre o treino do próprio cliente.
 
 Propor adaptação quando dor, limitação ou condição interferir no treino.
 
-- CA-19.1: dor ou limitação relatada gera adaptação contextualizada.
+- CA-19.1: dor ou limitação relatada gera adaptação contextualizada somente
+  quando o cliente é elegível e existe evidência pertinente recuperada do corpus
+  aprovado para a condição e a adaptação propostas.
 - CA-19.2: adaptação passa novamente pela triagem/validações e, quando válida,
   é publicada em nova versão com parecer PENDENTE; aceite prévio não é necessário.
 - CA-19.3: partes não relacionadas não são apagadas.
 - CA-19.4: versão publicada permanece após nova autenticação; versões anteriores
-  e pareceres permanecem rastreáveis.
+  e pareceres permanecem rastreáveis, respeitando a exclusão de CA-35.7.
+- CA-19.5: falta de evidência, fonte inadequada ao caso ou conflito não resolvido
+  impede publicar a adaptação; registrar abstenção sem alterar a ficha vigente.
 
 ## Biometria, acesso e frequência
 
@@ -204,7 +214,8 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
 - CA-21.2: identidade desconhecida produz decisão de negação apropriada.
 - CA-21.3: cliente desativado não é tratado como habilitado.
 - CA-21.4: correspondência facial somente é aceita quando atinge o limiar
-  configurado, inicialmente definido como no mínimo 95%.
+  configurado, inicialmente 0,95 na escala 0–1 do CompreFace (95% na apresentação).
+  Essa pontuação não constitui medida de acurácia do sistema.
 
 ### RF-22 — Inserir referência biométrica do cliente
 
@@ -345,14 +356,24 @@ Comunicar propostas ao instrutor responsável e permitir sua decisão profission
 - CA-35.3: decisão registra instrutor e data/hora.
 - CA-35.4: consulta do treino e chat estão disponíveis ao cliente antes do parecer;
   o aceite profissional não é pré-condição de publicação.
-- CA-35.5: rejeição preserva versão, motivo e acesso do cliente ao conteúdo e chat.
+- CA-35.5: rejeição mantém a ficha consultável pelo cliente com motivo e chat;
+  permanece disponível até uma ficha posterior também receber rejeição.
 - CA-35.6: parecer aplica-se somente à versão avaliada; nova versão não herda aceite.
+- CA-35.7: quando uma ficha posterior é rejeitada, excluir o conteúdo/itens da
+  rejeitada anterior, retirando-o das consultas, exportações e contexto do chat;
+  a nova rejeitada ocupa seu lugar e permanece visível. A exclusão é automática,
+  transacional e idempotente, com metadados de identificação, parecer, responsável,
+  data e motivo da exclusão preservados em auditoria protegida. Fichas aceitas e
+  registros/snapshots de treinos executados não são apagados por essa regra.
+- CA-35.8: apenas gerar/publicar nova ficha, falhar na geração ou aceitá-la não
+  dispara essa exclusão. Repetição ou parecer atrasado sobre versão mais antiga
+  não elimina a rejeitada mais recente nem cria duas fichas vigentes.
 
 ## Integração facial e catraca acadêmica
 
 ### RF-36 — Reconhecer cliente por nova captura facial
 
-Comparar uma nova captura com referências cadastradas usando API facial real,
+Comparar uma nova captura com referências cadastradas usando CompreFace,
 sem implementar algoritmo de reconhecimento no AcademIA.
 
 - CA-36.1: captura com um rosto é enviada pelo backend ao provedor configurado.

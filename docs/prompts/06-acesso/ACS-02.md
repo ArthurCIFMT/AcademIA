@@ -28,8 +28,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Capturar nova imagem e enviá-la pelo backend à API facial real para busca
-   entre referências cadastradas; resolver identidade externa no vínculo local.
+1. Capturar nova imagem e enviá-la pelo backend ao reconhecimento CompreFace
+   (POST /api/v1/recognition/recognize); resolver subject no vínculo local.
 2. Definir JSON normalizado: evento, origem, identidade, pontuação de correspondência,
    instante e direção. Separar score de identificação, detecção e qualidade da foto.
 3. Autenticar origem, validar payload/replays e persistir recebimento idempotente.
@@ -40,8 +40,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - JSON malformado ou credencial inválida não processa evento.
 - Mesmo evento recebido duas vezes não duplica registro.
-- Identidade desconhecida, ambígua ou pontuação abaixo do limiar inicial de 95
+- Identidade desconhecida, ambígua ou similarity abaixo do limiar inicial de 0,95
   não vira reconhecimento positivo; erro do provedor falha de forma controlada.
+- Normalizar similarity 0–1; não confundir box.probability/det_prob_threshold
+  com correspondência. x-api-key e endereço do serviço ficam no backend.
 - Nova foto do cliente cadastrado é comparada realmente; rosto diferente e imagem
   sem rosto são cobertos. Teste com mock não encerra o aceite biométrico.
 

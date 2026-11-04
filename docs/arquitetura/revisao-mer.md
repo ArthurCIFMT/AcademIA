@@ -57,7 +57,10 @@ condiciona visibilidade/chat; nova versão não herda parecer anterior.
 
 Uma entidade-raiz FICHA pode facilitar a identidade/versionamento, mas não é
 obrigatória se a relação cliente–versões e a versão atual forem inequívocas.
-A ativação de uma versão deve preservar a anterior e impedir duas atuais.
+A ativação de uma versão deve impedir duas atuais. A retenção segue RF-35:
+rejeitar a vigente mantém sua consulta; outra ficha posterior rejeitada exclui
+conteúdo/itens da rejeitada anterior, preservando metadados de auditoria e snapshots
+de treinos executados. Modelar essa exclusão sem quebrar chaves históricas.
 
 Cada proposta deve identificar avaliação/onboarding e versão-base usados.
 Na publicação, comparar a atualidade do contexto; no parecer posterior, registrar

@@ -9,6 +9,8 @@
 - [Comparação com o professor](comparacao-modelo-professor.md).
 - [Fluxos atualizados](../arquitetura/fluxos-atualizados.md): treino antes do parecer,
   matrícula sem pagamento obrigatório, API facial real e catraca fictícia.
+- [Funcionamento da IA/RAG](../arquitetura/funcionamento-ia-rag.md): tabela dos
+  macrorequisitos, evidência obrigatória para saúde e retenção de fichas rejeitadas.
 - [Estratégia de testes](../testes/estrategia.md) e [comandos](../testes/comandos.md).
 - [Revisão dos módulos](../arquitetura/revisao-modulos.md) e
   [análise do MER preservado](../arquitetura/revisao-mer.md).
@@ -44,7 +46,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
-| GATE-08 | API facial real, matrícula manual sem pagamento obrigatório, simulador de catraca, limites e alternativa manual | Contrato/políticas aceitos antes do módulo | ABERTO |
+| GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01, ACS-06, EQP-01, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |

@@ -26,3 +26,15 @@ prompts de implementação.
 O texto original permanece recuperável no histórico da conversa e no material
 fonte. Antes de FND-01 ser concluído, o responsável deve aceitar as normalizações
 ou solicitar ajustes.
+
+## Adições expressamente autorizadas em 2026-11-04
+
+| Item | Alteração | Origem |
+|---|---|---|
+| RF-35, RF-17, RN-18/RN-33, MRF07/MRF10/MRF14 | A rejeitada continua visível; outra ficha posterior rejeitada exclui o conteúdo da rejeitada anterior, preservando auditoria e treinos executados. | Decisão do responsável sobre substituição de fichas rejeitadas. |
+| RF-15/RF-19, RN-15, MRF05/MRF09/MRF11/MRF14 | Adaptação por saúde depende de evidência pertinente recuperada do corpus aprovado; ausência de suporte impede gerar/publicar adaptação. | Confirmação do responsável sobre evidência obrigatória. |
+| RF-21/RF-36 e prompts de acesso | CompreFace confirmado; similarity normalizada 0–1, inicialmente 0,95. | Escolha explícita do responsável; hospedagem e ensaio continuam pendentes. |
+
+Os demais pontos da análise e MRF08–MRF15 não foram aprovados automaticamente.
+O MER original em imagem permanece inalterado; prompts de modelagem devem refletir
+as decisões acima quando produzirem o modelo lógico.

@@ -44,6 +44,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Estados de conta, matrícula, biometria e elegibilidade são distintos.
 - Onboarding/avaliações e fichas possuem versionamento necessário.
 - Conteúdo de ficha publicada não é modificado retroativamente.
+- RF-35 prevê exclusão do conteúdo da rejeitada anterior quando uma ficha posterior
+  também é rejeitada, mantendo metadados de auditoria e snapshots de execuções.
 - `EXERCICIO` não armazena séries/carga específicas de prescrição.
 - Validação técnica, publicação e parecer profissional por versão são dimensões
   independentes; consulta/chat não dependem de aceite.

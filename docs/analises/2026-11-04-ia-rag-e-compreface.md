@@ -1,5 +1,12 @@
 # Análise da IA/RAG e escolha do CompreFace
 
+> Registro da análise anterior às decisões adicionais do responsável em 2026-11-04.
+> A política de rejeitadas, a evidência obrigatória e a adoção de CompreFace foram
+> incorporadas depois em [funcionamento vigente](../arquitetura/funcionamento-ia-rag.md).
+> A estimativa de coleta abaixo foi seguida por 11 novos PDFs: ver
+> [catálogo atualizado](../../materiais/rag/README.md). Os números e pendências
+> restantes neste relatório descrevem a base examinada naquela análise.
+
 Data: 2026-11-04. Base examinada: commit
 `aa63caa3a20764b9fee8c45f6cf173d9682030f9` do AcademIA.
 Escopo: registrar a escolha explícita de CompreFace e analisar compatibilidade,

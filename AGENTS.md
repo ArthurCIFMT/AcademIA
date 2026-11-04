@@ -50,9 +50,12 @@ necessária para sua entrega.
   aceite prévio do instrutor. Chat e parecer profissional são independentes.
 - O instrutor designado pode aceitar, rejeitar ou modificar o treino posteriormente;
   cada parecer identifica a versão avaliada, o responsável e a data.
+- A ficha rejeitada continua consultável. Quando uma ficha posterior também é
+  rejeitada, excluir o conteúdo da rejeitada anterior e manter a nova; preservar
+  metadados de auditoria e registros de treinos já executados (RF-35).
 - O atendente autorizado pode matricular e renovar o cliente sem pagamento
   confirmado. Matrícula e acesso acadêmico não dependem do módulo financeiro.
-- Reconhecimento facial usa API real; a catraca será uma API externa fictícia.
+- Reconhecimento facial usa CompreFace; a catraca será uma API externa fictícia.
 - Usar banco vetorial especializado para o RAG, mantendo dados operacionais no
   PostgreSQL.
 - Deixar pagamentos e cobrança automatizada para uma fase posterior.
@@ -106,6 +109,9 @@ necessária para sua entrega.
 - O backend publica somente conteúdo validado; a IA não grava diretamente no banco
   nem atribui aceite profissional. Conteúdo publicado é imutável; mudanças criam versão.
 - Bloqueios e restrições críticas não podem depender apenas de texto generativo.
+- Adaptação por condição de saúde exige evidência pertinente recuperada do corpus
+  aprovado. Sem suporte suficiente, não gerar/publicar a adaptação; registrar
+  abstenção, sem substituir a evidência por conhecimento presumido do modelo.
 - Falha da IA não pode impedir a criação manual de uma ficha pelo instrutor.
 - Registre modelo, versão do prompt, fontes recuperadas e resultado do fluxo sem
   armazenar raciocínio interno do modelo.

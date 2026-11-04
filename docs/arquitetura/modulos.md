@@ -83,9 +83,10 @@ Parecer por versão publicada: `PENDENTE` → `ACEITO` ou `REJEITADO`.
 
 Validação técnica da geração tem estado próprio. Publicar exige validações técnicas,
 mas não aceite profissional; publicação torna conteúdo visível. Nova versão começa
-com parecer PENDENTE e preserva a anterior. Rejeição permanece visível; política
-para escolher a versão atual após rejeição ainda precisa de definição explícita,
-sem transformar aceite em barreira de consulta/chat.
+com parecer PENDENTE. Rejeitar a vigente mantém sua consulta; quando uma ficha
+posterior também é rejeitada, excluir o conteúdo da rejeitada anterior e manter
+a nova conforme RF-35. Apenas gerar/aceitar não dispara exclusão. Preservar
+auditoria e treinos executados; aceite continua sem bloquear consulta/chat.
 
 ### Triagem de IA
 

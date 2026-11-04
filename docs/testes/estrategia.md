@@ -66,12 +66,18 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
 - Cliente lê treino e usa chat com parecer PENDENTE, antes de qualquer aceite.
 - Aceite/rejeição identifica versão e responsável; rejeição continua visível e
   não bloqueia consulta/chat; versão alterada não herda aceite anterior.
+- A rejeitada → B PENDENTE preserva A; rejeitar B exclui conteúdo de A e mantém B.
+  Aceitar B, falhar na geração ou repetir evento não exclui A. Cobrir rejeições
+  concorrentes/fora de ordem e preservar auditoria/execuções sem recuperar conteúdo
+  excluído por API, exportação, cache ou contexto ativo do chat.
+- Adaptação por saúde exige evidência pertinente recuperada: fonte ausente,
+  irrelevante, incompatível ou conflitante impede gerar/publicar adaptação.
 - Cliente sem instrutor designado mantém consulta/chat; pendência de revisão é explícita.
 - Atendente autorizado matricula/renova sem pagamento ou comprovante; matrícula
   funciona com estado financeiro ausente, pendente/recusado e gateway indisponível.
 - Cliente com matrícula válida usa o fluxo facial sem consulta financeira obrigatória;
   usuário sem permissão, matrícula ausente/vencida e limites inválidos continuam recusados.
-- Cadastro biométrico exige matrícula; nova captura é comparada pelo serviço facial
+- Cadastro biométrico exige matrícula; nova captura é comparada pelo CompreFace
   real com a referência, incluindo outra pessoa, ausência de rosto e baixa qualidade.
 - Mock facial testa contratos/regras; aceite biométrico requer evidência do provedor
   real configurado. Não publicar fotos nem credenciais nos relatórios.

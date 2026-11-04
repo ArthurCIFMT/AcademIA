@@ -34,6 +34,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Consulta nunca recupera documento não aprovado/revogado.
 - Busca insuficiente retorna ausência explícita, sem citações inventadas.
+- Score alto sozinho não prova suporte: verificar condição, população e
+  intervenção. Sem evidência pertinente, adaptação por saúde não pode prosseguir.
 - p95 vetorial <= 2 segundos no cenário documentado; métricas de relevância têm limiar aceito antes do ensaio.
 
 ## Testes obrigatórios

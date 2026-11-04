@@ -35,6 +35,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Cliente vê ficha própria publicada com parecer PENDENTE, ACEITO ou REJEITADO;
   sem ficha recebe estado vazio. Nenhum desses pareceres impede consulta/chat.
 - Trocar ID na consulta/exportação não revela treino de terceiro.
+- Conteúdo de rejeitada excluída por RF-35 não é retornado, nem por URL direta
+  ou exportação; metadados de auditoria não reconstituem a prescrição na tela.
 - Prescrição e versão exibidas correspondem ao banco e são legíveis em celular.
 
 ## Testes obrigatórios

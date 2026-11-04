@@ -87,7 +87,7 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 | RAG | Recuperação de evidências documentais para contextualizar a geração. |
 | Corpus | Conjunto versionado de documentos autorizados para o RAG. |
 | Matrícula | Vínculo entre cliente e plano, criado pelo atendente sem exigir pagamento, com validade própria e responsável identificado. |
-| Reconhecimento | Associação facial produzida por serviço externo. |
+| Reconhecimento | Associação facial produzida pelo serviço CompreFace. |
 | Autorização de acesso | Decisão do sistema após identidade, matrícula e regras de acesso. |
 
 ## Decisões ainda abertas

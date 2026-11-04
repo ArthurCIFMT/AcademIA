@@ -27,8 +27,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Definir adapter para API facial real e critérios de qualidade em GATE-08;
-   Amazon Rekognition é recomendação a decidir, não escolha já aceita.
+1. Implementar adapter CompreFace (DEC-015), com versão/hospedagem e qualidade
+   definidas em GATE-08. Cadastrar por subject opaco e guardar image_id;
+   substituir/excluir exemplos pela API sem deixar referência antiga ativa.
 2. Exigir cliente matriculado, sem exigir pagamento; funcionário captura ou
    envia foto, verifica exatamente um rosto e cadastra referência no provedor.
 3. Criar upload protegido/referência externa, substituição atômica e descarte conforme regra aprovada.
