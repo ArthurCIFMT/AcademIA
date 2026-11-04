@@ -41,7 +41,7 @@ evoluída; não exige redesenhar o domínio do zero.
 | ITEM_FICHA não representa dia/microciclo/cadência | Acrescentar esses dados ou uma estrutura de dia/organização equivalente | MRF07 |
 | AJUSTA liga INTERACAO_IA diretamente a ITEM_FICHA, sem cardinalidade junto ao item | Relacionar execução a proposta/nova versão e, se útil, aos itens afetados; preservar itens aprovados históricos | RF-19, RN-16–RN-18 |
 | Não há corpus/documentos/versões/ingestão/evidências | Acrescentar metadados e relações de proveniência; os vetores ficam no banco especializado | MRF01/MRF02 e derivados MRF11/MRF15 |
-| INTERACAO_IA só possui mensagem, resposta, instante e tipo | Representar solicitação/execução, estado, decisão de triagem, política/modelo/prompts e falhas | RF-15/RF-18/RF-19, MRF04–MRF06 |
+| INTERACAO_IA só possui mensagem, resposta, instante e tipo | Representar solicitação/execução, finalidade, resumo/snapshot, etapas fixas, decisão de triagem, política/modelo/prompts e falhas | RF-15/RF-18/RF-19, MRF04–MRF06 |
 
 ### Designação, publicação, parecer e ficha vigente
 
@@ -176,12 +176,10 @@ Depois revisar acesso/matrícula e complementares, deixando pagamento detalhado 
 a fase tardia. A implementação futura altera o modelo revisado e cria migrations;
 a imagem original deve continuar preservada como fonte de origem.
 
-## Extensão autorizada para Agentic RAG
+## Dados do fluxo semântico com orquestrador
 
-MRF16–MRF19 acrescentam plano/revisões, ferramentas/chamadas, avaliação de
-suficiência e orçamento de pesquisa à execução de IA. INTERACAO_IA isolada não
-representa esse workflow; a [extensão lógica](modelo-de-dados/extensao-agentic-rag.md)
-descreve relações e invariantes para FND-03 e migrations de RAG/IA.
-PostgreSQL armazena execução/proveniência; vetores de literatura continuam no banco
-especializado. Não criar embeddings faciais ou dados privados de cliente nesse corpus.
-Esta atualização não altera o MER original nem representa schema já implantado.
+Revisão atual substitui planos de pesquisa, ferramentas dinâmicas e suficiência
+agentiva por execução, resumo/decisão de triagem, etapas fixas e evidências.
+Consultar [dados vigentes](modelo-de-dados/dados-rag-ia.md) antes de FND-03.
+EXERCICIO e seus recursos atendem RF-38; conteúdo prescrito fica em ITEM_FICHA.
+A imagem original permanece intacta, sem migrations nesta revisão.

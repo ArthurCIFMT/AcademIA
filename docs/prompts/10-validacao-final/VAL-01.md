@@ -5,7 +5,7 @@
 - Fase: Entrega final.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: PG-02.
-- Requisitos: RF-01–RF-37; RN-01–RN-39; RNF-01–RNF-17; MRF01–MRF19 e critérios vigentes.
+- Requisitos: RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-18; MRF01–MRF15 e critérios vigentes.
 - Módulos: MOD-00–MOD-12.
 
 ## Objetivo e contexto

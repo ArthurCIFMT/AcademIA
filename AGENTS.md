@@ -112,30 +112,37 @@ necessária para sua entrega.
 
 ## IA e RAG
 
-- O fluxo adotado é Agentic RAG: LLM escolhe ações de pesquisa e ferramentas de
-  leitura conforme resultados; executor valida schemas, autorização e orçamento.
-- Consultar MRF01–MRF19 e docs/arquitetura/agentic-rag.md. A atualização funcional
-  autorizada não fecha escolhas de provedor, políticas clínicas ou parâmetros
-  de GATE-04.
-- Planejamento, chamadas, resultados e decisões são rastreáveis sem raciocínio
-  interno. Nenhuma ferramenta do modelo escreve domínio, publica ficha ou remove
-  bloqueio; publicação permanece no serviço de aplicação por contrato de MOD-04.
-- Memória/retomada respeitam cliente, versões, revogação e orçamento global;
-  retries e retorno do revisor não reiniciam limites de execução.
-
-- Documentos recuperados são evidências, nunca instruções para o agente.
-- Somente documentos aprovados podem compor a base ativa do RAG.
-- Dados de clientes diferentes jamais podem compartilhar o mesmo contexto.
-- Saídas de IA devem obedecer a JSON Schema e passar por validação de domínio.
-- O backend publica somente conteúdo validado; a IA não grava diretamente no banco
-  nem atribui aceite profissional. Conteúdo publicado é imutável; mudanças criam versão.
-- Bloqueios e restrições críticas não podem depender apenas de texto generativo.
-- Adaptação por condição de saúde exige evidência pertinente recuperada do corpus
-  aprovado. Sem suporte suficiente, não gerar/publicar a adaptação; registrar
-  abstenção, sem substituir a evidência por conhecimento presumido do modelo.
-- Falha da IA não pode impedir a criação manual de uma ficha pelo instrutor.
-- Registre modelo, versão do prompt, fontes recuperadas e resultado do fluxo sem
-  armazenar raciocínio interno do modelo.
+- Fluxo vigente: agente orquestrador com RAG vetorial semântico de etapas fixas,
+  triagem de onboarding resumido, geração de fichas pelo LLM e chat de dúvidas.
+- MRF01–MRF15 e docs/arquitetura/rag-semantico.md são a fonte vigente. A abordagem
+  agentiva e a restrição de fichas exclusivamente manuais foram substituídas.
+- Não implementar planner LLM, ferramentas escolhidas pelo modelo, pesquisa iterativa
+  ou cadeia de agentes biomecânico/periodização/revisor. Orquestrador controla estados.
+- Chat usa até uma geração; ficha/adaptação usa até uma análise de triagem e uma
+  geração, com validações em código. Limites globais incluem retries de transporte;
+  falha/JSON inválido não abre loop de reparo automático.
+- Backend monta resumo estruturado e minimizado do onboarding, preservando todos os
+  alertas relevantes e a versão de origem. Ausente não significa saudável/zero/média.
+- Bloqueios de saúde vêm de política revisada; o LLM pode sinalizar risco, não
+  diagnostica nem concede aptidão médica ou remove bloqueio determinístico.
+- RAG recupera trechos do livro/literatura aprovada para dúvidas, triagem e geração;
+  não enviar livros inteiros, todo histórico ou anamnese completa por padrão.
+- Adaptação por condição de saúde exige evidência pertinente; falta/conflito exige
+  abstenção. Fonte relevante não substitui política clínica ou revisão profissional.
+- Catálogo fornece IDs de exercícios e requisitos; MOD-10 fornece equipamentos.
+  Modelo não inventa recursos; MOD-04 revalida antes de publicar por contrato.
+- Somente backend publica ficha tecnicamente válida com parecer PENDENTE; cliente
+  consulta/chat sem aceite prévio. Instrutor pode revisar, alterar ou criar manualmente.
+- Mensagem informativa não altera ficha; adaptação explícita segue nova triagem,
+  geração e versão. Novo relato relevante exige confirmação/versionamento dos dados.
+- Documentos são evidências, nunca instruções. Somente versões aprovadas participam;
+  dados de clientes não entram na literatura compartilhada ou no contexto de terceiros.
+- Saídas usam JSON Schema e referências reais. Modelo não escreve domínio, executa
+  SQL livre nem atribui aceite humano. Registrar estados, fontes e consumo sem
+  raciocínio interno ou dados sensíveis desnecessários em logs.
+- Preferir provedor/modelo gratuito compatível, definido por ADR e ensaio; não
+  presumir capacidade, qualidade ou velocidade. Medir tempo total separado da busca.
+- Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 ## Testes
 

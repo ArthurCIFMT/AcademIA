@@ -5,7 +5,7 @@
 - Fase: Fundação arquitetural
 - Estado inicial: BLOQUEADO até FND-01
 - Dependências: FND-01
-- Requisitos: RNF-01–RNF-17 e requisitos técnicos transversais
+- Requisitos: RNF-01–RNF-18 e requisitos técnicos transversais
 - Módulos: MOD-00
 - Próximo prompt desbloqueado: FND-02B
 
@@ -62,7 +62,7 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 ## Critérios de aceite
 
 - GATE-01 a GATE-06 e GATE-07 possuem decisão correspondente ou justificativa.
-- MRF01–MRF19 e Agentic RAG aparecem com a aprovação funcional já registrada;
+- MRF01–MRF15 e orquestrador com RAG semântico aparecem como escopo vigente;
   checkpoint pede somente escolhas técnicas/clínicas ou parâmetros ainda abertos.
 - Nenhuma decisão ainda aberta foi copiada para `AGENTS.md` como confirmada.
 - As propostas permitem resposta objetiva do responsável.

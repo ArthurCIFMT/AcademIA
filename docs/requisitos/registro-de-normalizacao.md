@@ -88,3 +88,11 @@ de escopo. A revisão geral seguinte as corrige sem fechar gates técnicos.
 Ver [revisão vigente e checklist](../testes/revisao-dos-prompts.md). O histórico
 detalhado de versões anteriores permanece no Git; contagens antigas não são a
 especificação atual. Nenhum ID funcional ou critério identificado foi removido.
+
+## Correção vigente: orquestrador com RAG semântico
+
+Os registros anteriores são históricos. O responsável substituiu a abordagem
+agentiva e a revisão parcial de fichas exclusivamente manuais por dúvidas,
+triagem resumida e geração LLM. MRF01–MRF15 passam a ter 67 critérios; MRF16–MRF19
+são retirados. RF-13/RF-15/RF-18/RF-19, RF-38 e RNF-18 refletem o fluxo atual.
+Ver [mapa completo](../analises/2026-11-04-revisao-ia-semantica.md).

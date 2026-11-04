@@ -3,8 +3,8 @@
 ## Resultado
 
 Os 13 módulos MOD-00 a MOD-12 são suficientes para o escopo atual do AcademIA.
-A revisão considera RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17 e MRF01–MRF19
-com 110 critérios. Agentic RAG foi autorizado funcionalmente; políticas clínicas,
+A revisão considera RF-01–RF-38, RN-01–RN-39, RNF-01–RNF-18 e MRF01–MRF15
+com 67 critérios. Orquestrador com busca semântica fixa é o fluxo vigente; políticas clínicas,
 provedores/parâmetros e reservas condicionais continuam nas decisões pertinentes.
 Cobertura de planejamento não é evidência de implementação.
 
@@ -17,8 +17,8 @@ Cobertura de planejamento não é evidência de implementação.
 | MOD-02 | RF-34 e colaboração na revisão | Somente designação e responsabilidade vigente/histórica |
 | MOD-03 | RF-09–RF-14, RN-21 e MRF03 | Convite, avaliação e snapshot; não limitar evolução a um formulário mutável |
 | MOD-04 | RF-16/RF-17/RF-35, catálogo e ficha manual | Dono da publicação, versão e parecer posterior; consulta/chat independem de aceite |
-| MOD-05 | MRF01/MRF02, evidências e ferramentas de conhecimento | Aprovação, reindexação e recuperação/contexto verificáveis para pesquisa agentiva |
-| MOD-06 | RF-15/RF-18/RF-19, MRF16–MRF19 | Planejamento/pesquisa, executor/orçamento, suficiência, triagem, geração/chat e publicação por MOD-04 |
+| MOD-05 | MRF01/MRF02, evidências e ferramentas de conhecimento | Aprovação, reindexação e recuperação/contexto verificáveis para dúvidas, triagem resumida e geração |
+| MOD-06 | RF-15/RF-18/RF-19, MRF03–MRF06/MRF08–MRF15 | Resumo, triagem assistida, rotas fixas, geração/chat e publicação por MOD-04 |
 | MOD-07 | RF-20–RF-25/RF-36/RF-37 e RN-06–RN-10/RN-35/RN-36 | API facial real; decisão separada e passagem em catraca fictícia |
 | MOD-08 | RF-26/RF-27/RF-31 | Matrícula pelo atendente sem pagamento obrigatório; financeiro tardio |
 | MOD-09 | RF-30 e RN-25 condicional | Aula e ocorrência; reserva só após aceite do requisito complementar |

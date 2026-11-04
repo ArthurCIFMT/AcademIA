@@ -5,7 +5,7 @@
 - Fase: Checkpoint arquitetural
 - Estado inicial: BLOQUEADO até FND-02A e resposta do responsável
 - Dependências: FND-02A
-- Requisitos: RNF-01–RNF-17, MRF01–MRF19
+- Requisitos: RNF-01–RNF-18, MRF01–MRF15
 - Módulos: MOD-00
 - Próximo prompt desbloqueado: FND-03 conforme seus gates; FND-07 pode avançar independentemente.
 
@@ -52,7 +52,7 @@ gates efetivamente confirmados.
 
 1. Apresentar um único checkpoint conciso com escolhas e recomendações.
 2. Registrar as respostas nos ADRs.
-3. Registrar a aprovação funcional já autorizada de MRF01–MRF19; solicitar
+3. Registrar a aprovação funcional já autorizada de MRF01–MRF15; solicitar
    decisão somente sobre políticas clínicas, provedores e parâmetros ainda abertos.
 4. Atualizar `AGENTS.md` somente com decisões aceitas.
 5. Atualizar estado e evidência de GATE-01 a GATE-07.
@@ -64,7 +64,7 @@ gates efetivamente confirmados.
 - GATE-01, GATE-02, GATE-03 e GATE-05 estão fechados antes do modelo lógico de FND-03.
 - GATE-02 está fechado antes de IAM-01.
 - GATE-04 está fechado antes de RAG-01/AI-01.
-- MRF01–MRF19 refletem a decisão funcional vigente; parâmetros ainda indefinidos
+- MRF01–MRF15 refletem a decisão funcional vigente; parâmetros ainda indefinidos
   possuem pendência específica, sem reabrir todo o conjunto funcional.
 - Gates adiados não impedem concluir o checkpoint documental, mas continuam
   bloqueando os cartões dependentes.

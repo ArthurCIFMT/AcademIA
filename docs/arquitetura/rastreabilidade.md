@@ -14,9 +14,9 @@ definido em modulos.md; participar de um requisito não transfere seu ownership.
 | MOD-01 | RF-01–RF-08 | RN-01–RN-05, RN-11, RN-28 | MRF12 |
 | MOD-02 | RF-34; apoio a RF-35 pela designação | RN-11, RN-31, RN-33 | Apoio a MRF10 |
 | MOD-03 | RF-09–RF-14 | RN-11, RN-13, RN-21, RN-23, RN-32, RN-33 | MRF03, MRF08 |
-| MOD-04 | RF-15–RF-17, RF-19, RF-35 | RN-14–RN-20, RN-31, RN-33, RN-37–RN-39 | MRF05–MRF07, MRF09, MRF10 |
-| MOD-05 | — | RN-15, RN-23, RN-29, RN-30, RN-39 | MRF01, MRF02, MRF11, MRF15, MRF17–MRF19 |
-| MOD-06 | RF-15, RF-18, RF-19 | RN-12–RN-19, RN-29, RN-30, RN-37–RN-39 | MRF04–MRF06, MRF08–MRF14, MRF16–MRF19 |
+| MOD-04 | RF-15–RF-17, RF-19, RF-35, RF-38 | RN-14–RN-20, RN-31, RN-33, RN-37–RN-39 | MRF05–MRF07, MRF09, MRF10 |
+| MOD-05 | — | RN-15, RN-23, RN-29, RN-30, RN-39 | MRF01, MRF02, MRF11, MRF15 |
+| MOD-06 | RF-15, RF-18, RF-19 | RN-12–RN-19, RN-29, RN-30, RN-37–RN-39 | MRF04–MRF06, MRF08–MRF14 |
 | MOD-07 | RF-20–RF-25, RF-36, RF-37 | RN-06–RN-10, RN-24, RN-26, RN-34–RN-36 | — |
 | MOD-08 | RF-26, RF-27, RF-31 | RN-22, RN-24, RN-35, RN-36 | — |
 | MOD-09 | RF-30 | RN-25 | — |
@@ -51,9 +51,9 @@ esta matriz deve ser atualizada com o prompt, teste ou evidência correspondente
 - RNF-14: prompts de interface e VAL-02.
 - RNF-15–RNF-17: FND-06, FND-08 e integrações correspondentes.
 
-## Agentic RAG
+## Orquestrador semântico
 
-MRF16–MRF19 colaboram em MOD-05/06 com contratos de contexto, catálogo e recursos,
-sem transferir ownership de MOD-01/03/04/10. A rastreabilidade por critério continua
-na tabela canônica de 19 MRFs/110 critérios; [AR-01–AR-25](../testes/agentic-rag.md)
-definem os cenários futuros. Esta atualização não comprova execução.
+MRF01–MRF15 e 67 critérios governam MOD-05/06. [Cenários](../testes/rag-ia-semantico.md)
+cobrem dúvidas, resumo sem perda de alertas, triagem, geração, limites e fontes.
+RF-38/TRN-01 formalizam catálogo; RNF-18/AI-02/AI-06 cobrem orçamento/tempo.
+Atribuição de prompt não comprova implementação ou ensaio real.

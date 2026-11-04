@@ -7,10 +7,10 @@ O MER original permanece preservado e será revisado em FND-03.
 ## Treino disponível antes do parecer
 
 1. Cliente com onboarding concluído solicita treino; triagem e regras continuam obrigatórias.
-2. Após triagem, Agentic RAG planeja e escolhe ferramentas de leitura conforme
-   os resultados; pesquisa adicional respeita orçamento e pode terminar pedindo
-   dados, abstendo-se ou com falha técnica. Evidência suficiente permite gerar;
-   backend valida schema, catálogo, restrições, fontes e contexto atual.
+2. Orquestrador projeta resumo do onboarding, preservando alertas e ausências;
+   executa regras, busca semântica e análise assistida. Se elegível, recupera
+   trechos especializados e candidatos; LLM gera JSON e backend valida schema,
+   catálogo, restrições, fontes e contexto. Sem pesquisa agentiva ou agentes em cadeia.
 3. Conteúdo válido é publicado ao cliente, com parecer profissional PENDENTE.
 4. Cliente consulta o treino e conversa com a IA sem esperar aceite do instrutor.
 5. Instrutor designado recebe aviso/fila e pode aceitar ou rejeitar a versão, com
@@ -23,11 +23,13 @@ Publicação e parecer são dimensões independentes:
 | Dimensão | Estados propostos | Efeito |
 |---|---|---|
 | Geração técnica | EM_PROCESSAMENTO, VALIDADA, BLOQUEADA, FALHOU | Validação é necessária para publicar |
-| Pesquisa | PLANEJANDO, PESQUISANDO, AVALIANDO, SUFICIENTE, PEDIR_DADOS, SEM_SUPORTE, CONFLITO, LIMITE/FALHA | Estados operacionais próprios, sem substituir a triagem |
+| Recuperação | RECUPERANDO, COM_EVIDENCIA, SEM_SUPORTE, CONFLITO, FALHOU | Etapa fixa, sem plano ou loop de pesquisa |
 | Publicação | RASCUNHO, PUBLICADO, SUBSTITUIDO | Conteúdo publicado pode ser consultado |
 | Parecer por versão | PENDENTE, ACEITO, REJEITADO | Informa avaliação posterior, sem bloquear consulta/chat |
 
-Aprovação do agente revisor é uma validação automática, não um aceite profissional.
+Validação em código não é aceite profissional nem prova de segurança clínica universal.
+Até uma análise de triagem e uma geração na ficha; até uma geração no chat.
+Dúvidas usam contexto curto; adaptação explícita exige nova execução e dados versionados.
 Caso grave bloqueado pela política continua sem geração/publicação de treino.
 Chat pode funcionar sem ficha avaliada; ausência de ficha não permite inventar contexto.
 Cliente sem instrutor mantém consulta/chat, com pendência de designação para revisão.

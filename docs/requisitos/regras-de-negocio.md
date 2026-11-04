@@ -14,11 +14,11 @@
 | RN-10 | Dados biométricos são tratados separadamente dos cadastrais comuns. | Dados sensíveis |
 | RN-11 | Informações médicas, lesões e restrições não ficam disponíveis sem necessidade funcional. | Dados sensíveis |
 | RN-12 | Cliente pode consultar treino e conversar com a IA sem aceite prévio; instrutor pode avaliar e aceitar/rejeitar posteriormente. | IA |
-| RN-13 | IA não cria sugestão de treino para caso grave de saúde definido pela política. | IA/Treino |
+| RN-13 | Orquestrador cruza resumo do onboarding, análise assistida e política estruturada; caso grave definido/bloqueado não recebe treino. LLM não diagnostica nem remove bloqueio determinístico. | IA/Treino |
 | RN-14 | Instrutor pode modificar integralmente uma sugestão. | IA/Treino |
 | RN-15 | Restrições do cliente prevalecem sobre otimizações da IA. Adaptação a condição de saúde exige evidência pertinente recuperada do corpus aprovado; sem suporte suficiente, não é gerada/publicada. | IA/Treino |
 | RN-16 | IA não modifica silenciosamente conteúdo publicado; validações técnicas precedem publicação e parecer profissional é independente. | IA/Treino |
-| RN-17 | Alteração proposta pela IA cria nova proposta/versão. | IA/Treino |
+| RN-17 | Adaptação explícita pela IA passa por triagem/validações e cria nova versão; conversa informativa nunca altera ficha silenciosamente. | IA/Treino |
 | RN-18 | Treinos históricos não são reescritos retroativamente. Conteúdo antigo pode ser excluído pelo limite de 15 (RF-17/RN-38) ou substituição de rejeitada (RF-35); auditoria e registros/snapshots de treinos executados permanecem preservados. | Histórico |
 | RN-19 | Falha da IA não impede montagem manual pelo instrutor. | Disponibilidade |
 | RN-20 | Exercício inativo permanece em históricos, mas não é selecionável em novas prescrições. | Exercícios |

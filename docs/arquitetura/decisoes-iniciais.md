@@ -30,7 +30,8 @@
 | DEC-018 | Máximo de 15 versões publicadas completas por cliente, incluindo a vigente. | Excedente antigo tem conteúdo excluído; manter auditoria e snapshots de execuções (RF-17). |
 | DEC-019 | Equipamentos e vínculo com exercícios fazem parte do MVP. | Administrador mantém recursos; geração/publicação rejeitam exercício inviável no inventário atual (RN-37). |
 | DEC-020 | Produto em português; fontes estrangeiras são permitidas. | Recuperação PT/EN avaliada e explicação/tradução em português preservam evidência original (RN-39). |
-| DEC-021 | Agentic RAG com planejamento, ferramentas de leitura, pesquisa iterativa e avaliação de suficiência. | MOD-06 escolhe ações sob executor/orçamento; MOD-05 fornece corpus aprovado; bloqueios e publicação permanecem no backend. |
+| DEC-021 | Substituída: orquestrador com RAG vetorial semântico de fluxo fixo. | Dúvidas, triagem de resumo e geração pelo LLM; sem pesquisa agentiva ou cadeia de agentes prescritores. |
+| DEC-022 | LLM gera fichas com resumo elegível, catálogo e trechos de conhecimento especializado. | Treinador também cria manualmente e avalia depois; a revisão parcial de autoria exclusivamente humana foi descartada. |
 
 ## Recomendações a formalizar em ADR
 
@@ -67,11 +68,13 @@ primeiro schema.
 
 ### GATE-04 — IA e RAG
 
-Confirmar Qdrant, provedores de LLM/embeddings, corpus inicial, responsável por
-aprovar documentos e critérios de bloqueio de casos graves. A abordagem agentiva
-está confirmada em DEC-021; definir seus limites globais, política de progresso,
-schemas/contratos, critérios de suficiência, retenção operacional e métricas de
-avaliação antes do aceite. Isso não escolhe novo framework nem aprova corpus.
+Definir banco vetorial especializado, LLM/embeddings (preferência por opção gratuita),
+livro/corpus inicial e curador, política de bloqueio/encaminhamento, esquema do resumo,
+validação de preservação de alertas, limites de contexto/saída/tentativas e orçamento.
+Definir retenção operacional, métricas/limiares e meta de tempo total por rota.
+Fluxo semântico com orquestrador já autorizado; não exigir plano/ferramentas/pesquisa
+iterativa. Literatura coletada não equivale a corpus suficiente ou aprovado.
+Geração usa até uma análise de triagem e uma geração; chat até uma geração.
 
 ### GATE-05 — Git
 
@@ -93,7 +96,7 @@ correspondente e não precisam bloquear a redação dos prompts.
 - Matrícula pelo atendente não exige pagamento nem registro financeiro, manual ou
   automatizado. O acesso acadêmico verifica matrícula e regras próprias; pagamento
   não é um pré-requisito. Eventual bloqueio financeiro futuro exige decisão explícita.
-- Agentes de IA são papéis sob um orquestrador; não implicam microserviços.
+- Orquestrador coordena etapas fixas e não implica microserviços, pesquisa agentiva ou agentes de prescrição em cadeia.
 - Regras críticas não ficam exclusivamente em prompts ou documentos vetoriais.
 - A base RAG não recebe literatura inventada pelo agente.
 - `EXERCICIO` descreve catálogo; séries, repetições, carga, ordem e descanso

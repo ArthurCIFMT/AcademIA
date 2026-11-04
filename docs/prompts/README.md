@@ -42,7 +42,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-01 | Stack Python e ferramentas | ADRs aceitos | ABERTO |
 | GATE-02 | Identidade e recuperação de credenciais | ADR aceito | ABERTO |
 | GATE-03 | Academia única ou múltipla | ADR aceito | ABERTO |
-| GATE-04 | Provedores, banco vetorial, corpus, políticas e parâmetros ainda abertos de MRF01–MRF19; Agentic RAG funcional já autorizado | ADRs e requisitos aprovados | ABERTO |
+| GATE-04 | Provedores, banco vetorial, livro/corpus, política de triagem, resumo, limites por rota e métricas de MRF01–MRF15; fluxo semântico autorizado | ADRs e requisitos aprovados | ABERTO |
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
@@ -131,7 +131,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
 | [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
 | [AI-01](05-ia-rag/AI-01.md) | Triagem clínica e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | BLOQUEADO |
-| [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts de execução da IA e orquestrador | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
+| [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
 | [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-02, EQP-01 | BLOQUEADO |
 | [AI-04](05-ia-rag/AI-04.md) | Publicação ao cliente e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04 | BLOQUEADO |
@@ -201,7 +201,7 @@ INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
 ## Leitura antes da implementação
 
 Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
-contexto/contrato e o cartão escolhido. São 19 MRFs/110 critérios; fontes e decisões
+contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. Gates técnicos continuam
 abertos até sua evidência, e FND-01 permanece PRONTO para execução/revisão formal.
 Esta auditoria não marca cartões de implementação como concluídos.

@@ -101,3 +101,13 @@ comentários e diretrizes têm papéis distintos; fontes podem compartilhar estu
 
 O catálogo mantém todos os itens em COLETADO_PENDENTE_REVISAO e aprovado_para_rag=false.
 A presença no GitHub não significa aprovação para uso nas respostas do sistema.
+
+## Uso no fluxo vigente de IA
+
+O acervo apoia dúvidas, triagem de onboarding resumido e geração com conhecimento
+especializado; a abordagem atual é [RAG semântico](../../docs/arquitetura/rag-semantico.md).
+Não remover automaticamente referências de saúde ou exercícios: avaliar trechos
+pertinentes por finalidade e manter pendentes fora do índice ativo. Livro/material
+de exercícios definitivo depende de aprovação; os 18 PDFs não comprovam cobertura
+suficiente para todo treino/condição. Inventário/catálogo ficam em PostgreSQL.
+Nenhum PDF foi modificado, aprovado ou reindexado nesta revisão.

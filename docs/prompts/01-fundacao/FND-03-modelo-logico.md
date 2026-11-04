@@ -5,7 +5,7 @@
 - Fase: Fundação de dados
 - Estado inicial: BLOQUEADO até FND-02B
 - Dependências: FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05
-- Requisitos: RF-01–RF-37, RN-01–RN-39, MRF01–MRF19
+- Requisitos: RF-01–RF-38, RN-01–RN-39, MRF01–MRF15
 - Módulos: MOD-01–MOD-12
 - Próximo prompt desbloqueado: FND-04 conforme GATE-06; FND-07 já depende apenas de FND-02B.
 
@@ -22,7 +22,7 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - todos os requisitos e ADRs aceitos
 - `docs/arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png`
 - `docs/arquitetura/modulos.md`
-- `docs/arquitetura/modelo-de-dados/extensao-agentic-rag.md`
+- `docs/arquitetura/modelo-de-dados/dados-rag-ia.md`
 
 ## Pré-condições
 
@@ -61,8 +61,9 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Reconhecimento externo e decisão de acesso são registros separados.
 - Cobrança pode possuir múltiplas tentativas de pagamento.
 - Corpus vetorial referencia fontes; dados pessoais permanecem operacionais.
-- Modelar execução/etapas/evidências/avaliações e orçamento da pesquisa agentiva
-  conforme a extensão, sem duplicar catálogo, inventário, publicação ou parecer.
+- Modelar execução, resumo/decisão de triagem, etapas fixas, evidências e consumo
+  conforme dados-rag-ia.md; sem planos/ferramentas de pesquisa dinâmica nem duplicar
+  catálogo, inventário, publicação ou parecer. RF-38 explicita catálogo de exercícios.
 - Distinguir estado da conta, de cada perfil e das permissões acumuladas; alcance
   da inativação de perfil ainda exige decisão explícita antes de codificar a regra.
 

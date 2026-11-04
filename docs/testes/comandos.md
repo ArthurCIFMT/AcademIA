@@ -3,7 +3,7 @@
 Nenhuma aplicação foi criada. Os comandos de BE/INT/API/FE/DB/E2E/RAG/IA/INF
 continuam pendentes; DOC já possui a verificação reutilizável abaixo.
 As siglas são referências para os prompts e não devem ser executadas no terminal.
-Suíte significa conjunto organizado de testes. IA inclui o fluxo agentivo;
+Suíte significa conjunto organizado de testes. IA inclui dúvidas, resumo/triagem e geração LLM;
 RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 
 | Suite | Estado | Prompt que registra o comando real |

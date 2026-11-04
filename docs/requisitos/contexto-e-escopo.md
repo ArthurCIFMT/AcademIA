@@ -2,7 +2,7 @@
 
 ## Estado do documento
 
-- Versão: 0.4
+- Versão: 0.5
 - Data de consolidação: 2026-11-04
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
@@ -53,10 +53,11 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 3. O cliente recebe convite e conclui o onboarding.
 4. Administrador mantém equipamentos disponíveis; instrutor usa catálogo elegível
    para criar ficha manualmente, com recursos necessários explicitamente vinculados.
-5. Backend valida contexto e executa triagem; bloqueio e dado insuficiente impedem gerar.
-6. Agentic RAG planeja e escolhe ferramentas de leitura, pesquisa e avalia evidências;
-   pode reformular, pedir dados ou abster-se. Suporte pertinente e validações técnicas
-   precedem geração/publicação; revisor pode devolver lacuna à pesquisa sob orçamento.
+5. Orquestrador monta resumo do onboarding, preserva alertas/ausências e executa
+   regras, busca semântica e análise assistida; bloqueio/insuficiência impedem gerar.
+6. Recupera trechos do livro/literatura e catálogo elegível; LLM gera ficha JSON
+   em fluxo fixo. Backend valida fontes, regras, recursos e contexto antes de publicar.
+   Sem planner de pesquisa ou cadeia de agentes prescritores.
 7. O treino validado fica disponível ao cliente com parecer profissional PENDENTE.
 8. O cliente consulta o treino e conversa com a IA sem aceite prévio do instrutor.
 9. O instrutor designado avalia posteriormente, aceita/rejeita ou cria versão modificada.
@@ -97,7 +98,7 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 | Proposta/treino de IA | Conteúdo gerado sujeito a validações técnicas; publicado sem aceite prévio e com parecer posterior por versão. |
 | Parecer profissional | Avaliação PENDENTE, ACEITO ou REJEITADO, separada da publicação e da consulta/chat. |
 | RAG | Recuperação de evidências documentais para contextualizar a geração. |
-| Agentic RAG | LLM escolhe ações de pesquisa conforme resultados, usando ferramentas autorizadas e orçamento controlado pelo backend. |
+| Orquestrador com RAG semântico | Coordena etapas fixas de dúvidas, triagem resumida e geração com recuperação vetorial, sem pesquisa autônoma iterativa. |
 | Suíte / conjunto de testes | Grupo organizado de testes para verificar um comportamento ou integração. |
 | Corpus | Conjunto versionado de documentos autorizados para o RAG. |
 | Matrícula | Vínculo entre cliente e plano, criado pelo atendente sem exigir pagamento, com validade própria e responsável identificado. |
@@ -115,6 +116,7 @@ scaffolds ou módulos até serem registradas em ADR:
 - academia única ou multiacademia;
 - provedor de LLM e embeddings;
 - corpus inicial e responsável por aprová-lo;
-- critérios operacionais para casos de saúde graves;
+- critérios operacionais de bloqueio/encaminhamento e validação da triagem resumida;
+- livro/material especializado inicial, limites por rota e meta de tempo total;
 - política Git por branches/PRs ou commits diretos;
 - forma de executar PostgreSQL, identidade e banco vetorial antes do Docker.

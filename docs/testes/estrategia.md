@@ -18,7 +18,7 @@ Ferramentas e comandos reais serão registrados pelos prompts de fundação.
 | E2E | Ponta a ponta | Usuários reais de teste percorrem interface e backend |
 | DB | Migrations | Instalação limpa e evolução preservando dados |
 | RAG | Recuperação | Chunking, filtros, evidências, relevância e latência |
-| IA | Avaliação | Triagem, restrições, abstenção, contexto e proposta |
+| IA | Avaliação | Resumo sem perda de alertas, triagem assistida, dúvidas, geração e limites |
 | INF | Infraestrutura | Subida, persistência, rede e healthchecks na fase final |
 
 ## Distribuição
@@ -102,21 +102,17 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
   rotulados; não aprovar desempenho apenas pelo rótulo multilíngue do modelo.
 - Fixtures/seeds de equipamentos serão produzidos na implementação; não são
   inventário real nem literatura clínica. A revisão atual não cria esses dados.
-- Usar os critérios identificados de MRF01–MRF19 conforme a tabela completa, sem tratar
+- Usar os critérios identificados de MRF01–MRF15 conforme a tabela completa, sem tratar
   exemplos sintéticos como casos clínicos automaticamente validados.
 
-## Agentic RAG: conjunto de testes
+## Orquestrador com RAG semântico
 
-Suíte significa conjunto organizado de testes. [AR-01–AR-25](agentic-rag.md)
-verificam planejamento, escolha de ferramentas, pesquisa iterativa, suficiência,
-limites, falhas, privacidade, revogação e integração com fichas/equipamentos.
-MRF01–MRF19 e seus 110 critérios são a referência atual, incluindo os 75 IDs
-anteriores e os complementos agentivos.
-
-RAG-05 testa ferramentas e busca sem depender do planejador. AI-02 usa doubles
-para executor/estados; AI-03 integra persistência; AI-06 demonstra decisões do
-modelo real e compara com referência fixa somente no runner de avaliação.
-Registrar qualidade, abstenção adequada, falhas, custo/chamadas e duração total;
-limiares são fixados antes de executar. p95 <= 2 s continua restrito à busca vetorial.
-As 32 perguntas documentais anteriores precisam de revisão antes de virar aceite.
-Não declarar testes da aplicação executados por apenas atualizar esta documentação.
+[Cenários SV-01–SV-20](rag-ia-semantico.md) cobrem dúvidas, projeção resumida sem perda
+de alertas, triagem assistida, geração LLM, contexto curto, fontes, falhas e limites.
+MRF01–MRF15 e seus 67 critérios são a referência atual; não há teste obrigatório
+de planner, escolha dinâmica de ferramentas ou pesquisa iterativa.
+AI-01/AI-02 testam regras/projeção/orquestrador com doubles; AI-03 integra persistência;
+AI-06 executa ensaio real e mede p50/p95 por rota, busca, chamadas e tokens.
+p95 ≤ 2 s é da busca vetorial, não da geração completa. Os 32 casos documentais
+anteriores exigem revisão antes do aceite. Não declarar aplicação testada só por
+atualizar estes arquivos. Critérios numéricos de qualidade são definidos antes do ensaio.

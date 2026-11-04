@@ -62,8 +62,10 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
 - Publicação verifica onboarding/restrições e versão-base; parecer identifica a
   versão avaliada e não é herdado por novas versões.
 - Dados de clientes diferentes nunca compartilham contexto de IA.
-- Agentic RAG planeja e escolhe ferramentas de pesquisa conforme resultados;
-  executor controla autorização, schemas e orçamento global (MRF16–MRF19).
+- Orquestrador coordena chat, triagem de resumo e geração/adaptação com busca
+  semântica fixa. Não implementar planner, pesquisa iterativa ou cadeia de agentes.
+- Até uma geração no chat; até uma análise de triagem e uma geração na ficha,
+  com limites globais e validações em código (MRF01–MRF15/RNF-18).
 - O RAG recupera somente documentos e versões aprovados; falta de suporte,
   conflito e falha técnica têm encerramentos distintos e não contornam bloqueios.
 - Regras críticas e numéricas são validadas por código, não somente por LLM/RAG.

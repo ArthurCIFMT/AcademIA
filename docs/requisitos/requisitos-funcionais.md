@@ -9,7 +9,9 @@
   designação de instrutor e avaliação posterior dos treinos da IA.
 - RF-36 e RF-37 explicitam reconhecimento facial real e catraca fictícia,
   conforme solicitação posterior; não há hardware físico neste projeto.
-- Mudanças de redação não alteram o propósito original.
+- A revisão de IA preserva os IDs, mas substitui a abordagem agentiva e a revisão
+  interrompida de fichas exclusivamente manuais; RF-38 formaliza o catálogo.
+  Ver [mapa de mudança](../analises/2026-11-04-revisao-ia-semantica.md).
 
 ## Usuários, clientes e funcionários
 
@@ -124,7 +126,8 @@ Concluir o formulário somente após o preenchimento obrigatório.
 
 - CA-13.1: formulário obrigatório incompleto não é concluído.
 - CA-13.2: conclusão registra estado e data/hora.
-- CA-13.3: a IA identifica a existência de onboarding válido.
+- CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
+  versionado que preserva alertas relevantes; chat geral não exige onboarding.
 
 ### RF-14 — Consultar o próprio onboarding
 
@@ -136,25 +139,30 @@ Permitir ao cliente revisar os dados que informou.
 
 ## Fichas de treino e IA
 
-### RF-15 — Gerar proposta de ficha utilizando IA
+### RF-15 — Gerar ficha com LLM e conhecimento especializado recuperado
 
-Gerar proposta inicial com base no onboarding e em conhecimento recuperado.
+Orquestrar geração usando resumo do onboarding, triagem assistida com política,
+catálogo elegível e trechos recuperados do livro/literatura aprovada.
 
-- CA-15.1: onboarding não concluído impede a geração.
-- CA-15.2: chamada bem-sucedida produz proposta estruturada e persistível.
-- CA-15.3: proposta pertence exclusivamente ao cliente correto.
-- CA-15.4: caso bloqueado pela política de saúde não recebe proposta de treino.
-- CA-15.5: proposta utiliza a versão identificada do onboarding.
-- CA-15.6: após triagem e validações técnicas, o treino é publicado e fica visível
-  ao cliente com parecer profissional PENDENTE, sem exigir aceite prévio.
-- CA-15.7: prescrição adaptada a condição de saúde exige evidência pertinente
-  recuperada do corpus aprovado, vinculada à recomendação; ausência ou conflito
-  não resolvido impede gerar/publicar essa adaptação e retorna justificativa.
-- CA-15.8: geração só seleciona exercícios ativos com todos os recursos necessários
-  disponíveis na academia ou alternativa completa cadastrada. Disponibilidade é
-  fornecida por MOD-10 e revalidada antes da publicação; dado ausente não libera seleção.
-- CA-15.9: ficha e explicações ao cliente são em português, inclusive quando a
-  evidência recuperada está em inglês, preservando fonte, sentido, unidades e negações.
+- CA-15.1: onboarding não concluído ou dados necessários insuficientes impedem geração.
+- CA-15.2: LLM configurado produz ficha JSON estruturada com IDs do catálogo; backend
+  valida schema/regras antes de persistir/publicar pelo contrato de MOD-04.
+- CA-15.3: ficha fica exclusivamente no cliente autorizado e identifica origem IA.
+- CA-15.4: política revisada e análise assistida identificam bloqueio/necessidade de
+  avaliação; caso grave bloqueado não recebe ficha, mesmo com resposta favorável do LLM.
+- CA-15.5: resumo rastreia versão de onboarding e preserva condições, medicamentos,
+  lesões, objetivos e restrições pertinentes; ausente não vira saudável/médio.
+- CA-15.6: conteúdo tecnicamente validado é publicado com parecer PENDENTE, consultável
+  antes do aceite do instrutor; falha mantém a vigente.
+- CA-15.7: adaptação por saúde exige evidência pertinente recuperada e identificada;
+  ausência/conflito não resolvido impede gerar/publicar a adaptação solicitada.
+- CA-15.8: selecionar somente exercícios ativos com recursos obrigatórios ou alternativa
+  completa disponível; backend revalida contexto e inventário antes de publicar.
+- CA-15.9: prescrição e explicações ao cliente são em português.
+- CA-15.10: recuperação segue fluxo semântico fixo; orquestrador limita contexto,
+  trechos e chamadas, sem pesquisa agentiva ou cadeia de agentes prescritores.
+- CA-15.11: instrutor designado também pode criar/alterar ficha manualmente, sem
+  dependência de LLM/RAG; catálogo de RF-38 separa movimento de prescrição.
 
 ### RF-16 — Visualizar ficha de treino atual
 
@@ -190,15 +198,22 @@ Manter a ficha e criar nova versão quando uma alteração validada for publicad
   numeração crescente; rascunhos e tentativas não publicadas não contam como ficha
   disponível. Falha na publicação não elimina ficha válida.
 
-### RF-18 — Conversar com assistente de IA
+### RF-18 — Conversar com assistente de IA com RAG semântico
 
-Disponibilizar chat contextualizado sobre o treino do próprio cliente.
+Responder dúvidas em português sobre exercícios, atividade física e saúde geral,
+com fontes recuperadas e contexto curto, distinguindo conversa de geração de ficha.
 
-- CA-18.1: cliente autenticado envia mensagem e recebe resposta sem exigir aceite
-  do instrutor, inclusive quando ainda não possui ficha avaliada.
-- CA-18.2: assistente recebe somente o contexto autorizado do cliente.
-- CA-18.3: mensagens de clientes diferentes não se misturam.
-- CA-18.4: indisponibilidade do provedor gera erro controlado.
+- CA-18.1: cliente autenticado usa chat sem onboarding/ficha/aceite prévio do instrutor.
+- CA-18.2: enviar pergunta, janela recente limitada e trechos pertinentes; não enviar
+  automaticamente ficha inteira, anamnese completa ou livro inteiro por mensagem.
+- CA-18.3: mensagens e cache não misturam clientes.
+- CA-18.4: indisponibilidade/timeout retornam erro controlado e não corrompem treino.
+- CA-18.5: resposta informativa cita fontes reais recuperadas; falta/conflito de suporte
+  produz abstenção e não é apresentado como diagnóstico, tratamento ou liberação médica.
+- CA-18.6: pedido explícito de gerar/adaptar ficha é roteado para RF-15/RF-19; resposta
+  de dúvida não modifica conteúdo silenciosamente.
+- CA-18.7: chat tem no máximo uma chamada generativa, contexto/saída limitados;
+  benchmark registra tempo total e busca separadamente.
 
 ### RF-19 — Propor alteração dinâmica de treino via IA
 
@@ -216,6 +231,9 @@ Propor adaptação quando dor, limitação ou condição interferir no treino.
   impede publicar a adaptação; registrar abstenção sem alterar a ficha vigente.
 - CA-19.6: adaptação respeita equipamentos disponíveis, idioma português e limite
   de 15 versões; recurso que ficou indisponível durante o fluxo exige revalidação.
+- CA-19.7: solicitação explícita usa nova execução limitada do orquestrador; relato
+  de saúde relevante exige dados confirmados/versionados antes de gerar. Não há
+  alteração automática por simples conversa nem pesquisa agentiva iterativa.
 
 ## Biometria, acesso e frequência
 
@@ -430,3 +448,23 @@ Enviar decisão de acesso a um serviço simulador separado, sem catraca física.
   somente esta última pode gerar frequência/lotação, conforme decisão válida.
 - CA-37.4: repetição, expiração, negação e falha não duplicam nem inventam entrada.
 - CA-37.5: evidências distinguem reconhecimento real e passagem simulada.
+
+## Catálogo de exercícios
+
+### RF-38 — Gerenciar catálogo de exercícios e recursos necessários
+
+Permitir a administrador e instrutor autorizados cadastrar, consultar, editar e
+inativar exercícios/variações para a montagem profissional das fichas.
+
+- CA-38.1: nome, descrição do movimento, grupo muscular e situação válidos criam
+  registro persistente com ID estável; duplicidade segue regra de cadastro aprovada.
+- CA-38.2: exercício declara combinações de equipamentos necessários, alternativas
+  completas ou dispensa explícita; vínculo ausente não significa peso corporal.
+- CA-38.3: só exercício ativo e viável no inventário está disponível para nova seleção;
+  desativar preserva referências e snapshots históricos.
+- CA-38.4: cliente não mantém o catálogo; administração/instrutor têm autorização
+  conferida na API e alterações críticas ficam auditáveis.
+- CA-38.5: séries, repetições, carga, cadência, intervalo e ordem pertencem ao item
+  prescrito na ficha, não a uma prescrição universal no cadastro do exercício.
+- CA-38.6: registros de exemplo são seeds/fixtures sintéticos produzidos na
+  implementação, separados do corpus documental, sem confundir dados sintéticos com fichas reais ou literatura aprovada.
