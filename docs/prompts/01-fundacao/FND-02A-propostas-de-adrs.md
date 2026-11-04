@@ -42,7 +42,9 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 
 ## Contratos e invariantes
 
-- Cada ADR usa status `PROPOSTA`.
+- Escolha aberta usa status `PROPOSTA`. Decisão já expressa pelo responsável
+  pode ser formalizada como `ACEITA`, identificando sua origem, sem novo pedido
+  de confirmação. Recomendação do agente não recebe esse tratamento.
 - Cada opção registra benefícios, custos e impacto na execução local sem Docker.
 - Recomendação deve ser explícita e distinguível da decisão final.
 
@@ -60,7 +62,8 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 ## Critérios de aceite
 
 - GATE-01 a GATE-06 e GATE-07 possuem decisão correspondente ou justificativa.
-- MRF08–MRF15 aparecem explicitamente no checkpoint de aceitação.
+- MRF01–MRF19 e Agentic RAG aparecem com a aprovação funcional já registrada;
+  checkpoint pede somente escolhas técnicas/clínicas ou parâmetros ainda abertos.
 - Nenhuma decisão ainda aberta foi copiada para `AGENTS.md` como confirmada.
 - As propostas permitem resposta objetiva do responsável.
 
@@ -72,7 +75,7 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 
 ## Entregáveis
 
-- ADRs com status `PROPOSTA`.
+- ADRs de escolhas abertas com status `PROPOSTA` e formalização das decisões já aceitas.
 - Tabela de decisão para FND-02B.
 - Manifesto atualizado.
 

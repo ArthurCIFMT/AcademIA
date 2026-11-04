@@ -6,8 +6,10 @@ as mesmas instruções em dezenas de arquivos. Sua leitura é obrigatória.
 ## Leitura e pré-condições
 
 Leia AGENTS.md, o contexto de execução, o cartão, os requisitos citados, os ADRs
-aplicáveis, o modelo lógico aceito e a estratégia de testes. Confirme no manifesto
-as dependências concluídas e os gates fechados. Texto escrito não significa tarefa
+aplicáveis e a estratégia de testes. Leia o modelo lógico aceito quando existente
+e pertinente; FND-01/FND-02 antecedem sua criação, e FND-03 deve produzi-lo antes
+das implementações que dele dependem. Confirme no manifesto as dependências
+concluídas e os gates pertinentes fechados. Texto escrito não significa tarefa
 executada. Estado inicial dos cartões futuros: BLOQUEADO até suas dependências.
 
 ## Escopo e entregáveis
@@ -21,12 +23,15 @@ de caminho antes de editar se a estrutura adotada diferir da prevista.
 São permitidas também atualizações diretamente afetadas em docs/arquitetura/,
 docs/testes/ e no manifesto. Lockfiles, configuração e dependências podem mudar
 somente se essenciais à entrega e com justificativa. Não antecipe outro módulo.
+Quando o cartão configurar ou ampliar comandos de teste, é permitida a atualização
+restrita da seção Comandos de AGENTS.md; isso não autoriza mudar outras regras.
 
 ## Critérios e testes
 
 Os cenários do cartão são mínimos e complementam os critérios completos dos RF/RN.
-Use os códigos de suites de docs/testes/comandos.md, resolvidos em comandos reais
-durante os scaffolds. Código de suite não é comando de terminal. Não declare
+Use os códigos dos conjuntos de testes de docs/testes/comandos.md, resolvidos em
+comandos reais pelos cartões responsáveis; DOC já possui verificador reutilizável.
+Código de conjunto de testes não é comando de terminal. Não declare
 sucesso se um comando estiver pendente ou se faltou serviço externo necessário.
 
 Acrescente testes aos comportamentos alterados. Execute somente suites pertinentes,

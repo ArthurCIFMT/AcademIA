@@ -42,7 +42,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-01 | Stack Python e ferramentas | ADRs aceitos | ABERTO |
 | GATE-02 | Identidade e recuperação de credenciais | ADR aceito | ABERTO |
 | GATE-03 | Academia única ou múltipla | ADR aceito | ABERTO |
-| GATE-04 | Banco vetorial, provedores, corpus, políticas e MRF08–MRF15 | ADRs e requisitos aprovados | ABERTO |
+| GATE-04 | Provedores, banco vetorial, corpus, políticas e parâmetros ainda abertos de MRF01–MRF19; Agentic RAG funcional já autorizado | ADRs e requisitos aprovados | ABERTO |
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
@@ -50,7 +50,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
-| PG-02 | Escopo selecionado final concluído ou dispensado | Manifesto, decisões e matriz de aceite | ABERTO |
+| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; exclui VAL-01–VAL-03 | Manifesto, decisões e matriz de aceite com escopo explícito | ABERTO |
 
 Gates de IA e pagamentos são fechados antes desses módulos, sem impedir o trabalho
 independente de fundação. FND-02B registra escolhas e pendências; não declara escolhas
@@ -73,7 +73,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [FND-01](01-fundacao/FND-01-fontes-de-verdade.md) | Validar fontes, normalizações e glossário | MOD-00–MOD-12 | P00 | PRONTO |
 | [FND-02A](01-fundacao/FND-02A-propostas-de-adrs.md) | Propor decisões arquiteturais | MOD-00 | FND-01 | BLOQUEADO |
 | [FND-02B](01-fundacao/FND-02B-aprovacao-dos-gates.md) | Registrar escolhas e fechar gates aplicáveis | MOD-00 | FND-02A | BLOQUEADO |
-| [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-02, GATE-03 | BLOQUEADO |
+| [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05 | BLOQUEADO |
 | [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | BLOQUEADO |
 | [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | BLOQUEADO |
 | [FND-06](01-fundacao/FND-06.md) | Convenções REST, contratos e testes de API | MOD-00 | FND-04, FND-05 | BLOQUEADO |
@@ -197,3 +197,14 @@ AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tar
 MEM-00 é opcional nessa fase, com caminho preservado; matrícula/acesso não dependem
 dele nem de pagamento confirmado.
 INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
+
+## Leitura antes da implementação
+
+Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
+contexto/contrato e o cartão escolhido. São 19 MRFs/110 critérios; fontes e decisões
+funcionais já autorizadas não precisam ser reaprovadas. Gates técnicos continuam
+abertos até sua evidência, e FND-01 permanece PRONTO para execução/revisão formal.
+Esta auditoria não marca cartões de implementação como concluídos.
+
+PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
+exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

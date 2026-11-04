@@ -6,6 +6,10 @@ O [manifesto](../prompts/README.md) registra dependências e execução.
 
 | Prompt | Módulos | Requisitos relacionados |
 |---|---|---|
+| [FND-01](../prompts/01-fundacao/FND-01-fontes-de-verdade.md) | MOD-00–MOD-12 | RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17, MRF01–MRF19 |
+| [FND-02A](../prompts/01-fundacao/FND-02A-propostas-de-adrs.md) | MOD-00 | RNF-01–RNF-17 e requisitos técnicos transversais |
+| [FND-02B](../prompts/01-fundacao/FND-02B-aprovacao-dos-gates.md) | MOD-00 | RNF-01–RNF-17, MRF01–MRF19 |
+| [FND-03](../prompts/01-fundacao/FND-03-modelo-logico.md) | MOD-01–MOD-12 | RF-01–RF-37, RN-01–RN-39, MRF01–MRF19 |
 | [FND-04](../prompts/01-fundacao/FND-04.md) | MOD-00 | RNF-02, RNF-04, RNF-07, RNF-08, RNF-10 |
 | [FND-05](../prompts/01-fundacao/FND-05.md) | MOD-00 | RNF-03, RNF-07, RNF-10, RNF-16; RN-33 |
 | [FND-06](../prompts/01-fundacao/FND-06.md) | MOD-00 | RNF-04, RNF-06, RNF-07, RNF-15, RNF-16; RN-23, RN-32 |
@@ -60,7 +64,7 @@ O [manifesto](../prompts/README.md) registra dependências e execução.
 | [INF-02](../prompts/09-infraestrutura/INF-02.md) | MOD-00 | RNF-05, RNF-09, RNF-11, RNF-12 |
 | [INF-03](../prompts/09-infraestrutura/INF-03.md) | MOD-00 | RNF-08, RNF-11, RNF-12, RNF-15 |
 | [INF-04](../prompts/09-infraestrutura/INF-04.md) | MOD-00 | RNF-07, RNF-10, RNF-11, RNF-12 |
-| [VAL-01](../prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-37; RN-01–RN-39; RNF-01–RNF-17; MRF01–MRF15 conforme aceite |
+| [VAL-01](../prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-37; RN-01–RN-39; RNF-01–RNF-17; MRF01–MRF19 e critérios vigentes |
 | [VAL-02](../prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07 e critérios dos módulos selecionados |
 | [VAL-03](../prompts/10-validacao-final/VAL-03.md) | MOD-00 | RNF-10, RNF-11; contexto acadêmico |
 
@@ -88,8 +92,7 @@ MRFs e critérios identificados está em [macrorequisitos](../requisitos/macrore
 | MRF18 | RAG-03/04/05 (contexto), AI-02/03/05 (pesquisa dinâmica) | AR-03/04/10/11/19 em AI-06 |
 | MRF19 | AI-02/03/04/05, com vigência de fontes em RAG-01/05 | AR-05/07/13/16/19 em AI-06 |
 
-Os 61 cartões e as dependências do manifesto são mantidos. Mestre, manifesto,
-fundação e validação final não foram alterados por restrição explícita de escopo.
-Suas listagens antigas de MRFs/status estão identificadas na
-[análise de compatibilidade](../analises/2026-11-04-compatibilidade-agentic-rag.md).
-Metadados históricos não substituem a fonte canônica atual nem comprovam aceite.
+Os 61 cartões são mantidos. A revisão geral anterior à implementação alinha mestre,
+fundação, manifesto e validação final a MRF01–MRF19 e explicita GATE-01/02/03/05
+nas dependências de FND-03. A [revisão vigente](../testes/revisao-dos-prompts.md)
+registra correções e pendências, sem comprovar aceite ou implementação.

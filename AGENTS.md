@@ -114,9 +114,9 @@ necessária para sua entrega.
 
 - O fluxo adotado é Agentic RAG: LLM escolhe ações de pesquisa e ferramentas de
   leitura conforme resultados; executor valida schemas, autorização e orçamento.
-- Consultar MRF01–MRF19 e docs/arquitetura/agentic-rag.md. Listagens históricas
-  MRF01–MRF15 não excluem os novos requisitos; a atualização funcional autorizada
-  não fecha escolhas de provedor, políticas clínicas ou parâmetros de GATE-04.
+- Consultar MRF01–MRF19 e docs/arquitetura/agentic-rag.md. A atualização funcional
+  autorizada não fecha escolhas de provedor, políticas clínicas ou parâmetros
+  de GATE-04.
 - Planejamento, chamadas, resultados e decisões são rastreáveis sem raciocínio
   interno. Nenhuma ferramenta do modelo escreve domínio, publica ficha ou remove
   bloqueio; publicação permanece no serviço de aplicação por contrato de MOD-04.
@@ -150,9 +150,12 @@ necessária para sua entrega.
 
 ## Comandos
 
-Os comandos oficiais ainda não foram definidos. O prompt de scaffold deverá
-registrá-los aqui somente depois que os projetos frontend e backend existirem.
-Não invente comandos ou ferramentas que ainda não estejam configurados.
+Verificação documental disponível, a partir da raiz, com Python 3.10+:
+`python scripts/verificar_documentacao.py` (somente leitura, sem dependências externas).
+
+Os comandos da aplicação ainda serão registrados pelos scaffolds, depois que
+frontend/backend e seus testes existirem. Não invente comandos ou ferramentas
+que ainda não estejam configurados.
 
 ## Git e escopo de commits
 

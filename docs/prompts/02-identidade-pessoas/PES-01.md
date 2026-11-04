@@ -27,6 +27,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
+Aplicar a matriz de estados conta/perfis de IAM-02. A inativação de funcionário
+remove suas permissões operacionais conforme a decisão registrada; não inferir
+automaticamente o efeito sobre eventual perfil de cliente da mesma identidade.
+
 1. Criar API e telas administrativas de listagem, cadastro, atualização e inativação.
 2. Atribuir papéis operacionais conforme política; manter histórico e auditoria.
 3. Evitar cadastro parcial quando criação de identidade ou perfil falhar.

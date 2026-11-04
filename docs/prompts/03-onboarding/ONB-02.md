@@ -16,6 +16,13 @@ Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
 A redação deste cartão não fecha gates nem autoriza escolher tecnologia pendente.
 
+## Pré-condição de domínio
+
+Antes de implementar, registrar esquema de onboarding aprovado: campos, tipos,
+unidades, obrigatoriedade, validações e origem declarada/medida. Sua ausência
+bloqueia a parte afetada, sem exigir fechar provedores ou todo GATE-04. Não inventar
+questionário clínico. O checklist da revisão documental identifica essa pendência.
+
 ## Escopo permitido
 
 - `backend/app/modules/onboarding/**`

@@ -62,7 +62,10 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
 - Publicação verifica onboarding/restrições e versão-base; parecer identifica a
   versão avaliada e não é herdado por novas versões.
 - Dados de clientes diferentes nunca compartilham contexto de IA.
-- O RAG recupera somente documentos e versões aprovados.
+- Agentic RAG planeja e escolhe ferramentas de pesquisa conforme resultados;
+  executor controla autorização, schemas e orçamento global (MRF16–MRF19).
+- O RAG recupera somente documentos e versões aprovados; falta de suporte,
+  conflito e falha técnica têm encerramentos distintos e não contornam bloqueios.
 - Regras críticas e numéricas são validadas por código, não somente por LLM/RAG.
 - Reconhecimento facial por API real é separado da autorização e da catraca fictícia.
 - Matrícula pelo atendente, sem pagamento obrigatório → foto de referência → nova

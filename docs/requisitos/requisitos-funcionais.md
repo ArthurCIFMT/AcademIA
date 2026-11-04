@@ -38,6 +38,11 @@ Permitir alteração cadastral e ativação ou desativação do cliente.
 - CA-03.3: desativação não apaga o histórico.
 - CA-03.4: cliente elegível à biometria precisa de foto facial válida.
 
+Pendência de detalhamento: CA-03.2 exige definir o alcance da desativação quando
+a identidade também possuir perfil de funcionário. Estado da conta, estado de
+perfil e permissões acumuladas não são sinônimos; registrar a matriz antes de
+implementar IAM-02/PES-01/PES-02, sem presumir uma política ainda não aprovada.
+
 ### RF-04 — Autenticar usuário
 
 Identificar cliente ou funcionário antes de acessar áreas protegidas.
@@ -214,13 +219,15 @@ Propor adaptação quando dor, limitação ou condição interferir no treino.
 
 ## Biometria, acesso e frequência
 
-### RF-20 — Receber evento de uso de catraca externa
+### RF-20 — Receber evento externo de identificação facial
 
-Disponibilizar endpoint REST para o resultado de identificação facial externa.
+Disponibilizar contrato REST autenticado para o resultado de identificação facial
+externa, normalizado pelo adaptador confiável. Não pressupõe webhook nativo do
+CompreFace: reconhecimento, autorização e passagem simulada de RF-37 são distintos.
 
 - CA-20.1: requisição autenticada e válida segue o JSON documentado.
 - CA-20.2: JSON inválido retorna erro de validação.
-- CA-20.3: aplicação não implementa o algoritmo facial da catraca.
+- CA-20.3: aplicação não implementa o algoritmo de reconhecimento facial do provedor.
 - CA-20.4: mesmo identificador externo não cria duplicidade.
 
 ### RF-21 — Verificar identidade e habilitação para acesso
@@ -288,7 +295,7 @@ Permitir consulta autorizada da situação financeira já registrada.
 - CA-27.2: cliente pode visualizar a própria situação quando disponível.
 - CA-27.3: cliente não consulta cobrança de terceiro.
 
-### RF-31 — Comprar e manter plano de academia
+### RF-31 — Matricular cliente e manter vínculo com plano
 
 Permitir que um plano seja associado à conta por matrícula com validade definida.
 

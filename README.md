@@ -4,6 +4,7 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 
 ## Planejamento
 
+- [Revisão antes da implementação e pendências](docs/testes/revisao-dos-prompts.md)
 - [Contexto e escopo](docs/requisitos/contexto-e-escopo.md)
 - [Requisitos funcionais](docs/requisitos/requisitos-funcionais.md)
 - [Regras de negócio](docs/requisitos/regras-de-negocio.md)
@@ -29,3 +30,16 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 O mestre produz o plano. A implementação incremental usa `AGENTS.md`, o contexto
 de execução, o contrato comum e um prompt operacional escolhido de cada vez.
 Os 61 cartões foram redigidos; a criação da documentação não implementa o sistema.
+
+Para a leitura manual: comece pela revisão, confira decisões e escopo, leia o mestre
+e depois percorra o manifesto por dependências. Os primeiros passos executáveis
+são FND-01, propostas/decisões de FND-02A/B e modelo lógico de FND-03; a escolha de
+stack e outros gates continua necessária antes dos respectivos scaffolds.
+
+Verificação documental reutilizável (Python 3.10+, sem pacotes externos):
+
+```text
+python scripts/verificar_documentacao.py
+```
+
+Ela não implementa a aplicação, não valida decisões clínicas e não aprova corpus.

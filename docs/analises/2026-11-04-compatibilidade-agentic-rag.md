@@ -55,27 +55,18 @@ publicação precisam de controle concorrente. A validação final de aprovaçã
 fontes e disponibilidade usa serviços proprietários com controle de revisão,
 consistente com a transação final. Referência a snapshot não substitui essa garantia.
 
-## Prompts externos congelados e divergências registradas
+## Atualização pela revisão geral antes da implementação
 
-Foram preservados os 55 arquivos de `docs/prompts/` fora de `05-ia-rag/`, incluindo
-mestre, manifesto, contrato/contexto comuns, fundação, treinos, equipamentos,
-acesso, financeiro, infraestrutura e validação final. Os 12 cartões internos
-recebem os novos requisitos mantendo IDs, títulos e dependências; o total de
-61 cartões não cresce. Os complementos de TST-01 tratam apenas a integração RAG/IA.
+A entrega agentiva anterior preservou os prompts externos por limite de escopo.
+Na revisão geral seguinte, autorizada pelo responsável, mestre, contexto/contrato,
+fundação, manifesto e VAL-01 foram alinhados à fonte canônica MRF01–MRF19.
+Os 61 cartões permanecem; aprovação funcional não fecha gates técnicos/clínicos.
 
-| Referência externa que permanece | Diferença atual | Tratamento nesta entrega |
-|---|---|---|
-| [Mestre](../prompts/00-prompt-mestre.md), seção de fontes | MRF08–MRF15 ainda são descritos como derivados pendentes | Atualização funcional autorizada está registrada na fonte canônica, AGENTS.md e normalização; aprovação funcional não fecha parâmetros clínicos/técnicos. |
-| [FND-01](../prompts/01-fundacao/FND-01-fontes-de-verdade.md) | Metadados listam MRF01–MRF15 e texto antigo de validação | Preservado; leitura de todos os requisitos atuais não deve excluir MRF16–MRF19. |
-| [FND-02A](../prompts/01-fundacao/FND-02A-propostas-de-adrs.md) e [FND-02B](../prompts/01-fundacao/FND-02B-aprovacao-dos-gates.md) | Checkpoint enumera MRF08–MRF15 | Registrar a decisão funcional já autorizada e continuar fechando escolhas ainda abertas; não inferir que GATE-04 inteiro está aprovado. |
-| [FND-03](../prompts/01-fundacao/FND-03-modelo-logico.md) | Faixa de MRFs nos metadados não inclui os novos | Corpo exige todos os requisitos/arquitetura; a extensão de dados orienta a revisão. Não criar schema físico nesta entrega. |
-| [Manifesto](../prompts/README.md), GATE-04 | Faixa antiga MRF08–MRF15 e gate ABERTO | Gate técnico/clínico continua aberto. Grafo e IDs não mudam; plano funcional atual é MRF01–MRF19. |
-| [VAL-01](../prompts/10-validacao-final/VAL-01.md) | Metadados ainda enumeram MRF01–MRF15 | Aceite agentivo é detalhado em AI-06/TST-01 e na fonte atual; registro histórico não comprova cobertura nem exclui novos critérios. |
-
-São divergências documentais conhecidas, não compatibilidade textual integral.
-Uma revisão futura desses arquivos dependerá de escopo autorizado. Nesta entrega,
-as instruções atuais do responsável e as fontes de verdade atualizadas orientam
-a execução; não alterar prompts externos nem inventar exceção clínica para harmonizá-los.
+Foram corrigidos o comando de contagem de MRFs, a leitura prematura do modelo
+lógico, dependências de FND-03 e dependências de comandos de teste futuros em
+AI-01/INF-01. O marco PG-02 exclui a própria validação final. A
+[revisão vigente](../testes/revisao-dos-prompts.md) registra evidências e pendências.
+As alterações não acrescentam regras clínicas ou capacidades a outros módulos.
 
 ## Distribuição de implementação sem ciclos novos
 
@@ -93,11 +84,12 @@ somente suas estruturas por migrations novas.
 
 ## Verificações desta atualização
 
-O relatório de revisão documental confere: 19 MRFs, 110 critérios únicos, 75 IDs
-anteriores preservados, 25 cenários AR, links locais, rastreabilidade dos 12 cartões,
-61 cartões no grafo sem ciclos e mesmos metadados de dependência do manifesto.
-Hashes confirmam os 55 arquivos externos, o MER/18 PDFs e os dois artefatos
-preexistentes da avaliação documental preservados. RFs, RNs e RNFs não foram alterados.
+A entrega agentiva original conferiu 19 MRFs, 110 critérios, 75 IDs anteriores,
+25 cenários AR, integridade do MER/18 PDFs e dependências dos 61 cartões. A revisão
+geral atual amplia a verificação para referências/escopos e alinhamento de todo o
+planejamento; suas evidências estão na revisão vigente e no verificador DOC.
+O MER original e os materiais permanecem preservados; detalhamentos de redação
+não representam implantação ou aprovação clínica.
 
 Essas verificações são documentais. BE/INT/API/DB/RAG/IA/E2E não foram executados
 como testes de aplicação: projetos, provedores e serviços ainda não estão

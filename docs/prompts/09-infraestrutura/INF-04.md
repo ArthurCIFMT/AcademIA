@@ -31,6 +31,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Reproduzir instalação em ambiente limpo identificado, com inicialização e migrations.
 2. Reexecutar cenário crítico do MVP e integrações selecionadas no Compose.
 3. Documentar backup/restauração e diferenças entre setup local e containerizado.
+4. Ampliar os comandos INF registrados em INF-01 com instalação limpa, persistência
+   e integração; manter verificações anteriores reproduzíveis.
 
 ## Critérios de aceite
 

@@ -42,7 +42,7 @@
 | REC-004 | Keycloak/OIDC. | Identidade e credenciais fora do domínio. |
 | REC-005 | Qdrant. | Banco vetorial especializado e configurável. |
 | REC-006 | Academia única no MVP. | Evita isolamento multitenant prematuro. |
-| REC-007 | Um instrutor principal ativo por cliente. | Responsabilidade inequívoca com histórico. |
+| REC-007 | Incorporada à decisão vigente DEC-008 e RF-34: principal vigente inequívoco. | Não reabrir a regra já especificada; formalizar integridade e histórico no modelo lógico. |
 | REC-008 | Separar publicação, validação técnica e parecer por versão. | Não condicionar consulta/chat ao aceite; explicitar tratamento da atualidade e de rejeição. |
 | REC-009 | Armazenar timestamps em UTC/ISO 8601. | Consistência e rastreabilidade. |
 | REC-010 | Objetos tipados internamente; JSON nas fronteiras. | Evita serialização artificial dentro do monólito. |

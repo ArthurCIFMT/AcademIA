@@ -27,6 +27,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
+Aplicar a matriz de estados conta/perfis de IAM-02. Antes de inativar uma identidade
+que também seja funcionário, resolver a pendência de alcance indicada em RF-03;
+não implementar revogação global como consequência implícita do perfil de cliente.
+
 1. Criar API/telas para cadastrar, pesquisar por nome/e-mail, consultar, atualizar e inativar clientes.
 2. Distinguir estado da conta de matrícula, biometria e elegibilidade.
 3. Permitir cadastro inicial antes de biometria e onboarding conforme modelo aceito.

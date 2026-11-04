@@ -67,6 +67,24 @@ continuam pendentes em GATE-04, sem aprovação automática de corpus ou políti
 | Dados | Especificação de execução, etapas, evidências e avaliações em PostgreSQL | Modelo lógico/migrations ainda futuros; MER original intacto. |
 | Prompts | Somente 12 cartões em 05-ia-rag atualizados, sem mudar dependências | 55 arquivos de prompts fora do diretório preservados, inclusive mestre/manifesto/fundação/treinos. |
 
-As listagens antigas de MRF01–MRF15 e aprovação pendente em prompts externos são
-registradas na [análise de compatibilidade](../analises/2026-11-04-compatibilidade-agentic-rag.md).
-Elas não excluem requisitos atuais das fontes de verdade nem fecham gates técnicos.
+Naquela entrega, referências antigas fora de RAG/IA foram preservadas por limite
+de escopo. A revisão geral seguinte as corrige sem fechar gates técnicos.
+
+## Revisão geral antes da implementação
+
+- Mestre, fundação, manifesto e VAL-01 passam a apontar MRF01–MRF19; origem
+  derivada não significa que a aprovação funcional atual precise ser pedida novamente.
+- RF-20 mantém seu ID e passa a nomear identificação facial, distinguindo-a da
+  passagem de RF-37. Não é exigido webhook inexistente do provedor.
+- RF-31 mantém seu ID e nomeia matrícula/vínculo com plano, refletindo a decisão
+  anterior de matrícula manual independente de pagamento.
+- REC-007 é alinhada a DEC-008/RF-34, que já exigem responsável principal vigente.
+- O alcance de inativação de conta/perfil continua pendente; nenhuma opção foi
+  escolhida nesta revisão. Esquema de onboarding também exige campos/unidades e
+  obrigatoriedade aprovados antes de ONB-02, sem fechar todo GATE-04 por inferência.
+- Pré-condições de FND-03, comandos de AI-01/INF-01 e escopos de manutenção DOC
+  foram alinhados para eliminar dependências implícitas impossíveis de satisfazer.
+
+Ver [revisão vigente e checklist](../testes/revisao-dos-prompts.md). O histórico
+detalhado de versões anteriores permanece no Git; contagens antigas não são a
+especificação atual. Nenhum ID funcional ou critério identificado foi removido.

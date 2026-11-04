@@ -5,7 +5,7 @@
 - Fase: Entrega final.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: PG-02.
-- Requisitos: RF-01–RF-37; RN-01–RN-39; RNF-01–RNF-17; MRF01–MRF15 conforme aceite.
+- Requisitos: RF-01–RF-37; RN-01–RN-39; RNF-01–RNF-17; MRF01–MRF19 e critérios vigentes.
 - Módulos: MOD-00–MOD-12.
 
 ## Objetivo e contexto
@@ -15,6 +15,9 @@ Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
 A redação deste cartão não fecha gates nem autoriza escolher tecnologia pendente.
+
+PG-02 considera módulos funcionais selecionados e infraestrutura aplicável,
+não exige VAL-01–VAL-03 já concluídos: estes são executados após esse marco.
 
 ## Escopo permitido
 

@@ -31,6 +31,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Criar imagens a partir dos comandos locais já validados e dependências fixadas.
 2. Configurar build frontend, processo backend e usuário/arquivos necessários.
 3. Evitar segredos na imagem e validar artefatos produzidos.
+4. Configurar, executar e registrar comandos INF de build/smoke nesta entrega;
+   INF-04 amplia a verificação integrada sem ser pré-condição dos testes daqui.
 
 ## Critérios de aceite
 

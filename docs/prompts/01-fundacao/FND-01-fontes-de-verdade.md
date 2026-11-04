@@ -5,7 +5,7 @@
 - Fase: Fundação documental
 - Estado inicial: PRONTO
 - Dependências: P00
-- Requisitos: RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17, MRF01–MRF15
+- Requisitos: RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17, MRF01–MRF19
 - Módulos: MOD-00–MOD-12
 - Próximo prompt desbloqueado: FND-02A
 
@@ -35,6 +35,8 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 - `docs/arquitetura/modulos.md`
 - `docs/arquitetura/rastreabilidade.md`
 - `docs/prompts/README.md`
+- `docs/testes/comandos.md`
+- `scripts/verificar_documentacao.py`
 
 ## Fora do escopo
 
@@ -45,8 +47,8 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 
 ## Contratos e invariantes
 
-- Headings canônicos são a fonte para contagem de RF/MRF; referências em matrizes
-  podem repetir IDs legitimamente.
+- RFs usam títulos canônicos; RN/RNF/MRF usam linhas das respectivas tabelas.
+  Referências em matrizes podem repetir IDs legitimamente; não contá-las como definição.
 - Requisito derivado ou normalizado precisa ter proveniência registrada.
 
 ## Implementação obrigatória
@@ -65,7 +67,8 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 - Nenhum ID fornecido desaparece.
 - RF-34–RF-37 e as mudanças em publicação/parecer, matrícula e biometria possuem
   origem explícita nas solicitações do responsável.
-- MRF08–MRF15 permanecem identificados como derivados até validação.
+- MRF01–MRF19 e seus 110 critérios preservam origem e aprovação funcional já
+  registradas; escolhas clínicas/técnicas ainda abertas permanecem explícitas.
 - Restrições técnicas, testes e firewall estão representados como RNFs.
 - Pagamento e Docker estão corretamente posicionados em fases tardias.
 - Rastreabilidade aponta módulo para cada grupo de requisitos.
@@ -76,8 +79,10 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 - `rg -n "^### RF-[0-9]{2}" docs/requisitos/requisitos-funcionais.md`
 - `rg -n "^\| RN-[0-9]{2}" docs/requisitos/regras-de-negocio.md`
 - `rg -n "^\| RNF-[0-9]{2}" docs/requisitos/requisitos-nao-funcionais.md`
-- `rg -n "^### MRF[0-9]{2}" docs/requisitos/macrorequisitos-ia-rag.md`
-- Confirmar manualmente que links relativos apontam para arquivos existentes.
+- `rg -n "^\| MRF[0-9]{2} \|" docs/requisitos/macrorequisitos-ia-rag.md`
+- `python scripts/verificar_documentacao.py` (Python 3 disponível no ambiente).
+- Conferir também sentido das referências e lacunas de domínio; links existentes
+  não comprovam aprovação do conteúdo nem adequação clínica.
 - `git diff --check`.
 
 ## Entregáveis

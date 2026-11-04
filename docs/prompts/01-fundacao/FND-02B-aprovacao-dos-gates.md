@@ -5,9 +5,9 @@
 - Fase: Checkpoint arquitetural
 - Estado inicial: BLOQUEADO até FND-02A e resposta do responsável
 - Dependências: FND-02A
-- Requisitos: RNF-01–RNF-17, MRF08–MRF15
+- Requisitos: RNF-01–RNF-17, MRF01–MRF19
 - Módulos: MOD-00
-- Próximo prompt desbloqueado: FND-03
+- Próximo prompt desbloqueado: FND-03 conforme seus gates; FND-07 pode avançar independentemente.
 
 ## Objetivo
 
@@ -19,7 +19,7 @@ gates efetivamente confirmados.
 - `AGENTS.md`
 - `docs/prompts/00-contexto-de-execucao.md`
 - `docs/prompts/00-contrato-operacional.md`
-- ADRs com status `PROPOSTA`
+- ADRs propostos e formalizações das decisões já aceitas
 - tabela de decisão criada por FND-02A
 - `docs/prompts/README.md`
 
@@ -52,7 +52,8 @@ gates efetivamente confirmados.
 
 1. Apresentar um único checkpoint conciso com escolhas e recomendações.
 2. Registrar as respostas nos ADRs.
-3. Confirmar ou rejeitar MRF08–MRF15 individualmente ou como conjunto revisado.
+3. Registrar a aprovação funcional já autorizada de MRF01–MRF19; solicitar
+   decisão somente sobre políticas clínicas, provedores e parâmetros ainda abertos.
 4. Atualizar `AGENTS.md` somente com decisões aceitas.
 5. Atualizar estado e evidência de GATE-01 a GATE-07.
 6. Registrar a política Git aceita antes das próximas entregas.
@@ -60,10 +61,11 @@ gates efetivamente confirmados.
 ## Critérios de aceite
 
 - GATE-01, GATE-03, GATE-05 e GATE-06 estão fechados antes de FND-04.
-- GATE-02 e GATE-03 estão fechados antes do modelo lógico de FND-03.
+- GATE-01, GATE-02, GATE-03 e GATE-05 estão fechados antes do modelo lógico de FND-03.
 - GATE-02 está fechado antes de IAM-01.
 - GATE-04 está fechado antes de RAG-01/AI-01.
-- MRF08–MRF15 possuem estado formal: aprovado, rejeitado ou pendente explícito.
+- MRF01–MRF19 refletem a decisão funcional vigente; parâmetros ainda indefinidos
+  possuem pendência específica, sem reabrir todo o conjunto funcional.
 - Gates adiados não impedem concluir o checkpoint documental, mas continuam
   bloqueando os cartões dependentes.
 - Decisões aceitas estão consistentes entre ADRs, `AGENTS.md` e manifesto.

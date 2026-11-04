@@ -1,83 +1,142 @@
-# Revisão documental dos prompts
+# Revisão antes da implementação
 
-## Atualização atual: Agentic RAG
+Data: 2026-11-04. Base anterior: `055e042fee218260b418ade88bc7e03190fdac77`.
+Estado: REVISADA_DOCUMENTALMENTE; implementação e gates técnicos ainda pendentes.
 
-MRF01–MRF19 possuem 110 critérios, preservando os 75 IDs anteriores. Somente
-os 12 cartões de 05-ia-rag foram adequados, sem mudar IDs/dependências ou o total
-de 61 cartões. 55 arquivos de prompts externos ficam congelados nesta entrega.
-Ver [compatibilidade](../analises/2026-11-04-compatibilidade-agentic-rag.md) e
-[AR-01–AR-25](agentic-rag.md). Registros abaixo são históricos.
-Não houve implementação/ensaio do Agentic RAG ou fechamento de gates nesta entrega.
+Esta é a revisão vigente do planejamento; substitui os snapshots contraditórios
+de contagem/estado deste arquivo. Histórico completo no Git. Não implementa
+módulos, aprova corpus/políticas clínicas ou encerra gates por inferência.
 
-## Atualização: equipamentos no MVP, retenção e macrorequisitos completos
+## Resultado e fontes
 
-Verificação documental de 2026-11-04 após as decisões do responsável:
+O planejamento tem 37 RFs, 39 RNs, 17 RNFs, 19 MRFs/110 critérios, 13 módulos e
+61 cartões. Continua monólito modular Python, PostgreSQL operacional e banco
+vetorial especializado para literatura aprovada. Mestre e cartões usam Agentic RAG.
 
-- 15 MRFs em tabela com descrição, atores, módulos e 75 critérios identificados.
-- RF-01–RF-37 preservados; RN-37/RN-38/RN-39 registram recursos, retenção e idioma.
-- 61 cartões operacionais; grafo sem ciclos e metadados coerentes com manifesto
-  e rastreabilidade. EQP-01 é MVP e precede catálogo/geração/aceite integrado.
-- Links locais, whitespace e integridade do MER e dos 18 PDFs conferidos.
-- Testes de aplicação não executados: esta entrega é documental e os projetos
-  executáveis ainda não estão configurados. Cenários novos estão nos cartões.
+Fontes: [RFs](../requisitos/requisitos-funcionais.md),
+[RNs](../requisitos/regras-de-negocio.md),
+[RNFs](../requisitos/requisitos-nao-funcionais.md),
+[MRFs](../requisitos/macrorequisitos-ia-rag.md),
+[decisões](../arquitetura/decisoes-iniciais.md), [manifesto](../prompts/README.md),
+[MER original](../arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png),
+[revisão do MER](../arquitetura/revisao-mer.md) e
+[extensão agentiva](../arquitetura/modelo-de-dados/extensao-agentic-rag.md).
 
-Os registros abaixo documentam revisões anteriores e não fecham gates atuais.
+## Correções realizadas
 
-## Objeto da revisão
+| Achado | Correção |
+|---|---|
+| Mestre/fundação/validação ainda apontavam 15 MRFs e aprovação funcional pendente | Alinhados a MRF01–MRF19, mantendo pendências técnicas/clínicas específicas. |
+| Mestre descrevia recuperação única | Incluídos planejamento, ferramentas, suficiência, retornos à pesquisa, orçamento e encerramentos. |
+| Contrato exigia modelo lógico antes de FND-03 | Leitura condicionada à existência/aplicabilidade; FND-03 continua responsável por produzi-lo. |
+| FND-01 procurava títulos MRF, mas fonte é tabela | Corrigidos regex/invariável e incluído verificador DOC reutilizável. |
+| Pré-condições de FND-03 divergiam dos metadados | GATE-01/02/03/05 explícitos no cartão e manifesto. FND-07 continua independente após FND-02B. |
+| Checkpoint podia pedir novamente decisões já dadas | ADRs distinguem escolhas abertas de formalização de decisões expressas. |
+| AI-01 exigia comando IA criado apenas em AI-06 | Regras/contratos locais usam BE/INT/API; avaliação integrada real fica em AI-06. |
+| INF-01 exigia comando INF criado apenas em INF-04 | INF-01 configura build/smoke; INF-04 amplia o conjunto. Docker permanece tardio. |
+| Comandos eram registrados sem escopo para o registro | FND-01 pode manter DOC; contrato permite somente atualizar a seção Comandos de AGENTS.md ao configurar testes. |
+| PG-02 podia exigir VALs já concluídos | Marco exclui VAL-01–VAL-03, que são posteriores. |
+| Rastreabilidade de quatro cartões FND estava apenas em prosa | Incluídas linhas explícitas para os 61 cartões. |
+| ONB-02 exigia esquema aprovado sem checkpoint explícito | Campos, tipos, unidades, obrigatoriedade, validações e origem precisam ser registrados antes da parte afetada. |
+| Inativação de perfil podia virar bloqueio de toda a conta | Pendência registrada em RF-03 e IAM/PES, sem escolher regra nova. |
+| REC-007 tratava responsável principal como recomendação | Alinhada à decisão vigente DEC-008/RF-34. |
+| RF-20/RF-31 tinham títulos divergentes do fluxo | Identificação facial e matrícula manual passam a nomear os requisitos, preservando IDs e critérios. |
 
-Pacote de planejamento AcademIA: mestre, contexto, contrato, 61 cartões,
-manifesto e estratégia de testes. Esta revisão não executa os cartões nem testa
-uma aplicação implementada.
+Não foram retiradas funcionalidades do MVP ou introduzidos pagamento obrigatório,
+aceite humano prévio, novos serviços ou novas regras clínicas.
 
-## Verificações da versão anterior
+## MER e dados
 
-- Mestre de planejamento: 39 linhas e saída limitada a 40 linhas.
-- Cartões: 59 arquivos e 59 entradas correspondentes no manifesto.
-- Cada cartão possui dependências, módulos/requisitos, aceite e testes.
-- IDs/referências de dependência são resolvíveis e não possuem ciclos entre cartões.
-- Caminhos Markdown relativos apontam para arquivos existentes.
-- Numeração preservada: 35 RFs, 36 RNs, 17 RNFs e 15 MRFs.
-- Testes de aplicação continuam pendentes de implementação/configuração.
-- Docker depende do aceite do MVP e da maioria dos módulos.
-- Diff revisado com git diff --check, incluindo arquivos novos depois do stage.
+PNG original conferido também pelo XML draw.io embutido: 307 células, 18 entidades.
+SHA-256: `5b57634d6936bc76c82e3f85bfa45a91626ec734af77b45e0a083e2990c1df93`.
 
-## Revisão ampliada posterior
+É fonte de origem, não schema definitivo. FND-03 ainda produzirá modelo textual,
+dicionário e estados com papéis acumuláveis, designação, snapshots, publicação e
+parecer independentes, equipamentos, execução/evidências agentivas e matrícula
+sem pagamento. Revisão do MER e extensão de dados já descrevem essas diferenças;
+a imagem não foi regravada.
 
-O responsável solicitou um mestre completo e análise dos módulos/MER. O limite
-didático de 40 linhas foi removido; a contagem anterior é evidência histórica,
-não restrição atual. Os 59 cartões foram mantidos.
+## Pendências legítimas por etapa
 
-- Módulos: cobertura suficiente, com refinamentos de ownership e fluxo.
-- Mestre: fluxos, estados, fontes, testes, marcos, gates e saída detalhados.
-- Cartões afetados: bootstrap/primeiro acesso, atualidade da proposta e
-  dependência da interface de notificações.
-- MER: análise em relatório separado; o PNG/XML original permanece inalterado.
-- Verificações atuais: links, IDs, correspondência manifesto/cartões,
-  dependências/ciclos, diff e hash do MER.
+| Antes de | Decisão/dado necessário | Situação |
+|---|---|---|
+| FND-03/FND-04 e scaffolds dependentes | Framework/ferramentas Python, identidade, academia única/múltipla, política Git e plano local sem Docker | Gates pertinentes abertos; recomendações não são decisões aceitas. |
+| IAM-02/PES-01/PES-02 | Efeito de inativar cliente que também é funcionário e vice-versa | Não presumir bloqueio global nem restrição somente do perfil. |
+| ONB-02 | Esquema, unidades, obrigatoriedade, validações e origem declarada/medida | Registrar aprovação sem exigir fechar todos os provedores de IA. |
+| RAG-01/AI-01 e aceite da IA | Provedores/modelos, corpus/curador, política de gravidade/liberação, limites de prescrição, orçamento, suficiência e casos esperados | GATE-04 aberto; aprovação funcional dos 19 MRFs já registrada. |
+| Aceite da persistência agentiva | Retenção operacional de execuções/evidências e consistência de revisão de fontes/inventário | Limite de 15 fichas não define retenção de todo o banco. |
+| Biometria pós-MVP | Hospedagem/versão/ensaio do CompreFace e fluxo alternativo | Preferir instância externa; eventual contêiner do serviço antes do Docker da aplicação exige decisão específica. |
+| AUL-02/FIN-02 | Escopo de reservas e gateway/sandbox | Decisões tardias; não bloquear fundação nem exigir pagamento para matrícula. |
 
-## Limitações conhecidas
+Pendências bloqueiam somente a parte dependente. Critérios clínicos não podem ser
+inventados para fechar o checklist. A auditoria não marca cartões CONCLUIDO por si só.
 
-Os comandos BE/INT/API/FE/E2E/DB/RAG/IA/INF ainda serão configurados pelos prompts
-responsáveis. Ferramentas, corpus, fornecedores e políticas clínicas pendentes
-impedem executar os módulos afetados; não impedem revisar estes documentos.
-MRF08–MRF15 continuam derivados sujeitos a aceite. AUL-02 continua opcional.
+## Referências e materiais
 
-O manifesto guarda o estado da execução de cada tarefa, independentemente da
-existência deste relatório de revisão.
+- Catálogo: 18 PDFs originais, 783 páginas, 8 PT/10 EN; hashes/tamanhos, IDs e
+  caminhos/metadados conferidos. Nenhum foi aprovado automaticamente para RAG.
+- URLs bibliográficas: 11 origens abriram diretamente; 7 PMC apresentaram reCAPTCHA.
+  Essas sete identidades foram conferidas por fontes primárias alternativas (4)
+  ou metadados primários indexados (3), com limitação de acesso. Não foi observado
+  título/DOI incompatível nem URL comprovadamente inválido.
+- reCAPTCHA, 403/429 e redirecionamento inacessível não foram tratados como link
+  quebrado. Não houve nova coleta/download. REST/limiar do CompreFace conferem
+  com as referências de [fluxos](../arquitetura/fluxos-atualizados.md).
+- Preservados [32 casos](casos-documentais-rag-2026-11-04.json) e seu
+  [relatório](avaliacao-documental-rag-2026-11-04.md), candidatos à avaliação futura,
+  sem aprovação clínica automática.
 
-## Atualização de treino, matrícula e biometria
+## Limpeza
 
-Pacote atual: 61 cartões, 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.
-As contagens anteriores neste relatório são históricas.
+- Removida a análise histórica de IA/CompreFace anterior à ampliação do acervo,
+  sem referências de entrada e substituída pelas fontes normativas, catálogo,
+  avaliação de evidências e arquitetura atuais; histórico recuperável no Git.
+- Este arquivo consolida snapshots antigos de contagens/estados.
+- Temporários: removidos 106 arquivos de `tmp/` (20.412.160 bytes, cerca de 19,5 MiB),
+  incluindo 24 scripts Python pontuais, payloads, extrações, imagens e logs.
+  O caminho absoluto foi validado e não continha junctions/links simbólicos.
+- Preservados `.git`, MER, PDFs, catálogo/metadados, normalizações, casos de
+  perguntas/respostas e comparação didática com o professor.
+- Mantido [um verificador reutilizável](../../scripts/verificar_documentacao.py),
+  somente leitura, sem publicar commits, baixar arquivos ou modificar documentos.
 
-- Publicação e parecer profissional separados; consulta/chat antes do aceite.
-- Matrícula pelo atendente sem pagamento obrigatório; substitui a pré-condição
-  financeira da revisão anterior por correção explícita do responsável.
-- API facial real proposta, com catraca externa fictícia; aceite facial não usa só mock.
-- MEM-00 é financeiro tardio/opcional e não é dependência de MEM-01; ACS-07 mantém
-  catraca fictícia. Manifesto, dependências e rastreabilidade atualizados.
-- Verificação executada: 86 documentos, 61 cartões/entradas no manifesto e 455
-  links locais válidos; seções obrigatórias e dependências coerentes, sem ciclos.
-- IDs únicos confirmados: 37 RFs, 36 RNs, 17 RNFs e 15 MRFs.
-- git diff --check passou; hash SHA-256 do PNG original preservado.
-- Nenhum teste de aplicação executado: documentação e prompts não implementam módulos.
+## Verificação reproduzível
+
+Na raiz, com Python 3.10+ e sem pacotes externos:
+
+```text
+python scripts/verificar_documentacao.py
+python scripts/verificar_documentacao.py --json
+git diff --check
+```
+
+DOC confere referências locais, IDs, manifesto/rastreabilidade, grafo com marcos,
+hashes/tamanhos e dados dos casos. Páginas dos casos são conferidas contra o
+catálogo; a contagem física dos PDFs foi conferida separadamente. URLs externas
+foram verificadas por navegação; o script não depende de rede ou valida semântica
+clínica. Destinos futuros apenas citados em crases não são tratados como links quebrados.
+
+Resultado executado nesta revisão: 94 Markdown, 657 links locais, 61 cartões e
+61 registros de rastreabilidade, 12 gates/marcos e grafo sem ciclos; 18 PDFs,
+MER e 32 casos com 94 referências de páginas íntegros. Foram preservados os
+110 critérios de IA/RAG e os 150 critérios funcionais identificados.
+
+Também passaram oito verificações em memória do próprio auditor: intervalos
+Unicode, exclusão de links em código, ID duplicado, ciclo por marco PG, link
+ausente, hash divergente, página inválida e remoção do último critério. Nenhuma
+dessas simulações alterou arquivos. O comando foi executado com o Python real
+disponível no runtime, sem instalar bibliotecas; `git diff --check` passou.
+
+Não foram executados testes da aplicação BE/INT/API/DB/FE/E2E/RAG/IA/INF: não há
+projetos/migrations/provedores configurados. [AR-01–AR-25](agentic-rag.md) continua
+especificação de testes, sem resultado real de modelo.
+
+## Leitura manual sugerida
+
+1. Esta revisão, contexto/requisitos e decisões abertas.
+2. Mestre, contexto e contrato comuns.
+3. Manifesto por dependências: fundação, identidade/designação, onboarding,
+   equipamentos/catálogo/fichas e RAG/IA/testes do MVP.
+4. Resolver decisões da etapa antes de executar seu cartão.
+5. Pós-MVP: matrícula/acesso, complementares, financeiro e infraestrutura conforme
+   dependências/escopo, sem antecipar Docker.
