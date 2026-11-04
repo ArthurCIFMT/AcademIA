@@ -10,7 +10,7 @@
 
 | ID | Decisão | Consequência |
 |---|---|---|
-| DEC-001 | Projeto acadêmico com MVP incremental. | Evitar complexidade comercial prematura. |
+| DEC-001 | Trabalho acadêmico didático com MVP incremental. | Dispensar aprovação médica formal, laudos e workflows jurídicos/comerciais; manter regras/testes da demonstração e parecer posterior do instrutor. |
 | DEC-002 | React + TypeScript + Vite no frontend. | SPA responsiva e contratos tipados. |
 | DEC-003 | Backend obrigatoriamente em Python. | Framework será fechado por ADR. |
 | DEC-004 | PostgreSQL para dados relacionais. | Invariantes por constraints e migrations. |
@@ -69,12 +69,15 @@ primeiro schema.
 ### GATE-04 — IA e RAG
 
 Definir banco vetorial especializado, LLM/embeddings (preferência por opção gratuita),
-livro/corpus inicial e curador, política de bloqueio/encaminhamento, esquema do resumo,
+livro/corpus inicial e curador, regras acadêmicas de bloqueio e dados insuficientes, esquema do resumo,
 validação de preservação de alertas, limites de contexto/saída/tentativas e orçamento.
 Definir retenção operacional, métricas/limiares e meta de tempo total por rota.
 Fluxo semântico com orquestrador já autorizado; não exigir plano/ferramentas/pesquisa
 iterativa. Literatura coletada não equivale a corpus suficiente ou aprovado.
 Geração usa até uma análise de triagem e uma geração; chat até uma geração.
+Cada etapa LLM tem uma tentativa; nova tentativa é ação explícita com nova execução.
+O responsável do projeto define regras/casos sintéticos e seleciona o corpus; não
+exigir médico, laudo, comitê ou validação jurídica externa para fechar este gate.
 
 ### GATE-05 — Git
 

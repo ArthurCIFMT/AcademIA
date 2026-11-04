@@ -111,6 +111,9 @@ Registrar os dados físicos e funcionais previstos no formulário aprovado.
 - CA-11.1: campos físicos previstos podem ser persistidos.
 - CA-11.2: campos obrigatórios são validados.
 - CA-11.3: formulário editável recupera corretamente dados salvos.
+- CA-11.4: cliente autenticado confirma correção/complemento dos próprios dados em
+  nova versão validada; snapshots já usados por fichas são preservados. Ausência ou
+  alteração relevante invalida triagem anterior; chat não grava dados silenciosamente.
 
 ### RF-12 — Registrar medicações e condições de saúde
 
@@ -148,8 +151,9 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
 - CA-15.2: LLM configurado produz ficha JSON estruturada com IDs do catálogo; backend
   valida schema/regras antes de persistir/publicar pelo contrato de MOD-04.
 - CA-15.3: ficha fica exclusivamente no cliente autorizado e identifica origem IA.
-- CA-15.4: política revisada e análise assistida identificam bloqueio/necessidade de
-  avaliação; caso grave bloqueado não recebe ficha, mesmo com resposta favorável do LLM.
+- CA-15.4: regras documentadas para a demonstração e análise assistida identificam
+  bloqueio/dados insuficientes; caso grave bloqueado não recebe ficha mesmo com LLM
+  favorável. Não exigir laudo/aprovação médica ou oferecer desbloqueio por documento.
 - CA-15.5: resumo rastreia versão de onboarding e preserva condições, medicamentos,
   lesões, objetivos e restrições pertinentes; ausente não vira saudável/médio.
 - CA-15.6: conteúdo tecnicamente validado é publicado com parecer PENDENTE, consultável

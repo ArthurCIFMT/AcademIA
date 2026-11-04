@@ -36,12 +36,18 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Implementar schema aprovado de dados físicos, queixas, medicações e condições.
 2. Salvar rascunho e concluir atomicamente, registrando data, versão e responsável.
 3. Expor consulta própria e snapshot versionado para futuras gerações.
+4. Implementar contrato ConfirmarAtualizacaoOnboarding para o próprio cliente
+   autenticado: exigir confirmação explícita, schema válido e versão-base atual;
+   salvar nova versão sem editar snapshots já usados e invalidar triagem anterior.
+   Chat não escreve no repositório de onboarding nem exige laudo para atualizar dados.
 
 ## Critérios de aceite
 
 - Campo obrigatório ausente impede conclusão mas permite rascunho autorizado.
 - Reabrir rascunho recupera valores; conclusão registra instante.
 - Atualização posterior não muda snapshot já usado por ficha.
+- Confirmar complemento cria versão nova; acesso alheio ou versão-base superada
+  é recusado, e análise anterior não é reaproveitada após mudança relevante.
 
 ## Testes obrigatórios
 

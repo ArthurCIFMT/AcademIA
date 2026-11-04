@@ -30,7 +30,8 @@ operacional exige escolha explícita da tarefa e cumprimento das dependências.
 
 - Framework Python e ferramentas; identidade; academia única ou múltipla.
 - Banco vetorial e forma local de executar os serviços antes do Docker.
-- Modelo de LLM, embeddings, corpus e políticas clínicas validadas.
+- Modelo de LLM, embeddings, corpus selecionado e regras acadêmicas de triagem
+  documentadas pelo responsável, sem aprovação médica ou jurídica externa.
 - Regras de acesso/manual, reservas opcionais e integração de pagamentos.
 - Política Git para as próximas implementações.
 

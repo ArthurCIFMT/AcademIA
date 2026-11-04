@@ -5,6 +5,7 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 ## Planejamento
 
 - [Revisão antes da implementação e pendências](docs/testes/revisao-dos-prompts.md)
+- [Revisão didática e consistência dos prompts](docs/analises/2026-11-04-revisao-didatica-e-consistencia.md)
 - [Contexto e escopo](docs/requisitos/contexto-e-escopo.md)
 - [Requisitos funcionais](docs/requisitos/requisitos-funcionais.md)
 - [Regras de negócio](docs/requisitos/regras-de-negocio.md)

@@ -6,6 +6,28 @@ Construir uma aplicação web acadêmica para centralizar operações de uma aca
 com cadastro de clientes e funcionários, onboarding, avaliações, fichas de treino,
 controle de acesso, agenda, equipamentos, indicadores e geração assistida por IA.
 
+## Natureza didática e limites do trabalho acadêmico
+
+- O projeto é um trabalho acadêmico para aprender e demonstrar arquitetura,
+  banco, APIs, testes e integração de IA. Não implementar exigências de produção
+  comercial ou processos jurídicos que não façam parte dos requisitos solicitados.
+- Não exigir aprovação médica profissional, atestado/laudo, certificado, assinatura
+  de médico ou validação jurídica externa para implementar, testar, gerar ou exibir
+  fichas no cenário didático. Esses documentos e fluxos ficam fora do MVP.
+- Triagem é uma regra funcional da demonstração: dados sintéticos e casos rotulados,
+  regras documentadas pelo responsável do projeto, casos graves bloqueados e dados
+  insuficientes tratados explicitamente. Não criar fluxo de desbloqueio por laudo.
+- Aprovação do corpus e revisão dos casos significam seleção técnica pelo responsável
+  do projeto/curador autorizado; não exigem comitê, médico ou auditor jurídico externo.
+  Manter fontes e metadados bibliográficos existentes.
+- O parecer do instrutor da academia é funcionalidade do sistema e permanece
+  posterior à publicação; não equivale à aprovação médica e não bloqueia consulta/chat.
+- Preservar autenticação, autorização, isolamento entre clientes, dados de teste
+  sintéticos, integridade, evidências RAG e os bloqueios funcionais já solicitados.
+  Simplificar a burocracia não autoriza retirar esses critérios ou inventar evidências.
+- Escopo jurídico/comercial adicional só entra por solicitação explícita posterior;
+  não transformar essa ausência em gate para o trabalho acadêmico.
+
 ## Estágio atual
 
 O projeto está na fase de especificação e fundação. Antes de implementar um módulo,
@@ -119,16 +141,21 @@ necessária para sua entrega.
 - Não implementar planner LLM, ferramentas escolhidas pelo modelo, pesquisa iterativa
   ou cadeia de agentes biomecânico/periodização/revisor. Orquestrador controla estados.
 - Chat usa até uma geração; ficha/adaptação usa até uma análise de triagem e uma
-  geração, com validações em código. Limites globais incluem retries de transporte;
-  falha/JSON inválido não abre loop de reparo automático.
+  geração, com validações em código. Cada etapa LLM admite uma tentativa por
+  execução, sem retry automático; repetição idempotente não faz nova chamada.
+  Ingestão/busca podem repetir transporte dentro do orçamento; falha/JSON inválido
+  não abre loop de reparo. Nova tentativa LLM exige ação explícita e nova execução.
 - Backend monta resumo estruturado e minimizado do onboarding, preservando todos os
   alertas relevantes e a versão de origem. Ausente não significa saudável/zero/média.
-- Bloqueios de saúde vêm de política revisada; o LLM pode sinalizar risco, não
-  diagnostica nem concede aptidão médica ou remove bloqueio determinístico.
+- Bloqueios vêm de regras acadêmicas de triagem documentadas; o LLM sinaliza
+  informações relevantes, sem diagnosticar ou remover bloqueio determinístico.
+  Estados de domínio: DADOS_INSUFICIENTES, BLOQUEADO_POR_SEGURANCA e
+  ELEGIVEL_PARA_GERACAO; erro/timeout pertence ao estado técnico da execução.
 - RAG recupera trechos do livro/literatura aprovada para dúvidas, triagem e geração;
   não enviar livros inteiros, todo histórico ou anamnese completa por padrão.
 - Adaptação por condição de saúde exige evidência pertinente; falta/conflito exige
-  abstenção. Fonte relevante não substitui política clínica ou revisão profissional.
+  abstenção. Fonte relevante não remove bloqueios das regras da demonstração.
+  Não exigir aprovação médica para tornar uma ficha tecnicamente válida consultável.
 - Catálogo fornece IDs de exercícios e requisitos; MOD-10 fornece equipamentos.
   Modelo não inventa recursos; MOD-04 revalida antes de publicar por contrato.
 - Somente backend publica ficha tecnicamente válida com parecer PENDENTE; cliente

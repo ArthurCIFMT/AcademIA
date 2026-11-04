@@ -1,5 +1,9 @@
 # Avaliação documental do corpus RAG por perguntas e respostas
 
+> Avaliação documental histórica do acervo. As observações sobre evidência não
+> criam fluxo de laudo/aprovação médica para o MVP. Aplicar o escopo didático de
+> [AGENTS.md](../../AGENTS.md) e os [cenários vigentes](rag-ia-semantico.md).
+
 Data: 2026-11-04. Base: `77535cf13b36d70f7d0f00d9b141d848bee55fb3`.
 Escopo: revisão exploratória dos 18 PDFs locais (783 páginas), com 32 perguntas de clientes e respostas de referência em português. Foram criados apenas este relatório e seu conjunto de casos; prompts, requisitos, MER, catálogo e PDFs não foram alterados.
 
@@ -485,4 +489,4 @@ O JSON associado registra perguntas, respostas, limites, evidências e hashes: [
 
 ## Condição para avançar
 
-A fundação do sistema pode avançar independentemente desta revisão. Antes de aceitar a geração de treinos, revisar profissionalmente os casos e o corpus, fechar o catálogo de exercícios e as regras de triagem, e então executar as mesmas perguntas contra o recuperador e o gerador reais. Manter a avaliação documental, a relevância da busca, a fidelidade da resposta e os bloqueios do domínio como verificações distintas.
+A fundação do sistema pode avançar independentemente desta revisão. No escopo didático vigente, o responsável do projeto confere tecnicamente os casos/corpus e documenta catálogo e regras da demonstração, sem aprovação médica ou jurídica externa. Só então usar perguntas adequadas contra o recuperador e o gerador reais. Manter a avaliação documental, a relevância da busca, a fidelidade da resposta e os bloqueios do domínio como verificações distintas.

@@ -42,7 +42,7 @@ rastreabilidade antes de qualquer scaffold de aplicação.
 
 - Criar frontend, backend, banco ou migrations.
 - Escolher silenciosamente tecnologias ainda abertas.
-- Inventar literatura, critérios clínicos ou regras de pagamento.
+- Inventar literatura, critérios de triagem da demonstração ou regras de pagamento.
 - Renumerar IDs existentes sem mapa de migração explícito.
 
 ## Contratos e invariantes

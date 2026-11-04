@@ -44,8 +44,8 @@ Não dispare cobranças reais nem envie mensagens a pessoas reais nos testes.
 
 Monte fixtures sintéticas rotuladas separadas do corpus de conhecimento.
 Documentos artificiais podem testar o pipeline, mas não representar literatura
-validada. Corpus, política de bloqueio e resultados esperados precisam de revisão
-do responsável. Registre modelo, embeddings, parâmetros e versões.
+validada. Corpus, regras acadêmicas de bloqueio e resultados esperados precisam de
+conferência técnica do responsável do projeto, sem aprovação médica/jurídica externa. Registre modelo, embeddings, parâmetros e versões.
 Inclua dados insuficientes, caso bloqueado, restrição, contradição, falha de provedor,
 instrução maliciosa documental e tentativa de consultar outro cliente.
 Os casos críticos esperados bloqueiam geração/publicação em 100% da suíte definida.
@@ -107,7 +107,7 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
 
 ## Orquestrador com RAG semântico
 
-[Cenários SV-01–SV-20](rag-ia-semantico.md) cobrem dúvidas, projeção resumida sem perda
+[Cenários SV-01–SV-24](rag-ia-semantico.md) cobrem dúvidas, projeção resumida sem perda
 de alertas, triagem assistida, geração LLM, contexto curto, fontes, falhas e limites.
 MRF01–MRF15 e seus 67 critérios são a referência atual; não há teste obrigatório
 de planner, escolha dinâmica de ferramentas ou pesquisa iterativa.
@@ -116,3 +116,7 @@ AI-06 executa ensaio real e mede p50/p95 por rota, busca, chamadas e tokens.
 p95 ≤ 2 s é da busca vetorial, não da geração completa. Os 32 casos documentais
 anteriores exigem revisão antes do aceite. Não declarar aplicação testada só por
 atualizar estes arquivos. Critérios numéricos de qualidade são definidos antes do ensaio.
+
+Na revisão didática, cobrir SV-21–SV-24: sem laudo obrigatório, confirmação de
+novo snapshot antes de adaptar, publicação/aviso únicos e ausência de retries
+automáticos das etapas LLM. Esses cenários são planos, ainda não testes executados.

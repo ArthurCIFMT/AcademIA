@@ -1,6 +1,6 @@
 # Revisão antes da implementação
 
-Data: 2026-11-04. Base Git: d7a5199. Revisão documental, sem implementação de aplicação.
+Data: 2026-11-04. Base da revisão didática: af1685b. Revisão documental, sem implementação de aplicação.
 
 O planejamento vigente tem 38 RFs, 39 RNs, 18 RNFs, 15 MRFs/67 critérios, 13 módulos
 e 61 cartões. Orquestrador coordena dúvidas, triagem de resumo e geração pelo LLM,
@@ -13,9 +13,18 @@ interrompida que restringia fichas ao instrutor.
 [dados](../arquitetura/modelo-de-dados/dados-rag-ia.md),
 [manifesto](../prompts/README.md) e [testes](rag-ia-semantico.md).
 
+## Revisão didática vigente
+
+AGENTS.md dispensa laudos, aprovação médica formal e validação jurídica externa.
+Três estados da triagem, regras/casos sintéticos pelo responsável e parecer posterior
+do instrutor permanecem. Revisados contexto do chat, confirmação versionada de novos
+dados, publicação única, teto real de chamadas e escopos de portas/adaptadores.
+[Achados completos](../analises/2026-11-04-revisao-didatica-e-consistencia.md).
+
 ## Consistência e preservação
 
-Cartões RAG/IA revisados, sem dependências novas/cíclicas. Mestre, contexto,
+Cartões RAG/IA revisados. AI-03 passa a depender de TRN-03 e AI-05 de ONB-03,
+alinhando publicação e confirmação de dados às entregas dos módulos proprietários. Mestre, contexto,
 fundação, catálogo, matrizes, testes e referências apontam o fluxo atual.
 Documentos agentivos antigos são pontes históricas; MRF16–MRF19 não são executáveis.
 MER original permanece intacto; FND-03 produzirá modelo lógico/migrations depois.
@@ -50,7 +59,8 @@ Contexto/requisitos → decisões → mestre/contexto/contrato → manifesto por
 dependências. FND-01 permanece primeira tarefa formal; gates bloqueiam somente
 partes dependentes. Histórico detalhado das revisões anteriores permanece no Git.
 
-Resultado documental na proposta isolada: auditor OK; 98 Markdown, 653 links
-locais, 61 cartões/rastreabilidades, 12 gates/marcos, grafo sem ciclos, 18 PDFs
-e MER íntegros, 32 casos/94 referências de páginas preservados. Não foram
+A verificação anterior (base af1685b) registrou auditor OK e materiais íntegros.
+Na proposta didática, o auditor passou: 99 Markdown, 663 links locais, 61 cartões,
+12 gates/marcos, grafo sem ciclos, 18 PDFs/MER íntegros e 32 casos/94 páginas
+referenciadas preservados. São 67 critérios MRF e 163 critérios RF. Não foram
 executados testes BE/INT/API/FE/E2E/RAG/IA da aplicação, ainda não implementada.

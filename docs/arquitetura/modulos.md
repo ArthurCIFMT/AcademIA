@@ -106,8 +106,11 @@ de rejeitadas pode reduzir o total abaixo de 15; numeração de versão não rei
 
 - `DADOS_INSUFICIENTES`;
 - `BLOQUEADO_POR_SEGURANCA`;
-- `REQUER_LIBERACAO_PROFISSIONAL`;
 - `ELEGIVEL_PARA_GERACAO`.
+
+A triagem da demonstração não possui liberação por laudo ou aprovação médica.
+Dúvida/dado faltante é DADOS_INSUFICIENTES; erro/timeout é estado técnico da execução.
+Parecer posterior do instrutor é independente desses estados.
 
 ### Usuário
 
@@ -123,4 +126,4 @@ Essas enumerações são propostas e devem ser confirmadas no modelo lógico.
 MRF01–MRF15 definem RAG semântico e LLM; os 13 módulos permanecem.
 [Fluxo e contratos](rag-semantico.md) e [dados](modelo-de-dados/dados-rag-ia.md).
 MOD-03 fornece snapshot, MOD-05 literatura, MOD-04 catálogo/publicação, MOD-10 recursos.
-Orquestrador não equivale a pesquisa agentiva; evidência não remove bloqueio clínico.
+Orquestrador não equivale a pesquisa agentiva; evidência não remove bloqueio das regras acadêmicas de triagem.

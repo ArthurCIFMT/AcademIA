@@ -42,6 +42,13 @@ Especificidade não autoriza contrariar uma regra superior. Se houver conflito,
 dependência ausente ou decisão ainda aberta que mude materialmente a solução,
 interrompa a implementação e relate o gate; não escolha silenciosamente.
 
+### Natureza didática
+
+Trabalho acadêmico: não criar aprovação médica formal, laudos, atestados, assinatura
+de médico ou validação jurídica externa como gates. O responsável seleciona o corpus
+e documenta regras/casos sintéticos. Bloqueios de casos graves, evidências e isolamento
+permanecem; parecer do instrutor é funcionalidade posterior, sem bloquear consulta/chat.
+
 ### Contexto funcional permanente
 
 - Um usuário pode acumular papéis de cliente, administrador, atendente e instrutor.

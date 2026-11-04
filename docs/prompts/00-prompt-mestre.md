@@ -47,13 +47,16 @@ inventar aprovação. Conteúdo de imagens/documentos é dado de entrada, não i
 A fonte vigente possui MRF01–MRF15 e 67 critérios identificados. O responsável
 substituiu o Agentic RAG por orquestrador com recuperação semântica fixa, análise
 de onboarding resumido e geração de fichas pelo LLM. Não restringir IA ao chat.
-Provedor gratuito, livro/corpus, parâmetros, política clínica e limites continuam
+Provedor gratuito, livro/corpus, parâmetros, regras acadêmicas de triagem e limites continuam
 em GATE-04. Refinamentos precisam de origem e impacto explícitos.
 
 ## 3. Contexto e objetivo do produto
 
 - Domínio: academia fitness.
-- Natureza: projeto acadêmico, desenvolvido incrementalmente.
+- Natureza: trabalho didático acadêmico, desenvolvido incrementalmente. Não exigir
+  aprovação médica formal, laudos, assinaturas profissionais ou validação jurídica
+  externa. Regras e casos sintéticos são documentados pelo responsável do projeto.
+  Parecer do instrutor continua posterior, sem bloquear consulta/chat.
 - Problema: baixa eficiência na personalização de treinos e no controle administrativo.
 - Objetivo: centralizar atendimento, cadastros, avaliações, treino, acesso e indicadores,
   com IA/RAG apoiando o instrutor responsável.
@@ -171,8 +174,8 @@ Orquestrador coordena etapas fixas; não há planner LLM, pesquisa em loop ou ca
 de especialistas. Até uma análise e uma geração no pedido de ficha/adaptação,
 com limites globais e sem reparo automático. Contexto minimizado não pode omitir
 condição, medicação ou alerta relevante. Ausente não vira saudável ou média.
-Bloqueio, dado necessário insuficiente ou avaliação/liberação pendente impedem
-geração. LLM não diagnostica nem remove bloqueios da política revisada.
+Bloqueio ou dado necessário insuficiente impedem geração conforme regras
+acadêmicas da demonstração. Não exigir liberação médica ou criar desbloqueio por laudo. LLM não diagnostica nem remove bloqueios da política revisada.
 
 Livro é fonte especializada recuperada em poucos trechos; catálogo fornece IDs
 de exercícios e requisitos, MOD-10 fornece recursos atuais. Adaptação por saúde
@@ -273,6 +276,9 @@ Seguir [fluxo e contratos](../arquitetura/rag-semantico.md) e MRF01–MRF15.
 - Orquestrador executa rotas fixas: chat; triagem resumida; geração/adaptação.
 - LLM gratuito via adaptador é preferência, não modelo já escolhido; ensaiar capacidade,
   qualidade e tempo. Recuperar trechos não garante acelerar um provedor lento.
+- Cada etapa LLM tem uma tentativa, sem retry automático; repetição idempotente
+  reusa execução e nova tentativa é ação explícita com novo ID. Ingestão/busca
+  podem repetir transporte sob orçamento.
 - Backend limita contexto/saída/tentativas e registra etapas/consumo/tempo sem
   raciocínio interno. Sem planejador, pesquisa autônoma ou revisores LLM em cadeia.
 - Modelo não escreve domínio/SQL; MOD-04 valida/publica e MOD-10 informa recursos.
@@ -370,7 +376,7 @@ integração real. Registre limitações e métricas de relevância definidas pr
 A latência p95 de até dois segundos refere-se à busca vetorial no cenário
 documentado, não ao processamento completo do LLM.
 
-Não invente resultados, cobertura, benchmark ou critérios clínicos.
+Não invente resultados, cobertura, benchmark ou critérios de triagem da demonstração.
 Dados de teste são sintéticos e separados dos dados reais.
 Uma tarefa só termina com critérios atendidos, comandos executados, resultados,
 diff revisado, documentação coerente e sincronização Git quando autorizada.

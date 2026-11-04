@@ -1,7 +1,9 @@
 # Conjunto de testes — orquestrador e RAG semântico
 
 Plano para AI-06/RAG-05/TST-01, não resultado de testes executados. Casos de saúde
-e resultados esperados precisam de responsável/política revisada antes do ensaio.
+e resultados esperados são conferidos pelo responsável do projeto antes do ensaio.
+Não exigir aprovação médica formal ou auditoria jurídica; manter regras documentadas
+para casos graves/insuficientes e não usar parecer posterior para desbloqueá-los.
 Doubles verificam contratos/estados; aceite da IA requer provedor real configurado.
 
 | ID | Cenário | Resultado esperado | Referências |
@@ -26,6 +28,10 @@ Doubles verificam contratos/estados; aceite da IA requer provedor real configura
 | SV-18 | LLM/embeddings/vetorial indisponível | Instrutor continua criando/modificando manualmente. | MRF10, MRF15 |
 | SV-19 | Pergunta PT com fonte EN | Recuperação e resposta preservam negações, unidades e suporte. | MRF02, MRF11 |
 | SV-20 | Benchmark das três rotas no provedor real | p50/p95 total por rota, busca p95 ≤ 2 s, chamadas/tokens; registrar hardware/corpus/configuração. | MRF13, RNF-13, RNF-18 |
+| SV-21 | Demonstração sem laudo/aprovação médica ou jurídica externa | Três estados de domínio; caso grave bloqueado, dados faltantes insuficientes e elegível gera sem aprovação prévia. Parecer do instrutor continua posterior. | MRF08, CA-15.4 |
+| SV-22 | Novo dado de saúde informado no chat | Dúvida não grava cadastro; adaptação espera confirmação em ONB-03/ONB-02, novo snapshot e nova triagem, sem reusar a anterior. | CA-11.4, MRF03, MRF14 |
+| SV-23 | Acompanhamento de ficha gerada | AI-03 usa TRN-03 e publica uma vez; AI-04 somente acompanha, sem duplicar versão, aviso ou pendência. | MRF04, MRF10 |
+| SV-24 | Timeout/quota do LLM, replay e nova tentativa explícita | Não há retry automático LLM; replay da mesma chave reusa execução sem chamada nova; novo pedido explícito tem outro ID e orçamento. Medir chamadas reais. | MRF04, RNF-18 |
 
 Critérios/limiares de relevância, suporte, preservação de alertas, bloqueios e
 qualidade são fixados antes da avaliação. Não confundir JSON válido com segurança

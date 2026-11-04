@@ -29,6 +29,13 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 2. Oferecer conclusão e consulta própria com dados retornados da API.
 3. Tratar token inválido, expiração, rede e mensagens de erro sem perda silenciosa.
 
+## Atualização confirmada
+
+Expor ao cliente autenticado edição/complemento dos próprios dados pelo contrato
+de ONB-02, com confirmação explícita e nova versão. Link inicial de onboarding não
+concede sessão geral nem altera versão concluída silenciosamente. Reusar formulário
+e validações; mostrar dados ausentes e preservar snapshots anteriores.
+
 ## Critérios de aceite
 
 - Usuário preenche, salva, reabre e conclui em viewport móvel.

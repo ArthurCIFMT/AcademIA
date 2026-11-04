@@ -38,7 +38,7 @@ aberta, sem apresentar a recomendação do agente como decisão do responsável.
 
 - Marcar ADR como `ACEITA` sem confirmação do responsável.
 - Instalar dependências, gerar código, migrations, Dockerfiles ou Compose.
-- Inventar critérios clínicos ou corpus documental.
+- Inventar critérios de triagem da demonstração ou corpus documental.
 
 ## Contratos e invariantes
 

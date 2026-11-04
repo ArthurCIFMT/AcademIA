@@ -1,5 +1,9 @@
 # Revisão autorizada: orquestrador e RAG semântico
 
+> Mapa da mudança em af1685b. Refinamentos posteriores, inclusive dispensa de
+> aprovação médica e novas dependências dos cartões, estão na
+> [revisão didática vigente](2026-11-04-revisao-didatica-e-consistencia.md).
+
 ## Origem e prevalência
 
 O responsável esclareceu que IA deve responder dúvidas, analisar resumo do onboarding

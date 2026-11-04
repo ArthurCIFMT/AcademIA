@@ -2,7 +2,7 @@
 
 ## Estado do documento
 
-- Versão: 0.5
+- Versão: 0.6
 - Data de consolidação: 2026-11-04
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
@@ -18,7 +18,10 @@
 
 ## Natureza e prioridades
 
-- O projeto é acadêmico, não um produto comercial em produção.
+- O projeto é didático, um trabalho acadêmico, sem processos jurídicos/comerciais
+  ou aprovação médica formal como pré-requisitos do MVP. O responsável documenta
+  regras e casos sintéticos da demonstração; bloqueios de casos graves permanecem.
+  A revisão do instrutor é funcionalidade posterior, separada de qualquer laudo médico.
 - O MVP deve priorizar usuários, clientes, funcionários, designação de instrutor,
   onboarding, equipamentos disponíveis, exercícios, fichas manuais, IA/RAG, chat
   e avaliação profissional posterior.
@@ -61,7 +64,8 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 7. O treino validado fica disponível ao cliente com parecer profissional PENDENTE.
 8. O cliente consulta o treino e conversa com a IA sem aceite prévio do instrutor.
 9. O instrutor designado avalia posteriormente, aceita/rejeita ou cria versão modificada.
-10. Alterações posteriores, inclusive pelo chat, geram nova versão e novo parecer pendente.
+10. Alterações explicitamente solicitadas e publicadas, inclusive via chat, geram
+    nova versão/parecer; dúvida informativa não altera ficha nem onboarding.
 11. Nova publicação aplica o limite de 15 versões e a política de rejeitadas sem
     reescrever registros de execuções ou perder metadados de auditoria.
 
@@ -81,6 +85,8 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 - Implantação comercial, alta disponibilidade e escalabilidade distribuída.
 - Containerização completa da aplicação.
 - Diagnóstico médico realizado pela IA.
+- Laudos, atestados, aprovação médica formal, certificados ou validação jurídica externa.
+- Fluxos de desbloqueio da triagem por documento médico.
 - Reconhecimento facial implementado pela própria aplicação; o reconhecimento é
   responsabilidade de um serviço externo.
 

@@ -27,6 +27,10 @@ O texto original permanece recuperável no histórico da conversa e no material
 fonte. Antes de FND-01 ser concluído, o responsável deve aceitar as normalizações
 ou solicitar ajustes.
 
+> Registro cronológico: redações anteriores abaixo são históricas e não reabrem
+> decisões já substituídas. Para implementar, usar os requisitos vigentes e a
+> seção final de revisão didática, conforme AGENTS.md.
+
 ## Adições expressamente autorizadas em 2026-11-04
 
 | Item | Alteração | Origem |
@@ -96,3 +100,13 @@ agentiva e a revisão parcial de fichas exclusivamente manuais por dúvidas,
 triagem resumida e geração LLM. MRF01–MRF15 passam a ter 67 critérios; MRF16–MRF19
 são retirados. RF-13/RF-15/RF-18/RF-19, RF-38 e RNF-18 refletem o fluxo atual.
 Ver [mapa completo](../analises/2026-11-04-revisao-ia-semantica.md).
+
+## Revisão didática e consistência
+
+Solicitação posterior dispensa aprovação médica formal e processos jurídicos
+externos no trabalho acadêmico. A triagem passa a três estados sem laudo ou
+desbloqueio por documento; regras/casos/corpus são conferidos pelo responsável
+do projeto. Preservar bloqueio de casos graves e parecer posterior do instrutor.
+CA-11.4 explicita atualização confirmada/versionada necessária ao fluxo já previsto
+de adaptação; MRF04/RNF-18 esclarecem uma tentativa por etapa LLM, sem retry automático.
+Ver [achados e correções](../analises/2026-11-04-revisao-didatica-e-consistencia.md).

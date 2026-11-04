@@ -40,6 +40,13 @@ quando há persistência; testes unitários de portas usam doubles controlados.
 Métricas da IA requerem dados de avaliação rotulados; um JSON válido não comprova
 que o treino é adequado. Use dados sintéticos e não publique credenciais.
 
+## Proporcionalidade acadêmica
+
+Não exigir laudo, aprovação médica profissional ou validação jurídica externa para
+implementar ou demonstrar o MVP. Corpus/casos são revisados tecnicamente pelo
+responsável do projeto, sem comitê externo. Regras funcionais de bloqueio/evidência
+e permissões permanecem; parecer do instrutor não equivale a autorização médica.
+
 ## Interrupção e decisões
 
 Suspenda apenas a parte dependente de gate aberto, contrato ausente ou conflito

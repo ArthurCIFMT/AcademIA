@@ -4,7 +4,7 @@
 
 Os 13 módulos MOD-00 a MOD-12 são suficientes para o escopo atual do AcademIA.
 A revisão considera RF-01–RF-38, RN-01–RN-39, RNF-01–RNF-18 e MRF01–MRF15
-com 67 critérios. Orquestrador com busca semântica fixa é o fluxo vigente; políticas clínicas,
+com 67 critérios. Orquestrador com busca semântica fixa é o fluxo vigente; regras acadêmicas de triagem,
 provedores/parâmetros e reservas condicionais continuam nas decisões pertinentes.
 Cobertura de planejamento não é evidência de implementação.
 

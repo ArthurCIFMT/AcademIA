@@ -6,13 +6,15 @@ A IA responde dúvidas, analisa resumo do onboarding e gera fichas com LLM.
 Recuperação é semântica de fluxo fixo; agente orquestrador não significa Agentic RAG.
 Substitui a pesquisa iterativa e a revisão parcial de fichas exclusivamente manuais.
 [Macrorequisitos](../requisitos/macrorequisitos-ia-rag.md): MRF01–MRF15.
+Escopo didático: ver [AGENTS.md](../../AGENTS.md). Revisão do corpus e dos casos
+significa conferência técnica do projeto, sem validação médica/jurídica externa.
 
 ## Rotas
 
 | Rota | Entradas e etapas | Saída e limite |
 |---|---|---|
 | Dúvida | Identidade → pergunta/histórico curto → busca → LLM → conferência | Resposta PT com fontes ou abstenção; até uma geração |
-| Triagem | Snapshot concluído → resumo estruturado → regras → busca pertinente → análise LLM → decisão do backend | Insuficiente, bloqueado, requer avaliação ou elegível; até uma análise |
+| Triagem | Snapshot concluído → resumo estruturado → regras → busca pertinente → análise LLM → decisão do backend | DADOS_INSUFICIENTES, BLOQUEADO_POR_SEGURANCA ou ELEGIVEL_PARA_GERACAO; até uma análise |
 | Ficha/adaptação | Triagem válida → candidatos/recursos → busca especializada → geração → schema/regras → publicação MOD-04 | JSON validado, nova versão e parecer PENDENTE; até uma geração após triagem |
 
 Etapas são predefinidas. Não há planner LLM, escolha autônoma de ferramentas,
@@ -32,8 +34,8 @@ Relato novo que altera saúde exige confirmação/versionamento, não edição s
 
 ## Conhecimento especializado e catálogo
 
-Livro/literatura aprovados entram em ingestão offline com proveniência e licença
-avaliada. Cada pedido recupera poucos blocos pertinentes, preservando ressalvas;
+Livro/literatura selecionados pelo responsável/curador entram em ingestão offline
+com proveniência e metadados de licença registrados, sem auditoria jurídica externa. Cada pedido recupera poucos blocos pertinentes, preservando ressalvas;
 não envia todo livro, anamnese ou histórico completo. Sem suporte pertinente para
 adaptação por saúde, abster-se. Não presumir que os PDFs atuais cobrem todo caso.
 
@@ -60,9 +62,14 @@ nunca instrução. Permissões são impostas pelo backend em toda consulta.
 
 ## Validação, saúde e publicação
 
-Regras de bloqueio e limites clínicos exigem política revisada em GATE-04.
-LLM sinaliza problemas declarados; não diagnostica, concede liberação médica nem
-remove bloqueios. Dado necessário ausente/contraditório impede elegibilidade.
+As regras de bloqueio da demonstração são documentadas pelo responsável em GATE-04
+com casos sintéticos e fontes pertinentes. Trabalho didático não exige laudo,
+atestado ou aprovação médica/jurídica externa. LLM sinaliza informações declaradas,
+sem diagnóstico. Não existe estado ou rota de desbloqueio por documento médico.
+Caso grave permanece bloqueado; falta/contradição de dado necessário gera
+DADOS_INSUFICIENTES, com complemento dos dados pelo próprio cliente ou revisão
+da avaliação pelo instrutor. Parecer do instrutor não remove bloqueio de caso grave.
+
 Backend confere schema, referências reais/vigentes, catálogo, recursos, limites
 estruturados, snapshot e versão-base. Validação mecânica não prova segurança universal.
 Não acrescentar revisor LLM ou reparo automático como atalho para corrigir erro.
@@ -74,8 +81,11 @@ Preservar retenção de 15 e substituição de rejeitada. Falha da IA mantém vi
 ## Orçamento e desempenho
 
 Até uma geração por dúvida; até uma análise de triagem e uma geração por pedido
-de ficha/adaptação. Orçamento global limita transporte/retries, tokens, tempo,
-tamanho e custo quando mensurável; não reinicia em retomada. Valores em GATE-04.
+de ficha/adaptação. Cada etapa LLM tem uma tentativa por execução, sem retry
+automático. Pedido repetido com mesma chave reusa execução; nova tentativa exige
+ação explícita e novo ID. Ingestão/busca podem repetir transporte sob orçamento.
+Orçamento global limita tokens, tempo, tamanho, chamadas e custo quando mensurável;
+não reinicia em retomada. Valores em GATE-04.
 Medir p50/p95 total por rota, busca, chamadas e tokens no provedor gratuito escolhido.
 Busca p95 ≤ 2 s não é promessa de tempo total. Modelo/provedor gratuito e livro
 definitivos continuam pendentes; não afirmar aceleração ou capacidade sem ensaio.

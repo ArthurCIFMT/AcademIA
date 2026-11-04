@@ -40,7 +40,7 @@ gates efetivamente confirmados.
 
 - Implementar qualquer ADR.
 - Fechar gate com base apenas na recomendação do agente.
-- Aprovar critérios clínicos ou corpus que o responsável não forneceu/aceitou.
+- Aprovar critérios de triagem da demonstração ou corpus que o responsável não forneceu/aceitou.
 
 ## Contratos e invariantes
 
@@ -53,7 +53,7 @@ gates efetivamente confirmados.
 1. Apresentar um único checkpoint conciso com escolhas e recomendações.
 2. Registrar as respostas nos ADRs.
 3. Registrar a aprovação funcional já autorizada de MRF01–MRF15; solicitar
-   decisão somente sobre políticas clínicas, provedores e parâmetros ainda abertos.
+   decisão somente sobre regras acadêmicas de triagem, provedores e parâmetros ainda abertos.
 4. Atualizar `AGENTS.md` somente com decisões aceitas.
 5. Atualizar estado e evidência de GATE-01 a GATE-07.
 6. Registrar a política Git aceita antes das próximas entregas.

@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06.
-- Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14.
+- Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35, RF-38; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14, RNF-18; MRF03–MRF06, MRF08–MRF14.
 - Módulos: MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12.
 
 ## Referências de arquitetura
@@ -39,6 +39,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 2. Exercitar também ficha manual, recuperação, rejeição visível, cliente sem
    instrutor, bloqueio de saúde e acesso indevido.
 3. Registrar aceite do MVP PG-01 somente com critérios e evidências por requisito.
+4. Demonstrar três estados de triagem sem laudo/liberação médica; dúvida geral
+   sem onboarding; complemento confirmado/versionado antes de adaptar; geração
+   publica uma vez e não duplica aviso ao entrar na tela de acompanhamento.
 
 ## Critérios de aceite
 

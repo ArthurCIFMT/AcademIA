@@ -26,6 +26,11 @@ Mudança relevante de snapshot/política/inventário exige revalidação antes d
 Conteúdo excluído por RF-17/RF-35 não fica duplicado como ficha consultável na
 execução, cache ou exportação; preservar auditoria e snapshots de execução existentes.
 
+Não criar entidades de atestado, laudo, assinatura médica, aprovação jurídica ou
+liberação clínica para o MVP; casos sintéticos e regras são documentados no projeto.
+Atualização confirmada em MOD-03 cria snapshot novo e invalida triagem anterior;
+execuções antigas mantêm referência à versão usada, sem reescrever histórico.
+
 Esquemas reais, campos/unidades, retenção operacional e orçamento são definidos
 nos gates/modelagem. [Arquitetura](../rag-semantico.md) e
 [macrorequisitos](../../requisitos/macrorequisitos-ia-rag.md).

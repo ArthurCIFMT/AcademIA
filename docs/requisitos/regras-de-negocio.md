@@ -46,7 +46,8 @@
 
 - RN-01: definir UUID interno, unicidade de e-mail e eventual identificador externo.
 - RN-08: definir o fluxo alternativo e quem pode executá-lo.
-- RN-13: definir critérios operacionais e fontes para casos graves.
+- RN-13: documentar regras acadêmicas e casos sintéticos de bloqueio por gravidade;
+  sem etapa de liberação médica, aprovação jurídica externa ou desbloqueio por laudo.
 - RN-25: decidir se reservas fazem parte do escopo ou fase futura.
 - RN-26: definir destinatários, canais e tratamento de falha.
 - RN-36: definir modalidades e limites de acesso dos planos.
