@@ -1,0 +1,24 @@
+{
+  "pmcid": "PMC11120654",
+  "version": 1,
+  "pmid": 38791815,
+  "doi": "10.3390/ijerph21050601",
+  "mid": null,
+  "title": "The Effectiveness of Clinician-Led Community-Based Group Exercise Interventions on Health Outcomes in Adults with Type 2 Diabetes Mellitus: A Systematic Review and Meta-Analysis",
+  "citation": "Int J Environ Res Public Health. 2024 May 7;21(5):601. doi: 10.3390/ijerph21050601",
+  "is_pmc_openaccess": true,
+  "is_manuscript": false,
+  "is_historical_ocr": false,
+  "is_retracted": false,
+  "license_code": "CC BY",
+  "xml_url": "s3://pmc-oa-opendata/PMC11120654.1/PMC11120654.1.xml?md5=b4b5d02c149db08ad1cf17d20241bc75",
+  "text_url": "s3://pmc-oa-opendata/PMC11120654.1/PMC11120654.1.txt?md5=71dbc84315e09e1af3fd6d6a81b470c5",
+  "pdf_url": "s3://pmc-oa-opendata/PMC11120654.1/PMC11120654.1.pdf?md5=30c9a79b8ec55dda7c44bbf5611e7f5b",
+  "media_urls": [
+    "s3://pmc-oa-opendata/PMC11120654.1/ijerph-21-00601-g001.jpg?md5=2330a396b56c815d311865f6cd970616",
+    "s3://pmc-oa-opendata/PMC11120654.1/ijerph-21-00601-g002.jpg?md5=d4957a22339de5f13a7d679f8ef38bb8",
+    "s3://pmc-oa-opendata/PMC11120654.1/ijerph-21-00601-g003.jpg?md5=926eb643669ef0bdda42d2355d996fd3",
+    "s3://pmc-oa-opendata/PMC11120654.1/ijerph-21-00601-g004.jpg?md5=93d1e573f085f30221d5a6f87dd955ee",
+    "s3://pmc-oa-opendata/PMC11120654.1/ijerph-21-00601-s001.zip?md5=964444171ec25514e75bf2ec2132550b"
+  ]
+}

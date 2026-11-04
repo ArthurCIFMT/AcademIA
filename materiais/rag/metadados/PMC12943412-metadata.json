@@ -1,0 +1,20 @@
+{
+  "pmcid": "PMC12943412",
+  "version": 1,
+  "pmid": 41752672,
+  "doi": "10.3390/medicina62020272",
+  "mid": null,
+  "title": "Rotator Cuff Disorders: Practical Recommendations for Conservative Management Based on the Literature",
+  "citation": "Medicina (Kaunas). 2026 Jan 27;62(2):272. doi: 10.3390/medicina62020272",
+  "is_pmc_openaccess": true,
+  "is_manuscript": false,
+  "is_historical_ocr": false,
+  "is_retracted": false,
+  "license_code": "CC BY",
+  "pdf_url": "s3://pmc-oa-opendata/PMC12943412.1/PMC12943412.1.pdf?md5=c4de21668adf21c0946b4a1f63eaca79",
+  "xml_url": "s3://pmc-oa-opendata/PMC12943412.1/PMC12943412.1.xml?md5=2693ef8ff4717991b4ab0e16efe76d20",
+  "text_url": "s3://pmc-oa-opendata/PMC12943412.1/PMC12943412.1.txt?md5=9017583d0b2e11893621790425ea86ed",
+  "media_urls": [
+    "s3://pmc-oa-opendata/PMC12943412.1/medicina-62-00272-g001.jpg?md5=f9f4aa1f7957b41415350f5e6c449f6c"
+  ]
+}

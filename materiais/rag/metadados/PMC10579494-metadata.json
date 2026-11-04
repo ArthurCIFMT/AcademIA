@@ -1,0 +1,25 @@
+{
+  "pmcid": "PMC10579494",
+  "version": 1,
+  "pmid": 37414459,
+  "doi": "10.1136/bjsports-2023-106807",
+  "mid": null,
+  "title": "Resistance training prescription for muscle strength and hypertrophy in healthy adults: a systematic review and Bayesian network meta-analysis",
+  "citation": "Br J Sports Med. 2023 Jul 6;57(18):1211–20. doi: 10.1136/bjsports-2023-106807",
+  "is_pmc_openaccess": true,
+  "is_manuscript": false,
+  "is_historical_ocr": false,
+  "is_retracted": false,
+  "license_code": "CC BY-NC",
+  "xml_url": "s3://pmc-oa-opendata/PMC10579494.1/PMC10579494.1.xml?md5=c1cdf52a878163e0587df823bc096b1d",
+  "pdf_url": "s3://pmc-oa-opendata/PMC10579494.1/PMC10579494.1.pdf?md5=111d4dbe91311c22aa50c4dc4d43c262",
+  "text_url": "s3://pmc-oa-opendata/PMC10579494.1/PMC10579494.1.txt?md5=38f5b1853d05e076cf4477fca8b2f468",
+  "media_urls": [
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807f01.jpg?md5=0dbff7975309185e85d3935e5acca258",
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807f02.jpg?md5=2540077d85f8d30784482b10848fdb90",
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807f03.jpg?md5=47841a889bc609dad3cedf1bdb3821d4",
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807f04.jpg?md5=56ed0ffa0910cac7dde88529c427e3a5",
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807f05.jpg?md5=b6637ed653c9d1c768c35973f1ee73f3",
+    "s3://pmc-oa-opendata/PMC10579494.1/bjsports-2023-106807supp001.pdf?md5=a89f2455c6bb264a077d4ac026acdd1a"
+  ]
+}

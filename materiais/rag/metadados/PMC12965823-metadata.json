@@ -1,0 +1,22 @@
+{
+  "pmcid": "PMC12965823",
+  "version": 1,
+  "pmid": 41843416,
+  "doi": "10.1249/MSS.0000000000003897",
+  "mid": null,
+  "title": "American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews",
+  "citation": "Med Sci Sports Exerc. 2026 Mar 5;58(4):851–72. doi: 10.1249/MSS.0000000000003897",
+  "is_pmc_openaccess": true,
+  "is_manuscript": false,
+  "is_historical_ocr": false,
+  "is_retracted": false,
+  "license_code": "CC BY-NC-ND",
+  "pdf_url": "s3://pmc-oa-opendata/PMC12965823.1/PMC12965823.1.pdf?md5=4d3f67f3eea0ad23446a9489f3498341",
+  "xml_url": "s3://pmc-oa-opendata/PMC12965823.1/PMC12965823.1.xml?md5=c713e945c9e9e1cc28fb1c1002e08bc8",
+  "text_url": "s3://pmc-oa-opendata/PMC12965823.1/PMC12965823.1.txt?md5=7f76e2ed62f69af84f3df70bcb190c24",
+  "media_urls": [
+    "s3://pmc-oa-opendata/PMC12965823.1/msse-58-851-g001.jpg?md5=c1db1e7aaf1dab10852fff78a10a66c5",
+    "s3://pmc-oa-opendata/PMC12965823.1/msse-58-851-g002.jpg?md5=e976394342f57d6d5652c4441cef98fa",
+    "s3://pmc-oa-opendata/PMC12965823.1/msse-58-851-s001.pdf?md5=43f38a39288273043bbad754e6ac0add"
+  ]
+}

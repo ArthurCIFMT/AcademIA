@@ -1,9 +1,9 @@
 {
-  "versao_catalogo": 1,
+  "versao_catalogo": 2,
   "coletado_em": "2026-11-03",
-  "finalidade": "Coleção bibliográfica inicial para avaliação humana e futuro RAG do AcademIA; sem treinamento, embeddings ou indexação nesta coleta.",
-  "quantidade_pdfs": 7,
-  "paginas_pdf_total": 326,
+  "finalidade": "Coleção bibliográfica para revisão e futuro RAG do AcademIA; sem treinamento, embeddings, indexação ou aprovação automática nesta coleta.",
+  "quantidade_pdfs": 18,
+  "paginas_pdf_total": 783,
   "documentos": [
     {
       "id": "BR-MS-001",
@@ -296,6 +296,514 @@
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
       "situacao": "COLETADO_PENDENTE_REVISAO",
       "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-ACSM-001",
+      "file": "acsm-prescricao-treino-resistido-2026.pdf",
+      "ano": 2026,
+      "edicao": "Medicine & Science in Sports & Exercise 58(4):851–872",
+      "tipo": "posicionamento / overview de revisões",
+      "fonte": "ACSM / Medicine & Science in Sports & Exercise; distribuição PMC Cloud",
+      "licenca": "CC-BY-NC-ND-4.0",
+      "temas": [
+        "força",
+        "hipertrofia",
+        "prescrição",
+        "adultos saudáveis"
+      ],
+      "uso": "Síntese recente para prescrição em adultos saudáveis.",
+      "limites": "Não extrapolar para condições clínicas; licença ND: cópia integral sem alterações nesta coleta. Tradução/adaptação e uso futuro no RAG exigem avaliação específica das condições de uso.",
+      "titulo": "American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews",
+      "autores": [
+        "BRAD S CURRIER",
+        "ALYSHA C D’SOUZA",
+        "MARIA A FIATARONE SINGH",
+        "CAROLINE V LOWISZ",
+        "ERIC S RAWSON",
+        "BRAD J SCHOENFELD",
+        "ABBIE E SMITH-RYAN",
+        "JEREMY P STEEN",
+        "GWENDOLYN A THOMAS",
+        "N TRAVIS TRIPLETT",
+        "TYRONE A WASHINGTON",
+        "TIMOTHY J WERNER",
+        "STUART M PHILLIPS"
+      ],
+      "identificador": {
+        "doi": "10.1249/MSS.0000000000003897",
+        "pmcid": "PMC12965823"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12965823/",
+      "metadados_distribuicao": "metadados/PMC12965823-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC12965823.1/PMC12965823.1.pdf?md5=4d3f67f3eea0ad23446a9489f3498341",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/acsm-prescricao-treino-resistido-2026.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 22,
+      "tamanho_bytes": 893636,
+      "sha256": "c4cd21d4fdea2ae7d9dbf81f66dd1688f24e47b0c2edc4f119f5f5848b17599e",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-BJSM-001",
+      "file": "bjsm-prescricao-forca-hipertrofia-2023.pdf",
+      "ano": 2023,
+      "edicao": "British Journal of Sports Medicine 57(18):1211–1220",
+      "tipo": "revisão sistemática / metanálise em rede",
+      "fonte": "British Journal of Sports Medicine; distribuição PMC Cloud",
+      "licenca": "CC-BY-NC-4.0",
+      "temas": [
+        "força",
+        "hipertrofia",
+        "dose de treino"
+      ],
+      "uso": "Comparar prescrições de treino resistido em adultos saudáveis.",
+      "limites": "Resultados agregados não são doses individuais nem autorização para clientes com condições clínicas. Sobreposição de estudos com o posicionamento ACSM deve ser considerada.",
+      "titulo": "Resistance training prescription for muscle strength and hypertrophy in healthy adults: a systematic review and Bayesian network meta-analysis",
+      "autores": [
+        "Brad S Currier",
+        "Jonathan C Mcleod",
+        "Laura Banfield",
+        "Joseph Beyene",
+        "Nicky J Welton",
+        "Alysha C D'Souza",
+        "Joshua A J Keogh",
+        "Lydia Lin",
+        "Giulia Coletta",
+        "Antony Yang",
+        "Lauren Colenso-Semple",
+        "Kyle J Lau",
+        "Alexandria Verboom",
+        "Stuart M Phillips"
+      ],
+      "identificador": {
+        "doi": "10.1136/bjsports-2023-106807",
+        "pmcid": "PMC10579494"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10579494/",
+      "metadados_distribuicao": "metadados/PMC10579494-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC10579494.1/PMC10579494.1.pdf?md5=111d4dbe91311c22aa50c4dc4d43c262",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "evidencia_licenca": "Página 10 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/bjsm-prescricao-forca-hipertrofia-2023.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 12,
+      "tamanho_bytes": 1101261,
+      "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-SPMED-001",
+      "file": "sportsmed-treino-eficiente-2021.pdf",
+      "ano": 2021,
+      "edicao": "Sports Medicine 51:2079–2095",
+      "tipo": "revisão narrativa",
+      "fonte": "Sports Medicine / Springer Nature",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "organização do treino",
+        "disponibilidade de tempo",
+        "força",
+        "hipertrofia"
+      ],
+      "uso": "Contexto para organização de sessões com tempo limitado.",
+      "limites": "Revisão narrativa; não equivale a diretriz clínica nem justifica técnicas avançadas para todos os clientes.",
+      "titulo": "No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review",
+      "autores": [
+        "Vegard M Iversen",
+        "Martin Norum",
+        "Brad J Schoenfeld",
+        "Marius S Fimland"
+      ],
+      "identificador": {
+        "doi": "10.1007/s40279-021-01490-1",
+        "pmcid": "PMC8449772"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8449772/",
+      "download": "https://link.springer.com/content/pdf/10.1007/s40279-021-01490-1.pdf",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 13 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/sportsmed-treino-eficiente-2021.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 17,
+      "tamanho_bytes": 880778,
+      "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-WHO-001",
+      "file": "who-lombalgia-cronica-2023.pdf",
+      "ano": 2023,
+      "titulo": "WHO guideline for non-surgical management of chronic primary low back pain in adults in primary and community care settings",
+      "autores": [
+        "World Health Organization"
+      ],
+      "edicao": "2023; ISBN 978-92-4-008178-9",
+      "tipo": "diretriz",
+      "fonte": "World Health Organization / IRIS",
+      "licenca": "CC-BY-NC-SA-3.0-IGO",
+      "temas": [
+        "lombalgia crônica primária",
+        "adultos",
+        "cuidados primários",
+        "exercício"
+      ],
+      "uso": "Contextualizar evidências para lombalgia crônica primária no público e ambiente indicados.",
+      "limites": "Não cobre todas as causas de dor lombar nem autoriza diagnóstico. Arquivo contém 274 páginas PDF; a página editorial anuncia 242 páginas de conteúdo, além dos elementos pré-textuais. Há páginas em branco no original.",
+      "url": "https://www.who.int/publications/i/item/9789240081789",
+      "identificador": {
+        "isbn": "978-92-4-008178-9"
+      },
+      "download": "https://iris.who.int/server/api/core/bitstreams/d3ff33db-d9fd-46a6-8992-e0617d71a5a6/content",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc-sa/3.0/igo/",
+      "evidencia_licenca": "Página 2 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/who-lombalgia-cronica-2023.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 274,
+      "tamanho_bytes": 13929724,
+      "sha256": "840c9f31f50814c5699260d41e1da7a1cd8b5a4d068d8d7715a6a33e594c4446",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-FRONT-001",
+      "file": "frontiers-dor-patelofemoral-2025.pdf",
+      "ano": 2025,
+      "edicao": "Frontiers in Rehabilitation Sciences 6:1641054",
+      "tipo": "revisão sistemática e síntese",
+      "fonte": "Frontiers in Rehabilitation Sciences",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "joelho",
+        "dor patelofemoral",
+        "extensores do joelho"
+      ],
+      "uso": "Mapear características e relato de prescrições para dor patelofemoral.",
+      "limites": "Não cobre toda lesão de joelho. A revisão descreve limitações na padronização/relato; não constitui protocolo individual pronto.",
+      "titulo": "Knee extensor training in patients with patellofemoral pain: a systematic review and synthesis",
+      "autores": [
+        "Ted Gunhamn",
+        "Haris Pojskic",
+        "Sofia Ryman Augustsson"
+      ],
+      "identificador": {
+        "doi": "10.3389/fresc.2025.1641054",
+        "pmcid": "PMC12377044"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12377044/",
+      "download": "https://www.frontiersin.org/journals/rehabilitation-sciences/articles/10.3389/fresc.2025.1641054/pdf",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/frontiers-dor-patelofemoral-2025.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 11,
+      "tamanho_bytes": 674305,
+      "sha256": "a3a3b6fc09258aae7996e89392461a0b12cb62bea5311413aa10835f52108908",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-MEDICINA-001",
+      "file": "medicina-manguito-rotador-2026.pdf",
+      "ano": 2026,
+      "edicao": "Medicina 62(2):272",
+      "tipo": "revisão narrativa / proposta de protocolo",
+      "fonte": "Medicina / MDPI; distribuição PMC Cloud",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "ombro",
+        "manguito rotador",
+        "manejo conservador"
+      ],
+      "uso": "Contextualizar limitações e princípios de reabilitação do manguito rotador.",
+      "limites": "Proposta narrativa com experiência clínica; inclui diagnóstico, imagem e tratamento fora do escopo da academia. Não cobre todas as causas de dor de ombro.",
+      "titulo": "Rotator Cuff Disorders: Practical Recommendations for Conservative Management Based on the Literature",
+      "autores": [
+        "Adrien J-P Schwitzguébel"
+      ],
+      "identificador": {
+        "doi": "10.3390/medicina62020272",
+        "pmcid": "PMC12943412"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12943412/",
+      "metadados_distribuicao": "metadados/PMC12943412-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC12943412.1/PMC12943412.1.pdf?md5=c4de21668adf21c0946b4a1f63eaca79",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/medicina-manguito-rotador-2026.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 16,
+      "tamanho_bytes": 456421,
+      "sha256": "e455a4c87c2467e5351a322a7eeaa175ed9507ff83937551463452272d121787",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-IJSPT-001",
+      "file": "ijspt-biomecanica-agachamento-2024.pdf",
+      "ano": 2024,
+      "edicao": "International Journal of Sports Physical Therapy 19(4):490–501",
+      "tipo": "comentário clínico / revisão biomecânica; nível de evidência 5 declarado",
+      "fonte": "International Journal of Sports Physical Therapy / Scholastica",
+      "licenca": "CC-BY-NC-4.0",
+      "temas": [
+        "biomecânica",
+        "agachamento",
+        "parâmetros de execução"
+      ],
+      "uso": "Apoiar discussão sobre variações do agachamento e demandas articulares.",
+      "limites": "Comentário clínico, não catálogo completo nem regra universal de contraindicação. O texto do PDF abrevia o nome da licença, mas aponta explicitamente BY-NC-4.0.",
+      "titulo": "A Biomechanical Review of the Squat Exercise: Implications for Clinical Practice",
+      "autores": [
+        "Rachel K Straub",
+        "Christopher M Powers"
+      ],
+      "identificador": {
+        "doi": "10.26603/001c.94600",
+        "pmcid": "PMC10987311"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10987311/",
+      "download": "https://ijspt.scholasticahq.com/article/94600.pdf",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "evidencia_licenca": "Página 8 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/ijspt-biomecanica-agachamento-2024.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 12,
+      "tamanho_bytes": 1772295,
+      "sha256": "5416791660e3183ade77ebfd907bf42cf0c68ba9e105f3d1ba59754ddc4fa720",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-HEALTH-001",
+      "file": "healthcare-triagem-preparticipacao-2024.pdf",
+      "ano": 2024,
+      "edicao": "Healthcare 12(8):815",
+      "tipo": "revisão contextual",
+      "fonte": "Healthcare / MDPI; distribuição PMC Cloud",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "triagem",
+        "pré-participação",
+        "questionário",
+        "contexto tropical"
+      ],
+      "uso": "Contexto para revisão da triagem e encaminhamento pré-participação.",
+      "limites": "Contexto de Singapura; não valida automaticamente um formulário brasileiro nem autoriza copiar instrumentos de terceiros sob a licença do artigo.",
+      "titulo": "Relevance of the Get Active Questionnaire for Pre-Participation Exercise Screening in the General Population in a Tropical Environment",
+      "autores": [
+        "Cuiying Lisa Ho",
+        "Venkataraman Anantharaman"
+      ],
+      "identificador": {
+        "doi": "10.3390/healthcare12080815",
+        "pmcid": "PMC11050380"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11050380/",
+      "metadados_distribuicao": "metadados/PMC11050380-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11050380.1/PMC11050380.1.pdf?md5=e578a5a8c7e9a01853ff9613e22dee6f",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/healthcare-triagem-preparticipacao-2024.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 11,
+      "tamanho_bytes": 251271,
+      "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-003",
+      "file": "sbc-cardiologia-esporte-2019.pdf",
+      "ano": 2019,
+      "titulo": "Atualização da Diretriz em Cardiologia do Esporte e do Exercício da Sociedade Brasileira de Cardiologia e da Sociedade Brasileira de Medicina do Exercício e Esporte – 2019",
+      "autores": [
+        "Nabil Ghorayeb",
+        "Ricardo Stein",
+        "Daniel Jogaib Daher",
+        "Anderson Donelli da Silveira",
+        "Japy Angelini Oliveira Filho",
+        "Luiz Eduardo Fonteles Ritt",
+        "Daniel Fernando Pellegrino dos Santos",
+        "Ana Paula Rennó Sierra",
+        "Artur Haddad Herdy",
+        "Claúdio Gil Soares de Araújo",
+        "Cléa Simone Sabino de Souza Colombo",
+        "Daniel Arkader Kopiler",
+        "Filipe Ferrari Ribeiro de Lacerda",
+        "José Kawazoe Lazzoli",
+        "Luciana Diniz Nagem Janot de Matos",
+        "Marcelo Bichels Leitão",
+        "Ricardo Contesini Francisco",
+        "Rodrigo Otávio Bougleux Alô",
+        "Sérgio Timerman",
+        "Tales de Carvalho",
+        "Thiago Ghorayeb Garcia",
+        "Antonio Claudio Lucas da Nobrega",
+        "Luiz Gustavo Marin Emed",
+        "Roberto Vital"
+      ],
+      "edicao": "Arquivos Brasileiros de Cardiologia 112(3):326–368",
+      "tipo": "diretriz",
+      "fonte": "SBC / SBMEE / Arquivos Brasileiros de Cardiologia / SciELO",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "avaliação pré-participação",
+        "cardiologia do esporte",
+        "restrições"
+      ],
+      "uso": "Referência em português para avaliação pré-participação e contexto de exercício.",
+      "limites": "Edição de 2019: conferir atualizações e conflitos com fontes mais recentes antes de aprovar. Inclui conteúdo clínico além do escopo; autores do PDF diferem em extensão da lista resumida da página editorial.",
+      "url": "https://www.scielo.br/j/abc/a/ZZFKCxfv3cSDqZYmFLgJhVB/?lang=pt",
+      "identificador": {
+        "doi": "10.5935/abc.20190048"
+      },
+      "download": "https://www.scielo.br/j/abc/a/ZZFKCxfv3cSDqZYmFLgJhVB/?format=pdf&lang=pt",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Declaração Creative Commons e link BY-4.0 na página editorial SciELO, consultada em 2026-11-04; PDF sem declaração extraível.",
+      "arquivo": "documentos/sbc-cardiologia-esporte-2019.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 43,
+      "tamanho_bytes": 835410,
+      "sha256": "13009dc3b671df62609d795104e8fed3689349e7d2c032b5986fa301d3301bbc",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-FRONT-002",
+      "file": "frontiers-prescricao-populacoes-clinicas-2026.pdf",
+      "ano": 2026,
+      "titulo": "Practical guidelines for exercise prescription in different clinical populations",
+      "autores": [
+        "Klara Komici",
+        "Antonio Bianco",
+        "Alessandra Cuomo",
+        "Roberto Bianco",
+        "Maddalena Illario",
+        "Germano Guerra",
+        "Antonio Paoli",
+        "Federico Schena",
+        "Guido Iaccarino"
+      ],
+      "edicao": "Frontiers in Sports and Active Living 8:1649549",
+      "tipo": "revisão narrativa",
+      "fonte": "Frontiers in Sports and Active Living",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "condições crônicas",
+        "diabetes tipo 2",
+        "individualização",
+        "prescrição"
+      ],
+      "uso": "Panorama complementar de prescrição para populações clínicas, incluindo diabetes.",
+      "limites": "Apesar de guidelines no título, a publicação se descreve como revisão narrativa; não é diretriz universal nem cobre todas as condições.",
+      "url": "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2026.1649549/full",
+      "identificador": {
+        "doi": "10.3389/fspor.2026.1649549",
+        "pmcid": "PMC12990137"
+      },
+      "download": "https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2026.1649549/pdf",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/frontiers-prescricao-populacoes-clinicas-2026.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 25,
+      "tamanho_bytes": 1082528,
+      "sha256": "b649355f8124f23469efbc59e84d9c7894354e80754f9862893a6bde3e11f744",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-IJERPH-001",
+      "file": "ijerph-exercicio-diabetes-tipo2-2024.pdf",
+      "ano": 2024,
+      "titulo": "The Effectiveness of Clinician-Led Community-Based Group Exercise Interventions on Health Outcomes in Adults with Type 2 Diabetes Mellitus: A Systematic Review and Meta-Analysis",
+      "autores": [
+        "Liam White",
+        "Morwenna Kirwan",
+        "Vita Christie",
+        "Lauren Hurst",
+        "Kylie Gwynne"
+      ],
+      "edicao": "International Journal of Environmental Research and Public Health 21(5):601",
+      "tipo": "revisão sistemática / metanálise",
+      "fonte": "IJERPH / MDPI; distribuição PMC Cloud",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "diabetes tipo 2",
+        "exercício em grupo",
+        "ambiente comunitário"
+      ],
+      "uso": "Complementar evidências sobre exercício em adultos com diabetes tipo 2.",
+      "limites": "Intervenções conduzidas por profissionais em contexto comunitário; não extrapolar para DM1, qualquer complicação ou treino autônomo sem avaliação.",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11120654/",
+      "identificador": {
+        "doi": "10.3390/ijerph21050601",
+        "pmcid": "PMC11120654"
+      },
+      "metadados_distribuicao": "metadados/PMC11120654-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11120654.1/PMC11120654.1.pdf?md5=30c9a79b8ec55dda7c44bbf5611e7f5b",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/ijerph-exercicio-diabetes-tipo2-2024.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 14,
+      "tamanho_bytes": 2002210,
+      "sha256": "d08edcf1792ef78dfcbfa5ea6cc768331b764cdb4484110cf897fb3e614599f2",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
     }
-  ]
+  ],
+  "atualizado_em": "2026-11-04"
 }
