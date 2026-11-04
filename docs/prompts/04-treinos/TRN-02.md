@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: TRN-01, ONB-02, PES-03.
-- Requisitos: RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33.
+- Requisitos: RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33, RN-37, RN-38.
 - Módulos: MOD-04.
 
 ## Objetivo e contexto
@@ -33,12 +33,17 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 4. Separar conteúdo publicado imutável do parecer profissional por versão.
 5. Prever a exclusão de conteúdo da rejeitada anterior em RF-35, sem quebrar
    auditoria, numeração de versões ou snapshots de treinos executados.
+6. Suportar retenção de 15 versões publicadas completas por cliente (inclui vigente),
+   removendo conteúdo excedente mais antigo sem quebrar referências de auditoria
+   ou snapshots de execuções. Rascunhos/tentativas não contam como ficha disponível.
 
 ## Critérios de aceite
 
 - Ficha manual pode ser criada com provedor de IA indisponível.
 - Nova versão não muda itens, autoria e prescrição histórica.
-- Não aceitar item inexistente/inativo em nova ficha nem alteração por outro cliente.
+- Não aceitar item inexistente/inativo, recursos indisponíveis em nova ficha nem alteração por outro cliente.
+- Retenção não reutiliza números de versão; snapshots de execuções não são
+  reexpostos como fichas completas fora do limite.
 
 ## Testes obrigatórios
 

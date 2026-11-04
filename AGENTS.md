@@ -58,6 +58,16 @@ necessária para sua entrega.
 - Reconhecimento facial usa CompreFace; a catraca será uma API externa fictícia.
 - Usar banco vetorial especializado para o RAG, mantendo dados operacionais no
   PostgreSQL.
+- Equipamentos entram no MVP: administrador mantém disponibilidade e cada variação
+  de exercício declara recursos obrigatórios/alternativos ou dispensa explícita.
+  A IA só seleciona exercícios viáveis e o backend revalida antes de publicar.
+- Reter no máximo 15 versões publicadas completas por cliente, incluindo a vigente;
+  excluir conteúdo excedente das mais antigas, mantendo auditoria e snapshots de
+  treinos executados. Aplicar também a regra específica de rejeitadas (RF-17/RF-35).
+- Interface, prescrições e explicações são em português; fontes estrangeiras são
+  permitidas com recuperação multilíngue e explicação/tradução fiel rastreável.
+- Dados de exemplo de equipamentos serão criados apenas na implementação, como
+  fixtures/seeds sintéticos de testes, sem cadastrar dados nesta fase documental.
 - Deixar pagamentos e cobrança automatizada para uma fase posterior.
 - Containerizar a aplicação somente depois do MVP e da maioria dos módulos.
 

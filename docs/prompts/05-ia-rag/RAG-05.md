@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: RAG-04.
-- Requisitos: MRF02, MRF11, MRF12, MRF15; RN-29; RNF-13.
+- Requisitos: MRF02, MRF11, MRF12, MRF15; RN-29, RN-39; RNF-13.
 - Módulos: MOD-05.
 
 ## Objetivo e contexto
@@ -33,6 +33,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Critérios de aceite
 
 - Consulta nunca recupera documento não aprovado/revogado.
+- Consultas de teste em português recuperam evidências esperadas PT/EN com modelo
+  de embeddings compatível; avaliar relevância por idioma, sem traduzir o acervo
+  automaticamente ou presumir desempenho só porque o modelo é multilíngue.
 - Busca insuficiente retorna ausência explícita, sem citações inventadas.
 - Score alto sozinho não prova suporte: verificar condição, população e
   intervenção. Sem evidência pertinente, adaptação por saúde não pode prosseguir.

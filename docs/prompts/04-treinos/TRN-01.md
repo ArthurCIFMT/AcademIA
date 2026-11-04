@@ -4,9 +4,9 @@
 
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: FND-05, IAM-03, IAM-04.
-- Requisitos: RN-20, RN-31, RN-33; MRF05, MRF09.
-- Módulos: MOD-04.
+- Dependências: FND-05, IAM-03, IAM-04, EQP-01.
+- Requisitos: RF-15, RF-19, RF-32; RN-20, RN-31, RN-33, RN-37; MRF05, MRF09.
+- Módulos: MOD-04, MOD-10.
 
 ## Objetivo e contexto
 
@@ -29,13 +29,21 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Implementar cadastro, consulta, edição e inativação do catálogo para papel autorizado.
 2. Separar descrição/movimento de séries, carga, descanso e ordem de prescrição.
-3. Criar seed sintético identificado para testes; conteúdo de uso real requer revisão técnica.
+3. Na implementação, criar seed sintético identificado para testes; conteúdo de uso real requer revisão técnica.
+4. Relacionar exercício/variação a combinações de recursos obrigatórios e
+   alternativas completas; dispensa de equipamento é explícita, não ausência de vínculo.
+5. Expor candidatos elegíveis por contrato de disponibilidade de MOD-10; seleção
+   de nova ficha considera recursos ativos e operacionais da academia.
 
 ## Critérios de aceite
 
 - Exercício ativo aparece na seleção de nova ficha.
 - Inativo desaparece da seleção e permanece nas versões históricas.
 - Cliente sem permissão de manutenção não altera o catálogo.
+- Todos os recursos de uma combinação são exigidos; uma alternativa completa
+  disponível basta. Cadastro incompleto não libera seleção por engano.
+- Exercício com recurso obrigatório ausente, inativo ou indisponível não é candidato; exercício
+  explicitamente de peso corporal pode ser candidato sem equipamento.
 
 ## Testes obrigatórios
 

@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: TRN-03, IAM-04.
-- Requisitos: RF-16, RF-17; RN-05, RN-28; MRF07.
+- Requisitos: RF-16, RF-17; RN-05, RN-28, RN-37, RN-38, RN-39; MRF07.
 - Módulos: MOD-04.
 
 ## Objetivo e contexto
@@ -35,9 +35,13 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Cliente vê ficha própria publicada com parecer PENDENTE, ACEITO ou REJEITADO;
   sem ficha recebe estado vazio. Nenhum desses pareceres impede consulta/chat.
 - Trocar ID na consulta/exportação não revela treino de terceiro.
-- Conteúdo de rejeitada excluída por RF-35 não é retornado, nem por URL direta
+- Conteúdo excluído por RF-17/RF-35 não é retornado, nem por URL direta
   ou exportação; metadados de auditoria não reconstituem a prescrição na tela.
 - Prescrição e versão exibidas correspondem ao banco e são legíveis em celular.
+- Histórico consultável/exportável possui no máximo 15 versões completas incluindo
+  vigente; metadados de exclusão não reconstituem conteúdo antigo.
+- Conteúdo ao usuário é em português; equipamento que ficou indisponível é
+  sinalizado sem reescrever ficha histórica ou trocar exercício silenciosamente.
 
 ## Testes obrigatórios
 

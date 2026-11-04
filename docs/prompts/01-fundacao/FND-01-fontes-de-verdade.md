@@ -5,7 +5,7 @@
 - Fase: Fundação documental
 - Estado inicial: PRONTO
 - Dependências: P00
-- Requisitos: RF-01–RF-37, RN-01–RN-36, RNF-01–RNF-17, MRF01–MRF15
+- Requisitos: RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17, MRF01–MRF15
 - Módulos: MOD-00–MOD-12
 - Próximo prompt desbloqueado: FND-02A
 

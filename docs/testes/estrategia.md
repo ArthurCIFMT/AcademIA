@@ -83,3 +83,24 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
   real configurado. Não publicar fotos nem credenciais nos relatórios.
 - API fictícia de catraca recebe decisão autenticada, rejeita comando expirado e
   separa confirmação do comando da passagem simulada; replay não duplica presença.
+
+## Critérios adicionais do MVP: recursos, retenção e idioma
+
+- Administrador mantém equipamentos; outro perfil não altera o inventário.
+  Gerar somente com recursos ativos/operacionais; testar falta/inativação,
+  combinações obrigatórias, alternativa completa, dispensa explícita e vínculo ausente.
+- Alteração de disponibilidade durante geração impede publicar plano inviável;
+  mudança posterior é sinalizada sem editar versões históricas.
+- Testar 15 → 16 versões publicadas: ficam 15 completas incluindo vigente,
+  conteúdo mais antigo sai de consulta/exportação/cache/contexto ativo. Parecer
+  aceito/rejeitado não dispensa limite. Rascunhos/tentativas não entram na contagem.
+- Cobrir concorrência, rollback, replay e numeração crescente, preservando
+  metadados de auditoria e registros/snapshots de execuções quando existentes.
+  A exclusão por rejeição e a por limite têm motivos distintos e são idempotentes.
+- Consultas PT devem recuperar fontes PT/EN esperadas e gerar saída ao usuário em
+  português. Avaliar suporte, unidades/negações e falhas de tradução por casos
+  rotulados; não aprovar desempenho apenas pelo rótulo multilíngue do modelo.
+- Fixtures/seeds de equipamentos serão produzidos na implementação; não são
+  inventário real nem literatura clínica. A revisão atual não cria esses dados.
+- Usar critérios CA-MRF01.1–CA-MRF15.5 conforme a tabela completa, sem tratar
+  exemplos sintéticos como casos clínicos automaticamente validados.

@@ -47,7 +47,9 @@ Não invente regras clínicas, fontes ou parâmetros financeiros para destravar 
 Respeite ownership entre módulos. Inclua migration para novos invariantes, sem
 alterar migrations aplicadas. Atualize também o modelo textual e dicionário quando
 o requisito mudar. Não apague o MER original. Conteúdo publicado/histórico é
-preservado; parecer profissional não condiciona consulta e chat.
+imutável; exclusões seguem retenção de RF-17/RF-35 sem perder auditoria ou execuções.
+Parecer profissional não condiciona consulta/chat das versões retidas. Equipamentos
+disponíveis restringem novas prescrições e saída ao usuário deve ser em português.
 
 ## Git e relatório
 

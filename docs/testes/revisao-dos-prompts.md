@@ -1,5 +1,19 @@
 # Revisão documental dos prompts
 
+## Atualização: equipamentos no MVP, retenção e macrorequisitos completos
+
+Verificação documental de 2026-11-04 após as decisões do responsável:
+
+- 15 MRFs em tabela com descrição, atores, módulos e 75 critérios identificados.
+- RF-01–RF-37 preservados; RN-37/RN-38/RN-39 registram recursos, retenção e idioma.
+- 61 cartões operacionais; grafo sem ciclos e metadados coerentes com manifesto
+  e rastreabilidade. EQP-01 é MVP e precede catálogo/geração/aceite integrado.
+- Links locais, whitespace e integridade do MER e dos 18 PDFs conferidos.
+- Testes de aplicação não executados: esta entrega é documental e os projetos
+  executáveis ainda não estão configurados. Cenários novos estão nos cartões.
+
+Os registros abaixo documentam revisões anteriores e não fecham gates atuais.
+
 ## Objeto da revisão
 
 Pacote de planejamento AcademIA: mestre, contexto, contrato, 61 cartões,

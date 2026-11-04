@@ -126,7 +126,7 @@ capacidade do domínio sem proprietário; uma entidade nova não exige módulo n
 | MOD-07 | Referência biométrica, eventos externos, autorização, passagem e frequência | ACS |
 | MOD-08 | Planos, matrícula, validade, limites e financeiro tardio | MEM, FIN |
 | MOD-09 | Aulas e ocorrências; reservas somente se aprovadas | AUL |
-| MOD-10 | Cadastro e consulta de equipamentos | EQP |
+| MOD-10 | Equipamentos no MVP e disponibilidade para prescrição | EQP |
 | MOD-11 | Indicadores e relatórios provenientes de contratos de leitura | DSH, FIN-03 |
 | MOD-12 | Auditoria, eventos duráveis e entrega de avisos | FND-08, NTF-01 |
 
@@ -179,7 +179,11 @@ Cliente sem designação mantém consulta/chat e uma pendência explícita de re
 Rejeitar a ficha vigente mantém sua consulta. Quando uma ficha posterior também
 é rejeitada, excluir o conteúdo da rejeitada anterior e manter a nova, conforme
 CA-35.7/CA-35.8: auditoria e treinos executados preservados; repetição/parecer
-atrasado não apaga a mais recente. Gerar ou aceitar ficha não dispara exclusão.
+atrasado não apaga indevidamente a mais recente por essa regra. RF-17 aplica
+retenção independente: no máximo 15 versões publicadas completas por cliente,
+incluindo a vigente. Publicar a 16ª exclui conteúdo das mais antigas, inclusive
+aceitas/rejeitadas, mantendo metadados de auditoria e execuções existentes.
+Gerar ou aceitar não dispara exclusão por rejeição; publicar pode disparar o limite.
 
 ### 7.4 Chat e adaptação
 
@@ -219,7 +223,12 @@ Teste real do provedor é necessário para comprovar biometria; mock testa contr
 
 ### 7.6 Complementos administrativos
 
-Planeje equipamentos ativos/inativos, ocorrências de aula, lotação e indicadores.
+Equipamentos pertencem ao MVP: administrador mantém recursos ativos e operacionais,
+MOD-04 relaciona exercícios/variações a combinações obrigatórias/alternativas e
+MOD-06 só recebe candidatos viáveis. Revalidar disponibilidade antes de publicar;
+vínculo ausente não significa peso corporal. Impossibilidade exige abstenção,
+não recurso inventado. Inativação posterior é sinalizada sem reescrever histórico.
+Planeje também ocorrências de aula, lotação e indicadores.
 Reservas/capacidade dependem de GATE-07 e requisito complementar aprovado.
 Dashboard usa dados de módulos entregues e diferencia erro parcial de ausência de
 dados. Sem despesas, não apresente receita/faturamento como lucro.
@@ -274,6 +283,12 @@ pertencer ao provedor; com autenticação local precisam do fluxo correspondente
 - Busca usa top-K/cosseno e filtros; adaptação por saúde sem evidência pertinente
   recuperada exige abstenção, não uma prescrição baseada na memória do modelo.
 - Dados identificadores não são necessários para buscar conhecimento genérico.
+- Preferir fontes em português; fontes estrangeiras são permitidas com origem e
+  idioma identificados. Avaliar consultas PT contra PT/EN; interface, prescrições
+  e explicações ao usuário são em português, preservando sentido/unidades/negações.
+- Não presumir tradução perfeita nem traduzir/regravar o acervo nesta fase.
+- Gerador e validador só aceitam exercícios viáveis pelos equipamentos disponíveis;
+  o inventário vem de MOD-10/PostgreSQL, não da literatura vetorial.
 - Agentes recebem tarefas delimitadas e retornam JSON validado com IDs do catálogo.
 - Políticas críticas e limites numéricos passam por código.
 - Orquestrador controla estado, timeout, repetição e limite de ciclos.
@@ -312,16 +327,17 @@ Mantenha o MVP proposto e apresente marcos internos para torná-lo executável:
 | Fundação | Requisitos/decisões/modelo revisados; aplicação local e testes base |
 | Identidade e atendimento | Bootstrap, primeiro acesso, cadastros, papéis e designação |
 | Onboarding | Convite, anamnese, consulta, avaliações e versões |
-| Treino manual | Catálogo, editor, versão publicada imutável e consulta móvel |
+| Equipamentos | Administrador cadastra recursos; disponibilidade integra seleção e validação |
+| Treino manual | Catálogo vinculado a recursos, editor, retenção de 15 versões e consulta móvel |
 | RAG e IA | Corpus, recuperação, triagem, agentes e treino publicado com evidências |
 | Avaliação integrada | Fila/aviso, parecer posterior por versão e cliente com acesso anterior ao parecer |
 | Chat e aceite | Adaptação versionada e teste ponta a ponta do MVP |
 
-Biometria/catraca, matrícula mínima, equipamentos, aulas e dashboard são extensões
+Biometria/catraca, matrícula mínima, aulas e dashboard são extensões
 planejadas; pagamentos automáticos continuam tardios. Caso recomende reduzir o MVP,
 apresente a opção e seu impacto sem retirar requisito aprovado silenciosamente.
-Reserva, multiacademia, sessões executadas de treino e relação exercício–equipamento
-só entram na medida em que forem confirmadas.
+Relação exercício–equipamento foi confirmada e é necessária no MVP. Reserva,
+multiacademia e sessões executadas de treino continuam condicionadas a confirmação.
 
 Docker/Compose requer PG-01 e PG-03. Escolhas de IA não devem bloquear cadastro
 e treino manual; matrícula pelo atendente e acesso acadêmico não dependem do

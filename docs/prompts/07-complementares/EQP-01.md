@@ -2,10 +2,10 @@
 
 ## Metadados
 
-- Fase: Pós-MVP.
+- Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: IAM-03, IAM-04.
-- Requisitos: RF-32, RF-33; RN-04, RN-33; RNF-14.
+- Dependências: FND-05, IAM-03, IAM-04.
+- Requisitos: RF-15, RF-19, RF-32, RF-33; RN-04, RN-33, RN-37; RNF-14.
 - Módulos: MOD-10.
 
 ## Objetivo e contexto
@@ -27,15 +27,25 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Implementar API e telas de cadastro, consulta, atualização e inativação.
+1. Implementar API e telas de cadastro, consulta, disponibilidade operacional e
+   inativação mantidas por administrador autorizado.
 2. Validar imagem opcional e registrar arquivo/referência por adapter configurável.
-3. Expor consulta de ativos para visitante/cliente conforme regra aprovada.
+3. Expor consulta de disponíveis para visitante/cliente e contrato de recursos
+   atuais para MOD-04/MOD-06; não depender de busca vetorial para disponibilidade.
+4. Manter referência estável de equipamento e distinguir recurso indisponível de
+   ocupado no instante; não implementar reserva/ocupação em tempo real.
+5. Na implementação, fixtures/seeds sintéticos identificados podem representar
+   equipamentos para testes. Nenhum dado de exemplo é criado nesta revisão documental.
 
 ## Critérios de aceite
 
 - Nome/situação obrigatórios inválidos impedem cadastro.
 - Equipamento inativado some da oferta, mas registro/histórico permanece.
-- Listagem móvel mostra nome e imagem quando houver; manutenção exige permissão.
+- Listagem móvel mostra nome e imagem quando houver; manutenção exige papel de administrador.
+- Serviço recusa recurso ausente/inativo/indisponível para nova prescrição;
+  alteração é refletida na revalidação antes de publicar.
+- TRN-01 consome o contrato para relacionar requisitos de exercícios sem acesso
+  direto ao repositório interno de MOD-10.
 
 ## Testes obrigatórios
 

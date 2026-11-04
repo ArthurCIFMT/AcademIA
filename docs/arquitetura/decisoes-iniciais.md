@@ -27,6 +27,9 @@
 | DEC-015 | CompreFace é a API de reconhecimento facial escolhida. | Adapter Python; hospedagem/versão/contratos e ensaio real continuam em GATE-08. |
 | DEC-016 | Nova ficha rejeitada substitui e exclui o conteúdo da rejeitada anterior. | RF-35 preserva consulta da última rejeitada, auditoria e treinos já executados. |
 | DEC-017 | Adaptação à saúde exige evidência pertinente recuperada do corpus aprovado. | Sem suporte suficiente, abster-se de gerar/publicar a adaptação. |
+| DEC-018 | Máximo de 15 versões publicadas completas por cliente, incluindo a vigente. | Excedente antigo tem conteúdo excluído; manter auditoria e snapshots de execuções (RF-17). |
+| DEC-019 | Equipamentos e vínculo com exercícios fazem parte do MVP. | Administrador mantém recursos; geração/publicação rejeitam exercício inviável no inventário atual (RN-37). |
+| DEC-020 | Produto em português; fontes estrangeiras são permitidas. | Recuperação PT/EN avaliada e explicação/tradução em português preservam evidência original (RN-39). |
 
 ## Recomendações a formalizar em ADR
 

@@ -3,7 +3,7 @@
 ## Resultado
 
 Os 13 módulos MOD-00 a MOD-12 são suficientes para o escopo atual do AcademIA.
-A revisão cruzou RF-01–RF-37, RN-01–RN-36, RNF-01–RNF-17 e MRF01–MRF15.
+A revisão cruzou RF-01–RF-37, RN-01–RN-39, RNF-01–RNF-17 e MRF01–MRF15.
 Cobertura de planejamento não é evidência de implementação. MRF08–MRF15 continuam
 derivados pendentes de validação e reservas continuam condicionais.
 
@@ -21,7 +21,7 @@ derivados pendentes de validação e reservas continuam condicionais.
 | MOD-07 | RF-20–RF-25/RF-36/RF-37 e RN-06–RN-10/RN-35/RN-36 | API facial real; decisão separada e passagem em catraca fictícia |
 | MOD-08 | RF-26/RF-27/RF-31 | Matrícula pelo atendente sem pagamento obrigatório; financeiro tardio |
 | MOD-09 | RF-30 e RN-25 condicional | Aula e ocorrência; reserva só após aceite do requisito complementar |
-| MOD-10 | RF-32/RF-33 | Cadastro e disponibilidade; uso na seleção da IA é melhoria proposta |
+| MOD-10 | RF-32/RF-33 e RN-37 | MVP: cadastro administrativo e disponibilidade obrigatória na seleção/validação de novas prescrições |
 | MOD-11 | RF-28/RF-29 | Indicadores por contratos; financeiro disponível depois, sem cálculo de lucro |
 | MOD-12 | RN-23/RN-26/RN-27 e suporte aos fluxos | Aviso/auditoria desde cedo; não possuir as fichas nem todas as exportações |
 
@@ -67,13 +67,12 @@ Seus marcos são fundação → identidade/designação → onboarding → trein
 RAG/geração → publicação e chat → parecer posterior e aceite E2E. Esta revisão não retirou
 chat nem qualquer requisito do MVP silenciosamente.
 
-Matrícula/catraca, equipamentos, aulas e dashboard são extensões planejadas.
+Equipamentos pertencem ao MVP. Matrícula/catraca, aulas e dashboard são extensões planejadas.
 Pagamento automático continua tardio e Docker depende de MVP e maioria dos módulos.
 Reserva, multiacademia e sessão executada de treino exigem escopo confirmado.
 
 ## Melhorias propostas, sem inclusão automática
 
-- Relacionar exercício a equipamento e filtrar indisponibilidade durante geração.
 - Registrar sessão executada/repetições realizadas, além da ficha prescrita.
 - Expandir relatórios ou regras financeiras além do controle básico.
 - Introduzir múltiplos instrutores principais ou escala de substituição.
@@ -86,3 +85,10 @@ A revisão posterior incorporou as correções do responsável em
 [fluxos atualizados](fluxos-atualizados.md), sem criar módulos adicionais.
 Foram acrescentados os cartões MEM-00 (registro financeiro opcional e tardio) e
 ACS-07 (catraca fictícia). MEM-01 não depende de MEM-00 nem de pagamento.
+
+## Decisões adicionais incorporadas
+
+Equipamentos no MVP e restrição ao gerador foram confirmados pelo responsável;
+EQP-01 precede TRN-01/AI-01 e TST-01. Retenção de 15 versões publicadas completas
+pertence a MOD-04 (RF-17/RN-38), sem novo módulo. Saída em português com fontes
+estrangeiras permitidas pertence a MOD-05/MOD-06/MOD-04 (RN-39).

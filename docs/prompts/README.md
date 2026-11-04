@@ -49,7 +49,7 @@ redação com aprovação da tecnologia ou conclusão do módulo.
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
-| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01, ACS-06, EQP-01, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
 | PG-02 | Escopo selecionado final concluído ou dispensado | Manifesto, decisões e matriz de aceite | ABERTO |
 
 Gates de IA e pagamentos são fechados antes desses módulos, sem impedir o trabalho
@@ -103,11 +103,20 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [ONB-03](03-onboarding/ONB-03.md) | Formulário e consulta responsivos do onboarding | MOD-03 | ONB-01, ONB-02, IAM-04 | BLOQUEADO |
 | [ONB-04](03-onboarding/ONB-04.md) | Avaliação profissional e acesso por designação | MOD-02, MOD-03 | ONB-02, PES-03, IAM-04 | BLOQUEADO |
 
+## MVP — equipamentos
+
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [EQP-01](07-complementares/EQP-01.md) | Equipamentos disponíveis e cadastro administrativo | MOD-10 | FND-05, IAM-03, IAM-04 | BLOQUEADO |
+
+O caminho histórico 07-complementares foi preservado; a fase do cartão é MVP.
+Dados de exemplo serão criados somente ao implementar os testes/seeds.
+
 ## MVP — exercícios e fichas
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04 | FND-05, IAM-03, IAM-04 | BLOQUEADO |
+| [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04, MOD-10 | FND-05, IAM-03, IAM-04, EQP-01 | BLOQUEADO |
 | [TRN-02](04-treinos/TRN-02.md) | Ficha manual e versões imutáveis | MOD-04 | TRN-01, ONB-02, PES-03 | BLOQUEADO |
 | [TRN-03](04-treinos/TRN-03.md) | Publicação e avaliação posterior da ficha | MOD-04, MOD-02, MOD-12 | TRN-02, PES-03, NTF-01 | BLOQUEADO |
 | [TRN-04](04-treinos/TRN-04.md) | Ficha atual no celular e exportação autorizada | MOD-04 | TRN-03, IAM-04 | BLOQUEADO |
@@ -121,13 +130,13 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | BLOQUEADO |
 | [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
 | [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
-| [AI-01](05-ia-rag/AI-01.md) | Triagem clínica e regras de restrição | MOD-06 | ONB-04, TRN-01, GATE-04 | BLOQUEADO |
+| [AI-01](05-ia-rag/AI-01.md) | Triagem clínica e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | BLOQUEADO |
 | [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts de execução da IA e orquestrador | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
-| [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04 | AI-02, TRN-02 | BLOQUEADO |
+| [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-02, EQP-01 | BLOQUEADO |
 | [AI-04](05-ia-rag/AI-04.md) | Publicação ao cliente e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04 | BLOQUEADO |
-| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
-| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, TRN-04, AI-06 | BLOQUEADO |
+| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
+| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
 
 ## Pós-MVP — matrícula e controle de acesso
 
@@ -146,7 +155,6 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [EQP-01](07-complementares/EQP-01.md) | Equipamentos administrativos e catálogo público | MOD-10 | IAM-03, IAM-04 | BLOQUEADO |
 | [AUL-01](07-complementares/AUL-01.md) | Agenda de aulas por ocorrências | MOD-09 | IAM-03, IAM-04 | BLOQUEADO |
 | [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
 | [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | BLOQUEADO |
@@ -179,9 +187,10 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 ## Fronteira do MVP
 
-Fundação + IAM + PES + NTF + ONB + TRN + RAG + AI + TST-01 compõem o MVP proposto.
+Fundação + IAM + PES + NTF + ONB + EQP-01 + TRN + RAG + AI + TST-01 compõem o MVP.
 O cenário central vai do cadastro ao treino publicado e chat antes do parecer,
-com avaliação posterior, bloqueio de saúde, ficha manual e adaptação versionada.
+com avaliação posterior, bloqueio de saúde, equipamentos disponíveis, retenção de
+15 versões, saída em português, ficha manual e adaptação versionada.
 MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
 AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.

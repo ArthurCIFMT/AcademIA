@@ -13,7 +13,7 @@ O MER original permanece preservado e será revisado em FND-03.
 5. Instrutor designado recebe aviso/fila e pode aceitar ou rejeitar a versão, com
    parecer, responsável e data; também pode modificar integralmente criando nova versão.
 6. Adaptação pelo chat passa novamente pela triagem/validações, cria nova versão
-   publicada e novo parecer PENDENTE. Versões anteriores seguem a retenção de RF-35.
+   publicada e novo parecer PENDENTE. Versões anteriores seguem RF-17/RF-35.
 
 Publicação e parecer são dimensões independentes:
 
@@ -29,10 +29,12 @@ Chat pode funcionar sem ficha avaliada; ausência de ficha não permite inventar
 Cliente sem instrutor mantém consulta/chat, com pendência de designação para revisão.
 Falha de aviso não desfaz publicação nem perde a tarefa de avaliação.
 Rejeição deve aparecer ao cliente, com motivo, e não ocultar conteúdo ou bloquear chat.
-Rejeitar a ficha vigente não a oculta: ela permanece atual e consultável. Apenas
-quando uma ficha posterior também é rejeitada, excluir o conteúdo da rejeitada
-anterior e manter a nova rejeitada. Gerar/publicar ou aceitar uma nova ficha não
-dispara a exclusão. Não apagar fichas aceitas nem treinos já executados; manter
+Rejeitar a ficha vigente não a oculta: ela permanece atual e consultável. Quando
+uma ficha posterior também é rejeitada, excluir o conteúdo da rejeitada anterior
+e manter a nova rejeitada enquanto retida. Gerar/publicar ou aceitar não dispara
+essa exclusão específica. RF-17 aplica independentemente o limite de 15 versões:
+publicar excedente remove conteúdo mais antigo, inclusive aceito/rejeitado.
+A vigente e os registros de treinos executados não são apagados; manter
 metadados de auditoria, sem reexpor o conteúdo excluído em API, exportação ou chat.
 Aplicar exclusão e troca atomicamente, com idempotência e ordem de versões;
 parecer atrasado não elimina a rejeitada mais recente (CA-35.7/CA-35.8).
@@ -143,3 +145,26 @@ de passagem simulada → frequência/lotação. Liberação manual continua audi
 IDs afetados: RF-15–RF-19, RF-22, RF-31, RF-35–RF-37; TRN-02–04, AI-03–05,
 TST-01, MEM-01, ACS-01–03/07, MEM-00 (financeiro opcional) e FIN-02. São refinamentos de MOD-04/06/07/08,
 sem necessidade de criar outro módulo de domínio.
+
+## Equipamentos, retenção e idioma no MVP
+
+Administrador mantém recursos disponíveis → catálogo relaciona requisitos por
+exercício/variação → backend filtra candidatos conforme recursos e saúde → IA
+gera somente entre candidatos → revalidação do inventário e do contexto → publicação
+atômica com retenção de 15 versões completas → cliente consulta em português.
+
+Recurso disponível é cadastrado, ativo e operacional, sem controle de ocupação em
+tempo real. Uma combinação exige todos os itens e uma alternativa só é válida
+quando completa. Peso corporal exige dispensa explícita; cadastro faltante não libera.
+Inventário vem de MOD-10, evidência da literatura vem de MOD-05. Equipamento que
+fica indisponível depois é sinalizado para adaptação, sem reescrever o passado.
+
+Fonte PT/EN pode sustentar explicação em português; original, localização e idioma
+permanecem identificados. Avaliar recuperação, tradução, unidades e negações.
+Dados de exemplo de equipamentos serão criados somente na implementação.
+
+O limite de 15 conta versões publicadas completas incluindo a vigente; rascunhos,
+tentativas e registros/snapshots de execuções não entram na contagem. Conteúdo
+excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
+identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
+Preservar execuções existentes não exige criar agora um módulo de execução de treino.

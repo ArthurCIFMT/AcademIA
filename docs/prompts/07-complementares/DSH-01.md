@@ -46,7 +46,7 @@ Execute também lint/tipos/build afetados e `git diff --check`.
 
 ## Fora do escopo e interrupção
 
-Chamar receita de lucro ou bloquear dashboard por aulas/equipamentos opcionais.
+Chamar receita de lucro ou exigir módulos fora das dependências aprovadas do dashboard.
 Dependência/gate aberto ou contrato material ausente impede executar a parte afetada.
 Informe a informação que falta; não improvise dados para obter aceite.
 

@@ -145,6 +145,11 @@ Gerar proposta inicial com base no onboarding e em conhecimento recuperado.
 - CA-15.7: prescrição adaptada a condição de saúde exige evidência pertinente
   recuperada do corpus aprovado, vinculada à recomendação; ausência ou conflito
   não resolvido impede gerar/publicar essa adaptação e retorna justificativa.
+- CA-15.8: geração só seleciona exercícios ativos com todos os recursos necessários
+  disponíveis na academia ou alternativa completa cadastrada. Disponibilidade é
+  fornecida por MOD-10 e revalidada antes da publicação; dado ausente não libera seleção.
+- CA-15.9: ficha e explicações ao cliente são em português, inclusive quando a
+  evidência recuperada está em inglês, preservando fonte, sentido, unidades e negações.
 
 ### RF-16 — Visualizar ficha de treino atual
 
@@ -169,6 +174,16 @@ Manter a ficha e criar nova versão quando uma alteração validada for publicad
 - CA-17.5: a exclusão da ficha rejeitada anterior segue CA-35.7; não apaga
   auditoria nem registros/snapshots de treinos já executados. Número de versão
   excluída não é reutilizado.
+- CA-17.6: cada cliente possui no máximo 15 versões publicadas completas, incluindo
+  a vigente; ao publicar a 16ª, excluir conteúdo/itens das versões mais antigas
+  até restarem 15, independentemente do parecer. A vigente nunca é eliminada.
+- CA-17.7: exclusão por limite retira conteúdo de consultas, exportações e contexto
+  ativo/cache do chat; mantém identificação, datas, autoria, parecer e motivo em
+  auditoria protegida e preserva registros/snapshots de treinos já executados.
+- CA-17.8: publicação e aplicação do limite são transacionais/idempotentes;
+  concorrência não ultrapassa 15 nem deixa duas vigentes. Versões continuam com
+  numeração crescente; rascunhos e tentativas não publicadas não contam como ficha
+  disponível. Falha na publicação não elimina ficha válida.
 
 ### RF-18 — Conversar com assistente de IA
 
@@ -194,6 +209,8 @@ Propor adaptação quando dor, limitação ou condição interferir no treino.
   e pareceres permanecem rastreáveis, respeitando a exclusão de CA-35.7.
 - CA-19.5: falta de evidência, fonte inadequada ao caso ou conflito não resolvido
   impede publicar a adaptação; registrar abstenção sem alterar a ficha vigente.
+- CA-19.6: adaptação respeita equipamentos disponíveis, idioma português e limite
+  de 15 versões; recurso que ficou indisponível durante o fluxo exige revalidação.
 
 ## Biometria, acesso e frequência
 
@@ -317,22 +334,29 @@ Permitir que usuário administrativo mantenha dias e horários das aulas.
 
 ### RF-32 — Gerenciar equipamentos
 
-Cadastrar, consultar, atualizar e desativar equipamentos da academia.
+Permitir ao administrador cadastrar, consultar, atualizar e desativar equipamentos
+da academia no MVP; disponibilidade operacional restringe prescrições.
 
-- CA-32.1: usuário autorizado cadastra nome e situação.
+- CA-32.1: administrador autorizado cadastra nome e situação/disponibilidade.
 - CA-32.2: equipamento pode possuir imagem.
 - CA-32.3: cadastro permanece disponível em nova consulta.
-- CA-32.4: usuário autorizado altera informações.
-- CA-32.5: equipamento desativado não aparece como disponível ao cliente.
+- CA-32.4: administrador autorizado altera informações; outros perfis não mantêm o inventário.
+- CA-32.5: equipamento inativo ou operacionalmente indisponível não aparece como
+  disponível ao cliente e não pode sustentar novas prescrições.
+- CA-32.6: serviço de disponibilidade expõe recursos atuais por contrato para
+  MOD-04/MOD-06; banco vetorial/LLM não determina o inventário da academia.
+- CA-32.7: exercício/variação declara recursos obrigatórios e alternativas completas;
+  só dispensa equipamentos quando isso está explicitamente cadastrado. Alterar
+  disponibilidade não reescreve fichas históricas; consulta sinaliza indisponibilidade.
 
 ### RF-33 — Consultar equipamentos disponíveis
 
 Permitir que visitantes ou clientes consultem equipamentos ativos e suas imagens.
 
-- CA-33.1: interface lista equipamentos ativos.
+- CA-33.1: interface lista como disponíveis somente equipamentos ativos e operacionais.
 - CA-33.2: apresenta nome e imagem quando cadastrada.
 - CA-33.3: apresenta informações adicionais disponíveis.
-- CA-33.4: equipamento desativado não aparece.
+- CA-33.4: equipamento desativado ou indisponível não aparece como disponível.
 - CA-33.5: listagem é utilizável em celular.
 
 ## Designação e revisão profissional
@@ -357,7 +381,8 @@ Comunicar propostas ao instrutor responsável e permitir sua decisão profission
 - CA-35.4: consulta do treino e chat estão disponíveis ao cliente antes do parecer;
   o aceite profissional não é pré-condição de publicação.
 - CA-35.5: rejeição mantém a ficha consultável pelo cliente com motivo e chat;
-  permanece disponível até uma ficha posterior também receber rejeição.
+  permanece disponível até outra ficha posterior receber rejeição ou expirar pelo
+  limite global de 15 versões de RF-17.
 - CA-35.6: parecer aplica-se somente à versão avaliada; nova versão não herda aceite.
 - CA-35.7: quando uma ficha posterior é rejeitada, excluir o conteúdo/itens da
   rejeitada anterior, retirando-o das consultas, exportações e contexto do chat;
@@ -367,7 +392,11 @@ Comunicar propostas ao instrutor responsável e permitir sua decisão profission
   registros/snapshots de treinos executados não são apagados por essa regra.
 - CA-35.8: apenas gerar/publicar nova ficha, falhar na geração ou aceitá-la não
   dispara essa exclusão. Repetição ou parecer atrasado sobre versão mais antiga
-  não elimina a rejeitada mais recente nem cria duas fichas vigentes.
+  não elimina indevidamente a rejeitada mais recente nem cria duas fichas vigentes.
+- CA-35.9: a exclusão específica de rejeitadas é independente da retenção global;
+  publicar nova versão pode expirar uma antiga pelo limite de RF-17, inclusive
+  aceita/rejeitada. A proteção às fichas aceitas em CA-35.7 refere-se somente à
+  substituição de rejeitadas, sem dispensar o limite global.
 
 ## Integração facial e catraca acadêmica
 

@@ -2,8 +2,8 @@
 
 ## Estado do documento
 
-- Versão: 0.2
-- Data de consolidação: 2026-11-03
+- Versão: 0.3
+- Data de consolidação: 2026-11-04
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
 
@@ -20,7 +20,14 @@
 
 - O projeto é acadêmico, não um produto comercial em produção.
 - O MVP deve priorizar usuários, clientes, funcionários, designação de instrutor,
-  onboarding, exercícios, fichas manuais, IA/RAG, chat e avaliação profissional posterior.
+  onboarding, equipamentos disponíveis, exercícios, fichas manuais, IA/RAG, chat
+  e avaliação profissional posterior.
+- Administradores mantêm os equipamentos no MVP; a disponibilidade restringe o
+  catálogo elegível da geração/adaptação. Dados sintéticos ficam para a implementação.
+- Cada cliente retém até 15 versões publicadas completas, incluindo vigente,
+  conforme RF-17; auditoria e registros de treinos executados são preservados.
+- Interface e respostas ao usuário são em português; fontes estrangeiras são
+  permitidas com recuperação e explicação/tradução em português avaliadas.
 - Cobrança e integração automática de pagamentos ficam para fase tardia.
 - Dockerfiles e Docker Compose ficam para depois do MVP e da maioria dos módulos.
 - O código deve permanecer executável localmente antes da containerização.
@@ -44,13 +51,16 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 1. Um usuário autorizado cadastra o cliente.
 2. Um instrutor responsável é designado ao cliente, preservando o histórico.
 3. O cliente recebe convite e conclui o onboarding.
-4. O instrutor pode criar uma ficha manualmente.
+4. Administrador mantém equipamentos disponíveis; instrutor usa catálogo elegível
+   para criar ficha manualmente, com recursos necessários explicitamente vinculados.
 5. O RAG recupera conhecimento de uma base documental aprovada.
 6. A IA analisa o onboarding; triagem e validações técnicas precedem a publicação.
 7. O treino validado fica disponível ao cliente com parecer profissional PENDENTE.
 8. O cliente consulta o treino e conversa com a IA sem aceite prévio do instrutor.
 9. O instrutor designado avalia posteriormente, aceita/rejeita ou cria versão modificada.
 10. Alterações posteriores, inclusive pelo chat, geram nova versão e novo parecer pendente.
+11. Nova publicação aplica o limite de 15 versões e a política de rejeitadas sem
+    reescrever registros de execuções ou perder metadados de auditoria.
 
 ## Fluxo posterior de matrícula e acesso
 

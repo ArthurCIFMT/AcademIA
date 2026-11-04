@@ -4,9 +4,9 @@
 
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
-- Dependências: IAM-05, PES-03, ONB-03, ONB-04, TRN-04, AI-06.
-- Requisitos: RF-01–RF-19, RF-34, RF-35; RNF-07, RNF-10, RNF-14.
-- Módulos: MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-12.
+- Dependências: IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06.
+- Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14.
+- Módulos: MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12.
 
 ## Objetivo e contexto
 
@@ -37,8 +37,14 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Critérios de aceite
 
 - Fluxo completo persiste após logout/login e recarga.
+- Administrador cadastra recursos e geração só usa equipamentos disponíveis;
+  revalidação impede publicar prescrição inviável após alteração do inventário.
+- Publicar 16 versões deixa 15 completas consultáveis incluindo vigente; testar
+  rejeitadas, exclusões, exportação/chat, concorrência e preservação de auditoria/execuções.
+- Consulta em português usa fonte PT/EN e resposta é em português com sentido,
+  unidades e negações preservados.
 - Caso bloqueado não chega à publicação; instrutor alheio e cliente alheio são recusados.
-- Treino e chat funcionam antes do aceite; rejeição não oculta conteúdo nem conversa.
+- Treino e chat funcionam antes do aceite; rejeição não oculta conteúdo retido nem conversa.
 - Execução local reproduzível passa; serviço real obrigatório ausente mantém aceite pendente.
 - Repetir bootstrap não duplica administrador e usuário convidado consegue o
   primeiro login; mudança de restrição durante revisão exige revalidação prevista.

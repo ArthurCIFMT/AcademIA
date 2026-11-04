@@ -1,136 +1,78 @@
-# Macrorequisitos de IA e RAG
+# Macrorequisitos completos de IA e RAG
 
-## Situação
+## Origem e situação
 
-- MRF01 a MRF07: fornecidos pelo responsável do projeto.
-- MRF08 a MRF15: derivados durante a análise e sujeitos a validação formal antes
-  da implementação do módulo correspondente.
+- MRF01–MRF07: fornecidos pelo responsável; detalhados com critérios rastreáveis.
+- MRF08–MRF15: derivados e agora especificados por completo; continuam sujeitos
+  à validação formal dos pontos não expressamente aprovados em GATE-04.
+- Confirmados pelo responsável: evidência obrigatória para adaptação por saúde,
+  parecer posterior, equipamentos disponíveis como restrição no MVP, retenção
+  de 15 versões publicadas e produto em português com fontes estrangeiras permitidas.
+- Nenhum gate técnico/clínico é fechado por esta tabela. Formulário, políticas
+  clínicas, responsável pela curadoria, provedores e limiares de avaliação ainda
+  precisam das decisões correspondentes; não inventar seus valores.
 
-## Requisitos fornecidos
+## Atores e módulos
 
-### MRF01 — Ingestão e processamento de documentos
+Curador é uma função atribuída a administrador/instrutor autorizado, sem criar
+novo perfil de usuário. A autorização e o responsável final pela aprovação do
+corpus são definidos em GATE-04. Equipe técnica é ator de operação/testes, não
+um novo papel de acesso aos dados clínicos. Agentes internos não são novos atores
+humanos nem microserviços.
 
-Extrair texto de literatura validada em PDF/TXT, dividir em blocos e gerar
-embeddings por provedor configurável.
+MOD-00: plataforma/testes; MOD-01: identidade; MOD-02: designação; MOD-03:
+onboarding/avaliações; MOD-04: exercícios/fichas; MOD-05: RAG; MOD-06: IA/chat;
+MOD-10: equipamentos; MOD-12: auditoria/notificações.
+Os módulos relacionados colaboram por contratos; não compartilham livremente tabelas.
 
-- Preservar conteúdo clínico, unidades e símbolos relevantes.
-- Tratar limites, tentativas e falhas do provedor de embeddings.
-- Persistir vetor, texto e metadados correspondentes.
-- Manter fonte, versão, página/seção, hash e estado de aprovação.
+## Tabela completa
 
-### MRF02 — Consulta semântica ao banco vetorial
+| ID | Macrorequisito | Módulos relacionados | Atores | Descrição / funcionamento | Critérios de aceite testáveis |
+|---|---|---|---|---|---|
+| MRF01 | Ingestão e processamento de documentos | MOD-05; MOD-00; MOD-12 | Administrador/Instrutor autorizado para curadoria; provedor de embeddings | Extrair PDF/TXT, dividir em blocos e gerar embeddings de literatura revisada, preservando o original e sua proveniência. | **CA-MRF01.1:** Documento aprovado com texto extraível produz blocos ligados a documento, versão, página/seção, hash e modelo/dimensão dos embeddings.<br>**CA-MRF01.2:** Extração preserva unidades, símbolos, negações e estrutura relevante; arquivo sem texto ou com extração inadequada fica pendente de revisão/OCR, sem ativação automática.<br>**CA-MRF01.3:** Mesmo arquivo/hash e configuração não duplicam a ingestão; falha permite retomada e versões incompatíveis de embeddings não se misturam.<br>**CA-MRF01.4:** Rate limit, timeout e indisponibilidade usam tentativas limitadas/configuráveis e deixam estado de execução verificável.<br>**CA-MRF01.5:** Português é preferido na seleção; fonte estrangeira mantém idioma e original identificados. Coleta ou tradução por IA não equivale a aprovação para o corpus. |
+| MRF02 | Consulta semântica ao banco vetorial | MOD-05; MOD-06 | Cliente/Instrutor autorizado como solicitante indireto; provedor de embeddings | Converter contexto minimizado em consulta e recuperar diretrizes pertinentes do banco vetorial especializado. | **CA-MRF02.1:** Busca retorna top-K por cosseno, pontuação e proveniência, com filtros de corpus/versão aprovados; outra métrica exige ADR.<br>**CA-MRF02.2:** Consultas de teste em português recuperam os trechos esperados em português e inglês, com modelo/espaço vetorial compatível entre consultas e documentos.<br>**CA-MRF02.3:** Corpus revogado/não aprovado é excluído; busca vazia, irrelevante ou insuficiente retorna ausência explícita e impede adaptação de saúde sem suporte.<br>**CA-MRF02.4:** Relevância é avaliada por consultas rotuladas e limiar definido em GATE-04 antes do ensaio; score sozinho não comprova aplicabilidade.<br>**CA-MRF02.5:** Latência p95 da busca vetorial é ≤ 2 segundos no volume, hardware e conjunto de consultas documentados, separada do tempo do LLM. |
+| MRF03 | Perfil e anamnese clínica/funcional | MOD-03; MOD-01; MOD-02 | Cliente; instrutor designado | Coletar e versionar dados físicos, experiência, objetivos, queixas, medicações e condições declaradas conforme formulário aprovado. | **CA-MRF03.1:** Campo obrigatório ausente/inválido impede concluir, mas permite rascunho autorizado; reabrir recupera os valores salvos.<br>**CA-MRF03.2:** Resposta negativa explícita, informação desconhecida e campo ausente são distintos; dado clínico/físico ausente não é preenchido com saudável, zero ou média.<br>**CA-MRF03.3:** Conclusão registra data, versão e responsável; dados declarados e avaliações/medições profissionais têm origem identificável.<br>**CA-MRF03.4:** Fronteiras usam JSON padronizado; geração identifica snapshot utilizado e edição posterior não muda o snapshot anterior.<br>**CA-MRF03.5:** Cliente consulta somente seus dados e instrutor somente os dados autorizados pela designação; formulário concluído ainda passa pela triagem. |
+| MRF04 | Orquestração multiagente | MOD-06; MOD-04; MOD-05; MOD-12 | Cliente como solicitante; provedor de LLM | Coordenar triagem, biomecânica, periodização e revisor, com estado controlado e fronteiras de publicação. | **CA-MRF04.1:** Fluxo elegível percorre triagem → recuperação/elegibilidade de exercícios → biomecânica → periodização → revisor; estados bloqueados/insuficientes não geram ficha.<br>**CA-MRF04.2:** Agentes devolvem JSON conforme schema; somente backend valida e publica pelo contrato de MOD-04, sem acesso direto do modelo ao banco ou aceite profissional automático.<br>**CA-MRF04.3:** Timeout, tentativas, tokens e ciclos têm limites configurados; ao exceder, execução termina com erro controlado e não corrompe a ficha vigente.<br>**CA-MRF04.4:** Repetição do mesmo pedido é idempotente e concorrência não cria duas fichas vigentes nem ultrapassa a retenção de RF-17.<br>**CA-MRF04.5:** Execução registra versões de onboarding, catálogo/disponibilidade, corpus, políticas, modelo e prompts, sem armazenar raciocínio interno. |
+| MRF05 | Geração delimitada por regras | MOD-06; MOD-04; MOD-10 | Cliente; instrutor autorizado como solicitante; provedor de LLM | Gerar seleção de exercícios, volume e intensidade dentro das restrições de saúde e equipamentos da academia. | **CA-MRF05.1:** Saída segue JSON Schema estrito e referencia somente IDs de exercícios existentes e ativos do catálogo.<br>**CA-MRF05.2:** Todo recurso obrigatório do exercício/variação deve estar disponível na academia; combinações e alternativas cadastradas são respeitadas.<br>**CA-MRF05.3:** Exercício de peso corporal dispensa recursos somente quando isso está explicitamente cadastrado; vínculo ausente não significa sem equipamento.<br>**CA-MRF05.4:** Restrições e limites numéricos vêm de políticas estruturadas rastreáveis e são validados por código, sem valores clínicos inventados pelo LLM.<br>**CA-MRF05.5:** Adaptação por saúde só é gerada com evidência pertinente recuperada do corpus aprovado, aplicável à condição, população e intervenção.<br>**CA-MRF05.6:** Prescrição e explicações destinadas ao usuário são em português; não havendo opção elegível com suporte, retornar abstenção sem inventar equipamento ou exercício. |
+| MRF06 | Auditoria automática por revisor | MOD-06; MOD-04; MOD-12 | Cliente como beneficiário indireto; provedor de LLM | Revisar redundâncias, conflitos e inconsistências da proposta antes de sua publicação técnica. | **CA-MRF06.1:** Casos rotulados com inconsistências são rejeitados pelo fluxo e retornam feedback de correção ao orquestrador.<br>**CA-MRF06.2:** Correções respeitam o limite de ciclos; esgotamento não publica proposta inválida nem altera a vigente.<br>**CA-MRF06.3:** Somente conteúdo aprovado nas validações de domínio/schema/restrições pode ser publicado com parecer profissional PENDENTE.<br>**CA-MRF06.4:** Tentativas, resultado e rejeições técnicas ficam auditáveis, sem confundir revisor automático com instrutor nem manter cópias consultáveis de conteúdo excluído por RF-17/RF-35. |
+| MRF07 | Disponibilização estruturada da ficha | MOD-04; MOD-06; MOD-01 | Cliente; instrutor designado | Exibir ficha publicada por dias/microciclos, com prescrições em português, parecer separado e exportação autorizada. | **CA-MRF07.1:** Interface móvel apresenta dias, exercícios, cadência, séries, repetições e demais campos persistidos da versão, sem exigir aceite prévio do instrutor.<br>**CA-MRF07.2:** Consulta própria e exportação respeitam autorização; trocar ID não revela dados de terceiros e falta de ficha retorna estado vazio.<br>**CA-MRF07.3:** API/listagem/exportação retornam no máximo 15 versões publicadas completas por cliente, incluindo a vigente, conforme RF-17.<br>**CA-MRF07.4:** Versão eliminada por retenção ou substituição de rejeitada não retorna conteúdo nem reaparece no contexto ativo do chat; identificação de auditoria continua preservada.<br>**CA-MRF07.5:** Rejeitada retida mostra parecer/motivo e mantém consulta/chat. Indisponibilidade posterior de equipamento é sinalizada sem reescrever o histórico. |
+| MRF08 | Triagem e decisão de segurança | MOD-06; MOD-03 | Cliente; instrutor autorizado para acompanhamento | Classificar solicitação como dados insuficientes, bloqueada, dependente de avaliação/liberação prevista na política ou elegível, sem produzir diagnóstico. | **CA-MRF08.1:** Caso grave definido em política revisada bloqueia geração/publicação, independentemente de resposta favorável do LLM.<br>**CA-MRF08.2:** Dado necessário ausente, desconhecido ou contraditório segue a tabela de decisão e não é presumido saudável; solicitar complemento quando aplicável.<br>**CA-MRF08.3:** Estados insuficiente, bloqueado ou requer liberação não geram ficha enquanto não houver condição válida prevista na política.<br>**CA-MRF08.4:** Decisão registra código, dados/snapshot utilizados e versão da política; explicação ao cliente é em português e não se apresenta como diagnóstico.<br>**CA-MRF08.5:** Liberação clínica prevista em política não se confunde com parecer rotineiro do instrutor; ausência de aceite posterior não bloqueia consulta/chat de conteúdo retido. |
+| MRF09 | Motor de restrições estruturadas | MOD-06; MOD-04; MOD-10 | Cliente/Instrutor como solicitantes indiretos; administrador mantém equipamentos | Filtrar candidatos antes da geração e validar deterministicamente saúde, catálogo, recursos e limites após a geração. | **CA-MRF09.1:** Candidato incompatível com restrição de saúde ou equipamento obrigatório indisponível é excluído antes da seleção.<br>**CA-MRF09.2:** Validador final rejeita ID inexistente/inativo, recurso inventado/indisponível ou prescrição fora de política, mesmo que o agente revisor aceite.<br>**CA-MRF09.3:** Conferência antes da publicação usa disponibilidade atual por contrato de MOD-10; alteração relevante durante a geração exige revalidação.<br>**CA-MRF09.4:** Requisitos de recursos suportam todos os itens obrigatórios de uma combinação e pelo menos uma alternativa completa cadastrada; cadastro incompleto não libera seleção.<br>**CA-MRF09.5:** Falha de regra impede publicação, registra motivo/política e não é contornada por texto do modelo ou simples aceite profissional. |
+| MRF10 | Avaliação profissional posterior | MOD-04; MOD-02; MOD-12 | Instrutor designado; cliente | Encaminhar ficha ao instrutor responsável para aceitar, rejeitar ou modificar depois da publicação. | **CA-MRF10.1:** Nova versão entra em fila/aviso do instrutor designado; falha do aviso não perde a pendência nem bloqueia consulta/chat.<br>**CA-MRF10.2:** Somente instrutor autorizado avalia; parecer identifica versão, responsável e data/hora; edição cria nova versão sem herdar aceite.<br>**CA-MRF10.3:** Cliente consulta/chat antes do parecer e vê o motivo de rejeição enquanto a versão estiver retida.<br>**CA-MRF10.4:** Ficha posterior rejeitada exclui o conteúdo da rejeitada anterior conforme RF-35; limite global de 15 pode expirar uma versão antiga independentemente do parecer.<br>**CA-MRF10.5:** Exclusões preservam auditoria e registros/snapshots de treinos executados; repetição/concorrência não duplica exclusão nem elimina indevidamente a vigente. |
+| MRF11 | Evidências e rastreabilidade | MOD-05; MOD-06; MOD-12 | Cliente; instrutor designado; curador autorizado | Vincular adaptações/recomendações a evidências efetivamente recuperadas e permitir sua conferência. | **CA-MRF11.1:** Recomendação identifica documento, versão, página/seção e fragmento recuperado que sustenta a orientação.<br>**CA-MRF11.2:** Adaptação por saúde sem suporte pertinente, com citação inventada ou com fonte incompatível com condição/população/intervenção não é gerada/publicada.<br>**CA-MRF11.3:** Conflito não resolvido ou fonte revogada exige abstenção em vez de escolher arbitrariamente uma conclusão.<br>**CA-MRF11.4:** Explicação em português de fonte estrangeira preserva sentido, unidades e negações; fonte original permanece acessível e sua tradução não ganha aprovação automática.<br>**CA-MRF11.5:** Dados de execução suficientes à rastreabilidade são registrados sem copiar desnecessariamente informações sensíveis para logs técnicos. |
+| MRF12 | Isolamento de contexto | MOD-01; MOD-03; MOD-04; MOD-05; MOD-06 | Cliente; instrutor autorizado | Garantir contexto autorizado de um cliente por execução, inclusive histórico, cache, ferramentas e evidências. | **CA-MRF12.1:** Identidade é resolvida no backend; trocar client_id no payload não muda o cliente autorizado.<br>**CA-MRF12.2:** Mensagens, onboarding, ficha e cache de A não aparecem na execução/resposta de B; testar dois clientes e instrutor não designado.<br>**CA-MRF12.3:** Consulta vetorial usa contexto minimizado e literatura compartilhada aprovada, sem indexar dados privados como conhecimento público.<br>**CA-MRF12.4:** Conteúdo de versão excluída por RF-17/RF-35 não é restaurado como prescrição por cache, ferramenta ou mensagens anteriores; histórico da conversa não é reescrito. |
+| MRF13 | Avaliação automatizada da IA | MOD-00; MOD-05; MOD-06; MOD-04; MOD-10 | Equipe técnica; instrutor/curador responsável pelos casos esperados | Avaliar recuperação, geração, chat, triagem e regras usando casos sintéticos rotulados separados do corpus de conhecimento. | **CA-MRF13.1:** Suíte inclui elegíveis, restritos, graves, incompletos, contraditórios, adversariais e falhas; casos elegíveis esperados geram saída válida e todos os bloqueios críticos definidos impedem publicação.<br>**CA-MRF13.2:** Nenhum caso mistura clientes, publica exercício proibido ou usa equipamento ausente/inativo; incluir alternativas, múltiplos recursos e alteração de disponibilidade durante geração.<br>**CA-MRF13.3:** Cobrir 15 → 16 publicações, sequência de rejeições, concorrência, exportação e contexto após exclusão, preservando auditoria/execuções.<br>**CA-MRF13.4:** Consultas em português são avaliadas contra fontes PT/EN; respostas/traduções são verificadas quanto a idioma, suporte, unidades e negações.<br>**CA-MRF13.5:** Métricas/limiares de relevância e configuração são definidos antes do ensaio; medir p95 vetorial ≤ 2 s separado do LLM.<br>**CA-MRF13.6:** Relatório registra modelo, corpus, políticas, parâmetros, resultados e falhas; doubles aprovam testes isolados, mas aceite da IA real exige provedor configurado. |
+| MRF14 | Chat e adaptação versionada | MOD-06; MOD-04; MOD-03; MOD-10 | Cliente; instrutor designado como avaliador posterior; provedor de LLM | Conversar em português sobre o próprio treino e propor adaptações com novo contexto, evidências e versão. | **CA-MRF14.1:** Cliente conversa antes do aceite e sem ficha avaliada; ausência de ficha não permite inventar contexto nem dispensar pré-condições de geração.<br>**CA-MRF14.2:** Nova dor/limitação reexecuta triagem e busca de evidências; sem suporte ou com bloqueio, explicar abstenção sem alterar a vigente.<br>**CA-MRF14.3:** Adaptação só usa exercícios/equipamentos disponíveis; partes não relacionadas permanecem e mudança válida cria nova versão com parecer PENDENTE.<br>**CA-MRF14.4:** Publicação respeita 15 versões completas e regra de rejeitadas; conteúdo excluído não volta ao contexto ativo.<br>**CA-MRF14.5:** Falha do provedor retorna erro controlado sem corromper ficha/conversa; resposta é em português e não constitui diagnóstico. |
+| MRF15 | Segurança e governança do corpus | MOD-05; MOD-01; MOD-12 | Administrador/Instrutor autorizado para curadoria; equipe técnica na operação | Controlar quarentena, revisão, aprovação, versões, revogação e uso das fontes bibliográficas. | **CA-MRF15.1:** Documento coletado entra pendente/quarentena; somente versão aprovada por responsável autorizado pode ser recuperada.<br>**CA-MRF15.2:** Aprovação/revogação identifica responsável, data, versão e origem; revogação impede novas recuperações e não apaga a proveniência histórica necessária.<br>**CA-MRF15.3:** Instrução maliciosa em documento não muda prompts, permissões, bloqueios ou acesso a outro cliente.<br>**CA-MRF15.4:** Preferir fontes em português; fonte estrangeira é permitida com idioma/original identificados e saída ao usuário em português. Tradução integral persistida depende de revisão e condições de uso.<br>**CA-MRF15.5:** Aprovar fonte para RAG é diferente de parecer posterior do treino; reunir PDFs, traduzir ou passar testes não aprova automaticamente a literatura clínica. |
 
-Converter contexto minimizado do cliente em consulta vetorial e recuperar
-diretrizes biomecânicas/fisiológicas pertinentes.
+## Regras transversais e limites
 
-- Retornar `top-K` blocos por similaridade de cosseno e suas pontuações; outra
-  métrica exige decisão arquitetural explícita.
-- Aplicar filtros por corpus e versão aprovada.
-- Registrar baixa similaridade e permitir abstenção.
-- Busca vetorial com latência p95 menor ou igual a dois segundos no ambiente de
-  teste definido.
+- Saúde: evidência pertinente recuperada é obrigatória para a adaptação; os
+  critérios clínicos de elegibilidade vêm de política revisada, não de inferência
+  livre nem de dados preenchidos com médias.
+- Equipamentos: PostgreSQL/MOD-10 é a fonte de disponibilidade; literatura RAG
+  não define o inventário da academia. Disponível significa cadastrado, ativo e
+  operacional; não exige controle de ocupação em tempo real.
+- Retenção: contam-se versões publicadas completas, incluindo a vigente. Ao
+  publicar a 16ª, excluir conteúdo das mais antigas até restarem 15. Rascunhos,
+  tentativas e snapshots de execuções não entram nessa contagem; auditoria e
+  registros de treinos executados são preservados. A exclusão específica das
+  rejeitadas pode reduzir o total abaixo de 15 (RF-17/RF-35).
+- Idioma: interface, prescrições e explicações em português; títulos/referências
+  podem manter o original. Uma tradução por IA não comprova correção clínica nem
+  substitui a fonte; não traduzir/regravar o acervo nesta atualização documental.
+- Qualidade: o critério de 100% de bloqueios refere-se à suíte crítica definida,
+  sem constituir garantia clínica universal. Não confundir JSON válido ou score
+  de similaridade com adequação de treino.
 
-### MRF03 — Perfil e anamnese clínica/funcional
+## Implementação e rastreabilidade
 
-Coletar dados físicos, experiência, limitações, lesões e condições informadas.
+RAG-01–RAG-05 implementam MOD-05; ONB-01–ONB-04 implementam a coleta/avaliação;
+EQP-01 e TRN-01 implementam recursos e catálogo; AI-01–AI-06 implementam geração,
+revisão e chat; TRN-02–TRN-04 pertencem à publicação/retenção/parecer de MOD-04;
+TST-01 integra o aceite do MVP. Dados sintéticos de equipamentos serão criados
+somente na implementação, identificados como testes e sem compor literatura.
 
-- Campos obrigatórios são validados.
-- Dados são serializados em JSON padronizado nas fronteiras.
-- A versão utilizada por cada geração permanece identificável.
-
-### MRF04 — Orquestração multiagente
-
-Coordenar estado entre agentes especialistas sob controle central.
-
-- Fluxo controlado: triagem → biomecânica → periodização → revisor.
-- Timeout, tentativas e limite máximo de ciclos.
-- Agentes retornam JSON tipado; o backend valida e publica o treino, sem atribuir
-  aceite profissional nem conceder acesso direto dos modelos ao banco.
-
-### MRF05 — Geração delimitada por regras
-
-Gerar seleção de exercícios, volume e intensidade dentro das restrições do cliente
-e das políticas estruturadas, usando o RAG como evidência.
-
-- Exercício incompatível com restrição é bloqueado.
-- Limites numéricos passam por validação determinística.
-- Saída segue JSON Schema estrito.
-- Exercícios são referenciados pelo catálogo do sistema.
-- Adaptação por condição de saúde só é gerada com evidência pertinente recuperada
-  do corpus aprovado, aplicável à condição, população e intervenção propostas.
-
-### MRF06 — Auditoria automática por revisor
-
-Revisar redundâncias, conflitos e inconsistências da proposta.
-
-- Revisor pode rejeitar e devolver feedback ao orquestrador.
-- Ciclos de correção possuem limite.
-- Tentativas e rejeições são persistidas para auditoria.
-- Somente conteúdo validado é publicado ao cliente e encaminhado à avaliação
-  posterior do instrutor. Validação automática não equivale a aceite profissional.
-
-### MRF07 — Disponibilização estruturada da ficha
-
-Renderizar ficha publicada por microciclos/dias, sem exigir aceite prévio do instrutor.
-
-- Mapear exercício, cadência, séries, repetições e demais prescrições.
-- Disponibilizar API e exportação autorizada do consolidado.
-- Exibir versão publicada e parecer profissional separadamente, inclusive PENDENTE.
-- Rejeitada continua visível; quando outra ficha posterior também é rejeitada,
-  seu conteúdo substitui o da rejeitada anterior conforme RF-35.
-
-## Requisitos derivados pendentes de validação
-
-### MRF08 — Triagem e decisão de segurança
-
-Classificar solicitação como dados insuficientes, bloqueada por segurança,
-dependente de liberação profissional ou elegível para geração. Nenhum treino é
-gerado nos três primeiros estados, e a explicação não constitui diagnóstico.
-
-### MRF09 — Motor de restrições estruturadas
-
-Aplicar restrições antes da seleção e validar por código exercícios, volume e
-intensidade depois da geração. Falha impede avanço; políticas são versionadas.
-
-### MRF10 — Avaliação profissional posterior
-
-Permitir que instrutor designado aceite ou rejeite uma versão, registrando
-responsável, parecer e data/hora. Modificação cria nova versão. Consulta e chat
-independem desse aceite; conteúdo publicado não é reescrito. Quando uma ficha
-posterior também é rejeitada, excluir o conteúdo da rejeitada anterior conforme
-RF-35, mantendo auditoria e registros de treinos executados.
-
-### MRF11 — Evidências e rastreabilidade
-
-Vincular recomendações a documento, versão, página/seção e fragmento recuperado.
-Adaptação a condição de saúde exige evidência pertinente recuperada do corpus
-aprovado; ausência, inadequação ou conflito não resolvido obriga abstenção e impede
-gerar/publicar essa adaptação. Score de similaridade ou citação sem suporte não
-comprovam adequação; manter a relação entre recomendação e evidência utilizada.
-
-### MRF12 — Isolamento de contexto
-
-Garantir que cada execução utilize apenas dados autorizados de um cliente, sem
-identificadores pessoais desnecessários na consulta vetorial.
-
-### MRF13 — Avaliação automatizada da IA
-
-Executar casos sintéticos saudáveis, restritos, graves, incompletos,
-contraditórios, adversariais e com falha de provedor. Medir bloqueios, aderência,
-isolamento, validade do JSON, recuperação e latência.
-
-### MRF14 — Chat e adaptação de ficha
-
-Nova dor ou limitação relatada no chat reexecuta a triagem e pode criar uma nova
-versão somente com evidência pertinente recuperada e validações de domínio,
-publicada com parecer PENDENTE. Sem suporte, explicar abstenção sem modificar
-a ficha. Consulta/chat não dependem de
-aceite profissional; a prescrição anterior nunca é reescrita silenciosamente.
-Excluir conteúdo de ficha rejeitada substituída do contexto ativo conforme RF-35;
-histórico de mensagens não deve reintroduzi-lo como prescrição vigente.
-
-### MRF15 — Segurança e governança do corpus
-
-Documentos entram em quarentena e somente versões aprovadas são recuperáveis.
-Conteúdo documental é evidência, não instrução capaz de substituir os prompts do
-sistema.
+Referências: [RFs](requisitos-funcionais.md), [RNs](regras-de-negocio.md),
+[RNFs](requisitos-nao-funcionais.md), [módulos](../arquitetura/modulos.md),
+[manifesto](../prompts/README.md) e [estratégia de testes](../testes/estrategia.md).

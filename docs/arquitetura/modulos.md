@@ -12,7 +12,7 @@
 | MOD-07 | Biometria e acesso | API facial real, referência/captura, decisão, simulador externo de catraca, frequência e lotação. |
 | MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
 | MOD-09 | Agenda e reservas | Aulas, capacidade e eventual reserva. |
-| MOD-10 | Equipamentos | Cadastro administrativo e consulta de equipamentos ativos. |
+| MOD-10 | Equipamentos | MVP: cadastro administrativo, disponibilidade e contrato de recursos para prescrição. |
 | MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
 | MOD-12 | Auditoria e notificações | Evidências, entrega de avisos, eventos duráveis e rastreabilidade. |
 
@@ -37,6 +37,11 @@ Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao
   Valida contexto/restrições antes de publicar. Parecer posterior não condiciona
   a consulta ou o chat e não reescreve o conteúdo publicado.
 - MOD-05 é proprietário do corpus e da recuperação, não de dados pessoais.
+- MOD-10 é proprietário do inventário/disponibilidade; MOD-04 mantém requisitos
+  de recursos dos exercícios/variações e consulta MOD-10 por contrato. MOD-06
+  recebe candidatos elegíveis e MOD-04 revalida antes de publicar.
+- MOD-04 aplica limite de 15 versões publicadas completas por cliente; exclusão
+  antiga preserva autoria/auditoria e snapshots de execuções, quando existentes.
 - MOD-06 gera conteúdo e decisões técnicas por contrato; MOD-04 publica conteúdo
   validado com parecer PENDENTE, sem esperar aceite humano.
 - MOD-07 separa API facial real, autorização interna e API externa fictícia de catraca.
@@ -56,10 +61,11 @@ MOD-00: fundação técnica
   │    ├── MOD-02: designação
   │    ├── MOD-03: onboarding/avaliação
   │    ├── MOD-04: treino manual/revisão
-  │    └── MOD-07/08/09/10: extensões do domínio
+  │    ├── MOD-10: equipamentos disponíveis no MVP
+  │    └── MOD-07/08/09: extensões do domínio
   └── MOD-12: auditoria/avisos disponíveis desde a fundação
 
-MOD-03 + MOD-04 + MOD-05 + MOD-02
+MOD-03 + MOD-04 + MOD-05 + MOD-02 + MOD-10
   └── MOD-06
 
 MOD-08 + MOD-07
@@ -87,6 +93,10 @@ com parecer PENDENTE. Rejeitar a vigente mantém sua consulta; quando uma ficha
 posterior também é rejeitada, excluir o conteúdo da rejeitada anterior e manter
 a nova conforme RF-35. Apenas gerar/aceitar não dispara exclusão. Preservar
 auditoria e treinos executados; aceite continua sem bloquear consulta/chat.
+O limite global de RF-17 retém no máximo 15 versões publicadas completas,
+incluindo vigente, removendo conteúdo mais antigo ao publicar excedente. Aplica-se
+independentemente do parecer, inclusive à última rejeitada se ela expirar. A regra
+de rejeitadas pode reduzir o total abaixo de 15; numeração de versão não reinicia.
 
 ### Triagem de IA
 

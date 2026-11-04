@@ -51,6 +51,11 @@ interrompa a implementação e relate o gate; não escolha silenciosamente.
   distinto do link de onboarding.
 - O onboarding e as avaliações fornecem contexto versionado para o treino.
 - Exercícios formam catálogo; prescrição pertence ao item da ficha.
+- Equipamentos disponíveis são restrição obrigatória no MVP; administrador mantém
+  inventário e gerador/publicador validam recursos por contrato.
+- Reter até 15 versões publicadas completas incluindo vigente; aplicar RF-17/RF-35
+  preservando metadados e execuções existentes. Saída ao usuário é em português,
+  com fontes estrangeiras permitidas e evidência original rastreável.
 - O backend publica treino validado e o cliente pode consultá-lo e usar o chat
   sem aceite prévio do instrutor. Validação técnica não é aceite profissional.
 - O instrutor designado aceita/rejeita posteriormente; modificação cria versão.

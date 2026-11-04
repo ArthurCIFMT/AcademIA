@@ -61,6 +61,10 @@ A ativação de uma versão deve impedir duas atuais. A retenção segue RF-35:
 rejeitar a vigente mantém sua consulta; outra ficha posterior rejeitada exclui
 conteúdo/itens da rejeitada anterior, preservando metadados de auditoria e snapshots
 de treinos executados. Modelar essa exclusão sem quebrar chaves históricas.
+RF-17 também limita a 15 versões publicadas completas por cliente, incluindo a
+vigente. Conteúdo excedente das mais antigas é removido independentemente do
+parecer; metadados permanecem para auditoria e numeração não é reutilizada.
+A imagem original permanece intacta; essas decisões orientam o futuro modelo lógico.
 
 Cada proposta deve identificar avaliação/onboarding e versão-base usados.
 Na publicação, comparar a atualidade do contexto; no parecer posterior, registrar
@@ -77,8 +81,9 @@ quem é responsável pelo cliente, o que foi prescrito e qual equipamento é uti
 Ela não traz a temporalidade da designação nem decisão de aprovação de uma versão.
 
 Recomenda-se separar os conceitos. Designação e prescrição são necessárias no
-escopo atual; uma relação exercício–equipamento é útil, mas depende de confirmar
-se o gerador deve considerar equipamentos disponíveis. Não a tratar como RF já aprovado.
+escopo atual; a relação exercício/variação–equipamento foi confirmada pelo
+responsável e deve integrar o MVP. Modelar recursos obrigatórios, combinações e
+alternativas e dispensa explícita de equipamento (RF-15/RF-32/RN-37).
 
 ### Queixas e chaves
 
@@ -129,7 +134,7 @@ As fontes e critérios de gravidade continuam pendentes de decisão aprovada.
 | ASSINATURA já liga cliente, plano e validade | Pode ser matrícula; incluir atendente, modalidade, limites e histórico, sem exigir relação com pagamento | MEM-01 |
 | Não há comando/retorno da catraca simulada | Representar correlação, validade e idempotência; comando aceito é distinto de passagem simulada | ACS-07/ACS-03 |
 | AULA DE GINÁSTICA usa dia_semana e horas | Acrescentar data de ocorrência ou separar aula/ocorrência, conforme RF-30 | AUL-01 |
-| EQUIPAMENTO já possui situação e imagem | Base cobre cadastro/consulta; relação com exercício é opcional | EQP-01 |
+| EQUIPAMENTO já possui situação e imagem | MVP: disponibilidade operacional e vínculo com exercício/variação são obrigatórios para prescrição | EQP-01; TRN-01; RN-37 |
 | COBRANÇA–PAGAMENTO está 1 : 0..1 | Prever múltiplas tentativas/transações e confirmação idempotente por provedor | Financeiro tardio |
 | ACADEMIA existe como entidade | Definir se é configuração de estabelecimento único ou escopo multitenant | GATE-03, antes do modelo lógico |
 
@@ -162,7 +167,6 @@ somente metadados de ação, respeitando a regra de descarte fornecida.
 - Sessões efetivamente executadas, cargas realizadas e progresso por exercício.
 - Reservas, lista de espera e capacidade de aulas, além do RF-30 básico.
 - Vários estabelecimentos com isolamento multitenant.
-- Relação exercício–equipamento aplicada ao gerador.
 - Normalização clínica detalhada e financeiro avançado.
 
 ## Encaminhamento

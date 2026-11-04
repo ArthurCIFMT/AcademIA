@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: FND-04, FND-06, RAG-01, GATE-06.
-- Requisitos: MRF01, MRF02; RNF-05, RNF-08, RNF-10.
+- Requisitos: MRF01, MRF02; RN-39; RNF-05, RNF-08, RNF-10.
 - Módulos: MOD-05.
 
 ## Objetivo e contexto
@@ -55,3 +55,10 @@ Informe a informação que falta; não improvise dados para obter aceite.
 Siga GATE-05 e autorização vigente; registre evidência em
 [manifesto](../README.md). Informe arquivos, comandos reais, resultados, pendências
 e próximo ID liberado. Texto criado não significa código implementado.
+
+## Idioma e configuração da recuperação
+
+Selecionar configuração de embeddings/recuperação capaz de avaliar consultas em
+português contra fontes PT/EN, mantendo modelo, dimensão e espaço vetorial
+compatíveis. Isso não escolhe fornecedor nem fecha GATE-04. Preferir português
+na curadoria; não traduzir/regravar PDFs como parte da conexão ao banco.

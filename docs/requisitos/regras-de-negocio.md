@@ -19,7 +19,7 @@
 | RN-15 | Restrições do cliente prevalecem sobre otimizações da IA. Adaptação a condição de saúde exige evidência pertinente recuperada do corpus aprovado; sem suporte suficiente, não é gerada/publicada. | IA/Treino |
 | RN-16 | IA não modifica silenciosamente conteúdo publicado; validações técnicas precedem publicação e parecer profissional é independente. | IA/Treino |
 | RN-17 | Alteração proposta pela IA cria nova proposta/versão. | IA/Treino |
-| RN-18 | Treinos históricos não são alterados retroativamente. A rejeitada anterior tem seu conteúdo excluído somente quando uma ficha posterior também é rejeitada, conforme RF-35; auditoria e treinos executados permanecem preservados. | Histórico |
+| RN-18 | Treinos históricos não são reescritos retroativamente. Conteúdo antigo pode ser excluído pelo limite de 15 (RF-17/RN-38) ou substituição de rejeitada (RF-35); auditoria e registros/snapshots de treinos executados permanecem preservados. | Histórico |
 | RN-19 | Falha da IA não impede montagem manual pelo instrutor. | Disponibilidade |
 | RN-20 | Exercício inativo permanece em históricos, mas não é selecionável em novas prescrições. | Exercícios |
 | RN-21 | Avaliações possuem data e responsável para evolução cronológica. | Avaliação |
@@ -34,10 +34,13 @@
 | RN-30 | Respostas da IA não são apresentadas como diagnóstico médico. | IA |
 | RN-31 | Profissional responsável permanece identificável nas fichas que criou ou alterou. | Treino |
 | RN-32 | Registros temporais usam padrão consistente para rastreabilidade. | Sistema |
-| RN-33 | Exclusão/inativação não quebra relacionamentos históricos necessários. Na exclusão prevista em CA-35.7, manter referência de auditoria e snapshots de execuções, sem expor novamente o conteúdo excluído como ficha consultável. | Integridade |
+| RN-33 | Exclusão/inativação não quebra relacionamentos históricos necessários. Nas exclusões de RF-17/RF-35, manter referência de auditoria e snapshots de execuções, sem expor novamente conteúdo excluído como ficha consultável. | Integridade |
 | RN-34 | Dados biométricos não são enviados para relatórios operacionais comuns. | Dados sensíveis |
 | RN-35 | Cliente sem matrícula existente e vigente não recebe autorização de acesso. | Controle de acesso |
 | RN-36 | Liberação da catraca valida identidade, matrícula, validade, modalidade e limites de acesso. | Autorização de entrada |
+| RN-37 | Nova prescrição/adaptação só usa exercícios ativos cujos recursos obrigatórios ou alternativa completa cadastrada estão disponíveis na academia. Disponibilidade é cadastral e operacional, sem exigir controle de ocupação em tempo real. Dispensa de equipamento deve ser explícita. | Equipamentos/Treino |
+| RN-38 | Cada cliente mantém no máximo 15 versões publicadas completas, incluindo a vigente. Publicar excedente exclui conteúdo das mais antigas, independentemente do parecer, sem apagar auditoria/snapshots de treinos executados. A regra de rejeitadas também se aplica e pode reduzir esse total. | Fichas/Retenção |
+| RN-39 | Interface, prescrições, chat e explicações ao usuário são em português. Fontes estrangeiras são permitidas com original/idioma identificados e recuperação/tradução avaliadas; não há aprovação automática da fonte ou de uma tradução pela IA. | IA/Idioma |
 
 ## Regras que exigem detalhamento antes do módulo correspondente
 

@@ -38,3 +38,16 @@ ou solicitar ajustes.
 Os demais pontos da análise e MRF08–MRF15 não foram aprovados automaticamente.
 O MER original em imagem permanece inalterado; prompts de modelagem devem refletir
 as decisões acima quando produzirem o modelo lógico.
+
+## Decisões posteriores: limite, recursos e idioma
+
+| Item | Alteração confirmada | Efeito |
+|---|---|---|
+| RF-17/RN-38 | Até 15 versões publicadas completas por cliente, incluindo vigente | Publicar excedente exclui conteúdo mais antigo; preserva auditoria/execuções existentes e numeração crescente. |
+| RF-35 | Última rejeitada também está sujeita ao limite global | Substituição por nova rejeição continua; limite pode expirar antiga aceita/rejeitada independentemente do parecer. |
+| RF-15/RF-19/RF-32/RN-37 | Equipamentos e relação com exercícios no MVP | Inventário mantido por administrador restringe geração e publicação; EQP-01 é antecipado. |
+| RN-39/MRF02/MRF05/MRF11/MRF14 | Produto em português com fontes estrangeiras permitidas | Avaliar recuperação/tradução; originais preservados, sem traduzir todo o acervo nesta fase. |
+| MRF01–MRF15 | Tabela completa com atores, módulos e 75 critérios identificados | Completar especificação não fecha GATE-04 nem aprova critérios clínicos ainda indefinidos. |
+
+Não foram criados dados de exemplo, código de aplicação ou mudanças no MER em imagem.
+Esses dados serão tratados nos prompts de implementação quando solicitados.

@@ -5,7 +5,7 @@
 - Fase: Fundação de dados
 - Estado inicial: BLOQUEADO até FND-02B
 - Dependências: FND-01, FND-02B, GATE-02, GATE-03
-- Requisitos: RF-01–RF-37, RN-01–RN-36, MRF03–MRF12
+- Requisitos: RF-01–RF-37, RN-01–RN-39, MRF03–MRF12
 - Módulos: MOD-01–MOD-12
 - Próximo prompt desbloqueado: FND-04 e FND-07
 
@@ -46,6 +46,11 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - Conteúdo de ficha publicada não é modificado retroativamente.
 - RF-35 prevê exclusão do conteúdo da rejeitada anterior quando uma ficha posterior
   também é rejeitada, mantendo metadados de auditoria e snapshots de execuções.
+- Reter no máximo 15 versões publicadas completas por cliente, incluindo vigente;
+  excluir conteúdo mais antigo ao publicar excedente, sem apagar auditoria/execuções
+  existentes nem reutilizar versão. O limite independe do parecer.
+- Equipamentos estão no MVP: modelar disponibilidade e requisitos de recursos por
+  exercício/variação, com combinações/alternativas e dispensa explícita.
 - `EXERCICIO` não armazena séries/carga específicas de prescrição.
 - Validação técnica, publicação e parecer profissional por versão são dimensões
   independentes; consulta/chat não dependem de aceite.
