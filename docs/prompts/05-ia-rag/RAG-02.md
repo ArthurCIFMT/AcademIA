@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: FND-04, FND-06, RAG-01, GATE-06.
-- Requisitos: MRF01, MRF02; RN-39; RNF-05, RNF-08, RNF-10.
+- Requisitos: MRF01, MRF02; RN-39; RNF-05, RNF-08, RNF-10; MRF17 (infraestrutura da ferramenta).
 - Módulos: MOD-05.
 
 ## Objetivo e contexto
@@ -15,6 +15,10 @@ Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
 A redação deste cartão não fecha gates nem autoriza escolher tecnologia pendente.
+Consulte o [fluxo agentivo](../../arquitetura/agentic-rag.md), a
+[extensão de dados](../../arquitetura/modelo-de-dados/extensao-agentic-rag.md)
+e o [conjunto de testes](../../testes/agentic-rag.md). Suíte significa conjunto
+organizado de testes; sigla de teste não é comando pronto de terminal.
 
 ## Escopo permitido
 
@@ -35,6 +39,17 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Coleção tem dimensão/métrica esperadas e dados persistem após nova conexão.
 - Dimensão ou modelo incompatível retorna erro controlado sem misturar vetores.
 - Serviço indisponível não causa fallback silencioso para recuperação falsa.
+
+## Complementos obrigatórios para Agentic RAG
+
+- Adapter vetorial recebe filtros/limites já validados pelo serviço de conhecimento;
+  conexão/segredos e seleção de coleção não são argumentos livres do LLM.
+- Retornar IDs, scores e metadados suficientes à validação da proveniência; a
+  versão aprovada em MOD-05 continua autoridade mesmo com índice desatualizado.
+- Testar filtro obrigatório contra remoção/alteração por payload e erro separado
+  de resultado vazio. Manter integração com banco vetorial real, sem Docker antecipado.
+- Não implementar planejador/loop LLM neste cartão: ele pertence a AI-02. Assim,
+  o recuperador pode ser testado isoladamente e não cria dependência circular.
 
 ## Testes obrigatórios
 

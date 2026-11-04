@@ -51,3 +51,22 @@ as decisões acima quando produzirem o modelo lógico.
 
 Não foram criados dados de exemplo, código de aplicação ou mudanças no MER em imagem.
 Esses dados serão tratados nos prompts de implementação quando solicitados.
+
+## Atualização autorizada: Agentic RAG em 2026-11-04
+
+O responsável solicitou incorporar a proposta de 19 macrorequisitos aos documentos
+e somente aos prompts de RAG/IA. Os estados de pendência dos MRFs nos registros
+anteriores são históricos; escolhas técnicas, clínicas e parâmetros não resolvidos
+continuam pendentes em GATE-04, sem aprovação automática de corpus ou políticas.
+
+| Item | Alteração atual | Rastreabilidade |
+|---|---|---|
+| MRF01–MRF15 | Preservados os 75 identificadores, com adequações agentivas e 15 critérios adicionais | MRF04.1 passa a incluir pesquisa dinâmica; orçamento/revisor/privacidade permanecem controlados. |
+| MRF16–MRF19 | Planejamento, ferramentas, pesquisa iterativa e suficiência | 20 critérios novos; total canônico de 110. |
+| MOD-05/MOD-06 | Ferramentas de conhecimento separadas da decisão/orquestração | Mesmos módulos e monólito; sem framework novo escolhido. |
+| Dados | Especificação de execução, etapas, evidências e avaliações em PostgreSQL | Modelo lógico/migrations ainda futuros; MER original intacto. |
+| Prompts | Somente 12 cartões em 05-ia-rag atualizados, sem mudar dependências | 55 arquivos de prompts fora do diretório preservados, inclusive mestre/manifesto/fundação/treinos. |
+
+As listagens antigas de MRF01–MRF15 e aprovação pendente em prompts externos são
+registradas na [análise de compatibilidade](../analises/2026-11-04-compatibilidade-agentic-rag.md).
+Elas não excluem requisitos atuais das fontes de verdade nem fecham gates técnicos.

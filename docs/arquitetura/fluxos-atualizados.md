@@ -7,7 +7,10 @@ O MER original permanece preservado e será revisado em FND-03.
 ## Treino disponível antes do parecer
 
 1. Cliente com onboarding concluído solicita treino; triagem e regras continuam obrigatórias.
-2. IA/RAG produz conteúdo; backend valida schema, catálogo, restrições e contexto atual.
+2. Após triagem, Agentic RAG planeja e escolhe ferramentas de leitura conforme
+   os resultados; pesquisa adicional respeita orçamento e pode terminar pedindo
+   dados, abstendo-se ou com falha técnica. Evidência suficiente permite gerar;
+   backend valida schema, catálogo, restrições, fontes e contexto atual.
 3. Conteúdo válido é publicado ao cliente, com parecer profissional PENDENTE.
 4. Cliente consulta o treino e conversa com a IA sem esperar aceite do instrutor.
 5. Instrutor designado recebe aviso/fila e pode aceitar ou rejeitar a versão, com
@@ -20,6 +23,7 @@ Publicação e parecer são dimensões independentes:
 | Dimensão | Estados propostos | Efeito |
 |---|---|---|
 | Geração técnica | EM_PROCESSAMENTO, VALIDADA, BLOQUEADA, FALHOU | Validação é necessária para publicar |
+| Pesquisa | PLANEJANDO, PESQUISANDO, AVALIANDO, SUFICIENTE, PEDIR_DADOS, SEM_SUPORTE, CONFLITO, LIMITE/FALHA | Estados operacionais próprios, sem substituir a triagem |
 | Publicação | RASCUNHO, PUBLICADO, SUBSTITUIDO | Conteúdo publicado pode ser consultado |
 | Parecer por versão | PENDENTE, ACEITO, REJEITADO | Informa avaliação posterior, sem bloquear consulta/chat |
 

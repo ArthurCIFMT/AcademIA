@@ -2,7 +2,7 @@
 
 ## Estado do documento
 
-- Versão: 0.3
+- Versão: 0.4
 - Data de consolidação: 2026-11-04
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
@@ -53,8 +53,10 @@ possuir simultaneamente perfil de cliente e perfil de funcionário.
 3. O cliente recebe convite e conclui o onboarding.
 4. Administrador mantém equipamentos disponíveis; instrutor usa catálogo elegível
    para criar ficha manualmente, com recursos necessários explicitamente vinculados.
-5. O RAG recupera conhecimento de uma base documental aprovada.
-6. A IA analisa o onboarding; triagem e validações técnicas precedem a publicação.
+5. Backend valida contexto e executa triagem; bloqueio e dado insuficiente impedem gerar.
+6. Agentic RAG planeja e escolhe ferramentas de leitura, pesquisa e avalia evidências;
+   pode reformular, pedir dados ou abster-se. Suporte pertinente e validações técnicas
+   precedem geração/publicação; revisor pode devolver lacuna à pesquisa sob orçamento.
 7. O treino validado fica disponível ao cliente com parecer profissional PENDENTE.
 8. O cliente consulta o treino e conversa com a IA sem aceite prévio do instrutor.
 9. O instrutor designado avalia posteriormente, aceita/rejeita ou cria versão modificada.
@@ -95,6 +97,8 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 | Proposta/treino de IA | Conteúdo gerado sujeito a validações técnicas; publicado sem aceite prévio e com parecer posterior por versão. |
 | Parecer profissional | Avaliação PENDENTE, ACEITO ou REJEITADO, separada da publicação e da consulta/chat. |
 | RAG | Recuperação de evidências documentais para contextualizar a geração. |
+| Agentic RAG | LLM escolhe ações de pesquisa conforme resultados, usando ferramentas autorizadas e orçamento controlado pelo backend. |
+| Suíte / conjunto de testes | Grupo organizado de testes para verificar um comportamento ou integração. |
 | Corpus | Conjunto versionado de documentos autorizados para o RAG. |
 | Matrícula | Vínculo entre cliente e plano, criado pelo atendente sem exigir pagamento, com validade própria e responsável identificado. |
 | Reconhecimento | Associação facial produzida pelo serviço CompreFace. |

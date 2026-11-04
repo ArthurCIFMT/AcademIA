@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: FND-04, RAG-01.
-- Requisitos: MRF01, MRF11, MRF15.
+- Requisitos: MRF01, MRF11, MRF15; MRF18 (apoio à leitura contextual).
 - Módulos: MOD-05.
 
 ## Objetivo e contexto
@@ -15,6 +15,10 @@ Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
 A redação deste cartão não fecha gates nem autoriza escolher tecnologia pendente.
+Consulte o [fluxo agentivo](../../arquitetura/agentic-rag.md), a
+[extensão de dados](../../arquitetura/modelo-de-dados/extensao-agentic-rag.md)
+e o [conjunto de testes](../../testes/agentic-rag.md). Suíte significa conjunto
+organizado de testes; sigla de teste não é comando pronto de terminal.
 
 ## Escopo permitido
 
@@ -35,6 +39,17 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Fixture PDF/TXT mantém símbolos como >=, <=, % e unidades relevantes.
 - Mesmo documento não gera extrações duplicadas sem nova versão.
 - Falha registra motivo e não publica conteúdo vazio como sucesso.
+
+## Complementos obrigatórios para Agentic RAG
+
+- Preservar relações entre tabelas, cabeçalhos, células, unidades e notas; manter
+  recomendação, grau de certeza e ressalvas ligadas à localização correspondente.
+- Identificar problemas de ordem de leitura, duas colunas e texto rotacionado;
+  não ativar extração que inverta significado nem remover símbolos genericamente.
+- Guardar referências de página/seção/vizinhança para a ferramenta contextual de
+  RAG-05. Uma página de abertura com pouco texto não é automaticamente falha/OCR.
+- Testar AR-04 com fixture conferida: fórmula e exceção devem ser recuperáveis
+  juntas; conteúdo documental malicioso continua sendo dado, não instrução.
 
 ## Testes obrigatórios
 

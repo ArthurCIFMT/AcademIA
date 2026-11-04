@@ -30,6 +30,7 @@
 | DEC-018 | Máximo de 15 versões publicadas completas por cliente, incluindo a vigente. | Excedente antigo tem conteúdo excluído; manter auditoria e snapshots de execuções (RF-17). |
 | DEC-019 | Equipamentos e vínculo com exercícios fazem parte do MVP. | Administrador mantém recursos; geração/publicação rejeitam exercício inviável no inventário atual (RN-37). |
 | DEC-020 | Produto em português; fontes estrangeiras são permitidas. | Recuperação PT/EN avaliada e explicação/tradução em português preservam evidência original (RN-39). |
+| DEC-021 | Agentic RAG com planejamento, ferramentas de leitura, pesquisa iterativa e avaliação de suficiência. | MOD-06 escolhe ações sob executor/orçamento; MOD-05 fornece corpus aprovado; bloqueios e publicação permanecem no backend. |
 
 ## Recomendações a formalizar em ADR
 
@@ -67,7 +68,10 @@ primeiro schema.
 ### GATE-04 — IA e RAG
 
 Confirmar Qdrant, provedores de LLM/embeddings, corpus inicial, responsável por
-aprovar documentos e critérios de bloqueio de casos graves.
+aprovar documentos e critérios de bloqueio de casos graves. A abordagem agentiva
+está confirmada em DEC-021; definir seus limites globais, política de progresso,
+schemas/contratos, critérios de suficiência, retenção operacional e métricas de
+avaliação antes do aceite. Isso não escolhe novo framework nem aprova corpus.
 
 ### GATE-05 — Git
 

@@ -175,3 +175,13 @@ Priorizar identidade/papéis, designação, avaliações, prescrição, revisõe
 Depois revisar acesso/matrícula e complementares, deixando pagamento detalhado para
 a fase tardia. A implementação futura altera o modelo revisado e cria migrations;
 a imagem original deve continuar preservada como fonte de origem.
+
+## Extensão autorizada para Agentic RAG
+
+MRF16–MRF19 acrescentam plano/revisões, ferramentas/chamadas, avaliação de
+suficiência e orçamento de pesquisa à execução de IA. INTERACAO_IA isolada não
+representa esse workflow; a [extensão lógica](modelo-de-dados/extensao-agentic-rag.md)
+descreve relações e invariantes para FND-03 e migrations de RAG/IA.
+PostgreSQL armazena execução/proveniência; vetores de literatura continuam no banco
+especializado. Não criar embeddings faciais ou dados privados de cliente nesse corpus.
+Esta atualização não altera o MER original nem representa schema já implantado.

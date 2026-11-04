@@ -7,8 +7,8 @@
 | MOD-02 | Designação profissional | Vínculo cliente–instrutor, responsabilidade vigente e histórico. |
 | MOD-03 | Onboarding e avaliações | Convites, dados físicos/saúde, avaliações versionadas e conclusão. |
 | MOD-04 | Exercícios e fichas | Catálogo, prescrição, publicação, versões imutáveis e parecer profissional posterior. |
-| MOD-05 | Base de conhecimento RAG | Documentos, chunking, embeddings, busca e evidências. |
-| MOD-06 | IA e adaptação | Triagem, regras, agentes, geração, revisão automática, chat e propostas. |
+| MOD-05 | Base de conhecimento RAG | Corpus, ingestão, embeddings e ferramentas de busca/contexto documental com proveniência. |
+| MOD-06 | IA e adaptação | Triagem, planejamento/pesquisa agentiva, executor/orçamento, suficiência, geração, revisão, chat e propostas. |
 | MOD-07 | Biometria e acesso | API facial real, referência/captura, decisão, simulador externo de catraca, frequência e lotação. |
 | MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
 | MOD-09 | Agenda e reservas | Aulas, capacidade e eventual reserva. |
@@ -37,6 +37,10 @@ Veja a [análise de cobertura](revisao-modulos.md) e a [análise do MER](revisao
   Valida contexto/restrições antes de publicar. Parecer posterior não condiciona
   a consulta ou o chat e não reescreve o conteúdo publicado.
 - MOD-05 é proprietário do corpus e da recuperação, não de dados pessoais.
+  Expõe ferramentas de leitura por contrato; não depende do planejador/LLM.
+- MOD-06 decide a próxima ação de pesquisa pelo modelo e executa somente ferramentas
+  autorizadas. Plano/etapas/consumo/evidências da execução são dados operacionais
+  próprios, sem SQL livre ou acesso direto a tabelas dos demais módulos.
 - MOD-10 é proprietário do inventário/disponibilidade; MOD-04 mantém requisitos
   de recursos dos exercícios/variações e consulta MOD-10 por contrato. MOD-06
   recebe candidatos elegíveis e MOD-04 revalida antes de publicar.
@@ -113,3 +117,10 @@ de rejeitadas pode reduzir o total abaixo de 15; numeração de versão não rei
 - `BLOQUEADO`.
 
 Essas enumerações são propostas e devem ser confirmadas no modelo lógico.
+
+## Integração agentiva
+
+MRF16–MRF19 refinam MOD-05/06; os 13 módulos e suas dependências conceituais
+permanecem. [Contratos e execução](agentic-rag.md) e
+[extensão de dados](modelo-de-dados/extensao-agentic-rag.md) separam triagem,
+pesquisa, publicação e parecer. Uma pesquisa suficiente não remove bloqueio.

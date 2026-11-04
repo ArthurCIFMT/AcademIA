@@ -1,12 +1,13 @@
 # Funcionamento previsto da IA/RAG
 
-Atualização de 2026-11-04: especificação de equipamentos no MVP, retenção e idioma.
+Atualização de 2026-11-04: Agentic RAG, equipamentos no MVP, retenção e idioma.
 Este documento descreve o sistema a implementar; não representa código executado.
 
-A [tabela completa dos 15 macrorequisitos](../requisitos/macrorequisitos-ia-rag.md)
-é a fonte canônica de descrição, atores, módulos e 75 critérios identificados.
-MRF08–MRF15 continuam derivados nos pontos sem aprovação formal; políticas clínicas,
-formulário definitivo, responsáveis e provedores permanecem em GATE-04.
+A [tabela completa dos 19 macrorequisitos](../requisitos/macrorequisitos-ia-rag.md)
+é a fonte canônica de descrição, atores, módulos e 110 critérios identificados,
+preservando os 75 IDs anteriores. Atualização funcional autorizada não define
+políticas clínicas, formulário definitivo, responsáveis, provedores ou limites
+ainda abertos em GATE-04. A [arquitetura agentiva](agentic-rag.md) detalha o fluxo.
 
 ## Percurso de uma solicitação
 
@@ -14,10 +15,13 @@ formulário definitivo, responsáveis e provedores permanecem em GATE-04.
 2. Backend autentica/autoriza cliente e obtém snapshot do onboarding/ficha vigente.
 3. Validar dados e executar triagem conforme política revisada; dado ausente não
    significa saudável nem valor médio. Formulário concluído não dispensa triagem.
-4. Recuperar evidências aprovadas para condição/objetivo e filtrar catálogo pelos
-   recursos disponíveis. Falta de suporte para adaptação por saúde exige abstenção.
-5. Biomecânica seleciona candidatos viáveis, periodização organiza sessões e
-   prescrições, regras por código e revisor verificam a proposta.
+4. Planejar questões e escolher ferramentas de leitura. Resultados podem provocar
+   busca complementar, contexto documental, replanejamento ou pedido de dados;
+   executor valida permissões/schemas e controla orçamento global.
+5. Avaliar suficiência por questão. Suporte pertinente encaminha candidatos viáveis
+   à biomecânica/periodização e revisor; lacuna pode retornar à pesquisa dentro do
+   mesmo orçamento. Sem suporte pertinente suficiente ou com conflito,
+   abster-se da adaptação; falha técnica tem estado separado, sem diagnóstico.
 6. Revalidar contexto, versão-base e disponibilidade antes de publicar; backend
    publica com parecer PENDENTE, aplica retenção de 15 e registra evidências.
 7. Cliente consulta/conversa em português antes do aceite. Instrutor designado

@@ -1,0 +1,1109 @@
+{
+  "versao": 1,
+  "data": "2026-11-04",
+  "commit_base": "77535cf13b36d70f7d0f00d9b141d848bee55fb3",
+  "tipo_avaliacao": "REVISAO_DOCUMENTAL_MANUAL_EXPLORATORIA",
+  "estado": "REFERENCIAS_DE_RESPOSTA_PENDENTES_DE_REVISAO_PROFISSIONAL",
+  "metodo": "Busca lexical bilíngue para localizar candidatos, seguida de leitura das páginas pertinentes e avaliação manual do suporte e dos limites. Sem embeddings, recuperação vetorial, API LLM ou simulação de agentes.",
+  "limites": [
+    "Amostra intencional de perguntas; contagens descrevem cobertura desta amostra, não taxa de acerto de um RAG.",
+    "Referências candidatas, não benchmark clínico validado nem conjunto de fontes aceitáveis exaustivo.",
+    "Não houve revisão clínica integral de todas as 783 páginas nem aprovação de corpus.",
+    "Conclusão negativa significa suporte suficiente não localizado para o pedido; não prova ausência absoluta de qualquer menção."
+  ],
+  "legenda": {
+    "SUFICIENTE_PARA_RESPOSTA_GERAL": "Sustenta a resposta geral formulada, incluindo recusa justificada de uma extrapolação; não significa autorização para prescrever individualmente.",
+    "PARCIAL": "Oferece princípios ou parâmetros, mas não sustenta integralmente o pedido individual.",
+    "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO": "Não sustenta o pedido específico ou ele excede a função do sistema.",
+    "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA": "Requer inventário, catálogo, dados do cliente ou regras do aplicativo; literatura não é a fonte de verdade."
+  },
+  "resumo": {
+    "SUFICIENTE_PARA_RESPOSTA_GERAL": 12,
+    "PARCIAL": 10,
+    "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO": 6,
+    "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA": 4
+  },
+  "documentos": [
+    {
+      "id": "BR-MS-001",
+      "arquivo": "materiais/rag/documentos/ms-guia-atividade-fisica-2021.pdf",
+      "titulo": "Guia de Atividade Física para a População Brasileira",
+      "paginas_pdf": 52,
+      "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-MS-002",
+      "arquivo": "materiais/rag/documentos/ms-recomendacoes-gestores-profissionais-2021.pdf",
+      "titulo": "Guia de Atividade Física para a População Brasileira: recomendações para gestores e profissionais de saúde",
+      "paginas_pdf": 20,
+      "sha256": "2fc0e130090b1269d35e0478ebfa84698ca8af59413c2f2135770c1d0c33b483",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBAFS-001",
+      "arquivo": "materiais/rag/documentos/rbafs-atividade-fisica-adultos-2021.pdf",
+      "titulo": "Atividade física para adultos: Guia de Atividade Física para a População Brasileira",
+      "paginas_pdf": 11,
+      "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBAFS-002",
+      "arquivo": "materiais/rag/documentos/rbafs-atividade-fisica-idosos-2021.pdf",
+      "titulo": "Atividade física para idosos: Guia de Atividade Física para a População Brasileira",
+      "paginas_pdf": 8,
+      "sha256": "840b192654a22987ca379c2afb79d940db9cc4fb400570015f5eb79ec63d7e01",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBCM-001",
+      "arquivo": "materiais/rag/documentos/rbcm-variaveis-treinamento-resistido-2022.pdf",
+      "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+      "paginas_pdf": 36,
+      "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-001",
+      "arquivo": "materiais/rag/documentos/sbc-hipertensao-arterial-2025.pdf",
+      "titulo": "Diretriz Brasileira de Hipertensão Arterial – 2025",
+      "paginas_pdf": 154,
+      "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-002",
+      "arquivo": "materiais/rag/documentos/sbc-reabilitacao-cardiovascular-2020.pdf",
+      "titulo": "Diretriz Brasileira de Reabilitação Cardiovascular – 2020",
+      "paginas_pdf": 45,
+      "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-ACSM-001",
+      "arquivo": "materiais/rag/documentos/acsm-prescricao-treino-resistido-2026.pdf",
+      "titulo": "American College of Sports Medicine Position Stand. Resistance Training Prescription for Muscle Function, Hypertrophy, and Physical Performance in Healthy Adults: An Overview of Reviews",
+      "paginas_pdf": 22,
+      "sha256": "c4cd21d4fdea2ae7d9dbf81f66dd1688f24e47b0c2edc4f119f5f5848b17599e",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-BJSM-001",
+      "arquivo": "materiais/rag/documentos/bjsm-prescricao-forca-hipertrofia-2023.pdf",
+      "titulo": "Resistance training prescription for muscle strength and hypertrophy in healthy adults: a systematic review and Bayesian network meta-analysis",
+      "paginas_pdf": 12,
+      "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-SPMED-001",
+      "arquivo": "materiais/rag/documentos/sportsmed-treino-eficiente-2021.pdf",
+      "titulo": "No Time to Lift? Designing Time-Efficient Training Programs for Strength and Hypertrophy: A Narrative Review",
+      "paginas_pdf": 17,
+      "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-WHO-001",
+      "arquivo": "materiais/rag/documentos/who-lombalgia-cronica-2023.pdf",
+      "titulo": "WHO guideline for non-surgical management of chronic primary low back pain in adults in primary and community care settings",
+      "paginas_pdf": 274,
+      "sha256": "840c9f31f50814c5699260d41e1da7a1cd8b5a4d068d8d7715a6a33e594c4446",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-FRONT-001",
+      "arquivo": "materiais/rag/documentos/frontiers-dor-patelofemoral-2025.pdf",
+      "titulo": "Knee extensor training in patients with patellofemoral pain: a systematic review and synthesis",
+      "paginas_pdf": 11,
+      "sha256": "a3a3b6fc09258aae7996e89392461a0b12cb62bea5311413aa10835f52108908",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-MEDICINA-001",
+      "arquivo": "materiais/rag/documentos/medicina-manguito-rotador-2026.pdf",
+      "titulo": "Rotator Cuff Disorders: Practical Recommendations for Conservative Management Based on the Literature",
+      "paginas_pdf": 16,
+      "sha256": "e455a4c87c2467e5351a322a7eeaa175ed9507ff83937551463452272d121787",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-IJSPT-001",
+      "arquivo": "materiais/rag/documentos/ijspt-biomecanica-agachamento-2024.pdf",
+      "titulo": "A Biomechanical Review of the Squat Exercise: Implications for Clinical Practice",
+      "paginas_pdf": 12,
+      "sha256": "5416791660e3183ade77ebfd907bf42cf0c68ba9e105f3d1ba59754ddc4fa720",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-HEALTH-001",
+      "arquivo": "materiais/rag/documentos/healthcare-triagem-preparticipacao-2024.pdf",
+      "titulo": "Relevance of the Get Active Questionnaire for Pre-Participation Exercise Screening in the General Population in a Tropical Environment",
+      "paginas_pdf": 11,
+      "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-003",
+      "arquivo": "materiais/rag/documentos/sbc-cardiologia-esporte-2019.pdf",
+      "titulo": "Atualização da Diretriz em Cardiologia do Esporte e do Exercício da Sociedade Brasileira de Cardiologia e da Sociedade Brasileira de Medicina do Exercício e Esporte – 2019",
+      "paginas_pdf": 43,
+      "sha256": "13009dc3b671df62609d795104e8fed3689349e7d2c032b5986fa301d3301bbc",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-FRONT-002",
+      "arquivo": "materiais/rag/documentos/frontiers-prescricao-populacoes-clinicas-2026.pdf",
+      "titulo": "Practical guidelines for exercise prescription in different clinical populations",
+      "paginas_pdf": 25,
+      "sha256": "b649355f8124f23469efbc59e84d9c7894354e80754f9862893a6bde3e11f744",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "INT-IJERPH-001",
+      "arquivo": "materiais/rag/documentos/ijerph-exercicio-diabetes-tipo2-2024.pdf",
+      "titulo": "The Effectiveness of Clinician-Led Community-Based Group Exercise Interventions on Health Outcomes in Adults with Type 2 Diabetes Mellitus: A Systematic Review and Meta-Analysis",
+      "paginas_pdf": 14,
+      "sha256": "d08edcf1792ef78dfcbfa5ea6cc768331b764cdb4484110cf897fb3e614599f2",
+      "aprovado_para_rag": false
+    }
+  ],
+  "casos": [
+    {
+      "id": "QD-01",
+      "pergunta": "Sou adulto saudável e iniciante. Preciso treinar força todos os dias?",
+      "resposta_referencia": "Não há obrigação de treinar diariamente. As fontes apoiam fortalecimento em pelo menos dois dias semanais e adaptação à disponibilidade e à adesão.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Responde à frequência geral; não estabelece a divisão individual nem confirma que um cliente com dados incompletos seja saudável.",
+      "evidencias": [
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            24,
+            25
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            12,
+            13
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "frequência",
+        "frequency",
+        "twice weekly"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-02",
+      "pergunta": "Só consigo hipertrofia fazendo exatamente 8 a 12 repetições?",
+      "resposta_referencia": "Não. O acervo descreve hipertrofia em diferentes cargas e faixas de repetições; não sustenta uma faixa única obrigatória para todos.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Resultados agregados de adultos saudáveis não determinam os quilos, o esforço ou a faixa apropriada para qualquer pessoa.",
+      "evidencias": [
+        {
+          "documento_id": "INT-BJSM-001",
+          "paginas_pdf": [
+            1,
+            8
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "BR-RBCM-001",
+          "paginas_pdf": [
+            25
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "hypertrophy",
+        "load",
+        "repetições",
+        "intensidade"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-03",
+      "pergunta": "Quero hipertrofia: quantas séries semanais são exatamente ideais para mim?",
+      "resposta_referencia": "Há apoio para discutir volume e retornos decrescentes, mas não para calcular um número individual ideal só com esse objetivo.",
+      "cobertura": "PARCIAL",
+      "limite": "Experiência, resposta ao treino, esforço, recuperação e tempo precisam ser considerados; média de estudo não é limite clínico universal.",
+      "evidencias": [
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            6,
+            15
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "BR-RBCM-001",
+          "paginas_pdf": [
+            24,
+            26
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "weekly sets",
+        "volume",
+        "séries"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-04",
+      "pergunta": "Devo descansar sempre exatamente 60 segundos entre todas as séries?",
+      "resposta_referencia": "O descanso precisa considerar exercício, recuperação, experiência e tempo. O acervo permite discutir intervalos, mas não impõe um único valor ótimo.",
+      "cobertura": "PARCIAL",
+      "limite": "A síntese ACSM considera insuficiente a evidência para certos efeitos do intervalo; a revisão narrativa em português faz sugestões práticas. Não unir esses textos como regra rígida.",
+      "evidencias": [
+        {
+          "documento_id": "BR-RBCM-001",
+          "paginas_pdf": [
+            23,
+            25
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            6,
+            7
+          ],
+          "papel": "LIMITE"
+        },
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            11
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "rest interval",
+        "inter-set rest",
+        "intervalo"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-05",
+      "pergunta": "Preciso chegar à falha muscular em todas as séries para ter resultado?",
+      "resposta_referencia": "Não. A síntese ACSM descreve benefícios sem falha obrigatória; esforço adequado e contexto do programa continuam relevantes.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Não converter isso em treino sem esforço. A própria fonte reconhece incerteza para alvos exatos de repetições em reserva.",
+      "evidencias": [
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            15,
+            16
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-BJSM-001",
+          "paginas_pdf": [
+            8
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "failure",
+        "fatigue",
+        "falha"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-06",
+      "pergunta": "Toda repetição tem que seguir a cadência 2-0-2 para hipertrofia?",
+      "resposta_referencia": "O acervo não estabelece essa cadência como obrigatória e relata resultados com diferentes durações de repetição.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Ausência de uma cadência universal não autoriza execução descontrolada nem valida a mesma técnica para pessoas com lesão.",
+      "evidencias": [
+        {
+          "documento_id": "BR-RBCM-001",
+          "paginas_pdf": [
+            23,
+            25
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            6
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "cadência",
+        "time under tension",
+        "time-under-tension"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-07",
+      "pergunta": "Monte agora 12 semanas com cargas em quilos e semana de deload ideal para mim.",
+      "resposta_referencia": "Há princípios de individualização e progressão, mas não uma tabela individual pronta nem um calendário ideal de deload derivável desse pedido.",
+      "cobertura": "PARCIAL",
+      "limite": "Faltam medidas e evolução do cliente, além de política de progressão e avaliação profissional das regras. Não inventar quilos ou progressão obrigatória.",
+      "evidencias": [
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            12,
+            13,
+            15
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            12
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "periodization",
+        "progressive overload",
+        "deload"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-08",
+      "pergunta": "Só tenho 20 minutos para treinar. Ainda faz sentido montar uma sessão?",
+      "resposta_referencia": "Sim, há princípios para priorizar movimentos e organizar sessões curtas. A revisão de eficiência considera tempo, preferência e recursos disponíveis.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Não comprova que qualquer ficha caiba em exatamente 20 minutos. Técnicas avançadas citadas na revisão não devem ser aplicadas indiscriminadamente.",
+      "evidencias": [
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            1,
+            11,
+            12
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "time-efficient",
+        "time constraints",
+        "tempo"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-09",
+      "pergunta": "Alongar antes ou depois garante que eu não fique dolorido no dia seguinte?",
+      "resposta_referencia": "A revisão de eficiência não sustenta essa garantia: diferencia objetivos de mobilidade de prevenção de dor muscular tardia.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "A resposta não deve concluir que todo alongamento é proibido nem confundir dor muscular tardia com dor de lesão.",
+      "evidencias": [
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            11
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "delayed onset",
+        "soreness",
+        "stretching"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-10",
+      "pergunta": "Além da musculação, qual é a recomendação geral de atividade aeróbica para adultos?",
+      "resposta_referencia": "O guia brasileiro apresenta pelo menos 150 minutos semanais de atividade moderada ou 75 de vigorosa, ou combinação equivalente, além do fortalecimento.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "É orientação populacional; não escolhe intensidade individual nem elimina triagem. O artigo de adultos fundamenta o mesmo guia, sem constituir evidência totalmente independente.",
+      "evidencias": [
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            24,
+            25
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "BR-RBAFS-001",
+          "paginas_pdf": [
+            7,
+            9
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "150 minutos",
+        "75 minutos",
+        "adultos"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-11",
+      "pergunta": "Tenho 70 anos. O treino deveria incluir equilíbrio além da força?",
+      "resposta_referencia": "Sim. Os materiais brasileiros de idosos apoiam atividades multicomponentes, incluindo fortalecimento e equilíbrio, com progressão compatível com a pessoa.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Não substitui avaliação de capacidade funcional, quedas ou fragilidade nem entrega um protocolo individual só pela idade.",
+      "evidencias": [
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            30
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "BR-RBAFS-002",
+          "paginas_pdf": [
+            6
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "equilíbrio",
+        "idosos",
+        "multicomponentes"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-12",
+      "pergunta": "Estou grávida de 20 semanas. O acervo permite definir meu treino completo de musculação?",
+      "resposta_referencia": "O guia contém orientações para gestação, progressão e situações a evitar, mas não basta para uma prescrição completa e individual por semana gestacional.",
+      "cobertura": "PARCIAL",
+      "limite": "O texto condiciona recomendações à ausência de contraindicações e aconselha acompanhamento para musculação. Não reutilizar automaticamente uma ficha de adulto saudável.",
+      "evidencias": [
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            40,
+            41,
+            42
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "gestantes",
+        "gestação",
+        "contraindicações"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-13",
+      "pergunta": "Tenho hipertensão controlada. Basta saber isso para gerar minha ficha adaptada?",
+      "resposta_referencia": "A diretriz brasileira tem uma seção de exercício, cuidados e parâmetros; o rótulo de hipertensão controlada sozinho não resolve a decisão individual.",
+      "cobertura": "PARCIAL",
+      "limite": "Sintomas, pressão atual, outras doenças, medicações e intensidade pretendida importam. As tabelas devem ser recuperadas com suas ressalvas, sem virar autorização automática.",
+      "evidencias": [
+        {
+          "documento_id": "BR-SBC-001",
+          "paginas_pdf": [
+            54,
+            55,
+            56
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "hipertensão",
+        "pressão arterial",
+        "treinamento resistido"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-14",
+      "pergunta": "Sinto dor no peito e tontura durante o esforço. A IA deveria apenas reduzir a carga?",
+      "resposta_referencia": "Não. Há apoio documental para tratar esses relatos como sinais que exigem avaliação, em vez de publicar uma adaptação rotineira de carga.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "O sistema precisa de política de bloqueio validada. O acervo não transforma o chat em diagnóstico ou atendimento de urgência.",
+      "evidencias": [
+        {
+          "documento_id": "BR-SBC-001",
+          "paginas_pdf": [
+            55
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-HEALTH-001",
+          "paginas_pdf": [
+            4,
+            5
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "BR-SBC-003",
+          "paginas_pdf": [
+            6
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "chest pain",
+        "dizziness",
+        "dor precordial",
+        "tontura"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-15",
+      "pergunta": "Uso betabloqueador. Pode calcular minha intensidade só com a fórmula 220 menos idade?",
+      "resposta_referencia": "A diretriz de hipertensão ressalva explicitamente o uso dessa fórmula em pessoas que usam betabloqueadores; ela não deve ser aplicada automaticamente nesse caso.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Uma fórmula alternativa individual não foi validada por esta revisão; o teste avalia se a ressalva é preservada junto à fórmula.",
+      "evidencias": [
+        {
+          "documento_id": "BR-SBC-001",
+          "paginas_pdf": [
+            56
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "betabloqueadores",
+        "220",
+        "BB"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-16",
+      "pergunta": "Tenho diabetes tipo 2. Os materiais respondem quais exercícios e doses são adequados para mim?",
+      "resposta_referencia": "Há suporte para benefícios de exercício e parâmetros gerais de programas, mas não uma prescrição individual completa para qualquer pessoa com DM2.",
+      "cobertura": "PARCIAL",
+      "limite": "A metanálise trata de exercício em grupo conduzido por profissionais; a revisão clínica é narrativa. Complicações, medicação e condições de execução não podem ser presumidas.",
+      "evidencias": [
+        {
+          "documento_id": "INT-IJERPH-001",
+          "paginas_pdf": [
+            1,
+            10,
+            11
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "INT-FRONT-002",
+          "paginas_pdf": [
+            14,
+            15
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "type 2 diabetes",
+        "diabetes tipo 2",
+        "glycemic"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-17",
+      "pergunta": "Tenho diabetes tipo 1. Quanto devo reduzir minha insulina antes do treino?",
+      "resposta_referencia": "Não foi localizado suporte suficiente no corpus para calcular essa alteração. Ajustar insulina também está fora da função de prescrição de treino do sistema.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "As fontes principais de diabetes coletadas tratam de DM2; menções a insulina não validam uma dose para DM1. Os links externos da SBD não integram os PDFs avaliados.",
+      "evidencias": [
+        {
+          "documento_id": "INT-FRONT-002",
+          "paginas_pdf": [
+            14,
+            15
+          ],
+          "papel": "LIMITE_DE_ESCOPO"
+        },
+        {
+          "documento_id": "INT-IJERPH-001",
+          "paginas_pdf": [
+            1,
+            11
+          ],
+          "papel": "LIMITE_DE_ESCOPO"
+        }
+      ],
+      "termos_busca": [
+        "type 1 diabetes",
+        "type 1",
+        "insulin dose",
+        "insulina"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-18",
+      "pergunta": "Tenho lombalgia crônica primária diagnosticada. Qual exercício específico é o melhor para mim?",
+      "resposta_referencia": "A OMS apoia condicionalmente programas estruturados nessa população, mas não identifica uma modalidade universalmente superior nem fornece a ficha individual solicitada.",
+      "cobertura": "PARCIAL",
+      "limite": "A recomendação é de baixa certeza e integra cuidado individualizado; não extrapolar para qualquer dor lombar ou retirar o contexto de acompanhamento.",
+      "evidencias": [
+        {
+          "documento_id": "INT-WHO-001",
+          "paginas_pdf": [
+            78,
+            90
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "INT-IJSPT-001",
+          "paginas_pdf": [
+            7
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "chronic primary low back",
+        "structured exercise",
+        "specific exercise modalities"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-19",
+      "pergunta": "Minha dor lombar começou ontem e irradia para a perna. Gere um treino corretivo.",
+      "resposta_referencia": "Não foi localizado suporte para montar esse treino individual com o quadro descrito. A diretriz de lombalgia crônica primária não é uma autorização para esse cenário novo.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "É necessário esclarecer o quadro e avaliar sinais relevantes; não presumir o diagnóstico nem adaptar usando evidência de outra população.",
+      "evidencias": [
+        {
+          "documento_id": "INT-WHO-001",
+          "paginas_pdf": [
+            78,
+            90
+          ],
+          "papel": "LIMITE_DE_ESCOPO"
+        }
+      ],
+      "termos_busca": [
+        "radicular",
+        "radiculopathy",
+        "acute low back",
+        "sciatica"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-20",
+      "pergunta": "Tenho dor patelofemoral diagnosticada. Qual exercício é comprovadamente superior aos demais?",
+      "resposta_referencia": "Há descrição de exercícios usados, mas a revisão não determina superioridade entre eles. A biomecânica do agachamento acrescenta contexto, sem fechar uma prescrição individual.",
+      "cobertura": "PARCIAL",
+      "limite": "Não transformar descrição de protocolos ou demanda articular em prova de eficácia clínica. A revisão de PFP aponta relato incompleto e limitações dos estudos.",
+      "evidencias": [
+        {
+          "documento_id": "INT-FRONT-001",
+          "paginas_pdf": [
+            7,
+            8
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "INT-IJSPT-001",
+          "paginas_pdf": [
+            5,
+            6,
+            7
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "patellofemoral",
+        "PFP",
+        "superior",
+        "efficacy"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-21",
+      "pergunta": "Operei o LCA há três semanas. Diga a carga e a amplitude exatas para treinar hoje.",
+      "resposta_referencia": "Há discussão biomecânica sobre agachamento após reconstrução do LCA, mas não suporte suficiente para fixar essas doses e liberar a pessoa na terceira semana.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "Não afirmar ausência de qualquer menção ao LCA: ela existe. Faltam protocolo aplicável à fase, características cirúrgicas e orientação individual da equipe assistente.",
+      "evidencias": [
+        {
+          "documento_id": "INT-IJSPT-001",
+          "paginas_pdf": [
+            6,
+            7
+          ],
+          "papel": "CONTEXTO_INSUFICIENTE"
+        }
+      ],
+      "termos_busca": [
+        "ACL",
+        "anterior cruciate",
+        "three weeks",
+        "reconstruction"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-22",
+      "pergunta": "Tenho lesão de manguito rotador. O artigo fornece um treino de academia pronto?",
+      "resposta_referencia": "Ele oferece princípios e fases de manejo conservador, não uma ficha universal pronta para academia.",
+      "cobertura": "PARCIAL",
+      "limite": "É uma revisão narrativa com síntese baseada também em experiência clínica; mistura reabilitação, diagnóstico e tratamentos. Selecionar somente trechos pertinentes e não generalizar para toda dor no ombro.",
+      "evidencias": [
+        {
+          "documento_id": "INT-MEDICINA-001",
+          "paginas_pdf": [
+            2,
+            10,
+            11,
+            12
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "rotator cuff",
+        "rehabilitation",
+        "progressive strengthening"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-23",
+      "pergunta": "Meu ombro dói no supino. Descubra qual lesão tenho e me passe a reabilitação.",
+      "resposta_referencia": "Os PDFs não permitem diagnosticar a causa dessa dor pelo relato e derivar a reabilitação solicitada.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "A existência de uma revisão de manguito rotador não autoriza atribuir esse diagnóstico a qualquer dor no supino. Pedir contexto e encaminhar para avaliação, sem inventar diagnóstico.",
+      "evidencias": [
+        {
+          "documento_id": "INT-MEDICINA-001",
+          "paginas_pdf": [
+            2,
+            10,
+            11
+          ],
+          "papel": "LIMITE_DE_ESCOPO"
+        }
+      ],
+      "termos_busca": [
+        "shoulder pain",
+        "diagnostic",
+        "rotator cuff",
+        "bench press"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-24",
+      "pergunta": "Com esta ficha, quantos quilos vou perder em um mês? Garanta o resultado.",
+      "resposta_referencia": "O guia menciona benefícios para controle do peso, mas o acervo não sustenta uma garantia individual de perda de quilos em prazo fixo.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "Essa limitação não é resolvida apenas baixando mais PDFs. Não confundir benefício populacional com previsão individual garantida ou prescrição de dieta.",
+      "evidencias": [
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            24
+          ],
+          "papel": "CONTEXTO_INSUFICIENTE"
+        },
+        {
+          "documento_id": "INT-IJERPH-001",
+          "paginas_pdf": [
+            10
+          ],
+          "papel": "CONTEXTO_INSUFICIENTE"
+        }
+      ],
+      "termos_busca": [
+        "peso",
+        "weight loss",
+        "body weight",
+        "obesity"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-25",
+      "pergunta": "Tenho hipertensão, diabetes e dor no joelho, e tomo vários remédios. Basta combinar três protocolos?",
+      "resposta_referencia": "Não. Há material sobre condições isoladas e sobre individualização, mas isso não valida somar automaticamente prescrições e limites de populações diferentes.",
+      "cobertura": "PARCIAL",
+      "limite": "Falta um protocolo validado para essa combinação e para as medicações do cliente. Restrições conflitantes ou evidência não pertinente devem impedir a adaptação.",
+      "evidencias": [
+        {
+          "documento_id": "BR-SBC-001",
+          "paginas_pdf": [
+            55,
+            56
+          ],
+          "papel": "SUPORTE_E_LIMITE"
+        },
+        {
+          "documento_id": "INT-FRONT-002",
+          "paginas_pdf": [
+            3,
+            15
+          ],
+          "papel": "CONTEXTO"
+        },
+        {
+          "documento_id": "INT-FRONT-001",
+          "paginas_pdf": [
+            7,
+            8
+          ],
+          "papel": "LIMITE"
+        }
+      ],
+      "termos_busca": [
+        "comorbidity",
+        "comorbidities",
+        "multimorbidity",
+        "comorbidades"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-26",
+      "pergunta": "Sou corredor competitivo. Monte um ciclo avançado completo para maratona.",
+      "resposta_referencia": "Não foi localizado suporte suficiente para esse plano específico de endurance competitivo no conjunto avaliado.",
+      "cobertura": "SEM_SUPORTE_PARA_PEDIDO_ESPECIFICO",
+      "limite": "Citar corrida como modalidade aeróbica não equivale a protocolo de maratona. A metanálise de força exclui atletas de elite; o objetivo principal do acervo é outro.",
+      "evidencias": [
+        {
+          "documento_id": "INT-BJSM-001",
+          "paginas_pdf": [
+            9
+          ],
+          "papel": "LIMITE_DE_ESCOPO"
+        },
+        {
+          "documento_id": "BR-MS-001",
+          "paginas_pdf": [
+            25
+          ],
+          "papel": "CONTEXTO_INSUFICIENTE"
+        }
+      ],
+      "termos_busca": [
+        "marathon",
+        "maratona",
+        "elite athletes",
+        "endurance periodization"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-27",
+      "pergunta": "Quais aparelhos da minha academia estão disponíveis hoje para o meu treino?",
+      "resposta_referencia": "Essa resposta deve vir do inventário atual da academia, consultado pelo módulo de equipamentos; nenhum PDF conhece a disponibilidade local.",
+      "cobertura": "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA",
+      "limite": "Uma recomendação documental sobre equipamentos não comprova existência ou funcionamento de um aparelho específico.",
+      "evidencias": [],
+      "termos_busca": [
+        "equipment",
+        "equipamentos",
+        "availability"
+      ],
+      "fontes_sistema": [
+        "docs/arquitetura/funcionamento-ia-rag.md",
+        "AGENTS.md"
+      ],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-28",
+      "pergunta": "O leg press está indisponível. Qual exercício cadastrado pode substituí-lo agora?",
+      "resposta_referencia": "A literatura ajuda a justificar escolhas, mas a substituição precisa cruzar o catálogo de exercícios, os recursos disponíveis e as restrições do cliente.",
+      "cobertura": "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA",
+      "limite": "Não inventar ID, equivalência ou equipamento. Uma alternativa genérica encontrada em artigo não resolve a viabilidade real.",
+      "evidencias": [
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            1,
+            12
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "leg press",
+        "equipment",
+        "free weights"
+      ],
+      "fontes_sistema": [
+        "docs/arquitetura/funcionamento-ia-rag.md",
+        "AGENTS.md"
+      ],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-29",
+      "pergunta": "Mostre todos os exercícios da academia com técnica, músculos e recursos necessários.",
+      "resposta_referencia": "O acervo não é um catálogo operacional completo. Esse conteúdo precisa ser organizado e validado como dados de exercícios e equipamentos.",
+      "cobertura": "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA",
+      "limite": "A revisão biomecânica aprofunda agachamento e alguns materiais dão exemplos; isso não cobre todos os movimentos nem os modelos de aparelhos locais.",
+      "evidencias": [
+        {
+          "documento_id": "INT-IJSPT-001",
+          "paginas_pdf": [
+            6,
+            7
+          ],
+          "papel": "CONTEXTO_INSUFICIENTE"
+        }
+      ],
+      "termos_busca": [
+        "exercise selection",
+        "squat",
+        "equipamentos"
+      ],
+      "fontes_sistema": [
+        "docs/arquitetura/funcionamento-ia-rag.md",
+        "AGENTS.md"
+      ],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-30",
+      "pergunta": "Não preenchi a parte de saúde do onboarding. Pode assumir que sou saudável e gerar?",
+      "resposta_referencia": "Não. O sistema precisa distinguir informação ausente de resposta negativa e solicitar os dados necessários, sem inferir saúde pela ausência de relato.",
+      "cobertura": "DEPENDE_DE_DADOS_OU_REGRAS_DO_SISTEMA",
+      "limite": "Essa é uma regra de entrada e triagem do sistema; mais literatura não corrige dados ausentes do cliente. O corpus tampouco prova que essa pessoa seja saudável.",
+      "evidencias": [],
+      "termos_busca": [
+        "screening",
+        "history",
+        "anamnese"
+      ],
+      "fontes_sistema": [
+        "docs/requisitos/macrorequisitos-ia-rag.md",
+        "docs/arquitetura/funcionamento-ia-rag.md"
+      ],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-31",
+      "pergunta": "Tenho cardiopatia grave. Como há uma diretriz de reabilitação, a IA pode copiar o protocolo e gerar?",
+      "resposta_referencia": "Não. A diretriz descreve estratificação e supervisão para pessoas de maior risco; a existência do protocolo não libera treino autônomo nem supera o bloqueio previsto no projeto.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "É suficiente para justificar a recusa da extrapolação. A classificação automática de gravidade ainda depende de política validada e dados adequados.",
+      "evidencias": [
+        {
+          "documento_id": "BR-SBC-002",
+          "paginas_pdf": [
+            7
+          ],
+          "papel": "SUPORTE"
+        }
+      ],
+      "termos_busca": [
+        "alto risco",
+        "supervisão",
+        "estratificação"
+      ],
+      "fontes_sistema": [
+        "AGENTS.md",
+        "docs/requisitos/macrorequisitos-ia-rag.md"
+      ],
+      "revisao_profissional": "PENDENTE"
+    },
+    {
+      "id": "QD-32",
+      "pergunta": "Para força e hipertrofia eu sou obrigado a usar máquinas, ou pesos livres também servem?",
+      "resposta_referencia": "Há suporte para programas com máquinas e pesos livres, considerando objetivo, preferência, experiência e disponibilidade; máquinas não são obrigatórias em todos os programas.",
+      "cobertura": "SUFICIENTE_PARA_RESPOSTA_GERAL",
+      "limite": "Não afirma equivalência perfeita de todo exercício ou valida qualquer substituição para alguém com lesão. Disponibilidade é checada no sistema.",
+      "evidencias": [
+        {
+          "documento_id": "INT-SPMED-001",
+          "paginas_pdf": [
+            1,
+            12
+          ],
+          "papel": "SUPORTE"
+        },
+        {
+          "documento_id": "INT-ACSM-001",
+          "paginas_pdf": [
+            7,
+            13
+          ],
+          "papel": "CONTEXTO"
+        }
+      ],
+      "termos_busca": [
+        "machines",
+        "free weights",
+        "equipment availability"
+      ],
+      "fontes_sistema": [],
+      "revisao_profissional": "PENDENTE"
+    }
+  ]
+}

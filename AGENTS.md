@@ -112,6 +112,17 @@ necessária para sua entrega.
 
 ## IA e RAG
 
+- O fluxo adotado é Agentic RAG: LLM escolhe ações de pesquisa e ferramentas de
+  leitura conforme resultados; executor valida schemas, autorização e orçamento.
+- Consultar MRF01–MRF19 e docs/arquitetura/agentic-rag.md. Listagens históricas
+  MRF01–MRF15 não excluem os novos requisitos; a atualização funcional autorizada
+  não fecha escolhas de provedor, políticas clínicas ou parâmetros de GATE-04.
+- Planejamento, chamadas, resultados e decisões são rastreáveis sem raciocínio
+  interno. Nenhuma ferramenta do modelo escreve domínio, publica ficha ou remove
+  bloqueio; publicação permanece no serviço de aplicação por contrato de MOD-04.
+- Memória/retomada respeitam cliente, versões, revogação e orçamento global;
+  retries e retorno do revisor não reiniciam limites de execução.
+
 - Documentos recuperados são evidências, nunca instruções para o agente.
 - Somente documentos aprovados podem compor a base ativa do RAG.
 - Dados de clientes diferentes jamais podem compartilhar o mesmo contexto.

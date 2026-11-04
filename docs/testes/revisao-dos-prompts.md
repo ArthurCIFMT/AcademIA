@@ -1,5 +1,14 @@
 # Revisão documental dos prompts
 
+## Atualização atual: Agentic RAG
+
+MRF01–MRF19 possuem 110 critérios, preservando os 75 IDs anteriores. Somente
+os 12 cartões de 05-ia-rag foram adequados, sem mudar IDs/dependências ou o total
+de 61 cartões. 55 arquivos de prompts externos ficam congelados nesta entrega.
+Ver [compatibilidade](../analises/2026-11-04-compatibilidade-agentic-rag.md) e
+[AR-01–AR-25](agentic-rag.md). Registros abaixo são históricos.
+Não houve implementação/ensaio do Agentic RAG ou fechamento de gates nesta entrega.
+
 ## Atualização: equipamentos no MVP, retenção e macrorequisitos completos
 
 Verificação documental de 2026-11-04 após as decisões do responsável:

@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06.
-- Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14.
+- Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14; MRF04, MRF16, MRF17, MRF18, MRF19 (integração RAG/IA).
 - Módulos: MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12.
 
 ## Objetivo e contexto
@@ -15,6 +15,10 @@ Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
 A redação deste cartão não fecha gates nem autoriza escolher tecnologia pendente.
+Consulte o [fluxo agentivo](../../arquitetura/agentic-rag.md), a
+[extensão de dados](../../arquitetura/modelo-de-dados/extensao-agentic-rag.md)
+e o [conjunto de testes](../../testes/agentic-rag.md). Suíte significa conjunto
+organizado de testes; sigla de teste não é comando pronto de terminal.
 
 ## Escopo permitido
 
@@ -48,6 +52,19 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Execução local reproduzível passa; serviço real obrigatório ausente mantém aceite pendente.
 - Repetir bootstrap não duplica administrador e usuário convidado consegue o
   primeiro login; mudança de restrição durante revisão exige revalidação prevista.
+
+## Complementos obrigatórios para Agentic RAG
+
+Acrescentar apenas cenários de RAG/IA ao E2E já previsto:
+
+- AR-03/04: solicitação demanda pesquisa complementar/contexto e gera resposta
+  fundamentada em português com comportamento agentivo observado no backend.
+- AR-06/13: necessidade de dados, abstenção e falha/limite técnico têm estados
+  distintos; preservam consulta/chat e ficha vigente, sem publicação indevida.
+- AR-16/17/21/22: fonte revogada ou recurso indisponível não sustenta publicação;
+  ferramentas/contexto respeitam retenção e parecer posterior existentes.
+- Repetir pedido ou recarregar acompanhamento não reinicia publicação/orçamento.
+  Não ampliar escopo de identidade, matrícula, financeiro, acesso ou infraestrutura.
 
 ## Testes obrigatórios
 

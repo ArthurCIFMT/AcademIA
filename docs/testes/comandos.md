@@ -2,6 +2,8 @@
 
 Nenhuma aplicação foi criada. Portanto os comandos abaixo ainda não existem.
 As siglas são referências para os prompts e não devem ser executadas no terminal.
+Suíte significa conjunto organizado de testes. IA inclui o fluxo agentivo;
+RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 
 | Suite | Estado | Prompt que registra o comando real |
 |---|---|---|
