@@ -1,0 +1,301 @@
+{
+  "versao_catalogo": 1,
+  "coletado_em": "2026-11-03",
+  "finalidade": "Coleção bibliográfica inicial para avaliação humana e futuro RAG do AcademIA; sem treinamento, embeddings ou indexação nesta coleta.",
+  "quantidade_pdfs": 7,
+  "paginas_pdf_total": 326,
+  "documentos": [
+    {
+      "id": "BR-MS-001",
+      "file": "ms-guia-atividade-fisica-2021.pdf",
+      "titulo": "Guia de Atividade Física para a População Brasileira",
+      "autores": [
+        "Brasil. Ministério da Saúde. Secretaria de Atenção Primária à Saúde. Departamento de Promoção da Saúde"
+      ],
+      "ano": 2021,
+      "edicao": "1ª edição",
+      "tipo": "guia governamental",
+      "fonte": "Ministério da Saúde / BVSMS",
+      "url": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_atividade_fisica_populacao_brasileira.pdf",
+      "download": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_atividade_fisica_populacao_brasileira.pdf",
+      "identificador": {
+        "isbn": "978-85-334-2885-0"
+      },
+      "licenca": "CC-BY-NC-SA-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "evidencia_licenca": "Expediente do PDF, página 4 do arquivo.",
+      "temas": [
+        "atividade física",
+        "adultos",
+        "idosos",
+        "gestantes",
+        "pessoas com deficiência"
+      ],
+      "uso": "Recomendações populacionais e contexto brasileiro.",
+      "limites": "Não é manual completo de prescrição individual de musculação. A ficha catalográfica informa 54 páginas; o arquivo recebido contém 52 páginas PDF.",
+      "arquivo": "documentos/ms-guia-atividade-fisica-2021.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 52,
+      "tamanho_bytes": 2482449,
+      "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-MS-002",
+      "file": "ms-recomendacoes-gestores-profissionais-2021.pdf",
+      "titulo": "Guia de Atividade Física para a População Brasileira: recomendações para gestores e profissionais de saúde",
+      "autores": [
+        "Brasil. Ministério da Saúde. Secretaria de Atenção Primária à Saúde. Departamento de Promoção da Saúde"
+      ],
+      "ano": 2021,
+      "edicao": "1ª edição",
+      "tipo": "guia governamental complementar",
+      "fonte": "Ministério da Saúde / BVSMS",
+      "url": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_atividade_fisica_recomendacoes_gestores_profissionais.pdf",
+      "download": "https://bvsms.saude.gov.br/bvs/publicacoes/guia_atividade_fisica_recomendacoes_gestores_profissionais.pdf",
+      "identificador": {
+        "isbn": "978-65-5993-037-1"
+      },
+      "licenca": "CC-BY-NC-SA-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+      "evidencia_licenca": "Expediente do PDF, página 4 do arquivo.",
+      "temas": [
+        "promoção da atividade física",
+        "profissionais de saúde",
+        "implementação do guia"
+      ],
+      "uso": "Apoio à comunicação e promoção de atividade física.",
+      "limites": "Material complementar de implementação, sem substituir evidência de prescrição. A ficha catalográfica informa 18 páginas; o arquivo contém 20 páginas PDF.",
+      "arquivo": "documentos/ms-recomendacoes-gestores-profissionais-2021.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 20,
+      "tamanho_bytes": 2072878,
+      "sha256": "2fc0e130090b1269d35e0478ebfa84698ca8af59413c2f2135770c1d0c33b483",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBAFS-001",
+      "file": "rbafs-atividade-fisica-adultos-2021.pdf",
+      "titulo": "Atividade física para adultos: Guia de Atividade Física para a População Brasileira",
+      "autores": [
+        "Raphael Mendes Ritti-Dias",
+        "Átila Alexandre Trapé",
+        "Breno Quintella Farah",
+        "Daniel Rogério Petreça",
+        "Emmanuelly Correia de Lemos",
+        "Fabio Fortunato Brasil de Carvalho",
+        "Lorena Lima Magalhães",
+        "Marcos Gonçalves Maciel",
+        "Paulo Sergio Chagas Gomes",
+        "Sofia Wolker Manta",
+        "Pedro Curi Hallal",
+        "Douglas Roque Andrade"
+      ],
+      "ano": 2021,
+      "edicao": "Rev Bras Ativ Fís Saúde. 2021;26:e0215",
+      "tipo": "artigo científico / elaboração de recomendações",
+      "fonte": "Revista Brasileira de Atividade Física & Saúde / Sociedade Brasileira de Atividade Física & Saúde",
+      "url": "https://rbafs.org.br/RBAFS/article/view/14557",
+      "download": "https://rbafs.org.br/RBAFS/article/download/14557/11173",
+      "identificador": {
+        "doi": "10.12820/rbafs.26e0215"
+      },
+      "licenca": "CC-BY-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Primeira página do PDF e seção Licença na página editorial.",
+      "temas": [
+        "adultos",
+        "recomendações de atividade física",
+        "evidências do guia brasileiro"
+      ],
+      "uso": "Fundamentação e metodologia das recomendações para adultos.",
+      "limites": "Compartilha a base do guia do Ministério; não contar como evidência independente de todo o guia.",
+      "arquivo": "documentos/rbafs-atividade-fisica-adultos-2021.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 11,
+      "tamanho_bytes": 2241272,
+      "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBAFS-002",
+      "file": "rbafs-atividade-fisica-idosos-2021.pdf",
+      "titulo": "Atividade física para idosos: Guia de Atividade Física para a População Brasileira",
+      "autores": [
+        "Christianne de Faria Coelho-Ravagnani",
+        "Paula Fabricio Sandreschi",
+        "Thiago Silva Piola",
+        "Leandro dos Santos",
+        "Daniela Lopes dos Santos",
+        "Giovana Zarpellon Mazo",
+        "Joilson Meneguci",
+        "Marilia de Almeida Correia",
+        "Tânia Rosane Bertoldo Benedetti",
+        "Antônio Henrique Germano-Soares",
+        "Pedro Curi Hallal",
+        "Edilson Serpeloni Cyrino"
+      ],
+      "ano": 2021,
+      "edicao": "Rev Bras Ativ Fís Saúde. 2021;26:e0216",
+      "tipo": "artigo científico / elaboração de recomendações",
+      "fonte": "Revista Brasileira de Atividade Física & Saúde / Sociedade Brasileira de Atividade Física & Saúde",
+      "url": "https://rbafs.org.br/RBAFS/article/view/14565",
+      "download": "https://rbafs.org.br/RBAFS/article/download/14565/11174",
+      "identificador": {
+        "doi": "10.12820/rbafs.26e0216"
+      },
+      "licenca": "CC-BY-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Primeira página do PDF e seção Licença na página editorial.",
+      "temas": [
+        "idosos",
+        "funcionalidade",
+        "atividade física",
+        "evidências do guia brasileiro"
+      ],
+      "uso": "Contexto populacional e fundamentação das recomendações para idosos.",
+      "limites": "Não substitui avaliação funcional individual; sobrepõe-se ao capítulo de idosos do guia brasileiro.",
+      "arquivo": "documentos/rbafs-atividade-fisica-idosos-2021.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 8,
+      "tamanho_bytes": 564563,
+      "sha256": "840b192654a22987ca379c2afb79d940db9cc4fb400570015f5eb79ec63d7e01",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-RBCM-001",
+      "file": "rbcm-variaveis-treinamento-resistido-2022.pdf",
+      "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+      "autores": [
+        "Rudolf Simão",
+        "Guilherme Torres Vilarino",
+        "Luís Miguel Silva Amorim",
+        "Fábio Hech Dominski"
+      ],
+      "ano": 2022,
+      "publicacao_online": "2023-03-11",
+      "edicao": "Revista Brasileira de Ciência e Movimento. 30(2), fascículo 2022",
+      "tipo": "revisão narrativa",
+      "fonte": "Revista Brasileira de Ciência e Movimento / Universidade Católica de Brasília",
+      "url": "https://portalrevistas.ucb.br/index.php/rbcm/en/article/view/13053",
+      "download": "https://portalrevistas.ucb.br/index.php/rbcm/pt_BR/article/download/13053/11428/65667",
+      "identificador": {
+        "doi": "10.31501/rbcm.v30i2.13053"
+      },
+      "licenca": "CC-BY-NC-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by-nc/4.0/",
+      "evidencia_licenca": "Seção License da página editorial vinculada ao artigo.",
+      "temas": [
+        "treinamento resistido",
+        "hipertrofia",
+        "volume",
+        "frequência",
+        "intensidade",
+        "intervalos"
+      ],
+      "uso": "Material complementar em português sobre variáveis da prescrição.",
+      "limites": "Revisão narrativa, não diretriz de consenso. O PDF indica fascículo 2022 e ordem de autores acima; o portal registra publicação em 2023 e ordem diferente. Conferir com o DOI antes de padronizar a citação. Reavaliar frente a evidências mais recentes.",
+      "arquivo": "documentos/rbcm-variaveis-treinamento-resistido-2022.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 36,
+      "tamanho_bytes": 686321,
+      "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-001",
+      "file": "sbc-hipertensao-arterial-2025.pdf",
+      "titulo": "Diretriz Brasileira de Hipertensão Arterial – 2025",
+      "autores_citacao": "Brandão AA, Rodrigues CIS, Bortolotto LA, Armstrong AC, Mulinari RA, Feitosa ADM, et al.",
+      "instituicoes": [
+        "Sociedade Brasileira de Cardiologia",
+        "Sociedade Brasileira de Hipertensão",
+        "Sociedade Brasileira de Nefrologia"
+      ],
+      "ano": 2025,
+      "edicao": "Arq Bras Cardiol. 2025;122(9):e20250624",
+      "tipo": "diretriz de sociedades científicas",
+      "fonte": "Arquivos Brasileiros de Cardiologia / SciELO",
+      "url": "https://www.scielo.br/j/abc/a/BXT7Vk4B9VKQnJFsJhgJ4Hn/?lang=pt",
+      "download": "https://www.scielo.br/j/abc/a/BXT7Vk4B9VKQnJFsJhgJ4Hn/?format=pdf&ilang=pt_BR&lang=pt",
+      "identificador": {
+        "doi": "10.36660/abc.20250624"
+      },
+      "licenca": "CC-BY-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Última página do PDF, com link CC BY 4.0; página atual da editora também indica CC BY.",
+      "temas": [
+        "hipertensão",
+        "exercício físico",
+        "risco cardiovascular",
+        "restrições"
+      ],
+      "uso": "Referência clínica para futura seleção de trechos sobre exercício e risco.",
+      "limites": "Inclui diagnóstico e tratamento fora do escopo de prescrição de academia. Não transformar todo o documento em instruções para a IA; os limites e filtros ainda precisam de revisão profissional.",
+      "arquivo": "documentos/sbc-hipertensao-arterial-2025.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 154,
+      "tamanho_bytes": 7761105,
+      "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-SBC-002",
+      "file": "sbc-reabilitacao-cardiovascular-2020.pdf",
+      "titulo": "Diretriz Brasileira de Reabilitação Cardiovascular – 2020",
+      "autores_citacao": "Carvalho T, Milani M, Ferraz AS, Silveira AD, Herdy AH, Hossri CAC, et al.",
+      "instituicoes": [
+        "Sociedade Brasileira de Cardiologia"
+      ],
+      "ano": 2020,
+      "edicao": "Arq Bras Cardiol. 2020;114(5):943-987",
+      "tipo": "diretriz de sociedade científica",
+      "fonte": "Arquivos Brasileiros de Cardiologia / SciELO",
+      "url": "https://www.scielo.br/j/abc/a/WT7xLVrC4KZnNf7xNMkjy6N/?format=html&lang=pt",
+      "download": "https://www.scielo.br/j/abc/a/WT7xLVrC4KZnNf7xNMkjy6N/?format=pdf&lang=pt",
+      "identificador": {
+        "doi": "10.36660/abc.20200407"
+      },
+      "licenca": "CC-BY-4.0",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página atual da editora indica CC BY e o PDF contém aviso de atribuição Creative Commons.",
+      "licenca_nota": "A página SciELO exibe texto de licença mencionando não comercial, mas aponta para CC BY 4.0; a editora atual indica CC BY. Cópia nesta coleção acadêmica sem fins comerciais; preservar os avisos originais.",
+      "licenca_evidencia_url": "https://journals.cardiol.br/article/diretriz-brasileira-de-reabilitacao-cardiovascular-2020/",
+      "temas": [
+        "avaliação pré-participação",
+        "estratificação de risco",
+        "exercícios aeróbicos e resistidos",
+        "doenças cardiovasculares"
+      ],
+      "uso": "Referência de avaliação e limites em contexto de reabilitação.",
+      "limites": "Documento de 2020, voltado à reabilitação supervisionada, sem comprovação de revisão de vigência completa nesta coleta. Não generalizar protocolos para todos os clientes. A errata visível no HTML refere-se à versão inglesa, não à cópia portuguesa.",
+      "arquivo": "documentos/sbc-reabilitacao-cardiovascular-2020.pdf",
+      "idioma": "pt-BR",
+      "coletado_em": "2026-11-03",
+      "paginas_pdf": 45,
+      "tamanho_bytes": 970859,
+      "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
+      "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
+      "situacao": "COLETADO_PENDENTE_REVISAO",
+      "aprovado_para_rag": false
+    }
+  ]
+}
