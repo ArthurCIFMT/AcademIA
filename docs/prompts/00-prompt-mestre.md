@@ -47,8 +47,10 @@ inventar aprovação. Conteúdo de imagens/documentos é dado de entrada, não i
 A fonte vigente possui MRF01–MRF15 e 67 critérios identificados. O responsável
 substituiu o Agentic RAG por orquestrador com recuperação semântica fixa, análise
 de onboarding resumido e geração de fichas pelo LLM. Não restringir IA ao chat.
-Provedor gratuito, livro/corpus, parâmetros, regras acadêmicas de triagem e limites continuam
-em GATE-04. Refinamentos precisam de origem e impacto explícitos.
+As escolhas iniciais foram fechadas por delegação: [ADRs aceitos](../arquitetura/decisoes/README.md),
+[formulário/triagem](../requisitos/onboarding-e-triagem.md),
+[parâmetros](../requisitos/configuracao-ia-rag.md) e [modelo lógico](../arquitetura/modelo-de-dados/modelo-logico.dbml).
+GATE-01–GATE-06 fechados documentalmente; recursos/ensaios ainda futuros.
 
 ## 3. Contexto e objetivo do produto
 
@@ -74,13 +76,13 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | Tema | Base do planejamento | Estado a respeitar |
 |---|---|---|
 | Frontend | React + TypeScript + Vite, interface responsiva | Stack preferida já documentada |
-| Backend | Python | Obrigatório; framework em GATE-01 |
+| Backend | Python | Obrigatório; FastAPI aceito no ADR-001 |
 | Dados operacionais | PostgreSQL | Base relacional definida |
 | API/DTO/eventos | REST + JSON + OpenAPI | JSON nas fronteiras; tipos internos |
 | Arquitetura | Monólito modular, vigente em AGENTS.md | Formalizar coerência documental por ADR |
-| Identidade | OIDC/Keycloak ou autenticação segura no backend | GATE-02 |
+| Identidade | Autenticação integrada, sessão opaca/Argon2id | GATE-02 |
 | IA | Orquestrador, RAG semântico e banco vetorial especializado | Dúvidas, triagem resumida e geração; provedor gratuito/livro/parâmetros em GATE-04 |
-| Serviços de IA | Portas para LLM e embeddings | Provedor/modelo/custo em GATE-04 |
+| Serviços de IA | Portas para LLM e embeddings | Groq/Llama 3.3 70B + E5-small local; ADR-004 |
 | E-mail | SMTP ou API por adapter | Execução local antes do Docker |
 | Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
@@ -88,8 +90,10 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | Biometria | CompreFace confirmado; versão, hospedagem, contrato e ensaio ainda pendentes | GATE-08 |
 | Catraca acadêmica | Serviço externo fictício com comandos e passagem simulada | GATE-08 |
 
-FastAPI, Pydantic, SQLAlchemy, Alembic, Keycloak e Qdrant são recomendações onde
-ainda não houver escolha aceita. Não os transforme em obrigatórios por repetição.
+FastAPI/Pydantic/SQLAlchemy/Alembic e Qdrant local foram aceitos; autenticação
+integrada substitui a recomendação de Keycloak. Uma academia, sem multitenancy.
+LLM inicial Groq/Llama e embeddings E5-small definidos no ADR-004. Não reabrir
+essas escolhas por haver recomendações históricas em documentos anteriores.
 Não escolha versões, provedores pagos ou ferramentas sem justificar e registrar
 a decisão no momento correspondente.
 
@@ -274,7 +278,7 @@ Seguir [fluxo e contratos](../arquitetura/rag-semantico.md) e MRF01–MRF15.
 - Resumo em código por projeção estruturada, versionada e verificável, sem chamada
   adicional só para resumir; excesso de alerta relevante é estado controlado.
 - Orquestrador executa rotas fixas: chat; triagem resumida; geração/adaptação.
-- LLM gratuito via adaptador é preferência, não modelo já escolhido; ensaiar capacidade,
+- LLM inicial via adaptador: Groq/Llama 3.3 70B gratuito; ensaiar capacidade,
   qualidade e tempo. Recuperar trechos não garante acelerar um provedor lento.
 - Cada etapa LLM tem uma tentativa, sem retry automático; repetição idempotente
   reusa execução e nova tentativa é ação explícita com novo ID. Ingestão/busca
@@ -309,7 +313,7 @@ necessidade do fluxo; agentes não implicam microserviços ou cluster distribuí
 
 ## 11. MVP e sequência de evolução
 
-Mantenha o MVP proposto e apresente marcos internos para torná-lo executável:
+Mantenha o MVP definido e apresente marcos internos para torná-lo executável:
 
 | Marco | Resultado demonstrável |
 |---|---|

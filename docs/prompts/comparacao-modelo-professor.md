@@ -28,7 +28,8 @@ operacional exige escolha explícita da tarefa e cumprimento das dependências.
 
 ## Informações que ainda condicionam implementação
 
-- Framework Python e ferramentas; identidade; academia única ou múltipla.
+- Preparação delegada fechou FastAPI/ferramentas, identidade integrada e academia única.
+  Ver [ADRs](../arquitetura/decisoes/README.md).
 - Banco vetorial e forma local de executar os serviços antes do Docker.
 - Modelo de LLM, embeddings, corpus selecionado e regras acadêmicas de triagem
   documentadas pelo responsável, sem aprovação médica ou jurídica externa.

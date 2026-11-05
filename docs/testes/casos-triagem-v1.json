@@ -1,0 +1,664 @@
+{
+  "versao": 1,
+  "nota": "Casos sintéticos de regras/contratos da demonstração; resultados esperados, não execuções do serviço/modelo. Campos omitidos da envoltória usam autorizado=true/onboarding_concluido=true; llm é double rotulado, nunca resultado real.",
+  "casos": [
+    {
+      "id": "T01",
+      "cenario": "Adulto com negativas explícitas",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": false,
+          "lacuna": false
+        }
+      },
+      "esperado": "ELEGIVEL_PARA_GERACAO"
+    },
+    {
+      "id": "T02",
+      "cenario": "Onboarding não concluído",
+      "entrada": {
+        "idade": 30,
+        "onboarding_concluido": false
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T03",
+      "cenario": "Menor fora do escopo",
+      "entrada": {
+        "idade": 17,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T04",
+      "cenario": "Condição declarada grave",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "SIM",
+          "condicoes_saude": [
+            {
+              "categoria": "CARDIACA",
+              "descricao": "caso sintético",
+              "gravidade_declarada": "GRAVE"
+            }
+          ],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T05",
+      "cenario": "Restrição explícita",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "SIM",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T06",
+      "cenario": "Evento importante declarado",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "SIM",
+          "observacoes": ""
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T07",
+      "cenario": "Medicamento desconhecido",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO_SEI",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T08",
+      "cenario": "Gravidade desconhecida",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "SIM",
+          "condicoes_saude": [
+            {
+              "categoria": "OUTRA",
+              "descricao": "caso sintético",
+              "gravidade_declarada": "NAO_SEI"
+            }
+          ],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T09",
+      "cenario": "Contradição flag/lista",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "SIM",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T10",
+      "cenario": "Resumo não comporta alerta",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "contexto_excedido": true
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T11",
+      "cenario": "Alerta importante encontrado no texto",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": true,
+          "lacuna": false
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T12",
+      "cenario": "Análise aponta lacuna",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": false,
+          "lacuna": true
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T13",
+      "cenario": "Quota API",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "erro_provedor": "429"
+      },
+      "esperado": "FALHA_TECNICA_SEM_TRIAGEM"
+    },
+    {
+      "id": "T14",
+      "cenario": "Timeout",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "erro_provedor": "TIMEOUT"
+      },
+      "esperado": "FALHA_TECNICA_SEM_TRIAGEM"
+    },
+    {
+      "id": "T15",
+      "cenario": "Peso ausente",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T16",
+      "cenario": "Usuário sem autorização",
+      "entrada": {
+        "autorizado": false,
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "403_SEM_IA"
+    },
+    {
+      "id": "T17",
+      "cenario": "Limitação não grave com suporte",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "SIM",
+          "limitacoes": [
+            {
+              "regiao": "joelho",
+              "descricao": "exemplo sintético",
+              "gravidade_declarada": "NAO_GRAVE"
+            }
+          ],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": false,
+          "lacuna": false
+        },
+        "evidencia_adaptacao": true
+      },
+      "esperado": "ELEGIVEL_PARA_GERACAO"
+    },
+    {
+      "id": "T18",
+      "cenario": "Adaptação não suportada",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": false,
+          "lacuna": false
+        },
+        "evidencia_adaptacao": false,
+        "pedido": "ADAPTACAO_SAUDE"
+      },
+      "esperado": "ABSTENCAO_NA_GERACAO"
+    },
+    {
+      "id": "T19",
+      "cenario": "Bloqueio não removido pelo modelo",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "SIM",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "llm": {
+          "alerta_grave": false,
+          "lacuna": false
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    },
+    {
+      "id": "T20",
+      "cenario": "NAO_SEI não é saudável",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO_SEI",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "DADOS_INSUFICIENTES"
+    },
+    {
+      "id": "T21",
+      "cenario": "Snapshot mudou",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "snapshot_alterado": true
+      },
+      "esperado": "EXIGIR_NOVA_EXECUCAO_SEM_PUBLICAR"
+    },
+    {
+      "id": "T22",
+      "cenario": "Equipamento ficou indisponível",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "recurso_indisponivel_antes_publicacao": true
+      },
+      "esperado": "NAO_PUBLICAR"
+    },
+    {
+      "id": "T23",
+      "cenario": "Fonte revogada",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "NAO",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        },
+        "fonte_revogada_antes_publicacao": true
+      },
+      "esperado": "NAO_PUBLICAR"
+    },
+    {
+      "id": "T24",
+      "cenario": "Grave e outra flag desconhecida",
+      "entrada": {
+        "idade": 30,
+        "dados": {
+          "altura_cm": 175,
+          "peso_kg": 75,
+          "objetivo_principal": "FORCA",
+          "experiencia": "INICIANTE",
+          "nivel_atividade": "LEVE",
+          "dias_semana": 3,
+          "duracao_sessao_min": 60,
+          "possui_condicoes_saude": "NAO",
+          "condicoes_saude": [],
+          "usa_medicamentos": "NAO_SEI",
+          "medicamentos": [],
+          "possui_dor_lesao_limitacao": "NAO",
+          "limitacoes": [],
+          "restricao_exercicio_declarada": "SIM",
+          "evento_saude_importante_recente": "NAO",
+          "observacoes": ""
+        }
+      },
+      "esperado": "BLOQUEADO_POR_SEGURANCA"
+    }
+  ]
+}

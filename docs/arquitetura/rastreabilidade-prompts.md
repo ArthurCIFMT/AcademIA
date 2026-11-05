@@ -1,8 +1,7 @@
 # Rastreabilidade dos prompts
 
-Matriz vigente de cartões → módulos → requisitos; atribuição não comprova implementação.
-[Manifesto](../prompts/README.md) registra sequência/gates. AI-03 depende do serviço
-de publicação TRN-03 e AI-05 do formulário de atualização ONB-03.
+Metadados canônicos após a preparação delegada.
+[Manifesto](../prompts/README.md), [prontidão](preparacao-implementacao.md).
 
 | Prompt | Módulos | Requisitos |
 |---|---|---|
@@ -67,10 +66,3 @@ de publicação TRN-03 e AI-05 do formulário de atualização ONB-03.
 | [VAL-01](../prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-18; MRF01–MRF15 e critérios vigentes |
 | [VAL-02](../prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07 e critérios dos módulos selecionados |
 | [VAL-03](../prompts/10-validacao-final/VAL-03.md) | MOD-00 | RNF-10, RNF-11; contexto acadêmico |
-
-## Escopo vigente
-
-MRF01–MRF15 são vigentes; os MRFs agentivos retirados não são executáveis.
-RF-38/TRN-01 cobrem catálogo; RNF-18/AI-02/AI-06 cobrem tempo e chamadas.
-A [revisão didática](../analises/2026-11-04-revisao-didatica-e-consistencia.md)
-registra a dispensa de aprovação médica formal e as correções de contratos.

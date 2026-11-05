@@ -18,10 +18,11 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 
 ## Pré-condição de domínio
 
-Antes de implementar, registrar esquema de onboarding aprovado: campos, tipos,
-unidades, obrigatoriedade, validações e origem declarada/medida. Sua ausência
-bloqueia a parte afetada, sem exigir fechar provedores ou todo GATE-04. Não inventar
-questionário clínico. O checklist da revisão documental identifica essa pendência.
+Usar [esquema v1 definido](../../requisitos/onboarding-e-triagem.md) e
+[JSON Schema](../../requisitos/schemas/onboarding-v1.schema.json), selecionados
+por delegação. Não pedir novamente campos/unidades; conferir casos de contrato.
+Distinguir conclusão estrutural de elegibilidade: NAO_SEI pode concluir, mas não
+autoriza geração. Alteração de requisito exige versão do contrato.
 
 ## Escopo permitido
 

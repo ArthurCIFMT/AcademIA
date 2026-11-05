@@ -3,7 +3,7 @@
 ## Metadados
 
 - Fase: Fundação.
-- Estado de execução inicial: BLOQUEADO até concluir dependências.
+- Estado de execução inicial: PRONTO — dependências documentais concluídas.
 - Dependências: FND-03, GATE-01, GATE-03, GATE-06.
 - Requisitos: RNF-02, RNF-04, RNF-07, RNF-08, RNF-10.
 - Módulos: MOD-00.

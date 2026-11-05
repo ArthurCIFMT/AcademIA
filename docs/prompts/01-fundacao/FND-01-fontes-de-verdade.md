@@ -3,7 +3,7 @@
 ## Metadados
 
 - Fase: Fundação documental
-- Estado inicial: PRONTO
+- Estado inicial: CONCLUIDO — preparação documental delegada em 2026-11-04.
 - Dependências: P00
 - Requisitos: RF-01–RF-38, RN-01–RN-39, RNF-01–RNF-18, MRF01–MRF15
 - Módulos: MOD-00–MOD-12
@@ -106,3 +106,10 @@ duas decisões explícitas do responsável forem materialmente incompatíveis.
 
 Informe documentos revisados, IDs preservados, lacunas, validações executadas e
 se FND-02A foi desbloqueado.
+
+## Evidência de execução documental
+
+Executado por delegação expressa do responsável. Consultar
+[prontidão](../../arquitetura/preparacao-implementacao.md) para ADRs, contratos,
+modelo, verificações e próximos prompts. Não solicitar novamente as escolhas
+registradas como aceitas. Não confundir esta conclusão com código/serviços funcionando.

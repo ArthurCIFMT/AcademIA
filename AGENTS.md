@@ -60,8 +60,12 @@ necessária para sua entrega.
 
 - Adotar monólito modular; não iniciar com microserviços.
 - Usar React, TypeScript e Vite no frontend.
-- Usar Python no backend; a definição do framework será registrada por decisão
-  arquitetural antes do scaffold.
+- Academia única, sem multitenancy no MVP.
+- Backend Python 3.12 com FastAPI/Pydantic 2, SQLAlchemy 2.x/Alembic e psycopg 3;
+  uv, Ruff, mypy e pytest/HTTPX. ADRs aceitos em docs/arquitetura/decisoes/.
+- Autenticação integrada por sessão opaca/Argon2id, sem Keycloak no MVP; estados
+  de conta e perfis independentes conforme ADR-002.
+- Node 24 LTS/npm no frontend; versões exatas serão travadas nos scaffolds.
 - Usar PostgreSQL para dados relacionais.
 - Expor contratos externos por REST, JSON e OpenAPI.
 - Representar uma identidade por `USUARIO`, com papéis acumuláveis: cliente,
@@ -78,8 +82,9 @@ necessária para sua entrega.
 - O atendente autorizado pode matricular e renovar o cliente sem pagamento
   confirmado. Matrícula e acesso acadêmico não dependem do módulo financeiro.
 - Reconhecimento facial usa CompreFace; a catraca será uma API externa fictícia.
-- Usar banco vetorial especializado para o RAG, mantendo dados operacionais no
-  PostgreSQL.
+- Qdrant local persistente por qdrant-client no MVP (um processo, sem Docker);
+  banco vetorial especializado separado do PostgreSQL. Embeddings locais E5-small
+  multilíngue, 384 dimensões, prefixos query:/passage: e cosseno; ADR-004.
 - Equipamentos entram no MVP: administrador mantém disponibilidade e cada variação
   de exercício declara recursos obrigatórios/alternativos ou dispensa explícita.
   A IA só seleciona exercícios viáveis e o backend revalida antes de publicar.
@@ -167,8 +172,14 @@ necessária para sua entrega.
 - Saídas usam JSON Schema e referências reais. Modelo não escreve domínio, executa
   SQL livre nem atribui aceite humano. Registrar estados, fontes e consumo sem
   raciocínio interno ou dados sensíveis desnecessários em logs.
-- Preferir provedor/modelo gratuito compatível, definido por ADR e ensaio; não
-  presumir capacidade, qualidade ou velocidade. Medir tempo total separado da busca.
+- LLM inicial Groq / llama-3.3-70b-versatile, plano gratuito, chave em ambiente;
+  json_object com validação backend. Não contratar plano pago ou fazer fallback
+  oculto. Qualidade/tempo só são aprovados no ensaio real de AI-06.
+- Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
+  parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
+  técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
+- Livro/conhecimento inicial: sete documentos selecionados em materiais/rag/corpus-inicial.json;
+  ativação depende da extração/indexação válida, não de uma nova aprovação externa.
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 ## Testes

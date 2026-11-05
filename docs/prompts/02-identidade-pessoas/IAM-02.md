@@ -18,11 +18,10 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 
 ## Escopo permitido
 
-Pré-condição de domínio: registrar o alcance da inativação da conta e de cada
-perfil/papel acumulável. RF-03/CA-03.2 não resolve sozinho se desativar cliente
-também afeta seu perfil de funcionário. Não presumir desativação global nem
-preservação de todos os acessos; aplicar a matriz de estados aprovada antes de
-codificar a parte afetada, mantendo o histórico.
+Regra de domínio resolvida: [ADR-002](../../arquitetura/decisoes/ADR-002-identidade-e-papeis.md).
+Conta inativa bloqueia todos; perfil cliente inativo remove só capacidades de
+cliente e funcionário inativo remove só operações profissionais, preservando outro
+perfil ativo. Não reabrir a escolha; aplicar a matriz nos testes.
 
 - `backend/app/modules/identity/**`
 - `backend/app/modules/people/**`

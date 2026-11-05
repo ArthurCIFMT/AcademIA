@@ -1,0 +1,2091 @@
+{
+  "version": 1,
+  "academy": "single",
+  "tables": [
+    {
+      "name": "academia",
+      "owner": "MOD-00",
+      "note": "Singleton id=1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "integer",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "endereco",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "usuario",
+      "owner": "MOD-01",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "email",
+          "type": "varchar(254)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "senha_hash",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "usuario_papel",
+      "owner": "MOD-01",
+      "note": "Unicidade usuario_id+papel; enum fechado de quatro papéis",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "papel",
+          "type": "varchar(30)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "usuario_id",
+          "papel"
+        ]
+      ]
+    },
+    {
+      "name": "cliente",
+      "owner": "MOD-01",
+      "note": "",
+      "columns": [
+        {
+          "name": "usuario_id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "data_nascimento",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "telefone",
+          "type": "varchar(25)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "funcionario",
+      "owner": "MOD-01",
+      "note": "",
+      "columns": [
+        {
+          "name": "usuario_id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cargo",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "data_admissao",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "sessao",
+      "owner": "MOD-01",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "token_hash",
+          "type": "char(64)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "csrf_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ultimo_uso_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revogada_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "token_acesso",
+      "owner": "MOD-01",
+      "note": "Finalidades de credencial separadas do convite/sessão restrita de onboarding",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "hash",
+          "type": "char(64)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "finalidade",
+          "type": "varchar(30)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "consumido_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "designacao",
+      "owner": "MOD-02",
+      "note": "Um vínculo principal sem fim por cliente",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "instrutor_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "inicio",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "atribuido_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "onboarding_versao",
+      "owner": "MOD-03",
+      "note": "Dados validados pelo schema v1; versões concluídas imutáveis; contexto não é índice público",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "numero",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "schema_version",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "idade_snapshot",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "concluido_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "numero"
+        ]
+      ]
+    },
+    {
+      "name": "convite_onboarding",
+      "owner": "MOD-03",
+      "note": "Token é trocado por sessão restrita de edição com expiração, não login geral",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "onboarding_versao.id"
+        },
+        {
+          "name": "token_hash",
+          "type": "char(64)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revogado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "consumido_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "sessao_restrita_hash",
+          "type": "char(64)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "sessao_expira_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "avaliacao",
+      "owner": "MOD-03",
+      "note": "Avaliação opcional do instrutor; não é laudo ou aprovação prévia",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "instrutor_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "onboarding_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "onboarding_versao.id"
+        },
+        {
+          "name": "registrado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "equipamento",
+      "owner": "MOD-10",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "categoria",
+          "type": "varchar(80)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "imagem_ref",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "operacional",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "exercicio",
+      "owner": "MOD-04",
+      "note": "Cada variação pode ter ID próprio; catálogo não é prescrição",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "grupo_muscular",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dispensa_equipamento",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "exercicio_recurso_grupo",
+      "owner": "MOD-04",
+      "note": "Grupos são alternativas OR; todos os recursos de um grupo são obrigatórios",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "exercicio_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "exercicio.id"
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "exercicio_recurso",
+      "owner": "MOD-04",
+      "note": "Unicidade grupo+equipamento; grupo vazio não libera prescrição",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "grupo_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "exercicio_recurso_grupo.id"
+        },
+        {
+          "name": "equipamento_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "equipamento.id"
+        }
+      ],
+      "unique": [
+        [
+          "grupo_id",
+          "equipamento_id"
+        ]
+      ]
+    },
+    {
+      "name": "versao_ficha",
+      "owner": "MOD-04",
+      "note": "Origem IA pode não ter autor humano; modificação manual exige instrutor designado; metadados sobrevivem ao expurgo",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "numero",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "origem",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "autor_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "onboarding_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "onboarding_versao.id"
+        },
+        {
+          "name": "avaliacao_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "avaliacao.id"
+        },
+        {
+          "name": "versao_base_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "estado_publicacao",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "vigente",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "publicada_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "conteudo_excluido_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo_exclusao",
+          "type": "varchar(40)",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "numero"
+        ]
+      ]
+    },
+    {
+      "name": "dia_ficha",
+      "owner": "MOD-04",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "versao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "ordem",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "titulo",
+          "type": "varchar(60)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "versao_id",
+          "ordem"
+        ]
+      ]
+    },
+    {
+      "name": "item_ficha",
+      "owner": "MOD-04",
+      "note": "Nome/descrição do exercício usados são snapshot do item, preservados contra edição do catálogo",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "dia_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "dia_ficha.id"
+        },
+        {
+          "name": "exercicio_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "exercicio.id"
+        },
+        {
+          "name": "ordem",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "series",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "repeticoes",
+          "type": "varchar(40)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "carga_kg",
+          "type": "numeric(8,2)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "intervalo_segundos",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cadencia",
+          "type": "varchar(40)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "observacoes",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "exercicio_snapshot",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "dia_id",
+          "ordem"
+        ]
+      ]
+    },
+    {
+      "name": "parecer",
+      "owner": "MOD-04",
+      "note": "Parecer independente de publicação; histórico atribuível, sem herdar aceite",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "versao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "instrutor_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "estado",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "motivo",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "documento",
+      "owner": "MOD-05",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "catalogo_id",
+          "type": "varchar(40)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "titulo",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "origem_url",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "licenca",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "documento_versao",
+      "owner": "MOD-05",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "documento_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "documento.id"
+        },
+        {
+          "name": "sha256",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "idioma",
+          "type": "varchar(12)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "arquivo_ref",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "aprovado_por",
+          "type": "uuid",
+          "flags": "",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "aprovado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "ingestao",
+      "owner": "MOD-05",
+      "note": "Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "documento_versao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "documento_versao.id"
+        },
+        {
+          "name": "config_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "iniciada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "concluida_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "documento_versao_id",
+          "config_hash"
+        ]
+      ]
+    },
+    {
+      "name": "fragmento",
+      "owner": "MOD-05",
+      "note": "Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "ingestao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "ingestao.id"
+        },
+        {
+          "name": "pagina_inicio",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "pagina_fim",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "secao",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "texto_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "vetor_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "colecao",
+          "type": "varchar(100)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "conversa",
+      "owner": "MOD-06",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "mensagem",
+      "owner": "MOD-06",
+      "note": "Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "conversa_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "conversa.id"
+        },
+        {
+          "name": "request_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "papel",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "texto",
+          "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "conversa_id",
+          "request_id",
+          "papel"
+        ]
+      ]
+    },
+    {
+      "name": "execucao_ia",
+      "owner": "MOD-06",
+      "note": "Única por cliente+chave; sem duplicar conteúdo de ficha excluída",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "idempotency_key",
+          "type": "varchar(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "entrada_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "finalidade",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "onboarding_versao.id"
+        },
+        {
+          "name": "versao_base_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "versao_publicada_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "config_version",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "modelo",
+          "type": "varchar(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_version",
+          "type": "varchar(60)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "iniciada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "terminada_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "idempotency_key"
+        ]
+      ]
+    },
+    {
+      "name": "triagem",
+      "owner": "MOD-06",
+      "note": "Três estados de domínio, falhas técnicas pertencem à execução",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": "execucao_ia.id"
+        },
+        {
+          "name": "onboarding_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "onboarding_versao.id"
+        },
+        {
+          "name": "resumo",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "regra_version",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(35)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "motivos",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "etapa_ia",
+      "owner": "MOD-06",
+      "note": "Dados de consumo sem chain-of-thought",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "execucao_ia.id"
+        },
+        {
+          "name": "tipo",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "chamadas",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tokens_entrada",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "tokens_saida",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "duracao_ms",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "evidencia_execucao",
+      "owner": "MOD-06",
+      "note": "IDs de fontes reais, sem copiar dados privados na literatura",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "execucao_ia.id"
+        },
+        {
+          "name": "fragmento_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "fragmento.id"
+        },
+        {
+          "name": "finalidade",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "plano",
+      "owner": "MOD-08",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "varchar(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "duracao_dias",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "modalidade",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "limite_acessos",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "janela_limite",
+          "type": "varchar(25)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "preco_base",
+          "type": "numeric(12,2)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "matricula",
+      "owner": "MOD-08",
+      "note": "Fim civil inclusive no fuso da academia; sem FK obrigatória para pagamento",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "plano_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "plano.id"
+        },
+        {
+          "name": "atendente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "inicio",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "modalidade_contratada",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "limites_snapshot",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "biometria",
+      "owner": "MOD-07",
+      "note": "Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "subject_externo",
+          "type": "varchar(120)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "image_id",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cadastrada_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "evento_acesso",
+      "owner": "MOD-07",
+      "note": "Unicidade origem+event_id; desconhecido tem cliente nulo",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "origem",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "event_id_externo",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "tipo",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ocorrido_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "payload_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "origem",
+          "event_id_externo"
+        ]
+      ]
+    },
+    {
+      "name": "decisao_acesso",
+      "owner": "MOD-07",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "evento_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "evento_acesso.id"
+        },
+        {
+          "name": "matricula_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "matricula.id"
+        },
+        {
+          "name": "resultado",
+          "type": "varchar(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "motivo",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "catraca_comando",
+      "owner": "MOD-07",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "decisao_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": "decisao_acesso.id"
+        },
+        {
+          "name": "request_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "direcao",
+          "type": "varchar(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "presenca",
+      "owner": "MOD-07",
+      "note": "Uma presença aberta por cliente, apenas passagem simulada confirmada muda lotação",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "entrada_evento_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": "evento_acesso.id"
+        },
+        {
+          "name": "saida_evento_id",
+          "type": "uuid",
+          "flags": "unique",
+          "ref": "evento_acesso.id"
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "cobranca",
+      "owner": "MOD-08",
+      "note": "",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "matricula_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "matricula.id"
+        },
+        {
+          "name": "competencia",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "valor",
+          "type": "numeric(12,2)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "vencimento",
+          "type": "date",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "pagamento",
+      "owner": "MOD-08",
+      "note": "Múltiplas tentativas; confirmação financeira não cria matrícula",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cobranca_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "cobranca.id"
+        },
+        {
+          "name": "cliente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "origem",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "referencia_externa",
+          "type": "varchar(150)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "valor",
+          "type": "numeric(12,2)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "confirmado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "aula_ocorrencia",
+      "owner": "MOD-09",
+      "note": "Reserva/capacidade não entra no primeiro escopo sem GATE-07",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "varchar(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "inicio",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "notificacao",
+      "owner": "MOD-12",
+      "note": "Unique destinatario+evento+canal; sem anamnese no payload",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "destinatario_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "evento_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "canal",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "lida_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "destinatario_id",
+          "evento_id",
+          "canal"
+        ]
+      ]
+    },
+    {
+      "name": "auditoria",
+      "owner": "MOD-12",
+      "note": "Sem exclusão pelo autor; metadados mínimos, não cópia de ficha/foto",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "ator_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "acao",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "recurso_tipo",
+          "type": "varchar(60)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "recurso_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "correlation_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ocorrido_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "outbox",
+      "owner": "MOD-12",
+      "note": "Publicação de domínio e evento na mesma transação; consumidor idempotente",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "evento_tipo",
+          "type": "varchar(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "schema_version",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "payload",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "entregue_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "unique": []
+    }
+  ]
+}

@@ -3,8 +3,9 @@
 Coleta inicial em 3 de novembro e ampliação autorizada em 4 de novembro de 2026.
 Esta pasta reúne **18 PDFs originais, com 783 páginas PDF: 8 em português e 10 em
 inglês**. A ampliação acrescentou 11 documentos e 457 páginas, sem alterar os sete
-originais. São candidatos à base de consulta; nenhum foi aprovado, indexado ou
-usado para treinar/ajustar um modelo nesta entrega. As alterações de especificação
+originais. A coleta inicial reuniu candidatos. Na preparação técnica posterior, sete foram
+selecionados por delegação para ingestão; os demais continuam em reserva. Nenhum
+foi indexado nem usado para treinar/ajustar modelo nesta preparação. As alterações de especificação
 autorizadas estão descritas em [funcionamento da IA/RAG](../../docs/arquitetura/funcionamento-ia-rag.md).
 
 RAG usa documentos como fontes de consulta. Reunir estes arquivos é a coleta
@@ -80,8 +81,9 @@ ou nenhum texto extraível e foram conferidas visualmente, sem editar o original
 
 ## Limites desta seleção
 
-A seleção ainda não foi revisada integralmente por um profissional de Educação
-Física/saúde. Os documentos têm públicos e níveis de evidência diferentes.
+A seleção técnica do protótipo foi delegada pelo responsável; não exige revisão
+médica externa. Não houve revisão científica integral de todas as obras.
+Os documentos têm públicos e níveis de evidência diferentes.
 Uma revisão narrativa não tem o mesmo papel de uma diretriz. Os artigos da RBAFS
 fundamentam o guia brasileiro e não são evidências totalmente independentes dele.
 
@@ -89,7 +91,8 @@ Há cobertura bibliográfica inicial de atividade física, força/hipertrofia,
 organização do treino, lombalgia crônica primária, dor patelofemoral, manguito
 rotador, biomecânica do agachamento, triagem e diabetes tipo 2. Isso não constitui
 cobertura suficiente para toda patologia ou exercício. Ainda faltam o catálogo
-validado de exercícios, políticas estruturadas de bloqueio e avaliações rotuladas,
+implementado de exercícios e ensaios reais; regras de triagem e casos esperados
+foram definidos documentalmente nesta preparação,
 além da revisão de atualizações, conflitos e adequação ao público. As diretrizes
 clínicas incluem temas de diagnóstico/medicação que não se confundem com orientação
 de treino de academia.
@@ -110,4 +113,14 @@ Não remover automaticamente referências de saúde ou exercícios: avaliar trec
 pertinentes por finalidade e manter pendentes fora do índice ativo. Livro/material
 de exercícios definitivo depende de aprovação; os 18 PDFs não comprovam cobertura
 suficiente para todo treino/condição. Inventário/catálogo ficam em PostgreSQL.
-Nenhum PDF foi modificado, aprovado ou reindexado nesta revisão.
+Os PDFs permanecem intactos. A seleção técnica posterior aprovou sete para
+ingestão; nenhum foi reindexado nesta preparação.
+
+## Corpus inicial definido
+
+A seleção vigente está em [corpus-inicial.json](corpus-inicial.json) e no catálogo:
+sete documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
+PDFs. Outros onze seguem pendentes. Não confundir seleção com chunks/índice pronto
+ou qualidade de geração comprovada. O material especializado inicial é esse
+conjunto, não um novo livro já baixado. RAG-01 importa aprovação/proveniência;
+RAG-03/04 validam extração/indexação e RAG-05 mede recuperação.

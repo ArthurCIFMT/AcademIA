@@ -1,0 +1,237 @@
+{
+  "nota": "Fixtures sintéticas de contrato, não dados reais nem teste de LLM",
+  "casos": [
+    {
+      "nome": "válido",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": true
+    },
+    {
+      "nome": "peso decimal",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75.3,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": true
+    },
+    {
+      "nome": "NAO_SEI é resposta explícita válida para conclusão",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO_SEI",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": true
+    },
+    {
+      "nome": "sim sem ocorrência",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "SIM",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": false
+    },
+    {
+      "nome": "campo extra",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": "",
+        "diagnostico": "X"
+      },
+      "valido": false
+    },
+    {
+      "nome": "peso ausente",
+      "entrada": {
+        "altura_cm": 175,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": false
+    },
+    {
+      "nome": "dias inválidos",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 8,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": false
+    },
+    {
+      "nome": "nulo não é não",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": null,
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": false
+    },
+    {
+      "nome": "não com condição",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [
+          {
+            "categoria": "CARDIACA",
+            "descricao": "exemplo",
+            "gravidade_declarada": "GRAVE"
+          }
+        ],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": false
+    },
+    {
+      "nome": "sim com condição",
+      "entrada": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "SIM",
+        "condicoes_saude": [
+          {
+            "categoria": "CARDIACA",
+            "descricao": "exemplo sintético",
+            "gravidade_declarada": "GRAVE"
+          }
+        ],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "valido": true
+    }
+  ]
+}

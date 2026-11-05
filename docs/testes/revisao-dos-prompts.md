@@ -1,66 +1,44 @@
-# Revisão antes da implementação
+# Revisão antes da implementação — preparação técnica
 
-Data: 2026-11-04. Base da revisão didática: af1685b. Revisão documental, sem implementação de aplicação.
+Data: 2026-11-04. Preparação por delegação do responsável, após a revisão c6d1c82.
+[Prontidão e evidências](../arquitetura/preparacao-implementacao.md) é o índice vigente.
 
-O planejamento vigente tem 38 RFs, 39 RNs, 18 RNFs, 15 MRFs/67 critérios, 13 módulos
-e 61 cartões. Orquestrador coordena dúvidas, triagem de resumo e geração pelo LLM,
-com busca vetorial semântica fixa. Substitui a pesquisa agentiva e a revisão local
-interrompida que restringia fichas ao instrutor.
+## Resultado
 
-[Mapa de mudança](../analises/2026-11-04-revisao-ia-semantica.md),
-[MRFs](../requisitos/macrorequisitos-ia-rag.md),
-[arquitetura](../arquitetura/rag-semantico.md),
-[dados](../arquitetura/modelo-de-dados/dados-rag-ia.md),
-[manifesto](../prompts/README.md) e [testes](rag-ia-semantico.md).
+Uma academia. FastAPI/Pydantic/SQLAlchemy/Alembic/uv; React/TS/Vite; sessão integrada;
+PostgreSQL nativo e Qdrant local antes do Docker; E5-small e Groq/Llama como defaults.
+Campos, validações, estados de perfis, triagem, limites e avaliação foram definidos.
+GATE-01–GATE-06 fechados documentalmente. FND-01–FND-03 concluídos; FND-04/FND-07 prontos.
+Sem instalação de aplicação ou testes reais de PostgreSQL/LLM/CompreFace nesta fase.
 
-## Revisão didática vigente
+## Contratos e consistência
 
-AGENTS.md dispensa laudos, aprovação médica formal e validação jurídica externa.
-Três estados da triagem, regras/casos sintéticos pelo responsável e parecer posterior
-do instrutor permanecem. Revisados contexto do chat, confirmação versionada de novos
-dados, publicação única, teto real de chamadas e escopos de portas/adaptadores.
-[Achados completos](../analises/2026-11-04-revisao-didatica-e-consistencia.md).
+[ADRs](../arquitetura/decisoes/README.md),
+[onboarding/triagem](../requisitos/onboarding-e-triagem.md),
+[JSON Schema](../requisitos/schemas/onboarding-v1.schema.json),
+[configuração IA](../requisitos/configuracao-ia-rag.md),
+[modelo DBML](../arquitetura/modelo-de-dados/modelo-logico.dbml),
+[dicionário](../arquitetura/modelo-de-dados/dicionario.md),
+[invariantes](../arquitetura/modelo-de-dados/invariantes-e-estados.md).
 
-## Consistência e preservação
+TRN-02 entrega rascunho/editor e estrutura de versões; TRN-03 publica/retem/revisa,
+sem exigir publicação completa no cartão anterior. AI-03 usa TRN-03 e AI-04 só
+acompanha, sem nova publicação/aviso. AI-05 usa formulário ONB-03 para confirmação.
+Dúvida geral sem onboarding; dado ausente não é saudável; sem laudo obrigatório.
+Módulos continuam independentes por contrato, não por acesso livre às tabelas.
 
-Cartões RAG/IA revisados. AI-03 passa a depender de TRN-03 e AI-05 de ONB-03,
-alinhando publicação e confirmação de dados às entregas dos módulos proprietários. Mestre, contexto,
-fundação, catálogo, matrizes, testes e referências apontam o fluxo atual.
-Documentos agentivos antigos são pontes históricas; MRF16–MRF19 não são executáveis.
-MER original permanece intacto; FND-03 produzirá modelo lógico/migrations depois.
-PDFs originais, metadados e os 32 casos documentais foram preservados; perguntas
-antigas precisam de revisão antes de serem usadas como aceite do modelo.
+## Verificação documental/técnica
 
-## Pendências por etapa
+Parser @dbml/core: DBML válido com 42 tabelas e 60 referências.
+Ajv 2020: contrato e dez casos sintéticos passaram. XML de origem extraído e
+parseado (307 células), sem alterar PNG. Auditor geral executado antes de aplicar.
+Ferramentas temporárias externas à aplicação; nenhuma dependência do projeto instalada.
+Testes de aplicação, recuperação/geração e biometria reais continuam por executar.
 
-| Antes de | Necessário |
-|---|---|
-| Scaffolds/modelagem | Framework/ferramentas Python, identidade, academia única/múltipla, Git e serviços locais |
-| Identidade/pessoas | Alcance de inativar perfil quando usuário acumula papéis |
-| ONB-02 | Campos/unidades/obrigatoriedade e origem declarada/medida aprovados |
-| RAG/IA | Livro/corpus e curador, provedores gratuitos/modelos, política de bloqueio, esquema de resumo, orçamento/contexto, retenção e qualidade |
-| Aceite da IA | Casos esperados revisados e benchmark real por rota; doubles não aprovam qualidade |
-| Biometria | Hospedagem/versão/ensaio CompreFace e alternativa de acesso |
-| Reservas/financeiro | Escopo e gateway/sandbox, sem bloquear fundação/matrícula |
+## Recursos e fases posteriores
 
-Aprovação desta funcionalidade não fecha escolhas ainda abertas. Manter fila/parecer
-posterior e trabalho manual independente dos serviços de IA.
-
-## Verificação
-
-Executar na raiz: python scripts/verificar_documentacao.py e git diff --check.
-O auditor confere links, IDs, cartões, matrizes, dependências, hashes e casos
-documentais. Não é ensaio de recuperação real, triagem ou geração. Não marcar
-prompts de implementação como concluídos por redação ou aprovação documental.
-
-## Leitura manual
-
-Contexto/requisitos → decisões → mestre/contexto/contrato → manifesto por
-dependências. FND-01 permanece primeira tarefa formal; gates bloqueiam somente
-partes dependentes. Histórico detalhado das revisões anteriores permanece no Git.
-
-A verificação anterior (base af1685b) registrou auditor OK e materiais íntegros.
-Na proposta didática, o auditor passou: 99 Markdown, 663 links locais, 61 cartões,
-12 gates/marcos, grafo sem ciclos, 18 PDFs/MER íntegros e 32 casos/94 páginas
-referenciadas preservados. São 67 critérios MRF e 163 critérios RF. Não foram
-executados testes BE/INT/API/FE/E2E/RAG/IA da aplicação, ainda não implementada.
+GROQ_API_KEY, pesos locais e PostgreSQL/Mailpit serão configurados nos prompts
+dependentes; não bloqueiam a criação dos scaffolds. Não pedir chave em texto/log.
+GATE-07/08/09 (reservas, detalhes de acesso/CompreFace e gateway) continuam tardios.
+MVP e demais marcos não foram marcados como aplicação concluída.
+Sete documentos selecionados para ingestão; outros onze pendentes; PDFs preservados.

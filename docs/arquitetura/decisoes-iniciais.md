@@ -3,7 +3,10 @@
 ## Como interpretar este documento
 
 - **Confirmada**: decisão expressa pelo responsável do projeto.
-- **Recomendada**: escolha técnica proposta, sujeita ao checkpoint FND-02B.
+- **Recomendada**: hipótese histórica; decisões aceitas nos ADRs prevalecem.
+- Em 2026-11-04 o responsável delegou frameworks, campos e regras;
+  [ADRs aceitos](decisoes/README.md) e [prontidão](preparacao-implementacao.md)
+  fecham escolhas iniciais sem nova confirmação.
 - **Aberta**: não implementar o componente dependente antes de registrar ADR.
 
 ## Decisões confirmadas
@@ -12,7 +15,7 @@
 |---|---|---|
 | DEC-001 | Trabalho acadêmico didático com MVP incremental. | Dispensar aprovação médica formal, laudos e workflows jurídicos/comerciais; manter regras/testes da demonstração e parecer posterior do instrutor. |
 | DEC-002 | React + TypeScript + Vite no frontend. | SPA responsiva e contratos tipados. |
-| DEC-003 | Backend obrigatoriamente em Python. | Framework será fechado por ADR. |
+| DEC-003 | Python 3.12 / FastAPI / Pydantic 2, SQLAlchemy/Alembic. | ADR-001 aceito por delegação; versões travadas no scaffold. |
 | DEC-004 | PostgreSQL para dados relacionais. | Invariantes por constraints e migrations. |
 | DEC-005 | REST + JSON + OpenAPI nas fronteiras. | Contratos documentados e testáveis. |
 | DEC-006 | RAG com banco vetorial especializado. | Conhecimento separado dos dados operacionais. |
@@ -40,54 +43,26 @@
 | REC-001 | Monólito modular já vigente em AGENTS.md; formalizar em ADR. | Evitar divergência entre regra atual e registro de decisão. |
 | REC-002 | FastAPI + Pydantic. | Python, OpenAPI e validação tipada. |
 | REC-003 | SQLAlchemy + Alembic. | ORM e migrations explícitas. |
-| REC-004 | Keycloak/OIDC. | Identidade e credenciais fora do domínio. |
+| REC-004 | Substituída por autenticação integrada — ADR-002. | Sessão opaca e Argon2id, menos serviços no MVP. |
 | REC-005 | Qdrant. | Banco vetorial especializado e configurável. |
-| REC-006 | Academia única no MVP. | Evita isolamento multitenant prematuro. |
+| REC-006 | Confirmada expressamente: academia única — ADR-003. | Sem tenant_id ou seletor de unidade. |
 | REC-007 | Incorporada à decisão vigente DEC-008 e RF-34: principal vigente inequívoco. | Não reabrir a regra já especificada; formalizar integridade e histórico no modelo lógico. |
 | REC-008 | Separar publicação, validação técnica e parecer por versão. | Não condicionar consulta/chat ao aceite; explicitar tratamento da atualidade e de rejeição. |
 | REC-009 | Armazenar timestamps em UTC/ISO 8601. | Consistência e rastreabilidade. |
 | REC-010 | Objetos tipados internamente; JSON nas fronteiras. | Evita serialização artificial dentro do monólito. |
 | REC-011 | Promovida à decisão confirmada DEC-015: CompreFace. | Escolha do responsável em 2026-11-04; configuração e ensaio ainda pendentes. |
 
-## Decisões abertas que funcionam como gates
+## Gates iniciais resolvidos
 
-### GATE-01 — Stack Python
+GATE-01 a GATE-06: FECHADO documentalmente por delegação, conforme
+[ADRs](decisoes/README.md) e [matriz de prontidão](preparacao-implementacao.md).
+Stack, auth, academia única, Git, execução local e RAG/IA foram escolhidos.
+Formulário e regras estão em [onboarding/triagem](../requisitos/onboarding-e-triagem.md).
+LLM requer chave pessoal durante a integração; serviços/modelos ainda não foram
+instalados/testados. Isso não reabre a decisão técnica nem bloqueia scaffold.
 
-Escolher e registrar framework, validação, ORM, migrations, gerenciador de
-dependências, lint, formatação e testes.
-
-### GATE-02 — Identidade
-
-Escolher Keycloak/OIDC ou autenticação integrada. Definir como o serviço será
-executado localmente antes da fase Docker.
-
-### GATE-03 — Escopo de academia
-
-Confirmar academia única no MVP ou introduzir isolamento multitenant desde o
-primeiro schema.
-
-### GATE-04 — IA e RAG
-
-Definir banco vetorial especializado, LLM/embeddings (preferência por opção gratuita),
-livro/corpus inicial e curador, regras acadêmicas de bloqueio e dados insuficientes, esquema do resumo,
-validação de preservação de alertas, limites de contexto/saída/tentativas e orçamento.
-Definir retenção operacional, métricas/limiares e meta de tempo total por rota.
-Fluxo semântico com orquestrador já autorizado; não exigir plano/ferramentas/pesquisa
-iterativa. Literatura coletada não equivale a corpus suficiente ou aprovado.
-Geração usa até uma análise de triagem e uma geração; chat até uma geração.
-Cada etapa LLM tem uma tentativa; nova tentativa é ação explícita com nova execução.
-O responsável do projeto define regras/casos sintéticos e seleciona o corpus; não
-exigir médico, laudo, comitê ou validação jurídica externa para fechar este gate.
-
-### GATE-05 — Git
-
-Definir se cada prompt usa branch e pull request ou se entregas acadêmicas podem
-ser integradas diretamente na `main`.
-
-### GATE-06 — Dependências locais
-
-Documentar como PostgreSQL, identidade e Qdrant serão disponibilizados antes da
-containerização final.
+GATE-07 (reservas), GATE-08 (execução/ensaio facial e limites de acesso) e
+GATE-09 (gateway) continuam decisões das fases posteriores, não do início.
 
 ## Restrições permanentes
 

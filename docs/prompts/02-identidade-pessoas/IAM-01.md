@@ -26,15 +26,21 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Implementar estratégia aceita em ADR; para OIDC validar assinatura, emissor, audiência e expiração.
-2. Definir vínculo estável entre identidade externa/local e usuário, sem usar e-mail como chave primária.
-3. Documentar execução/configuração local do provedor sem Docker.
+1. Implementar porta de identidade/sessão do ADR-002: senha Argon2id e token opaco,
+   expiração absoluta/ociosidade, revogação, CSRF e validação de origem.
+2. Resolver identidade por UUID e contratos, sem e-mail como chave primária.
+   Não integrar Keycloak, JWT ou OIDC neste escopo.
+3. Definir interfaces dos repositórios; modelos/adapters persistentes ficam em
+   IAM-02 para evitar dependência circular. Testar porta aqui com doubles;
+   fluxo persistente completo é verificado após IAM-02 e no login IAM-04.
+4. Configurar sessão/cookies por ambiente e mesma origem via proxy Vite.
 
 ## Critérios de aceite
 
-- Credencial/token válido é aceito; expirado, adulterado ou de emissor/audiência inválidos é recusado.
-- Rota protegida sem credencial retorna 401.
-- Indisponibilidade do provedor não permite acesso por fallback inseguro.
+- Sessão ausente, expirada/revogada, token adulterado ou origem/CSRF inválidos são recusados.
+- Uma sessão resolve apenas a identidade autorizada; troca de senha/logout revoga.
+- Sem sessão retorna 401; falha de persistência não concede acesso por fallback.
+- Regras de papel/perfil são aplicadas em IAM-02/IAM-03, sem adiantar permissões aqui.
 
 ## Testes obrigatórios
 

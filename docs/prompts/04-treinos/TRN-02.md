@@ -29,7 +29,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Permitir ao instrutor designado montar rascunho por dias/itens com catálogo, séries, repetições, cadência e intervalo.
 2. Criar versionamento, referência à avaliação/onboarding e autoria por versão.
-3. Oferecer editor e publicação com validações de domínio; edição de versão publicada gera novo rascunho.
+3. Oferecer editor de rascunho e validações de domínio; edição de versão publicada
+   gera novo rascunho. Preparar modelo/contrato de publicação, sem executá-la aqui;
+   serviço transacional, troca de vigente e avisos serão implementados em TRN-03.
 4. Separar conteúdo publicado imutável do parecer profissional por versão.
 5. Prever a exclusão de conteúdo da rejeitada anterior em RF-35, sem quebrar
    auditoria, numeração de versões ou snapshots de treinos executados.
@@ -64,3 +66,7 @@ Informe a informação que falta; não improvise dados para obter aceite.
 Siga GATE-05 e autorização vigente; registre evidência em
 [manifesto](../README.md). Informe arquivos, comandos reais, resultados, pendências
 e próximo ID liberado. Texto criado não significa código implementado.
+
+A divisão TRN-02/TRN-03 foi fechada: este cartão entrega editor, persistência de
+rascunho e invariantes estruturais; TRN-03 entrega publicação/retenção/parecer
+e workflow durável. Não depender de TRN-03 para concluir testes deste cartão.

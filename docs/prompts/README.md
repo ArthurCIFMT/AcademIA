@@ -43,12 +43,12 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 
 | ID | Condição de fechamento | Evidência | Estado |
 |---|---|---|---|
-| GATE-01 | Stack Python e ferramentas | ADRs aceitos | ABERTO |
-| GATE-02 | Identidade e recuperação de credenciais | ADR aceito | ABERTO |
-| GATE-03 | Academia única ou múltipla | ADR aceito | ABERTO |
-| GATE-04 | Provedores, banco vetorial, livro/corpus, política de triagem, resumo, limites por rota e métricas de MRF01–MRF15; fluxo semântico autorizado | ADRs e requisitos aprovados | ABERTO |
-| GATE-05 | Branches, commits, push e integração | Política Git aceita | ABERTO |
-| GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | ABERTO |
+| GATE-01 | Stack Python e ferramentas | ADRs aceitos | FECHADO |
+| GATE-02 | Identidade e recuperação de credenciais | ADR aceito | FECHADO |
+| GATE-03 | Academia única ou múltipla | ADR aceito | FECHADO |
+| GATE-04 | Provedores, banco vetorial, livro/corpus, política de triagem, resumo, limites por rota e métricas de MRF01–MRF15; fluxo semântico autorizado | ADRs e requisitos aprovados | FECHADO |
+| GATE-05 | Branches, commits, push e integração | Política Git aceita | FECHADO |
+| GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | FECHADO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
@@ -56,7 +56,8 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
 | PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; exclui VAL-01–VAL-03 | Manifesto, decisões e matriz de aceite com escopo explícito | ABERTO |
 
-Gates de IA e pagamentos são fechados antes desses módulos, sem impedir o trabalho
+Gates iniciais foram fechados por delegação em [preparação técnica](../arquitetura/preparacao-implementacao.md).
+Isso registra decisões e não instalação/ensaio. Gates de fases posteriores não impedem o trabalho
 independente de fundação. FND-02B registra escolhas e pendências; não declara escolhas
 adiadas como aprovadas. PG-01 exige testes do MVP e PG-03 também exige maioria dos
 módulos antes de INF-01, conforme orientação do professor.
@@ -66,6 +67,10 @@ módulos antes de INF-01, conforme orientação do professor.
 | ID | Estado | Evidência |
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
+| FND-01 | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
+| FND-02A | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
+| FND-02B | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
+| FND-03 | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -74,14 +79,14 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [FND-01](01-fundacao/FND-01-fontes-de-verdade.md) | Validar fontes, normalizações e glossário | MOD-00–MOD-12 | P00 | PRONTO |
-| [FND-02A](01-fundacao/FND-02A-propostas-de-adrs.md) | Propor decisões arquiteturais | MOD-00 | FND-01 | BLOQUEADO |
-| [FND-02B](01-fundacao/FND-02B-aprovacao-dos-gates.md) | Registrar escolhas e fechar gates aplicáveis | MOD-00 | FND-02A | BLOQUEADO |
-| [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05 | BLOQUEADO |
-| [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | BLOQUEADO |
+| [FND-01](01-fundacao/FND-01-fontes-de-verdade.md) | Validar fontes, normalizações e glossário | MOD-00–MOD-12 | P00 | CONCLUIDO |
+| [FND-02A](01-fundacao/FND-02A-propostas-de-adrs.md) | Propor decisões arquiteturais | MOD-00 | FND-01 | CONCLUIDO |
+| [FND-02B](01-fundacao/FND-02B-aprovacao-dos-gates.md) | Registrar escolhas e fechar gates aplicáveis | MOD-00 | FND-02A | CONCLUIDO |
+| [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05 | CONCLUIDO |
+| [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | PRONTO |
 | [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | BLOQUEADO |
 | [FND-06](01-fundacao/FND-06.md) | Convenções REST, contratos e testes de API | MOD-00 | FND-04, FND-05 | BLOQUEADO |
-| [FND-07](01-fundacao/FND-07.md) | Scaffold React, TypeScript e Vite | MOD-00 | FND-02B | BLOQUEADO |
+| [FND-07](01-fundacao/FND-07.md) | Scaffold React, TypeScript e Vite | MOD-00 | FND-02B | PRONTO |
 | [FND-08](01-fundacao/FND-08.md) | Auditoria e eventos duráveis mínimos | MOD-00, MOD-12 | FND-05, FND-06 | BLOQUEADO |
 
 ## MVP — identidade, pessoas e comunicação

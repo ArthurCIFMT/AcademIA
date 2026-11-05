@@ -12,7 +12,10 @@ não devem ser implementados. Histórico e mapa no [registro de mudança](../ana
 Curador é função de administrador/instrutor autorizado. No trabalho acadêmico,
 o responsável do projeto seleciona corpus e documenta regras/casos da demonstração,
 sem aprovação médica ou jurídica externa. Parecer do instrutor é uma funcionalidade
-posterior, distinta. Gate técnico não aprova automaticamente corpus, campos ou provedores.
+posterior, distinta. Campos, regras, corpus e provedores iniciais foram definidos
+por delegação nos [ADRs](../arquitetura/decisoes/README.md),
+[formulário](onboarding-e-triagem.md) e [parâmetros IA](configuracao-ia-rag.md).
+Seleção não comprova indexação nem qualidade real.
 
 | ID | Macrorequisito | Módulos relacionados | Atores | Descrição / funcionamento | Critérios de aceite testáveis |
 |---|---|---|---|---|---|

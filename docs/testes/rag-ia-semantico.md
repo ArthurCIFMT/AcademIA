@@ -38,3 +38,11 @@ qualidade são fixados antes da avaliação. Não confundir JSON válido com seg
 universal; não declarar velocidade sem benchmark. Os 32 casos documentais antigos
 podem apoiar exemplos após revisão, sem se tornar aceite automático deste fluxo.
 [Arquitetura](../arquitetura/rag-semantico.md), [MRFs](../requisitos/macrorequisitos-ia-rag.md).
+
+## Casos esperados definidos na preparação
+
+[Casos de triagem v1](casos-triagem-v1.json) e
+[contratos do formulário](contratos-onboarding-v1.json) são fixtures sintéticas
+por delegação. Campos/regras em [onboarding](../requisitos/onboarding-e-triagem.md),
+metas e configurações em [IA/RAG](../requisitos/configuracao-ia-rag.md).
+Esses rótulos não constituem resultado de teste do provedor real.

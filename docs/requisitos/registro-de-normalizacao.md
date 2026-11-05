@@ -110,3 +110,13 @@ do projeto. Preservar bloqueio de casos graves e parecer posterior do instrutor.
 CA-11.4 explicita atualização confirmada/versionada necessária ao fluxo já previsto
 de adaptação; MRF04/RNF-18 esclarecem uma tentativa por etapa LLM, sem retry automático.
 Ver [achados e correções](../analises/2026-11-04-revisao-didatica-e-consistencia.md).
+
+## Preparação técnica delegada para iniciar
+
+O responsável confirmou academia única e delegou frameworks, campos e regras.
+ADRs, onboarding v1, triagem/configuração e modelo lógico foram definidos, com
+FND-01–FND-03 concluídos documentalmente e FND-04/FND-07 prontos.
+Sete documentos foram selecionados tecnicamente para ingestão, sem alterar PDFs.
+As pendências históricas de framework/auth/tenancy/campos não devem ser reabertas.
+Serviços/chaves e ensaios reais não foram inventados como concluídos.
+Ver [prontidão](../arquitetura/preparacao-implementacao.md).

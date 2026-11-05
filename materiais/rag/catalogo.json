@@ -1,7 +1,7 @@
 {
   "versao_catalogo": 2,
   "coletado_em": "2026-11-03",
-  "finalidade": "Coleção bibliográfica para revisão e futuro RAG do AcademIA; sem treinamento, embeddings, indexação ou aprovação automática nesta coleta.",
+  "finalidade": "Coleção preservada; seleção técnica delegada de 7 documentos para ingestão do protótipo. Sem embeddings, indexação ou teste LLM executados nesta preparação.",
   "quantidade_pdfs": 18,
   "paginas_pdf_total": 783,
   "documentos": [
@@ -40,8 +40,13 @@
       "tamanho_bytes": 2482449,
       "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "BR-MS-002",
@@ -123,8 +128,13 @@
       "tamanho_bytes": 2241272,
       "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "BR-RBAFS-002",
@@ -214,8 +224,13 @@
       "tamanho_bytes": 686321,
       "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "BR-SBC-001",
@@ -254,8 +269,13 @@
       "tamanho_bytes": 7761105,
       "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "BR-SBC-002",
@@ -294,8 +314,13 @@
       "tamanho_bytes": 970859,
       "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
       "alteracoes_no_original": "nenhuma; cópia do PDF recebido, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "INT-ACSM-001",
@@ -406,8 +431,13 @@
       "tamanho_bytes": 1101261,
       "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
       "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "INT-SPMED-001",
@@ -447,8 +477,13 @@
       "tamanho_bytes": 880778,
       "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
       "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "APROVADO_TECNICAMENTE_PARA_INGESTAO",
+      "aprovado_para_rag": true,
+      "aprovacao": {
+        "data": "2026-11-04",
+        "origem": "Seleção técnica delegada pelo responsável do projeto",
+        "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
     },
     {
       "id": "INT-WHO-001",

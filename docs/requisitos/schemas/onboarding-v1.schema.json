@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://academia.example/schemas/onboarding-v1.json",
+  "title": "Onboarding AcademIA v1",
+  "description": "Contrato didático; não é questionário diagnóstico.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "altura_cm": {
+      "type": "number",
+      "minimum": 50,
+      "maximum": 250,
+      "multipleOf": 0.1
+    },
+    "peso_kg": {
+      "type": "number",
+      "minimum": 20,
+      "maximum": 350,
+      "multipleOf": 0.1
+    },
+    "objetivo_principal": {
+      "type": "string",
+      "enum": [
+        "CONDICIONAMENTO",
+        "FORCA",
+        "HIPERTROFIA",
+        "ATIVIDADE_GERAL"
+      ]
+    },
+    "experiencia": {
+      "type": "string",
+      "enum": [
+        "INICIANTE",
+        "INTERMEDIARIO",
+        "AVANCADO"
+      ]
+    },
+    "nivel_atividade": {
+      "type": "string",
+      "enum": [
+        "SEDENTARIO",
+        "LEVE",
+        "MODERADO",
+        "ELEVADO"
+      ]
+    },
+    "dias_semana": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "duracao_sessao_min": {
+      "type": "integer",
+      "minimum": 20,
+      "maximum": 120
+    },
+    "possui_condicoes_saude": {
+      "type": "string",
+      "enum": [
+        "SIM",
+        "NAO",
+        "NAO_SEI"
+      ]
+    },
+    "condicoes_saude": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "CARDIACA",
+              "RESPIRATORIA",
+              "METABOLICA",
+              "MUSCULOESQUELETICA",
+              "OUTRA"
+            ]
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "gravidade_declarada": {
+            "type": "string",
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ]
+          }
+        },
+        "required": [
+          "categoria",
+          "descricao",
+          "gravidade_declarada"
+        ]
+      }
+    },
+    "usa_medicamentos": {
+      "type": "string",
+      "enum": [
+        "SIM",
+        "NAO",
+        "NAO_SEI"
+      ]
+    },
+    "medicamentos": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nome": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "observacao": {
+            "type": "string",
+            "maxLength": 300
+          }
+        },
+        "required": [
+          "nome",
+          "observacao"
+        ]
+      }
+    },
+    "possui_dor_lesao_limitacao": {
+      "type": "string",
+      "enum": [
+        "SIM",
+        "NAO",
+        "NAO_SEI"
+      ]
+    },
+    "limitacoes": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "regiao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "descricao": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "gravidade_declarada": {
+            "type": "string",
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ]
+          }
+        },
+        "required": [
+          "regiao",
+          "descricao",
+          "gravidade_declarada"
+        ]
+      }
+    },
+    "restricao_exercicio_declarada": {
+      "type": "string",
+      "enum": [
+        "SIM",
+        "NAO",
+        "NAO_SEI"
+      ]
+    },
+    "evento_saude_importante_recente": {
+      "type": "string",
+      "enum": [
+        "SIM",
+        "NAO",
+        "NAO_SEI"
+      ]
+    },
+    "observacoes": {
+      "type": "string",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "altura_cm",
+    "peso_kg",
+    "objetivo_principal",
+    "experiencia",
+    "nivel_atividade",
+    "dias_semana",
+    "duracao_sessao_min",
+    "possui_condicoes_saude",
+    "condicoes_saude",
+    "usa_medicamentos",
+    "medicamentos",
+    "possui_dor_lesao_limitacao",
+    "limitacoes",
+    "restricao_exercicio_declarada",
+    "evento_saude_importante_recente",
+    "observacoes"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "possui_condicoes_saude": {
+            "const": "SIM"
+          }
+        },
+        "required": [
+          "possui_condicoes_saude"
+        ]
+      },
+      "then": {
+        "properties": {
+          "condicoes_saude": {
+            "minItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "condicoes_saude": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "usa_medicamentos": {
+            "const": "SIM"
+          }
+        },
+        "required": [
+          "usa_medicamentos"
+        ]
+      },
+      "then": {
+        "properties": {
+          "medicamentos": {
+            "minItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "medicamentos": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "possui_dor_lesao_limitacao": {
+            "const": "SIM"
+          }
+        },
+        "required": [
+          "possui_dor_lesao_limitacao"
+        ]
+      },
+      "then": {
+        "properties": {
+          "limitacoes": {
+            "minItems": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "limitacoes": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

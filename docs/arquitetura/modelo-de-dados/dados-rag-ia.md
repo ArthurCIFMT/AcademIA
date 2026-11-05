@@ -31,6 +31,9 @@ liberação clínica para o MVP; casos sintéticos e regras são documentados no
 Atualização confirmada em MOD-03 cria snapshot novo e invalida triagem anterior;
 execuções antigas mantêm referência à versão usada, sem reescrever histórico.
 
-Esquemas reais, campos/unidades, retenção operacional e orçamento são definidos
-nos gates/modelagem. [Arquitetura](../rag-semantico.md) e
+Modelo lógico, campos, retenção e orçamento foram definidos na preparação:
+[modelo DBML](modelo-logico.dbml), [dicionário](dicionario.md),
+[invariantes](invariantes-e-estados.md) e
+[campos/triagem](../../requisitos/onboarding-e-triagem.md).
+Migrations e serviços reais permanecem tarefas de implementação. [Arquitetura](../rag-semantico.md) e
 [macrorequisitos](../../requisitos/macrorequisitos-ia-rag.md).

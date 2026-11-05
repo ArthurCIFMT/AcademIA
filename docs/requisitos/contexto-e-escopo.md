@@ -2,7 +2,7 @@
 
 ## Estado do documento
 
-- Versão: 0.6
+- Versão: 0.7
 - Data de consolidação: 2026-11-04
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
 - Situação: base para revisão antes da implementação.
@@ -111,18 +111,13 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 | Reconhecimento | Associação facial produzida pelo serviço CompreFace. |
 | Autorização de acesso | Decisão do sistema após identidade, matrícula e regras de acesso. |
 
-## Decisões ainda abertas
+## Decisões iniciais fechadas por delegação
 
-As decisões abaixo não impedem esta documentação, mas impedem os respectivos
-scaffolds ou módulos até serem registradas em ADR:
-
-- framework Python definitivo;
-- Keycloak/OIDC ou autenticação integrada ao backend;
-- banco vetorial especializado definitivo;
-- academia única ou multiacademia;
-- provedor de LLM e embeddings;
-- corpus inicial e responsável por aprová-lo;
-- critérios operacionais de bloqueio/encaminhamento e validação da triagem resumida;
-- livro/material especializado inicial, limites por rota e meta de tempo total;
-- política Git por branches/PRs ou commits diretos;
-- forma de executar PostgreSQL, identidade e banco vetorial antes do Docker.
+Uma academia, FastAPI/Pydantic/SQLAlchemy/Alembic, autenticação integrada, Qdrant
+local persistente, embeddings E5-small e Groq/Llama estão definidos nos
+[ADRs aceitos](../arquitetura/decisoes/README.md).
+[Campos/triagem](onboarding-e-triagem.md), [configuração IA](configuracao-ia-rag.md)
+e [modelo lógico](../arquitetura/modelo-de-dados/modelo-logico.dbml) são fontes vigentes.
+Serviços e chave do provedor serão configurados na implementação, sem prometer
+qualidade/velocidade não testadas. Reservas, detalhes de acesso e gateway continuam
+tardios. Ver [prontidão](../arquitetura/preparacao-implementacao.md).

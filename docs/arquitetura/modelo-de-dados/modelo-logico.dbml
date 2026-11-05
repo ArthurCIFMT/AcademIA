@@ -1,0 +1,535 @@
+// Modelo lógico AcademIA v1, sem migrations de aplicação.
+Project AcademIA {
+  database_type: 'PostgreSQL'
+}
+
+Table academia {
+  id integer [pk]
+  nome varchar(120) [not null]
+  endereco text
+  descricao text
+  Note: 'Owner MOD-00. Singleton id=1'
+}
+
+Table usuario {
+  id uuid [pk]
+  email varchar(254) [not null, unique]
+  senha_hash text [not null]
+  estado varchar(20) [not null]
+  criado_em timestamptz [not null]
+  revision integer [not null]
+}
+
+Table usuario_papel {
+  id uuid [pk]
+  usuario_id uuid [not null]
+  papel varchar(30) [not null]
+  indexes {
+    (usuario_id, papel) [unique]
+  }
+  Note: 'Owner MOD-01. Unicidade usuario_id+papel; enum fechado de quatro papéis'
+}
+
+Table cliente {
+  usuario_id uuid [pk]
+  nome varchar(120) [not null]
+  data_nascimento date [not null]
+  telefone varchar(25)
+  ativo boolean [not null]
+}
+
+Table funcionario {
+  usuario_id uuid [pk]
+  nome varchar(120) [not null]
+  cargo varchar(80) [not null]
+  data_admissao date [not null]
+  ativo boolean [not null]
+}
+
+Table sessao {
+  id uuid [pk]
+  usuario_id uuid [not null]
+  token_hash char(64) [not null, unique]
+  csrf_hash char(64) [not null]
+  criado_em timestamptz [not null]
+  ultimo_uso_em timestamptz [not null]
+  expira_em timestamptz [not null]
+  revogada_em timestamptz
+}
+
+Table token_acesso {
+  id uuid [pk]
+  usuario_id uuid [not null]
+  hash char(64) [not null, unique]
+  finalidade varchar(30) [not null]
+  expira_em timestamptz [not null]
+  consumido_em timestamptz
+  Note: 'Owner MOD-01. Finalidades de credencial separadas do convite/sessão restrita de onboarding'
+}
+
+Table designacao {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  instrutor_id uuid [not null]
+  inicio timestamptz [not null]
+  fim timestamptz
+  atribuido_por uuid [not null]
+  Note: 'Owner MOD-02. Um vínculo principal sem fim por cliente'
+}
+
+Table onboarding_versao {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  numero integer [not null]
+  estado varchar(20) [not null]
+  schema_version integer [not null]
+  idade_snapshot integer [not null]
+  dados jsonb [not null]
+  criado_por uuid [not null]
+  concluido_em timestamptz
+  revision integer [not null]
+  indexes {
+    (cliente_id, numero) [unique]
+  }
+  Note: 'Owner MOD-03. Dados validados pelo schema v1; versões concluídas imutáveis; contexto não é índice público'
+}
+
+Table convite_onboarding {
+  id uuid [pk]
+  onboarding_id uuid [not null]
+  token_hash char(64) [not null, unique]
+  expira_em timestamptz [not null]
+  revogado_em timestamptz
+  consumido_em timestamptz
+  sessao_restrita_hash char(64)
+  sessao_expira_em timestamptz
+  Note: 'Owner MOD-03. Token é trocado por sessão restrita de edição com expiração, não login geral'
+}
+
+Table avaliacao {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  instrutor_id uuid [not null]
+  onboarding_id uuid [not null]
+  registrado_em timestamptz [not null]
+  dados jsonb [not null]
+  Note: 'Owner MOD-03. Avaliação opcional do instrutor; não é laudo ou aprovação prévia'
+}
+
+Table equipamento {
+  id uuid [pk]
+  nome varchar(120) [not null]
+  descricao text
+  categoria varchar(80)
+  imagem_ref text
+  ativo boolean [not null]
+  operacional boolean [not null]
+  revision integer [not null]
+}
+
+Table exercicio {
+  id uuid [pk]
+  nome varchar(120) [not null]
+  descricao text [not null]
+  grupo_muscular varchar(80) [not null]
+  dispensa_equipamento boolean [not null]
+  ativo boolean [not null]
+  revision integer [not null]
+  Note: 'Owner MOD-04. Cada variação pode ter ID próprio; catálogo não é prescrição'
+}
+
+Table exercicio_recurso_grupo {
+  id uuid [pk]
+  exercicio_id uuid [not null]
+  Note: 'Owner MOD-04. Grupos são alternativas OR; todos os recursos de um grupo são obrigatórios'
+}
+
+Table exercicio_recurso {
+  id uuid [pk]
+  grupo_id uuid [not null]
+  equipamento_id uuid [not null]
+  indexes {
+    (grupo_id, equipamento_id) [unique]
+  }
+  Note: 'Owner MOD-04. Unicidade grupo+equipamento; grupo vazio não libera prescrição'
+}
+
+Table versao_ficha {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  numero integer [not null]
+  origem varchar(20) [not null]
+  autor_id uuid
+  onboarding_id uuid [not null]
+  avaliacao_id uuid
+  versao_base_id uuid
+  estado_publicacao varchar(25) [not null]
+  vigente boolean [not null]
+  publicada_em timestamptz
+  conteudo_excluido_em timestamptz
+  motivo_exclusao varchar(40)
+  indexes {
+    (cliente_id, numero) [unique]
+  }
+  Note: 'Owner MOD-04. Origem IA pode não ter autor humano; modificação manual exige instrutor designado; metadados sobrevivem ao expurgo'
+}
+
+Table dia_ficha {
+  id uuid [pk]
+  versao_id uuid [not null]
+  ordem integer [not null]
+  titulo varchar(60) [not null]
+  indexes {
+    (versao_id, ordem) [unique]
+  }
+}
+
+Table item_ficha {
+  id uuid [pk]
+  dia_id uuid [not null]
+  exercicio_id uuid [not null]
+  ordem integer [not null]
+  series integer [not null]
+  repeticoes varchar(40) [not null]
+  carga_kg numeric(8,2)
+  intervalo_segundos integer [not null]
+  cadencia varchar(40)
+  observacoes text
+  exercicio_snapshot jsonb [not null]
+  indexes {
+    (dia_id, ordem) [unique]
+  }
+  Note: 'Owner MOD-04. Nome/descrição do exercício usados são snapshot do item, preservados contra edição do catálogo'
+}
+
+Table parecer {
+  id uuid [pk]
+  versao_id uuid [not null]
+  instrutor_id uuid [not null]
+  estado varchar(20) [not null]
+  motivo text
+  criado_em timestamptz [not null]
+  Note: 'Owner MOD-04. Parecer independente de publicação; histórico atribuível, sem herdar aceite'
+}
+
+Table documento {
+  id uuid [pk]
+  catalogo_id varchar(40) [not null, unique]
+  titulo text [not null]
+  origem_url text [not null]
+  licenca text [not null]
+}
+
+Table documento_versao {
+  id uuid [pk]
+  documento_id uuid [not null]
+  sha256 char(64) [not null]
+  idioma varchar(12) [not null]
+  arquivo_ref text [not null]
+  estado varchar(25) [not null]
+  aprovado_por uuid
+  aprovado_em timestamptz
+  revision integer [not null]
+}
+
+Table ingestao {
+  id uuid [pk]
+  documento_versao_id uuid [not null]
+  config_hash char(64) [not null]
+  estado varchar(25) [not null]
+  iniciada_em timestamptz [not null]
+  concluida_em timestamptz
+  indexes {
+    (documento_versao_id, config_hash) [unique]
+  }
+  Note: 'Owner MOD-05. Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção'
+}
+
+Table fragmento {
+  id uuid [pk]
+  ingestao_id uuid [not null]
+  pagina_inicio integer [not null]
+  pagina_fim integer [not null]
+  secao text
+  texto_hash char(64) [not null]
+  vetor_id uuid [not null, unique]
+  colecao varchar(100) [not null]
+  Note: 'Owner MOD-05. Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência'
+}
+
+Table conversa {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  criada_em timestamptz [not null]
+}
+
+Table mensagem {
+  id uuid [pk]
+  conversa_id uuid [not null]
+  request_id uuid [not null]
+  papel varchar(20) [not null]
+  texto text [not null]
+  estado varchar(25) [not null]
+  criada_em timestamptz [not null]
+  indexes {
+    (conversa_id, request_id, papel) [unique]
+  }
+  Note: 'Owner MOD-06. Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado'
+}
+
+Table execucao_ia {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  idempotency_key varchar(100) [not null]
+  entrada_hash char(64) [not null]
+  finalidade varchar(25) [not null]
+  estado varchar(25) [not null]
+  onboarding_id uuid
+  versao_base_id uuid
+  versao_publicada_id uuid
+  config_version integer [not null]
+  modelo varchar(100) [not null]
+  prompt_version varchar(60) [not null]
+  iniciada_em timestamptz [not null]
+  terminada_em timestamptz
+  indexes {
+    (cliente_id, idempotency_key) [unique]
+  }
+  Note: 'Owner MOD-06. Única por cliente+chave; sem duplicar conteúdo de ficha excluída'
+}
+
+Table triagem {
+  id uuid [pk]
+  execucao_id uuid [not null, unique]
+  onboarding_id uuid [not null]
+  resumo jsonb [not null]
+  regra_version integer [not null]
+  estado varchar(35) [not null]
+  motivos jsonb [not null]
+  Note: 'Owner MOD-06. Três estados de domínio, falhas técnicas pertencem à execução'
+}
+
+Table etapa_ia {
+  id uuid [pk]
+  execucao_id uuid [not null]
+  tipo varchar(25) [not null]
+  estado varchar(25) [not null]
+  chamadas integer [not null]
+  tokens_entrada integer
+  tokens_saida integer
+  duracao_ms integer
+  Note: 'Owner MOD-06. Dados de consumo sem chain-of-thought'
+}
+
+Table evidencia_execucao {
+  id uuid [pk]
+  execucao_id uuid [not null]
+  fragmento_id uuid [not null]
+  finalidade varchar(25) [not null]
+  Note: 'Owner MOD-06. IDs de fontes reais, sem copiar dados privados na literatura'
+}
+
+Table plano {
+  id uuid [pk]
+  nome varchar(100) [not null]
+  duracao_dias integer [not null]
+  modalidade varchar(80) [not null]
+  limite_acessos integer
+  janela_limite varchar(25)
+  preco_base numeric(12,2)
+  ativo boolean [not null]
+}
+
+Table matricula {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  plano_id uuid [not null]
+  atendente_id uuid [not null]
+  inicio date [not null]
+  fim date [not null]
+  estado varchar(20) [not null]
+  modalidade_contratada varchar(80) [not null]
+  limites_snapshot jsonb [not null]
+  Note: 'Owner MOD-08. Fim civil inclusive no fuso da academia; sem FK obrigatória para pagamento'
+}
+
+Table biometria {
+  id uuid [pk]
+  cliente_id uuid [not null, unique]
+  subject_externo varchar(120) [not null, unique]
+  image_id varchar(120) [not null]
+  estado varchar(25) [not null]
+  cadastrada_por uuid [not null]
+  criada_em timestamptz [not null]
+  Note: 'Owner MOD-07. Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato'
+}
+
+Table evento_acesso {
+  id uuid [pk]
+  origem varchar(80) [not null]
+  event_id_externo varchar(120) [not null]
+  cliente_id uuid
+  tipo varchar(25) [not null]
+  ocorrido_em timestamptz [not null]
+  payload_hash char(64) [not null]
+  indexes {
+    (origem, event_id_externo) [unique]
+  }
+  Note: 'Owner MOD-07. Unicidade origem+event_id; desconhecido tem cliente nulo'
+}
+
+Table decisao_acesso {
+  id uuid [pk]
+  evento_id uuid [not null]
+  matricula_id uuid
+  resultado varchar(15) [not null]
+  motivo varchar(80) [not null]
+  criada_em timestamptz [not null]
+}
+
+Table catraca_comando {
+  id uuid [pk]
+  decisao_id uuid [not null, unique]
+  request_id uuid [not null, unique]
+  direcao varchar(15) [not null]
+  expira_em timestamptz [not null]
+  estado varchar(25) [not null]
+}
+
+Table presenca {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  entrada_evento_id uuid [not null, unique]
+  saida_evento_id uuid [unique]
+  Note: 'Owner MOD-07. Uma presença aberta por cliente, apenas passagem simulada confirmada muda lotação'
+}
+
+Table cobranca {
+  id uuid [pk]
+  cliente_id uuid [not null]
+  matricula_id uuid
+  competencia date [not null]
+  valor numeric(12,2) [not null]
+  vencimento date [not null]
+  estado varchar(25) [not null]
+}
+
+Table pagamento {
+  id uuid [pk]
+  cobranca_id uuid
+  cliente_id uuid [not null]
+  origem varchar(25) [not null]
+  referencia_externa varchar(150)
+  valor numeric(12,2) [not null]
+  estado varchar(25) [not null]
+  confirmado_em timestamptz
+  Note: 'Owner MOD-08. Múltiplas tentativas; confirmação financeira não cria matrícula'
+}
+
+Table aula_ocorrencia {
+  id uuid [pk]
+  nome varchar(120) [not null]
+  inicio timestamptz [not null]
+  fim timestamptz [not null]
+  descricao text
+  estado varchar(25) [not null]
+  Note: 'Owner MOD-09. Reserva/capacidade não entra no primeiro escopo sem GATE-07'
+}
+
+Table notificacao {
+  id uuid [pk]
+  destinatario_id uuid [not null]
+  evento_id uuid [not null]
+  canal varchar(25) [not null]
+  estado varchar(25) [not null]
+  criada_em timestamptz [not null]
+  lida_em timestamptz
+  indexes {
+    (destinatario_id, evento_id, canal) [unique]
+  }
+  Note: 'Owner MOD-12. Unique destinatario+evento+canal; sem anamnese no payload'
+}
+
+Table auditoria {
+  id uuid [pk]
+  ator_id uuid
+  acao varchar(80) [not null]
+  recurso_tipo varchar(60) [not null]
+  recurso_id uuid
+  motivo text
+  correlation_id uuid [not null]
+  ocorrido_em timestamptz [not null]
+  Note: 'Owner MOD-12. Sem exclusão pelo autor; metadados mínimos, não cópia de ficha/foto'
+}
+
+Table outbox {
+  id uuid [pk]
+  evento_tipo varchar(80) [not null]
+  schema_version integer [not null]
+  payload jsonb [not null]
+  estado varchar(25) [not null]
+  criado_em timestamptz [not null]
+  entregue_em timestamptz
+  Note: 'Owner MOD-12. Publicação de domínio e evento na mesma transação; consumidor idempotente'
+}
+
+Ref: usuario_papel.usuario_id > usuario.id
+Ref: cliente.usuario_id > usuario.id
+Ref: funcionario.usuario_id > usuario.id
+Ref: sessao.usuario_id > usuario.id
+Ref: token_acesso.usuario_id > usuario.id
+Ref: designacao.cliente_id > cliente.usuario_id
+Ref: designacao.instrutor_id > funcionario.usuario_id
+Ref: designacao.atribuido_por > usuario.id
+Ref: onboarding_versao.cliente_id > cliente.usuario_id
+Ref: onboarding_versao.criado_por > usuario.id
+Ref: convite_onboarding.onboarding_id > onboarding_versao.id
+Ref: avaliacao.cliente_id > cliente.usuario_id
+Ref: avaliacao.instrutor_id > funcionario.usuario_id
+Ref: avaliacao.onboarding_id > onboarding_versao.id
+Ref: exercicio_recurso_grupo.exercicio_id > exercicio.id
+Ref: exercicio_recurso.grupo_id > exercicio_recurso_grupo.id
+Ref: exercicio_recurso.equipamento_id > equipamento.id
+Ref: versao_ficha.cliente_id > cliente.usuario_id
+Ref: versao_ficha.autor_id > usuario.id
+Ref: versao_ficha.onboarding_id > onboarding_versao.id
+Ref: versao_ficha.avaliacao_id > avaliacao.id
+Ref: versao_ficha.versao_base_id > versao_ficha.id
+Ref: dia_ficha.versao_id > versao_ficha.id
+Ref: item_ficha.dia_id > dia_ficha.id
+Ref: item_ficha.exercicio_id > exercicio.id
+Ref: parecer.versao_id > versao_ficha.id
+Ref: parecer.instrutor_id > funcionario.usuario_id
+Ref: documento_versao.documento_id > documento.id
+Ref: documento_versao.aprovado_por > usuario.id
+Ref: ingestao.documento_versao_id > documento_versao.id
+Ref: fragmento.ingestao_id > ingestao.id
+Ref: conversa.cliente_id > cliente.usuario_id
+Ref: mensagem.conversa_id > conversa.id
+Ref: execucao_ia.cliente_id > cliente.usuario_id
+Ref: execucao_ia.onboarding_id > onboarding_versao.id
+Ref: execucao_ia.versao_base_id > versao_ficha.id
+Ref: execucao_ia.versao_publicada_id > versao_ficha.id
+Ref: triagem.execucao_id > execucao_ia.id
+Ref: triagem.onboarding_id > onboarding_versao.id
+Ref: etapa_ia.execucao_id > execucao_ia.id
+Ref: evidencia_execucao.execucao_id > execucao_ia.id
+Ref: evidencia_execucao.fragmento_id > fragmento.id
+Ref: matricula.cliente_id > cliente.usuario_id
+Ref: matricula.plano_id > plano.id
+Ref: matricula.atendente_id > funcionario.usuario_id
+Ref: biometria.cliente_id > cliente.usuario_id
+Ref: biometria.cadastrada_por > funcionario.usuario_id
+Ref: evento_acesso.cliente_id > cliente.usuario_id
+Ref: decisao_acesso.evento_id > evento_acesso.id
+Ref: decisao_acesso.matricula_id > matricula.id
+Ref: catraca_comando.decisao_id > decisao_acesso.id
+Ref: presenca.cliente_id > cliente.usuario_id
+Ref: presenca.entrada_evento_id > evento_acesso.id
+Ref: presenca.saida_evento_id > evento_acesso.id
+Ref: cobranca.cliente_id > cliente.usuario_id
+Ref: cobranca.matricula_id > matricula.id
+Ref: pagamento.cobranca_id > cobranca.id
+Ref: pagamento.cliente_id > cliente.usuario_id
+Ref: notificacao.destinatario_id > usuario.id
+Ref: auditoria.ator_id > usuario.id

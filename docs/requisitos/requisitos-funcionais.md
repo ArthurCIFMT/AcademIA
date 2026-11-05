@@ -106,7 +106,8 @@ Abrir o formulário correspondente a partir do convite recebido.
 
 ### RF-11 — Registrar dados físicos
 
-Registrar os dados físicos e funcionais previstos no formulário aprovado.
+Registrar os dados físicos e funcionais do [formulário v1](onboarding-e-triagem.md),
+com [JSON Schema](schemas/onboarding-v1.schema.json) definido por delegação.
 
 - CA-11.1: campos físicos previstos podem ser persistidos.
 - CA-11.2: campos obrigatórios são validados.

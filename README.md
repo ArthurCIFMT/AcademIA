@@ -4,6 +4,11 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 
 ## Planejamento
 
+- [Prontidão para implementar](docs/arquitetura/preparacao-implementacao.md)
+- [Decisões técnicas aceitas](docs/arquitetura/decisoes/README.md)
+- [Campos e regras do onboarding](docs/requisitos/onboarding-e-triagem.md)
+- [Modelo lógico](docs/arquitetura/modelo-de-dados/modelo-logico.dbml)
+
 - [Revisão antes da implementação e pendências](docs/testes/revisao-dos-prompts.md)
 - [Revisão didática e consistência dos prompts](docs/analises/2026-11-04-revisao-didatica-e-consistencia.md)
 - [Contexto e escopo](docs/requisitos/contexto-e-escopo.md)
@@ -33,9 +38,9 @@ de execução, o contrato comum e um prompt operacional escolhido de cada vez.
 Os 61 cartões foram redigidos; a criação da documentação não implementa o sistema.
 
 Para a leitura manual: comece pela revisão, confira decisões e escopo, leia o mestre
-e depois percorra o manifesto por dependências. Os primeiros passos executáveis
-são FND-01, propostas/decisões de FND-02A/B e modelo lógico de FND-03; a escolha de
-stack e outros gates continua necessária antes dos respectivos scaffolds.
+e depois percorra o manifesto por dependências. A preparação documental FND-01–FND-03 foi concluída por delegação;
+FND-04 (backend) e FND-07 (frontend) estão prontos para iniciar. Serviços e
+integrações reais ainda serão configurados/testados nas implementações.
 
 Verificação documental reutilizável (Python 3.10+, sem pacotes externos):
 

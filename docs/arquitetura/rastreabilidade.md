@@ -28,7 +28,7 @@ definido em modulos.md; participar de um requisito não transfere seu ownership.
 
 | Lacuna | Tratamento planejado |
 |---|---|
-| Regra acadêmica de caso grave | Responsável documenta casos sintéticos/fontes antes de AI-01; sem liberação médica formal. |
+| Regra acadêmica de caso grave | Definida em onboarding-e-triagem.md; ensaio de AI-06 ainda futuro, sem liberação médica formal. |
 | Reserva/capacidade de aula | Prompt opcional condicionado à validação de escopo. |
 | Destinatários de avisos críticos | Definir antes do módulo de notificações. |
 | Fluxo alternativo de biometria | Definir antes de ACS-04. |

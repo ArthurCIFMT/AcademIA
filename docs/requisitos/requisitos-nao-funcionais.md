@@ -2,9 +2,9 @@
 
 ## Situação
 
-Este documento consolida tecnologias preferenciais/obrigatórias e requisitos
-transversais fornecidos para o projeto. Escolhas entre alternativas continuam
-sujeitas aos ADRs e ao checkpoint FND-02B.
+Este documento consolida tecnologias e requisitos transversais. Escolhas iniciais
+foram fechadas por delegação nos [ADRs](../arquitetura/decisoes/README.md);
+recursos/serviços e ensaios reais são configurados nas implementações.
 
 | ID | Requisito |
 |---|---|
@@ -25,7 +25,7 @@ sujeitas aos ADRs e ao checkpoint FND-02B.
 | RNF-15 | Logs não devem expor credenciais, onboarding completo, informações médicas ou dados biométricos desnecessários. |
 | RNF-16 | Timestamps devem ser armazenados em UTC e expostos em ISO 8601, com conversão de apresentação configurável. |
 | RNF-17 | Integrações e eventos repetíveis devem possuir estratégia de idempotência. |
-| RNF-18 | Orquestrador usa busca semântica fixa e contexto limitado; chat tem até uma geração, ficha tem até uma análise de triagem e uma geração, sem loops de pesquisa/reparo e sem retry automático das etapas LLM. Nova tentativa LLM é explícita em nova execução; ingestão/busca mantêm tentativas limitadas. Medir p50/p95 total por rota, chamadas/tokens e busca separada. Meta total, limites e provedor gratuito dependem de ADR/ensaio em GATE-04; RAG não garante acelerar uma API lenta. |
+| RNF-18 | Orquestrador usa busca semântica fixa e contexto limitado; chat tem até uma geração, ficha tem até uma análise de triagem e uma geração, sem loops de pesquisa/reparo e sem retry automático das etapas LLM. Nova tentativa LLM é explícita em nova execução; ingestão/busca mantêm tentativas limitadas. Medir p50/p95 total por rota, chamadas/tokens e busca separada. Metas, limites e provedor estão definidos em configuracao-ia-rag.md/ADR-004 e exigem ensaio real; RAG não garante acelerar uma API lenta. |
 
 
 ## Firewall

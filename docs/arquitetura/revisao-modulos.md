@@ -70,7 +70,8 @@ chat nem qualquer requisito do MVP silenciosamente.
 
 Equipamentos pertencem ao MVP. Matrícula/catraca, aulas e dashboard são extensões planejadas.
 Pagamento automático continua tardio e Docker depende de MVP e maioria dos módulos.
-Reserva, multiacademia e sessão executada de treino exigem escopo confirmado.
+Reserva e sessão executada de treino exigem escopo futuro confirmado. Academia
+única foi escolhida; múltiplas academias ficam fora deste início.
 
 ## Melhorias propostas, sem inclusão automática
 

@@ -44,10 +44,10 @@
 
 ## Regras que exigem detalhamento antes do módulo correspondente
 
-- RN-01: definir UUID interno, unicidade de e-mail e eventual identificador externo.
+- RN-01: UUID interno e e-mail normalizado único definidos no ADR-002; sem CPF obrigatório.
 - RN-08: definir o fluxo alternativo e quem pode executá-lo.
-- RN-13: documentar regras acadêmicas e casos sintéticos de bloqueio por gravidade;
-  sem etapa de liberação médica, aprovação jurídica externa ou desbloqueio por laudo.
+- RN-13: regras documentadas em onboarding-e-triagem.md; sem liberação médica
+  ou desbloqueio por laudo. Ensaiar casos antes do aceite real da IA.
 - RN-25: decidir se reservas fazem parte do escopo ou fase futura.
 - RN-26: definir destinatários, canais e tratamento de falha.
 - RN-36: definir modalidades e limites de acesso dos planos.

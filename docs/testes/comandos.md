@@ -40,3 +40,10 @@ rastreabilidade e integridade dos materiais. Não executa testes clínicos, apli
 ou URLs externas. Se `python` for apenas um alias de instalação no Windows, usar
 o executável real de Python do ambiente. As siglas de outros conjuntos continuam
 sem comandos até seus cartões de configuração; não substituí-los por este DOC.
+
+## Preparação técnica documental
+
+DBML foi validado com @dbml/core 11.0.1 e o JSON Schema com Ajv 8.20.0 em
+diretório temporário externo ao repositório; 10 casos de contrato passaram.
+Scaffolds registrarão comandos reproduzíveis dos conjuntos BE/FE/API/DB.
+Não chamar a validação do contrato de teste do backend/LLM ainda inexistentes.

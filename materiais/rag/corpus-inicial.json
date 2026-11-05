@@ -1,0 +1,72 @@
+{
+  "versao": 1,
+  "status": "SELECAO_TECNICA_DEFINIDA",
+  "origem": "Delegação expressa do responsável em 2026-11-04",
+  "documentos": [
+    {
+      "id": "BR-MS-001",
+      "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "BR-RBAFS-001",
+      "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "BR-RBCM-001",
+      "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "INT-BJSM-001",
+      "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "INT-SPMED-001",
+      "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "BR-SBC-001",
+      "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
+      "finalidades": [
+        "TRIAGEM",
+        "DUVIDAS_SAUDE_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "BR-SBC-002",
+      "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
+      "finalidades": [
+        "TRIAGEM",
+        "DUVIDAS_SAUDE_GERAL"
+      ],
+      "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    }
+  ],
+  "ativacao": "Aprovação técnica não é índice pronto. Ativar somente após extração válida, proveniência, escopo e testes de recuperação; demais 11 documentos permanecem reserva pendente.",
+  "provedores_testados": false
+}

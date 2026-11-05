@@ -3,7 +3,7 @@
 ## Metadados
 
 - Fase: Checkpoint arquitetural
-- Estado inicial: BLOQUEADO até FND-02A e resposta do responsável
+- Estado inicial: CONCLUIDO — preparação documental delegada em 2026-11-04.
 - Dependências: FND-02A
 - Requisitos: RNF-01–RNF-18, MRF01–MRF15
 - Módulos: MOD-00
@@ -44,7 +44,9 @@ gates efetivamente confirmados.
 
 ## Contratos e invariantes
 
-- Somente decisão explícita muda ADR de `PROPOSTA` para `ACEITA`.
+- Decisão expressa ou seleção técnica delegada explicitamente pelo responsável
+  pode registrar ADR ACEITA, identificando a origem. A delegação de 2026-11-04
+  já cobre framework, campos e regras; não pedir aprovação repetida.
 - Gate aberto permanece visível e bloqueia apenas os prompts dependentes.
 - ADR substituído preserva histórico e aponta para o sucessor.
 
@@ -95,3 +97,10 @@ prompts que dependem dele. Não force uma escolha para liberar o grafo.
 ## Relatório final
 
 Liste decisões aceitas, gates abertos, arquivos atualizados e prompts liberados.
+
+## Evidência de execução documental
+
+Executado por delegação expressa do responsável. Consultar
+[prontidão](../../arquitetura/preparacao-implementacao.md) para ADRs, contratos,
+modelo, verificações e próximos prompts. Não solicitar novamente as escolhas
+registradas como aceitas. Não confundir esta conclusão com código/serviços funcionando.

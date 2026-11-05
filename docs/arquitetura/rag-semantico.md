@@ -27,7 +27,7 @@ Falha de análise não equivale a elegibilidade. Mensagem comum não publica ada
 MOD-03 fornece snapshot autorizado. MOD-06 projeta DTO estruturado minimizado,
 sem nome/e-mail/biometria desnecessários. Preserva condições, medicamentos, lesões,
 objetivos, experiência, limitações e estados ausente/desconhecido/negativo explícito.
-Campos/unidades/obrigatoriedade dependem do esquema aprovado antes de ONB-02.
+Campos/unidades/obrigatoriedade estão no [esquema v1](../requisitos/onboarding-e-triagem.md).
 Não usar nova chamada LLM só para resumir: projeção em código com regras verificáveis.
 Se não couber todo alerta pertinente, pedir complemento/revisão; não truncar alerta.
 Relato novo que altera saúde exige confirmação/versionamento, não edição silenciosa.
@@ -87,8 +87,8 @@ ação explícita e novo ID. Ingestão/busca podem repetir transporte sob orçam
 Orçamento global limita tokens, tempo, tamanho, chamadas e custo quando mensurável;
 não reinicia em retomada. Valores em GATE-04.
 Medir p50/p95 total por rota, busca, chamadas e tokens no provedor gratuito escolhido.
-Busca p95 ≤ 2 s não é promessa de tempo total. Modelo/provedor gratuito e livro
-definitivos continuam pendentes; não afirmar aceleração ou capacidade sem ensaio.
+Busca p95 ≤ 2 s não é promessa de tempo total. Modelos e corpus iniciais foram definidos em
+[ADR-004](decisoes/ADR-004-rag-llm-e-corpus.md); não afirmar aceleração ou capacidade sem ensaio.
 Não manter transação SQL durante rede; timeout/cancelamento invalida resposta tardia.
 
 ## Dados, testes e materiais
@@ -99,3 +99,11 @@ Não manter transação SQL durante rede; timeout/cancelamento invalida resposta
 Literatura é compartilhada aprovada; conversas, snapshots, resumos e fichas são
 dados privados operacionais. Retenção de execução não é o limite de 15 fichas.
 Não executar implementação por apenas ler esta especificação.
+
+## Configuração inicial aceita
+
+Qdrant local persistente (um processo), E5-small/384/cosseno, chunks 300 tokens
+com sobreposição 48 e top-K 5. LLM Groq/Llama 3.3 70B com json_object validado.
+Ver [configuração canônica](../requisitos/configuracao-ia-rag.md) e
+[corpus selecionado](../../materiais/rag/corpus-inicial.json). Modo local é engine
+especializada persistente para protótipo; modo servidor só na fase apropriada.

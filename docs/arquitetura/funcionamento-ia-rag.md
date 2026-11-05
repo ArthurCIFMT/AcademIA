@@ -22,4 +22,5 @@ Falha da IA não impede o instrutor de criar/alterar treino manualmente.
 
 O [modelo de dados](modelo-de-dados/dados-rag-ia.md) é proposta para implementação,
 não alteração do MER original. [Testes](../testes/rag-ia-semantico.md) ainda serão
-implementados; [acervo](../../materiais/rag/README.md) continua pendente de curadoria.
+implementados; [acervo](../../materiais/rag/README.md) tem sete documentos selecionados
+para ingestão, com extração/indexação e ensaio reais ainda por executar.

@@ -32,7 +32,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Implementar porta e adapter do banco vetorial aceito, inicialmente recomendado Qdrant.
+1. Implementar porta e adapter Qdrant local persistente, um singleton por processo,
+   conforme ADR-004. Caminho ignorado no Git; testes usam diretório separado.
+   Sem servidor/Docker inicial, sem compartilhar diretório entre processos.
 2. Definir coleção, dimensão, modelo de embeddings e métrica cosseno por versão.
 3. Documentar serviço local/remoto de teste antes do Docker e sua verificação de conexão.
 

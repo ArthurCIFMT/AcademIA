@@ -3,7 +3,7 @@
 ## Metadados
 
 - Fase: Fundação arquitetural
-- Estado inicial: BLOQUEADO até FND-01
+- Estado inicial: CONCLUIDO — preparação documental delegada em 2026-11-04.
 - Dependências: FND-01
 - Requisitos: RNF-01–RNF-18 e requisitos técnicos transversais
 - Módulos: MOD-00
@@ -93,3 +93,10 @@ bloqueiam a elaboração da proposta; devem aparecer no checkpoint.
 ## Relatório final
 
 Liste ADRs propostos, recomendação de cada um, dúvidas e o checkpoint necessário.
+
+## Evidência de execução documental
+
+Executado por delegação expressa do responsável. Consultar
+[prontidão](../../arquitetura/preparacao-implementacao.md) para ADRs, contratos,
+modelo, verificações e próximos prompts. Não solicitar novamente as escolhas
+registradas como aceitas. Não confundir esta conclusão com código/serviços funcionando.

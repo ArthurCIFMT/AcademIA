@@ -3,7 +3,7 @@
 ## Metadados
 
 - Fase: Fundação de dados
-- Estado inicial: BLOQUEADO até FND-02B
+- Estado inicial: CONCLUIDO — preparação documental delegada em 2026-11-04.
 - Dependências: FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05
 - Requisitos: RF-01–RF-38, RN-01–RN-39, MRF01–MRF15
 - Módulos: MOD-01–MOD-12
@@ -29,6 +29,8 @@ designação de instrutor, versionamento, IA/RAG e controle de acesso.
 - FND-02B concluído.
 - Gates de stack, identidade, tenancy e Git fechados (GATE-01/02/03/05).
 - MER original versionado e legível.
+- Resultado vigente: modelo-logico.dbml/JSON, dicionario.md e invariantes-e-estados.md
+  em docs/arquitetura/modelo-de-dados/, verificados na preparação delegada.
 
 ## Escopo permitido
 
@@ -126,3 +128,10 @@ a consulta e o chat anteriores ao parecer já foram confirmados.
 
 Resuma entidades, principais correções ao MER, validações, decisões pendentes e
 prompts de scaffold desbloqueados.
+
+## Evidência de execução documental
+
+Executado por delegação expressa do responsável. Consultar
+[prontidão](../../arquitetura/preparacao-implementacao.md) para ADRs, contratos,
+modelo, verificações e próximos prompts. Não solicitar novamente as escolhas
+registradas como aceitas. Não confundir esta conclusão com código/serviços funcionando.

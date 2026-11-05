@@ -16,7 +16,10 @@ SHA-256 de referência:
 
 Nenhum PNG, XML, .drawio, DBML, schema ou migration foi criado ou alterado por esta
 análise. Este relatório é uma recomendação de evolução, não um modelo aprovado.
-Seu conteúdo serve de entrada à revisão futura de FND-03.
+Seu conteúdo serviu de entrada ao FND-03, concluído na preparação delegada.
+Modelo lógico vigente: [DBML](modelo-de-dados/modelo-logico.dbml),
+[dicionário](modelo-de-dados/dicionario.md) e [invariantes](modelo-de-dados/invariantes-e-estados.md).
+As observações abaixo descrevem a comparação com o PNG de origem.
 
 ## O que a base já representa bem
 
@@ -122,7 +125,8 @@ incoerente e preservar evidências usadas por propostas antigas.
 Não é necessário criar tabelas complexas para toda medicação, patologia ou medida
 no projeto acadêmico. É necessário que o contexto seja compreensível e que as
 restrições usadas pelo validador sejam estruturadas, versionadas e testáveis.
-As fontes e critérios de gravidade continuam pendentes de decisão aprovada.
+Fontes iniciais, regras de gravidade declarada e dados insuficientes foram definidos
+na preparação delegada em onboarding-e-triagem.md; ensaio real ainda será executado.
 
 ## Prioridade 3 — acesso, matrícula e módulos complementares
 
