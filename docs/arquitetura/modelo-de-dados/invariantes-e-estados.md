@@ -27,6 +27,8 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 - Item mantém snapshot de nome/descrição usado; edição do catálogo não reescreve
   histórico. Quando existirem execuções de treino, snapshots já registrados não
   são apagados; não criar módulo de execução nesta fundação.
+- Exercício/variação: nome_normalizado obrigatório e único, inclusive inativos;
+  trim + espaços internos colapsados + lowercase, mantido pelo serviço e constraint.
 - Exercício ativo: grupo de alternativa não vazio, todos seus recursos disponíveis,
   OU dispensa explícita sem recurso obrigatório. Relação grupo/recurso é única.
 - Versão de documento aprovada e ingestão completa antes do uso ativo. Chunks
@@ -43,7 +45,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
   Limites contratados congelados; regra detalhada de janela fecha em MEM-01/GATE-08.
 - Cobrança permite múltiplas tentativas; referência externa única por provedor quando
-  existir. Confirmação não matricula. Dinheiro decimal e não-negativo.
+  existir. Compra de plano exige pagamento.plano_id com plano ativo na contratação;
+  valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
+  opcional só para lançamentos que não representam compra de plano.
+  Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
 - Aulas: fim>início; estado CANCELADA preserva histórico. Reservas fora do primeiro escopo.
 - Outbox e notificação idempotentes; autor da ação não apaga auditoria livremente.
   TTL técnico de 90 dias não apaga metadados necessários à ficha/auditoria.

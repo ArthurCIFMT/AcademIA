@@ -120,3 +120,11 @@ atualizar estes arquivos. Critérios numéricos de qualidade são definidos ante
 Na revisão didática, cobrir SV-21–SV-24: sem laudo obrigatório, confirmação de
 novo snapshot antes de adaptar, publicação/aviso únicos e ausência de retries
 automáticos das etapas LLM. Esses cenários são planos, ainda não testes executados.
+
+## Detalhamento RF/RN de 2026-11-06
+
+[Regressões de aceite](aceite-rf-rn-2026-11-06.md) vinculam os critérios adicionados
+aos prompts e níveis de teste, incluindo falhas da IA, criação manual sem IA,
+sessões/perfis, compra versus matrícula e passagem versus identificação.
+O verificador documental também confere corpus selecionado e modelo JSON/DBML;
+essa checagem não executa regras de FastAPI, SQL ou provedores reais.

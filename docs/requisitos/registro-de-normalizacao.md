@@ -120,3 +120,16 @@ Sete documentos foram selecionados tecnicamente para ingestão, sem alterar PDFs
 As pendências históricas de framework/auth/tenancy/campos não devem ser reabertas.
 Serviços/chaves e ensaios reais não foram inventados como concluídos.
 Ver [prontidão](../arquitetura/preparacao-implementacao.md).
+
+## Auditoria de aceitação e referências — 2026-11-06
+
+Detalhados 24 critérios adicionais de RFs existentes, sem remover/renumerar IDs:
+sessões/perfis, onboarding desconhecido, geração idempotente/falhas/criação manual,
+isolamento, biometria/passagem, compra tardia e designação/parecer.
+187 critérios RF + 67 MRF. MRF01–MRF15 permanecem sem mudança de escopo.
+Compra de plano continua posterior; atendente matricula sem pagamento confirmado.
+Modelo lógico recebe nome normalizado único de exercício e vínculo plano-pagamento;
+42 tabelas e 61 referências, ainda sem migrations aplicadas.
+Prompts afetados, rastreabilidade, estados do manifesto e README do corpus alinhados.
+Verificador somente leitura mantido/estendido; nenhum script inútil encontrado.
+[Achados, cobertura e limites](../analises/2026-11-06-auditoria-rf-rn-ia.md).

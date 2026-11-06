@@ -2,6 +2,10 @@
 
 ## Convenções
 
+Revisão de 2026-11-06: critérios detalhados a partir dos ADRs/prompts vigentes,
+sem alterar IDs, reintroduzir pagamento obrigatório ou exigir aprovação médica.
+[Auditoria e cobertura da IA](../analises/2026-11-06-auditoria-rf-rn-ia.md).
+
 - Os IDs originais foram preservados.
 - RF-24 e RF-25 permanecem separados: cálculo e apresentação são capacidades
   distintas.
@@ -20,7 +24,10 @@
 Permitir que usuário administrativo registre novo cliente e o vincule a um e-mail.
 
 - CA-01.1: dados obrigatórios válidos criam cliente com identificador único.
-- CA-01.2: e-mail associado a outra conta ativa é rejeitado.
+- CA-01.2: e-mail normalizado (trim/lowercase) associado a outra identidade é
+  rejeitado inclusive se a conta estiver inativa, conforme ADR-002. Pessoa já
+  funcionária pode receber perfil cliente na mesma identidade pelo fluxo autorizado,
+  sem criar usuário duplicado ou conceder sessão só por informar e-mail.
 - CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
 
 ### RF-02 — Consultar e pesquisar clientes
@@ -36,14 +43,15 @@ Permitir que usuários administrativos localizem e consultem clientes.
 Permitir alteração cadastral e ativação ou desativação do cliente.
 
 - CA-03.1: alterações válidas persistem após nova consulta.
-- CA-03.2: cliente desativado deixa de ser usuário habilitado.
+- CA-03.2: perfil cliente desativado perde capacidades de cliente e entrada pela
+  catraca, sem desativar automaticamente eventual perfil funcionário. Conta global
+  INATIVA/BLOQUEADA impede todas as sessões/operações; aplicar ADR-002.
 - CA-03.3: desativação não apaga o histórico.
 - CA-03.4: cliente elegível à biometria precisa de foto facial válida.
 
-Pendência de detalhamento: CA-03.2 exige definir o alcance da desativação quando
-a identidade também possuir perfil de funcionário. Estado da conta, estado de
-perfil e permissões acumuladas não são sinônimos; registrar a matriz antes de
-implementar IAM-02/PES-01/PES-02, sem presumir uma política ainda não aprovada.
+Alcance definido em [ADR-002](../arquitetura/decisoes/ADR-002-identidade-e-papeis.md):
+estado da conta, estado dos perfis e papéis acumulados são independentes.
+A matriz já foi aceita; não reabrir essa decisão como gate de IAM/PES.
 
 ### RF-04 — Autenticar usuário
 
@@ -52,6 +60,8 @@ Identificar cliente ou funcionário antes de acessar áreas protegidas.
 - CA-04.1: credenciais válidas de usuário ativo iniciam sessão.
 - CA-04.2: credenciais inválidas não iniciam sessão.
 - CA-04.3: rota protegida sem sessão válida retorna não autenticado.
+- CA-04.4: Sessão expirada/revogada e logout impedem novo acesso protegido; expiração absoluta e inatividade seguem ADR-002, sem aceitar token adulterado.
+- CA-04.5: Mutações autenticadas validam origem/CSRF conforme ADR-002; cookie não é credencial suficiente para ignorar essa validação.
 
 ### RF-05 — Autorizar funções conforme papéis
 
@@ -60,6 +70,7 @@ Aplicar permissões de cliente, administrador, atendente e instrutor.
 - CA-05.1: cliente não acessa funções administrativas.
 - CA-05.2: administrador acessa as operações previstas.
 - CA-05.3: chamada direta a API proibida também é rejeitada.
+- CA-05.4: Papéis acumulados seguem a matriz de conta/perfis do ADR-002; alterar papel ou inativar perfil é refletido na próxima requisição, sem confiar em permissão enviada pelo frontend.
 
 ### RF-06 — Recuperar acesso por e-mail
 
@@ -69,6 +80,7 @@ Permitir recuperação de conta vinculada a e-mail.
 - CA-06.2: token expirado ou utilizado é recusado.
 - CA-06.3: após recuperação, o usuário autentica com a nova credencial.
 - Observação: infraestrutura SMTP em contêiner pertence à fase final de Docker.
+- CA-06.4: Resposta pública não revela se o e-mail existe; falha de envio é observável sem expor token/senha. Redefinir senha revoga sessões anteriores conforme ADR-002.
 
 ### RF-07 — Cadastrar funcionário
 
@@ -84,7 +96,9 @@ Manter dados e estado de funcionários.
 
 - CA-08.1: administrador lista e consulta funcionários.
 - CA-08.2: alterações válidas persistem.
-- CA-08.3: funcionário desativado perde permissões, preservando histórico.
+- CA-08.3: perfil funcionário desativado perde capacidades operacionais conforme
+  ADR-002, preservando histórico e eventual perfil cliente ativo; conta global
+  inativa bloqueia ambos. Papel de cliente não concede capacidade administrativa.
 
 ## Onboarding e avaliações
 
@@ -103,6 +117,7 @@ Abrir o formulário correspondente a partir do convite recebido.
 - CA-10.1: token válido abre o formulário correto.
 - CA-10.2: token inválido ou expirado é rejeitado.
 - CA-10.3: token não abre onboarding de outro cliente.
+- CA-10.4: Sessão obtida pelo convite é restrita ao onboarding do cliente; não permite login geral, consulta de terceiros ou APIs administrativas.
 
 ### RF-11 — Registrar dados físicos
 
@@ -123,6 +138,7 @@ Registrar queixas, medicações, lesões e condições informadas pelo cliente.
 - CA-12.1: formulário separa queixas, medicações e histórico relevante.
 - CA-12.2: dados ficam associados somente ao cliente correto.
 - CA-12.3: usuário sem permissão não acessa esses dados por interface ou API.
+- CA-12.4: SIM exige ocorrência detalhada e NAO/NAO_SEI não ganha lista inventada, conforme schema v1; dado ausente/desconhecido não é convertido em ausência de problema.
 
 ### RF-13 — Validar e concluir onboarding
 
@@ -132,6 +148,7 @@ Concluir o formulário somente após o preenchimento obrigatório.
 - CA-13.2: conclusão registra estado e data/hora.
 - CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
   versionado que preserva alertas relevantes; chat geral não exige onboarding.
+- CA-13.4: NAO_SEI pode concluir o formulário estruturalmente válido, mas mantém estado DADOS_INSUFICIENTES na triagem quando a informação for necessária; conclusão não equivale a autorização de geração.
 
 ### RF-14 — Consultar o próprio onboarding
 
@@ -168,6 +185,10 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
   trechos e chamadas, sem pesquisa agentiva ou cadeia de agentes prescritores.
 - CA-15.11: instrutor designado também pode criar/alterar ficha manualmente, sem
   dependência de LLM/RAG; catálogo de RF-38 separa movimento de prescrição.
+- CA-15.12: Pedido de geração tem chave idempotente, cliente e entrada identificados; replay não chama LLM/publica outra versão e mesma chave com entrada divergente retorna conflito.
+- CA-15.13: Timeout, quota, chave ausente, cancelamento, JSON inválido ou resposta tardia encerram a tentativa sem nova versão e sem corromper a vigente; não há retry LLM automático ou contratação/fallback pago oculto.
+- CA-15.14: Instrutor designado cria rascunho manual por dias/itens, preenche séries/repetições/carga/intervalos e publica pelo mesmo serviço de domínio, com origem MANUAL, autoria e snapshot do catálogo; cliente/instrutor alheio não cria ficha para terceiro.
+- CA-15.15: Geração usa a configuração v1 e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
 
 ### RF-16 — Visualizar ficha de treino atual
 
@@ -219,6 +240,7 @@ com fontes recuperadas e contexto curto, distinguindo conversa de geração de f
   de dúvida não modifica conteúdo silenciosamente.
 - CA-18.7: chat tem no máximo uma chamada generativa, contexto/saída limitados;
   benchmark registra tempo total e busca separadamente.
+- CA-18.8: Instrução inserida na pergunta ou no documento não altera permissões, remove bloqueio de triagem nem concede escrita direta ao modelo; tentativa de acessar conversa de outro cliente é recusada.
 
 ### RF-19 — Propor alteração dinâmica de treino via IA
 
@@ -252,6 +274,7 @@ CompreFace: reconhecimento, autorização e passagem simulada de RF-37 são dist
 - CA-20.2: JSON inválido retorna erro de validação.
 - CA-20.3: aplicação não implementa o algoritmo de reconhecimento facial do provedor.
 - CA-20.4: mesmo identificador externo não cria duplicidade.
+- CA-20.5: Mesmo identificador com conteúdo divergente retorna conflito sem reprocessar; identidade/score só são aceitos do adaptador confiável ou origem autenticada, não como alegação livre do navegador.
 
 ### RF-21 — Verificar identidade e habilitação para acesso
 
@@ -263,6 +286,8 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
 - CA-21.4: correspondência facial somente é aceita quando atinge o limiar
   configurado, inicialmente 0,95 na escala 0–1 do CompreFace (95% na apresentação).
   Essa pontuação não constitui medida de acurácia do sistema.
+- CA-21.5: Mesmo com rosto conhecido, conta/perfil cliente inativo, matrícula inexistente/futura/vencida, modalidade incompatível ou limite excedido resultam em negação com código de motivo.
+- CA-21.6: Matrícula válida pode autorizar o fluxo sem pagamento registrado ou gateway disponível; reconhecimento sozinho nunca concede autorização.
 
 ### RF-22 — Inserir referência biométrica do cliente
 
@@ -273,6 +298,7 @@ matrícula registrada pelo atendente, sem exigir pagamento confirmado.
   conforme critérios técnicos do provedor; imagem inválida não cria referência.
 - CA-22.2: nova referência substitui a anterior conforme política definida.
 - CA-22.3: somente funcionário autorizado altera a referência.
+- CA-22.4: Falha externa na substituição é registrada sem declarar troca concluída ou perder silenciosamente a referência anterior; troca concluída descarta o exemplo antigo e mantém uma referência ativa com autor/data auditáveis.
 
 ### RF-23 — Registrar entrada, saída e frequência
 
@@ -282,6 +308,7 @@ Persistir eventos de acesso utilizados como histórico de frequência.
 - CA-23.2: saída válida cria registro de saída.
 - CA-23.3: evento repetido não é contado duas vezes.
 - CA-23.4: registros possuem data/hora e cliente relacionados.
+- CA-23.5: Somente passagem simulada confirmada e correlacionada a uma autorização válida cria frequência/presença; tentativa de reconhecimento, decisão ALLOW ou confirmação de recebimento de comando não contam como entrada.
 
 ### RF-24 — Calcular lotação atual
 
@@ -291,6 +318,7 @@ Derivar a quantidade de pessoas presentes a partir dos eventos válidos.
 - CA-24.2: saída válida decrementa uma vez.
 - CA-24.3: evento duplicado não altera novamente o total.
 - CA-24.4: valor nunca é negativo.
+- CA-24.5: Entrada com presença já aberta e saída sem presença correspondente não alteram o total indevidamente; evento é classificado com motivo para reconciliação, sem contar duplicado ou exibir valor negativo.
 
 ### RF-25 — Exibir lotação atual
 
@@ -309,18 +337,22 @@ Manter controle básico de cobranças por cliente.
 - CA-26.1: usuário autorizado registra competência, vencimento e situação.
 - CA-26.2: atualização persiste.
 - CA-26.3: cobrança pertence ao cliente correto.
+- CA-26.4: Valor decimal não-negativo, competência e vencimento válidos são registrados no cliente correto; tentativa de pagamento/webhook não é receita confirmada por si só.
 
 ### RF-27 — Consultar situação de cobrança
 
 Permitir consulta autorizada da situação financeira já registrada.
 
 - CA-27.1: usuário autorizado consulta registros do cliente.
-- CA-27.2: cliente pode visualizar a própria situação quando disponível.
+- CA-27.2: na entrega do módulo financeiro, cliente autenticado consulta a própria
+  situação; ausência de cobrança retorna estado vazio, não dados de terceiro.
 - CA-27.3: cliente não consulta cobrança de terceiro.
 
-### RF-31 — Matricular cliente e manter vínculo com plano
+### RF-31 — Comprar plano e matricular cliente pelo atendente
 
-Permitir que um plano seja associado à conta por matrícula com validade definida.
+Permitir compra de plano na fase financeira e vínculo ao cliente por matrícula
+registrada pelo atendente. No escopo acadêmico, matrícula não exige pagamento
+confirmado; não confundir compra, matrícula e autorização biométrica.
 
 - CA-31.1: atendente autorizado cria ou renova matrícula sem exigir pagamento
   confirmado, comprovante ou existência do módulo financeiro.
@@ -332,6 +364,9 @@ Permitir que um plano seja associado à conta por matrícula com validade defini
   financeira ou indisponibilidade do gateway não bloqueiam a ação do atendente.
 - CA-31.6: matrícula manual registra responsável, início, término e plano ativo;
   falta de pagamento não invalida automaticamente uma matrícula vigente.
+- CA-31.7: Na fase financeira FIN-02, cliente autenticado escolhe plano ativo e inicia compra vinculada ao próprio cliente/plano, com valor e referência externa identificados; plano inativo não origina nova compra.
+- CA-31.8: Somente confirmação autenticada da API financeira registra sucesso; retorno visual do navegador e pagamento pendente/recusado não confirmam. Callback duplicado ou fora de ordem não duplica crédito nem regride estado final indevidamente.
+- CA-31.9: Após compra, matrícula/renovação continua ação do atendente. Pagamento confirmado não cria matrícula, referência facial ou autorização sozinho; exceção acadêmica sem pagamento de CA-31.1 continua válida.
 
 ## Dashboard, aulas e equipamentos
 
@@ -399,6 +434,7 @@ Vincular cada cliente a um instrutor principal vigente, preservando substituiç�
 - CA-34.2: substituição encerra o vínculo anterior sem apagar o histórico.
 - CA-34.3: somente funcionário com papel de instrutor pode ser responsável.
 - CA-34.4: sistema identifica inequivocamente o instrutor principal vigente.
+- CA-34.5: Troca de designação retira do antigo responsável o acesso aos dados protegidos do cliente; pareceres/autoria históricos são mantidos e concorrência não cria dois principais vigentes.
 
 ### RF-35 — Registrar avaliação posterior do treino pelo instrutor
 
@@ -427,6 +463,7 @@ Comunicar propostas ao instrutor responsável e permitir sua decisão profission
   publicar nova versão pode expirar uma antiga pelo limite de RF-17, inclusive
   aceita/rejeitada. A proteção às fichas aceitas em CA-35.7 refere-se somente à
   substituição de rejeitadas, sem dispensar o limite global.
+- CA-35.10: Somente instrutor autorizado pela designação vigente registra parecer; rejeição exige motivo, e ausência de responsável mantém pendência visível sem bloquear consulta própria/chat ou expor dados a funcionário alheio.
 
 ## Integração facial e catraca acadêmica
 
@@ -462,7 +499,8 @@ Permitir a administrador e instrutor autorizados cadastrar, consultar, editar e
 inativar exercícios/variações para a montagem profissional das fichas.
 
 - CA-38.1: nome, descrição do movimento, grupo muscular e situação válidos criam
-  registro persistente com ID estável; duplicidade segue regra de cadastro aprovada.
+  registro persistente com ID estável; mesmo nome/variação após trim, colapso de
+  espaços e lowercase é recusado inclusive se inativo, sem reutilizar seu ID.
 - CA-38.2: exercício declara combinações de equipamentos necessários, alternativas
   completas ou dispensa explícita; vínculo ausente não significa peso corporal.
 - CA-38.3: só exercício ativo e viável no inventário está disponível para nova seleção;

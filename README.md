@@ -4,6 +4,8 @@ Projeto acadêmico para gestão de academia e geração assistida de fichas de t
 
 ## Planejamento
 
+- [Auditoria atual de RFs, regras, IA e referências (2026-11-06)](docs/analises/2026-11-06-auditoria-rf-rn-ia.md)
+
 - [Prontidão para implementar](docs/arquitetura/preparacao-implementacao.md)
 - [Decisões técnicas aceitas](docs/arquitetura/decisoes/README.md)
 - [Campos e regras do onboarding](docs/requisitos/onboarding-e-triagem.md)

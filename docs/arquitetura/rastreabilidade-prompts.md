@@ -1,7 +1,8 @@
 # Rastreabilidade dos prompts
 
-Metadados canônicos após a preparação delegada.
-[Manifesto](../prompts/README.md), [prontidão](preparacao-implementacao.md).
+Metadados canônicos após a preparação delegada e a auditoria de 2026-11-06.
+[Manifesto](../prompts/README.md), [prontidão](preparacao-implementacao.md),
+[auditoria](../analises/2026-11-06-auditoria-rf-rn-ia.md).
 
 | Prompt | Módulos | Requisitos |
 |---|---|---|
@@ -28,8 +29,8 @@ Metadados canônicos após a preparação delegada.
 | [ONB-03](../prompts/03-onboarding/ONB-03.md) | MOD-03 | RF-10, RF-11, RF-12, RF-13, RF-14; RN-05, RN-11; RNF-14 |
 | [ONB-04](../prompts/03-onboarding/ONB-04.md) | MOD-02, MOD-03 | RF-12, RF-14, RF-34; RN-11, RN-21, RN-31, RN-33; MRF03, MRF12 |
 | [TRN-01](../prompts/04-treinos/TRN-01.md) | MOD-04, MOD-10 | RF-15, RF-19, RF-32, RF-38; RN-20, RN-31, RN-33, RN-37; MRF05, MRF09 |
-| [TRN-02](../prompts/04-treinos/TRN-02.md) | MOD-04 | RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33, RN-37, RN-38 |
-| [TRN-03](../prompts/04-treinos/TRN-03.md) | MOD-04, MOD-02, MOD-12 | RF-17, RF-35; RN-12, RN-14, RN-16, RN-17, RN-18, RN-31, RN-37, RN-38 |
+| [TRN-02](../prompts/04-treinos/TRN-02.md) | MOD-04 | RF-15, RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33, RN-37, RN-38 |
+| [TRN-03](../prompts/04-treinos/TRN-03.md) | MOD-04, MOD-02, MOD-12 | RF-15, RF-17, RF-35; RN-12, RN-14, RN-16, RN-17, RN-18, RN-31, RN-37, RN-38 |
 | [TRN-04](../prompts/04-treinos/TRN-04.md) | MOD-04 | RF-16, RF-17; RN-05, RN-28, RN-37, RN-38, RN-39; MRF07 |
 | [AI-01](../prompts/05-ia-rag/AI-01.md) | MOD-06, MOD-10 | RF-15, RF-19; RN-13, RN-15, RN-29, RN-30, RN-37; MRF03, MRF08, MRF09, MRF12 |
 | [AI-02](../prompts/05-ia-rag/AI-02.md) | MOD-06 | MRF03–MRF06, MRF08, MRF11, MRF12, MRF15; RN-15, RN-16; RNF-06, RNF-18 |

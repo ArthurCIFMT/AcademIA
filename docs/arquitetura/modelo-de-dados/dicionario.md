@@ -166,6 +166,7 @@ Cada variação pode ter ID próprio; catálogo não é prescrição
 |---|---|---|---|
 | id | uuid | pk | — |
 | nome | varchar(120) | required | — |
+| nome_normalizado | varchar(120) | required unique | — |
 | descricao | text | required | — |
 | grupo_muscular | varchar(80) | required | — |
 | dispensa_equipamento | boolean | required | — |
@@ -506,13 +507,14 @@ Uma presença aberta por cliente, apenas passagem simulada confirmada muda lota�
 
 ## pagamento — MOD-08
 
-Múltiplas tentativas; confirmação financeira não cria matrícula
+Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | cobranca_id | uuid | opcional | cobranca.id |
 | cliente_id | uuid | required | cliente.usuario_id |
+| plano_id | uuid | opcional | plano.id |
 | origem | varchar(25) | required | — |
 | referencia_externa | varchar(150) | opcional | — |
 | valor | numeric(12,2) | required | — |

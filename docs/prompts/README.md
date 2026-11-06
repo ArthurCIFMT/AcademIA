@@ -211,8 +211,9 @@ INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
 
 Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
-funcionais já autorizadas não precisam ser reaprovadas. Gates técnicos continuam
-abertos até sua evidência, e FND-01 permanece PRONTO para execução/revisão formal.
+funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
+fechados documentalmente, FND-01–FND-03 concluídos e FND-04/FND-07 prontos. Gates
+pós-MVP e marcos de execução permanecem abertos até suas evidências reais.
 Esta auditoria não marca cartões de implementação como concluídos.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

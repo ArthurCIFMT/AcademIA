@@ -28,8 +28,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 Aplicar a matriz de estados conta/perfis de IAM-02. A inativação de funcionário
-remove suas permissões operacionais conforme a decisão registrada; não inferir
-automaticamente o efeito sobre eventual perfil de cliente da mesma identidade.
+remove suas permissões operacionais conforme a decisão registrada; preserva
+eventual perfil cliente ativo quando a conta global continua ativa (ADR-002).
 
 1. Criar API e telas administrativas de listagem, cadastro, atualização e inativação.
 2. Atribuir papéis operacionais conforme política; manter histórico e auditoria.

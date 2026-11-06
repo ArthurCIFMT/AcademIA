@@ -39,6 +39,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 2. Exercitar também ficha manual, recuperação, rejeição visível, cliente sem
    instrutor, bloqueio de saúde e acesso indevido.
 3. Registrar aceite do MVP PG-01 somente com critérios e evidências por requisito.
+   Cobrir sessão/CSRF, perfis independentes, NAO_SEI concluído sem elegibilidade,
+   criação manual sem serviços IA e critérios RF adicionais de 2026-11-06.
 4. Demonstrar três estados de triagem sem laudo/liberação médica; dúvida geral
    sem onboarding; complemento confirmado/versionado antes de adaptar; geração
    publica uma vez e não duplica aviso ao entrar na tela de acompanhamento.

@@ -5,7 +5,7 @@
 - Fase: MVP.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: TRN-01, ONB-02, PES-03.
-- Requisitos: RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33, RN-37, RN-38.
+- Requisitos: RF-15, RF-17; RN-14, RN-18, RN-19, RN-20, RN-31, RN-33, RN-37, RN-38.
 - Módulos: MOD-04.
 
 ## Objetivo e contexto
@@ -41,7 +41,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Critérios de aceite
 
-- Ficha manual pode ser criada com provedor de IA indisponível.
+- Ficha manual pode ser criada com LLM, embeddings e Qdrant indisponíveis; registrar
+  origem MANUAL, instrutor designado autor e snapshot do catálogo (CA-15.14).
 - Nova versão não muda itens, autoria e prescrição histórica.
 - Não aceitar item inexistente/inativo, recursos indisponíveis em nova ficha nem alteração por outro cliente.
 - Retenção não reutiliza números de versão; snapshots de execuções não são

@@ -31,6 +31,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
    modalidade, limites e atendente responsável, sem exigir registro financeiro.
 2. Definir unidade/janela dos acessos e regra de expiração com responsável antes de codificar.
 3. Expor consulta de validade por contrato ao módulo de acesso.
+4. Cobrir compra confirmada seguida de matrícula pelo atendente na fase financeira,
+   mantendo o cenário de matrícula válida sem pagamento. O cliente não se matricula
+   sozinho e a confirmação financeira não cria referência facial.
 
 ## Critérios de aceite
 

@@ -576,6 +576,12 @@
           "ref": null
         },
         {
+          "name": "nome_normalizado",
+          "type": "varchar(120)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
           "name": "descricao",
           "type": "text",
           "flags": "required",
@@ -1828,7 +1834,7 @@
     {
       "name": "pagamento",
       "owner": "MOD-08",
-      "note": "Múltiplas tentativas; confirmação financeira não cria matrícula",
+      "note": "Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir",
       "columns": [
         {
           "name": "id",
@@ -1847,6 +1853,12 @@
           "type": "uuid",
           "flags": "required",
           "ref": "cliente.usuario_id"
+        },
+        {
+          "name": "plano_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "plano.id"
         },
         {
           "name": "origem",

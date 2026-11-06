@@ -102,8 +102,9 @@ uma adaptação. Cada adaptação por saúde precisa de suporte pertinente efeti
 recuperado do corpus aprovado, conforme RF-15/RF-19 e MRF11. Revisões narrativas,
 comentários e diretrizes têm papéis distintos; fontes podem compartilhar estudos.
 
-O catálogo mantém todos os itens em COLETADO_PENDENTE_REVISAO e aprovado_para_rag=false.
-A presença no GitHub não significa aprovação para uso nas respostas do sistema.
+O catálogo atual registra sete documentos selecionados tecnicamente para ingestão
+e onze em reserva; conferir [manifesto inicial](corpus-inicial.json). A seleção
+não significa chunks/índice prontos nem qualidade de geração comprovada.
 
 ## Uso no fluxo vigente de IA
 

@@ -39,6 +39,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Funcionário autorizado cadastra após matrícula; cliente não substitui referência própria pela API.
 - Foto sem rosto/com vários rostos ou qualidade insuficiente é recusada.
+- Cadastro sem matrícula registrada é recusado; cadastro do cliente e compra
+  sozinhos não substituem esse vínculo. Renovação futura continua ação do atendente.
 - Nova foto válida substitui a antiga; falha externa mantém referência anterior consistente.
 - Conteúdo biométrico não é público nem aparece em relatórios comuns.
 

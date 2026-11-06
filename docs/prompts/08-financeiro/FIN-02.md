@@ -30,11 +30,17 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Escolher gateway/sandbox e contrato antes de codificar; registrar política de validade/renovação/cancelamento.
 2. Criar checkout e webhook autenticado com idempotência, tentativas e vínculo externo.
+   Cada compra referencia cliente/plano ativo/valor contratado; materializar plano_id
+   em pagamento conforme o modelo lógico, sem perder histórico ao editar/inativar plano.
 3. Registrar confirmação validada pelos contratos financeiros; compatibilizar com
    MEM-00 somente se implementado. Tratar falhas/eventos fora de ordem; matrícula
    continua ação independente do atendente, sem pagamento obrigatório.
 
 ## Critérios de aceite
+
+- Cobrir CA-31.7–CA-31.9: compra própria de plano ativo, confirmação confiável,
+  callback repetido/fora de ordem e matrícula posterior por atendente. Plano
+  inativo não origina checkout e compra não permite acesso antes da matrícula.
 
 - Retorno visual do navegador não ativa matrícula por si.
 - Webhook duplicado não duplica confirmação; assinatura inválida é rejeitada.

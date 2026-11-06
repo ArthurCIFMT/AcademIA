@@ -43,7 +43,10 @@ A chave pessoal GROQ_API_KEY só é necessária na integração real de IA; aus�
 não bloqueia fundação, cadastros e treino manual. Pesos de embedding e serviços
 locais serão instalados nos prompts correspondentes; não inventar resultados.
 
-## Verificação executada
+## Verificação executada na preparação de 2026-11-04
+
+Retrato histórico anterior à [auditoria de 2026-11-06](../analises/2026-11-06-auditoria-rf-rn-ia.md).
+O modelo atual mantém 42 tabelas, com 61 referências; os resultados abaixo são do modelo anterior.
 
 - Parser oficial @dbml/core 11.0.1: DBML válido, 42 tabelas e 60 referências.
 - Ajv 8.20.0 / draft 2020-12: schema válido e 10 casos sintéticos de contrato passaram.

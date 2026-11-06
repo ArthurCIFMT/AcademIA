@@ -130,6 +130,7 @@ Table equipamento {
 Table exercicio {
   id uuid [pk]
   nome varchar(120) [not null]
+  nome_normalizado varchar(120) [not null, unique]
   descricao text [not null]
   grupo_muscular varchar(80) [not null]
   dispensa_equipamento boolean [not null]
@@ -418,12 +419,13 @@ Table pagamento {
   id uuid [pk]
   cobranca_id uuid
   cliente_id uuid [not null]
+  plano_id uuid
   origem varchar(25) [not null]
   referencia_externa varchar(150)
   valor numeric(12,2) [not null]
   estado varchar(25) [not null]
   confirmado_em timestamptz
-  Note: 'Owner MOD-08. Múltiplas tentativas; confirmação financeira não cria matrícula'
+  Note: 'Owner MOD-08. Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir'
 }
 
 Table aula_ocorrencia {
@@ -531,5 +533,6 @@ Ref: cobranca.cliente_id > cliente.usuario_id
 Ref: cobranca.matricula_id > matricula.id
 Ref: pagamento.cobranca_id > cobranca.id
 Ref: pagamento.cliente_id > cliente.usuario_id
+Ref: pagamento.plano_id > plano.id
 Ref: notificacao.destinatario_id > usuario.id
 Ref: auditoria.ator_id > usuario.id

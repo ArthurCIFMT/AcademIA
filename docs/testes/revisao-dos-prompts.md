@@ -27,7 +27,15 @@ acompanha, sem nova publicação/aviso. AI-05 usa formulário ONB-03 para confir
 Dúvida geral sem onboarding; dado ausente não é saudável; sem laudo obrigatório.
 Módulos continuam independentes por contrato, não por acesso livre às tabelas.
 
-## Verificação documental/técnica
+## Atualização da auditoria de 2026-11-06
+
+[Auditoria e cobertura da IA](../analises/2026-11-06-auditoria-rf-rn-ia.md) revisam
+RFs/RNs e as referências vigentes: 187 critérios RF e 67 MRF, com 61 cartões.
+O modelo atual possui 42 tabelas, 284 campos e 61 referências.
+[Cenários adicionais](aceite-rf-rn-2026-11-06.md) são planos de implementação.
+O verificador foi estendido; nenhuma API, IA, biometria ou migration foi implementada.
+
+## Verificação documental/técnica da preparação anterior
 
 Parser @dbml/core: DBML válido com 42 tabelas e 60 referências.
 Ajv 2020: contrato e dez casos sintéticos passaram. XML de origem extraído e

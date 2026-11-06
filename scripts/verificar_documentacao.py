@@ -475,6 +475,72 @@ class Audit:
             self.issue("MER_ORIGINAL_ALTERADO", "SHA-256 diverge da origem preservada", mer)
         self.metrics.update(pdfs_catalogados=len(docs), paginas_catalogadas=pages, bytes_pdfs=total_bytes, mer_preservado=mer.is_file() and file_hash(mer) == MER_SHA256)
 
+    def check_preparation(self):
+        """Confere referências do modelo gerado e seleção do corpus, sem serviços."""
+        model_path = self.root / "docs/arquitetura/modelo-de-dados/modelo-logico.json"
+        dbml_path = model_path.with_suffix(".dbml")
+        model = json.loads(read_text(model_path))
+        tables = model["tables"]
+        names = [table["name"] for table in tables]
+        if len(names) != len(set(names)):
+            self.issue("MODELO_TABELA_DUPLICADA", "Nomes de tabelas repetidos", model_path)
+        columns = {}
+        expected_columns = {}
+        expected_refs = set()
+        for table in tables:
+            fields = table["columns"]
+            field_names = [field["name"] for field in fields]
+            columns[table["name"]] = set(field_names)
+            if len(field_names) != len(set(field_names)):
+                self.issue("MODELO_COLUNA_DUPLICADA", table["name"], model_path)
+            if not any("pk" in field.get("flags", "").split() for field in fields):
+                self.issue("MODELO_SEM_PK", table["name"], model_path)
+            for group in table.get("unique", []):
+                if not group or not set(group).issubset(field_names):
+                    self.issue("MODELO_UNICIDADE_INVALIDA", table["name"], model_path)
+            expected_columns[table["name"]] = {
+                field["name"]: (field["type"], frozenset(field.get("flags", "").split()))
+                for field in fields
+            }
+            for field in fields:
+                if field.get("ref"):
+                    expected_refs.add((table["name"] + "." + field["name"], field["ref"]))
+        for origin, target in sorted(expected_refs):
+            target_table, separator, target_column = target.partition(".")
+            if not separator or target_column not in columns.get(target_table, set()):
+                self.issue("MODELO_REFERENCIA_INVALIDA", f"{origin} > {target}", model_path)
+        # Apenas o subconjunto DBML emitido pelo modelo; o parser oficial é separado.
+        dbml = read_text(dbml_path)
+        blocks = re.findall(r"^Table (\w+) \{\n(.*?)^\}", dbml, re.MULTILINE | re.DOTALL)
+        actual_columns = {}
+        for name, body in blocks:
+            fields = re.findall(r"^  ([a-z_]\w*) ([\w(),]+)(?: \[([^\]]+)\])?$", body, re.MULTILINE)
+            actual_columns[name] = {
+                field: (kind, frozenset(flag.strip().replace("not null", "required")
+                                       for flag in flags.split(",") if flag.strip()))
+                for field, kind, flags in fields
+            }
+        if len(blocks) != len(tables) or actual_columns != expected_columns:
+            self.issue("MODELO_DBML_DIVERGENTE", "Tabelas, campos, tipos ou flags diferem do JSON", dbml_path)
+        refs = re.findall(r"^Ref: (\w+\.\w+) > (\w+\.\w+)$", dbml, re.MULTILINE)
+        if len(refs) != len(expected_refs) or set(refs) != expected_refs:
+            self.issue("MODELO_DBML_REFERENCIAS", "Referências diferem do JSON", dbml_path)
+        corpus_path = self.root / "materiais/rag/corpus-inicial.json"
+        selected = json.loads(read_text(corpus_path))["documentos"]
+        ids = [doc["id"] for doc in selected]
+        approved = {key for key, doc in self.catalog.items() if doc.get("aprovado_para_rag") is True}
+        if len(ids) != len(set(ids)) or set(ids) != approved:
+            self.issue("CORPUS_SELECAO_DIVERGENTE", "Seleção inicial difere dos IDs aprovados no catálogo", corpus_path)
+        for doc in selected:
+            registered = self.catalog.get(doc["id"], {})
+            if doc.get("sha256") != registered.get("sha256"):
+                self.issue("CORPUS_HASH_DIVERGENTE", doc["id"], corpus_path)
+            if not doc.get("finalidades"):
+                self.issue("CORPUS_FINALIDADE_AUSENTE", doc["id"], corpus_path)
+        self.metrics.update(tabelas_logicas=len(tables), colunas_logicas=sum(len(t["columns"]) for t in tables),
+                            referencias_logicas=len(expected_refs), corpus_inicial=len(selected),
+                            documentos_reserva=len(self.catalog) - len(approved))
+
     def check_cases(self):
         path = self.root / CASES_PATH
         data = json.loads(read_text(path))
@@ -534,7 +600,8 @@ class Audit:
         for name, method in (
             ("links", self.check_links), ("requisitos", self.check_requirements),
             ("cartoes", self.check_cards), ("rastreabilidade", self.check_traceability),
-            ("materiais", self.check_materials), ("casos", self.check_cases),
+            ("materiais", self.check_materials), ("preparacao", self.check_preparation),
+            ("casos", self.check_cases),
         ):
             try:
                 method()

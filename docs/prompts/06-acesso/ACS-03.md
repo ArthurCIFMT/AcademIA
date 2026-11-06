@@ -38,6 +38,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Critérios de aceite
 
+- Cobrir CA-21.5/CA-21.6: conta/perfil cliente, matrícula e limites são validados
+  separadamente da correspondência facial e do financeiro. Compra paga sem
+  matrícula é negada; matrícula válida sem pagamento continua elegível.
+
 - Sem matrícula/vencida, modalidade incompatível ou limite excedido nega entrada.
 - Reconhecimento válido sozinho não permite acesso.
 - Matrícula vigente permite seguir as regras de acesso sem pagamento registrado

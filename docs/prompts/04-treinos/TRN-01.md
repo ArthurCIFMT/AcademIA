@@ -28,6 +28,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Implementar cadastro, consulta, edição e inativação do catálogo para papel autorizado.
+   Persistir nome_normalizado único (trim, espaços colapsados, lowercase), inclusive
+   inativos; reativação não cria novo ID. Testar duplicidade/concorrência.
 2. Separar descrição/movimento de séries, carga, descanso e ordem de prescrição.
 3. Na implementação, criar seed sintético identificado para testes; conteúdo de uso real requer revisão técnica.
 4. Relacionar exercício/variação a combinações de recursos obrigatórios e

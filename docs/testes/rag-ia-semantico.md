@@ -46,3 +46,7 @@ podem apoiar exemplos após revisão, sem se tornar aceite automático deste flu
 por delegação. Campos/regras em [onboarding](../requisitos/onboarding-e-triagem.md),
 metas e configurações em [IA/RAG](../requisitos/configuracao-ia-rag.md).
 Esses rótulos não constituem resultado de teste do provedor real.
+
+Complementar SV-18/SV-24 e isolamento com os critérios CA-15.12–CA-15.15/CA-18.8
+conforme [regressões RF/RN](aceite-rf-rn-2026-11-06.md). Criação manual deve funcionar
+com os três serviços (LLM, embeddings e vetorial) indisponíveis.
