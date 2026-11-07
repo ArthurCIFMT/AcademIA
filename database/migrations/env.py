@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from alembic import context
 from sqlalchemy import Connection
 
@@ -8,6 +10,9 @@ from app.database.connection import (
     create_database_engine,
     database_url,
 )
+
+import_module("app.events.models")
+import_module("app.modules.audit.models")
 
 
 def include_name(name: str | None, type_: str, _parent_names: object) -> bool:

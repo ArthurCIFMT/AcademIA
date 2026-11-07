@@ -75,6 +75,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | FND-05 | CONCLUIDO | [Guia do banco](../../database/README.md) e [comandos](../testes/comandos.md). PostgreSQL 17.11 local, revisão 0001 aplicada em desenvolvimento, 4 BE, 1 DB e 1 INT aprovados. A role de teste foi recusada em desenvolvimento. Ruff, mypy e DOC aprovados. |
 | FND-06 | CONCLUIDO | [Contrato REST](../arquitetura/contratos-rest.md) e [comandos](../testes/comandos.md). 9 API, 13 BE e 2 INT aprovados, incluindo falha real de PostgreSQL sem exposição de detalhes. Ruff, mypy e DOC aprovados. |
 | FND-07 | CONCLUIDO | [Guia do frontend](../../frontend/README.md) e [comandos](../testes/comandos.md). Node 24.22.1 e npm 11.6.2. npm ci, 2 testes FE, lint, tipos, build e DOC aprovados. Vite serviu a SPA e encaminhou o healthcheck ao FastAPI real. |
+| FND-08 | CONCLUIDO | [Auditoria e eventos](../arquitetura/auditoria-e-eventos.md). Revisão 0002 aplicada em desenvolvimento. 14 BE, 2 DB e 4 INT aprovados em PostgreSQL real quando aplicável. Ruff, mypy e DOC aprovados. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -91,7 +92,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | CONCLUIDO |
 | [FND-06](01-fundacao/FND-06.md) | Convenções REST, contratos e testes de API | MOD-00 | FND-04, FND-05 | CONCLUIDO |
 | [FND-07](01-fundacao/FND-07.md) | Scaffold React, TypeScript e Vite | MOD-00 | FND-02B | CONCLUIDO |
-| [FND-08](01-fundacao/FND-08.md) | Auditoria e eventos duráveis mínimos | MOD-00, MOD-12 | FND-05, FND-06 | PRONTO |
+| [FND-08](01-fundacao/FND-08.md) | Auditoria e eventos duráveis mínimos | MOD-00, MOD-12 | FND-05, FND-06 | CONCLUIDO |
 
 ## MVP — identidade, pessoas e comunicação
 
@@ -217,7 +218,7 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 está pronto. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação está concluída e IAM-01 está pronto. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
