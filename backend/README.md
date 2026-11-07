@@ -12,7 +12,7 @@ disponíveis, execute a partir da raiz do repositório:
 ```powershell
 Set-Location backend
 uv sync --locked
-uv run --locked --env-file ../.env.example uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --workers 1
+uv run --locked --env-file ../.env.example uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --workers 1 --no-access-log
 ```
 
 O exemplo fornece o nome padrão. Para usar configuração local própria, copie
@@ -23,6 +23,9 @@ a inicialização com erro de validação.
 - `GET /health` responde HTTP 200 com JSON `{"status":"ok"}` quando a API atende requisições.
 - A documentação interativa está em <http://127.0.0.1:8000/docs>.
 - O contrato gerado está em <http://127.0.0.1:8000/openapi.json>.
+
+Os erros seguem o [contrato REST](../docs/arquitetura/contratos-rest.md). A
+inicialização acima desabilita o log bruto de acesso do Uvicorn.
 
 ## Verificações
 

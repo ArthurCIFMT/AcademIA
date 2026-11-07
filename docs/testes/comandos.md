@@ -11,7 +11,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | DOC | `python scripts/verificar_documentacao.py` na raiz + `git diff --check` | Disponível; FND-01 mantém o verificador |
 | BE | `uv run --locked pytest` em `backend/` | Disponível no FND-04 |
 | INT | `uv run --locked --env-file ../.env pytest -m integration` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
-| API | PENDENTE | FND-06 |
+| API | `uv run --locked pytest tests/contracts` em `backend/` | Disponível no FND-06 |
 | FE | PENDENTE | FND-07 |
 | E2E | PENDENTE | TST-01 |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |

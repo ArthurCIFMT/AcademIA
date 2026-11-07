@@ -202,6 +202,7 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 
 - Instalar dependências: `uv sync --locked`.
 - BE: `uv run --locked pytest`.
+- API: `uv run --locked pytest tests/contracts`.
 - DB: `uv run --locked --env-file ../.env pytest -m database`.
 - INT: `uv run --locked --env-file ../.env pytest -m integration`.
 - Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
