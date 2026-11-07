@@ -2,9 +2,8 @@
 
 ## Estado
 
-Plano de verificação, não testes já implementados ou executados.
-Origem: AGENTS.md, RNF-07 e critérios de aceite RF/RN/MRF.
-Ferramentas e comandos reais serão registrados pelos prompts de fundação.
+A estratégia se baseia em AGENTS.md, RNF-07 e critérios de aceite RF/RN/MRF.
+As suites disponíveis e seus comandos constam no [registro de comandos](comandos.md).
 
 ## Níveis
 

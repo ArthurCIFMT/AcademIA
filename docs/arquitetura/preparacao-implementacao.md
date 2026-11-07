@@ -16,7 +16,8 @@ frameworks, campos e regras técnicas. Não há necessidade de nova aprovação 
 
 Fechamento é de escolhas/documentação. Não significa serviço instalado, chave
 configurada, benchmark ou ensaio real. GATE-07/08/09 continuam posteriores ao MVP
-e não impedem scaffold. Marcos PG-01/02/03 continuam abertos, sem código funcionando.
+e não impedem os scaffolds. Os marcos PG-01/02/03 exigem as entregas e os aceites
+integrados indicados no [manifesto](../prompts/README.md).
 
 ## Entregas documentais efetivamente executadas
 
@@ -36,9 +37,9 @@ e não impedem scaffold. Marcos PG-01/02/03 continuam abertos, sem código funci
 
 ## Próximos prompts prontos
 
-FND-04 (backend) e FND-07 (frontend) estão PRONTO. Implementar apenas o cartão
-escolhido, sem criar todas as tabelas ou antecipar Docker/IA.
-FND-05 requer o scaffold; configura PostgreSQL real de teste, sem SQLite substituto.
+FND-04 concluiu a estrutura inicial da API Python em 2026-11-07. O [guia do backend](../../backend/README.md)
+registra inicialização, healthcheck e verificações. FND-05 está pronto para configurar
+PostgreSQL real de teste, ORM e migrations. FND-07 (frontend) também está pronto.
 A chave pessoal GROQ_API_KEY só é necessária na integração real de IA; ausência
 não bloqueia fundação, cadastros e treino manual. Pesos de embedding e serviços
 locais serão instalados nos prompts correspondentes; não inventar resultados.

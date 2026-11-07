@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | FND-02A | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
 | FND-02B | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
 | FND-03 | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
+| FND-04 | CONCLUIDO | 2026-11-07. [Guia do backend](../../backend/README.md) e [comandos](../testes/comandos.md). Python 3.12.14, uv 0.13.7, 3 testes BE, Ruff e mypy aprovados. Uvicorn local confirmou HTTP 200 no healthcheck e OpenAPI disponível. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -83,8 +84,8 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [FND-02A](01-fundacao/FND-02A-propostas-de-adrs.md) | Propor decisões arquiteturais | MOD-00 | FND-01 | CONCLUIDO |
 | [FND-02B](01-fundacao/FND-02B-aprovacao-dos-gates.md) | Registrar escolhas e fechar gates aplicáveis | MOD-00 | FND-02A | CONCLUIDO |
 | [FND-03](01-fundacao/FND-03-modelo-logico.md) | Revisar MER e modelo lógico | MOD-01–MOD-12 | FND-01, FND-02B, GATE-01, GATE-02, GATE-03, GATE-05 | CONCLUIDO |
-| [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | PRONTO |
-| [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | BLOQUEADO |
+| [FND-04](01-fundacao/FND-04.md) | Scaffold do backend Python | MOD-00 | FND-03, GATE-01, GATE-03, GATE-06 | CONCLUIDO |
+| [FND-05](01-fundacao/FND-05.md) | PostgreSQL de teste, ORM e migrations | MOD-00 | FND-04 | PRONTO |
 | [FND-06](01-fundacao/FND-06.md) | Convenções REST, contratos e testes de API | MOD-00 | FND-04, FND-05 | BLOQUEADO |
 | [FND-07](01-fundacao/FND-07.md) | Scaffold React, TypeScript e Vite | MOD-00 | FND-02B | PRONTO |
 | [FND-08](01-fundacao/FND-08.md) | Auditoria e eventos duráveis mínimos | MOD-00, MOD-12 | FND-05, FND-06 | BLOQUEADO |
@@ -212,9 +213,9 @@ INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
 Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
-fechados documentalmente, FND-01–FND-03 concluídos e FND-04/FND-07 prontos. Gates
-pós-MVP e marcos de execução permanecem abertos até suas evidências reais.
-Esta auditoria não marca cartões de implementação como concluídos.
+fechados documentalmente. A preparação FND-01–FND-03 e a estrutura do backend
+FND-04 estão concluídas. FND-05 e FND-07 estão prontos. Gates pós-MVP e marcos
+de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

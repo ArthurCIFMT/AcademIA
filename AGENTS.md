@@ -198,9 +198,15 @@ necessária para sua entrega.
 Verificação documental disponível, a partir da raiz, com Python 3.10+:
 `python scripts/verificar_documentacao.py` (somente leitura, sem dependências externas).
 
-Os comandos da aplicação ainda serão registrados pelos scaffolds, depois que
-frontend/backend e seus testes existirem. Não invente comandos ou ferramentas
-que ainda não estejam configurados.
+Backend, a partir de `backend/` com uv e Python 3.12:
+
+- Instalar dependências: `uv sync --locked`.
+- BE: `uv run --locked pytest`.
+- Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
+- Tipos: `uv run --locked mypy`.
+
+A inicialização local está no [guia do backend](backend/README.md). Os demais
+comandos entram em `docs/testes/comandos.md` nos prompts que configuram cada suite.
 
 ## Git e escopo de commits
 
