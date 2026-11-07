@@ -38,8 +38,9 @@ integrados indicados no [manifesto](../prompts/README.md).
 ## Próximos prompts prontos
 
 FND-04 concluiu a estrutura inicial da API Python em 2026-11-07. O [guia do backend](../../backend/README.md)
-registra inicialização, healthcheck e verificações. FND-05 está pronto para configurar
-PostgreSQL real de teste, ORM e migrations. FND-07 (frontend) também está pronto.
+registra inicialização, healthcheck e verificações. FND-05 entregou bancos PostgreSQL
+separados, SQLAlchemy, transações e a revisão Alembic inicial. Ver [guia do banco](../../database/README.md).
+FND-06 (contratos REST) e FND-07 (frontend) estão prontos.
 A chave pessoal GROQ_API_KEY só é necessária na integração real de IA; ausência
 não bloqueia fundação, cadastros e treino manual. Pesos de embedding e serviços
 locais serão instalados nos prompts correspondentes; não inventar resultados.

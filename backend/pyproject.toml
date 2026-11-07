@@ -3,6 +3,9 @@ name = "academia-backend"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "alembic>=1.14,<2",
+    "psycopg[binary]>=3.2,<4",
+    "sqlalchemy>=2,<3",
     "fastapi>=0.115,<1",
     "pydantic>=2,<3",
     "pydantic-settings>=2,<3",
@@ -23,6 +26,11 @@ package = false
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+addopts = "-m 'not database and not integration'"
+markers = [
+    "database: migrations em PostgreSQL de teste",
+    "integration: integração com PostgreSQL de teste",
+]
 
 [tool.ruff]
 target-version = "py312"

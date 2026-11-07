@@ -1,6 +1,6 @@
 # Registro de comandos de verificação
 
-BE está disponível com a estrutura inicial do backend. DOC verifica os artefatos
+BE, DB e INT cobrem a base do backend e do banco. DOC verifica os artefatos
 do repositório. As demais suites serão configuradas nos prompts indicados.
 As siglas são referências para os prompts e não devem ser executadas no terminal.
 Suíte significa conjunto organizado de testes. IA inclui dúvidas, resumo/triagem e geração LLM;
@@ -10,11 +10,11 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 |---|---|---|
 | DOC | `python scripts/verificar_documentacao.py` na raiz + `git diff --check` | Disponível; FND-01 mantém o verificador |
 | BE | `uv run --locked pytest` em `backend/` | Disponível no FND-04 |
-| INT | PENDENTE | FND-05/FND-06 |
+| INT | `uv run --locked --env-file ../.env pytest -m integration` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | API | PENDENTE | FND-06 |
 | FE | PENDENTE | FND-07 |
 | E2E | PENDENTE | TST-01 |
-| DB | PENDENTE | FND-05 |
+| DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | PENDENTE | RAG-05 |
 | IA | PENDENTE | AI-06 |
 | INF | PENDENTE | INF-01 configura build/smoke; INF-04 amplia integração |
@@ -55,6 +55,16 @@ uv run --locked mypy
 
 O [guia do backend](../../backend/README.md) documenta a inicialização local
 e o contrato do healthcheck.
+
+O [guia do banco](../../database/README.md) registra o provisionamento, os
+comandos de migration e a execução de DB e INT em PostgreSQL real. Para incluir
+os scripts de migration na análise estática, execute a partir de `backend/`:
+
+```text
+uv run --locked ruff check --config pyproject.toml . ../database/migrations
+uv run --locked ruff format --check --config pyproject.toml . ../database/migrations
+uv run --locked mypy app tests ../database/migrations
+```
 
 ## Preparação técnica documental
 
