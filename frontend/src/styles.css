@@ -1,0 +1,49 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #172b29;
+  background: #f4f8f6;
+}
+
+body {
+  margin: 0;
+}
+
+.shell {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: clamp(1rem, 6vw, 3rem);
+}
+
+h1 {
+  margin-bottom: 0.4rem;
+}
+
+.status {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid #cadbd4;
+  border-radius: 0.75rem;
+  background: white;
+}
+
+.status h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+button {
+  padding: 0.65rem 1rem;
+  min-height: 44px;
+  color: white;
+  background: #125448;
+  border: 0;
+  border-radius: 0.4rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 3px solid #125448;
+  outline-offset: 3px;
+}

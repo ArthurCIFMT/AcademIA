@@ -208,6 +208,10 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
 - Tipos: `uv run --locked mypy`.
 
+Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
+`npm run lint`, `npm run typecheck` e `npm run build`. Ver
+[guia do frontend](frontend/README.md) para inicialização.
+
 A inicialização está no [guia do backend](backend/README.md) e no
 [guia do banco](database/README.md). Os demais
 comandos entram em `docs/testes/comandos.md` nos prompts que configuram cada suite.

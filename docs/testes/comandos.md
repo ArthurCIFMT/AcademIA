@@ -12,7 +12,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | BE | `uv run --locked pytest` em `backend/` | Disponível no FND-04 |
 | INT | `uv run --locked --env-file ../.env pytest -m integration` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | API | `uv run --locked pytest tests/contracts` em `backend/` | Disponível no FND-06 |
-| FE | PENDENTE | FND-07 |
+| FE | `npm test` em `frontend/` | Disponível no FND-07 |
 | E2E | PENDENTE | TST-01 |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | PENDENTE | RAG-05 |
@@ -65,6 +65,12 @@ uv run --locked ruff check --config pyproject.toml . ../database/migrations
 uv run --locked ruff format --check --config pyproject.toml . ../database/migrations
 uv run --locked mypy app tests ../database/migrations
 ```
+
+## Verificações do frontend
+
+Com Node 24 e npm 11, em `frontend/`, execute `npm ci`, `npm test`,
+`npm run lint`, `npm run typecheck` e `npm run build`. O
+[guia do frontend](../../frontend/README.md) descreve a execução local.
 
 ## Preparação técnica documental
 
