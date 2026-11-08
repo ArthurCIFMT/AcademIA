@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, SecretStr, StringConstraints
 from app.contracts.errors import ErrorResponse
 from app.contracts.time import UtcTimestamp
 from app.modules.identity.limiter import TooManyAttempts
+from app.modules.identity.models import Role
 from app.modules.identity.ports import SessionRecord
 from app.modules.identity.service import (
     ABSOLUTE_AGE,
@@ -18,6 +19,7 @@ from app.modules.identity.service import (
     csrf_matches,
 )
 from app.modules.identity.settings import AuthSettings
+from app.policies.access import Actor
 
 SESSION_COOKIE = "academia_session"
 CSRF_COOKIE = "academia_csrf"
@@ -39,6 +41,7 @@ class SessionResponse(BaseModel):
     user_id: UUID
     expires_at: UtcTimestamp
     csrf_token: str
+    roles: list[Role]
 
 
 class BrowserAuth:
@@ -86,6 +89,11 @@ class BrowserAuth:
         with self.request_scope() as auth:
             return self.session_for(request, auth).user_id
 
+    def require_actor(self, request: Request) -> Actor:
+        with self.request_scope() as auth:
+            user_id = self.session_for(request, auth).user_id
+            return Actor(user_id, auth.roles_for(user_id))
+
     def router(self) -> APIRouter:
         router = APIRouter(prefix="/api/v1/auth", tags=["Identidade"])
 
@@ -102,6 +110,7 @@ class BrowserAuth:
             ip = request.client.host if request.client else ""
             with self.request_scope() as auth:
                 issued = auth.login(data.email, data.senha.get_secret_value(), ip)
+                roles = sorted(auth.roles_for(issued.record.user_id))
 
             for key, value in (
                 (SESSION_COOKIE, issued.token),
@@ -121,6 +130,7 @@ class BrowserAuth:
                 user_id=issued.record.user_id,
                 expires_at=issued.record.expires_at,
                 csrf_token=issued.csrf,
+                roles=roles,
             )
 
         @router.get("/session")
@@ -130,9 +140,13 @@ class BrowserAuth:
                 csrf = request.cookies.get(CSRF_COOKIE)
                 if csrf is None or not csrf_matches(session, csrf):
                     raise HTTPException(403)
+                roles = sorted(auth.roles_for(session.user_id))
             response.headers["Cache-Control"] = "no-store"
             return SessionResponse(
-                user_id=session.user_id, expires_at=session.expires_at, csrf_token=csrf
+                user_id=session.user_id,
+                expires_at=session.expires_at,
+                csrf_token=csrf,
+                roles=roles,
             )
 
         @router.post("/logout", status_code=204, response_class=Response)

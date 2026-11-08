@@ -1,6 +1,7 @@
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
+from functools import partial
 from threading import Lock
 from typing import Annotated
 
@@ -14,6 +15,7 @@ from app.modules.identity.http import BrowserAuth
 from app.modules.identity.limiter import LoginLimiter
 from app.modules.identity.passwords import Passwords
 from app.modules.identity.repository import PostgresIdentity
+from app.modules.identity.roles import effective_roles
 from app.modules.identity.service import AuthService, utc_now
 from app.modules.identity.settings import AuthSettings
 
@@ -66,9 +68,16 @@ def install_identity(
         current = get_runtime()
         with current.sessions.begin() as session:
             storage = PostgresIdentity(session)
-            yield AuthService(storage, storage, current.passwords, current.limiter)
+            yield AuthService(
+                storage,
+                storage,
+                current.passwords,
+                current.limiter,
+                role_reader=partial(effective_roles, session),
+            )
 
     browser = BrowserAuth(scope, lambda: get_runtime().settings)
+    app.state.browser_auth = browser
     app.include_router(browser.router())
 
     router = APIRouter(prefix="/api/v1/auth", tags=["Identidade"])

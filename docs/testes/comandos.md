@@ -75,6 +75,18 @@ para o fluxo HTTP com Argon2id e repositórios de teste de IAM-01, passando
 persistentes de IAM-02 usam `uv run --locked --env-file ../.env pytest -m
 integration tests/identity` e o PostgreSQL de teste.
 
+## Verificações de autorização
+
+A partir de `backend/`, `uv run --locked pytest tests/authorization` executa
+os testes unitários da matriz. Para o ensaio HTTP com contas e sessões no
+PostgreSQL de teste, execute:
+
+```text
+uv run --locked --env-file ../.env pytest -m integration tests/authorization
+```
+
+[Política de autorização](../arquitetura/autorizacao.md).
+
 ## Verificações do frontend
 
 Com Node 24 e npm 11, em `frontend/`, execute `npm ci`, `npm test`,

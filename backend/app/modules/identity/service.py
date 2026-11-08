@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 
 from app.modules.identity.accounts import canonical_email
 from app.modules.identity.limiter import LoginLimiter
+from app.modules.identity.models import Role
 from app.modules.identity.passwords import Passwords
 from app.modules.identity.ports import (
     IdentityRepository,
@@ -60,12 +61,19 @@ class AuthService:
         limiter: LoginLimiter,
         *,
         clock: Callable[[], datetime] = utc_now,
+        role_reader: Callable[[UUID], frozenset[Role]] | None = None,
     ) -> None:
         self.identities = identities
         self.sessions = sessions
         self.passwords = passwords
         self.limiter = limiter
         self.clock = clock
+        self.role_reader = role_reader
+
+    def roles_for(self, user_id: UUID) -> frozenset[Role]:
+        if self.role_reader is None:
+            return frozenset()
+        return self.role_reader(user_id)
 
     def login(self, email: str, password: str, ip: str) -> IssuedSession:
         normalized = canonical_email(email)

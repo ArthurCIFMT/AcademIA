@@ -78,6 +78,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | FND-08 | CONCLUIDO | [Auditoria e eventos](../arquitetura/auditoria-e-eventos.md). Revisão 0002 aplicada em desenvolvimento. 14 BE, 2 DB e 4 INT aprovados em PostgreSQL real quando aplicável. Ruff, mypy e DOC aprovados. |
 | IAM-01 | CONCLUIDO | [Adaptador de autenticação](../arquitetura/autenticacao.md). Argon2id real e sessão opaca. 26 BE, 9 API e 7 DB/INT aprovados. A integração HTTP de identidade usa repositórios de teste; persistência e montagem das rotas na aplicação pertencem a IAM-02. Ruff, mypy e DOC aprovados. |
 | IAM-02 | CONCLUIDO | [Autenticação persistente](../arquitetura/autenticacao.md) e [primeiro administrador](../instalacao/primeiro-administrador.md). Revisão 0003, 27 BE, 9 API e 12 DB/INT aprovados. Bootstrap repetido, disputa de e-mail, inativação, primeiro acesso e preservação da auditoria verificados. Ruff, mypy e DOC aprovados. |
+| IAM-03 | CONCLUIDO | [Matriz de autorização](../arquitetura/autorizacao.md). 30 BE, 9 API e 13 DB/INT aprovados. O ensaio HTTP usou sessão e papéis no PostgreSQL e um adaptador de designação de teste. Ruff, mypy e DOC aprovados. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -102,8 +103,8 @@ ou link de relatório. A numeração das seções não substitui as dependência
 |---|---|---|---|---|
 | [IAM-01](02-identidade-pessoas/IAM-01.md) | Adaptador de autenticação | MOD-01 | FND-06, GATE-02, GATE-06 | CONCLUIDO |
 | [IAM-02](02-identidade-pessoas/IAM-02.md) | Usuário, papéis e perfis de domínio | MOD-01 | FND-05, IAM-01 | CONCLUIDO |
-| [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | PRONTO |
-| [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | BLOQUEADO |
+| [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | CONCLUIDO |
+| [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | PRONTO |
 | [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | BLOQUEADO |
 | [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
 | [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
@@ -220,7 +221,7 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 e IAM-02 estão concluídos. IAM-03 está pronto. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação e IAM-01 a IAM-03 estão concluídos. IAM-04 está pronto. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

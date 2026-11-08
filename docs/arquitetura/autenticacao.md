@@ -10,7 +10,7 @@ nos novos eventos.
 
 | Rota | Contrato |
 |---|---|
-| POST /api/v1/auth/login | Recebe JSON com `email` e `senha`. Inicia sessão e devolve JSON com `user_id`, `expires_at` e `csrf_token`. |
+| POST /api/v1/auth/login | Recebe JSON com `email` e `senha`. Inicia sessão e devolve JSON com `user_id`, `expires_at`, `csrf_token` e `roles`. |
 | GET /api/v1/auth/session | Consulta a sessão vigente e recupera o token CSRF por JSON para a interface recarregada. |
 | POST /api/v1/auth/logout | Exige origem e CSRF. Revoga a sessão, limpa os cookies e retorna 204. |
 | POST /api/v1/auth/first-access | Recebe JSON com `token` e `senha`. Exige origem válida e consome o token ao ativar a conta. Retorna 204. |
@@ -46,5 +46,7 @@ chamador um token de primeiro acesso de 24 horas. Reemitir o token encerra
 os anteriores da mesma finalidade. O endpoint consome o token uma vez.
 As finalidades de recuperação e convite de onboarding permanecem distintas.
 Os papéis efetivos respeitam o estado global e o perfil correspondente.
+A consulta da sessão recalcula `roles`. Rotas protegidas aplicam a
+[política de autorização](autorizacao.md) no backend.
 
 [Primeiro administrador](../instalacao/primeiro-administrador.md) · [Decisão de identidade](decisoes/ADR-002-identidade-e-papeis.md)
