@@ -79,6 +79,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | IAM-01 | CONCLUIDO | [Adaptador de autenticação](../arquitetura/autenticacao.md). Argon2id real e sessão opaca. 26 BE, 9 API e 7 DB/INT aprovados. A integração HTTP de identidade usa repositórios de teste; persistência e montagem das rotas na aplicação pertencem a IAM-02. Ruff, mypy e DOC aprovados. |
 | IAM-02 | CONCLUIDO | [Autenticação persistente](../arquitetura/autenticacao.md) e [primeiro administrador](../instalacao/primeiro-administrador.md). Revisão 0003, 27 BE, 9 API e 12 DB/INT aprovados. Bootstrap repetido, disputa de e-mail, inativação, primeiro acesso e preservação da auditoria verificados. Ruff, mypy e DOC aprovados. |
 | IAM-03 | CONCLUIDO | [Matriz de autorização](../arquitetura/autorizacao.md). 30 BE, 9 API e 13 DB/INT aprovados. O ensaio HTTP usou sessão e papéis no PostgreSQL e um adaptador de designação de teste. Ruff, mypy e DOC aprovados. |
+| IAM-04 | CONCLUIDO | [Roteiro no navegador](../testes/iam-04-navegador.md). 11 FE, 9 API e ensaio Edge/Vite/FastAPI/PostgreSQL aprovados. Lint, tipos, build e DOC aprovados. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -104,12 +105,12 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [IAM-01](02-identidade-pessoas/IAM-01.md) | Adaptador de autenticação | MOD-01 | FND-06, GATE-02, GATE-06 | CONCLUIDO |
 | [IAM-02](02-identidade-pessoas/IAM-02.md) | Usuário, papéis e perfis de domínio | MOD-01 | FND-05, IAM-01 | CONCLUIDO |
 | [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | CONCLUIDO |
-| [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | PRONTO |
+| [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | CONCLUIDO |
 | [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | BLOQUEADO |
 | [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
 | [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | BLOQUEADO |
 | [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | BLOQUEADO |
-| [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02, IAM-04 | BLOQUEADO |
+| [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02, IAM-04 | PRONTO |
 
 ## MVP — onboarding e avaliações
 
@@ -124,7 +125,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [EQP-01](07-complementares/EQP-01.md) | Equipamentos disponíveis e cadastro administrativo | MOD-10 | FND-05, IAM-03, IAM-04 | BLOQUEADO |
+| [EQP-01](07-complementares/EQP-01.md) | Equipamentos disponíveis e cadastro administrativo | MOD-10 | FND-05, IAM-03, IAM-04 | PRONTO |
 
 O caminho histórico 07-complementares foi preservado; a fase do cartão é MVP.
 Dados de exemplo serão criados somente ao implementar os testes/seeds.
@@ -142,7 +143,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [RAG-01](05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | BLOQUEADO |
+| [RAG-01](05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | PRONTO |
 | [RAG-02](05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | BLOQUEADO |
 | [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | BLOQUEADO |
 | [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
@@ -172,7 +173,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [AUL-01](07-complementares/AUL-01.md) | Agenda de aulas por ocorrências | MOD-09 | IAM-03, IAM-04 | BLOQUEADO |
+| [AUL-01](07-complementares/AUL-01.md) | Agenda de aulas por ocorrências | MOD-09 | IAM-03, IAM-04 | PRONTO |
 | [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
 | [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | BLOQUEADO |
 
@@ -221,7 +222,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação e IAM-01 a IAM-03 estão concluídos. IAM-04 está pronto. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação e IAM-01 a IAM-04 estão concluídos. NTF-01 é o próximo prompt
+recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

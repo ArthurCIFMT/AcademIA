@@ -1,0 +1,44 @@
+.login-form {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 26rem;
+}
+
+.login-form input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #677f76;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+
+.login-form button {
+  justify-self: start;
+  margin-top: 0.6rem;
+}
+
+.login-form button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.area-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.area-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.area-links a[aria-current="page"] {
+  font-weight: 700;
+}

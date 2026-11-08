@@ -50,3 +50,26 @@ A consulta da sessão recalcula `roles`. Rotas protegidas aplicam a
 [política de autorização](autorizacao.md) no backend.
 
 [Primeiro administrador](../instalacao/primeiro-administrador.md) · [Decisão de identidade](decisoes/ADR-002-identidade-e-papeis.md)
+
+## Integração com a interface (IAM-04)
+
+A composição existente em `frontend/src/App.tsx` liga o scaffold às rotas em
+`frontend/src/app/`. O `frontend/tsconfig.json` inclui os testes do IAM-04 na
+verificação de tipos. Esses são caminhos equivalentes de ligação e teste
+da entrega.
+
+O navegador consulta a API antes de mostrar áreas protegidas e usa os
+papéis efetivos retornados para a navegação. `/area` seleciona a primeira
+área disponível na ordem administrador, atendente, instrutor e cliente.
+As áreas sem o papel correspondente mostram acesso negado. As operações
+de domínio dependem das permissões do backend.
+
+A SPA consulta a sessão ao abrir ou recarregar a área e ao retornar à
+janela com sessão ativa. Mantém a resposta e o CSRF em memória. O prazo
+local da tela usa o menor valor entre `expires_at` e 30 minutos desde a
+última confirmação pelo backend. Sessão expirada ou ausente leva ao login.
+Um 403 de sessão mostra acesso negado e permite iniciar outro login.
+A área some assim que o usuário solicita a saída. Se a API não confirmar o
+logout, a interface mantém a área oculta e oferece nova tentativa.
+
+Consulte o [roteiro no navegador](../testes/iam-04-navegador.md).
