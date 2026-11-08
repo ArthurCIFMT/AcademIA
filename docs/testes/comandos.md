@@ -66,6 +66,13 @@ uv run --locked ruff format --check --config pyproject.toml . ../database/migrat
 uv run --locked mypy app tests ../database/migrations
 ```
 
+## Verificações de identidade
+
+A partir de `backend/`, use `uv run --locked pytest tests/identity` para
+testes unitários e `uv run --locked pytest -m integration tests/identity`
+para o fluxo HTTP com Argon2id. Os repositórios de teste são substituídos
+pelos PostgreSQL na composição de IAM-02.
+
 ## Verificações do frontend
 
 Com Node 24 e npm 11, em `frontend/`, execute `npm ci`, `npm test`,
