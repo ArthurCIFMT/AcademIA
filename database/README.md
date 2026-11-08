@@ -35,6 +35,8 @@ uv run --locked --env-file ../.env alembic -c ../database/alembic.ini current
 
 A revisão `0001` cria o schema `academia`. A revisão `0002` cria
 as tabelas de [auditoria e eventos](../docs/arquitetura/auditoria-e-eventos.md).
+A revisão `0003` cria usuários, papéis, perfis, sessões e tokens de acesso.
+Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
 nova revisão antes de aplicá-la.

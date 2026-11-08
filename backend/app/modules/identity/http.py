@@ -42,9 +42,15 @@ class SessionResponse(BaseModel):
 
 
 class BrowserAuth:
-    def __init__(self, scope: AuthScope, settings: AuthSettings) -> None:
+    def __init__(
+        self, scope: AuthScope, settings: AuthSettings | Callable[[], AuthSettings]
+    ) -> None:
         self.scope = scope
-        self.settings = settings
+        self._settings = settings
+
+    @property
+    def settings(self) -> AuthSettings:
+        return self._settings() if callable(self._settings) else self._settings
 
     def require_origin(self, request: Request) -> None:
         if request.headers.getlist("origin") != [self.settings.origin]:

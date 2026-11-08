@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import DateTime, String, Text
+from sqlalchemy import DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -11,7 +11,9 @@ class AuditRecord(Base):
     __tablename__ = "auditoria"
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
-    ator_id: Mapped[UUID | None]
+    ator_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("academia.usuario.id", name="fk_auditoria_ator", ondelete="RESTRICT")
+    )
     acao: Mapped[str] = mapped_column(String(80))
     recurso_tipo: Mapped[str] = mapped_column(String(60))
     recurso_id: Mapped[UUID | None]

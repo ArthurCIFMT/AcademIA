@@ -7,8 +7,9 @@ from uuid import UUID, uuid4
 
 import httpx
 import pytest
+from fastapi import FastAPI
 
-from app.main import create_app
+from app.core.http import error_schemas, install_http_contract
 from app.modules.identity.http import SESSION_COOKIE, BrowserAuth
 from app.modules.identity.limiter import LoginLimiter, TooManyAttempts
 from app.modules.identity.passwords import Passwords
@@ -194,16 +195,15 @@ def test_limiter_reserves_concurrent_attempts_and_expires_failures() -> None:
 @pytest.mark.integration
 def test_http_login_session_logout_and_repository_failure(
     fixture_auth: tuple[AuthService, MemoryStore, Clock],
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     service, store, _ = fixture_auth
-    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA Teste")
 
     @contextmanager
     def scope() -> Iterator[AuthService]:
         yield service
 
-    app = create_app()
+    app = FastAPI(responses=error_schemas())
+    install_http_contract(app)
     app.include_router(BrowserAuth(scope, AuthSettings(origin=ORIGIN)).router())
     credentials = {"email": EMAIL, "senha": PASSWORD}
     origin_headers = {"Origin": ORIGIN}

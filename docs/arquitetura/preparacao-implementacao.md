@@ -43,8 +43,8 @@ separados, SQLAlchemy, transações e a revisão Alembic inicial. Ver [guia do b
 FND-06 entregou os [contratos REST](contratos-rest.md) e FND-07 a base do
 [frontend](../../frontend/README.md). FND-08 concluiu a fundação com
 [auditoria e eventos](auditoria-e-eventos.md). IAM-01 entregou o
-[adaptador de autenticação](autenticacao.md). IAM-02 segue com usuários,
-sessões persistentes e primeiro acesso.
+[adaptador de autenticação](autenticacao.md) e IAM-02 ligou os usuários,
+sessões e primeiro acesso ao PostgreSQL. IAM-03 segue com autorização.
 A chave pessoal GROQ_API_KEY só é necessária na integração real de IA; ausência
 não bloqueia fundação, cadastros e treino manual. Pesos de embedding e serviços
 locais serão instalados nos prompts correspondentes; não inventar resultados.

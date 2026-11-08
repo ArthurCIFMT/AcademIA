@@ -3,14 +3,17 @@
 IAM-01 entrega autenticação em Python com Argon2id pelo pwdlib, sessão opaca
 e portas de persistência. O adaptador HTTP é montado por `BrowserAuth.router()`
 quando recebe uma unidade de trabalho capaz de fornecer `AuthService`.
-A composição da aplicação com os repositórios PostgreSQL é a próxima etapa,
-IAM-02. O ensaio local compõe o adaptador real com repositórios de teste.
+IAM-02 compõe esse adaptador com os repositórios PostgreSQL. A montagem passa
+por `backend/app/main.py` e a migration `0003` inclui a ligação entre auditoria
+e usuários. A referência preserva eventos históricos e exige ator válido
+nos novos eventos.
 
 | Rota | Contrato |
 |---|---|
 | POST /api/v1/auth/login | Recebe JSON com `email` e `senha`. Inicia sessão e devolve JSON com `user_id`, `expires_at` e `csrf_token`. |
 | GET /api/v1/auth/session | Consulta a sessão vigente e recupera o token CSRF por JSON para a interface recarregada. |
 | POST /api/v1/auth/logout | Exige origem e CSRF. Revoga a sessão, limpa os cookies e retorna 204. |
+| POST /api/v1/auth/first-access | Recebe JSON com `token` e `senha`. Exige origem válida e consome o token ao ativar a conta. Retorna 204. |
 
 Os cookies são restritos ao caminho `/api/v1`, HttpOnly e SameSite=Lax.
 Em HTTPS são Secure. Defina `ACADEMIA_AUTH_ORIGIN` com a origem exata da
@@ -34,6 +37,14 @@ atualiza a revisão e chama `revoke_after_password_change` antes do commit.
 Assim, um login concorrente com credencial anterior não abre nova sessão.
 
 A partir de `backend/`, execute `uv run --locked pytest tests/identity`
-para os testes unitários e `uv run --locked pytest -m integration tests/identity`
-para o fluxo HTTP com Argon2id real. A suíte INT geral também inclui os testes
-do PostgreSQL, separados desse ensaio. [Decisão de identidade](decisoes/ADR-002-identidade-e-papeis.md)
+para os testes unitários e `uv run --locked pytest -m integration tests/identity/test_identity.py`
+para o ensaio do adaptador com repositórios de teste. O ensaio persistente usa
+`uv run --locked --env-file ../.env pytest -m integration tests/identity`.
+
+O serviço `provision_account` cria a conta convidada e fornece ao módulo
+chamador um token de primeiro acesso de 24 horas. Reemitir o token encerra
+os anteriores da mesma finalidade. O endpoint consome o token uma vez.
+As finalidades de recuperação e convite de onboarding permanecem distintas.
+Os papéis efetivos respeitam o estado global e o perfil correspondente.
+
+[Primeiro administrador](../instalacao/primeiro-administrador.md) · [Decisão de identidade](decisoes/ADR-002-identidade-e-papeis.md)

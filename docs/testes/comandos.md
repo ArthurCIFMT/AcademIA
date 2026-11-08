@@ -70,8 +70,10 @@ uv run --locked mypy app tests ../database/migrations
 
 A partir de `backend/`, use `uv run --locked pytest tests/identity` para
 testes unitários e `uv run --locked pytest -m integration tests/identity`
-para o fluxo HTTP com Argon2id. Os repositórios de teste são substituídos
-pelos PostgreSQL na composição de IAM-02.
+para o fluxo HTTP com Argon2id e repositórios de teste de IAM-01, passando
+`tests/identity/test_identity.py` no lugar do diretório. Os ensaios
+persistentes de IAM-02 usam `uv run --locked --env-file ../.env pytest -m
+integration tests/identity` e o PostgreSQL de teste.
 
 ## Verificações do frontend
 

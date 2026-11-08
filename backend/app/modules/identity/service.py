@@ -6,6 +6,7 @@ from hashlib import sha256
 from secrets import compare_digest, token_urlsafe
 from uuid import UUID, uuid4
 
+from app.modules.identity.accounts import canonical_email
 from app.modules.identity.limiter import LoginLimiter
 from app.modules.identity.passwords import Passwords
 from app.modules.identity.ports import (
@@ -67,7 +68,7 @@ class AuthService:
         self.clock = clock
 
     def login(self, email: str, password: str, ip: str) -> IssuedSession:
-        normalized = email.strip().lower()
+        normalized = canonical_email(email)
         with self.limiter.attempt(normalized, ip, self.clock()):
             account = self.identities.find_for_login(normalized)
             stored_hash = account.password_hash if account is not None else None

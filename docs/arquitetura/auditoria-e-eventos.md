@@ -2,8 +2,8 @@
 
 FND-08 cria as tabelas `academia.auditoria` e `academia.outbox` na revisão
 `0002`. A evidência guarda ator, ação, referência de recurso, motivo codificado,
-correlação e instante em UTC. O ator é guardado como UUID nesta etapa. A chave
-estrangeira pode ser criada com a tabela de usuários em IAM-02. O PostgreSQL
+correlação e instante em UTC. A revisão `0003` liga o UUID do ator ao usuário
+para novos registros e preserva referências anteriores. O PostgreSQL
 bloqueia alteração, exclusão e truncamento dos registros por gatilho.
 
 O serviço interno `record_audit(session, event)` recebe a sessão da operação
