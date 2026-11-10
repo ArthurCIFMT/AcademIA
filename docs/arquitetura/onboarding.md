@@ -54,7 +54,7 @@ O serviço interno `append_evaluation` guarda uma entrada imutável por
 avaliação com autor, data e snapshot do próprio cliente. A chave estrangeira
 composta impede associar a avaliação ao snapshot de outra pessoa. A
 autorização por designação e as rotas profissionais serão ligadas em
-ONB-04. A interface do cliente entra em ONB-03.
+ONB-04. ONB-03 implementa a interface do cliente.
 
 O teste de migration do PES-03 continua verificando a revisão 0005. A checagem
 global do Alembic acompanha a revisão mais recente no teste de ONB-02.
@@ -84,8 +84,8 @@ mostrar `SEM_CONFIRMACAO` ou `ENVIANDO`. Nesses casos, o operador pode
 solicitar reenvio com chave nova. A entrega do e-mail não conclui o onboarding.
 
 O e-mail aponta para `/onboarding/convite#token=…` na origem configurada.
-O fragmento não compõe a URL da requisição HTTP. A tela de ONB-03 lerá e
-removerá o fragmento antes da troca. Se a troca falhar, a tela apresentará
+O fragmento não compõe a URL da requisição HTTP. A tela de ONB-03 lê e
+remove o fragmento antes da troca. Se o link for recusado, a tela mostra
 o erro sem reabrir um rascunho associado a um cookie anterior.
 
 O link é de uso único e expira após 48 horas. A troca gera outro segredo,
@@ -101,3 +101,23 @@ administração exigem a sessão geral. Os segredos são armazenados por hash.
 O bloqueio do cadastro serializa troca, reenvio, edição e conclusão.
 A migration limita a um convite não revogado por rascunho e exige
 metadados de sessão coerentes com o consumo e o prazo do convite.
+
+## Interface do cliente
+
+A rota pública `/onboarding/convite` remove o fragmento do endereço e oferece
+**Abrir formulário** para fazer a troca. Reabrir a rota sem fragmento consulta
+o rascunho pelo cookie restrito. Se o link apresentado for recusado, a tela
+mostra o erro e encerra essa tentativa sem consultar um cookie anterior.
+
+A troca e as mutações do convite usam [Web Locks](https://www.w3.org/TR/web-locks/)
+na mesma origem. Antes de gravar, a tela verifica sob o bloqueio se o cookie
+continua ligado ao rascunho exibido. Isso evita enviar os dados de uma aba
+antiga depois que outra aba abriu um convite diferente. Para editar por
+convite, use um navegador com Web Locks em HTTPS ou no ambiente local.
+
+Em **Cliente → Meu onboarding**, a sessão geral permite consultar a versão
+concluída e continuar um rascunho. Editar após uma conclusão oferece uma
+etapa de confirmação antes de publicar a nova versão. A tela mantém em
+memória os campos editados quando a gravação falha. Em caso de conflito,
+recarregar o estado salvo exige ação explícita. O navegador não guarda
+dados de saúde em armazenamento local.

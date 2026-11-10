@@ -1,0 +1,94 @@
+.onboarding-form section {
+  margin-block: 1.25rem;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #cadbd4;
+  border-radius: 0.65rem;
+}
+
+.onboarding-form h3,
+.onboarding-form h4 {
+  margin-block: 0 0.75rem;
+}
+
+.onboarding-legend {
+  font-weight: 650;
+}
+
+.onboarding-editor {
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.onboarding-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.85rem;
+  margin: 0;
+}
+
+.onboarding-field {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 0.3rem;
+  overflow-wrap: anywhere;
+}
+
+.onboarding-field label,
+.onboarding-field dt {
+  font-weight: 600;
+}
+
+.onboarding-field dd {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.onboarding-field input,
+.onboarding-field select,
+.onboarding-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.45rem;
+  font: inherit;
+  color: inherit;
+  background: #fff;
+  border: 1px solid #809892;
+  border-radius: 0.4rem;
+}
+
+.onboarding-field textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.onboarding-entry {
+  margin-block: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #cadbd4;
+}
+
+.onboarding-form section button {
+  margin-top: 0.75rem;
+}
+
+.onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.onboarding-form button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+@media (max-width: 30rem) {
+  .onboarding-actions button {
+    width: 100%;
+  }
+}

@@ -8,7 +8,7 @@ type SessionState =
   | { status: "active"; session: Session; verifiedAt: number }
   | { status: "checking" | "signedOut" | "expired" | "denied" | "unavailable" | "signingOut" | "logoutFailed" };
 
-export function useSession() {
+export function useSession(keepEditingOnFocus = false) {
   const [state, setState] = useState<SessionState>({ status: "checking" });
   const pending = useRef<AbortController | null>(null);
   const logoutToken = useRef<string | null>(null);
@@ -29,7 +29,7 @@ export function useSession() {
     setState({ status: "active", session, verifiedAt });
   }, []);
 
-  const readCurrentSession = useCallback((restoring: boolean) => {
+  const readCurrentSession = useCallback((restoring: boolean, keepActiveOnNetworkError = false) => {
     const signal = startRequest();
     return getSession(signal).then(
       (session) => {
@@ -41,7 +41,7 @@ export function useSession() {
           setState({ status: restoring ? "signedOut" : "expired" });
         } else if (error instanceof ApiError && error.status === 403) {
           setState({ status: "denied" });
-        } else {
+        } else if (!keepActiveOnNetworkError) {
           setState({ status: "unavailable" });
         }
       },
@@ -64,8 +64,8 @@ export function useSession() {
     const check = () => {
       if (Date.now() >= deadline) expire();
       else if (document.visibilityState === "visible") {
-        setState({ status: "checking" });
-        void readCurrentSession(false);
+        if (!keepEditingOnFocus) setState({ status: "checking" });
+        void readCurrentSession(false, keepEditingOnFocus);
       }
     };
     const timer = window.setTimeout(expire, Math.max(0, deadline - Date.now()));
@@ -79,7 +79,7 @@ export function useSession() {
       window.removeEventListener("focus", check);
       window.removeEventListener("pageshow", checkRestoredPage);
     };
-  }, [readCurrentSession, state]);
+  }, [keepEditingOnFocus, readCurrentSession, state]);
 
   async function retrySession() {
     setState({ status: "checking" });

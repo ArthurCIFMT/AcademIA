@@ -228,3 +228,30 @@ O ensaio usa e-mails sintéticos e recupera o link no Mailpit. Exercita troca
 revogação, isolamento entre contas e falha SMTP com registro persistido.
 O contrato OpenAPI do módulo roda junto aos testes unitários e a migration
 0007 tem verificação de integridade e reversão.
+
+## Formulário responsivo do onboarding
+
+Em `frontend/`, rode `npm test -- --maxWorkers=2`, `npm run lint`,
+`npm run typecheck` e `npm run build`. As verificações do formulário ficam
+em `frontend/tests/onboarding/` e comparam campos e limites com o schema v1.
+Em `backend/`, rode `uv run --locked pytest tests/contracts` e a suíte de
+[convite inicial](#convite-inicial-de-onboarding).
+
+Roteiro com Vite, FastAPI, PostgreSQL de teste e Mailpit em 390 px:
+
+1. Com uma sessão administrativa ou de atendimento, use a API de emissão do
+   [convite](../arquitetura/onboarding.md#convite-inicial-e-sessão-restrita)
+   para um cliente sintético. Abra o link da caixa Mailpit em outra sessão.
+2. Abra o formulário, tente concluir vazio, salve um rascunho incompleto e
+   recarregue. Simule falha no PATCH e confira que o campo editado fica na tela.
+3. Abra o convite de outro cliente em uma segunda aba do mesmo navegador.
+   Confirme que a aba antiga não consegue enviar seus dados ao novo rascunho.
+4. Reemita o convite original, conclua com uma resposta **Não sei**, entre
+   na conta de cliente e consulte a versão salva em **Meu onboarding**.
+5. Edite, salve o rascunho e recarregue. Confirme a atualização, verifique a
+   nova versão e consulte a antiga pela API. A API deve recusar o mesmo UUID
+   histórico quando consultado com a sessão de outro cliente.
+
+O ensaio no Edge confirmou os cinco passos. Também verificou que o link
+reenviado abre na mesma aba após a recusa do link anterior. O schema
+sintético do ensaio foi removido ao final.
