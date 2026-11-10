@@ -53,8 +53,9 @@ rascunho preserva a referência vigente até a conclusão.
 O serviço interno `append_evaluation` guarda uma entrada imutável por
 avaliação com autor, data e snapshot do próprio cliente. A chave estrangeira
 composta impede associar a avaliação ao snapshot de outra pessoa. A
-autorização por designação e as rotas profissionais serão ligadas em
-ONB-04. ONB-03 implementa a interface do cliente.
+autorização por designação e as rotas profissionais estão descritas na
+[avaliação pelo instrutor designado](#avaliação-pelo-instrutor-designado).
+ONB-03 implementa a interface do cliente.
 
 O teste de migration do PES-03 continua verificando a revisão 0005. A checagem
 global do Alembic acompanha a revisão mais recente no teste de ONB-02.
@@ -121,3 +122,34 @@ etapa de confirmação antes de publicar a nova versão. A tela mantém em
 memória os campos editados quando a gravação falha. Em caso de conflito,
 recarregar o estado salvo exige ação explícita. O navegador não guarda
 dados de saúde em armazenamento local.
+
+## Avaliação pelo instrutor designado
+
+Em **Instrutor → Meus clientes → Avaliações**, o responsável consulta a
+última versão concluída do onboarding e o histórico paginado de avaliações.
+Uma avaliação nova registra a observação do instrutor em até 1000 caracteres.
+O servidor define a autoria e a data em UTC. O histórico começa pelas
+avaliações mais recentes e inclui a autoria de instrutores anteriores.
+
+| Rota | Operação |
+|---|---|
+| GET /api/v1/onboarding/clientes/{client_id}/avaliacoes | Consulta o nome do cliente, o snapshot concluído vigente e o histórico, com `pagina` e `limite`. |
+| POST /api/v1/onboarding/clientes/{client_id}/avaliacoes | Registra `onboarding_id`, `solicitacao_id` e `observacao`. Retorna 201 com autoria, data e referência ao snapshot. |
+
+A API exige a designação vigente nas duas operações. O POST exige a sessão
+geral, origem e CSRF. A autorização e a operação usam a mesma transação e
+o mesmo bloqueio da identidade do cliente que a troca de designação usa.
+O antigo responsável recebe 403 após a troca. O backend retorna 404 para
+snapshot fora do escopo e 409 quando a versão consultada deixou de ser
+vigente. Um reenvio idêntico com a mesma chave e autorização recupera o
+registro existente. O banco reutiliza as constraints e a imutabilidade da
+tabela `avaliacao` da migration 0006.
+
+O serviço interno `read_assessment_context` entrega ao orquestrador o
+snapshot vigente autorizado pelo cliente autenticado e, quando houver,
+a avaliação mais recente desse mesmo cliente e snapshot. A resposta
+tipada carrega referências de origem e dispensa nomes, identificadores de
+funcionários e histórico completo. AI-01 fará a projeção resumida. O
+conteúdo da avaliação é dado de entrada e não atribui elegibilidade.
+O consumidor encerra a transação de leitura antes de chamar serviços
+externos e revalida o snapshot na publicação.

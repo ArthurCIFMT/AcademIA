@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, NavLink, Navigate, Outlet, Route, Routes, useMatch, useOutletContext } from "react-router-dom";
 
+import { AssessmentPage } from "../features/assessments/AssessmentPage";
 import { AssignmentPage, MyAssignmentsPage } from "../features/assignments/AssignmentPages";
 import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
@@ -70,7 +71,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -118,6 +119,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {feature === "onboarding" && isClient && <OwnOnboardingPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {staffContent}
       {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
+      {feature === "assessments" && isInstructor && <AssessmentPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {feature === "my-assignments" && isInstructor && <MyAssignmentsPage />}
       {feature === "clients" && canManageClients &&
         <ClientDirectory key={state.session.user_id} session={state.session} onAccessChange={retrySession} />}
@@ -152,6 +154,7 @@ export function AppRoutes() {
           <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
           <Route path="/area/administracao/designacoes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="assignments" />} />
           <Route path="/area/instrutor/clientes" element={<AreaPage requiredRole="INSTRUTOR" feature="my-assignments" />} />
+          <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
           <Route path={onboardingPath} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
           {roles.map((role) => (
             <Route key={role} path={"/area/" + areas[role].path} element={<AreaPage requiredRole={role} />} />

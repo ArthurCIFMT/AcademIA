@@ -208,7 +208,14 @@ export function MyAssignmentsPage() {
       {records ? (
         <>
           {records.itens.length ? (
-            <ul>{records.itens.map(item => <li key={item.id}>{item.nome} · Desde {dateLabel(item.inicio)}</li>)}</ul>
+            <ul>{records.itens.map(item => (
+              <li key={item.id}>
+                {item.nome} · Desde {dateLabel(item.inicio)}{" "}
+                <Link to={encodeURIComponent(item.id) + "/avaliacoes"} aria-label={"Avaliações de " + item.nome}>
+                  Avaliações
+                </Link>
+              </li>
+            ))}</ul>
           ) : <p>Nenhum cliente designado nesta página.</p>}
           <Pager label="Páginas dos meus clientes" page={records} onPage={load} />
         </>

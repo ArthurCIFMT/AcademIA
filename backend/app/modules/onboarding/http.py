@@ -1,10 +1,18 @@
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.modules.onboarding.assessment import (
+    AssessmentHistory,
+    AssessmentView,
+    CreateAssessment,
+    assessment_history,
+    record_assessment,
+)
 from app.modules.onboarding.invitations_http import invitation_router
 from app.modules.onboarding.schemas import (
     Completion,
@@ -83,7 +91,36 @@ def onboarding_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIR
         with transaction() as session:
             return confirm_update(session, actor.user_id, actor.user_id, data)
 
+    professional = APIRouter(
+        prefix="/api/v1/onboarding/clientes/{client_id}/avaliacoes",
+        tags=["Avaliações"],
+    )
+
+    @professional.get("")
+    def evaluations(
+        client_id: UUID,
+        actor: AuthenticatedActor,
+        response: Response,
+        pagina: Annotated[int, Query(ge=1, le=1_000_000)] = 1,
+        limite: Annotated[int, Query(ge=1, le=100)] = 20,
+    ) -> AssessmentHistory:
+        response.headers["Cache-Control"] = "no-store"
+        with transaction() as session:
+            return assessment_history(session, actor, client_id, pagina, limite)
+
+    @professional.post("", status_code=201)
+    def evaluate(
+        client_id: UUID,
+        data: CreateAssessment,
+        actor: AuthenticatedActor,
+        response: Response,
+    ) -> AssessmentView:
+        response.headers["Cache-Control"] = "no-store"
+        with transaction() as session:
+            return record_assessment(session, actor, client_id, data)
+
     routes = APIRouter()
     routes.include_router(router)
     routes.include_router(invitation_router(get_sessions))
+    routes.include_router(professional)
     return routes

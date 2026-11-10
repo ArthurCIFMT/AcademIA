@@ -43,5 +43,5 @@ de instrutor retira a autorização mesmo quando a sessão antiga permanece aber
 Se o instrutor ficar inativo, a designação administrativa fica registrada
 como indisponível. O administrador pode substituí-la. O registro permanece
 como referência histórica e fica fora da consulta profissional enquanto o
-perfil estiver inativo. O módulo de avaliação usará o contrato de leitura
-para proteger os dados de saúde quando suas rotas forem entregues.
+perfil estiver inativo. O módulo de avaliação usa esse contrato nas
+[rotas profissionais](onboarding.md#avaliação-pelo-instrutor-designado).

@@ -121,6 +121,15 @@ def get_snapshot(
     return _snapshot(row) if row else None
 
 
+def get_current_snapshot(session: Session, client_id: UUID) -> SnapshotView | None:
+    row = session.scalar(
+        select(OnboardingVersion).where(
+            OnboardingVersion.id == _latest_completed_id(client_id)
+        )
+    )
+    return _snapshot(row) if row else None
+
+
 def is_current_snapshot(session: Session, client_id: UUID, snapshot_id: UUID) -> bool:
     return session.scalar(select(_latest_completed_id(client_id))) == snapshot_id
 
@@ -246,12 +255,14 @@ def append_evaluation(
     instructor_id: UUID,
     snapshot_id: UUID,
     data: dict[str, object],
+    *,
+    evaluation_id: UUID | None = None,
 ) -> Evaluation:
     """Persiste avaliação do instrutor já autorizado pelo módulo chamador."""
     if get_snapshot(session, client_id, snapshot_id) is None:
         raise OnboardingError(404)
     evaluation = Evaluation(
-        id=uuid4(),
+        id=evaluation_id or uuid4(),
         cliente_id=client_id,
         instrutor_id=instructor_id,
         onboarding_id=snapshot_id,

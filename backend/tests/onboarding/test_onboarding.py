@@ -26,6 +26,7 @@ from app.database.connection import (
     create_session_factory,
 )
 from app.main import create_app
+from app.modules.assignments.service import ChangeAssignment, change_assignment
 from app.modules.identity.accounts import create_account
 from app.modules.identity.first_access import issue_first_access
 from app.modules.identity.models import AccountState, Role, User, UserRole
@@ -33,6 +34,7 @@ from app.modules.identity.passwords import Passwords
 from app.modules.identity.service import digest, utc_now
 from app.modules.identity.settings import AuthSettings
 from app.modules.notifications.models import DeliveryState, EmailKind, Notification
+from app.modules.onboarding.assessment import CreateAssessment, read_assessment_context
 from app.modules.onboarding.invitations import exchange_invitation, issue_invitation
 from app.modules.onboarding.invitations_http import RESTRICTED_COOKIE, RESTRICTED_PATH
 from app.modules.onboarding.models import (
@@ -40,17 +42,26 @@ from app.modules.onboarding.models import (
     OnboardingInvitation,
     OnboardingVersion,
 )
-from app.modules.onboarding.schemas import Completion, DraftChange, DraftData
+from app.modules.onboarding.schemas import (
+    Completion,
+    ConfirmUpdate,
+    DraftChange,
+    DraftData,
+    OnboardingData,
+    SnapshotView,
+)
 from app.modules.onboarding.service import (
     OnboardingError,
     age_at,
     append_evaluation,
     complete_draft,
+    confirm_update,
     get_snapshot,
     is_current_snapshot,
     save_draft,
 )
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
+from app.policies.access import Actor
 
 _ROOT = Path(__file__).resolve().parents[3]
 _FORM: dict[str, object] = json.loads(
@@ -72,6 +83,8 @@ class People:
     other: UUID
     instructor: UUID
     attendant: UUID
+    replacement: UUID
+    admin: UUID
 
 
 def _seed(factory: sessionmaker[Session], suffix: str = "") -> People:
@@ -113,6 +126,8 @@ def _seed(factory: sessionmaker[Session], suffix: str = "") -> People:
             add("outro", Role.CLIENTE),
             add("instrutor", Role.INSTRUTOR),
             add("atendente", Role.ATENDENTE),
+            add("substituto", Role.INSTRUTOR),
+            add("admin", Role.ADMINISTRADOR),
         )
 
 
@@ -788,3 +803,249 @@ def test_0007_enforces_invite_constraints_and_downgrades_without_erasing_draft(
     with factory.begin() as session:
         row = session.get(OnboardingVersion, draft.id)
         assert row is not None and row.dados == {"altura_cm": 170.0}
+
+
+_ASSESSMENTS = "/api/v1/onboarding/clientes/{client_id}/avaliacoes"
+
+
+def test_assessment_json_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
+    openapi = create_app().openapi()
+    routes = openapi["paths"][_ASSESSMENTS]
+    assert "200" in routes["get"]["responses"]
+    assert "201" in routes["post"]["responses"]
+    request = openapi["components"]["schemas"]["CreateAssessment"]
+    assert set(request["required"]) == {"onboarding_id", "solicitacao_id", "observacao"}
+    assert request["additionalProperties"] is False
+    for invalid in (" ", "x" * 1001):
+        with pytest.raises(ValueError):
+            CreateAssessment(
+                onboarding_id=uuid4(), solicitacao_id=uuid4(), observacao=invalid
+            )
+
+
+def _finish_initial(session: Session, client_id: UUID) -> SnapshotView:
+    draft = save_draft(
+        session,
+        client_id,
+        client_id,
+        DraftChange(
+            versao_base=None, revisao=None, dados=DraftData.model_validate(_FORM)
+        ),
+    )
+    return complete_draft(
+        session,
+        client_id,
+        client_id,
+        Completion(versao_base=None, revisao=draft.revisao),
+    )
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_assessment_transfer_preserves_authorship_and_revokes_old_access(
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    people = _seed(sessions)
+    with sessions.begin() as session:
+        snapshot = _finish_initial(session, people.client)
+        other_snapshot = _finish_initial(session, people.other)
+    api = _api(sessions, monkeypatch)
+    endpoint = _ASSESSMENTS.format(client_id=people.client)
+    link = f"/api/v1/designacoes/clientes/{people.client}"
+    initial_note = {
+        "onboarding_id": str(snapshot.id),
+        "solicitacao_id": str(uuid4()),
+        "observacao": "Primeiro registro sintético",
+    }
+    async with (
+        _browser(api) as admin,
+        _browser(api) as old,
+        _browser(api) as new,
+        _browser(api) as visitor,
+    ):
+        assert (await visitor.get(endpoint)).status_code == 401
+        staff_headers = await _login(visitor, "atendente@example.test")
+        assert (await visitor.get(endpoint)).status_code == 403
+        assert (
+            await visitor.post(endpoint, json=initial_note, headers=staff_headers)
+        ).status_code == 403
+        admin_headers = await _login(admin, "admin@example.test")
+        assert (await admin.get(endpoint)).status_code == 403
+        old_headers = await _login(old, "instrutor@example.test")
+        new_headers = await _login(new, "substituto@example.test")
+        assert (await old.get(endpoint)).status_code == 403
+
+        assigned = await admin.put(
+            link,
+            headers=admin_headers,
+            json={"instrutor_id": str(people.instructor), "vigente_id": None},
+        )
+        assert assigned.status_code == 200
+        assert (await new.get(endpoint)).status_code == 403
+        initial = await old.get(endpoint)
+        assert initial.status_code == 200
+        assert initial.headers["Cache-Control"] == "no-store"
+        assert initial.json()["snapshot"]["id"] == str(snapshot.id)
+        assert initial.json()["historico"]["total"] == 0
+        assert (await old.post(endpoint, json=initial_note)).status_code == 403
+
+        forged = await old.post(
+            endpoint,
+            headers=old_headers,
+            json={**initial_note, "instrutor_id": str(people.admin)},
+        )
+        assert (
+            forged.status_code == 422 and initial_note["observacao"] not in forged.text
+        )
+        unrelated = await old.post(
+            endpoint,
+            headers=old_headers,
+            json={**initial_note, "onboarding_id": str(other_snapshot.id)},
+        )
+        assert unrelated.status_code == 404
+        first = await old.post(endpoint, headers=old_headers, json=initial_note)
+        assert first.status_code == 201 and first.headers["Cache-Control"] == "no-store"
+        assert first.json()["instrutor_id"] == str(people.instructor)
+        assert first.json()["registrado_em"].endswith("Z")
+        repeat = await old.post(endpoint, headers=old_headers, json=initial_note)
+        assert repeat.status_code == 201 and repeat.json() == first.json()
+        assert (
+            await old.post(
+                endpoint,
+                headers=old_headers,
+                json={**initial_note, "observacao": "Alterada"},
+            )
+        ).status_code == 409
+
+        transfer = await admin.put(
+            link,
+            headers=admin_headers,
+            json={
+                "instrutor_id": str(people.replacement),
+                "vigente_id": assigned.json()["id"],
+            },
+        )
+        assert transfer.status_code == 200
+        assert (await old.get("/api/v1/auth/session")).status_code == 200
+        assert (await old.get(endpoint)).status_code == 403
+        assert (
+            await old.post(endpoint, headers=old_headers, json=initial_note)
+        ).status_code == 403
+
+        with sessions.begin() as session:
+            updated = confirm_update(
+                session,
+                people.client,
+                people.client,
+                ConfirmUpdate(
+                    versao_base=snapshot.id,
+                    confirmado=True,
+                    dados=OnboardingData.model_validate({**_FORM, "altura_cm": 178}),
+                ),
+            )
+        second_note = {
+            **initial_note,
+            "solicitacao_id": str(uuid4()),
+            "observacao": "Segundo registro sintético",
+        }
+        assert (
+            await new.post(endpoint, headers=new_headers, json=second_note)
+        ).status_code == 409
+        second = await new.post(
+            endpoint,
+            headers=new_headers,
+            json={**second_note, "onboarding_id": str(updated.id)},
+        )
+        assert second.status_code == 201 and second.json()["instrutor_id"] == str(
+            people.replacement
+        )
+        assert second.json()["registrado_em"] >= first.json()["registrado_em"]
+        history = await new.get(endpoint + "?limite=1")
+        assert history.json()["historico"]["total"] == 2
+        assert history.json()["historico"]["itens"] == [second.json()]
+        previous = await new.get(endpoint + "?pagina=2&limite=1")
+        assert previous.json()["historico"]["itens"] == [first.json()]
+        assert first.json()["instrutor_nome"] == "instrutor"
+        assert second.json()["instrutor_nome"] == "substituto"
+
+
+@pytest.mark.integration
+def test_ai_assessment_context_requires_own_current_snapshot_and_never_mixes_clients(
+    sessions: sessionmaker[Session],
+) -> None:
+    people = _seed(sessions)
+    with sessions.begin() as session:
+        own = _finish_initial(session, people.client)
+        other = _finish_initial(session, people.other)
+        append_evaluation(
+            session,
+            people.other,
+            people.instructor,
+            other.id,
+            {"observacao": "Somente B"},
+        )
+        session.flush()
+        actor = Actor(people.client, frozenset({Role.CLIENTE}))
+        empty = read_assessment_context(session, actor, people.client, own.id)
+        assert empty.avaliacao_id is None and empty.observacao_avaliacao is None
+        for target, reference, expected in (
+            (people.other, other.id, 403),
+            (people.client, other.id, 404),
+        ):
+            with pytest.raises(OnboardingError) as error:
+                read_assessment_context(session, actor, target, reference)
+            assert error.value.status == expected
+
+        staff = Actor(people.instructor, frozenset({Role.INSTRUTOR}))
+        admin = Actor(people.admin, frozenset({Role.ADMINISTRADOR}))
+        change_assignment(
+            session,
+            people.client,
+            ChangeAssignment(
+                instrutor_id=people.instructor,
+                vigente_id=None,
+            ),
+            admin,
+            uuid4(),
+        )
+        with pytest.raises(OnboardingError) as rejected:
+            read_assessment_context(session, staff, people.client, own.id)
+        assert rejected.value.status == 403
+
+        row = append_evaluation(
+            session,
+            people.client,
+            people.instructor,
+            own.id,
+            {"observacao": "Somente A"},
+        )
+        session.flush()
+        data = read_assessment_context(session, actor, people.client, own.id)
+        assert data.avaliacao_id == row.id and data.observacao_avaliacao == "Somente A"
+        assert "Somente B" not in data.model_dump_json()
+        assert {"cliente_id", "instrutor_id", "criado_por"}.isdisjoint(
+            data.model_dump()
+        )
+
+        updated = confirm_update(
+            session,
+            people.client,
+            people.client,
+            ConfirmUpdate(
+                versao_base=own.id,
+                confirmado=True,
+                dados=OnboardingData.model_validate(_FORM),
+            ),
+        )
+        session.flush()
+        assert (
+            read_assessment_context(
+                session, actor, people.client, updated.id
+            ).avaliacao_id
+            is None
+        )
+        with pytest.raises(OnboardingError) as stale:
+            read_assessment_context(session, actor, people.client, own.id)
+        assert stale.value.status == 409

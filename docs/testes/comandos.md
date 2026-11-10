@@ -255,3 +255,25 @@ Roteiro com Vite, FastAPI, PostgreSQL de teste e Mailpit em 390 px:
 O ensaio no Edge confirmou os cinco passos. Também verificou que o link
 reenviado abre na mesma aba após a recusa do link anterior. O schema
 sintético do ensaio foi removido ao final.
+
+## Avaliação profissional por designação
+
+Rode `npm test -- --maxWorkers=2`, lint, tipos e build em `frontend/`.
+Em `backend/`, rode BE, API e a suíte com PostgreSQL do
+[onboarding](#persistência-do-onboarding), com o Mailpit habilitado conforme
+o roteiro de [convite inicial](#convite-inicial-de-onboarding).
+
+A integração testa leitura e registro pelo instrutor, recusa a atendentes,
+tentativa de vincular snapshot de outro cliente, revisão desatualizada,
+repetição sem duplicar e histórico após troca de responsável. A porta
+interna da IA é testada com dois clientes, snapshots distintos e
+avaliações opcionais. A verificação de banco reutiliza os testes da
+migration 0006 para a chave estrangeira composta e imutabilidade.
+
+Para conferir na SPA, designe um instrutor a um cliente sintético com
+onboarding concluído. Registre uma avaliação em **Meus clientes**.
+Transfira a designação e atualize a página do primeiro instrutor.
+Entre como sucessor, consulte a avaliação original e registre outra.
+
+O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
+O schema sintético foi removido ao final.
