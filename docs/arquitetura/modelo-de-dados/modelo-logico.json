@@ -1967,13 +1967,31 @@
           "ref": null
         },
         {
+          "name": "tipo",
+          "type": "varchar(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "estado",
           "type": "varchar(25)",
           "flags": "required",
           "ref": null
         },
         {
+          "name": "tentativas",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "criada_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "atualizada_em",
           "type": "timestamptz",
           "flags": "required",
           "ref": null

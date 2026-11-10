@@ -2,6 +2,7 @@ import { Link, NavLink, Navigate, Outlet, Route, Routes, useOutletContext } from
 
 import { LoginForm } from "../features/auth/LoginForm";
 import { useSession, type SessionController } from "../features/auth/useSession";
+import { PendingNotices } from "../features/notifications/PendingNotices";
 import { ServiceStatus } from "../features/status/ServiceStatus";
 import { roles, type Role } from "../lib/api/auth";
 import "../features/auth/auth.css";
@@ -92,6 +93,8 @@ function AreaPage({ requiredRole }: { requiredRole?: Role }) {
           </ul>
         </nav>
       )}
+      {(requiredRole === "ADMINISTRADOR" || requiredRole === "INSTRUTOR") &&
+        allowed.includes(requiredRole) && <PendingNotices key={state.session.user_id} />}
       <button type="button" onClick={() => void signOut()}>Sair</button>
     </>
   );

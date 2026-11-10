@@ -1,4 +1,4 @@
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import partial
@@ -40,7 +40,7 @@ def install_identity(
     *,
     settings: AuthSettings | None = None,
     sessions: sessionmaker[Session] | None = None,
-) -> None:
+) -> Callable[[], sessionmaker[Session]]:
     runtime: IdentityRuntime | None = None
     lock = Lock()
 
@@ -100,3 +100,4 @@ def install_identity(
         return Response(status_code=204, headers={"Cache-Control": "no-store"})
 
     app.include_router(router)
+    return lambda: get_runtime().sessions

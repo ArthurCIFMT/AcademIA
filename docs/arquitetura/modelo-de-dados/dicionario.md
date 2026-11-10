@@ -546,8 +546,11 @@ Unicidades: destinatario_id+evento_id+canal.
 | destinatario_id | uuid | required | usuario.id |
 | evento_id | uuid | required | — |
 | canal | varchar(25) | required | — |
+| tipo | varchar(25) | required | — |
 | estado | varchar(25) | required | — |
+| tentativas | integer | required | — |
 | criada_em | timestamptz | required | — |
+| atualizada_em | timestamptz | required | — |
 | lida_em | timestamptz | opcional | — |
 
 ## auditoria — MOD-12

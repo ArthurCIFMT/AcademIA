@@ -443,8 +443,11 @@ Table notificacao {
   destinatario_id uuid [not null]
   evento_id uuid [not null]
   canal varchar(25) [not null]
+  tipo varchar(25) [not null]
   estado varchar(25) [not null]
+  tentativas integer [not null]
   criada_em timestamptz [not null]
+  atualizada_em timestamptz [not null]
   lida_em timestamptz
   indexes {
     (destinatario_id, evento_id, canal) [unique]

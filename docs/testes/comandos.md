@@ -99,3 +99,17 @@ DBML foi validado com @dbml/core 11.0.1 e o JSON Schema com Ajv 8.20.0 em
 diretório temporário externo ao repositório; 10 casos de contrato passaram.
 Scaffolds registrarão comandos reproduzíveis dos conjuntos BE/FE/API/DB.
 A validação documental dos exemplos do onboarding é separada das suites da aplicação.
+
+## Notificações
+
+A integração PostgreSQL do NTF-01 está em `backend/tests/notifications/`.
+No diretório `backend/`, execute:
+
+```powershell
+uv run --locked --env-file ../.env pytest -m 'database or integration' tests/notifications
+```
+
+Para habilitar o cenário SMTP, inicie o sink local e configure
+`ACADEMIA_TEST_MAILPIT=1` conforme o [roteiro](../arquitetura/notificacoes.md).
+O teste de sink é opt-in porque os demais testes de integração não exigem
+um serviço de e-mail.

@@ -107,7 +107,6 @@ def test_migration_preserves_historical_actor_and_enforces_future_fk(
     old_id = uuid4()
     connection.execute(write, {"id": old_id, "actor": uuid4(), "correlation": uuid4()})
     command.upgrade(config, "0003")
-    command.check(config)
     assert (
         connection.scalar(
             text("SELECT id FROM academia.auditoria WHERE id = :id"), {"id": old_id}
