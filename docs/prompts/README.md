@@ -81,6 +81,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | IAM-03 | CONCLUIDO | [Matriz de autorização](../arquitetura/autorizacao.md). 30 BE, 9 API e 13 DB/INT aprovados. O ensaio HTTP usou sessão e papéis no PostgreSQL e um adaptador de designação de teste. Ruff, mypy e DOC aprovados. |
 | IAM-04 | CONCLUIDO | [Roteiro no navegador](../testes/iam-04-navegador.md). 11 FE, 9 API e ensaio Edge/Vite/FastAPI/PostgreSQL aprovados. Lint, tipos, build e DOC aprovados. |
 | NTF-01 | CONCLUIDO | [Notificações e ensaio SMTP](../arquitetura/notificacoes.md). 32 BE, 9 API, 19 DB/INT (incluindo Mailpit real) e 15 FE aprovados. Ruff, mypy, lint, tipos, build e DOC aprovados. |
+| IAM-05 | CONCLUIDO | [Recuperação e roteiro de testes](../arquitetura/autenticacao.md#recuperação-de-acesso-iam-05). 34 BE, 9 API, 23 DB/INT (incluindo Mailpit real) e 19 FE aprovados. Edge com Vite, FastAPI, PostgreSQL e Mailpit confirmou a troca e o novo login. Ruff, mypy, lint, tipos, build e DOC aprovados. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -107,7 +108,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [IAM-02](02-identidade-pessoas/IAM-02.md) | Usuário, papéis e perfis de domínio | MOD-01 | FND-05, IAM-01 | CONCLUIDO |
 | [IAM-03](02-identidade-pessoas/IAM-03.md) | Permissões e acesso a recursos | MOD-01 | IAM-02 | CONCLUIDO |
 | [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | CONCLUIDO |
-| [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | PRONTO |
+| [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | CONCLUIDO |
 | [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | PRONTO |
 | [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | PRONTO |
 | [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | BLOQUEADO |
@@ -223,7 +224,7 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-04 e NTF-01 estão concluídos. IAM-05 é o próximo
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05 e NTF-01 estão concluídos. PES-01 é o próximo
 prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 

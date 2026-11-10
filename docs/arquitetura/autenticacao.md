@@ -73,3 +73,36 @@ A área some assim que o usuário solicita a saída. Se a API não confirmar o
 logout, a interface mantém a área oculta e oferece nova tentativa.
 
 Consulte o [roteiro no navegador](../testes/iam-04-navegador.md).
+
+## Recuperação de acesso (IAM-05)
+
+A ligação das telas públicas usa os pontos de composição existentes
+`frontend/src/app/AppRoutes.tsx` e `frontend/src/lib/api/auth.ts`. Os componentes
+e os testes de interface ficam em `frontend/src/features/auth/`.
+
+| Rota | Contrato |
+|---|---|
+| POST /api/v1/auth/recovery | Recebe JSON com `email`. Requisição com formato e origem aceitos recebe 202 sem corpo, inclusive para endereço desconhecido, conta inativa ou limite atingido. |
+| POST /api/v1/auth/recovery/confirm | Recebe JSON com `token` e `senha`. Retorna 204 após a troca, ou 401 para token inválido, expirado ou já usado. |
+
+As duas rotas validam a origem do frontend. O processo do MVP limita pedidos
+a três por e-mail normalizado e vinte por IP em janelas de 15 minutos, sem
+revelar a cota na resposta pública. A consulta de conta e o envio pelo SMTP
+ocorrem em tarefa de segundo plano após a resposta. Apenas conta ativa é
+elegível. O adaptador do [NTF-01](notificacoes.md) guarda o estado de entrega.
+Falhas são registradas com estado e identificador de correlação. O corpo do
+e-mail, o token, o endereço e a senha ficam fora dos logs do aplicativo.
+Se o processo parar antes do envio, o usuário pode solicitar outro link
+quando houver cota disponível.
+
+O endereço do link vem de `ACADEMIA_AUTH_ORIGIN`. O token aleatório expira em
+30 minutos e o PostgreSQL guarda seu hash. O link usa fragmento
+`/redefinir-senha#token=...` para manter o token fora da URL enviada ao servidor.
+A tela remove o fragmento, retém o token em memória para a confirmação e o
+envia no corpo JSON com a nova senha.
+
+A confirmação bloqueia a conta no banco durante a troca. Na mesma transação,
+consome o token, invalida os outros links de recuperação, atualiza a senha
+Argon2id e sua revisão e revoga as sessões da conta. Os cookies da sessão
+são removidos do navegador que confirmou a troca, e a tela oferece voltar ao
+login. Links de primeiro acesso continuam com finalidade separada.

@@ -113,3 +113,25 @@ Para habilitar o cenário SMTP, inicie o sink local e configure
 `ACADEMIA_TEST_MAILPIT=1` conforme o [roteiro](../arquitetura/notificacoes.md).
 O teste de sink é opt-in porque os demais testes de integração não exigem
 um serviço de e-mail.
+
+## Recuperação de acesso
+
+A partir de `backend/`, com o PostgreSQL de teste configurado e o
+[Mailpit local](../arquitetura/notificacoes.md#ensaio-local-com-mailpit) ativo:
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -m integration tests/identity/test_recovery.py
+```
+
+O teste usa endereços sintéticos e busca o link por destinatário no Mailpit.
+Ele confirma o uso único do token, a troca de senha, a revogação de sessões
+e a resposta pública igual para contas conhecidas e desconhecidas. Testes
+separados cobrem concorrência, expiração e falha observável de SMTP.
+Para conferir no navegador, inicie a aplicação, use **Esqueci minha senha**
+com uma conta sintética ativa e abra a mensagem na caixa do Mailpit.
+
+O ensaio em Microsoft Edge headless com viewport de 390 px usou Vite, FastAPI,
+PostgreSQL de teste e Mailpit. Verificou o pedido, o link, a retirada do fragmento
+da URL, a confirmação e o login com a senha nova. O schema de teste foi removido
+ao final.

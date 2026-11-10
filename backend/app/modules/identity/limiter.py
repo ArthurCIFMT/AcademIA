@@ -46,3 +46,31 @@ class LoginLimiter:
                 current.pop(reservation, None)
                 if not current:
                     del self._attempts[key]
+
+
+class RecoveryLimiter:
+    """Conta pedidos por endereço normalizado e IP no processo do MVP."""
+
+    def __init__(self) -> None:
+        self._buckets: dict[tuple[str, str], tuple[datetime, int]] = {}
+        self._lock = Lock()
+
+    def allow(self, email: str, ip: str, now: datetime) -> bool:
+        limits = ((("email", email), 3), (("ip", ip), 20))
+        with self._lock:
+            self._buckets = {
+                key: bucket for key, bucket in self._buckets.items() if bucket[0] > now
+            }
+            new_keys = sum(key not in self._buckets for key, _ in limits)
+            if len(self._buckets) + new_keys > 4096:
+                return False
+            deadline = now + timedelta(minutes=15)
+            if any(
+                self._buckets.get(key, (deadline, 0))[1] >= limit
+                for key, limit in limits
+            ):
+                return False
+            for key, _ in limits:
+                expires, used = self._buckets.get(key, (deadline, 0))
+                self._buckets[key] = expires, used + 1
+            return True

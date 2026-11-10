@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 import { ApiError, type LoginCredentials } from "../../lib/api/auth";
 
@@ -53,6 +54,7 @@ export function LoginForm({ onLogin }: { onLogin: (credentials: LoginCredentials
         <button type="submit" disabled={submitting}>{submitting ? "Entrando…" : "Entrar"}</button>
         {error && <p role="alert">{error}</p>}
       </form>
+      <p><Link to="/recuperar-acesso">Esqueci minha senha</Link></p>
     </>
   );
 }

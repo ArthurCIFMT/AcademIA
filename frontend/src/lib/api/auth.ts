@@ -81,3 +81,21 @@ export async function logout(csrfToken: string, signal: AbortSignal) {
   });
   if (response.status !== 204) throw new Error("Saída sem confirmação da API.");
 }
+
+
+async function postRecovery(path: string, body: object, expectedStatus: number) {
+  const response = await request(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (response.status !== expectedStatus) throw new Error("Resposta de recuperação inválida.");
+}
+
+export function requestRecovery(email: string) {
+  return postRecovery("recovery", { email }, 202);
+}
+
+export function confirmRecovery(token: string, senha: string) {
+  return postRecovery("recovery/confirm", { token, senha }, 204);
+}

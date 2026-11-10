@@ -26,14 +26,15 @@ CSRF_COOKIE = "academia_csrf"
 COOKIE_PATH = "/api/v1"
 CSRF_HEADER = "X-CSRF-Token"
 type AuthScope = Callable[[], AbstractContextManager[AuthService]]
+type EmailInput = Annotated[
+    str, StringConstraints(strip_whitespace=True, min_length=3, max_length=254)
+]
 
 
 class LoginRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
 
-    email: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=3, max_length=254)
-    ]
+    email: EmailInput
     senha: Annotated[SecretStr, Field(min_length=1, max_length=128)]
 
 
@@ -93,6 +94,16 @@ class BrowserAuth:
         with self.request_scope() as auth:
             user_id = self.session_for(request, auth).user_id
             return Actor(user_id, auth.roles_for(user_id))
+
+    def clear_session_cookies(self, response: Response) -> None:
+        for key in (SESSION_COOKIE, CSRF_COOKIE):
+            response.delete_cookie(
+                key,
+                path=COOKIE_PATH,
+                httponly=True,
+                samesite="lax",
+                secure=self.settings.secure_cookie,
+            )
 
     def router(self) -> APIRouter:
         router = APIRouter(prefix="/api/v1/auth", tags=["Identidade"])
@@ -154,14 +165,7 @@ class BrowserAuth:
             with self.request_scope() as auth:
                 auth.logout(self.session_for(request, auth))
             response = Response(status_code=204, headers={"Cache-Control": "no-store"})
-            for key in (SESSION_COOKIE, CSRF_COOKIE):
-                response.delete_cookie(
-                    key,
-                    path=COOKIE_PATH,
-                    httponly=True,
-                    samesite="lax",
-                    secure=self.settings.secure_cookie,
-                )
+            self.clear_session_cookies(response)
             return response
 
         return router

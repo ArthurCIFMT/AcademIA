@@ -1,6 +1,7 @@
 import { Link, NavLink, Navigate, Outlet, Route, Routes, useOutletContext } from "react-router-dom";
 
 import { LoginForm } from "../features/auth/LoginForm";
+import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { PendingNotices } from "../features/notifications/PendingNotices";
 import { ServiceStatus } from "../features/status/ServiceStatus";
@@ -112,6 +113,8 @@ export function AppRoutes() {
             <ServiceStatus />
           </>
         } />
+        <Route path="/recuperar-acesso" element={<RequestRecoveryPage />} />
+        <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
         <Route element={<SessionBoundary />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/area" element={<AreaPage />} />
