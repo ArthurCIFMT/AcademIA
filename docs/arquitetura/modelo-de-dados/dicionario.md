@@ -130,7 +130,7 @@ Token é trocado por sessão restrita de edição com expiração, não login ge
 | expira_em | timestamptz | required | — |
 | revogado_em | timestamptz | opcional | — |
 | consumido_em | timestamptz | opcional | — |
-| sessao_restrita_hash | char(64) | opcional | — |
+| sessao_restrita_hash | char(64) | opcional unique | — |
 | sessao_expira_em | timestamptz | opcional | — |
 
 ## avaliacao — MOD-03

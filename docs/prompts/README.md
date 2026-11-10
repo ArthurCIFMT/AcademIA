@@ -86,6 +86,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | PES-02 | CONCLUIDO | [Clientes e primeiro acesso](../arquitetura/clientes.md). 37 BE, 9 API, 30 DB/INT e 24 FE aprovados. Edge com FastAPI, PostgreSQL e Mailpit confirmou cadastro, busca, primeiro login e inativação. Ruff, mypy, lint, tipos, build e DOC aprovados. |
 | PES-03 | CONCLUIDO | [Designações e leitura profissional](../arquitetura/designacoes.md). 38 BE, 9 API, 33 DB/INT e 27 FE aprovados. Edge com Vite, FastAPI e PostgreSQL confirmou troca, histórico e listas dos instrutores. Revisão 0005, Ruff, mypy, lint, tipos, build e DOC verificados. |
 | ONB-02 | CONCLUIDO | [Persistência e versões do onboarding](../arquitetura/onboarding.md). Revisão 0006 e 21 cenários específicos aprovados. 56 BE, 9 API e 36 DB/INT aprovados. Ruff, mypy e DOC verificados. |
+| ONB-01 | CONCLUIDO | [Contrato do convite e da sessão restrita](../arquitetura/onboarding.md#convite-inicial-e-sessão-restrita) e [comandos](../testes/comandos.md#convite-inicial-de-onboarding). Migration 0007, 57 BE, 9 API e 41 DB/INT aprovados com PostgreSQL e Mailpit. Ruff e mypy passaram no backend e na migration nova. O lint abrangente ainda aponta duas linhas longas nas migrations 0004 e 0006. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -123,8 +124,8 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [ONB-02](03-onboarding/ONB-02.md) | Persistência do onboarding e avaliações versionadas | MOD-03 | PES-02, FND-05 | CONCLUIDO |
-| [ONB-01](03-onboarding/ONB-01.md) | Convite e acesso por link seguro | MOD-03, MOD-12 | ONB-02, NTF-01 | PRONTO |
-| [ONB-03](03-onboarding/ONB-03.md) | Formulário e consulta responsivos do onboarding | MOD-03 | ONB-01, ONB-02, IAM-04 | BLOQUEADO |
+| [ONB-01](03-onboarding/ONB-01.md) | Convite e acesso por link seguro | MOD-03, MOD-12 | ONB-02, NTF-01 | CONCLUIDO |
+| [ONB-03](03-onboarding/ONB-03.md) | Formulário e consulta responsivos do onboarding | MOD-03 | ONB-01, ONB-02, IAM-04 | PRONTO |
 | [ONB-04](03-onboarding/ONB-04.md) | Avaliação profissional e acesso por designação | MOD-02, MOD-03 | ONB-02, PES-03, IAM-04 | PRONTO |
 
 ## MVP — equipamentos
@@ -228,8 +229,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03 e ONB-02 estão concluídos.
-ONB-01 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-02 e ONB-01 estão concluídos.
+ONB-03 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

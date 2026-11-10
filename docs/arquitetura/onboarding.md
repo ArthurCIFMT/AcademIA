@@ -54,7 +54,50 @@ O serviço interno `append_evaluation` guarda uma entrada imutável por
 avaliação com autor, data e snapshot do próprio cliente. A chave estrangeira
 composta impede associar a avaliação ao snapshot de outra pessoa. A
 autorização por designação e as rotas profissionais serão ligadas em
-ONB-04. A interface do cliente entra em ONB-03 e o convite em ONB-01.
+ONB-04. A interface do cliente entra em ONB-03.
 
 O teste de migration do PES-03 continua verificando a revisão 0005. A checagem
-global do Alembic acompanha a revisão 0006 no teste de ONB-02.
+global do Alembic acompanha a revisão mais recente no teste de ONB-02.
+
+## Convite inicial e sessão restrita
+
+ONB-01 acrescenta a migration 0007 e as rotas abaixo. O atendente ou
+administrador autenticado usa o e-mail já vinculado ao cliente. A API exige
+origem e CSRF da sessão normal para emitir ou reenviar. Só a versão inicial
+editável aceita convite novo. Uma conclusão anterior retorna 409.
+
+| Rota | Operação |
+|---|---|
+| POST /api/v1/onboarding/clientes/{client_id}/convite | Recebe `solicitacao_id` (UUID) e retorna 201 com o ID do convite, estado de entrega e expiração. |
+| GET /api/v1/onboarding/clientes/{client_id}/convite | Consulta o último estado de entrega e a expiração. Retorna 404 se não houver convite. |
+| POST /api/v1/onboarding/convite/troca | Recebe `token` em JSON, consome o link e devolve a expiração e o cookie restrito. |
+| GET /api/v1/onboarding/convite/rascunho | Consulta o rascunho vinculado ao cookie. |
+| PATCH /api/v1/onboarding/convite/rascunho | Recebe `revisao` e `dados` parciais. |
+| POST /api/v1/onboarding/convite/conclusao | Recebe `revisao`, valida a conclusão e encerra a sessão com 204. |
+
+A mesma chave de solicitação para o mesmo cliente recupera o resultado da
+emissão sem novo envio. Uma chave nova representa reenvio explícito, revoga
+o link e a sessão anteriores e preserva os dados do rascunho. O limite é de
+três emissões por cliente em 48 horas. Falha SMTP fica registrada como
+`FALHOU`. Se a execução parar antes de confirmar o envio, a consulta pode
+mostrar `SEM_CONFIRMACAO` ou `ENVIANDO`. Nesses casos, o operador pode
+solicitar reenvio com chave nova. A entrega do e-mail não conclui o onboarding.
+
+O e-mail aponta para `/onboarding/convite#token=…` na origem configurada.
+O fragmento não compõe a URL da requisição HTTP. A tela de ONB-03 lerá e
+removerá o fragmento antes da troca. Se a troca falhar, a tela apresentará
+o erro sem reabrir um rascunho associado a um cookie anterior.
+
+O link é de uso único e expira após 48 horas. A troca gera outro segredo,
+válido até o prazo original, em cookie HttpOnly, SameSite=Lax e Secure em
+HTTPS, limitado a `/api/v1/onboarding/convite`. O backend exige a origem
+configurada na troca e nas mutações restritas. Cada consulta revalida
+cliente, rascunho, prazo e revogação. A sessão permite reabrir o formulário
+no mesmo navegador, mesmo após recarregar a página. Link consumido,
+expirado ou revogado recebe 401. Uma vez concluída a versão inicial,
+a sessão perde o acesso ao rascunho. Login, consulta normal e APIs de
+administração exigem a sessão geral. Os segredos são armazenados por hash.
+
+O bloqueio do cadastro serializa troca, reenvio, edição e conclusão.
+A migration limita a um convite não revogado por rascunho e exige
+metadados de sessão coerentes com o consumo e o prazo do convite.

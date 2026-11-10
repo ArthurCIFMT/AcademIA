@@ -212,3 +212,19 @@ e executa as fixtures sintéticas aprovadas. A integração cobre rascunho
 incompleto, confirmação, revisão concorrente, isolamento por cliente e
 invalidação da referência de triagem. A verificação de banco exercita a
 migration, o vínculo da avaliação ao cliente e a imutabilidade dos registros.
+
+## Convite inicial de onboarding
+
+A partir de `backend/`, com PostgreSQL de teste e Mailpit local:
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -o addopts='' tests/onboarding
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+```
+
+O ensaio usa e-mails sintéticos e recupera o link no Mailpit. Exercita troca
+única, reabertura e conclusão, rejeição de acesso externo, reenvio com
+revogação, isolamento entre contas e falha SMTP com registro persistido.
+O contrato OpenAPI do módulo roda junto aos testes unitários e a migration
+0007 tem verificação de integridade e reversão.

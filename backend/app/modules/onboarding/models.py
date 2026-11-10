@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy import (
+    CHAR,
     CheckConstraint,
     DateTime,
     ForeignKey,
@@ -56,6 +57,38 @@ class OnboardingVersion(Base):
         ForeignKey("academia.usuario.id")
     )
     revision: Mapped[int]
+
+
+class OnboardingInvitation(Base):
+    __tablename__ = "convite_onboarding"
+    __table_args__ = (
+        CheckConstraint(
+            "(consumido_em IS NULL AND sessao_restrita_hash IS NULL "
+            "AND sessao_expira_em IS NULL) OR "
+            "(consumido_em IS NOT NULL AND sessao_restrita_hash IS NOT NULL "
+            "AND sessao_expira_em IS NOT NULL AND consumido_em < sessao_expira_em "
+            "AND sessao_expira_em <= expira_em)",
+            name="ck_convite_onboarding_sessao",
+        ),
+        Index("ix_convite_onboarding_versao_expiracao", "onboarding_id", "expira_em"),
+        Index(
+            "uq_convite_onboarding_nao_revogado",
+            "onboarding_id",
+            unique=True,
+            postgresql_where=text("revogado_em IS NULL"),
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(primary_key=True)
+    onboarding_id: Mapped[UUID] = mapped_column(
+        ForeignKey("academia.onboarding_versao.id")
+    )
+    token_hash: Mapped[str] = mapped_column(CHAR(64), unique=True)
+    expira_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    revogado_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    consumido_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    sessao_restrita_hash: Mapped[str | None] = mapped_column(CHAR(64), unique=True)
+    sessao_expira_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Evaluation(Base):

@@ -103,7 +103,7 @@ Table convite_onboarding {
   expira_em timestamptz [not null]
   revogado_em timestamptz
   consumido_em timestamptz
-  sessao_restrita_hash char(64)
+  sessao_restrita_hash char(64) [unique]
   sessao_expira_em timestamptz
   Note: 'Owner MOD-03. Token é trocado por sessão restrita de edição com expiração, não login geral'
 }

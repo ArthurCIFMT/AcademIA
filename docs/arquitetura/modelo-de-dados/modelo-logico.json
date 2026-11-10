@@ -456,7 +456,7 @@
         {
           "name": "sessao_restrita_hash",
           "type": "char(64)",
-          "flags": "",
+          "flags": "unique",
           "ref": null
         },
         {

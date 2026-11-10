@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException, Response
 from sqlalchemy.orm import Session, sessionmaker
 
+from app.modules.onboarding.invitations_http import invitation_router
 from app.modules.onboarding.schemas import (
     Completion,
     ConfirmUpdate,
@@ -82,4 +83,7 @@ def onboarding_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIR
         with transaction() as session:
             return confirm_update(session, actor.user_id, actor.user_id, data)
 
-    return router
+    routes = APIRouter()
+    routes.include_router(router)
+    routes.include_router(invitation_router(get_sessions))
+    return routes

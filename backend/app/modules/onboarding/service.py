@@ -66,7 +66,7 @@ def _versions(
     return draft, completed
 
 
-def _draft_view(row: OnboardingVersion) -> DraftView:
+def draft_view(row: OnboardingVersion) -> DraftView:
     return DraftView(
         id=row.id,
         numero=row.numero,
@@ -102,7 +102,7 @@ def _snapshot(row: OnboardingVersion) -> SnapshotView:
 def get_own(session: Session, client_id: UUID) -> OwnOnboarding:
     draft, completed = _versions(session, client_id)
     return OwnOnboarding(
-        rascunho=_draft_view(draft) if draft else None,
+        rascunho=draft_view(draft) if draft else None,
         concluido=_snapshot(completed) if completed else None,
     )
 
@@ -160,6 +160,20 @@ def _new_draft(
     return row
 
 
+def start_initial_draft(
+    session: Session, client_id: UUID, author_id: UUID
+) -> OnboardingVersion:
+    """Abre o primeiro rascunho sob o bloqueio do cadastro do cliente."""
+    draft, completed = _versions(session, client_id)
+    if completed is not None:
+        raise OnboardingError(409)
+    return (
+        draft
+        if draft is not None
+        else _new_draft(session, client_id, author_id, None, {})
+    )
+
+
 def save_draft(
     session: Session, client_id: UUID, author_id: UUID, change: DraftChange
 ) -> DraftView:
@@ -177,7 +191,7 @@ def save_draft(
         if merged != draft.dados:
             draft.dados = merged
             draft.revision += 1
-    return _draft_view(draft)
+    return draft_view(draft)
 
 
 def age_at(birth: date, today: date) -> int:
