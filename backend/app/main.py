@@ -7,6 +7,7 @@ from app.core.http import error_schemas, install_http_contract
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
 from app.modules.notifications.http import notification_router
+from app.modules.people.staff_http import staff_router
 
 
 def create_app(
@@ -22,4 +23,5 @@ def create_app(
         app, settings=auth_settings, sessions=identity_sessions
     )
     app.include_router(notification_router(get_sessions))
+    app.include_router(staff_router(get_sessions))
     return app

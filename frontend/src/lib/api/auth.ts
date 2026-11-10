@@ -16,14 +16,14 @@ export class ApiError extends Error {
   }
 }
 
-async function request(path: string, options: RequestInit): Promise<Response> {
+export async function requestApi(path: string, options: RequestInit): Promise<Response> {
   const baseUrl = (import.meta.env.VITE_API_BASE_URL?.trim() || "/api").replace(/\/+$/, "");
-  const url = new URL(baseUrl + "/v1/auth/" + path, window.location.origin);
-  if (url.origin !== window.location.origin) {
+  const url = new URL(baseUrl + path, window.location.origin);
+  if (url.origin !== window.location.origin || url.pathname.startsWith("//")) {
     throw new Error("A API de autenticação precisa estar na mesma origem.");
   }
 
-  const response = await fetch(url.pathname, {
+  const response = await fetch(url.pathname + url.search, {
     ...options,
     redirect: "error",
     cache: "no-store",
@@ -36,6 +36,10 @@ async function request(path: string, options: RequestInit): Promise<Response> {
 
 function isRole(value: unknown): value is Role {
   return roles.some((role) => role === value);
+}
+
+function request(path: string, options: RequestInit) {
+  return requestApi("/v1/auth/" + path, options);
 }
 
 async function readSession(response: Response): Promise<Session> {
@@ -83,7 +87,7 @@ export async function logout(csrfToken: string, signal: AbortSignal) {
 }
 
 
-async function postRecovery(path: string, body: object, expectedStatus: number) {
+async function postCredential(path: string, body: object, expectedStatus: number) {
   const response = await request(path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -93,9 +97,13 @@ async function postRecovery(path: string, body: object, expectedStatus: number) 
 }
 
 export function requestRecovery(email: string) {
-  return postRecovery("recovery", { email }, 202);
+  return postCredential("recovery", { email }, 202);
 }
 
 export function confirmRecovery(token: string, senha: string) {
-  return postRecovery("recovery/confirm", { token, senha }, 204);
+  return postCredential("recovery/confirm", { token, senha }, 204);
+}
+
+export function activateFirstAccess(token: string, senha: string) {
+  return postCredential("first-access", { token, senha }, 204);
 }

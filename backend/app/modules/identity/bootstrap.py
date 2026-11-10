@@ -1,12 +1,13 @@
 from datetime import date, datetime
 from uuid import UUID, uuid4
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.modules.identity.accounts import create_account, validate_email
 from app.modules.identity.models import AccountState, Role, User, UserRole
 from app.modules.identity.passwords import Passwords
+from app.modules.identity.roles import lock_admin_changes
 from app.modules.people.profiles import EmployeeProfile
 
 
@@ -29,8 +30,7 @@ def bootstrap_admin(
     if not 1 <= len(name) <= 120:
         raise ValueError("Informe o nome do administrador.")
 
-    # Chave transacional reservada ao bootstrap do AcademIA.
-    session.execute(select(func.pg_advisory_xact_lock(0x41434144, 1)))
+    lock_admin_changes(session)
     admins = session.execute(
         select(User.id, User.email, User.estado, EmployeeProfile.ativo)
         .join(UserRole, UserRole.usuario_id == User.id)

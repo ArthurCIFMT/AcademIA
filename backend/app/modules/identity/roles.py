@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import Select, and_, or_, select
+from sqlalchemy import Select, and_, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.modules.identity.models import AccountState, Role, User, UserRole
@@ -37,3 +37,8 @@ def active_admin_ids(session: Session) -> list[UUID]:
         .order_by(UserRole.usuario_id)
     )
     return list(session.scalars(statement))
+
+
+def lock_admin_changes(session: Session) -> None:
+    """Serializa bootstrap e mudanças que podem remover o último administrador."""
+    session.execute(select(func.pg_advisory_xact_lock(0x41434144, 1)))

@@ -172,3 +172,17 @@ class EmailDelivery:
 def local_email_delivery(sessions: sessionmaker[Session]) -> EmailDelivery:
     settings = SmtpSettings()
     return EmailDelivery(sessions, LocalSmtp(settings), settings.sender)
+
+
+def email_delivery_state(
+    session: Session, recipient_id: UUID, event_id: UUID, kind: EmailKind
+) -> DeliveryState | None:
+    state = session.scalar(
+        select(Notification.estado).where(
+            Notification.destinatario_id == recipient_id,
+            Notification.evento_id == event_id,
+            Notification.canal == "EMAIL",
+            Notification.tipo == kind,
+        )
+    )
+    return DeliveryState(state) if state is not None else None

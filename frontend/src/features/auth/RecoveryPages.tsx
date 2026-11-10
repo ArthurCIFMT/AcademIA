@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { ApiError, confirmRecovery, requestRecovery } from "../../lib/api/auth";
+import { activateFirstAccess, ApiError, confirmRecovery, requestRecovery } from "../../lib/api/auth";
 
 const genericReply = "Se o e-mail estiver elegível para recuperação, você receberá um link.";
 const invalidLink = "O link de recuperação é inválido ou expirou.";
@@ -42,7 +42,8 @@ export function RequestRecoveryPage() {
   );
 }
 
-export function ResetPasswordPage() {
+export function ResetPasswordPage({ firstAccess = false }: { firstAccess?: boolean }) {
+  const title = firstAccess ? "Definir senha" : "Redefinir senha";
   const { hash, pathname } = useLocation();
   const navigate = useNavigate();
   const [token, setToken] = useState(() => new URLSearchParams(hash.slice(1)).get("token") ?? "");
@@ -66,7 +67,8 @@ export function ResetPasswordPage() {
     setStatus("sending");
     setError("");
     try {
-      await confirmRecovery(token, password);
+      const confirm = firstAccess ? activateFirstAccess : confirmRecovery;
+      await confirm(token, password);
       setToken("");
       setStatus("sent");
     } catch (failure) {
@@ -74,7 +76,7 @@ export function ResetPasswordPage() {
         setToken("");
         setStatus("invalid");
       } else {
-        setError("Não foi possível redefinir a senha. Tente novamente.");
+        setError("Não foi possível salvar a senha. Tente novamente.");
         setStatus("ready");
       }
     } finally {
@@ -84,12 +86,15 @@ export function ResetPasswordPage() {
 
   return (
     <>
-      <h2>Redefinir senha</h2>
-      {status === "sent" ? <p role="status">Senha redefinida. Entre com a nova senha.</p> :
+      <h2>{title}</h2>
+      {status === "sent" ? <p role="status">
+        {firstAccess ? "Senha definida. Entre com sua senha." : "Senha redefinida. Entre com a nova senha."}
+      </p> :
         status === "invalid" || !/^[A-Za-z0-9_-]{43}$/.test(token) ? (
           <>
-            <p role="alert">{invalidLink}</p>
-            <Link to="/recuperar-acesso">Solicitar outro link</Link>
+            <p role="alert">{firstAccess ? "O link de primeiro acesso é inválido ou expirou." : invalidLink}</p>
+            {firstAccess ? <p>Solicite outro convite ao administrador.</p> :
+              <Link to="/recuperar-acesso">Solicitar outro link</Link>}
           </>
         ) : (
           <form className="login-form" onSubmit={handleSubmit}>
@@ -104,7 +109,7 @@ export function ResetPasswordPage() {
               minLength={10} maxLength={128} required disabled={status === "sending"}
             />
             <button type="submit" disabled={status === "sending"}>
-              {status === "sending" ? "Redefinindo…" : "Redefinir senha"}
+              {status === "sending" ? "Salvando…" : title}
             </button>
             {error && <p role="alert">{error}</p>}
           </form>

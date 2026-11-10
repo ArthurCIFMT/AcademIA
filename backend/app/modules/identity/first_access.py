@@ -23,6 +23,19 @@ class ProvisionedAccount:
     user_id: UUID
     token: str = field(repr=False)
     expires_at: datetime
+    token_id: UUID
+
+
+def invalidate_first_access(session: Session, user_id: UUID, *, now: datetime) -> None:
+    session.execute(
+        update(AccessToken)
+        .where(
+            AccessToken.usuario_id == user_id,
+            AccessToken.finalidade == FIRST_ACCESS,
+            AccessToken.consumido_em.is_(None),
+        )
+        .values(consumido_em=now)
+    )
 
 
 def issue_first_access(
@@ -36,27 +49,20 @@ def issue_first_access(
     if invited is None:
         raise InvalidFirstAccess
 
-    session.execute(
-        update(AccessToken)
-        .where(
-            AccessToken.usuario_id == user_id,
-            AccessToken.finalidade == FIRST_ACCESS,
-            AccessToken.consumido_em.is_(None),
-        )
-        .values(consumido_em=now)
-    )
+    invalidate_first_access(session, user_id, now=now)
     raw = token_urlsafe(32)
+    token_id = uuid4()
     expires_at = now + timedelta(hours=24)
     session.add(
         AccessToken(
-            id=uuid4(),
+            id=token_id,
             usuario_id=user_id,
             hash=digest(raw),
             finalidade=FIRST_ACCESS,
             expira_em=expires_at,
         )
     )
-    return ProvisionedAccount(user_id, raw, expires_at)
+    return ProvisionedAccount(user_id, raw, expires_at, token_id)
 
 
 def provision_account(

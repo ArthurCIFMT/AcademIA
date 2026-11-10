@@ -1,0 +1,40 @@
+.staff-panel {
+  margin: 1rem 0;
+  overflow-wrap: anywhere;
+}
+
+.staff-form fieldset {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.staff-form input:not([type="checkbox"]) {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem;
+  font: inherit;
+}
+
+.staff-form input[type="checkbox"] {
+  margin-inline-end: 0.5rem;
+}
+
+.staff-list {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.staff-list li,
+.staff-pages {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+}
+
+.staff-list li + li {
+  margin-top: 0.75rem;
+}

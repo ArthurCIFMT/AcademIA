@@ -135,3 +135,23 @@ O ensaio em Microsoft Edge headless com viewport de 390 px usou Vite, FastAPI,
 PostgreSQL de teste e Mailpit. Verificou o pedido, o link, a retirada do fragmento
 da URL, a confirmação e o login com a senha nova. O schema de teste foi removido
 ao final.
+
+## Cadastro e manutenção de funcionários
+
+A partir de `backend/`, com PostgreSQL de teste e
+[Mailpit local](../arquitetura/notificacoes.md#ensaio-local-com-mailpit):
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -m integration tests/people/test_staff.py
+```
+
+Na interface, entre como administrador, abra **Gerenciar funcionários** e
+cadastre uma conta sintética. Consulte os dados e o estado do convite. Abra
+o link recebido no Mailpit em outra janela, defina a senha e entre nessa
+janela com a conta convidada. Inative o perfil pelo painel administrativo
+e confirme que o acesso operacional foi retirado.
+
+O ensaio no Microsoft Edge com viewport de 390 px usou Vite, FastAPI, PostgreSQL
+de teste e Mailpit. Confirmou cadastro, convite, primeiro login e perda da
+área de instrutor após a inativação. O schema sintético foi removido ao final.
