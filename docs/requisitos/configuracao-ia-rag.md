@@ -40,3 +40,16 @@ Metas de p95 total são objetivos iniciais (15 s chat, 60 s ficha), não resulta
 se não atendidas, relatar e ajustar configuração por decisão registrada, não mentir
 sobre desempenho. p95 vetorial ≤2 s permanece requisito no cenário de ensaio.
 Nenhuma avaliação real foi executada nesta preparação.
+
+## Proteção contra abuso no chat
+
+A configuração v1 define até **6 novas execuções em 60 segundos**, em janela
+móvel por cliente autenticado, compartilhada entre dúvidas e adaptações
+iniciadas pelo chat. A cota é reservada de forma atômica para que requisições
+concorrentes com chaves diferentes não ultrapassem o teto. Ao atingir o
+limite, a API devolve HTTP 429 com `Retry-After` e encerra antes de chamar
+embeddings, recuperação vetorial ou LLM. Replay idempotente só consulta a
+execução do próprio cliente e não abre outra execução nem consome nova vaga.
+Os demais limites de tamanho, tempo, contexto e chamadas continuam aplicáveis.
+Os casos de regressão estão na
+[matriz de segurança](../testes/rag-ia-semantico.md#segurança-do-chat-e-do-rag).

@@ -46,7 +46,12 @@ indexados como literatura compartilhada. Não enviar documento inteiro por pedid
 
 ## Critérios de aceite
 
-- Consulta nunca recupera documento não aprovado/revogado.
+- Consulta nunca recupera documento não aprovado/revogado, inclusive após
+  aquecer o cache ou com o vetor ainda presente. SC-05 verifica isso em índice
+  de teste e confirma que conversas e dados operacionais não integram o acervo.
+- Exercitar a porta de recuperação com o vetorial de teste e sem configurar
+  provedor LLM. O resultado contém apenas evidências e proveniência dentro
+  do top-K permitido, mesmo quando um trecho sintético contém uma instrução.
 - Consultas de teste em português recuperam evidências esperadas PT/EN com modelo
   de embeddings compatível; avaliar relevância por idioma, sem traduzir o acervo
   automaticamente ou presumir desempenho só porque o modelo é multilíngue.

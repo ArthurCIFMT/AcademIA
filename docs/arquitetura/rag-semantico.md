@@ -57,8 +57,17 @@ caso não caiba conjunto suficiente, retornar limitação sem inventar IDs.
 | PublicarVersao | MOD-04 | conteúdo validado, versões-base e correlação idempotente |
 
 JSON Schema nas fronteiras e objetos tipados internos. Modelo não escolhe cliente,
-não acessa SQL, internet aberta ou escrita de domínio. Corpus recuperado é dado,
-nunca instrução. Permissões são impostas pelo backend em toda consulta.
+não acessa SQL, internet aberta ou escrita de domínio. Permissões são impostas
+pelo backend em toda consulta.
+
+O MOD-05 consulta o índice aprovado e retorna trechos com proveniência dentro do
+limite de recuperação. O MOD-06 decide quando consultar essa porta e envia ao
+LLM somente a entrada autorizada para a etapa em execução. Mensagens e trechos
+recuperados são dados externos ao prompt de controle. O LLM não pode consultar
+o índice diretamente, trocar a identidade do cliente nem decidir permissões.
+O backend valida resultados e mantém as decisões de bloqueio e publicação.
+A [matriz de segurança do chat](../testes/rag-ia-semantico.md#segurança-do-chat-e-do-rag)
+verifica separadamente recuperação, orquestração, API e navegador.
 
 ## Validação, saúde e publicação
 

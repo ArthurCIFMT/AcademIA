@@ -32,7 +32,9 @@
     "prompt_utf8_bytes": 24000,
     "chat": {
       "output_tokens": 600,
-      "timeout_seconds": 20
+      "timeout_seconds": 20,
+      "max_new_executions_per_client": 6,
+      "execution_window_seconds": 60
     },
     "triage": {
       "output_tokens": 400,

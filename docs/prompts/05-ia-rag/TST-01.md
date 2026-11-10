@@ -44,6 +44,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 4. Demonstrar três estados de triagem sem laudo/liberação médica; dúvida geral
    sem onboarding; complemento confirmado/versionado antes de adaptar; geração
    publica uma vez e não duplica aviso ao entrar na tela de acompanhamento.
+5. Conferir as evidências SC-01 a SC-06 de AI-06 e RAG-05. No navegador com
+   a API real, exercitar a troca de sessão entre dois clientes e a exibição
+   inerte de uma resposta maliciosa controlada pelo adaptador de teste.
 
 ## Critérios de aceite
 
@@ -57,6 +60,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Caso bloqueado não chega à publicação; instrutor alheio e cliente alheio são recusados.
 - Treino e chat funcionam antes do aceite; rejeição não oculta conteúdo retido nem conversa.
 - Execução local reproduzível passa; serviço real obrigatório ausente mantém aceite pendente.
+- O PG-01 exige os casos obrigatórios da
+  [matriz de segurança](../../testes/rag-ia-semantico.md#segurança-do-chat-e-do-rag)
+  aprovados, com evidência de autorização na API, recuperação vetorial e
+  renderização no navegador separada do ensaio de injeção com LLM real.
 - Repetir bootstrap não duplica administrador e usuário convidado consegue o
   primeiro login; mudança de restrição durante revisão exige revalidação prevista.
 
