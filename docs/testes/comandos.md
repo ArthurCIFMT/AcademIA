@@ -175,3 +175,26 @@ de funcionário ativo, confirme que ele conserva as permissões operacionais.
 O ensaio no Edge com viewport de 390 px usou Vite, FastAPI, PostgreSQL de
 teste e Mailpit. Confirmou cadastro, busca por e-mail, primeiro login e
 bloqueio da área de cliente após inativação. O schema de teste foi removido.
+
+## Designação de instrutor
+
+A partir de `backend/`, com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/assignments
+```
+
+O teste de API usa sessões reais e uma rota de prova registrada apenas no
+ensaio. Confere a perda do acesso do instrutor anterior após a troca e a
+concessão para o novo responsável, sem usar dados de saúde reais. O teste
+concorrente disputa a mesma revisão e verifica que o banco guarda apenas um
+vínculo vigente.
+
+Para conferir na SPA, entre como administrador, consulte um cliente e abra
+**Gerenciar instrutor responsável**. Designar e trocar o instrutor deve exibir
+o novo responsável e o vínculo anterior no histórico. Entre com a conta
+de cada instrutor e consulte **Meus clientes**.
+
+O ensaio no Edge com viewport de 390 px usou Vite, FastAPI e PostgreSQL de
+teste. Confirmou a troca, o histórico e a atualização das listas dos dois
+instrutores. O schema temporário foi removido ao final.

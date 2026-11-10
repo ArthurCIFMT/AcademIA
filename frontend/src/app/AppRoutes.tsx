@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, NavLink, Navigate, Outlet, Route, Routes, useOutletContext } from "react-router-dom";
 
+import { AssignmentPage, MyAssignmentsPage } from "../features/assignments/AssignmentPages";
 import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
@@ -65,7 +66,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -84,6 +85,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
   }
 
   const isAdmin = requiredRole === "ADMINISTRADOR" && allowed.includes("ADMINISTRADOR");
+  const isInstructor = requiredRole === "INSTRUTOR" && allowed.includes("INSTRUTOR");
   const canManageClients = (requiredRole === "ADMINISTRADOR" || requiredRole === "ATENDENTE") && allowed.includes(requiredRole);
   const staffContent: ReactNode = feature === "staff" && isAdmin
     ? <StaffDirectory key={state.session.user_id} session={state.session} onAccessChange={retrySession} />
@@ -106,7 +108,10 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {canManageClients && <p>
         <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
       </p>}
+      {isInstructor && <p><Link to="/area/instrutor/clientes">Meus clientes</Link></p>}
       {staffContent}
+      {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
+      {feature === "my-assignments" && isInstructor && <MyAssignmentsPage />}
       {feature === "clients" && canManageClients &&
         <ClientDirectory key={state.session.user_id} session={state.session} onAccessChange={retrySession} />}
       {!feature && (requiredRole === "ADMINISTRADOR" || requiredRole === "INSTRUTOR") &&
@@ -137,6 +142,8 @@ export function AppRoutes() {
           <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
           <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
           <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
+          <Route path="/area/administracao/designacoes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="assignments" />} />
+          <Route path="/area/instrutor/clientes" element={<AreaPage requiredRole="INSTRUTOR" feature="my-assignments" />} />
           {roles.map((role) => (
             <Route key={role} path={"/area/" + areas[role].path} element={<AreaPage requiredRole={role} />} />
           ))}

@@ -12,6 +12,7 @@ from app.database.connection import (
 )
 
 import_module("app.events.models")
+import_module("app.modules.assignments.models")
 import_module("app.modules.audit.models")
 import_module("app.modules.identity.models")
 import_module("app.modules.notifications.models")

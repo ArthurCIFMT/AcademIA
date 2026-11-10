@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { Link } from "react-router-dom";
 
 import { ApiError, type Session } from "../../lib/api/auth";
 import { changeClient, getClient, listClients, type ClientDetail, type ClientPage } from "./api";
@@ -147,6 +148,11 @@ export function ClientDirectory({
         <>
           <h4>{form ? "Editar cliente" : "Novo cliente"}</h4>
           {form && <p>{form.email} · {accountLabels[form.estado_conta]}</p>}
+          {form && session.roles.includes("ADMINISTRADOR") && (
+            <p><Link to={"/area/administracao/designacoes?cliente=" + encodeURIComponent(form.id)}>
+              Gerenciar instrutor responsável
+            </Link></p>
+          )}
           <form key={form ? form.id + "/" + form.revisao : "new"} className="clients-form" onSubmit={save}>
             <fieldset disabled={busy}>
               <label>Nome<input name="nome" maxLength={120} required defaultValue={form?.nome} /></label>

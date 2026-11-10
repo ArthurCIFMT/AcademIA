@@ -27,9 +27,11 @@ a existência, a visibilidade e as regras de publicação ou retenção. A inter
 usa os papéis para navegação. A API decide o acesso e retorna 401 para sessão
 inválida ou 403 para sessão válida sem permissão.
 
-`AssignmentReader` é o contrato a ser fornecido pelo módulo de designação em
-PES-03. Enquanto ele estiver ausente, a via profissional é negada. IAM-03
-testa o contrato com um adaptador de teste. Sessão, conta, perfis e papéis
-usam o PostgreSQL real. A área de login será entregue no IAM-04.
+`AssignmentReader` é fornecido pelo módulo de designação entregue no PES-03.
+O adaptador PostgreSQL verifica o vínculo vigente e a elegibilidade dos
+perfis. Rotas profissionais podem usar a dependência `AssignmentAccess`
+e aplicar a política ao identificador do cliente obtido pelo backend.
+Sessão, conta, perfis e papéis também usam PostgreSQL.
+[Contrato de designações](designacoes.md#leitura-profissional).
 
 [Contratos de autenticação](autenticacao.md) · [Decisão de identidade](decisoes/ADR-002-identidade-e-papeis.md)

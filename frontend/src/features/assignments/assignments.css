@@ -1,0 +1,25 @@
+.assignments-panel {
+  margin: 1rem 0;
+  overflow-wrap: anywhere;
+}
+.assignments-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.65rem;
+  margin: 1rem 0;
+}
+.assignments-controls input {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.55rem;
+  font: inherit;
+}
+.assignment-choice {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-height: 36px;
+}
