@@ -367,7 +367,7 @@
         {
           "name": "idade_snapshot",
           "type": "integer",
-          "flags": "required",
+          "flags": "",
           "ref": null
         },
         {
@@ -389,6 +389,12 @@
           "ref": null
         },
         {
+          "name": "concluido_por",
+          "type": "uuid",
+          "flags": "",
+          "ref": "usuario.id"
+        },
+        {
           "name": "revision",
           "type": "integer",
           "flags": "required",
@@ -399,6 +405,10 @@
         [
           "cliente_id",
           "numero"
+        ],
+        [
+          "cliente_id",
+          "id"
         ]
       ]
     },
@@ -461,7 +471,7 @@
     {
       "name": "avaliacao",
       "owner": "MOD-03",
-      "note": "Avaliação opcional do instrutor; não é laudo ou aprovação prévia",
+      "note": "Avaliação imutável vinculada ao snapshot do próprio cliente pela FK física composta",
       "columns": [
         {
           "name": "id",

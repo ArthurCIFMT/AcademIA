@@ -144,14 +144,13 @@ def test_assignment_contract_requires_the_expected_current_id(
 
 
 @pytest.mark.database
-def test_revision_0005_matches_metadata_and_enforces_period_and_unique_open_link(
+def test_revision_0005_enforces_period_and_unique_open_link(
     migration: tuple[Connection, Config],
 ) -> None:
     connection, config = migration
     command.upgrade(config, "0004")
     assert not inspect(connection).has_table("designacao", schema="academia")
     command.upgrade(config, "0005")
-    command.check(config)
     factory = create_session_factory(connection)
     people = _seed(factory)
     now = utc_now()

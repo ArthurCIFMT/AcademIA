@@ -102,7 +102,7 @@ Um vínculo principal sem fim por cliente
 
 Dados validados pelo schema v1; versões concluídas imutáveis; contexto não é índice público
 
-Unicidades: cliente_id+numero.
+Unicidades: cliente_id+numero, cliente_id+id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -111,10 +111,11 @@ Unicidades: cliente_id+numero.
 | numero | integer | required | — |
 | estado | varchar(20) | required | — |
 | schema_version | integer | required | — |
-| idade_snapshot | integer | required | — |
+| idade_snapshot | integer | obrigatório na conclusão | — |
 | dados | jsonb | required | — |
 | criado_por | uuid | required | usuario.id |
-| concluido_em | timestamptz | opcional | — |
+| concluido_em | timestamptz | obrigatório na conclusão | — |
+| concluido_por | uuid | obrigatório na conclusão | usuario.id |
 | revision | integer | required | — |
 
 ## convite_onboarding — MOD-03
@@ -134,7 +135,7 @@ Token é trocado por sessão restrita de edição com expiração, não login ge
 
 ## avaliacao — MOD-03
 
-Avaliação opcional do instrutor; não é laudo ou aprovação prévia
+Avaliação imutável vinculada ao snapshot do próprio cliente pela FK física composta
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|

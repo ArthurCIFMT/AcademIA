@@ -83,13 +83,15 @@ Table onboarding_versao {
   numero integer [not null]
   estado varchar(20) [not null]
   schema_version integer [not null]
-  idade_snapshot integer [not null]
+  idade_snapshot integer
   dados jsonb [not null]
   criado_por uuid [not null]
   concluido_em timestamptz
+  concluido_por uuid
   revision integer [not null]
   indexes {
     (cliente_id, numero) [unique]
+    (cliente_id, id) [unique]
   }
   Note: 'Owner MOD-03. Dados validados pelo schema v1; versões concluídas imutáveis; contexto não é índice público'
 }
@@ -113,7 +115,7 @@ Table avaliacao {
   onboarding_id uuid [not null]
   registrado_em timestamptz [not null]
   dados jsonb [not null]
-  Note: 'Owner MOD-03. Avaliação opcional do instrutor; não é laudo ou aprovação prévia'
+  Note: 'Owner MOD-03. Avaliação imutável, com FK física composta para a versão do próprio cliente'
 }
 
 Table equipamento {
@@ -488,6 +490,7 @@ Ref: designacao.instrutor_id > funcionario.usuario_id
 Ref: designacao.atribuido_por > usuario.id
 Ref: onboarding_versao.cliente_id > cliente.usuario_id
 Ref: onboarding_versao.criado_por > usuario.id
+Ref: onboarding_versao.concluido_por > usuario.id
 Ref: convite_onboarding.onboarding_id > onboarding_versao.id
 Ref: avaliacao.cliente_id > cliente.usuario_id
 Ref: avaliacao.instrutor_id > funcionario.usuario_id

@@ -198,3 +198,17 @@ de cada instrutor e consulte **Meus clientes**.
 O ensaio no Edge com viewport de 390 px usou Vite, FastAPI e PostgreSQL de
 teste. Confirmou a troca, o histórico e a atualização das listas dos dois
 instrutores. O schema temporário foi removido ao final.
+
+## Persistência do onboarding
+
+A partir de `backend/`, com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/onboarding
+```
+
+A suíte compara o schema emitido pelo Pydantic com o contrato versionado
+e executa as fixtures sintéticas aprovadas. A integração cobre rascunho
+incompleto, confirmação, revisão concorrente, isolamento por cliente e
+invalidação da referência de triagem. A verificação de banco exercita a
+migration, o vínculo da avaliação ao cliente e a imutabilidade dos registros.
