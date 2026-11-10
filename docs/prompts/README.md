@@ -83,6 +83,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | NTF-01 | CONCLUIDO | [Notificações e ensaio SMTP](../arquitetura/notificacoes.md). 32 BE, 9 API, 19 DB/INT (incluindo Mailpit real) e 15 FE aprovados. Ruff, mypy, lint, tipos, build e DOC aprovados. |
 | IAM-05 | CONCLUIDO | [Recuperação e roteiro de testes](../arquitetura/autenticacao.md#recuperação-de-acesso-iam-05). 34 BE, 9 API, 23 DB/INT (incluindo Mailpit real) e 19 FE aprovados. Edge com Vite, FastAPI, PostgreSQL e Mailpit confirmou a troca e o novo login. Ruff, mypy, lint, tipos, build e DOC aprovados. |
 | PES-01 | CONCLUIDO | [Funcionários e convite](../arquitetura/funcionarios.md). 36 BE, 9 API, 27 DB/INT e 22 FE aprovados. Edge com Vite, FastAPI, PostgreSQL e Mailpit confirmou cadastro, primeiro acesso e inativação. Ruff, mypy, lint, tipos, build e DOC aprovados. |
+| PES-02 | CONCLUIDO | [Clientes e primeiro acesso](../arquitetura/clientes.md). 37 BE, 9 API, 30 DB/INT e 24 FE aprovados. Edge com FastAPI, PostgreSQL e Mailpit confirmou cadastro, busca, primeiro login e inativação. Ruff, mypy, lint, tipos, build e DOC aprovados. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -111,15 +112,15 @@ ou link de relatório. A numeração das seções não substitui as dependência
 | [IAM-04](02-identidade-pessoas/IAM-04.md) | Login e sessão no frontend | MOD-01 | FND-07, IAM-01, IAM-02, IAM-03 | CONCLUIDO |
 | [IAM-05](02-identidade-pessoas/IAM-05.md) | Recuperação de acesso por e-mail | MOD-01, MOD-12 | IAM-01, IAM-04, NTF-01 | CONCLUIDO |
 | [PES-01](02-identidade-pessoas/PES-01.md) | Cadastro e manutenção de funcionários | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | CONCLUIDO |
-| [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | PRONTO |
-| [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | BLOQUEADO |
+| [PES-02](02-identidade-pessoas/PES-02.md) | Cadastro e manutenção de clientes | MOD-01 | IAM-02, IAM-03, IAM-04, FND-08, NTF-01 | CONCLUIDO |
+| [PES-03](02-identidade-pessoas/PES-03.md) | Designação de instrutor responsável | MOD-02 | PES-01, PES-02 | PRONTO |
 | [NTF-01](02-identidade-pessoas/NTF-01.md) | Notificações e adaptador de e-mail | MOD-12 | FND-08, IAM-02, IAM-04 | CONCLUIDO |
 
 ## MVP — onboarding e avaliações
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [ONB-02](03-onboarding/ONB-02.md) | Persistência do onboarding e avaliações versionadas | MOD-03 | PES-02, FND-05 | BLOQUEADO |
+| [ONB-02](03-onboarding/ONB-02.md) | Persistência do onboarding e avaliações versionadas | MOD-03 | PES-02, FND-05 | PRONTO |
 | [ONB-01](03-onboarding/ONB-01.md) | Convite e acesso por link seguro | MOD-03, MOD-12 | ONB-02, NTF-01 | BLOQUEADO |
 | [ONB-03](03-onboarding/ONB-03.md) | Formulário e consulta responsivos do onboarding | MOD-03 | ONB-01, ONB-02, IAM-04 | BLOQUEADO |
 | [ONB-04](03-onboarding/ONB-04.md) | Avaliação profissional e acesso por designação | MOD-02, MOD-03 | ONB-02, PES-03, IAM-04 | BLOQUEADO |
@@ -225,8 +226,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01 e PES-01 estão concluídos. PES-02 é o
-próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 e PES-02 estão concluídos.
+PES-03 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

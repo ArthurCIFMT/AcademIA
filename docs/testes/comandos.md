@@ -155,3 +155,23 @@ e confirme que o acesso operacional foi retirado.
 O ensaio no Microsoft Edge com viewport de 390 px usou Vite, FastAPI, PostgreSQL
 de teste e Mailpit. Confirmou cadastro, convite, primeiro login e perda da
 área de instrutor após a inativação. O schema sintético foi removido ao final.
+
+## Cadastro e manutenção de clientes
+
+A partir de `backend/`, com PostgreSQL de teste e
+[Mailpit local](../arquitetura/notificacoes.md#ensaio-local-com-mailpit):
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -m integration tests/people/test_clients.py
+```
+
+Na área de atendimento ou administrativa, abra **Gerenciar clientes**,
+cadastre uma conta sintética e consulte o estado do convite. Abra o link
+recebido no Mailpit em outra janela e faça o primeiro login. Busque pelo
+nome ou e-mail e inative o perfil. Se a identidade também tiver um perfil
+de funcionário ativo, confirme que ele conserva as permissões operacionais.
+
+O ensaio no Edge com viewport de 390 px usou Vite, FastAPI, PostgreSQL de
+teste e Mailpit. Confirmou cadastro, busca por e-mail, primeiro login e
+bloqueio da área de cliente após inativação. O schema de teste foi removido.

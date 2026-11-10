@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.contracts.errors import ErrorResponse
+from app.modules.people.invitations import send_first_access_invite
 from app.modules.people.staff import (
     CreateStaff,
     StaffDetail,
@@ -18,7 +19,6 @@ from app.modules.people.staff import (
     get_staff,
     list_staff,
     resend_staff_invite,
-    send_staff_invite,
     update_staff,
 )
 from app.policies.access import Actor, Operation
@@ -68,7 +68,7 @@ def staff_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRouter
         with transaction() as session:
             user_id, email, invite = create_staff(session, data, actor, correlation)
         if invite is not None:
-            send_staff_invite(
+            send_first_access_invite(
                 get_sessions(),
                 email,
                 invite,
@@ -96,7 +96,7 @@ def staff_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRouter
             email, invite = resend_staff_invite(
                 session, user_id, data.revisao, actor, correlation
             )
-        send_staff_invite(
+        send_first_access_invite(
             get_sessions(),
             email,
             invite,

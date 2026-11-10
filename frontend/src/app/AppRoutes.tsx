@@ -5,6 +5,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { PendingNotices } from "../features/notifications/PendingNotices";
+import { ClientDirectory } from "../features/clients/ClientDirectory";
 import { StaffDirectory } from "../features/staff/StaffDirectory";
 import { ServiceStatus } from "../features/status/ServiceStatus";
 import { roles, type Role } from "../lib/api/auth";
@@ -64,7 +65,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, staff = false }: { requiredRole?: Role; staff?: boolean }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -83,7 +84,8 @@ function AreaPage({ requiredRole, staff = false }: { requiredRole?: Role; staff?
   }
 
   const isAdmin = requiredRole === "ADMINISTRADOR" && allowed.includes("ADMINISTRADOR");
-  const staffContent: ReactNode = staff && isAdmin
+  const canManageClients = (requiredRole === "ADMINISTRADOR" || requiredRole === "ATENDENTE") && allowed.includes(requiredRole);
+  const staffContent: ReactNode = feature === "staff" && isAdmin
     ? <StaffDirectory key={state.session.user_id} session={state.session} onAccessChange={retrySession} />
     : null;
   return (
@@ -101,8 +103,13 @@ function AreaPage({ requiredRole, staff = false }: { requiredRole?: Role; staff?
         </nav>
       )}
       {isAdmin && <p><Link to="/area/administracao/funcionarios">Gerenciar funcionários</Link></p>}
+      {canManageClients && <p>
+        <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
+      </p>}
       {staffContent}
-      {!staff && (requiredRole === "ADMINISTRADOR" || requiredRole === "INSTRUTOR") &&
+      {feature === "clients" && canManageClients &&
+        <ClientDirectory key={state.session.user_id} session={state.session} onAccessChange={retrySession} />}
+      {!feature && (requiredRole === "ADMINISTRADOR" || requiredRole === "INSTRUTOR") &&
         allowed.includes(requiredRole) && <PendingNotices key={state.session.user_id} />}
       <button type="button" onClick={() => void signOut()}>Sair</button>
     </>
@@ -127,7 +134,9 @@ export function AppRoutes() {
         <Route element={<SessionBoundary />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/area" element={<AreaPage />} />
-          <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" staff />} />
+          <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
+          <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
+          <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
           {roles.map((role) => (
             <Route key={role} path={"/area/" + areas[role].path} element={<AreaPage requiredRole={role} />} />
           ))}

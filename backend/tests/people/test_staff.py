@@ -33,7 +33,7 @@ from app.modules.identity.service import digest, utc_now
 from app.modules.identity.settings import AuthSettings
 from app.modules.notifications.email import EmailDelivery
 from app.modules.notifications.models import DeliveryState, Notification
-from app.modules.people import staff
+from app.modules.people import invitations, staff
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
 from app.policies.access import Actor
 
@@ -327,7 +327,7 @@ async def test_failed_invite_can_be_reissued_and_old_link_is_revoked(
     assert admin
     sender = CaptureMail()
     monkeypatch.setattr(
-        staff,
+        invitations,
         "local_email_delivery",
         lambda factory: EmailDelivery(factory, sender, "academia@example.test"),
     )

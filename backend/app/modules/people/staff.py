@@ -1,44 +1,39 @@
-import logging
 from datetime import date, datetime
 from typing import Annotated, Literal
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StringConstraints
 from sqlalchemy import delete, func, select
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
-from app.contracts.time import UtcTimestamp
 from app.events.contracts import AuditEvent
 from app.modules.audit.service import record_audit
 from app.modules.identity.accounts import EmailAlreadyExists, validate_email
 from app.modules.identity.first_access import (
-    FIRST_ACCESS,
     ProvisionedAccount,
     invalidate_first_access,
-    issue_first_access,
     provision_account,
 )
 from app.modules.identity.http import EmailInput
-from app.modules.identity.models import AccessToken, AccountState, Role, User, UserRole
+from app.modules.identity.models import AccountState, Role, User, UserRole
 from app.modules.identity.roles import (
     active_admin_ids,
     effective_roles,
     lock_admin_changes,
 )
 from app.modules.identity.service import utc_now
-from app.modules.notifications.email import (
-    EmailRequest,
-    email_delivery_state,
-    local_email_delivery,
-)
-from app.modules.notifications.models import DeliveryState, EmailKind
 from app.modules.notifications.service import notify_critical_change
+from app.modules.people.invitations import (
+    InviteLimitReached,
+    InviteStatus,
+    issue_limited_invite,
+    latest_invite,
+)
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
 from app.policies.access import Actor
 
 StaffRole = Literal[Role.ADMINISTRADOR, Role.ATENDENTE, Role.INSTRUTOR]
 STAFF_ROLES = (Role.ADMINISTRADOR, Role.ATENDENTE, Role.INSTRUTOR)
-logger = logging.getLogger(__name__)
 
 
 class StaffError(Exception):
@@ -93,9 +88,8 @@ class StaffPage(BaseModel):
     total: int
 
 
-class StaffInvite(BaseModel):
-    estado: DeliveryState | Literal["SEM_CONFIRMACAO"]
-    expira_em: UtcTimestamp
+class StaffInvite(InviteStatus):
+    pass
 
 
 class StaffDetail(StaffSummary):
@@ -167,23 +161,11 @@ def _staff_record(
 def get_staff(session: Session, user_id: UUID) -> StaffDetail:
     profile, user = _staff_record(session, user_id)
     roles = _roles(session, [user_id]).get(user_id, set())
-    latest = session.scalar(
-        select(AccessToken)
-        .where(
-            AccessToken.usuario_id == user_id, AccessToken.finalidade == FIRST_ACCESS
-        )
-        .order_by(AccessToken.expira_em.desc(), AccessToken.id.desc())
-        .limit(1)
+    invite = latest_invite(session, user_id)
+    return StaffDetail(
+        **_summary(profile, user, roles).model_dump(),
+        convite=StaffInvite.model_validate(invite.model_dump()) if invite else None,
     )
-    invite = None
-    if latest is not None:
-        state = email_delivery_state(
-            session, user_id, latest.id, EmailKind.PRIMEIRO_ACESSO
-        )
-        invite = StaffInvite(
-            estado=state or "SEM_CONFIRMACAO", expira_em=latest.expira_em
-        )
-    return StaffDetail(**_summary(profile, user, roles).model_dump(), convite=invite)
 
 
 def _guard_write(session: Session, actor: Actor) -> None:
@@ -224,18 +206,10 @@ def _role_change(before: set[Role], after: set[StaffRole]) -> str:
 
 
 def _invite(session: Session, user: User, now: datetime) -> ProvisionedAccount:
-    recent = session.scalar(
-        select(func.count())
-        .select_from(AccessToken)
-        .where(
-            AccessToken.usuario_id == user.id,
-            AccessToken.finalidade == FIRST_ACCESS,
-            AccessToken.expira_em > now,
-        )
-    )
-    if recent is not None and recent >= 3:
-        raise StaffError(429)
-    return issue_first_access(session, user.id, now=now)
+    try:
+        return issue_limited_invite(session, user.id, now)
+    except InviteLimitReached:
+        raise StaffError(429) from None
 
 
 def create_staff(
@@ -366,30 +340,3 @@ def resend_staff_invite(
     user.revision += 1
     _audit(session, actor, correlation, user_id, "staff.invitation_reissued")
     return user.email, invite
-
-
-def send_staff_invite(
-    sessions: sessionmaker[Session],
-    email: str,
-    invite: ProvisionedAccount,
-    origin: str,
-    correlation: UUID,
-) -> None:
-    try:
-        local_email_delivery(sessions).send(
-            EmailRequest(
-                event_id=invite.token_id,
-                recipient_id=invite.user_id,
-                kind=EmailKind.PRIMEIRO_ACESSO,
-                address=email,
-                body=(
-                    "Defina sua senha para o primeiro acesso ao AcademIA.\n\n"
-                    f"{origin}/primeiro-acesso#token={invite.token}\n\n"
-                    "O link é de uso único e expira em 24 horas."
-                ),
-            )
-        )
-    except Exception:
-        logger.error(
-            "Falha no envio de primeiro acesso. correlation_id=%s", correlation
-        )
