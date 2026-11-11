@@ -41,3 +41,11 @@ Modelo lógico, campos, retenção e orçamento foram definidos na preparação:
 [campos/triagem](../../requisitos/onboarding-e-triagem.md).
 Os demais serviços e migrations permanecem tarefas de implementação. [Arquitetura](../rag-semantico.md) e
 [macrorequisitos](../../requisitos/macrorequisitos-ia-rag.md).
+
+## Marco AI-01
+
+A [triagem](../triagem-academica.md) entrega projeção, decisões tipadas e porta
+assistida, com auditoria mínima. Não cria tabelas paralelas de execução/triagem.
+O registro interno inclui códigos, resumo, snapshot, política e referências;
+execucao_ia/triagem/etapa_ia/evidencia_execucao permanecem nos cartões de persistência
+AI-02/AI-03. A API de preparação não armazena anamnese no log ou no índice RAG.

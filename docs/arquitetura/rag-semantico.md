@@ -128,3 +128,11 @@ com sobreposição 48 e top-K 5. LLM Groq/Llama 3.3 70B com json_object validado
 Ver [configuração canônica](../requisitos/configuracao-ia-rag.md) e
 [corpus selecionado](../../materiais/rag/corpus-inicial.json). Modo local é engine
 especializada persistente para protótipo; modo servidor só na fase apropriada.
+
+## Triagem implementada
+
+AI-01 entrega a [política acadêmica, projeção e porta assistida](triagem-academica.md),
+com API de preparação própria e revalidação de permissões/snapshot/recursos.
+Sem adaptador de análise, há AGUARDANDO_ANALISE e estado de saúde null, sem geração.
+AI-02 fará a ligação com RAG-05 e o provedor; AI-03 gera/publica. Os testes AI-01
+usam doubles rotulados e PostgreSQL/API reais, sem comprovar qualidade do LLM.

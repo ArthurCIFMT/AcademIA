@@ -2,7 +2,8 @@
 
 MOD-05 recupera evidências para dúvidas, triagem e geração. MRF02/MRF11/MRF12/MRF15,
 RN-29/RN-39 e RNF-13 governam esta entrega. O serviço não chama LLM, cria ficha
-ou decide elegibilidade. O adaptador LLM e a orquestração permanecem AI-01–AI-06.
+ou decide elegibilidade. AI-01 entregou regras/projeção; a integração do adaptador
+LLM e a orquestração permanecem AI-02–AI-06.
 
 ## Contratos e fronteiras
 

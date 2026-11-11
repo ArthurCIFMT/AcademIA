@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "fd46db9fdce388250247c1b785eeae6876c5434a",
+  "base_implementacao": "489784bdb79336de72162cd2b2c8936314a1a457",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -101,6 +101,22 @@
         {
           "arquivo": "docs/testes/casos-triagem-v1.json",
           "titulo": "Casos sintéticos e resultados esperados",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/arquitetura/triagem-academica.md",
+          "titulo": "Projeção, política e preparação autorizada de triagem"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/triagem-v1.schema.json",
+          "titulo": "Contratos de política, resumo, sinais e resultado de triagem",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/ai01-cobertura.json",
+          "titulo": "Rastreabilidade dos casos acadêmicos na etapa AI-01",
           "tipo": "codigo",
           "linguagem": "json"
         }

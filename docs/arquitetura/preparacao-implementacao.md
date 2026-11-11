@@ -46,7 +46,8 @@ e treino manual até TRN-04 foram entregues. RAG-01 concluiu a curadoria e
 RAG-02 entregou a conexão Qdrant persistente; RAG-03 entregou extração e
 proveniência, com pendências de qualidade registradas. RAG-04 entregou chunking,
 embeddings locais e indexação idempotente com migration 0013. A sequência segue
-em AI-01, após RAG-05 entregar recuperação/citações e avaliação real delimitada.
+em AI-02, após RAG-05 entregar recuperação/citações e AI-01 entregar as regras
+e a preparação autorizada de triagem, com avaliação delimitada.
 Quatro fontes de extração pendente seguem preservadas; o livro Nahas foi escolhido
 como apoio e aguarda validação de extração, sem promoção automática.
 Consulte o manifesto para dependências, critérios e evidências por cartão,
@@ -75,3 +76,9 @@ verificador documental para obter as contagens atuais.
 Ferramentas DBML/Ajv foram executadas em diretório temporário fora do repositório,
 sem adicionar dependências à aplicação naquele marco. Fixtures de contrato estão em
 [casos](../testes/contratos-onboarding-v1.json). Não são teste de FastAPI/LLM reais.
+
+Continuidade após AI-01: [triagem acadêmica](triagem-academica.md), resumo limitado
+e preparação autorizada entregues. Próximo cartão AI-02 integra RAG/provedor e
+estado de execução; não exigir laudo/parecer prévio ou revisão manual do responsável
+para executar os testes da implementação. O aceite manual será no MVP, conforme
+orientação do responsável, preservando testes incrementais e E2E previsto.

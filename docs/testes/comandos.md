@@ -667,3 +667,40 @@ SPEC e DOC verificados. Neste conjunto: recall@5=100%, recall PT/EN=100% e
 abstenção fora de escopo=100%. Tempos exatos, inicialização e tamanho da amostra
 estão no relatório JSON; esses resultados não são métricas da futura LLM.
 Não foi executado frontend, pois não houve alteração de interface.
+
+## Triagem acadêmica e preparação AI-01
+
+[Contrato](../arquitetura/triagem-academica.md) e [mapa de casos](ai01-cobertura.json).
+Em backend/, com PostgreSQL de teste configurado para a integração:
+
+~~~powershell
+uv run --locked pytest tests/ai
+uv run --locked --env-file ../.env pytest -m integration tests/ai
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai
+uv run --locked pytest tests/contracts
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Não requer chave Groq, pesos ou Qdrant para os testes AI-01. O Analyst é um double
+rotulado de contrato; a API, sessões/papéis e PostgreSQL são reais. A suíte geral
+DB/INT continua incluindo opt-ins E5/Mailpit dos módulos anteriores quando ativados.
+Testes novos verificam os 19 casos aplicáveis da tabela de triagem, tamanho real
+excedido, ausência/negação/gravidade, saída estrita e evidência inventada, timeout
+com resposta tardia e catálogo vazio separado da decisão de saúde.
+
+Integração: cliente titular, terceiros, administrador sem permissão de saúde e
+instrutor sem designação são diferenciados; instrutor designado acessa pelo serviço
+interno. A API resolve cliente/snapshot pela sessão, mantém no-store, não aceita
+sinais de análise pelo usuário e não expõe resumo. Cobrir snapshot alterado,
+catálogo inativado, equipamento indisponível e conta revogada durante a análise.
+Auditoria registra apenas metadados, sem anamnese ou motivos clínicos no log.
+
+Evidência de 2026-11-11: 32 testes específicos (26 unitários/6 integrações),
+180 BE, 121 DB/INT com Mailpit e 9 API aprovados. Ruff/formato, mypy em 148 arquivos,
+SPEC e DOC verificados. Schema 0013 reutilizado; sem migration ou dependência nova.
+Não executar frontend nesta entrega, pois a interface não mudou. O provedor real,
+qualidade semântica e desempenho integrado permanecem em AI-02/AI-06; não afirmar
+aceite de LLM pelos doubles. A revisão manual do responsável será no MVP, sem
+substituir os testes automatizados, E2E e critérios obrigatórios de cada etapa.

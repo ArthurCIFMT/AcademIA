@@ -1,0 +1,1150 @@
+{
+  "schema_version": 1,
+  "politica": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "version": {
+        "const": 1,
+        "default": 1,
+        "title": "Version",
+        "type": "integer"
+      },
+      "minimum_age": {
+        "const": 18,
+        "default": 18,
+        "title": "Minimum Age",
+        "type": "integer"
+      },
+      "max_summary_chars": {
+        "default": 2400,
+        "maximum": 2400,
+        "minimum": 1,
+        "title": "Max Summary Chars",
+        "type": "integer"
+      },
+      "analysis_timeout_seconds": {
+        "default": 25,
+        "exclusiveMinimum": 0,
+        "maximum": 25,
+        "title": "Analysis Timeout Seconds",
+        "type": "number"
+      },
+      "analysis_attempts": {
+        "const": 1,
+        "default": 1,
+        "title": "Analysis Attempts",
+        "type": "integer"
+      },
+      "fonte_regras": {
+        "const": "onboarding-e-triagem-v1",
+        "default": "onboarding-e-triagem-v1",
+        "title": "Fonte Regras",
+        "type": "string"
+      }
+    },
+    "title": "Policy",
+    "type": "object"
+  },
+  "resumo_para_analise": {
+    "$defs": {
+      "Condition": {
+        "additionalProperties": false,
+        "properties": {
+          "categoria": {
+            "enum": [
+              "CARDIACA",
+              "RESPIRATORIA",
+              "METABOLICA",
+              "MUSCULOESQUELETICA",
+              "OUTRA"
+            ],
+            "title": "Categoria",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "categoria",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Condition",
+        "type": "object"
+      },
+      "Limitation": {
+        "additionalProperties": false,
+        "properties": {
+          "regiao": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Regiao",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "regiao",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Limitation",
+        "type": "object"
+      },
+      "Medication": {
+        "additionalProperties": false,
+        "properties": {
+          "nome": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Nome",
+            "type": "string"
+          },
+          "observacao": {
+            "maxLength": 300,
+            "title": "Observacao",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "observacao"
+        ],
+        "title": "Medication",
+        "type": "object"
+      },
+      "OnboardingData": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "else": {
+              "properties": {
+                "condicoes_saude": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_condicoes_saude": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_condicoes_saude"
+              ]
+            },
+            "then": {
+              "properties": {
+                "condicoes_saude": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "medicamentos": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "usa_medicamentos": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "usa_medicamentos"
+              ]
+            },
+            "then": {
+              "properties": {
+                "medicamentos": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "limitacoes": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_dor_lesao_limitacao": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_dor_lesao_limitacao"
+              ]
+            },
+            "then": {
+              "properties": {
+                "limitacoes": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "altura_cm": {
+            "maximum": 250,
+            "minimum": 50,
+            "multipleOf": 0.1,
+            "title": "Altura Cm",
+            "type": "number"
+          },
+          "peso_kg": {
+            "maximum": 350,
+            "minimum": 20,
+            "multipleOf": 0.1,
+            "title": "Peso Kg",
+            "type": "number"
+          },
+          "objetivo_principal": {
+            "enum": [
+              "CONDICIONAMENTO",
+              "FORCA",
+              "HIPERTROFIA",
+              "ATIVIDADE_GERAL"
+            ],
+            "title": "Objetivo Principal",
+            "type": "string"
+          },
+          "experiencia": {
+            "enum": [
+              "INICIANTE",
+              "INTERMEDIARIO",
+              "AVANCADO"
+            ],
+            "title": "Experiencia",
+            "type": "string"
+          },
+          "nivel_atividade": {
+            "enum": [
+              "SEDENTARIO",
+              "LEVE",
+              "MODERADO",
+              "ELEVADO"
+            ],
+            "title": "Nivel Atividade",
+            "type": "string"
+          },
+          "dias_semana": {
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Dias Semana",
+            "type": "integer"
+          },
+          "duracao_sessao_min": {
+            "maximum": 120,
+            "minimum": 20,
+            "title": "Duracao Sessao Min",
+            "type": "integer"
+          },
+          "possui_condicoes_saude": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Condicoes Saude",
+            "type": "string"
+          },
+          "condicoes_saude": {
+            "items": {
+              "$ref": "#/$defs/Condition"
+            },
+            "maxItems": 10,
+            "title": "Condicoes Saude",
+            "type": "array"
+          },
+          "usa_medicamentos": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Usa Medicamentos",
+            "type": "string"
+          },
+          "medicamentos": {
+            "items": {
+              "$ref": "#/$defs/Medication"
+            },
+            "maxItems": 10,
+            "title": "Medicamentos",
+            "type": "array"
+          },
+          "possui_dor_lesao_limitacao": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Dor Lesao Limitacao",
+            "type": "string"
+          },
+          "limitacoes": {
+            "items": {
+              "$ref": "#/$defs/Limitation"
+            },
+            "maxItems": 8,
+            "title": "Limitacoes",
+            "type": "array"
+          },
+          "restricao_exercicio_declarada": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Restricao Exercicio Declarada",
+            "type": "string"
+          },
+          "evento_saude_importante_recente": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Evento Saude Importante Recente",
+            "type": "string"
+          },
+          "observacoes": {
+            "maxLength": 1000,
+            "title": "Observacoes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "altura_cm",
+          "peso_kg",
+          "objetivo_principal",
+          "experiencia",
+          "nivel_atividade",
+          "dias_semana",
+          "duracao_sessao_min",
+          "possui_condicoes_saude",
+          "condicoes_saude",
+          "usa_medicamentos",
+          "medicamentos",
+          "possui_dor_lesao_limitacao",
+          "limitacoes",
+          "restricao_exercicio_declarada",
+          "evento_saude_importante_recente",
+          "observacoes"
+        ],
+        "title": "OnboardingData",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "idade": {
+        "minimum": 0,
+        "title": "Idade",
+        "type": "integer"
+      },
+      "dados": {
+        "$ref": "#/$defs/OnboardingData"
+      }
+    },
+    "required": [
+      "idade",
+      "dados"
+    ],
+    "title": "SummaryData",
+    "type": "object"
+  },
+  "sinais_assistidos": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "alerta_grave": {
+        "title": "Alerta Grave",
+        "type": "boolean"
+      },
+      "lacuna": {
+        "title": "Lacuna",
+        "type": "boolean"
+      },
+      "contradicao": {
+        "default": false,
+        "title": "Contradicao",
+        "type": "boolean"
+      },
+      "evidencias_ids": {
+        "default": [],
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "maxItems": 8,
+        "title": "Evidencias Ids",
+        "type": "array"
+      }
+    },
+    "required": [
+      "alerta_grave",
+      "lacuna"
+    ],
+    "title": "Signals",
+    "type": "object"
+  },
+  "resultado_interno": {
+    "$defs": {
+      "Condition": {
+        "additionalProperties": false,
+        "properties": {
+          "categoria": {
+            "enum": [
+              "CARDIACA",
+              "RESPIRATORIA",
+              "METABOLICA",
+              "MUSCULOESQUELETICA",
+              "OUTRA"
+            ],
+            "title": "Categoria",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "categoria",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Condition",
+        "type": "object"
+      },
+      "Limitation": {
+        "additionalProperties": false,
+        "properties": {
+          "regiao": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Regiao",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "regiao",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Limitation",
+        "type": "object"
+      },
+      "Medication": {
+        "additionalProperties": false,
+        "properties": {
+          "nome": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Nome",
+            "type": "string"
+          },
+          "observacao": {
+            "maxLength": 300,
+            "title": "Observacao",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "observacao"
+        ],
+        "title": "Medication",
+        "type": "object"
+      },
+      "OnboardingData": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "else": {
+              "properties": {
+                "condicoes_saude": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_condicoes_saude": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_condicoes_saude"
+              ]
+            },
+            "then": {
+              "properties": {
+                "condicoes_saude": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "medicamentos": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "usa_medicamentos": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "usa_medicamentos"
+              ]
+            },
+            "then": {
+              "properties": {
+                "medicamentos": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "limitacoes": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_dor_lesao_limitacao": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_dor_lesao_limitacao"
+              ]
+            },
+            "then": {
+              "properties": {
+                "limitacoes": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "altura_cm": {
+            "maximum": 250,
+            "minimum": 50,
+            "multipleOf": 0.1,
+            "title": "Altura Cm",
+            "type": "number"
+          },
+          "peso_kg": {
+            "maximum": 350,
+            "minimum": 20,
+            "multipleOf": 0.1,
+            "title": "Peso Kg",
+            "type": "number"
+          },
+          "objetivo_principal": {
+            "enum": [
+              "CONDICIONAMENTO",
+              "FORCA",
+              "HIPERTROFIA",
+              "ATIVIDADE_GERAL"
+            ],
+            "title": "Objetivo Principal",
+            "type": "string"
+          },
+          "experiencia": {
+            "enum": [
+              "INICIANTE",
+              "INTERMEDIARIO",
+              "AVANCADO"
+            ],
+            "title": "Experiencia",
+            "type": "string"
+          },
+          "nivel_atividade": {
+            "enum": [
+              "SEDENTARIO",
+              "LEVE",
+              "MODERADO",
+              "ELEVADO"
+            ],
+            "title": "Nivel Atividade",
+            "type": "string"
+          },
+          "dias_semana": {
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Dias Semana",
+            "type": "integer"
+          },
+          "duracao_sessao_min": {
+            "maximum": 120,
+            "minimum": 20,
+            "title": "Duracao Sessao Min",
+            "type": "integer"
+          },
+          "possui_condicoes_saude": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Condicoes Saude",
+            "type": "string"
+          },
+          "condicoes_saude": {
+            "items": {
+              "$ref": "#/$defs/Condition"
+            },
+            "maxItems": 10,
+            "title": "Condicoes Saude",
+            "type": "array"
+          },
+          "usa_medicamentos": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Usa Medicamentos",
+            "type": "string"
+          },
+          "medicamentos": {
+            "items": {
+              "$ref": "#/$defs/Medication"
+            },
+            "maxItems": 10,
+            "title": "Medicamentos",
+            "type": "array"
+          },
+          "possui_dor_lesao_limitacao": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Dor Lesao Limitacao",
+            "type": "string"
+          },
+          "limitacoes": {
+            "items": {
+              "$ref": "#/$defs/Limitation"
+            },
+            "maxItems": 8,
+            "title": "Limitacoes",
+            "type": "array"
+          },
+          "restricao_exercicio_declarada": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Restricao Exercicio Declarada",
+            "type": "string"
+          },
+          "evento_saude_importante_recente": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Evento Saude Importante Recente",
+            "type": "string"
+          },
+          "observacoes": {
+            "maxLength": 1000,
+            "title": "Observacoes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "altura_cm",
+          "peso_kg",
+          "objetivo_principal",
+          "experiencia",
+          "nivel_atividade",
+          "dias_semana",
+          "duracao_sessao_min",
+          "possui_condicoes_saude",
+          "condicoes_saude",
+          "usa_medicamentos",
+          "medicamentos",
+          "possui_dor_lesao_limitacao",
+          "limitacoes",
+          "restricao_exercicio_declarada",
+          "evento_saude_importante_recente",
+          "observacoes"
+        ],
+        "title": "OnboardingData",
+        "type": "object"
+      },
+      "SnapshotRef": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "numero": {
+            "minimum": 1,
+            "title": "Numero",
+            "type": "integer"
+          },
+          "revisao": {
+            "minimum": 1,
+            "title": "Revisao",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "numero",
+          "revisao"
+        ],
+        "title": "SnapshotRef",
+        "type": "object"
+      },
+      "Summary": {
+        "additionalProperties": false,
+        "properties": {
+          "conteudo": {
+            "$ref": "#/$defs/SummaryData"
+          },
+          "caracteres": {
+            "title": "Caracteres",
+            "type": "integer"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "conteudo",
+          "caracteres",
+          "sha256"
+        ],
+        "title": "Summary",
+        "type": "object"
+      },
+      "SummaryData": {
+        "additionalProperties": false,
+        "properties": {
+          "idade": {
+            "minimum": 0,
+            "title": "Idade",
+            "type": "integer"
+          },
+          "dados": {
+            "$ref": "#/$defs/OnboardingData"
+          }
+        },
+        "required": [
+          "idade",
+          "dados"
+        ],
+        "title": "SummaryData",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "snapshot": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SnapshotRef"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "regra_versao": {
+        "title": "Regra Versao",
+        "type": "integer"
+      },
+      "regra_sha256": {
+        "title": "Regra Sha256",
+        "type": "string"
+      },
+      "estado": {
+        "anyOf": [
+          {
+            "enum": [
+              "DADOS_INSUFICIENTES",
+              "BLOQUEADO_POR_SEGURANCA",
+              "ELEGIVEL_PARA_GERACAO"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Estado"
+      },
+      "estado_tecnico": {
+        "enum": [
+          "CONCLUIDA",
+          "AGUARDANDO_ANALISE",
+          "FALHA",
+          "TIMEOUT"
+        ],
+        "title": "Estado Tecnico",
+        "type": "string"
+      },
+      "motivos": {
+        "items": {
+          "enum": [
+            "ONBOARDING_NAO_CONCLUIDO",
+            "DADOS_INVALIDOS",
+            "IDADE_AUSENTE",
+            "ESCOPO_ETARIO",
+            "ALERTA_GRAVE_DECLARADO",
+            "DADO_DESCONHECIDO",
+            "CONTEXTO_EXCEDIDO",
+            "ANALISE_PENDENTE",
+            "ALERTA_GRAVE_TEXTO",
+            "LACUNA_OU_CONTRADICAO",
+            "ANALISE_CONCLUIDA",
+            "FALHA_ANALISE",
+            "TIMEOUT_ANALISE",
+            "SAIDA_ANALISE_INVALIDA",
+            "EVIDENCIA_NAO_FORNECIDA",
+            "CONTEXTO_SUPERADO",
+            "RECURSOS_ALTERADOS",
+            "SEM_EXERCICIOS_VIAVEIS"
+          ],
+          "type": "string"
+        },
+        "title": "Motivos",
+        "type": "array"
+      },
+      "resumo_sha256": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Resumo Sha256"
+      },
+      "evidencias_ids": {
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "title": "Evidencias Ids",
+        "type": "array"
+      },
+      "exercicios_elegiveis": {
+        "title": "Exercicios Elegiveis",
+        "type": "integer"
+      },
+      "recursos_sha256": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Recursos Sha256"
+      },
+      "geracao_permitida": {
+        "title": "Geracao Permitida",
+        "type": "boolean"
+      },
+      "resumo": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Summary"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "snapshot",
+      "regra_versao",
+      "regra_sha256",
+      "estado",
+      "estado_tecnico",
+      "motivos",
+      "resumo_sha256",
+      "evidencias_ids",
+      "exercicios_elegiveis",
+      "recursos_sha256",
+      "geracao_permitida",
+      "resumo"
+    ],
+    "title": "TriageResult",
+    "type": "object"
+  },
+  "resposta_api_preparacao": {
+    "$defs": {
+      "SnapshotRef": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "numero": {
+            "minimum": 1,
+            "title": "Numero",
+            "type": "integer"
+          },
+          "revisao": {
+            "minimum": 1,
+            "title": "Revisao",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "numero",
+          "revisao"
+        ],
+        "title": "SnapshotRef",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "snapshot": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SnapshotRef"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "regra_versao": {
+        "title": "Regra Versao",
+        "type": "integer"
+      },
+      "regra_sha256": {
+        "title": "Regra Sha256",
+        "type": "string"
+      },
+      "estado": {
+        "anyOf": [
+          {
+            "enum": [
+              "DADOS_INSUFICIENTES",
+              "BLOQUEADO_POR_SEGURANCA",
+              "ELEGIVEL_PARA_GERACAO"
+            ],
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Estado"
+      },
+      "estado_tecnico": {
+        "enum": [
+          "CONCLUIDA",
+          "AGUARDANDO_ANALISE",
+          "FALHA",
+          "TIMEOUT"
+        ],
+        "title": "Estado Tecnico",
+        "type": "string"
+      },
+      "motivos": {
+        "items": {
+          "enum": [
+            "ONBOARDING_NAO_CONCLUIDO",
+            "DADOS_INVALIDOS",
+            "IDADE_AUSENTE",
+            "ESCOPO_ETARIO",
+            "ALERTA_GRAVE_DECLARADO",
+            "DADO_DESCONHECIDO",
+            "CONTEXTO_EXCEDIDO",
+            "ANALISE_PENDENTE",
+            "ALERTA_GRAVE_TEXTO",
+            "LACUNA_OU_CONTRADICAO",
+            "ANALISE_CONCLUIDA",
+            "FALHA_ANALISE",
+            "TIMEOUT_ANALISE",
+            "SAIDA_ANALISE_INVALIDA",
+            "EVIDENCIA_NAO_FORNECIDA",
+            "CONTEXTO_SUPERADO",
+            "RECURSOS_ALTERADOS",
+            "SEM_EXERCICIOS_VIAVEIS"
+          ],
+          "type": "string"
+        },
+        "title": "Motivos",
+        "type": "array"
+      },
+      "resumo_sha256": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Resumo Sha256"
+      },
+      "evidencias_ids": {
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "title": "Evidencias Ids",
+        "type": "array"
+      },
+      "exercicios_elegiveis": {
+        "title": "Exercicios Elegiveis",
+        "type": "integer"
+      },
+      "recursos_sha256": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Recursos Sha256"
+      },
+      "geracao_permitida": {
+        "title": "Geracao Permitida",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "snapshot",
+      "regra_versao",
+      "regra_sha256",
+      "estado",
+      "estado_tecnico",
+      "motivos",
+      "resumo_sha256",
+      "evidencias_ids",
+      "exercicios_elegiveis",
+      "recursos_sha256",
+      "geracao_permitida"
+    ],
+    "title": "TriageView",
+    "type": "object"
+  }
+}

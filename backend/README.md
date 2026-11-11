@@ -96,3 +96,13 @@ contexto_id é um UUID do contexto autorizado; em futura rota pública o backend
 deve resolvê-lo pela sessão. A CLI é ferramenta do operador local e não substitui
 a autorização REST. Coleção vazia resulta em SEM_EVIDENCIAS. Não há chamada LLM.
 O guia detalha aprovação/revogação, saúde, cache e inicialização fria do modelo.
+
+## Preparação de triagem
+
+AI-01 entrega GET /api/v1/ia/triagem/preparacao para cliente autenticado, usando
+o snapshot próprio mais recente, sem body ou seleção de outro titular. O
+[contrato](../docs/arquitetura/triagem-academica.md) descreve estados, códigos,
+limites e revalidação. A resposta não inclui anamnese ou resumo completo.
+Sem adaptador LLM (AI-02), caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
+permitida. O serviço interno já recebe porta assistida tipada para composição;
+não habilitar doubles por variável de ambiente ou entrada do cliente.

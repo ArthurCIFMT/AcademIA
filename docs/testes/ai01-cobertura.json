@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "tipo": "RASTREABILIDADE_TESTES_ACADEMICOS_SEM_LLM_REAL",
+  "fonte": "docs/testes/casos-triagem-v1.json",
+  "nucleo": [
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07",
+    "T08",
+    "T09",
+    "T10",
+    "T11",
+    "T12",
+    "T13",
+    "T14",
+    "T15",
+    "T17",
+    "T19",
+    "T20",
+    "T24"
+  ],
+  "integracao": {
+    "T16": "Autorização, isolamento e revalidação de papéis",
+    "T21": "Snapshot confirmado durante análise invalida o resultado anterior",
+    "T22": "Catálogo ou equipamento indisponível durante análise impede geração"
+  },
+  "etapas_posteriores": {
+    "T18": "AI-03: adaptação e publicação exigem suporte pertinente",
+    "T23": "RAG-05/AI-03: fonte revogada não é utilizável/publicável"
+  },
+  "limites": [
+    "T10 simula limite reduzido; existe teste adicional com corpo realmente acima de 2400 caracteres.",
+    "A porta Analyst usa doubles; integração real com provedor pertence a AI-02/AI-06.",
+    "Nenhuma ficha é gerada ou publicada nesta entrega."
+  ]
+}
