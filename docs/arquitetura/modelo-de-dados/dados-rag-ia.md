@@ -48,4 +48,4 @@ A [triagem](../triagem-academica.md) entrega projeção, decisões tipadas e por
 assistida, com auditoria mínima. Não cria tabelas paralelas de execução/triagem.
 O registro interno inclui códigos, resumo, snapshot, política e referências;
 execucao_ia/triagem/etapa_ia/evidencia_execucao permanecem nos cartões de persistência
-AI-02/AI-03. A API de preparação não armazena anamnese no log ou no índice RAG.
+AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.

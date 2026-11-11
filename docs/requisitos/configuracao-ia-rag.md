@@ -23,7 +23,8 @@ backend valida o intervalo. carga_kg é decimal não-negativo ou null.
 Sem inventar carga individual: pode ser null para determinação pelo instrutor.
 Prompt usa IDs/descrições compactas de até 40 candidatos viáveis; validação final
 verifica IDs e inventário atual. Sem conjunto suficiente, não gerar seleção falsa.
-Schema de saída detalhado será materializado em AI-02 a partir destes campos.
+Schema de saída materializado em [AI-02](../arquitetura/orquestracao-ia.md) e
+[contratos JSON](schemas/execucao-ia-v1.schema.json), a partir destes campos.
 Toda adaptação de saúde liga evidência pertinente à intervenção/ressalva.
 
 Dados brutos de chat/execução expiram em 90 dias (comando de manutenção e teste);

@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "489784bdb79336de72162cd2b2c8936314a1a457",
+  "base_implementacao": "b8eae83869a9f59c636a9f45cfeab5515afdd82d",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -198,6 +198,16 @@
         {
           "arquivo": "materiais/rag/livro-de-apoio.json",
           "titulo": "Livro em português escolhido e pendências de extração",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/arquitetura/orquestracao-ia.md",
+          "titulo": "Máquina de estados fixa, portas de estado, consumo e adaptador LLM"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/execucao-ia-v1.schema.json",
+          "titulo": "Schemas JSON de entrada, respostas e resultado interno de execução",
           "tipo": "codigo",
           "linguagem": "json"
         }

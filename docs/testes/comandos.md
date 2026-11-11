@@ -704,3 +704,51 @@ Não executar frontend nesta entrega, pois a interface não mudou. O provedor re
 qualidade semântica e desempenho integrado permanecem em AI-02/AI-06; não afirmar
 aceite de LLM pelos doubles. A revisão manual do responsável será no MVP, sem
 substituir os testes automatizados, E2E e critérios obrigatórios de cada etapa.
+
+## Orquestrador e contratos AI-02
+
+[Arquitetura/limites](../arquitetura/orquestracao-ia.md) e
+[schemas portáveis](../requisitos/schemas/execucao-ia-v1.schema.json).
+A partir de backend/, ambiente uv/Python 3.12; integração requer PostgreSQL de teste:
+
+~~~powershell
+uv run --locked pytest tests/ai/test_execution.py tests/ai/test_groq.py tests/ai/test_execution_contracts.py
+uv run --locked --env-file ../.env pytest -m integration tests/ai/test_execution_integration.py
+uv run --locked pytest
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked pytest tests/contracts
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Na raiz: python scripts/gerar_spec.py --write, depois --check;
+python scripts/verificar_documentacao.py e git diff --check.
+Testes não exigem GROQ_API_KEY nem fazem requisição à Groq. MockTransport exercita
+o adaptador HTTPX real, body/modelo/JSON, timeout, quota, redirects, tamanho, modelo
+divergente e ausência de credencial; não comprova disponibilidade ou latência real.
+Harness FastAPI testa transporte JSON/OpenAPI dos schemas, sem registrar uma rota
+de execução no produto. O arquivo JSON versionado é comparado aos modelos Python.
+
+Casos do orquestrador verificam uma análise/uma geração ou apenas chat; graves e
+dados desconhecidos sem rede, JSON/schema inválidos sem reparo, IDs/recursos/fontes,
+evidência pertinente para saúde, excesso sem truncamento, chamadas físicas/reserva
+mantidas em falha, replay concorrente, entrada diferente, cancelamento, resposta
+tardia e invalidação de fonte/contexto. Injeção é tratada como dado; campo de
+parecer humano é rejeitado. Não afirmar resistência semântica absoluta por doubles.
+
+Três integrações novas usam PostgreSQL real: autorização fresca/titular/instrutor
+designado, catálogo/equipamento alterado durante execução e ponte de evidência
+com ingestão/Qdrant reais e revogação. QueryDouble nessa ponte substitui embeddings;
+a regressão RAG existente executa E5 real com ACADEMIA_TEST_EMBEDDINGS_REAL=1,
+modelo local provisionado e ACADEMIA_EMBEDDING_PATH configurado.
+ACADEMIA_TEST_MAILPIT=1 mantém também o teste SMTP real. Testes revertem transações
+e usam diretórios Qdrant temporários; não alteram dados pessoais ou corpus ativo.
+
+Evidência de 2026-11-11: 60 testes específicos aprovados (57 BE/3 INT).
+Regressão: 237 BE, 124 DB/INT com E5/Mailpit e 9 API aprovados (API é subconjunto
+de BE). Ruff/formato, mypy em 168 arquivos, SPEC e DOC verificados.
+Schema físico permanece 0013. HTTPX já instalado passou a runtime, mesma versão.
+Não executar frontend pois nenhuma interface mudou. Não declarar geração/publicação
+integrada: o estado durável e publicação ficam em AI-03; chat/interface em AI-04/05;
+ensaio de qualidade/desempenho real em AI-06, E2E/aceite do MVP em TST-01.

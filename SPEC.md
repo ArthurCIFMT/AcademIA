@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-01. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-02. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -131,7 +131,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
-| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem determinística, resumo, porta assistida e API de preparação entregues; integração LLM/orquestração, geração e chat pendentes |
+| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; persistência/publicação e interfaces de geração/chat pendentes |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
 | MOD-09 — Agenda | [Aulas e eventual reserva](docs/requisitos/requisitos-funcionais.md) | Planejado; reserva depende do gate próprio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-02 a AI-06 e TST-01. O próximo cartão na
-sequência é AI-02. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-03 a AI-06 e TST-01. O próximo cartão na
+sequência é AI-03. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -151,7 +151,8 @@ comprova cobertura ampla ou geração de fichas. O livro de apoio Nahas foi esco
 e registrado com hash, aguardando tratamento de extração. O aceite do MVP segue aberto.
 AI-01 entrega [triagem e preparação autorizada](docs/arquitetura/triagem-academica.md):
 sem análise assistida configurada, estado de saúde permanece null e a preparação
-aguarda AI-02. A persistência da execução/triagem não foi antecipada com tabelas
+aguarda composição durável de AI-03. AI-02 fornece prompts, schemas, orquestrador
+e adaptadores; testes não comprovam qualidade/latência da Groq real. A persistência da execução/triagem não foi antecipada com tabelas
 paralelas; esta etapa retorna registro JSON e auditoria mínima.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
@@ -3630,8 +3631,9 @@ fronteiras externas; chamadas internas não são serializadas artificialmente.
 O ponto de composição no main.py e o contrato compartilhado são ajustes equivalentes
 necessários ao cartão. Não houve dependência, migration ou frontend novos.
 
-AI-01 define a porta Analyst, testada com doubles rotulados. AI-02 fará a composição
-com RAG-05 e o provedor gratuito, com timeouts reais. Não há chamada LLM ou vetorial
+AI-01 define a porta Analyst, testada com doubles rotulados. AI-02 entrega a composição
+por portas com RAG-05 e o adaptador do provedor gratuito, com timeouts;
+a ativação pública depende do estado durável de AI-03. Não há chamada LLM ou vetorial
 na rota de preparação desta entrega; importar/iniciar a API não cria sucesso falso.
 Sem Analyst, caso que precisa de análise retorna AGUARDANDO_ANALISE, estado de
 saúde null e geracao_permitida=false. É um estado técnico, sem quarto estado clínico.
@@ -3712,7 +3714,7 @@ público da preparação. Auditoria MOD-12 persiste ai.triage.checked, ator, ref
 correlação, UTC e policy_v1, sem anamnese ou motivos de saúde em logs operacionais.
 
 As tabelas planejadas execucao_ia/triagem/etapa/evidência serão materializadas
-em AI-02/AI-03, conforme seus cartões. AI-01 não cria execução fictícia ou tabela
+em AI-03; AI-02 define as portas e o orquestrador, conforme seus cartões. AI-01 não cria execução fictícia ou tabela
 paralela de triagem para contornar a dependência do modelo lógico. O endpoint é
 consulta de preparação, não pedido idempotente de geração; suas leituras podem
 produzir registros distintos de auditoria. Nova tentativa e persistência de
@@ -5141,7 +5143,7 @@ A [triagem](docs/arquitetura/triagem-academica.md) entrega projeção, decisões
 assistida, com auditoria mínima. Não cria tabelas paralelas de execução/triagem.
 O registro interno inclui códigos, resumo, snapshot, política e referências;
 execucao_ia/triagem/etapa_ia/evidencia_execucao permanecem nos cartões de persistência
-AI-02/AI-03. A API de preparação não armazena anamnese no log ou no índice RAG.
+AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.
 ### 3. Limites e avaliação
 
 Fonte versionada: [docs/requisitos/configuracao-ia-rag.md](docs/requisitos/configuracao-ia-rag.md).
@@ -5169,7 +5171,8 @@ backend valida o intervalo. carga_kg é decimal não-negativo ou null.
 Sem inventar carga individual: pode ser null para determinação pelo instrutor.
 Prompt usa IDs/descrições compactas de até 40 candidatos viáveis; validação final
 verifica IDs e inventário atual. Sem conjunto suficiente, não gerar seleção falsa.
-Schema de saída detalhado será materializado em AI-02 a partir destes campos.
+Schema de saída materializado em [AI-02](docs/arquitetura/orquestracao-ia.md) e
+[contratos JSON](docs/requisitos/schemas/execucao-ia-v1.schema.json), a partir destes campos.
 Toda adaptação de saúde liga evidência pertinente à intervenção/ressalva.
 
 Dados brutos de chat/execução expiram em 90 dias (comando de manutenção e teste);
@@ -6913,6 +6916,1562 @@ Fonte versionada: [materiais/rag/livro-de-apoio.json](materiais/rag/livro-de-apo
   "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os sete documentos do corpus inicial não foram substituídos."
 }
 ````
+### 16. Máquina de estados fixa, portas de estado, consumo e adaptador LLM
+
+Fonte versionada: [docs/arquitetura/orquestracao-ia.md](docs/arquitetura/orquestracao-ia.md).
+
+#### Entrega e fronteira
+
+MOD-06 fornece schemas JSON/Pydantic, prompts internos academia-ia-v1, orquestrador,
+adaptador HTTP Groq e pontes para a triagem, catálogo e recuperação existentes.
+[Contrato JSON](docs/requisitos/schemas/execucao-ia-v1.schema.json),
+[configuração](docs/requisitos/configuracao-ia-rag.md) e
+[triagem](docs/arquitetura/triagem-academica.md) integram esta entrega.
+
+AI-02 não publica fichas, não cria migrations e não ativa uma rota pública de
+execução com estado volátil. O construtor Orchestrator exige explicitamente quatro
+portas: ContextPort, EvidencePort, LLMPort e StatePort. Não há store de produção
+em memória. AI-03 implementará estado/consumo durável, recuperação segura de
+execuções interrompidas e publicação pelo serviço de MOD-04. AI-04/AI-05 entregarão
+as interfaces de geração e chat/adaptação. A rota GET de preparação permanece
+somente leitura, sem chamar LLM ou gastar cota.
+
+#### Fluxo determinístico
+
+| Finalidade | Sequência | Chamadas físicas LLM máximas |
+|---|---|---|
+| DUVIDA | contexto próprio → busca DUVIDAS → resposta → validação | 1 CHAT |
+| GERACAO | preparação → busca TRIAGEM → análise → busca GERACAO_GERAL → geração → validação | 1 TRIAGEM + 1 GERACAO |
+| ADAPTACAO | mesma sequência da geração, com versão-base autorizada e pedido explícito | 1 TRIAGEM + 1 GERACAO |
+
+Bloqueio determinístico ou dados insuficientes terminam antes de buscar/chamar o
+modelo. Casos desconhecidos não se tornam saudáveis por ausência de dados. O
+analista LLM pode acrescentar alerta/lacuna; nunca remover a regra acadêmica.
+Relato novo relevante sinaliza atualização confirmada do onboarding, sem alterar
+cadastro pelo chat. Adaptação exige leitor autorizado da versão-base; sem ele,
+encerra por insuficiência. A integração/publicação de adaptações fica em AI-05.
+
+A ponte PostgresContext usa serviços públicos de autorização, triagem e catálogo,
+com sessões curtas. Papéis vigentes e designação são conferidos; instrutor
+designado pode preparar geração, mas não ler o chat privado do cliente. O resumo
+e os candidatos vêm do backend, não de IDs ou sinais fornecidos pelo usuário.
+Antes/depois de cada etapa, revalidar permissão, snapshot, regras e recursos.
+Mudança relevante interrompe a execução e exige nova solicitação.
+
+RagEvidence chama Retriever de RAG-05, separando as finalidades. Revalida ingestões
+concluídas, espaço vetorial e versão/revisão documental ainda aprovada por serviços
+públicos de MOD-05. Cache não dispensa revalidação. Para condição de saúde declarada,
+exigir escopo condição/população/intervenção resolvido pelo backend para o conjunto
+completo de restrições (não selecionar somente uma condição favorável) e suporte
+PERTINENTE de RAG-05; sem mapeamento/evidência ou com conflito, abster-se.
+Similaridade alta isolada não prova suporte. Não há planner, navegação, ferramentas
+escolhidas pelo modelo, revisor LLM ou busca iterativa.
+
+#### Prompts e validação
+
+Prompts em app/modules/ai/prompts/v1.py separam instruções de sistema e um objeto
+dados_nao_confiaveis contendo pergunta, histórico limitado, resumo minimizado,
+candidatos e trechos aprovados. Não enviar IDs de cliente/snapshot, livros inteiros,
+anamnese fora do resumo ou chats de terceiros. Não registrar corpo, chave ou
+raciocínio interno nos logs. Hashes, versões e consumo são metadados de execução;
+conteúdo interno deve ficar sob autorização/retenção de AI-03, não log técnico.
+
+Cada chamada recebe JSON Schema específico. JSON Object Mode do provedor não
+garante schema: backend rejeita JSON malformado, chaves repetidas, NaN/Infinity,
+campos extras, idioma declarado diferente de pt-BR, tipos e faixas inválidas.
+Não há remoção de cercas de Markdown, reparo ou segunda chamada para corrigir.
+Ficha tem 1–6 dias, até seis itens/dia, ordem sequencial, IDs reais, combinação
+completa de equipamentos disponível, séries/repetições/carga/intervalos validados.
+Fontes citadas devem estar no pacote recuperado. Recurso ausente, exercício
+proibido/inexistente ou evidência inventada impedem resultado pronto.
+
+RESPOSTA_PRONTA é resposta de dúvida; PRONTA_PARA_PUBLICACAO é proposta interna
+validada, não ficha publicada nem aceite profissional. Somente AI-03/MOD-04
+publicará com parecer PENDENTE, independente do aceite posterior do instrutor.
+Nenhum schema permite SQL, ferramentas, autor administrativo ou parecer humano.
+FALHA, JSON_INVALIDO, SCHEMA_INVALIDO, TIMEOUT, CANCELADA, INTERROMPIDA,
+DADOS_INSUFICIENTES, BLOQUEADA, ABSTENCAO e CONFLITO são resultados distintos.
+
+#### Orçamentos e contrato de StatePort
+
+Valores vêm da configuração v1: prompt até 24000 bytes UTF-8, resumo até 2400
+caracteres, até 40 candidatos e cinco trechos por pacote; pergunta até 1000
+caracteres, seis mensagens de histórico/3000 caracteres. Excesso termina sem
+truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 4096;
+respectivamente 20/25/60 segundos, execução até 100 segundos. Bytes não são tokens.
+Reservas de saída não comprovam consumo real: registrar usage do provedor quando
+disponível; em falha/consumo desconhecido, manter reserva e indicação explícita.
+Não há preço presumido ou contratação automática de plano.
+
+StatePort deve garantir atomicamente:
+- claim exclusivo por ator/solicitação, vinculando titular, finalidade, entrada,
+  snapshot/contexto e versões de configuração/prompts;
+- mesma chave/entrada retorna execução em andamento ou resultado, sem retomar
+  chamadas; entrada/contexto diferente gera ExecutionConflict;
+- reserva única por etapa antes do envio e marca de despacho imediatamente antes
+  de cada requisição HTTP física, inclusive 429, erro de rede ou JSON inválido;
+- consumo recebido após cancelamento pode ser contabilizado, mas nunca reativar
+  execução, liberar resposta ou publicar;
+- finish/cancel terminais preservam orçamento; nova tentativa explícita usa novo ID;
+- cotas persistentes/atômicas de novas execuções por cliente antes de embeddings/
+  busca/LLM, conforme janela aprovada de seis em 60 segundos para chat/adaptação;
+- não reiniciar execução/orçamento após queda. O deadline monotônico recebido vale
+  no processo atual; AI-03 deve convertê-lo em prazo durável UTC e tratar execuções
+  órfãs como interrompidas, nunca repetir chamadas automaticamente.
+
+A implementação MemoryState existe somente em tests/ai/execution_fakes.py para
+testar esse protocolo; não fornece persistência, cota pública ou recuperação após
+reinício. A ativação da API depende do adaptador durável de AI-03. Retenção de
+90 dias e publicação/limite de 15 fichas não foram antecipados nesta etapa.
+
+#### Provedor e falhas
+
+GroqAdapter usa HTTPX síncrono, um slot global por processo, redirects/proxy de
+ambiente desativados, timeout e tamanho máximo de resposta. Usa o endpoint aprovado,
+modelo llama-3.3-70b-versatile, json_object, n=1 e max_completion_tokens. Uma
+tentativa por etapa, sem retry/fallback oculto. HTTP 429 encerra; nova ação explícita
+pode abrir outra execução. O tempo em fila consome o orçamento da etapa.
+Cancelamento impede despacho ainda pendente e descarta resposta em voo; não promete
+interromper instantaneamente um POST síncrono já enviado nem desfazer seu consumo.
+
+GROQ_API_KEY vem do ambiente e é mascarada. Sem chave, falha controlada sem POST.
+HTTPX já existia nos testes; foi promovido a dependência de runtime no lockfile,
+sem novo SDK, para executar o contrato HTTP. Não há nova versão de dependência.
+
+Referências oficiais consultadas:
+[API de chat](https://console.groq.com/docs/api-reference),
+[JSON Object Mode](https://console.groq.com/docs/structured-outputs),
+[erros](https://console.groq.com/docs/errors) e
+[limites](https://console.groq.com/docs/rate-limits).
+
+#### Verificação e limites da evidência
+
+[Comandos e resultados](docs/testes/comandos.md#orquestrador-e-contratos-ai-02).
+Testes controlam o texto do modelo; integração usa PostgreSQL/Qdrant reais.
+HTTPX MockTransport valida o contrato do adaptador sem enviar dados/credenciais
+à Groq. Harness REST de schemas não é rota do produto. Casos de injeção verificam
+separação de dados, permissões e campos rejeitados; não provam imunidade semântica.
+Qualidade de português, suporte dos textos gerados, resistência semântica,
+latência/cota gratuita real e corpus completo serão medidos em AI-06.
+### 17. Schemas JSON de entrada, respostas e resultado interno de execução
+
+Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requisitos/schemas/execucao-ia-v1.schema.json).
+
+````json
+{
+  "schema_version": 1,
+  "entrada": {
+    "$defs": {
+      "HistoryMessage": {
+        "additionalProperties": false,
+        "properties": {
+          "papel": {
+            "enum": [
+              "user",
+              "assistant"
+            ],
+            "title": "Papel",
+            "type": "string"
+          },
+          "texto": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Texto",
+            "type": "string"
+          }
+        },
+        "required": [
+          "papel",
+          "texto"
+        ],
+        "title": "HistoryMessage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "finalidade": {
+        "enum": [
+          "DUVIDA",
+          "GERACAO",
+          "ADAPTACAO"
+        ],
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "mensagem": {
+        "default": "",
+        "maxLength": 1000,
+        "title": "Mensagem",
+        "type": "string"
+      },
+      "historico": {
+        "default": [],
+        "items": {
+          "$ref": "#/$defs/HistoryMessage"
+        },
+        "maxItems": 6,
+        "title": "Historico",
+        "type": "array"
+      },
+      "versao_base_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Base Id"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "finalidade"
+    ],
+    "title": "RunRequest",
+    "type": "object"
+  },
+  "triagem": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "alerta_grave": {
+        "title": "Alerta Grave",
+        "type": "boolean"
+      },
+      "lacuna": {
+        "title": "Lacuna",
+        "type": "boolean"
+      },
+      "contradicao": {
+        "default": false,
+        "title": "Contradicao",
+        "type": "boolean"
+      },
+      "evidencias_ids": {
+        "default": [],
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "maxItems": 8,
+        "title": "Evidencias Ids",
+        "type": "array"
+      },
+      "atualizacao_onboarding_necessaria": {
+        "title": "Atualizacao Onboarding Necessaria",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "alerta_grave",
+      "lacuna",
+      "atualizacao_onboarding_necessaria"
+    ],
+    "title": "TriageAnswer",
+    "type": "object"
+  },
+  "chat": {
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "idioma": {
+        "const": "pt-BR",
+        "title": "Idioma",
+        "type": "string"
+      },
+      "tipo": {
+        "enum": [
+          "INFORMACAO",
+          "ABSTENCAO"
+        ],
+        "title": "Tipo",
+        "type": "string"
+      },
+      "texto": {
+        "maxLength": 6000,
+        "minLength": 1,
+        "title": "Texto",
+        "type": "string"
+      },
+      "evidencias_ids": {
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "maxItems": 5,
+        "title": "Evidencias Ids",
+        "type": "array"
+      }
+    },
+    "required": [
+      "idioma",
+      "tipo",
+      "texto",
+      "evidencias_ids"
+    ],
+    "title": "ChatAnswer",
+    "type": "object"
+  },
+  "ficha": {
+    "$defs": {
+      "PlanDay": {
+        "additionalProperties": false,
+        "properties": {
+          "titulo": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Titulo",
+            "type": "string"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/$defs/PlanItem"
+            },
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Itens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titulo",
+          "itens"
+        ],
+        "title": "PlanDay",
+        "type": "object"
+      },
+      "PlanItem": {
+        "additionalProperties": false,
+        "properties": {
+          "exercicio_id": {
+            "format": "uuid",
+            "title": "Exercicio Id",
+            "type": "string"
+          },
+          "ordem": {
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Ordem",
+            "type": "integer"
+          },
+          "equipamento_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Equipamento Ids",
+            "type": "array"
+          },
+          "series": {
+            "maximum": 10,
+            "minimum": 1,
+            "title": "Series",
+            "type": "integer"
+          },
+          "repeticoes": {
+            "pattern": "^[1-9][0-9]{0,2}(?:-[1-9][0-9]{0,2})?$",
+            "title": "Repeticoes",
+            "type": "string"
+          },
+          "carga_kg": {
+            "anyOf": [
+              {
+                "maximum": 999999.99,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carga Kg"
+          },
+          "cadencia": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cadencia"
+          },
+          "intervalo_segundos": {
+            "maximum": 600,
+            "minimum": 0,
+            "title": "Intervalo Segundos",
+            "type": "integer"
+          },
+          "observacoes": {
+            "maxLength": 1000,
+            "title": "Observacoes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exercicio_id",
+          "ordem",
+          "equipamento_ids",
+          "series",
+          "repeticoes",
+          "carga_kg",
+          "cadencia",
+          "intervalo_segundos",
+          "observacoes"
+        ],
+        "title": "PlanItem",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "idioma": {
+        "const": "pt-BR",
+        "title": "Idioma",
+        "type": "string"
+      },
+      "dias": {
+        "items": {
+          "$ref": "#/$defs/PlanDay"
+        },
+        "maxItems": 6,
+        "minItems": 1,
+        "title": "Dias",
+        "type": "array"
+      },
+      "explicacao": {
+        "maxLength": 2000,
+        "minLength": 1,
+        "title": "Explicacao",
+        "type": "string"
+      },
+      "evidencias_ids": {
+        "items": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "maxItems": 5,
+        "minItems": 1,
+        "title": "Evidencias Ids",
+        "type": "array"
+      }
+    },
+    "required": [
+      "idioma",
+      "dias",
+      "explicacao",
+      "evidencias_ids"
+    ],
+    "title": "PlanAnswer",
+    "type": "object"
+  },
+  "resultado_interno": {
+    "$defs": {
+      "ChatAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "idioma": {
+            "const": "pt-BR",
+            "title": "Idioma",
+            "type": "string"
+          },
+          "tipo": {
+            "enum": [
+              "INFORMACAO",
+              "ABSTENCAO"
+            ],
+            "title": "Tipo",
+            "type": "string"
+          },
+          "texto": {
+            "maxLength": 6000,
+            "minLength": 1,
+            "title": "Texto",
+            "type": "string"
+          },
+          "evidencias_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Evidencias Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "idioma",
+          "tipo",
+          "texto",
+          "evidencias_ids"
+        ],
+        "title": "ChatAnswer",
+        "type": "object"
+      },
+      "Condition": {
+        "additionalProperties": false,
+        "properties": {
+          "categoria": {
+            "enum": [
+              "CARDIACA",
+              "RESPIRATORIA",
+              "METABOLICA",
+              "MUSCULOESQUELETICA",
+              "OUTRA"
+            ],
+            "title": "Categoria",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "categoria",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Condition",
+        "type": "object"
+      },
+      "Consumption": {
+        "additionalProperties": false,
+        "properties": {
+          "etapa": {
+            "enum": [
+              "TRIAGEM",
+              "GERACAO",
+              "CHAT"
+            ],
+            "title": "Etapa",
+            "type": "string"
+          },
+          "chamadas_fisicas": {
+            "title": "Chamadas Fisicas",
+            "type": "integer"
+          },
+          "limite_saida_tokens": {
+            "title": "Limite Saida Tokens",
+            "type": "integer"
+          },
+          "prompt_bytes": {
+            "title": "Prompt Bytes",
+            "type": "integer"
+          },
+          "prompt_sha256": {
+            "title": "Prompt Sha256",
+            "type": "string"
+          },
+          "uso": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "consumo_desconhecido": {
+            "default": true,
+            "title": "Consumo Desconhecido",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "etapa",
+          "chamadas_fisicas",
+          "limite_saida_tokens",
+          "prompt_bytes",
+          "prompt_sha256"
+        ],
+        "title": "Consumption",
+        "type": "object"
+      },
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "ingestao_id": {
+            "format": "uuid",
+            "title": "Ingestao Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "aprovacao_revisao": {
+            "title": "Aprovacao Revisao",
+            "type": "integer"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          },
+          "texto": {
+            "title": "Texto",
+            "type": "string"
+          },
+          "texto_hash": {
+            "title": "Texto Hash",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "ingestao_id",
+          "documento_versao_id",
+          "aprovacao_revisao",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao",
+          "texto",
+          "texto_hash",
+          "score"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      },
+      "Limitation": {
+        "additionalProperties": false,
+        "properties": {
+          "regiao": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Regiao",
+            "type": "string"
+          },
+          "descricao": {
+            "maxLength": 300,
+            "minLength": 1,
+            "title": "Descricao",
+            "type": "string"
+          },
+          "gravidade_declarada": {
+            "enum": [
+              "NAO_GRAVE",
+              "GRAVE",
+              "NAO_SEI"
+            ],
+            "title": "Gravidade Declarada",
+            "type": "string"
+          }
+        },
+        "required": [
+          "regiao",
+          "descricao",
+          "gravidade_declarada"
+        ],
+        "title": "Limitation",
+        "type": "object"
+      },
+      "Medication": {
+        "additionalProperties": false,
+        "properties": {
+          "nome": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Nome",
+            "type": "string"
+          },
+          "observacao": {
+            "maxLength": 300,
+            "title": "Observacao",
+            "type": "string"
+          }
+        },
+        "required": [
+          "nome",
+          "observacao"
+        ],
+        "title": "Medication",
+        "type": "object"
+      },
+      "OnboardingData": {
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "else": {
+              "properties": {
+                "condicoes_saude": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_condicoes_saude": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_condicoes_saude"
+              ]
+            },
+            "then": {
+              "properties": {
+                "condicoes_saude": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "medicamentos": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "usa_medicamentos": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "usa_medicamentos"
+              ]
+            },
+            "then": {
+              "properties": {
+                "medicamentos": {
+                  "minItems": 1
+                }
+              }
+            }
+          },
+          {
+            "else": {
+              "properties": {
+                "limitacoes": {
+                  "maxItems": 0
+                }
+              }
+            },
+            "if": {
+              "properties": {
+                "possui_dor_lesao_limitacao": {
+                  "const": "SIM"
+                }
+              },
+              "required": [
+                "possui_dor_lesao_limitacao"
+              ]
+            },
+            "then": {
+              "properties": {
+                "limitacoes": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        ],
+        "properties": {
+          "altura_cm": {
+            "maximum": 250,
+            "minimum": 50,
+            "multipleOf": 0.1,
+            "title": "Altura Cm",
+            "type": "number"
+          },
+          "peso_kg": {
+            "maximum": 350,
+            "minimum": 20,
+            "multipleOf": 0.1,
+            "title": "Peso Kg",
+            "type": "number"
+          },
+          "objetivo_principal": {
+            "enum": [
+              "CONDICIONAMENTO",
+              "FORCA",
+              "HIPERTROFIA",
+              "ATIVIDADE_GERAL"
+            ],
+            "title": "Objetivo Principal",
+            "type": "string"
+          },
+          "experiencia": {
+            "enum": [
+              "INICIANTE",
+              "INTERMEDIARIO",
+              "AVANCADO"
+            ],
+            "title": "Experiencia",
+            "type": "string"
+          },
+          "nivel_atividade": {
+            "enum": [
+              "SEDENTARIO",
+              "LEVE",
+              "MODERADO",
+              "ELEVADO"
+            ],
+            "title": "Nivel Atividade",
+            "type": "string"
+          },
+          "dias_semana": {
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Dias Semana",
+            "type": "integer"
+          },
+          "duracao_sessao_min": {
+            "maximum": 120,
+            "minimum": 20,
+            "title": "Duracao Sessao Min",
+            "type": "integer"
+          },
+          "possui_condicoes_saude": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Condicoes Saude",
+            "type": "string"
+          },
+          "condicoes_saude": {
+            "items": {
+              "$ref": "#/$defs/Condition"
+            },
+            "maxItems": 10,
+            "title": "Condicoes Saude",
+            "type": "array"
+          },
+          "usa_medicamentos": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Usa Medicamentos",
+            "type": "string"
+          },
+          "medicamentos": {
+            "items": {
+              "$ref": "#/$defs/Medication"
+            },
+            "maxItems": 10,
+            "title": "Medicamentos",
+            "type": "array"
+          },
+          "possui_dor_lesao_limitacao": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Possui Dor Lesao Limitacao",
+            "type": "string"
+          },
+          "limitacoes": {
+            "items": {
+              "$ref": "#/$defs/Limitation"
+            },
+            "maxItems": 8,
+            "title": "Limitacoes",
+            "type": "array"
+          },
+          "restricao_exercicio_declarada": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Restricao Exercicio Declarada",
+            "type": "string"
+          },
+          "evento_saude_importante_recente": {
+            "enum": [
+              "SIM",
+              "NAO",
+              "NAO_SEI"
+            ],
+            "title": "Evento Saude Importante Recente",
+            "type": "string"
+          },
+          "observacoes": {
+            "maxLength": 1000,
+            "title": "Observacoes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "altura_cm",
+          "peso_kg",
+          "objetivo_principal",
+          "experiencia",
+          "nivel_atividade",
+          "dias_semana",
+          "duracao_sessao_min",
+          "possui_condicoes_saude",
+          "condicoes_saude",
+          "usa_medicamentos",
+          "medicamentos",
+          "possui_dor_lesao_limitacao",
+          "limitacoes",
+          "restricao_exercicio_declarada",
+          "evento_saude_importante_recente",
+          "observacoes"
+        ],
+        "title": "OnboardingData",
+        "type": "object"
+      },
+      "PlanAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "idioma": {
+            "const": "pt-BR",
+            "title": "Idioma",
+            "type": "string"
+          },
+          "dias": {
+            "items": {
+              "$ref": "#/$defs/PlanDay"
+            },
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Dias",
+            "type": "array"
+          },
+          "explicacao": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Explicacao",
+            "type": "string"
+          },
+          "evidencias_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "minItems": 1,
+            "title": "Evidencias Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "idioma",
+          "dias",
+          "explicacao",
+          "evidencias_ids"
+        ],
+        "title": "PlanAnswer",
+        "type": "object"
+      },
+      "PlanDay": {
+        "additionalProperties": false,
+        "properties": {
+          "titulo": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Titulo",
+            "type": "string"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/$defs/PlanItem"
+            },
+            "maxItems": 6,
+            "minItems": 1,
+            "title": "Itens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titulo",
+          "itens"
+        ],
+        "title": "PlanDay",
+        "type": "object"
+      },
+      "PlanItem": {
+        "additionalProperties": false,
+        "properties": {
+          "exercicio_id": {
+            "format": "uuid",
+            "title": "Exercicio Id",
+            "type": "string"
+          },
+          "ordem": {
+            "maximum": 6,
+            "minimum": 1,
+            "title": "Ordem",
+            "type": "integer"
+          },
+          "equipamento_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Equipamento Ids",
+            "type": "array"
+          },
+          "series": {
+            "maximum": 10,
+            "minimum": 1,
+            "title": "Series",
+            "type": "integer"
+          },
+          "repeticoes": {
+            "pattern": "^[1-9][0-9]{0,2}(?:-[1-9][0-9]{0,2})?$",
+            "title": "Repeticoes",
+            "type": "string"
+          },
+          "carga_kg": {
+            "anyOf": [
+              {
+                "maximum": 999999.99,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Carga Kg"
+          },
+          "cadencia": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cadencia"
+          },
+          "intervalo_segundos": {
+            "maximum": 600,
+            "minimum": 0,
+            "title": "Intervalo Segundos",
+            "type": "integer"
+          },
+          "observacoes": {
+            "maxLength": 1000,
+            "title": "Observacoes",
+            "type": "string"
+          }
+        },
+        "required": [
+          "exercicio_id",
+          "ordem",
+          "equipamento_ids",
+          "series",
+          "repeticoes",
+          "carga_kg",
+          "cadencia",
+          "intervalo_segundos",
+          "observacoes"
+        ],
+        "title": "PlanItem",
+        "type": "object"
+      },
+      "SnapshotRef": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "numero": {
+            "minimum": 1,
+            "title": "Numero",
+            "type": "integer"
+          },
+          "revisao": {
+            "minimum": 1,
+            "title": "Revisao",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "numero",
+          "revisao"
+        ],
+        "title": "SnapshotRef",
+        "type": "object"
+      },
+      "Summary": {
+        "additionalProperties": false,
+        "properties": {
+          "conteudo": {
+            "$ref": "#/$defs/SummaryData"
+          },
+          "caracteres": {
+            "title": "Caracteres",
+            "type": "integer"
+          },
+          "sha256": {
+            "title": "Sha256",
+            "type": "string"
+          }
+        },
+        "required": [
+          "conteudo",
+          "caracteres",
+          "sha256"
+        ],
+        "title": "Summary",
+        "type": "object"
+      },
+      "SummaryData": {
+        "additionalProperties": false,
+        "properties": {
+          "idade": {
+            "minimum": 0,
+            "title": "Idade",
+            "type": "integer"
+          },
+          "dados": {
+            "$ref": "#/$defs/OnboardingData"
+          }
+        },
+        "required": [
+          "idade",
+          "dados"
+        ],
+        "title": "SummaryData",
+        "type": "object"
+      },
+      "TriageResult": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "snapshot": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/SnapshotRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "regra_versao": {
+            "title": "Regra Versao",
+            "type": "integer"
+          },
+          "regra_sha256": {
+            "title": "Regra Sha256",
+            "type": "string"
+          },
+          "estado": {
+            "anyOf": [
+              {
+                "enum": [
+                  "DADOS_INSUFICIENTES",
+                  "BLOQUEADO_POR_SEGURANCA",
+                  "ELEGIVEL_PARA_GERACAO"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estado"
+          },
+          "estado_tecnico": {
+            "enum": [
+              "CONCLUIDA",
+              "AGUARDANDO_ANALISE",
+              "FALHA",
+              "TIMEOUT"
+            ],
+            "title": "Estado Tecnico",
+            "type": "string"
+          },
+          "motivos": {
+            "items": {
+              "enum": [
+                "ONBOARDING_NAO_CONCLUIDO",
+                "DADOS_INVALIDOS",
+                "IDADE_AUSENTE",
+                "ESCOPO_ETARIO",
+                "ALERTA_GRAVE_DECLARADO",
+                "DADO_DESCONHECIDO",
+                "CONTEXTO_EXCEDIDO",
+                "ANALISE_PENDENTE",
+                "ALERTA_GRAVE_TEXTO",
+                "LACUNA_OU_CONTRADICAO",
+                "ANALISE_CONCLUIDA",
+                "FALHA_ANALISE",
+                "TIMEOUT_ANALISE",
+                "SAIDA_ANALISE_INVALIDA",
+                "EVIDENCIA_NAO_FORNECIDA",
+                "CONTEXTO_SUPERADO",
+                "RECURSOS_ALTERADOS",
+                "SEM_EXERCICIOS_VIAVEIS"
+              ],
+              "type": "string"
+            },
+            "title": "Motivos",
+            "type": "array"
+          },
+          "resumo_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resumo Sha256"
+          },
+          "evidencias_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "title": "Evidencias Ids",
+            "type": "array"
+          },
+          "exercicios_elegiveis": {
+            "title": "Exercicios Elegiveis",
+            "type": "integer"
+          },
+          "recursos_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Recursos Sha256"
+          },
+          "geracao_permitida": {
+            "title": "Geracao Permitida",
+            "type": "boolean"
+          },
+          "resumo": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Summary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "snapshot",
+          "regra_versao",
+          "regra_sha256",
+          "estado",
+          "estado_tecnico",
+          "motivos",
+          "resumo_sha256",
+          "evidencias_ids",
+          "exercicios_elegiveis",
+          "recursos_sha256",
+          "geracao_permitida",
+          "resumo"
+        ],
+        "title": "TriageResult",
+        "type": "object"
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "properties": {
+          "prompt_tokens": {
+            "minimum": 0,
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "minimum": 0,
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "minimum": 0,
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "estado": {
+        "enum": [
+          "EM_EXECUCAO",
+          "RESPOSTA_PRONTA",
+          "PRONTA_PARA_PUBLICACAO",
+          "BLOQUEADA",
+          "DADOS_INSUFICIENTES",
+          "ABSTENCAO",
+          "CONFLITO",
+          "FALHA",
+          "JSON_INVALIDO",
+          "SCHEMA_INVALIDO",
+          "TIMEOUT",
+          "CANCELADA",
+          "LIMITE_EXCEDIDO",
+          "INTERROMPIDA"
+        ],
+        "title": "Estado",
+        "type": "string"
+      },
+      "motivo": {
+        "title": "Motivo",
+        "type": "string"
+      },
+      "etapas": {
+        "default": [],
+        "items": {
+          "type": "string"
+        },
+        "title": "Etapas",
+        "type": "array"
+      },
+      "consumo": {
+        "default": [],
+        "items": {
+          "$ref": "#/$defs/Consumption"
+        },
+        "title": "Consumo",
+        "type": "array"
+      },
+      "evidencias": {
+        "default": [],
+        "items": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "title": "Evidencias",
+        "type": "array"
+      },
+      "triagem": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/TriageResult"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "resposta": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ChatAnswer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "proposta": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/PlanAnswer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "modelo": {
+        "title": "Modelo",
+        "type": "string"
+      },
+      "versao_prompts": {
+        "title": "Versao Prompts",
+        "type": "string"
+      },
+      "configuracao_sha256": {
+        "title": "Configuracao Sha256",
+        "type": "string"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "estado",
+      "motivo",
+      "modelo",
+      "versao_prompts",
+      "configuracao_sha256"
+    ],
+    "title": "RunResult",
+    "type": "object"
+  }
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -8475,8 +10034,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | CONCLUIDO |
 | [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | CONCLUIDO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | CONCLUIDO |
-| [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | PRONTO |
-| [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | BLOQUEADO |
+| [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
+| [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | PRONTO |
 | [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
 | [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | BLOQUEADO |
 | [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
@@ -9285,6 +10844,16 @@ limites e revalidação. A resposta não inclui anamnese ou resumo completo.
 Sem adaptador LLM (AI-02), caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
 permitida. O serviço interno já recebe porta assistida tipada para composição;
 não habilitar doubles por variável de ambiente ou entrada do cliente.
+
+#### Orquestrador fixo AI-02
+
+[Contrato e limites](docs/arquitetura/orquestracao-ia.md). Schemas e prompts
+versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
+A composição exige StatePort explícito; AI-03 entregará persistência/publicação.
+Não há endpoint público de execução ou armazenamento volátil de produção.
+GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
+pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
+HTTPX passou de dependência de teste a runtime, sem alterar sua versão.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -9363,6 +10932,7 @@ name = "academia-backend"
 version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "httpx>=0.28,<1",
     "alembic>=1.14,<2",
     "psycopg[binary]>=3.2,<4",
     "sqlalchemy>=2,<3",
@@ -9383,7 +10953,6 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "httpx>=0.28,<1",
     "mypy>=1,<3",
     "pytest>=8,<10",
     "ruff>=0.11,<1",
@@ -9506,6 +11075,10 @@ ACADEMIA_EMBEDDING_BATCH_SIZE=8
 ACADEMIA_EMBEDDING_TIMEOUT_SECONDS=60
 ACADEMIA_EMBEDDING_CPU_THREADS=2
 ACADEMIA_INDEX_LOCK_DIR=data/indexacao
+
+# LLM gratuito Groq; credencial pessoal. Testes AI-02 usam transporte controlado.
+GROQ_API_KEY=
+# Modelo/endpoint/limites em docs/requisitos/schemas/configuracao-ia-v1.json.
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -9525,10 +11098,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `06fe84515229037b75478dd20ce7ca4418e77540bf6d4f487fc1022c7143a0c2` |
+| `.env.example` | `3ff8016d6c3a2b827011aa5f707d9aec6e94a4d438dc18780a03bcba7122651e` |
 | `AGENTS.md` | `96779619a58c189dcc3e9374a29cdcfa2ad49e475f9ebd00f24b9201c165097e` |
-| `backend/README.md` | `dbcfd8e5b88c113d05bbb7a9e046e78c57d0fe7ed8a9bec278511b55f147614e` |
-| `backend/pyproject.toml` | `c0cd2be2d92c2e19f48399c12b87a651e51bad98181a7077c00f5885b44b1229` |
+| `backend/README.md` | `f83a07f8febf2a8fe3cd205121d27302ef735623ed73b31fa5be0e5b2a1e078b` |
+| `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
 | `database/README.md` | `a2380251f2d87c5434d63a7308d6801525e698c7875ee094873fc9e468abd28c` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
@@ -9551,24 +11124,25 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
 | `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `88df5b6b8c2f07e556719872d55ba4e77c598b9a45b7361156c48b0e7eb4754d` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `263a3d7bdd29ec662ce9a4c2e25ae07c87a8056abb98c44816df778e3c3d9406` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `567b72d96b271b54021ae401c2d3faeb8cb8e8ff0bf09e6aa8839eec1b7b1db4` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `92e9288458409b0d18243e4e46c990bce4f9971e890831c14aa2910d999da498` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
+| `docs/arquitetura/orquestracao-ia.md` | `1cc7765d46deea850bcd0bc1b2c48d76c90e07fb202cd55dc19ca60ee503d4f1` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
-| `docs/arquitetura/triagem-academica.md` | `ddddc23831eab70677e5039cb5fa8cff0ff832e4da435c8ceda18fa412fc93a2` |
-| `docs/especificacao/compilacao-spec.json` | `c221f9a43bf2f37dea61f5d3a00978ecddcbd3286e0c135d45ace9645e21986b` |
+| `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
+| `docs/especificacao/compilacao-spec.json` | `f6555c96d9d55689d304cd037438513288d296ba34e543cca0812cc87af824b5` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `72106ef39c2104d018b321055cd6dc03a976ac10a5ca0a31518914a45b2b7bd7` |
+| `docs/especificacao/visao-geral.md` | `01fd42043dd61aaaae3d7ccb8f56123c1c594fd82a764fd79525f22d6ed52a4c` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `af2f476f844e286b77240ff45d6af8291791504f7e24e69f7f943afd6a41c620` |
-| `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
+| `docs/prompts/README.md` | `580ef8dff2e3dee386b8c8ee433ea96072fb82a29931a2065b401a5c62af383b` |
+| `docs/requisitos/configuracao-ia-rag.md` | `eeae28fb33573d4d05a159b0dce82420f4f10ac9f90cc7b170c999b2a6ad1de2` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
@@ -9577,6 +11151,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
+| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `86647575a151a123a1668b1a524b35eeaaf3bdea9510a75065482434849c25e5` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
 | `docs/requisitos/schemas/recuperacao-v1.schema.json` | `5057b3ff3fb127d06b57def109815030a771caeec5cf056f19a7d490e4bcc012` |
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |

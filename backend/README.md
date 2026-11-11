@@ -106,3 +106,13 @@ limites e revalidação. A resposta não inclui anamnese ou resumo completo.
 Sem adaptador LLM (AI-02), caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
 permitida. O serviço interno já recebe porta assistida tipada para composição;
 não habilitar doubles por variável de ambiente ou entrada do cliente.
+
+## Orquestrador fixo AI-02
+
+[Contrato e limites](../docs/arquitetura/orquestracao-ia.md). Schemas e prompts
+versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
+A composição exige StatePort explícito; AI-03 entregará persistência/publicação.
+Não há endpoint público de execução ou armazenamento volátil de produção.
+GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
+pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
+HTTPX passou de dependência de teste a runtime, sem alterar sua versão.

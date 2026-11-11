@@ -21,8 +21,9 @@ fronteiras externas; chamadas internas não são serializadas artificialmente.
 O ponto de composição no main.py e o contrato compartilhado são ajustes equivalentes
 necessários ao cartão. Não houve dependência, migration ou frontend novos.
 
-AI-01 define a porta Analyst, testada com doubles rotulados. AI-02 fará a composição
-com RAG-05 e o provedor gratuito, com timeouts reais. Não há chamada LLM ou vetorial
+AI-01 define a porta Analyst, testada com doubles rotulados. AI-02 entrega a composição
+por portas com RAG-05 e o adaptador do provedor gratuito, com timeouts;
+a ativação pública depende do estado durável de AI-03. Não há chamada LLM ou vetorial
 na rota de preparação desta entrega; importar/iniciar a API não cria sucesso falso.
 Sem Analyst, caso que precisa de análise retorna AGUARDANDO_ANALISE, estado de
 saúde null e geracao_permitida=false. É um estado técnico, sem quarto estado clínico.
@@ -103,7 +104,7 @@ público da preparação. Auditoria MOD-12 persiste ai.triage.checked, ator, ref
 correlação, UTC e policy_v1, sem anamnese ou motivos de saúde em logs operacionais.
 
 As tabelas planejadas execucao_ia/triagem/etapa/evidência serão materializadas
-em AI-02/AI-03, conforme seus cartões. AI-01 não cria execução fictícia ou tabela
+em AI-03; AI-02 define as portas e o orquestrador, conforme seus cartões. AI-01 não cria execução fictícia ou tabela
 paralela de triagem para contornar a dependência do modelo lógico. O endpoint é
 consulta de preparação, não pedido idempotente de geração; suas leituras podem
 produzir registros distintos de auditoria. Nova tentativa e persistência de
