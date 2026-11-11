@@ -159,6 +159,7 @@ def _expire(
         return
     if row.vigente or row.estado_publicacao == "RASCUNHO":
         raise WorkoutError(409)
+    row.explicacao = None
     row.estado_publicacao = "CONTEUDO_EXPIRADO"
     row.conteudo_excluido_em = utc_now()
     row.motivo_exclusao = reason

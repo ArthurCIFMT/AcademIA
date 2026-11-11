@@ -109,6 +109,8 @@ módulos antes de INF-01, conforme orientação do professor.
 
 | AI-02 | CONCLUIDO | [Orquestrador fixo e contratos](../arquitetura/orquestracao-ia.md), [schemas JSON](../requisitos/schemas/execucao-ia-v1.schema.json) e [comandos](../testes/comandos.md#orquestrador-e-contratos-ai-02). Prompts versionados, ponte autorizada AI-01/catálogo/RAG-05, adaptador Groq com transporte controlado, consumo físico e portas de estado. 60 testes específicos (57 BE/3 INT), 237 BE, 124 DB/INT com E5/Mailpit e 9 API aprovados; Ruff/formato, mypy (168 arquivos), SPEC e DOC verificados. HTTPX promovido a runtime, sem nova versão/migration/tela. Sem chamada Groq real ou endpoint volátil; persistência/publicação em AI-03, qualidade/tempo real em AI-06. |
 
+| AI-03 | CONCLUIDO | [Geração persistente](../arquitetura/geracao-persistente.md), migration 0014 e [comandos](../testes/comandos.md#geração-persistente-ai-03). Execução/triagem/etapas/fontes em PostgreSQL, API própria com sessão/CSRF, reserva física atômica, replay/cancelamento/reinício sem novas chamadas e publicação transacional por MOD-04. Origem IA, parecer PENDENTE, aviso/retenção existentes e nenhuma cópia de ficha na execução. 16 testes específicos (2 BE/14 INT); 239 BE, 134 DB/INT na regressão e 4 integrações complementares, 9 API aprovados. Ruff/formato, mypy (182 arquivos), SPEC/DOC verificados. Sem dependência/tela nova; Groq controlada, qualidade real em AI-06. |
+
 Consolidação documental em 2026-11-11: [SPEC completo e portátil](../../SPEC.md),
 conteúdo das fontes oficiais incorporado, evolução do MER e roteiro para
 reconstrução por outra IA. Leitura pelos agentes/prompts e referências de estágio
@@ -185,8 +187,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | CONCLUIDO |
 | [AI-01](05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | CONCLUIDO |
 | [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
-| [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | PRONTO |
-| [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
+| [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
+| [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | PRONTO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | BLOQUEADO |
 | [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
 | [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
@@ -257,8 +259,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 e AI-02 também estão concluídos.
-AI-03 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-03 também estão concluídos.
+AI-04 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

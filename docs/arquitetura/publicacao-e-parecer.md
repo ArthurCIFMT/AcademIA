@@ -97,3 +97,11 @@ worker nem envio automático contínuo neste cartão.
 A migration 0011 cria a validação e protege validações/pareceres contra UPDATE
 ou DELETE. O índice parcial limita a um parecer conclusivo por versão e a constraint
 exige motivo em rejeições. A migration 0010 permanece intacta.
+
+## Integração AI-03
+
+[Publicação por IA](geracao-persistente.md) usa o contrato interno
+ValidatedGeneration/treinos, sem passar pelo atalho de publicação manual.
+Reutiliza validação, retenção, pendência/aviso e parecer posterior do mesmo domínio.
+Explicação da versão é imutável; o expurgo remove-a junto à prescrição. Não existe
+cópia da ficha na execução IA que possa restaurar conteúdo expirado.

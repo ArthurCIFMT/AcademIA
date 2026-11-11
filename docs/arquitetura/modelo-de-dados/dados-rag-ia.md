@@ -2,7 +2,8 @@
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](../corpus.md)); ingestão e fragmentos entregues na migration 0013
-([RAG-04](../indexacao-documental.md)); orquestrador aguarda seus cartões.
+([RAG-04](../indexacao-documental.md)); orquestrador/triagem/etapas/evidências entregues na migration 0014
+([AI-03](../geracao-persistente.md)).
 RAG-03 mantém [artefatos privados de extração](../extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
@@ -47,5 +48,5 @@ Os demais serviços e migrations permanecem tarefas de implementação. [Arquite
 A [triagem](../triagem-academica.md) entrega projeção, decisões tipadas e porta
 assistida, com auditoria mínima. Não cria tabelas paralelas de execução/triagem.
 O registro interno inclui códigos, resumo, snapshot, política e referências;
-execucao_ia/triagem/etapa_ia/evidencia_execucao permanecem nos cartões de persistência
+execucao_ia/triagem/etapa_ia/evidencia_execucao são implementadas em
 AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.

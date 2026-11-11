@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-02. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-03. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -129,9 +129,9 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-01 — Identidade/pessoas | [Autenticação](docs/arquitetura/autenticacao.md), [clientes](docs/arquitetura/clientes.md) e [funcionários](docs/arquitetura/funcionarios.md) | Entregue nos cartões IAM/PES correspondentes |
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
-| MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
+| MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; interface de solicitação pendente |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
-| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; persistência/publicação e interfaces de geração/chat pendentes |
+| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; interfaces de solicitação/chat pendentes |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
 | MOD-09 — Agenda | [Aulas e eventual reserva](docs/requisitos/requisitos-funcionais.md) | Planejado; reserva depende do gate próprio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-03 a AI-06 e TST-01. O próximo cartão na
-sequência é AI-03. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-04 a AI-06 e TST-01. O próximo cartão na
+sequência é AI-04. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -151,9 +151,10 @@ comprova cobertura ampla ou geração de fichas. O livro de apoio Nahas foi esco
 e registrado com hash, aguardando tratamento de extração. O aceite do MVP segue aberto.
 AI-01 entrega [triagem e preparação autorizada](docs/arquitetura/triagem-academica.md):
 sem análise assistida configurada, estado de saúde permanece null e a preparação
-aguarda composição durável de AI-03. AI-02 fornece prompts, schemas, orquestrador
-e adaptadores; testes não comprovam qualidade/latência da Groq real. A persistência da execução/triagem não foi antecipada com tabelas
-paralelas; esta etapa retorna registro JSON e auditoria mínima.
+não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
+adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
+e publicação transacional. Testes não comprovam qualidade/latência da Groq real;
+essa avaliação e revisão pendente do corpus não foram declaradas concluídas.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -1376,6 +1377,7 @@ Table versao_ficha {
   conteudo_excluido_em timestamptz
   motivo_exclusao varchar(40)
   revision integer [not null]
+  explicacao text
   indexes {
     (cliente_id, numero) [unique]
   }
@@ -1540,7 +1542,7 @@ Table execucao_ia {
   idempotency_key varchar(100) [not null]
   entrada_hash char(64) [not null]
   finalidade varchar(25) [not null]
-  estado varchar(25) [not null]
+  estado varchar(35) [not null]
   onboarding_id uuid
   versao_base_id uuid
   versao_publicada_id uuid
@@ -1549,6 +1551,11 @@ Table execucao_ia {
   prompt_version varchar(60) [not null]
   iniciada_em timestamptz [not null]
   terminada_em timestamptz
+  ator_id uuid [not null]
+  request_hash char(64) [not null]
+  worker_id uuid [not null]
+  prazo_em timestamptz [not null]
+  resultado jsonb [not null]
   indexes {
     (cliente_id, idempotency_key) [unique]
   }
@@ -1561,7 +1568,7 @@ Table triagem {
   onboarding_id uuid [not null]
   resumo jsonb [not null]
   regra_version integer [not null]
-  estado varchar(35) [not null]
+  estado varchar(35)
   motivos jsonb [not null]
   Note: 'Owner MOD-06. Três estados de domínio, falhas técnicas pertencem à execução'
 }
@@ -1575,6 +1582,14 @@ Table etapa_ia {
   tokens_entrada integer
   tokens_saida integer
   duracao_ms integer
+  limite_saida_tokens integer [not null]
+  prompt_bytes integer [not null]
+  prompt_sha256 char(64) [not null]
+  dados jsonb [not null]
+  enviada_em timestamptz
+  indexes {
+    (execucao_id, tipo) [unique]
+  }
   Note: 'Owner MOD-06. Dados de consumo sem chain-of-thought'
 }
 
@@ -1583,6 +1598,10 @@ Table evidencia_execucao {
   execucao_id uuid [not null]
   fragmento_id uuid [not null]
   finalidade varchar(25) [not null]
+  metadados jsonb [not null]
+  indexes {
+    (execucao_id, fragmento_id) [unique]
+  }
   Note: 'Owner MOD-06. IDs de fontes reais, sem copiar dados privados na literatura'
 }
 
@@ -1802,6 +1821,8 @@ Ref: auditoria.ator_id > usuario.id
 
 Ref: validacao_ficha.versao_id > versao_ficha.id
 Ref: validacao_ficha.validado_por > usuario.id
+
+Ref: execucao_ia.ator_id > usuario.id
 ````
 ### 2. Dicionário dos campos
 
@@ -2024,6 +2045,8 @@ Unicidades: cliente_id+numero.
 | conteudo_excluido_em | timestamptz | opcional | — |
 | motivo_exclusao | varchar(40) | opcional | — |
 | revision | integer | required | — |
+| explicacao | text | opcional | — |
+
 
 #### dia_ficha — MOD-04
 
@@ -2212,7 +2235,7 @@ Unicidades: cliente_id+idempotency_key.
 | idempotency_key | varchar(100) | required | — |
 | entrada_hash | char(64) | required | — |
 | finalidade | varchar(25) | required | — |
-| estado | varchar(25) | required | — |
+| estado | varchar(35) | required | — |
 | onboarding_id | uuid | opcional | onboarding_versao.id |
 | versao_base_id | uuid | opcional | versao_ficha.id |
 | versao_publicada_id | uuid | opcional | versao_ficha.id |
@@ -2221,6 +2244,12 @@ Unicidades: cliente_id+idempotency_key.
 | prompt_version | varchar(60) | required | — |
 | iniciada_em | timestamptz | required | — |
 | terminada_em | timestamptz | opcional | — |
+| ator_id | uuid | required | usuario.id |
+| request_hash | char(64) | required | — |
+| worker_id | uuid | required | — |
+| prazo_em | timestamptz | required | — |
+| resultado | jsonb | required | — |
+
 
 #### triagem — MOD-06
 
@@ -2233,12 +2262,15 @@ Três estados de domínio, falhas técnicas pertencem à execução
 | onboarding_id | uuid | required | onboarding_versao.id |
 | resumo | jsonb | required | — |
 | regra_version | integer | required | — |
-| estado | varchar(35) | required | — |
+| estado | varchar(35) | opcional | — |
 | motivos | jsonb | required | — |
+
 
 #### etapa_ia — MOD-06
 
 Dados de consumo sem chain-of-thought
+
+Unicidades: execucao_id+tipo.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -2250,10 +2282,18 @@ Dados de consumo sem chain-of-thought
 | tokens_entrada | integer | opcional | — |
 | tokens_saida | integer | opcional | — |
 | duracao_ms | integer | opcional | — |
+| limite_saida_tokens | integer | required | — |
+| prompt_bytes | integer | required | — |
+| prompt_sha256 | char(64) | required | — |
+| dados | jsonb | required | — |
+| enviada_em | timestamptz | opcional | — |
+
 
 #### evidencia_execucao — MOD-06
 
 IDs de fontes reais, sem copiar dados privados na literatura
+
+Unicidades: execucao_id+fragmento_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -2261,6 +2301,8 @@ IDs de fontes reais, sem copiar dados privados na literatura
 | execucao_id | uuid | required | execucao_ia.id |
 | fragmento_id | uuid | required | fragmento.id |
 | finalidade | varchar(25) | required | — |
+| metadados | jsonb | required | — |
+
 
 #### plano — MOD-08
 
@@ -5097,7 +5139,8 @@ Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquit
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](docs/arquitetura/corpus.md)); ingestão e fragmentos entregues na migration 0013
-([RAG-04](docs/arquitetura/indexacao-documental.md)); orquestrador aguarda seus cartões.
+([RAG-04](docs/arquitetura/indexacao-documental.md)); orquestrador/triagem/etapas/evidências entregues na migration 0014
+([AI-03](docs/arquitetura/geracao-persistente.md)).
 RAG-03 mantém [artefatos privados de extração](docs/arquitetura/extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
@@ -5142,7 +5185,7 @@ Os demais serviços e migrations permanecem tarefas de implementação. [Arquite
 A [triagem](docs/arquitetura/triagem-academica.md) entrega projeção, decisões tipadas e porta
 assistida, com auditoria mínima. Não cria tabelas paralelas de execução/triagem.
 O registro interno inclui códigos, resumo, snapshot, política e referências;
-execucao_ia/triagem/etapa_ia/evidencia_execucao permanecem nos cartões de persistência
+execucao_ia/triagem/etapa_ia/evidencia_execucao são implementadas em
 AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.
 ### 3. Limites e avaliação
 
@@ -6931,7 +6974,7 @@ adaptador HTTP Groq e pontes para a triagem, catálogo e recuperação existente
 AI-02 não publica fichas, não cria migrations e não ativa uma rota pública de
 execução com estado volátil. O construtor Orchestrator exige explicitamente quatro
 portas: ContextPort, EvidencePort, LLMPort e StatePort. Não há store de produção
-em memória. AI-03 implementará estado/consumo durável, recuperação segura de
+em memória. [AI-03 implementa](docs/arquitetura/geracao-persistente.md) estado/consumo durável, recuperação segura de
 execuções interrompidas e publicação pelo serviço de MOD-04. AI-04/AI-05 entregarão
 as interfaces de geração e chat/adaptação. A rota GET de preparação permanece
 somente leitura, sem chamar LLM ou gastar cota.
@@ -7021,7 +7064,7 @@ StatePort deve garantir atomicamente:
 
 A implementação MemoryState existe somente em tests/ai/execution_fakes.py para
 testar esse protocolo; não fornece persistência, cota pública ou recuperação após
-reinício. A ativação da API depende do adaptador durável de AI-03. Retenção de
+reinício. A API foi ativada pelo adaptador durável de AI-03. Retenção de
 90 dias e publicação/limite de 15 fichas não foram antecipados nesta etapa.
 
 #### Provedor e falhas
@@ -8368,6 +8411,7 @@ Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requ
       "estado": {
         "enum": [
           "EM_EXECUCAO",
+          "PUBLICADA",
           "RESPOSTA_PRONTA",
           "PRONTA_PARA_PUBLICACAO",
           "BLOQUEADA",
@@ -8446,6 +8490,19 @@ Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requ
         ],
         "default": null
       },
+      "versao_publicada_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Publicada Id"
+      },
       "modelo": {
         "title": "Modelo",
         "type": "string"
@@ -8472,6 +8529,117 @@ Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requ
   }
 }
 ````
+### 18. Persistência, API de geração e publicação IA com revalidação transacional
+
+Fonte versionada: [docs/arquitetura/geracao-persistente.md](docs/arquitetura/geracao-persistente.md).
+
+#### Entrega e fronteiras
+
+MOD-06 persiste execucao_ia, triagem, etapa_ia e evidencia_execucao na migration
+0014. MOD-04 conserva a propriedade da ficha, seus dias/itens, parecer, retenção,
+validação e aviso. Nenhuma dependência nova. O MER original é preservado;
+[modelo lógico](docs/arquitetura/modelo-de-dados/modelo-logico.dbml) e dicionário refletem os campos.
+
+Ajustes equivalentes indispensáveis ao cartão: app/main.py registra a API;
+training/generated.py implementa o contrato interno de publicação do seu próprio
+domínio; knowledge/retrieval/publication.py oferece a verificação SQL com locks
+das fontes do seu próprio módulo. MOD-06 não consulta tabelas internas desses
+módulos. A explicação do LLM pertence à versao_ficha, é lida no contrato de
+consulta existente e eliminada junto ao conteúdo expurgado.
+
+[Orquestrador AI-02](docs/arquitetura/orquestracao-ia.md) e seus prompts são reutilizados. A geração
+usa até uma análise e uma geração, sem retry/fallback automático. Não há tela
+nova: AI-04 implementará solicitação/acompanhamento; chat/adaptação pública segue
+em AI-05; ensaio real de qualidade/tempo continua em AI-06.
+
+#### API do cliente
+
+| Método/rota | Entrada/resultado |
+|---|---|
+| POST /api/v1/ia/fichas/execucoes | solicitacao_id UUID; executa geração para o titular e devolve recibo |
+| GET /api/v1/ia/fichas/execucoes/{id} | recibo da própria solicitação, inclusive após reinício |
+| DELETE /api/v1/ia/fichas/execucoes/{id} | cancela execução ativa; finalizada permanece finalizada |
+
+Sessão ativa e papel cliente, CSRF nas mutações, Cache-Control: no-store.
+Não aceitar cliente_id, onboarding arbitrário, ficha, Signals ou parecer no POST.
+Sem sessão: 401; permissão recusada: 403; solicitação alheia/inexistente: 404;
+chave reutilizada com entrada divergente: 409; validação da entrada: 422.
+O recibo inclui estado/motivo estruturados, referência publicada e consumo;
+não contém anamnese, resumo, texto bruto do modelo ou prescrição duplicada.
+PUBLICADA identifica resultado persistido, não parecer ACEITO.
+A rota de consulta do MOD-04 já exibe a ficha própria antes de qualquer parecer.
+
+O serviço interno também permite instrutor designado solicitar geração para seu
+cliente; autoria humana de prescrição manual segue o fluxo já existente.
+O endpoint público desta etapa resolve exclusivamente o cliente pela sessão.
+
+#### Consistência e falhas
+
+Identificador interno é UUID derivado de ator+solicitação. Chave é única por
+cliente/ator/solicitação, com hashes de entrada e contexto. Replay é consultado
+antes de preparar novo contexto: não refaz análise/busca/LLM nem promove uma ficha
+antiga a vigente. Alterar entrada na mesma solicitação conflita. Nova tentativa
+exige ID explícito novo, mantendo recibos e consumo anteriores.
+
+Advisory lock por cliente e row locks serializam claim/reserva/despacho/finalização.
+Cliente e versão-base são fixados antes da execução. Cada etapa possui reserva
+única e marca de chamada física anterior ao HTTP; erro, quota e cancelamento não
+zeram a reserva. Guardar tokens reais quando disponíveis, indicação de consumo
+desconhecido, bytes/hash do prompt, instante do despacho e duração da resposta.
+Não copiar prompts privados ou raciocínio interno em logs técnicos.
+
+Uma execução possui prazo UTC durável e identificador do processo que a iniciou.
+Outro processo ou prazo expirado encerra sem retomar chamadas. O MVP roda em um
+processo conforme ADR-004; não iniciar workers independentes de geração.
+Rede e embeddings ocorrem entre transações curtas; não segurar locks SQL durante
+essas chamadas. Cancelamento em voo pode registrar consumo da resposta tardia,
+mas não publica nem muda terminal. O orçamento não reinicia no replay.
+
+Após resposta validada, a transação final revalida conta/designação, snapshot e
+revisão do onboarding, política, catálogo/recursos, versão-base e fontes aprovadas.
+O módulo de conhecimento trava documento, ingestão e fragmento, verificando
+revisão/hash/indexação. MOD-04 trava o contexto e revalida equipamentos completos.
+O prazo é conferido novamente após a publicação, ainda dentro do savepoint:
+se ultrapassado, desfazer ficha/aviso e conservar falha auditável.
+Publicação, vínculo à execução, troca de vigente, validação, retenção e aviso
+interno são atômicos. Falha não altera a vigente. O aviso interno reutiliza o evento
+de TRN-03 e a fila de parecer funciona independentemente do envio SMTP.
+
+Graves/dados insuficientes são barrados pelo mesmo motor de AI-01. Ausente não é
+saudável. Para saúde declarada, a porta de contexto exige escopo técnico curado
+que cubra as restrições e RAG-05 deve retornar suporte pertinente; fonte genérica
+ou pontuação alta não basta. Sem esse mapeamento/evidência, abster-se.
+Não inventar mapeamentos clínicos para ativar casos: a composição padrão mantém
+essa abstenção, e a composição por portas admite o mapeamento aprovado do cenário.
+Sem embeddings, corpus ou LLM disponível, retornar falha/abstenção controlada.
+Treino manual permanece independente. Não exigir laudo ou aprovação médica.
+
+#### Retenção e rastreabilidade
+
+A ficha IA começa com parecer funcional PENDENTE e origem IA. Aceitar/rejeitar e
+alterar manualmente usam TRN-03; IA não preenche aceite humano. Publicar acima de
+quinze versões remove conteúdo antigo. Rejeitadas seguem RF-35. A explicação
+publicada é imutável e expurgada com dias/itens. Não armazenar JSON da proposta em
+execucao_ia: constraint impede esse campo. Guardar somente referência à versão,
+resultado, decisão, evidências bibliográficas/hash e consumo.
+
+Conteúdo privado de execução/triagem expira em 90 dias, independente das quinze
+fichas. Em backend/, com banco configurado:
+uv run --locked --env-file ../.env python -m app.modules.ai.persistence.maintenance
+O expurgo remove resumo/resposta brutos, preservando recibo idempotente, estados,
+referências de auditoria e contadores. Não remove ficha publicada nem snapshot
+de treino executado. Literatura compartilhada nunca recebe dados de cliente.
+Referências históricas a fontes revogadas não autorizam novo uso na geração.
+
+#### Evidências
+
+[Comandos e resultados](docs/testes/comandos.md#geração-persistente-ai-03).
+PostgreSQL e Qdrant são reais; embeddings de fixtures são controlados nos testes
+novos e o contrato Groq usa HTTPX MockTransport, sem chave pessoal/rede Groq.
+Isso comprova integração de código/contratos, não adequação clínica, fidelidade
+semântica da resposta real ou desempenho do provedor gratuito. E5/Mailpit reais
+continuam na regressão dos módulos anteriores. A extração/revisão pendente de
+materiais não foi declarada concluída nem substituída por fontes inventadas.
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -9368,6 +9536,14 @@ worker nem envio automático contínuo neste cartão.
 A migration 0011 cria a validação e protege validações/pareceres contra UPDATE
 ou DELETE. O índice parcial limita a um parecer conclusivo por versão e a constraint
 exige motivo em rejeições. A migration 0010 permanece intacta.
+
+#### Integração AI-03
+
+[Publicação por IA](docs/arquitetura/geracao-persistente.md) usa o contrato interno
+ValidatedGeneration/treinos, sem passar pelo atalho de publicação manual.
+Reutiliza validação, retenção, pendência/aviso e parecer posterior do mesmo domínio.
+Explicação da versão é imutável; o expurgo remove-a junto à prescrição. Não existe
+cópia da ficha na execução IA que possa restaurar conteúdo expirado.
 ### 13. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
@@ -10035,8 +10211,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | CONCLUIDO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | CONCLUIDO |
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
-| [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | PRONTO |
-| [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | BLOQUEADO |
+| [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
+| [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | PRONTO |
 | [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | BLOQUEADO |
 | [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
 | [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
@@ -10734,6 +10910,13 @@ uv run --locked --env-file ../.env pytest -m integration
 ```
 
 [Comandos de verificação](docs/testes/comandos.md) · [Binários PostgreSQL para Windows](https://www.enterprisedb.com/download-postgresql-binaries)
+
+#### Marco AI-03 — migration 0014
+
+Acrescenta execucao_ia, triagem, etapa_ia e evidencia_execucao; constraints de
+idempotência, contexto e consumo, índices e explicacao expurgável da versao_ficha.
+[Contrato](docs/arquitetura/geracao-persistente.md). Nenhuma migration anterior
+foi alterada. Upgrade/downgrade e comparação ORM/schema são testados em PostgreSQL.
 ### 2. Backend
 
 Fonte versionada: [backend/README.md](backend/README.md).
@@ -10849,11 +11032,22 @@ não habilitar doubles por variável de ambiente ou entrada do cliente.
 
 [Contrato e limites](docs/arquitetura/orquestracao-ia.md). Schemas e prompts
 versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
-A composição exige StatePort explícito; AI-03 entregará persistência/publicação.
-Não há endpoint público de execução ou armazenamento volátil de produção.
+A composição exige StatePort explícito, implementado com PostgreSQL no AI-03.
+Não há armazenamento volátil de produção; a API de execução está descrita abaixo.
 GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
 pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
 HTTPX passou de dependência de teste a runtime, sem alterar sua versão.
+
+#### Geração persistente AI-03
+
+[Contrato, rotas e limites](docs/arquitetura/geracao-persistente.md). Aplicar
+a migration 0014 conforme database/README.md. POST autenticado em
+/api/v1/ia/fichas/execucoes, com solicitacao_id UUID e CSRF, gera para o titular.
+GET/DELETE da própria solicitação consultam/cancelam sem repetir LLM.
+Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
+Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
+sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
+não representam aceite de qualidade/latência da Groq, que permanece em AI-06.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -11100,9 +11294,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 |---|---|
 | `.env.example` | `3ff8016d6c3a2b827011aa5f707d9aec6e94a4d438dc18780a03bcba7122651e` |
 | `AGENTS.md` | `96779619a58c189dcc3e9374a29cdcfa2ad49e475f9ebd00f24b9201c165097e` |
-| `backend/README.md` | `f83a07f8febf2a8fe3cd205121d27302ef735623ed73b31fa5be0e5b2a1e078b` |
+| `backend/README.md` | `5e33b4749f0f1fd86f4f8d481b44c3bfa2ef9be5f21220d2bad6bbd6c022dcce` |
 | `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
-| `database/README.md` | `a2380251f2d87c5434d63a7308d6801525e698c7875ee094873fc9e468abd28c` |
+| `database/README.md` | `8932ad8684d5a6665c541d684ccf0a060d17279451e2b1b6a75853372ee0db03` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
@@ -11123,25 +11317,26 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
+| `docs/arquitetura/geracao-persistente.md` | `c36a512af7ac1f1d617ab3caf718c7ab5625727818117eba4cd0548a21427af5` |
 | `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `263a3d7bdd29ec662ce9a4c2e25ae07c87a8056abb98c44816df778e3c3d9406` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `567b72d96b271b54021ae401c2d3faeb8cb8e8ff0bf09e6aa8839eec1b7b1db4` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `9fcb6a9eaf5b4fa1711d509ac5201bec332e379e71781c0c8f6b8bfa96ade925` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `a7e5574518d6c33cab48fee61b1a479871e006a7c363eaeaf60cb320a51a683d` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `92e9288458409b0d18243e4e46c990bce4f9971e890831c14aa2910d999da498` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `96eef65d338dfd8e6e6b2df8c5f53c7f710926d5447b74163e13304351744209` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `1cc7765d46deea850bcd0bc1b2c48d76c90e07fb202cd55dc19ca60ee503d4f1` |
-| `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
+| `docs/arquitetura/orquestracao-ia.md` | `18de473268ef5af9ecf51b729c75c74ec77a00e6171f5d5d8ad8756278489da0` |
+| `docs/arquitetura/publicacao-e-parecer.md` | `53f00107ae661d1aea31452a19eb1297290445fdfced347b1ae2bbf3cd43b11c` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f6555c96d9d55689d304cd037438513288d296ba34e543cca0812cc87af824b5` |
+| `docs/especificacao/compilacao-spec.json` | `2b42c0b8db00e574d15eb3b92fb6cf679e93b706940520808a30afb26cf1c55d` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `01fd42043dd61aaaae3d7ccb8f56123c1c594fd82a764fd79525f22d6ed52a4c` |
+| `docs/especificacao/visao-geral.md` | `7cd2a3988aaad7d279cbf9375e2bb6638aaed1b40024dc3c6880163953ba0b69` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `580ef8dff2e3dee386b8c8ee433ea96072fb82a29931a2065b401a5c62af383b` |
+| `docs/prompts/README.md` | `0085b156ba948eae77f1c7fa542ee7ef212688dc0d8a2433a43c077024d45e00` |
 | `docs/requisitos/configuracao-ia-rag.md` | `eeae28fb33573d4d05a159b0dce82420f4f10ac9f90cc7b170c999b2a6ad1de2` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -11151,7 +11346,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
-| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `86647575a151a123a1668b1a524b35eeaaf3bdea9510a75065482434849c25e5` |
+| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `ea2941a15950289ce5a0301336973d9fb74b4c82379a6644dc44f8eaf14d0eff` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
 | `docs/requisitos/schemas/recuperacao-v1.schema.json` | `5057b3ff3fb127d06b57def109815030a771caeec5cf056f19a7d490e4bcc012` |
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |

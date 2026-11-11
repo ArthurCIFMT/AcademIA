@@ -752,3 +752,47 @@ Schema físico permanece 0013. HTTPX já instalado passou a runtime, mesma vers�
 Não executar frontend pois nenhuma interface mudou. Não declarar geração/publicação
 integrada: o estado durável e publicação ficam em AI-03; chat/interface em AI-04/05;
 ensaio de qualidade/desempenho real em AI-06, E2E/aceite do MVP em TST-01.
+
+## Geração persistente AI-03
+
+[Contrato](../arquitetura/geracao-persistente.md). Em backend/:
+
+~~~powershell
+uv run --locked pytest tests/ai/test_generation_unit.py
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_generation.py tests/ai/test_generation_http.py tests/ai/test_generation_concurrency.py
+uv run --locked pytest
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked pytest tests/contracts
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Na raiz: python scripts/gerar_spec.py --write/--check (uma opção por execução),
+python scripts/verificar_documentacao.py e git diff --check.
+Migration 0014 testada por upgrade/downgrade/upgrade e comparação ORM/schema.
+Sem alterar migrations aplicadas. Novas integrações usam PostgreSQL/Qdrant reais,
+QueryDouble para embeddings sintéticos e GroqAdapter/HTTPX MockTransport.
+Nenhum teste novo exige GROQ_API_KEY ou consulta a Groq. Não confundir esse
+contrato com ensaio semântico de qualidade/latência, que continua no AI-06.
+E5 real e Mailpit permanecem na regressão com as flags documentadas anteriormente.
+
+Cobertura específica: publicação própria/origem IA/parecer PENDENTE antes do aceite;
+tokens e chamadas físicas; replay/divergência sem gerar outra ficha; saída inválida
+preservando vigente; cancelamento em voo; mudança de equipamento; quinze versões
+com expurgo da explicação e ausência de cópia JSON na execução; processo reiniciado
+sem repetir chamadas; retenção de conteúdo privado por 90 dias com recibo preservado.
+API real cobre 401, CSRF/403, 422, consulta/cancelamento alheio 404 e no-store.
+Conexões PostgreSQL independentes verificam claim único e cota atômica/replay sem
+segunda vaga. Cenários complementares alteram fonte/onboarding na transação final
+e verificam bloqueio grave/desconhecido antes de qualquer chamada LLM.
+Fixtures/limpezas são isoladas no banco de teste; dados pessoais reais não são usados.
+
+Evidência de 2026-11-11: 16 testes novos aprovados (2 BE/14 INT), incluindo quatro
+integrações complementares executadas após a regressão geral.
+239 BE, 134 DB/INT na regressão com E5/Mailpit, mais as quatro integrações novas
+(138 DB/INT verificados ao todo); 9 API aprovados, incluídos em BE.
+Ruff/formato e mypy em 182 arquivos aprovados; SPEC/DOC verificados.
+Frontend não executado pois nenhuma interface mudou. AI-04 entregará a tela;
+AI-05 chat/adaptação públicos; AI-06 provedor real/qualidade/latência, sem dispensar
+o E2E e o aceite do MVP em TST-01. Pendências anteriores do corpus permanecem.

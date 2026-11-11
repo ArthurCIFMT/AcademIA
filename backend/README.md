@@ -111,8 +111,19 @@ não habilitar doubles por variável de ambiente ou entrada do cliente.
 
 [Contrato e limites](../docs/arquitetura/orquestracao-ia.md). Schemas e prompts
 versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
-A composição exige StatePort explícito; AI-03 entregará persistência/publicação.
-Não há endpoint público de execução ou armazenamento volátil de produção.
+A composição exige StatePort explícito, implementado com PostgreSQL no AI-03.
+Não há armazenamento volátil de produção; a API de execução está descrita abaixo.
 GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
 pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
 HTTPX passou de dependência de teste a runtime, sem alterar sua versão.
+
+## Geração persistente AI-03
+
+[Contrato, rotas e limites](../docs/arquitetura/geracao-persistente.md). Aplicar
+a migration 0014 conforme database/README.md. POST autenticado em
+/api/v1/ia/fichas/execucoes, com solicitacao_id UUID e CSRF, gera para o titular.
+GET/DELETE da própria solicitação consultam/cancelam sem repetir LLM.
+Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
+Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
+sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
+não representam aceite de qualidade/latência da Groq, que permanece em AI-06.

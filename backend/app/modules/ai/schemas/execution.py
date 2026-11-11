@@ -142,6 +142,7 @@ class RunResult(StrictModel):
     solicitacao_id: UUID
     estado: Literal[
         "EM_EXECUCAO",
+        "PUBLICADA",
         "RESPOSTA_PRONTA",
         "PRONTA_PARA_PUBLICACAO",
         "BLOQUEADA",
@@ -163,6 +164,7 @@ class RunResult(StrictModel):
     triagem: TriageResult | None = None
     resposta: ChatAnswer | None = None
     proposta: PlanAnswer | None = None
+    versao_publicada_id: UUID | None = None
     modelo: str
     versao_prompts: str
     configuracao_sha256: str

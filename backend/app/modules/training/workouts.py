@@ -122,7 +122,7 @@ def _view(row: WorkoutVersion) -> WorkoutView:
             for day in row.dias
         ]
     )
-    return WorkoutView(**_meta(row).model_dump(), dias=days)
+    return WorkoutView(**_meta(row).model_dump(), dias=days, explicacao=row.explicacao)
 
 
 def _current_id(session: Session, client_id: UUID) -> UUID | None:

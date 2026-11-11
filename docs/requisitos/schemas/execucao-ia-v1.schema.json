@@ -1308,6 +1308,7 @@
       "estado": {
         "enum": [
           "EM_EXECUCAO",
+          "PUBLICADA",
           "RESPOSTA_PRONTA",
           "PRONTA_PARA_PUBLICACAO",
           "BLOQUEADA",
@@ -1385,6 +1386,19 @@
           }
         ],
         "default": null
+      },
+      "versao_publicada_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Publicada Id"
       },
       "modelo": {
         "title": "Modelo",

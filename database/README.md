@@ -72,3 +72,10 @@ uv run --locked --env-file ../.env pytest -m integration
 ```
 
 [Comandos de verificação](../docs/testes/comandos.md) · [Binários PostgreSQL para Windows](https://www.enterprisedb.com/download-postgresql-binaries)
+
+## Marco AI-03 — migration 0014
+
+Acrescenta execucao_ia, triagem, etapa_ia e evidencia_execucao; constraints de
+idempotência, contexto e consumo, índices e explicacao expurgável da versao_ficha.
+[Contrato](../docs/arquitetura/geracao-persistente.md). Nenhuma migration anterior
+foi alterada. Upgrade/downgrade e comparação ORM/schema são testados em PostgreSQL.

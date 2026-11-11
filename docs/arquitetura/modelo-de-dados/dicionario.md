@@ -217,6 +217,8 @@ Unicidades: cliente_id+numero.
 | conteudo_excluido_em | timestamptz | opcional | — |
 | motivo_exclusao | varchar(40) | opcional | — |
 | revision | integer | required | — |
+| explicacao | text | opcional | — |
+
 
 ## dia_ficha — MOD-04
 
@@ -405,7 +407,7 @@ Unicidades: cliente_id+idempotency_key.
 | idempotency_key | varchar(100) | required | — |
 | entrada_hash | char(64) | required | — |
 | finalidade | varchar(25) | required | — |
-| estado | varchar(25) | required | — |
+| estado | varchar(35) | required | — |
 | onboarding_id | uuid | opcional | onboarding_versao.id |
 | versao_base_id | uuid | opcional | versao_ficha.id |
 | versao_publicada_id | uuid | opcional | versao_ficha.id |
@@ -414,6 +416,12 @@ Unicidades: cliente_id+idempotency_key.
 | prompt_version | varchar(60) | required | — |
 | iniciada_em | timestamptz | required | — |
 | terminada_em | timestamptz | opcional | — |
+| ator_id | uuid | required | usuario.id |
+| request_hash | char(64) | required | — |
+| worker_id | uuid | required | — |
+| prazo_em | timestamptz | required | — |
+| resultado | jsonb | required | — |
+
 
 ## triagem — MOD-06
 
@@ -426,12 +434,15 @@ Três estados de domínio, falhas técnicas pertencem à execução
 | onboarding_id | uuid | required | onboarding_versao.id |
 | resumo | jsonb | required | — |
 | regra_version | integer | required | — |
-| estado | varchar(35) | required | — |
+| estado | varchar(35) | opcional | — |
 | motivos | jsonb | required | — |
+
 
 ## etapa_ia — MOD-06
 
 Dados de consumo sem chain-of-thought
+
+Unicidades: execucao_id+tipo.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -443,10 +454,18 @@ Dados de consumo sem chain-of-thought
 | tokens_entrada | integer | opcional | — |
 | tokens_saida | integer | opcional | — |
 | duracao_ms | integer | opcional | — |
+| limite_saida_tokens | integer | required | — |
+| prompt_bytes | integer | required | — |
+| prompt_sha256 | char(64) | required | — |
+| dados | jsonb | required | — |
+| enviada_em | timestamptz | opcional | — |
+
 
 ## evidencia_execucao — MOD-06
 
 IDs de fontes reais, sem copiar dados privados na literatura
+
+Unicidades: execucao_id+fragmento_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -454,6 +473,8 @@ IDs de fontes reais, sem copiar dados privados na literatura
 | execucao_id | uuid | required | execucao_ia.id |
 | fragmento_id | uuid | required | fragmento.id |
 | finalidade | varchar(25) | required | — |
+| metadados | jsonb | required | — |
+
 
 ## plano — MOD-08
 

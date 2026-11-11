@@ -763,6 +763,12 @@
           "type": "integer",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "explicacao",
+          "type": "text",
+          "flags": "",
+          "ref": null
         }
       ],
       "unique": [
@@ -1491,7 +1497,7 @@
         },
         {
           "name": "estado",
-          "type": "varchar(25)",
+          "type": "varchar(35)",
           "flags": "required",
           "ref": null
         },
@@ -1542,6 +1548,36 @@
           "type": "timestamptz",
           "flags": "",
           "ref": null
+        },
+        {
+          "name": "ator_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "request_hash",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "worker_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prazo_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "resultado",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
         }
       ],
       "unique": [
@@ -1589,7 +1625,7 @@
         {
           "name": "estado",
           "type": "varchar(35)",
-          "flags": "required",
+          "flags": "",
           "ref": null
         },
         {
@@ -1653,9 +1689,44 @@
           "type": "integer",
           "flags": "",
           "ref": null
+        },
+        {
+          "name": "limite_saida_tokens",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_bytes",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_sha256",
+          "type": "char(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "enviada_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        [
+          "execucao_id",
+          "tipo"
+        ]
+      ]
     },
     {
       "name": "evidencia_execucao",
@@ -1685,9 +1756,20 @@
           "type": "varchar(25)",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "metadados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        [
+          "execucao_id",
+          "fragmento_id"
+        ]
+      ]
     },
     {
       "name": "plano",

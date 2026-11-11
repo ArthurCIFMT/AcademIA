@@ -11,7 +11,7 @@ adaptador HTTP Groq e pontes para a triagem, catálogo e recuperação existente
 AI-02 não publica fichas, não cria migrations e não ativa uma rota pública de
 execução com estado volátil. O construtor Orchestrator exige explicitamente quatro
 portas: ContextPort, EvidencePort, LLMPort e StatePort. Não há store de produção
-em memória. AI-03 implementará estado/consumo durável, recuperação segura de
+em memória. [AI-03 implementa](geracao-persistente.md) estado/consumo durável, recuperação segura de
 execuções interrompidas e publicação pelo serviço de MOD-04. AI-04/AI-05 entregarão
 as interfaces de geração e chat/adaptação. A rota GET de preparação permanece
 somente leitura, sem chamar LLM ou gastar cota.
@@ -101,7 +101,7 @@ StatePort deve garantir atomicamente:
 
 A implementação MemoryState existe somente em tests/ai/execution_fakes.py para
 testar esse protocolo; não fornece persistência, cota pública ou recuperação após
-reinício. A ativação da API depende do adaptador durável de AI-03. Retenção de
+reinício. A API foi ativada pelo adaptador durável de AI-03. Retenção de
 90 dias e publicação/limite de 15 fichas não foram antecipados nesta etapa.
 
 ## Provedor e falhas

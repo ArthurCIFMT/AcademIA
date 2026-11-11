@@ -172,6 +172,7 @@ Table versao_ficha {
   conteudo_excluido_em timestamptz
   motivo_exclusao varchar(40)
   revision integer [not null]
+  explicacao text
   indexes {
     (cliente_id, numero) [unique]
   }
@@ -336,7 +337,7 @@ Table execucao_ia {
   idempotency_key varchar(100) [not null]
   entrada_hash char(64) [not null]
   finalidade varchar(25) [not null]
-  estado varchar(25) [not null]
+  estado varchar(35) [not null]
   onboarding_id uuid
   versao_base_id uuid
   versao_publicada_id uuid
@@ -345,6 +346,11 @@ Table execucao_ia {
   prompt_version varchar(60) [not null]
   iniciada_em timestamptz [not null]
   terminada_em timestamptz
+  ator_id uuid [not null]
+  request_hash char(64) [not null]
+  worker_id uuid [not null]
+  prazo_em timestamptz [not null]
+  resultado jsonb [not null]
   indexes {
     (cliente_id, idempotency_key) [unique]
   }
@@ -357,7 +363,7 @@ Table triagem {
   onboarding_id uuid [not null]
   resumo jsonb [not null]
   regra_version integer [not null]
-  estado varchar(35) [not null]
+  estado varchar(35)
   motivos jsonb [not null]
   Note: 'Owner MOD-06. Três estados de domínio, falhas técnicas pertencem à execução'
 }
@@ -371,6 +377,14 @@ Table etapa_ia {
   tokens_entrada integer
   tokens_saida integer
   duracao_ms integer
+  limite_saida_tokens integer [not null]
+  prompt_bytes integer [not null]
+  prompt_sha256 char(64) [not null]
+  dados jsonb [not null]
+  enviada_em timestamptz
+  indexes {
+    (execucao_id, tipo) [unique]
+  }
   Note: 'Owner MOD-06. Dados de consumo sem chain-of-thought'
 }
 
@@ -379,6 +393,10 @@ Table evidencia_execucao {
   execucao_id uuid [not null]
   fragmento_id uuid [not null]
   finalidade varchar(25) [not null]
+  metadados jsonb [not null]
+  indexes {
+    (execucao_id, fragmento_id) [unique]
+  }
   Note: 'Owner MOD-06. IDs de fontes reais, sem copiar dados privados na literatura'
 }
 
@@ -598,3 +616,5 @@ Ref: auditoria.ator_id > usuario.id
 
 Ref: validacao_ficha.versao_id > versao_ficha.id
 Ref: validacao_ficha.validado_por > usuario.id
+
+Ref: execucao_ia.ator_id > usuario.id

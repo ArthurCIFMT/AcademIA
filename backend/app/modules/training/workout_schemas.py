@@ -99,6 +99,7 @@ class WorkoutDayView(BaseModel):
 
 
 class WorkoutView(WorkoutMeta):
+    explicacao: str | None = None
     dias: list[WorkoutDayView]
 
 

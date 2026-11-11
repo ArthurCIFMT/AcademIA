@@ -87,6 +87,7 @@ class WorkoutVersion(Base):
     )
     motivo_exclusao: Mapped[str | None] = mapped_column(String(40))
     revision: Mapped[int]
+    explicacao: Mapped[str | None] = mapped_column(Text)
     dias: Mapped[list[WorkoutDay]] = relationship(
         cascade="all, delete-orphan",
         order_by="WorkoutDay.ordem",
