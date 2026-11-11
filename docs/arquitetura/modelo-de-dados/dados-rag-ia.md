@@ -2,6 +2,8 @@
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](../corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
+RAG-03 mantém [artefatos privados de extração](../extracao-documental.md), por
+versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
 
 | Conceito | Proprietário / persistência | Relações e invariantes |

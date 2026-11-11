@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após RAG-02. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-03. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria e conexão Qdrant entregues; extração, indexação e busca pendentes |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, conexão e extração entregues; quatro fontes com revisão técnica pendente; indexação e busca futuras |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-03 a RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-03. Curadoria e conexão vetorial não concluem os demais módulos.
+O MVP ainda requer RAG-04/RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é RAG-04. As pendências de extração estão no contrato/relatório do módulo.
 Esta entrega não acrescenta cartões à sequência nem fecha o aceite integrado do MVP.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
@@ -3666,7 +3666,9 @@ Não executar implementação por apenas ler esta especificação.
 
 RAG-02 entregou a [porta Qdrant local persistente](docs/arquitetura/banco-vetorial.md), com
 identidade por coleção, conexão sob demanda, singleton e erros controlados.
-Não corresponde ainda à extração/indexação ou recuperação semântica.
+RAG-03 entregou [extração offline e proveniência](docs/arquitetura/extracao-documental.md), com
+pendências de OCR/revisão explícitas; RAG-04/05 continuam responsáveis pela
+indexação/ativação e recuperação semântica.
 
 #### Configuração inicial aceita
 
@@ -3681,6 +3683,8 @@ Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquit
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](docs/arquitetura/corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
+RAG-03 mantém [artefatos privados de extração](docs/arquitetura/extracao-documental.md), por
+versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
 
 | Conceito | Proprietário / persistência | Relações e invariantes |
@@ -4398,6 +4402,276 @@ A dependência qdrant-client é necessária para o engine real e traz nove pacot
 novos no lockfile, incluindo ela própria; versões preexistentes foram preservadas.
 Não instalar extras de inferência/fastembed ou provedores nesta etapa.
 Testes e evidências estão no [registro de comandos](docs/testes/comandos.md#conexão-vetorial-local).
+### 7. Extração offline, proveniência e bloqueios de qualidade
+
+Fonte versionada: [docs/arquitetura/extracao-documental.md](docs/arquitetura/extracao-documental.md).
+
+MOD-05 extrai PDF e TXT offline, com origem e qualidade explícitas.
+Atende a etapa de extração de MRF01, MRF11 e MRF15; indexação/embeddings e
+recuperação são RAG-04/05. Não chama LLM, não implementa OCR nem altera originais.
+
+#### Contrato e uso interno
+
+Extractor.extract recebe ApprovedReference da [curadoria](docs/arquitetura/corpus.md), uma função
+obrigatória approval_check(version_id, revision) e retry_failed opcional.
+A função de aprovação deve consultar is_approved em transação curta e atual;
+não manter uma transação PostgreSQL aberta enquanto o PDF é processado.
+
+O resultado tipado ExtractionResult contém UUID estável, versão documental,
+revisão da aprovação, hash do arquivo original, formato, snapshot bibliográfico,
+política/fingerprint, horário UTC, tentativa e resultado com páginas e motivos.
+Metadados bibliográficos preservam título, URL real, licença, autores, idioma,
+finalidades e limites aprovados. Não inferir autor, seção ou saúde de cliente.
+
+Cada Page guarda texto e SHA-256 textual, número físico PDF começando em 1,
+situação e seções disponíveis. Marcadores reais do PDF são associados à página
+de destino; seção declarada é identificada como tal, sem afirmar inferência.
+Não inventar capítulos de páginas sem marcador. TXT não recebe página fictícia:
+registra linhas 1..N e cabeçalhos Markdown com a linha de origem.
+
+Aprovação é conferida antes do trabalho e novamente antes de gravar/entregar,
+inclusive no replay. Versão pendente, revogada ou TESTE não passa pela checagem
+is_approved de literatura. Se for revogada durante o processamento, o resultado
+não é entregue nem gravado como nova extração válida. Os artefatos anteriores
+permanecem históricos e não contornam a consulta fresca da aprovação.
+
+#### Parsing e preservação
+
+Dependência de execução: pypdf 7.0.1, travada no lockfile. PDF usa modo layout,
+incluindo texto girado. Preserva negações, >=, <=, ≥, ≤, %, unidades, acentos,
+linhas e espaçamentos extraídos. Não aplica remoção genérica de caracteres,
+tradução, reescrita por IA, junção silenciosa de colunas ou exclusão de rodapés.
+TXT exige UTF-8; só remove o BOM de transporte, preservando as quebras originais.
+
+A extração mecânica não garante ordem semântica perfeita de tabelas/colunas.
+Avisos de texto/layout ou caracteres ilegíveis tornam o documento pendente de
+revisão. O único aviso tolerado explicitamente é a correção de numeração da
+tabela XREF pelo pypdf: fica contabilizado como aviso estrutural, não é apagado.
+Nenhuma alteração dessa correção em memória é salva no PDF original.
+Outros avisos permanecem bloqueantes e seus conteúdos brutos não vão a logs.
+
+Fontes técnicas: [extração pypdf](https://pypdf.readthedocs.io/en/7.0.1/user/extract-text.html),
+[limites de parsing](https://pypdf.readthedocs.io/en/7.0.1/modules/configuration.html)
+e [distribuição travada](https://pypi.org/project/pypdf/7.0.1/).
+
+#### Estados e falhas
+
+| Estado | Significado e consequência |
+|---|---|
+| CONCLUIDA | Existe texto, páginas coerentes e nenhuma pendência de extração; ainda requer curadoria de trechos/indexação e autorização vigente |
+| OCR_NECESSARIO | Uma página contém imagem e não tem camada textual; documento misto também fica pendente |
+| REVISAO_NECESSARIA | Texto/grafismos não classificados, caracteres ilegíveis ou aviso de extração/layout; não usar como extração completa |
+| FALHA | Arquivo ausente/alterado, tipo/tamanho/UTF-8 inválido, PDF corrompido/protegido, vazio, limite ou timeout; motivo persistido |
+
+Página realmente vazia é preservada como EM_BRANCO, sem deslocar as seguintes.
+Página sem texto com grafismos não é presumida vazia. PDF totalmente sem conteúdo
+textual útil não é CONCLUIDA. PDF protegido é recusado sem tentar senhas.
+OCR não foi previsto no corpus aceito e não foi instalado; escaneados não recebem
+texto inventado. Fonte estrangeira mantém o original para a recuperação multilíngue.
+
+Motivos são códigos estáveis em português; mensagens/avisos brutos do parser,
+bytes e caminhos privados não são registrados em logs técnicos. O resultado
+privado guarda somente a literatura que foi autorizada para esta etapa.
+Armazenamento inacessível, lock ocupado ou artefato inconsistente geram
+ExtractionError explícito, sem fingir que um registro foi persistido.
+
+#### Limites e processo isolado
+
+A política inicial tem versão 1, identifica pypdf/7.0.1 e participa do fingerprint:
+25 MiB por arquivo (limite comum do corpus), 1000 páginas, 100 mil caracteres por
+página PDF, 8 milhões por documento e 16 MiB por stream. Decodificação acumulada
+é limitada a quatro vezes esse tamanho. A árvore do PDF tem tetos próprios para
+nós e campos, distintos da contagem de páginas; a contagem física também é validada.
+Alterar algoritmo/parser ou limites exige versionar a política/configuração.
+
+O processo pai usa um subprocesso Python com timeout de 60 segundos por arquivo,
+encerrado pelo mecanismo de subprocess.run em caso de timeout. Comunicação por
+JSON UTF-8/base64; o worker não lê caminhos fornecidos pelo usuário nem busca URLs.
+A saída é validada por Pydantic, com limite de 64 MiB. Limites atingidos não truncam
+o conteúdo para declarar sucesso. Não há retry automático nem propagação da
+exceção bruta do subprocesso. Esses controles não são uma promessa de isolamento
+comercial completo de memória/CPU para qualquer PDF malicioso.
+
+#### Persistência e idempotência
+
+ACADEMIA_EXTRACTION_DIR define armazenamento privado (padrão data/extracoes,
+relativo ao processo, em backend/ no guia de execução). Padrões ficam fora do Git;
+configure caminho absoluto se a inicialização variar. Não confundir esses
+artefatos derivados com o banco vetorial ou a tabela de ingestão futura.
+
+UUIDv5 combina versão documental, SHA do original e fingerprint da política.
+Cada ID possui um JSON com envelope/hash, resultado e até três tentativas.
+Escrita atômica por temporário/substituição e lock exclusivo por ID impedem
+extrações duplicadas em chamadas concorrentes. portalocker 4.4.2 é dependência
+direta porque o extrator usa o lock entre processos; a versão já vinha no Qdrant.
+A instalação acrescenta somente pypdf; versões existentes não foram atualizadas.
+
+Replay válido devolve o resultado persistido sem chamar parser. OCR/revisão e
+falhas também são registrados. retry_failed=true permite ação explícita para
+FALHA, até três tentativas por ID, preservando resumos de estado/motivo/horário
+anteriores. Sucesso, OCR e revisão não são reprocessados implicitamente.
+Nova versão documental ou configuração tem identidade própria. Recuperar um
+artefato exige conferir envelope e identidade/proveniência; corrupção gera erro,
+sem reprocessamento silencioso. Esses hashes detectam inconsistência e não
+substituem as permissões do diretório privado.
+
+Não há nova migration, tabela, tela ou API REST neste cartão. A tabela relacional
+INGESTAO e fragmentos pertencem a RAG-04; artefatos de extração são derivados locais
+versionados por configuração, prontos para ser consumidos pela etapa seguinte.
+A extração não abre Qdrant e falhas não interferem no treino manual.
+
+#### Ensaio real e pendências identificadas
+
+Foram processados os sete documentos selecionados em corpus-inicial.json,
+conferindo SHA-256 e páginas físicas. Os 11 documentos de reserva permaneceram
+fora da extração de ingestão. [Relatório JSON](docs/testes/extracao-corpus-rag03.json)
+registra contagens e estados, sem textos integrais ou vetores.
+
+| Documento | Resultado observado | Pendência técnica |
+|---|---|---|
+| BR-RBAFS-001 | CONCLUIDA, 11 páginas | Apenas aviso estrutural XREF contabilizado |
+| BR-RBCM-001 | CONCLUIDA, 36 páginas | Nenhuma pendência automática de extração |
+| BR-SBC-002 | CONCLUIDA, 45 páginas | Apenas aviso estrutural XREF contabilizado |
+| BR-MS-001 | REVISAO_NECESSARIA, 52 páginas | Página 52 sem camada textual; renderização confirmou contracapa institucional com grafismos/texto visual |
+| INT-BJSM-001 | REVISAO_NECESSARIA, 12 páginas | Aviso de layout ao incluir texto girado |
+| INT-SPMED-001 | REVISAO_NECESSARIA, 17 páginas | Aviso de layout ao incluir texto girado |
+| BR-SBC-001 | REVISAO_NECESSARIA, 154 páginas | Avisos de layout ao incluir texto girado |
+
+Os quatro documentos pendentes não devem entrar como extração pronta no RAG-04
+até revisão técnica/tratamento explícito de páginas/layout. Revisão é do projeto,
+sem novo gate médico/jurídico. Não alterar originais, desabilitar avisos ou aceitar
+resultado parcial só para ativar todas as fontes. RAG-04 pode avançar nas partes
+independentes e nas fontes com extração concluída, respeitando o escopo aprovado.
+
+As [fixtures sintéticas](backend/tests/knowledge/fixtures/README.md) foram
+renderizadas/conferidas e mantêm expectativas explícitas de texto e símbolos.
+Os [comandos](docs/testes/comandos.md#extração-pdf-e-txt) cobrem parser, subprocesso,
+cache, concorrência, hashes e aprovação/revogação reais em PostgreSQL.
+
+As fixtures PDF são declaradas binárias em .gitattributes; isso preserva os bytes
+e offsets no Git, inclusive nas amostras ASCII. A verificação de diff continua
+valendo para código e documentação, e hashes dos PDFs são conferidos na entrega.
+### 8. Ensaio técnico dos sete documentos selecionados
+
+Fonte versionada: [docs/testes/extracao-corpus-rag03.json](docs/testes/extracao-corpus-rag03.json).
+
+````json
+{
+  "versao": 1,
+  "data": "2026-11-11",
+  "parser": "pypdf/7.0.1",
+  "tipo": "ENSAIO_TECNICO_EXTRACAO_SEM_INDEXACAO",
+  "limites": [
+    "Não é ensaio de relevância, benchmark clínico ou aprovação do corpus inteiro.",
+    "CONCLUIDA indica sucesso mecânico; seleção de trechos, tabelas e contexto ainda pertence à ingestão/indexação.",
+    "REVISAO_NECESSARIA não será tratada como extração pronta para indexar.",
+    "Avisos estruturais XREF corrigidos em memória são contabilizados; avisos de extração/layout permanecem bloqueantes."
+  ],
+  "documentos": [
+    {
+      "id": "BR-MS-001",
+      "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "SEM_CONTEUDO_TEXTUAL"
+      ],
+      "paginas_declaradas": 52,
+      "paginas_extraidas": 52,
+      "paginas_com_texto": 51,
+      "caracteres": 112054,
+      "avisos_parser": 0,
+      "avisos_estruturais": 0,
+      "paginas_pendentes": [
+        52
+      ]
+    },
+    {
+      "id": "BR-RBAFS-001",
+      "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 11,
+      "paginas_extraidas": 11,
+      "paginas_com_texto": 11,
+      "caracteres": 46466,
+      "avisos_parser": 1,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-RBCM-001",
+      "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 36,
+      "paginas_extraidas": 36,
+      "paginas_com_texto": 36,
+      "caracteres": 111279,
+      "avisos_parser": 0,
+      "avisos_estruturais": 0,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "INT-BJSM-001",
+      "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 12,
+      "paginas_extraidas": 12,
+      "paginas_com_texto": 12,
+      "caracteres": 103417,
+      "avisos_parser": 2,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "INT-SPMED-001",
+      "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 17,
+      "paginas_extraidas": 17,
+      "paginas_com_texto": 17,
+      "caracteres": 211843,
+      "avisos_parser": 2,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-SBC-001",
+      "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 154,
+      "paginas_extraidas": 154,
+      "paginas_com_texto": 154,
+      "caracteres": 1069196,
+      "avisos_parser": 7,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-SBC-002",
+      "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 45,
+      "paginas_extraidas": 45,
+      "paginas_com_texto": 45,
+      "caracteres": 384193,
+      "avisos_parser": 1,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    }
+  ]
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -5956,8 +6230,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 |---|---|---|---|---|
 | [RAG-01](docs/prompts/05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | CONCLUIDO |
 | [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | CONCLUIDO |
-| [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | PRONTO |
-| [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
+| [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | CONCLUIDO |
+| [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | PRONTO |
 | [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
@@ -6714,8 +6988,9 @@ uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
 O [guia vetorial](docs/arquitetura/banco-vetorial.md) descreve configuração,
 coleção versionada, persistência, falhas e exclusão entre processos. Não é
 necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
-suas rotas manuais não dependem de abrir o índice. Extração/indexação e busca
-serão implementadas nos cartões seguintes.
+suas rotas manuais não dependem de abrir o índice. A [extração offline](docs/arquitetura/extracao-documental.md)
+já oferece serviço interno com proveniência e registro privado de estados.
+Indexação e busca serão implementadas nos cartões seguintes.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -6804,6 +7079,8 @@ dependencies = [
     "uvicorn>=0.34,<1",
     "pillow>=13,<14",
     "qdrant-client==1.20.0",
+    "pypdf==7.0.1",
+    "portalocker==4.4.2",
 ]
 
 [dependency-groups]
@@ -6921,6 +7198,9 @@ ACADEMIA_VECTOR_COLLECTION=academia_rag_e5_v1
 ACADEMIA_VECTOR_EMBEDDING_MODEL=intfloat/multilingual-e5-small
 ACADEMIA_VECTOR_DIMENSION=384
 # ACADEMIA_VECTOR_MODEL_REVISION: hash exato dos pesos, definido em RAG-04.
+
+# Resultados privados de extração por versão/configuração, fora do Git.
+ACADEMIA_EXTRACTION_DIR=data/extracoes
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -6940,10 +7220,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `4f12753186e7f4d4e7b74cc58172532936449cc93657a67abcd81029863bd6f4` |
+| `.env.example` | `50d9b067a55190e9e39b07ad72b0c195f4bc90c9543a457afb684cf5d5417902` |
 | `AGENTS.md` | `03a6aa7031b6e62319d22a2faef9f321e2afa9d217d75a6648402a8a44cfed45` |
-| `backend/README.md` | `3795e502cac8a287ae54cdfc4a82bbf2b9c1320036db118f9af9063cc3f79765` |
-| `backend/pyproject.toml` | `cb94b2d0a62c18e9b3245d5e934a72d0a99f82ecd0ed532a35166f96c835855f` |
+| `backend/README.md` | `36a86d52d0d5ff90bb6c496aa688eca20b5801807119633d04c320921d71c6ea` |
+| `backend/pyproject.toml` | `96bb1a8b66783be3307c4b3cf562d30d757512db6249b9ee2636696ce804c5f8` |
 | `database/README.md` | `10eb39d85d11d4a4d4ad969e7556a6d0339107fcf4e36924a112e6eed0a194a3` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
@@ -6960,11 +7240,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
+| `docs/arquitetura/extracao-documental.md` | `9a418bd150a3a19ee8076795525f60218b0c72fc673680c4f377e10f5f31bf05` |
 | `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `dc1bf9a93611859370da63c12926bba71fc63e1e6a9e9b09f94aab9a31f1db2d` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `8ba63fd7559969e8c5d7b79f10f7b6cad0637703d79c16f9a3aab3bd5bfaf9be` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `b014bdcdc44db04fdee3423c3841556ada3ee32cbb6a3a1f184db76319739989` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6af4922b8e2d33510094a2f4afba32e15b4f40921ebdb768e66f046eabf797b` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `8d9a5fcbd6e8211ff94916e75185c60092842c85255b652c56835708ab0621e4` |
@@ -6972,13 +7253,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
-| `docs/arquitetura/rag-semantico.md` | `2c834c69f92119a20b3f718dc2c4008660a2a5187db516615f221565cde3087b` |
+| `docs/arquitetura/rag-semantico.md` | `b2082ad8fd5aa83affc592893bf4bbe943e10089afc1ac455ef86a2a6f69ccaa` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/especificacao/compilacao-spec.json` | `e63c7530901f36ddc549b63efc3634a98e0667fe335200729cb8e99c27d320f0` |
+| `docs/especificacao/compilacao-spec.json` | `06bcda80c0b6897665305ef629914bd6fcef31345be8d3fdfc880d97cd6aa084` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `0606c6ca97ba1865688fe601b6133ca6e94624b111e6c0d379cb927a9a6636d8` |
+| `docs/especificacao/visao-geral.md` | `9ca858958b21cf928609d18265da4a72b3a3c217e5092763aec6d1edd473954e` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `79ea8031df791763452e4d8efb9723fa58a9258d1deae0dc56f8dff349884041` |
+| `docs/prompts/README.md` | `f9b0acb49d182bfbe1cba2d9e478071e9a3e1718f018bb7503e43b7081b694bc` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -6989,6 +7270,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
+| `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/rag-ia-semantico.md` | `7e99054ef296b7f9fa7edf8e176ae077271e32d68d59e1571e5bd2079d97e8c1` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
 | `frontend/README.md` | `0159a71d63ba13103140a46f9dd286f54b5e23a8b6b0ef88093d95153ccecc04` |

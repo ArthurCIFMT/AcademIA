@@ -527,3 +527,47 @@ Frontend e schema PostgreSQL não foram alterados; não há nova migration ou ro
 vetorial REST. A dependência qdrant-client e suas transitivas foram travadas sem
 atualizar versões preexistentes. Extração/indexação/busca e fixação da revisão dos
 pesos ficam para RAG-03–RAG-05; sem novo ensaio de qualidade de IA nesta entrega.
+
+## Extração PDF e TXT
+
+RAG-03 oferece [serviço interno de extração](../arquitetura/extracao-documental.md)
+com fixtures pequenas e ensaio real do corpus. A partir de backend/:
+
+```powershell
+uv sync --locked
+uv run --locked pytest tests/knowledge/test_extraction.py
+uv run --locked --env-file ../.env pytest -m integration tests/knowledge/test_extraction.py tests/knowledge/test_extraction_postgres.py tests/knowledge/test_corpus_extraction.py
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+```
+
+O primeiro comando pytest seleciona os testes unitários. As integrações incluem
+subprocesso real, PostgreSQL de teste para aprovação/revogação e sete PDFs reais,
+com diretórios temporários exclusivos. Não requer Qdrant aberto, pesos, OCR ou LLM.
+O grupo de regressão geral mantém o comando DB/INT habitual com Mailpit opt-in.
+Na raiz, executar também gerar_spec.py --check, verificar_documentacao.py e
+git diff --check, conforme as seções anteriores.
+
+Fixtures PDF/TXT foram renderizadas/conferidas: símbolos, unidades, negações,
+marcadores, páginas em imagem, documento misto, vazio e protegido. As expectativas
+ficam em backend/tests/knowledge/fixtures/expectativas.json, separadas da literatura.
+Casos complementares cobrem UTF-8/BOM/CRLF, limites, timeout, saída inválida,
+falha persistida, replay, retry explícito máximo três, cache corrompido,
+concorrência e revogação antes/durante/depois da extração.
+
+O [relatório real](extracao-corpus-rag03.json) verifica os sete hashes e 327 páginas
+físicas: três documentos CONCLUIDA e quatro REVISAO_NECESSARIA. Os quatro pendentes
+não devem ser indexados como extrações concluídas sem tratamento/revisão técnica.
+Isso não representa avaliação de busca, resposta de LLM ou aprovação clínica.
+Os 11 documentos de reserva não foram promovidos nem extraídos para ingestão.
+
+Schema PostgreSQL e frontend permanecem fora desta entrega; não há migration ou
+novo endpoint. A persistência da extração é um artefato privado versionado por
+UUID/hash/configuração; ativação do índice pertence ao RAG-04.
+
+Evidência de 2026-11-11: 34 testes específicos (24 unitários/10 integrações)
+aprovados; regressão com 135 BE, 9 API e 97 DB/INT, incluindo Mailpit, aprovada.
+Ruff/formato, mypy em 115 arquivos, SPEC e DOC aprovados. Sem testes de frontend
+nesta entrega, pois a interface não foi alterada. O ensaio não promove os quatro
+documentos pendentes e não demonstra qualidade/velocidade de respostas da IA.

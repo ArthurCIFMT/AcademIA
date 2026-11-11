@@ -113,7 +113,9 @@ Não executar implementação por apenas ler esta especificação.
 
 RAG-02 entregou a [porta Qdrant local persistente](banco-vetorial.md), com
 identidade por coleção, conexão sob demanda, singleton e erros controlados.
-Não corresponde ainda à extração/indexação ou recuperação semântica.
+RAG-03 entregou [extração offline e proveniência](extracao-documental.md), com
+pendências de OCR/revisão explícitas; RAG-04/05 continuam responsáveis pela
+indexação/ativação e recuperação semântica.
 
 ## Configuração inicial aceita
 

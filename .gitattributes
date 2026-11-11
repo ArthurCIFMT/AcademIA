@@ -1,0 +1,2 @@
+# Preserve os bytes dos PDFs sintéticos, inclusive os que contêm apenas ASCII.
+backend/tests/knowledge/fixtures/*.pdf binary

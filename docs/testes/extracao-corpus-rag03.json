@@ -1,0 +1,115 @@
+{
+  "versao": 1,
+  "data": "2026-11-11",
+  "parser": "pypdf/7.0.1",
+  "tipo": "ENSAIO_TECNICO_EXTRACAO_SEM_INDEXACAO",
+  "limites": [
+    "Não é ensaio de relevância, benchmark clínico ou aprovação do corpus inteiro.",
+    "CONCLUIDA indica sucesso mecânico; seleção de trechos, tabelas e contexto ainda pertence à ingestão/indexação.",
+    "REVISAO_NECESSARIA não será tratada como extração pronta para indexar.",
+    "Avisos estruturais XREF corrigidos em memória são contabilizados; avisos de extração/layout permanecem bloqueantes."
+  ],
+  "documentos": [
+    {
+      "id": "BR-MS-001",
+      "sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "SEM_CONTEUDO_TEXTUAL"
+      ],
+      "paginas_declaradas": 52,
+      "paginas_extraidas": 52,
+      "paginas_com_texto": 51,
+      "caracteres": 112054,
+      "avisos_parser": 0,
+      "avisos_estruturais": 0,
+      "paginas_pendentes": [
+        52
+      ]
+    },
+    {
+      "id": "BR-RBAFS-001",
+      "sha256": "65b09b07e1005f6f0fdec4b7b1f32bfa0d01831e9ff8db6382705397b8229af1",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 11,
+      "paginas_extraidas": 11,
+      "paginas_com_texto": 11,
+      "caracteres": 46466,
+      "avisos_parser": 1,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-RBCM-001",
+      "sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 36,
+      "paginas_extraidas": 36,
+      "paginas_com_texto": 36,
+      "caracteres": 111279,
+      "avisos_parser": 0,
+      "avisos_estruturais": 0,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "INT-BJSM-001",
+      "sha256": "d5beb511d687a91f9de0138650ca3f38ee9fc397fe349401cb7089d9c8b3c140",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 12,
+      "paginas_extraidas": 12,
+      "paginas_com_texto": 12,
+      "caracteres": 103417,
+      "avisos_parser": 2,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "INT-SPMED-001",
+      "sha256": "8cc1c5ede96cd086e0f190cf44c7a14166cf6b4dcdab6917b870bd491f10e2e0",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 17,
+      "paginas_extraidas": 17,
+      "paginas_com_texto": 17,
+      "caracteres": 211843,
+      "avisos_parser": 2,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-SBC-001",
+      "sha256": "8c76e153b7a4d1204d85950f140716e3f4797a65ea57ce8a4cb3e55f52723215",
+      "estado": "REVISAO_NECESSARIA",
+      "motivos": [
+        "AVISOS_DO_PARSER"
+      ],
+      "paginas_declaradas": 154,
+      "paginas_extraidas": 154,
+      "paginas_com_texto": 154,
+      "caracteres": 1069196,
+      "avisos_parser": 7,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    },
+    {
+      "id": "BR-SBC-002",
+      "sha256": "934da555eefa4e4bc8dcacd256e922065999a55f5a6b3713bec722cd2b4399f5",
+      "estado": "CONCLUIDA",
+      "motivos": [],
+      "paginas_declaradas": 45,
+      "paginas_extraidas": 45,
+      "paginas_com_texto": 45,
+      "caracteres": 384193,
+      "avisos_parser": 1,
+      "avisos_estruturais": 1,
+      "paginas_pendentes": []
+    }
+  ]
+}

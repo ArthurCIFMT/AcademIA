@@ -1,0 +1,5 @@
+# Medidas sintéticas
+Não exceder 30 kg; >= 60 s e <= 120 s.
+Carga ≥ 10 kg; variação ≤ 5%; 20 °C; 10 µg.
+## Restrições
+Se houver dor, não prosseguir.

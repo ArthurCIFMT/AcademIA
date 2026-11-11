@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "cab6e0db995aa32453a7e1a97fb4c2cdb732fe61",
+  "base_implementacao": "21f3e5815ff549b573fdb46f29bb1bd1e66dd8d5",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -136,6 +136,16 @@
         {
           "arquivo": "docs/arquitetura/banco-vetorial.md",
           "titulo": "Conexão Qdrant persistente e identidade do espaço vetorial"
+        },
+        {
+          "arquivo": "docs/arquitetura/extracao-documental.md",
+          "titulo": "Extração offline, proveniência e bloqueios de qualidade"
+        },
+        {
+          "arquivo": "docs/testes/extracao-corpus-rag03.json",
+          "titulo": "Ensaio técnico dos sete documentos selecionados",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },

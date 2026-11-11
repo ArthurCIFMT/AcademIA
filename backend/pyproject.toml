@@ -13,6 +13,8 @@ dependencies = [
     "uvicorn>=0.34,<1",
     "pillow>=13,<14",
     "qdrant-client==1.20.0",
+    "pypdf==7.0.1",
+    "portalocker==4.4.2",
 ]
 
 [dependency-groups]

@@ -54,5 +54,6 @@ uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
 O [guia vetorial](../docs/arquitetura/banco-vetorial.md) descreve configuração,
 coleção versionada, persistência, falhas e exclusão entre processos. Não é
 necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
-suas rotas manuais não dependem de abrir o índice. Extração/indexação e busca
-serão implementadas nos cartões seguintes.
+suas rotas manuais não dependem de abrir o índice. A [extração offline](../docs/arquitetura/extracao-documental.md)
+já oferece serviço interno com proveniência e registro privado de estados.
+Indexação e busca serão implementadas nos cartões seguintes.
