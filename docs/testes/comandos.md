@@ -15,7 +15,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | FE | `npm test` em `frontend/` | Disponível no FND-07 |
 | E2E | PENDENTE | TST-01 |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
-| RAG | PENDENTE | RAG-05 |
+| RAG | `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py` em backend/; exige flag E5 real e pesos locais | Disponível no RAG-05; configuração abaixo |
 | IA | PENDENTE | AI-06 |
 | INF | PENDENTE | INF-01 configura build/smoke; INF-04 amplia integração |
 
@@ -616,3 +616,52 @@ A primeira tentativa de integração encontrou PostgreSQL parado; após iniciá-
 os ensaios foram repetidos com sucesso. Nenhum teste foi ignorado para obter aceite.
 Dependências anteriores do lockfile foram preservadas; 51 entradas novas cobrem
 a inferência e plataformas alternativas do lock, sem significar instalação de GPU.
+
+## Recuperação semântica e avaliação RAG
+
+RAG-05 entrega [porta de recuperação](../arquitetura/recuperacao-semantica.md),
+[28 casos rotulados](rag05-consultas-v1.json) e [relatório real](rag05-avaliacao.json).
+Em backend/, com PostgreSQL exclusivo de teste e E5 provisionado conforme RAG-04:
+
+~~~powershell
+$env:ACADEMIA_TEST_EMBEDDINGS_REAL = '1'
+uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Sem a flag, o ensaio real é explicitamente skipped e não comprova aceite RAG.
+Se os pesos estiverem em outro lugar, definir ACADEMIA_EMBEDDING_PATH absoluto.
+Não exige chave Groq, GPU ou API LLM. O cenário SC-05 remove a chave do ambiente
+para verificar a recuperação de instrução sintética como dado, sem executar ação.
+
+Para escrever novo relatório do ensaio, configurar ACADEMIA_RAG_REPORT para um
+arquivo local próprio antes de executar somente test_retrieval_evaluation.py.
+Esse arquivo registra métricas reais; não sobrescrever a evidência versionada em
+uma execução de rotina. O conjunto fixa limiares e perguntas antes da medição.
+As integrações revertem transações do banco de teste e usam Qdrant temporário.
+
+O ensaio real usa sete trechos completos, hash/página/offsets, de BR-RBCM-001;
+18 consultas buscam português, seis buscam o resumo original em inglês da mesma
+publicação e quatro são fora de escopo. Não traduz o corpus. Modelo aquecido e
+cache de consultas inicialmente vazio; carga inicial informada separadamente.
+Mede busca e recuperação total sem LLM, p50/p95 e recall por idioma. Uma amostra
+de sete candidatos não demonstra desempenho em corpus amplo nem qualidade do MVP.
+A geração de fichas e tempo total da LLM serão avaliados em AI-06.
+
+Casos de domínio cobrem autorização documental/revogação depois do cache e durante
+a consulta, ingestão parcial, finalidade, adulteração de payload, isolamento de
+cache por contexto, tamanho/top-K, baixa similaridade, falha de embeddings,
+pertinência curada por condição/população/intervenção e conflito. Fonte com score
+alto não recebe suporte de saúde automaticamente. O livro Nahas foi escolhido e
+registrado como referência pendente de extração válida; os quatro PDFs anteriores
+não foram promovidos. Não há migration, dependência nova ou alteração de frontend.
+
+Evidência de 2026-11-11: 15 testes específicos aprovados (6 BE e 9 INT,
+incluindo E5/Qdrant/PostgreSQL reais e o ensaio rotulado). Regressão: 154 BE,
+114 DB/INT com Mailpit e 9 API aprovados. Ruff/formato, mypy em 136 arquivos,
+SPEC e DOC verificados. Neste conjunto: recall@5=100%, recall PT/EN=100% e
+abstenção fora de escopo=100%. Tempos exatos, inicialização e tamanho da amostra
+estão no relatório JSON; esses resultados não são métricas da futura LLM.
+Não foi executado frontend, pois não houve alteração de interface.

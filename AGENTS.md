@@ -221,6 +221,9 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - INT: `uv run --locked --env-file ../.env pytest -m integration`.
 - Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
 - Tipos: `uv run --locked mypy`.
+- RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
+  `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
+  Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
 
 Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
 `npm run lint`, `npm run typecheck` e `npm run build`. Ver

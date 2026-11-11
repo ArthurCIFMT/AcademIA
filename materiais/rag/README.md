@@ -112,7 +112,7 @@ O acervo apoia dúvidas, triagem de onboarding resumido e geração com conhecim
 especializado; a abordagem atual é [RAG semântico](../../docs/arquitetura/rag-semantico.md).
 Não remover automaticamente referências de saúde ou exercícios: avaliar trechos
 pertinentes por finalidade e manter pendentes fora do índice ativo. Livro/material
-de exercícios definitivo depende de aprovação; os 18 PDFs não comprovam cobertura
+de exercícios segue a seleção registrada abaixo; os 18 PDFs não comprovam cobertura
 suficiente para todo treino/condição. Inventário/catálogo ficam em PostgreSQL.
 Os PDFs permanecem intactos. A seleção técnica posterior aprovou sete para
 ingestão; nenhum foi reindexado nesta preparação.
@@ -123,5 +123,24 @@ A seleção vigente está em [corpus-inicial.json](corpus-inicial.json) e no cat
 sete documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
 PDFs. Outros onze seguem pendentes. Não confundir seleção com chunks/índice pronto
 ou qualidade de geração comprovada. O material especializado inicial é esse
-conjunto, não um novo livro já baixado. RAG-01 importa aprovação/proveniência;
+conjunto. A referência em livro foi escolhida posteriormente, conforme abaixo.
+RAG-01 importa aprovação/proveniência;
 RAG-03/04 validam extração/indexação e RAG-05 mede recuperação.
+
+## Livro de apoio escolhido
+
+Por delegação expressa do responsável, foi selecionado o livro de Markus Vinicius
+Nahas, Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um
+Estilo de Vida Ativo, 7ª edição (2017), em português. O autor o disponibiliza
+[gratuitamente via SBAFS](https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html).
+[Referência e SHA-256](livro-de-apoio.json) registram o download oficial, capítulos
+prioritários (4: força/mobilidade; 6: orientações de exercícios) e limitações.
+
+É apoio geral, complementado pelos artigos especializados. IDs e recursos vêm
+do catálogo, e adaptação por saúde exige evidência pertinente. O livro não foi
+adicionado automaticamente ao índice: a leitura encontrou avisos de fontes CFF
+no pypdf e precisa de tratamento técnico antes de ativação. Páginas 81 e 130
+físicas foram conferidas visualmente; a numeração impressa é distinta. O arquivo
+oficial possui 354 páginas físicas, embora a ficha catalográfica declare 362.
+O Git guarda referência/hash; a cópia local de leitura fica fora do repositório.
+Os sete selecionados e os 11 documentos de reserva do catálogo permanecem intactos.

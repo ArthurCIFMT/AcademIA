@@ -57,7 +57,8 @@ necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
 suas rotas manuais não dependem de abrir o índice. A [extração offline](../docs/arquitetura/extracao-documental.md)
 já oferece serviço interno com proveniência e registro privado de estados.
 RAG-04 entrega [chunking e indexação com E5 CPU](../docs/arquitetura/indexacao-documental.md).
-A recuperação semântica/citações pertence ao próximo cartão, RAG-05.
+RAG-05 entrega [recuperação semântica/citações](../docs/arquitetura/recuperacao-semantica.md),
+sem LLM; geração/triagem/chat serão integrados pelos cartões AI.
 
 ## Embeddings e indexação offline
 
@@ -81,3 +82,17 @@ curador administrador ativo e versão aprovada. Não indexar páginas com qualid
 pendente. Um único processo por diretório Qdrant; manutenção e API não abrem o
 mesmo diretório simultaneamente. A coleção v2 preserva a v1 sem revisão de pesos.
 O guia detalha retomada, falhas e quatro documentos ainda pendentes de extração.
+
+## Recuperação técnica local
+
+Com .env configurado, modelo provisionado e API parada, em backend/:
+
+~~~powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.retrieval --request CAMINHO_JSON
+~~~
+
+Entrada segue o [schema](../docs/requisitos/schemas/recuperacao-v1.schema.json).
+contexto_id é um UUID do contexto autorizado; em futura rota pública o backend
+deve resolvê-lo pela sessão. A CLI é ferramenta do operador local e não substitui
+a autorização REST. Coleção vazia resulta em SEM_EVIDENCIAS. Não há chamada LLM.
+O guia detalha aprovação/revogação, saúde, cache e inicialização fria do modelo.

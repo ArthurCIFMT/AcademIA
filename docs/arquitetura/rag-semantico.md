@@ -116,8 +116,10 @@ identidade por coleção, conexão sob demanda, singleton e erros controlados.
 RAG-03 entregou [extração offline e proveniência](extracao-documental.md), com
 pendências de OCR/revisão explícitas. RAG-04 entregou
 [indexação idempotente e E5 CPU](indexacao-documental.md), seleção técnica de
-trechos, checkpoints e ativação condicionada à aprovação vigente. RAG-05 será
-responsável pela recuperação/citações e seu ensaio de relevância/latência.
+trechos, checkpoints e ativação condicionada à aprovação vigente. RAG-05 entregou
+[recuperação/citações](recuperacao-semantica.md), estados de evidência, cache de
+vetores isolado por contexto e ensaio real de relevância/latência. O ensaio é
+pequeno e não representa cobertura de todo o corpus nem desempenho do LLM.
 
 ## Configuração inicial aceita
 

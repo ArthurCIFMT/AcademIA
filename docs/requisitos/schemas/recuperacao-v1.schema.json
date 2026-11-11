@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "request": {
+    "$defs": {
+      "Scope": {
+        "additionalProperties": false,
+        "properties": {
+          "condicao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Condicao",
+            "type": "string"
+          },
+          "populacao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Populacao",
+            "type": "string"
+          },
+          "intervencao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Intervencao",
+            "type": "string"
+          }
+        },
+        "required": [
+          "condicao",
+          "populacao",
+          "intervencao"
+        ],
+        "title": "Scope",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "contexto_id": {
+        "format": "uuid",
+        "title": "Contexto Id",
+        "type": "string"
+      },
+      "finalidade": {
+        "enum": [
+          "DUVIDAS",
+          "GERACAO_GERAL",
+          "TRIAGEM",
+          "DUVIDAS_SAUDE_GERAL"
+        ],
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "consulta": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "title": "Consulta",
+        "type": "string"
+      },
+      "top_k": {
+        "default": 5,
+        "maximum": 8,
+        "minimum": 1,
+        "title": "Top K",
+        "type": "integer"
+      },
+      "escopo_saude": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Scope"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "contexto_id",
+      "finalidade",
+      "consulta"
+    ],
+    "title": "Request",
+    "type": "object"
+  },
+  "response": {
+    "$defs": {
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "ingestao_id": {
+            "format": "uuid",
+            "title": "Ingestao Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "aprovacao_revisao": {
+            "title": "Aprovacao Revisao",
+            "type": "integer"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          },
+          "texto": {
+            "title": "Texto",
+            "type": "string"
+          },
+          "texto_hash": {
+            "title": "Texto Hash",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "ingestao_id",
+          "documento_versao_id",
+          "aprovacao_revisao",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao",
+          "texto",
+          "texto_hash",
+          "score"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "estado": {
+        "enum": [
+          "EVIDENCIAS_ENCONTRADAS",
+          "SEM_EVIDENCIAS",
+          "EVIDENCIA_INSUFICIENTE",
+          "CONFLITO",
+          "SERVICO_INDISPONIVEL"
+        ],
+        "title": "Estado",
+        "type": "string"
+      },
+      "evidencias": {
+        "items": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "title": "Evidencias",
+        "type": "array"
+      },
+      "suporte_saude": {
+        "enum": [
+          "NAO_SOLICITADO",
+          "NAO_VERIFICADO",
+          "PERTINENTE",
+          "CONFLITANTE"
+        ],
+        "title": "Suporte Saude",
+        "type": "string"
+      },
+      "motivo": {
+        "title": "Motivo",
+        "type": "string"
+      },
+      "busca_ms": {
+        "default": 0,
+        "title": "Busca Ms",
+        "type": "number"
+      },
+      "total_ms": {
+        "default": 0,
+        "title": "Total Ms",
+        "type": "number"
+      }
+    },
+    "required": [
+      "estado",
+      "evidencias",
+      "suporte_saude",
+      "motivo"
+    ],
+    "title": "Result",
+    "type": "object"
+  }
+}

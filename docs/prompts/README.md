@@ -103,6 +103,8 @@ módulos antes de INF-01, conforme orientação do professor.
 
 | RAG-04 | CONCLUIDO | [Indexação/E5 CPU](../arquitetura/indexacao-documental.md) e [testes](../testes/comandos.md#indexação-e-embeddings-locais). Migration 0013; seleção técnica, chunking 300/48/512, IDs estáveis e checkpoints. Retomada parcial, crash após vetor, reparo, aprovação/revogação e pipeline PG/Qdrant/E5 reais verificados. 21 testes específicos e 32 de conexão (53 aprovados), 148 BE, 9 API e 105 DB/INT aprovados em execuções complementares; Ruff/formato, mypy (129 arquivos), SPEC e DOC aprovados. Quatro fontes pendentes de extração preservadas, sem carga integral automática. |
 
+| RAG-05 | CONCLUIDO | [Recuperação semântica](../arquitetura/recuperacao-semantica.md), [conjunto rotulado](../testes/rag05-consultas-v1.json) e [ensaio real](../testes/rag05-avaliacao.json). Fonte/versão/checkpoint revalidados no PG, cache isolado, top-K e abstenção/conflito explícitos. E5/Qdrant reais sem LLM; sete trechos de uma publicação e 28 consultas PT/EN. Livro Nahas escolhido, aguardando tratamento de extração. 15 testes específicos, 154 BE, 114 DB/INT com Mailpit e 9 API aprovados; Ruff/formato, mypy (136 arquivos), SPEC e DOC verificados. Comandos e limitações no registro de testes. |
+
 Consolidação documental em 2026-11-11: [SPEC completo e portátil](../../SPEC.md),
 conteúdo das fontes oficiais incorporado, evolução do MER e roteiro para
 reconstrução por outra IA. Leitura pelos agentes/prompts e referências de estágio
@@ -176,7 +178,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-02](05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | CONCLUIDO |
 | [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | CONCLUIDO |
 | [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | CONCLUIDO |
-| [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | PRONTO |
+| [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | CONCLUIDO |
 | [AI-01](05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
 | [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
 | [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | BLOQUEADO |
@@ -251,8 +253,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-04 estão concluídos.
-RAG-05 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos.
+AI-01 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

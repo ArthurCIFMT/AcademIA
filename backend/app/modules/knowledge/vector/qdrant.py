@@ -8,6 +8,8 @@ from uuid import UUID
 from qdrant_client import QdrantClient, models
 
 from app.modules.knowledge.embeddings.encoder import EmbeddingError, validate_vectors
+from app.modules.knowledge.retrieval.contracts import Hit
+from app.modules.knowledge.schemas import Purpose
 from app.modules.knowledge.vector.contracts import (
     CollectionStatus,
     VectorError,
@@ -189,5 +191,60 @@ class QdrantStore:
                                 continue
                             found.add(id)
                 return found
+            except Exception:
+                raise VectorError(VectorErrorCode.SERVICO_INDISPONIVEL) from None
+
+    def search(
+        self, vector: list[float], ingestions: list[UUID], purpose: Purpose, limit: int
+    ) -> list[Hit]:
+        if not ingestions:
+            return []
+        if not 1 <= limit <= 40:
+            raise ValueError("Limite de candidatos inválido.")
+        validate_vectors([vector], 1, self.settings.space.dimension)
+        with self._lock:
+            self.check()
+            assert self._client is not None
+            try:
+                results = self._client.query_points(
+                    self.settings.collection,
+                    query=vector,
+                    limit=limit,
+                    query_filter=models.Filter(
+                        must=[
+                            models.FieldCondition(
+                                key="ingestao_id",
+                                match=models.MatchAny(any=[str(i) for i in ingestions]),
+                            ),
+                            models.FieldCondition(
+                                key="space_sha256",
+                                match=models.MatchValue(
+                                    value=self.settings.space.fingerprint
+                                ),
+                            ),
+                            models.FieldCondition(
+                                key="finalidade", match=models.MatchValue(value=purpose)
+                            ),
+                        ]
+                    ),
+                    with_payload=True,
+                    with_vectors=False,
+                )
+                hits = []
+                for record in results.points:
+                    raw = dict(record.payload or {})
+                    checksum = raw.pop("payload_sha256", None)
+                    payload = Payload.model_validate(raw)
+                    payload.check()
+                    if checksum != payload.fingerprint or str(record.id) != str(
+                        payload.fragmento_id
+                    ):
+                        raise ValueError("Payload inválido.")
+                    hits.append(
+                        Hit(
+                            id=UUID(str(record.id)), score=record.score, payload=payload
+                        )
+                    )
+                return hits
             except Exception:
                 raise VectorError(VectorErrorCode.SERVICO_INDISPONIVEL) from None

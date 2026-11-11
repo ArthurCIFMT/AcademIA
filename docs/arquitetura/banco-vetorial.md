@@ -1,4 +1,4 @@
-# Banco vetorial — RAG-02 e RAG-04
+# Banco vetorial — RAG-02, RAG-04 e RAG-05
 
 MOD-05 usa qdrant-client 1.20.0 em modo local persistente, conforme ADR-004/005.
 É o engine vetorial real da biblioteca, separado do PostgreSQL; não exige serviço
@@ -23,7 +23,8 @@ RAG-03 entregou extração e RAG-04 entregou [embeddings/indexação](indexacao-
 Payload versionado e seu checksum ligam cada vetor ao texto/hash e à versão,
 configuração, finalidade, página/linhas e seção. present verifica esses vínculos,
 dimensão e normalização; upsert é idempotente por ID. Nenhuma dessas operações
-aprova a literatura. Recuperação e avaliação semântica são RAG-05.
+aprova a literatura. RAG-05 entrega [SearchIndex e recuperação](recuperacao-semantica.md),
+com query_points/cosseno, filtros de ingestão/espaço/finalidade e revalidação PG.
 Testes usam diretórios temporários; o ensaio E5 real não publica literatura
 sintética no banco de desenvolvimento. Esta entrega não chama LLM.
 

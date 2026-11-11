@@ -248,9 +248,9 @@ def sessions(migration: tuple[Connection, Config]) -> sessionmaker[Session]:
 
 
 def setup(
-    sessions: sessionmaker[Session], tmp_path: Path
+    sessions: sessionmaker[Session], tmp_path: Path, *, text: str | None = None
 ) -> tuple[Actor, CorpusStorage, ApprovedReference, ExtractionResult, Selection]:
-    storage, reference, extraction, selection = synthetic(tmp_path)
+    storage, reference, extraction, selection = synthetic(tmp_path, text=text)
     with sessions.begin() as session:
         user = create_account(
             session,

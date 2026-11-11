@@ -1,0 +1,726 @@
+{
+  "schema_version": 1,
+  "tipo": "RECUPERACAO_REAL_SEM_LLM",
+  "dataset_sha256": "452bc893621cffe6b25c97f715b2646425a9394510aa6a76446ca6731236b849",
+  "fonte_sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+  "configuracao_sha256": "159320ecb63b6156e0afac1b829c8d020fae0f60c49505684961b3c1db6ac604",
+  "modelo": {
+    "schema_version": 1,
+    "model": "intfloat/multilingual-e5-small",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "dimension": 384,
+    "metric": "Cosine",
+    "normalized": true,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: "
+  },
+  "ambiente": {
+    "python": "3.12.14",
+    "sistema": "Windows-10-10.0.19045-SP0",
+    "cpu": "Intel64 Family 6 Model 158 Stepping 9, GenuineIntel",
+    "cpu_threads": 2,
+    "qdrant_client": "1.20.0",
+    "sentence_transformers": "6.2.0"
+  },
+  "volume": {
+    "documentos": 1,
+    "fragmentos": 7,
+    "dimensoes": 384,
+    "consultas": 28,
+    "positivas": 24,
+    "fora_escopo": 4
+  },
+  "limiares_pre_definidos": {
+    "recall_at_5": 0.8,
+    "recall_por_idioma": 0.8,
+    "p95_busca_segundos": 2,
+    "abstencao_fora_escopo": 1
+  },
+  "resultados": {
+    "recall_at_5": 1.0,
+    "recall_por_idioma": {
+      "en": 1.0,
+      "pt": 1.0
+    },
+    "abstencao_fora_escopo": 1.0,
+    "busca_p50_ms": 1.9694500006153248,
+    "busca_p95_ms": 2.115399998729117,
+    "total_p50_ms": 38.87839999879361,
+    "total_p95_ms": 42.86130000036792,
+    "inicializacao_e5_segundos": 15.311764199999743
+  },
+  "limites": [
+    "Amostra pequena de definições e resumo original em inglês de uma publicação brasileira.",
+    "Modelo aquecido antes da busca; carga inicial informada separadamente. Cache de consultas vazio no início.",
+    "Não mede resposta de LLM, dose individual, validade clínica ou desempenho em corpus amplo.",
+    "Não promove fontes pendentes nem publica dados no banco de desenvolvimento."
+  ],
+  "casos": [
+    {
+      "id": "volume-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "volume"
+      ],
+      "textos_retornados": [
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.9219372949184919,
+        0.8814658129959301,
+        0.851986225102512,
+        0.8517305923651133,
+        0.8443249002782556
+      ],
+      "busca_ms": 2.115399998729117,
+      "total_ms": 44.275000000197906
+    },
+    {
+      "id": "volume-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "volume"
+      ],
+      "textos_retornados": [
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.9041570950391511,
+        0.8612026905882189,
+        0.84595867418174,
+        0.8385342167459946,
+        0.8349241258961871
+      ],
+      "busca_ms": 1.9664999999804422,
+      "total_ms": 36.01440000056755
+    },
+    {
+      "id": "volume-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "volume"
+      ],
+      "textos_retornados": [
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.8770671237892778,
+        0.8474252797885709,
+        0.8194520920936668,
+        0.8143941115569515,
+        0.8140324017422103
+      ],
+      "busca_ms": 1.9188999976904597,
+      "total_ms": 39.51230000166106
+    },
+    {
+      "id": "frequencia-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "frequencia"
+      ],
+      "textos_retornados": [
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d"
+      ],
+      "scores": [
+        0.9104666736888929,
+        0.8754113621597294,
+        0.8698833603857083,
+        0.867948094102921,
+        0.8578998971701542
+      ],
+      "busca_ms": 1.9274000005680136,
+      "total_ms": 38.379199999326374
+    },
+    {
+      "id": "frequencia-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "frequencia"
+      ],
+      "textos_retornados": [
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.9061571950979435,
+        0.8767382123642673,
+        0.874138543597915,
+        0.8718592693052118,
+        0.866287117592781
+      ],
+      "busca_ms": 2.030299998295959,
+      "total_ms": 42.86130000036792
+    },
+    {
+      "id": "frequencia-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "frequencia"
+      ],
+      "textos_retornados": [
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.9107009881599324,
+        0.8768779240725242,
+        0.8662889749555494,
+        0.8658253317419328,
+        0.8585349454788407
+      ],
+      "busca_ms": 2.017299997532973,
+      "total_ms": 41.38270000112243
+    },
+    {
+      "id": "acoes-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "acoes"
+      ],
+      "textos_retornados": [
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+      ],
+      "scores": [
+        0.8983619495459653,
+        0.8783611799582578,
+        0.8639768969180235,
+        0.8597923924977591,
+        0.8583869644654849
+      ],
+      "busca_ms": 1.995599999645492,
+      "total_ms": 39.37759999826085
+    },
+    {
+      "id": "acoes-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "acoes"
+      ],
+      "textos_retornados": [
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.905566613818621,
+        0.872421641101527,
+        0.8534007418664273,
+        0.851289211894543,
+        0.8481477970265605
+      ],
+      "busca_ms": 1.9864999994751997,
+      "total_ms": 42.40819999904488
+    },
+    {
+      "id": "acoes-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "acoes"
+      ],
+      "textos_retornados": [
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.8790510844708607,
+        0.8459487447655198,
+        0.836383112068223,
+        0.8310007784378,
+        0.8298571226851373
+      ],
+      "busca_ms": 1.977799998712726,
+      "total_ms": 40.2304000017466
+    },
+    {
+      "id": "intervalo-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "intervalo"
+      ],
+      "textos_retornados": [
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b"
+      ],
+      "scores": [
+        0.8827845612663521,
+        0.8654178402140247,
+        0.8356149898274493,
+        0.8197492981227179,
+        0.8193547322356814
+      ],
+      "busca_ms": 1.9571999982872512,
+      "total_ms": 40.12299999885727
+    },
+    {
+      "id": "intervalo-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "intervalo"
+      ],
+      "textos_retornados": [
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11"
+      ],
+      "scores": [
+        0.9102686338767283,
+        0.8654895612003857,
+        0.8634451864299255,
+        0.8610214297086536,
+        0.8574867245144318
+      ],
+      "busca_ms": 1.9748000013350975,
+      "total_ms": 40.789099999528844
+    },
+    {
+      "id": "intervalo-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "intervalo"
+      ],
+      "textos_retornados": [
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d"
+      ],
+      "scores": [
+        0.87834591417359,
+        0.8625347643115251,
+        0.8548822826875337,
+        0.8464833473564455,
+        0.8452199904627078
+      ],
+      "busca_ms": 2.106600000843173,
+      "total_ms": 39.746399997966364
+    },
+    {
+      "id": "cadencia-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "cadencia"
+      ],
+      "textos_retornados": [
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+      ],
+      "scores": [
+        0.881875241215549,
+        0.8287654909810287,
+        0.8256827444358054,
+        0.8231353412507255,
+        0.8189831170428317
+      ],
+      "busca_ms": 1.9936999997298699,
+      "total_ms": 39.79070000059437
+    },
+    {
+      "id": "cadencia-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "cadencia"
+      ],
+      "textos_retornados": [
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.8668804869818865,
+        0.85322100254743,
+        0.8346762577343353,
+        0.8339248469339337,
+        0.8323833556608213
+      ],
+      "busca_ms": 2.1161999975447543,
+      "total_ms": 41.069200000492856
+    },
+    {
+      "id": "cadencia-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "cadencia"
+      ],
+      "textos_retornados": [
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e"
+      ],
+      "scores": [
+        0.8742623381789898,
+        0.8687881058011793,
+        0.8661602308879737,
+        0.8660942143453211,
+        0.8550849624721835
+      ],
+      "busca_ms": 1.9733999979507644,
+      "total_ms": 40.314400001079775
+    },
+    {
+      "id": "amplitude-1",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "amplitude"
+      ],
+      "textos_retornados": [
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4"
+      ],
+      "scores": [
+        0.8801197505563001,
+        0.8072803909402244
+      ],
+      "busca_ms": 1.9724000012502074,
+      "total_ms": 38.202100000489736
+    },
+    {
+      "id": "amplitude-2",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "amplitude"
+      ],
+      "textos_retornados": [
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+      ],
+      "scores": [
+        0.8657622345163237,
+        0.832938895207501,
+        0.819583064954859,
+        0.8183037587654436,
+        0.813734523086962
+      ],
+      "busca_ms": 1.9844999987981282,
+      "total_ms": 38.06869999971241
+    },
+    {
+      "id": "amplitude-3",
+      "idioma_evidencia": "pt",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "amplitude"
+      ],
+      "textos_retornados": [
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d"
+      ],
+      "scores": [
+        0.9066512742247091,
+        0.8730361664254205,
+        0.8711678795871538,
+        0.8645104049285584,
+        0.8641076084557413
+      ],
+      "busca_ms": 2.0006999984616414,
+      "total_ms": 40.46600000219769
+    },
+    {
+      "id": "abstract-1",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4"
+      ],
+      "scores": [
+        0.9039581632972411,
+        0.8969777571096411,
+        0.8957179463078444,
+        0.8916293850294007,
+        0.8868536580769472
+      ],
+      "busca_ms": 1.9240000001445878,
+      "total_ms": 36.57779999775812
+    },
+    {
+      "id": "abstract-2",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d"
+      ],
+      "scores": [
+        0.8577675287638475,
+        0.853990173910127,
+        0.8453804305054669,
+        0.8305254430484689,
+        0.823006430006596
+      ],
+      "busca_ms": 1.8751999996311497,
+      "total_ms": 35.816799998428905
+    },
+    {
+      "id": "abstract-3",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11"
+      ],
+      "scores": [
+        0.905623310466092,
+        0.9003916881945204,
+        0.8965222801907033,
+        0.8816223967200036,
+        0.876678525865247
+      ],
+      "busca_ms": 1.8976999999722466,
+      "total_ms": 35.98960000090301
+    },
+    {
+      "id": "abstract-4",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11"
+      ],
+      "scores": [
+        0.8816196555566901,
+        0.8806166171720398,
+        0.8703330543748066,
+        0.8699622411807695,
+        0.8603662606358972
+      ],
+      "busca_ms": 1.9200999995518941,
+      "total_ms": 37.565700000413926
+    },
+    {
+      "id": "abstract-5",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47"
+      ],
+      "scores": [
+        0.8783471799359671,
+        0.8669702527347134,
+        0.8667359543190891,
+        0.8584607860154733,
+        0.8579154072734184
+      ],
+      "busca_ms": 1.919300000736257,
+      "total_ms": 37.53890000007232
+    },
+    {
+      "id": "abstract-6",
+      "idioma_evidencia": "en",
+      "deve_abster": false,
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "gold": [
+        "abstract"
+      ],
+      "textos_retornados": [
+        "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+        "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+        "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+        "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+        "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4"
+      ],
+      "scores": [
+        0.876358484882378,
+        0.8693549382504799,
+        0.8598770245628382,
+        0.8502877061863414,
+        0.8502854051769156
+      ],
+      "busca_ms": 1.928600002429448,
+      "total_ms": 37.66600000017206
+    },
+    {
+      "id": "fora-1",
+      "idioma_evidencia": null,
+      "deve_abster": true,
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "gold": [],
+      "textos_retornados": [],
+      "scores": [],
+      "busca_ms": 1.8834000002243556,
+      "total_ms": 36.9064000005892
+    },
+    {
+      "id": "fora-2",
+      "idioma_evidencia": null,
+      "deve_abster": true,
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "gold": [],
+      "textos_retornados": [],
+      "scores": [],
+      "busca_ms": 1.944999999977881,
+      "total_ms": 36.700100001326064
+    },
+    {
+      "id": "fora-3",
+      "idioma_evidencia": null,
+      "deve_abster": true,
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "gold": [],
+      "textos_retornados": [],
+      "scores": [],
+      "busca_ms": 1.8820000004780013,
+      "total_ms": 36.726500002259854
+    },
+    {
+      "id": "fora-4",
+      "idioma_evidencia": null,
+      "deve_abster": true,
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "gold": [],
+      "textos_retornados": [],
+      "scores": [],
+      "busca_ms": 1.9614999982877634,
+      "total_ms": 37.74409999823547
+    }
+  ]
+}

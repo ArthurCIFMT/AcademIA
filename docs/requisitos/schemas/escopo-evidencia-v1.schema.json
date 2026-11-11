@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "condicao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Condicao",
+          "type": "string"
+        },
+        "populacao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Populacao",
+          "type": "string"
+        },
+        "intervencao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Intervencao",
+          "type": "string"
+        }
+      },
+      "required": [
+        "condicao",
+        "populacao",
+        "intervencao"
+      ],
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "arquivo_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Arquivo Sha256",
+      "type": "string"
+    },
+    "texto_hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Texto Hash",
+      "type": "string"
+    },
+    "escopo": {
+      "$ref": "#/$defs/Scope"
+    },
+    "posicao": {
+      "enum": [
+        "SUPORTE",
+        "CONTRAINDICACAO"
+      ],
+      "title": "Posicao",
+      "type": "string"
+    },
+    "justificativa": {
+      "maxLength": 160,
+      "minLength": 1,
+      "title": "Justificativa",
+      "type": "string"
+    }
+  },
+  "required": [
+    "arquivo_sha256",
+    "texto_hash",
+    "escopo",
+    "posicao",
+    "justificativa"
+  ],
+  "title": "Annotation",
+  "type": "object"
+}

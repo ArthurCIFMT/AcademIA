@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após RAG-04. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-05. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração e indexação idempotente com E5 CPU entregues; quatro fontes com revisão técnica pendente; recuperação semântica futura |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,12 +139,16 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-05. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é AI-01. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
-ou avaliação de relevância da busca. Esta entrega não fecha o aceite do MVP.
+ou avaliação de relevância da busca. RAG-05 acrescenta o ensaio real de 28
+consultas sobre sete trechos de uma publicação; seu tamanho e limites estão no
+[contrato da recuperação](docs/arquitetura/recuperacao-semantica.md). Não
+comprova cobertura ampla ou geração de fichas. O livro de apoio Nahas foi escolhido
+e registrado com hash, aguardando tratamento de extração. O aceite do MVP segue aberto.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -3720,8 +3724,10 @@ identidade por coleção, conexão sob demanda, singleton e erros controlados.
 RAG-03 entregou [extração offline e proveniência](docs/arquitetura/extracao-documental.md), com
 pendências de OCR/revisão explícitas. RAG-04 entregou
 [indexação idempotente e E5 CPU](docs/arquitetura/indexacao-documental.md), seleção técnica de
-trechos, checkpoints e ativação condicionada à aprovação vigente. RAG-05 será
-responsável pela recuperação/citações e seu ensaio de relevância/latência.
+trechos, checkpoints e ativação condicionada à aprovação vigente. RAG-05 entregou
+[recuperação/citações](docs/arquitetura/recuperacao-semantica.md), estados de evidência, cache de
+vetores isolado por contexto e ensaio real de relevância/latência. O ensaio é
+pequeno e não representa cobertura de todo o corpus nem desempenho do LLM.
 
 #### Configuração inicial aceita
 
@@ -4359,7 +4365,8 @@ RAG-03 entregou extração e RAG-04 entregou [embeddings/indexação](docs/arqui
 Payload versionado e seu checksum ligam cada vetor ao texto/hash e à versão,
 configuração, finalidade, página/linhas e seção. present verifica esses vínculos,
 dimensão e normalização; upsert é idempotente por ID. Nenhuma dessas operações
-aprova a literatura. Recuperação e avaliação semântica são RAG-05.
+aprova a literatura. RAG-05 entrega [SearchIndex e recuperação](docs/arquitetura/recuperacao-semantica.md),
+com query_points/cosseno, filtros de ingestão/espaço/finalidade e revalidação PG.
 Testes usam diretórios temporários; o ensaio E5 real não publica literatura
 sintética no banco de desenvolvimento. Esta entrega não chama LLM.
 
@@ -4871,7 +4878,9 @@ O [relatório RAG-03](docs/testes/extracao-corpus-rag03.json) mantém quatro fon
 REVISAO_NECESSARIA: BR-MS-001, INT-BJSM-001, INT-SPMED-001 e BR-SBC-001.
 Não foram promovidas por esta entrega. As três extrações concluídas ainda exigem
 seleção de trechos úteis; não houve carga automática integral do acervo no banco
-de desenvolvimento. Não existe avaliação semântica de RAG-05 ou ensaio LLM de AI-06.
+de desenvolvimento. O aceite RAG-04 não incluiu avaliação semântica;
+RAG-05 acrescentou [ensaio delimitado](docs/arquitetura/recuperacao-semantica.md). O ensaio LLM
+permanece em AI-06.
 ### 10. Revisão de pesos, SHA-256 e configuração E5
 
 Fonte versionada: [docs/requisitos/schemas/embedding-e5-v1.json](docs/requisitos/schemas/embedding-e5-v1.json).
@@ -5011,6 +5020,533 @@ Fonte versionada: [docs/requisitos/schemas/selecao-indexacao-v1.schema.json](doc
   ],
   "title": "Selection",
   "type": "object"
+}
+````
+### 12. Busca, citações, escopo e estados de evidência
+
+Fonte versionada: [docs/arquitetura/recuperacao-semantica.md](docs/arquitetura/recuperacao-semantica.md).
+
+MOD-05 recupera evidências para dúvidas, triagem e geração. MRF02/MRF11/MRF12/MRF15,
+RN-29/RN-39 e RNF-13 governam esta entrega. O serviço não chama LLM, cria ficha
+ou decide elegibilidade. O adaptador LLM e a orquestração permanecem AI-01–AI-06.
+
+#### Contratos e fronteiras
+
+Request JSON estrito identifica contexto_id, finalidade, consulta minimizada,
+top_k (padrão 5, máximo 8) e escopo_saude opcional. O contexto é resolvido pelo
+backend autenticado quando integrado ao MOD-06; não expor essa CLI como endpoint
+anônimo. Não receber onboarding inteiro ou um cliente escolhido livremente pelo
+modelo. A consulta tem até 1000 caracteres e precisa caber em 512 tokens E5 com
+query:. A porta QueryEncoder fornece queries; SearchIndex estende a porta vetorial
+com search. Objetos internos são tipados, sem serialização JSON artificial.
+
+Os [schemas de entrada/saída](docs/requisitos/schemas/recuperacao-v1.schema.json)
+e de [anotação de escopo](docs/requisitos/schemas/escopo-evidencia-v1.schema.json)
+integram a SPEC. QdrantStore implementa search com tipos SDK privados. A extensão
+em vector/ e o ajuste do tipo do singleton são necessários à porta prevista pelo
+cartão; não existe rota REST ou migration nova. Tabelas de 0012/0013 são reutilizadas.
+Arquivos __init__ dos testes permitem reutilizar fixtures sem duplicar módulos no mypy.
+
+#### Filtros, proveniência e entrega
+
+1. Conferir coleção/revisão/espaço; consultar no PG somente ingestões CONCLUIDA de
+   literatura APROVADO na revisão atual. Sem ingestão, não chamar embeddings.
+2. Gerar vetor query: normalizado, 384 dimensões, com o E5 fixado; modelo/coleção
+   diferentes não são misturados. Sem busca livre na internet ou tradução do corpus.
+3. Buscar por cosseno até 40 candidatos, com filtros Qdrant obrigatórios de ingestão,
+   finalidade e fingerprint. Os IDs permitidos vêm do backend, não da pergunta.
+4. Reconsultar aprovação no PG depois da busca; revalidar fragmento/checkpoint,
+   versão, revisão, configuração, hash, metadados e coordenadas. Payload e checksum
+   incompatíveis geram falha técnica; não entregar fonte possivelmente adulterada.
+5. Aplicar limiar inicial 0,80, ordenar por score e ID para desempate, deduplicar por
+   versão/hash e retornar até top_k. Evidências são candidatas: similaridade não é
+   probabilidade clínica nem prova de que uma prescrição tem suporte.
+
+Cada evidência identifica fragmento/ingestão/versão e aprovação, título, URL real,
+idioma documental, página PDF ou linhas TXT, seção, texto/hash e score. Não inventar
+página ou URL. Em publicações multilíngues, a seção pode indicar Abstract (en) mesmo
+quando o idioma predominante do documento é pt-BR; esse é o caso do ensaio atual.
+Trechos que contêm instruções continuam dados: não podem mudar identidade,
+permissão ou fluxo. SC-05 exercita a porta real sem chave/provedor LLM configurado.
+
+#### Saúde: pertinência e conflito
+
+Escopo_saude possui condição, população e intervenção estruturadas. Suporte só é
+classificado PERTINENTE quando uma Annotation técnica do backend liga exatamente
+esse escopo ao SHA-256 do arquivo e do texto recuperado, com posição SUPORTE.
+A anotação é configuração de curadoria confiável e versionada; nunca aceitá-la do
+cliente/LLM como declaração de autorização. O ensaio de domínio usa rótulos
+sintéticos explícitos, sem declarar adequação clínica real.
+
+Sem anotação pertinente ou apenas com contraindicação, retornar insuficiência;
+com suporte e contraindicação conflitantes, retornar CONFLITO e os trechos para
+análise, impedindo tratar o resultado como suporte de adaptação. Não inferir
+pertinência apenas por ocorrência de palavra ou score alto. Anotação de outra
+versão/hash não vale. Esta entrega não cria uma taxonomia clínica universal nem
+aprovação médica. Políticas de triagem, dados insuficientes, caso grave e publicação
+continuam nos módulos responsáveis. PERTINENTE identifica relação curada da evidência,
+não aptidão do cliente nem validação universal da dose.
+
+A CLI técnica não fornece anotações de saúde e se abstém desses pedidos sem
+suporte configurado. Um chamador que omitir escopo recebe candidatos gerais,
+com suporte_saude=NAO_SOLICITADO; não pode usar esse estado para afirmar adaptação
+por condição. AI-01/AI-03 devem exigir os contratos e bloqueios de saúde previstos.
+
+#### Estados e falhas
+
+| Estado | Significado |
+|---|---|
+| EVIDENCIAS_ENCONTRADAS | Trechos candidatos dentro dos filtros; suporte de saúde é campo separado |
+| SEM_EVIDENCIAS | Sem ingestão aprovada ou sem resultado vigente para a finalidade |
+| EVIDENCIA_INSUFICIENTE | Score abaixo do limiar ou falta de suporte curado para o escopo |
+| CONFLITO | Evidências de posições divergentes para o mesmo escopo |
+| SERVICO_INDISPONIVEL | Falha de SQL, embeddings/Qdrant, proveniência inválida, espaço incompatível ou orçamento excedido |
+
+Falha não vira ausência de evidência, diagnóstico ou elegibilidade. Há uma tentativa
+por operação de busca nesta implementação (abaixo do teto de três de transporte),
+sem fallback ou reparo LLM. Orçamento padrão 60 s; retorno depois do orçamento é
+recusado. Isso não é uma promessa de que toda operação bloqueante termina em 60 s.
+Embeddings têm encerramento de worker conforme RAG-04. PG usa transações curtas,
+sem segurar conexão enquanto roda o modelo ou Qdrant. Falha não impede ficha manual.
+
+#### Cache e minimização
+
+Cache local guarda apenas vetores de consulta por até 300 s, máximo 128 entradas,
+com lock. Chave combina contexto autorizado, finalidade, espaço e hash da pergunta;
+não guarda texto de pergunta, onboarding, conversa ou resposta. Contextos diferentes
+não reutilizam a entrada. Não há cache de fontes nem de aprovação: toda consulta,
+mesmo com vetor em cache, repete filtros e revalidação PG. Reiniciar/clear_cache
+remove o cache. Revogação prevalece enquanto vetores físicos continuam no Qdrant.
+Não registrar a consulta ou dados privados em logs; resultado informa motivo,
+busca_ms e total_ms para instrumentação pelo orquestrador.
+
+#### Execução local e avaliação
+
+Com a API parada e .env configurado, em backend/:
+
+~~~powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.retrieval --request CAMINHO_JSON
+~~~
+
+O arquivo segue Request. É manutenção local com as credenciais do operador, não
+uma interface pública. Não concorrer com a API pelo mesmo diretório Qdrant. Não
+imprimir perguntas em logs. Uma coleção vazia retorna SEM_EVIDENCIAS, sem simulação.
+
+O [conjunto rotulado](docs/testes/rag05-consultas-v1.json) fixa antes do ensaio
+24 perguntas positivas (18 PT e seis que buscam o resumo original EN) e quatro
+fora de escopo. São sete trechos integrais selecionados de BR-RBCM-001, com página,
+offsets e hash. Os outros PDFs e seus estados não foram promovidos pelo ensaio.
+Metas prévias: recall@5 e recall por idioma >=0,80; abstenção fora de escopo=1;
+p95 da busca <=2 s. [Relatório real](docs/testes/rag05-avaliacao.json) registra
+numeradores por casos, modelo, ambiente, volume, inicialização e tempos.
+
+Amostra pequena e concentrada em uma publicação introdutória: não comprova
+cobertura do corpus amplo, qualidade de fichas, suporte clínico ou tempo do LLM.
+E5 é aquecido antes das consultas e a carga inicial é informada separadamente;
+a primeira requisição de um processo sem aquecimento pode demorar mais.
+A medição usa perf_counter de alta resolução, importante no Windows. Testes
+sintéticos verificam segurança/estados, não são literatura validada.
+Comandos reproduzíveis e resultados estão no [registro](docs/testes/comandos.md#recuperação-semântica-e-avaliação-rag).
+
+#### Livro de apoio e pendências
+
+Por delegação do responsável, a referência inicial em português é o livro de
+Markus V. Nahas, Atividade Física, Saúde e Qualidade de Vida, 7ª ed. (2017).
+[Referência/hash e pendências](materiais/rag/livro-de-apoio.json) registram
+capítulos 4 e 6, fonte oficial gratuita e limites. O livro apoia conceitos e
+planejamento geral, sem substituir catálogo/equipamentos ou literatura pertinente
+à saúde. Avisos de fontes na extração impedem ativá-lo automaticamente. Sua escolha
+não altera os sete documentos selecionados ou a evidência do ensaio.
+Os quatro PDFs pendentes do RAG-03 seguem fora da recuperação ativa; o responsável
+aceitou tratar essas revisões após o MVP, condicionado à cobertura do aceite.
+### 13. Schemas JSON de recuperação
+
+Fonte versionada: [docs/requisitos/schemas/recuperacao-v1.schema.json](docs/requisitos/schemas/recuperacao-v1.schema.json).
+
+````json
+{
+  "schema_version": 1,
+  "request": {
+    "$defs": {
+      "Scope": {
+        "additionalProperties": false,
+        "properties": {
+          "condicao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Condicao",
+            "type": "string"
+          },
+          "populacao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Populacao",
+            "type": "string"
+          },
+          "intervencao": {
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Intervencao",
+            "type": "string"
+          }
+        },
+        "required": [
+          "condicao",
+          "populacao",
+          "intervencao"
+        ],
+        "title": "Scope",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "contexto_id": {
+        "format": "uuid",
+        "title": "Contexto Id",
+        "type": "string"
+      },
+      "finalidade": {
+        "enum": [
+          "DUVIDAS",
+          "GERACAO_GERAL",
+          "TRIAGEM",
+          "DUVIDAS_SAUDE_GERAL"
+        ],
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "consulta": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "title": "Consulta",
+        "type": "string"
+      },
+      "top_k": {
+        "default": 5,
+        "maximum": 8,
+        "minimum": 1,
+        "title": "Top K",
+        "type": "integer"
+      },
+      "escopo_saude": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/Scope"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "contexto_id",
+      "finalidade",
+      "consulta"
+    ],
+    "title": "Request",
+    "type": "object"
+  },
+  "response": {
+    "$defs": {
+      "Evidence": {
+        "additionalProperties": false,
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "ingestao_id": {
+            "format": "uuid",
+            "title": "Ingestao Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "aprovacao_revisao": {
+            "title": "Aprovacao Revisao",
+            "type": "integer"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          },
+          "texto": {
+            "title": "Texto",
+            "type": "string"
+          },
+          "texto_hash": {
+            "title": "Texto Hash",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "ingestao_id",
+          "documento_versao_id",
+          "aprovacao_revisao",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao",
+          "texto",
+          "texto_hash",
+          "score"
+        ],
+        "title": "Evidence",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {
+        "const": 1,
+        "default": 1,
+        "title": "Schema Version",
+        "type": "integer"
+      },
+      "estado": {
+        "enum": [
+          "EVIDENCIAS_ENCONTRADAS",
+          "SEM_EVIDENCIAS",
+          "EVIDENCIA_INSUFICIENTE",
+          "CONFLITO",
+          "SERVICO_INDISPONIVEL"
+        ],
+        "title": "Estado",
+        "type": "string"
+      },
+      "evidencias": {
+        "items": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "title": "Evidencias",
+        "type": "array"
+      },
+      "suporte_saude": {
+        "enum": [
+          "NAO_SOLICITADO",
+          "NAO_VERIFICADO",
+          "PERTINENTE",
+          "CONFLITANTE"
+        ],
+        "title": "Suporte Saude",
+        "type": "string"
+      },
+      "motivo": {
+        "title": "Motivo",
+        "type": "string"
+      },
+      "busca_ms": {
+        "default": 0,
+        "title": "Busca Ms",
+        "type": "number"
+      },
+      "total_ms": {
+        "default": 0,
+        "title": "Total Ms",
+        "type": "number"
+      }
+    },
+    "required": [
+      "estado",
+      "evidencias",
+      "suporte_saude",
+      "motivo"
+    ],
+    "title": "Result",
+    "type": "object"
+  }
+}
+````
+### 14. Anotação técnica de condição, população e intervenção
+
+Fonte versionada: [docs/requisitos/schemas/escopo-evidencia-v1.schema.json](docs/requisitos/schemas/escopo-evidencia-v1.schema.json).
+
+````json
+{
+  "$defs": {
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "condicao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Condicao",
+          "type": "string"
+        },
+        "populacao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Populacao",
+          "type": "string"
+        },
+        "intervencao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Intervencao",
+          "type": "string"
+        }
+      },
+      "required": [
+        "condicao",
+        "populacao",
+        "intervencao"
+      ],
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "arquivo_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Arquivo Sha256",
+      "type": "string"
+    },
+    "texto_hash": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Texto Hash",
+      "type": "string"
+    },
+    "escopo": {
+      "$ref": "#/$defs/Scope"
+    },
+    "posicao": {
+      "enum": [
+        "SUPORTE",
+        "CONTRAINDICACAO"
+      ],
+      "title": "Posicao",
+      "type": "string"
+    },
+    "justificativa": {
+      "maxLength": 160,
+      "minLength": 1,
+      "title": "Justificativa",
+      "type": "string"
+    }
+  },
+  "required": [
+    "arquivo_sha256",
+    "texto_hash",
+    "escopo",
+    "posicao",
+    "justificativa"
+  ],
+  "title": "Annotation",
+  "type": "object"
+}
+````
+### 15. Livro em português escolhido e pendências de extração
+
+Fonte versionada: [materiais/rag/livro-de-apoio.json](materiais/rag/livro-de-apoio.json).
+
+````json
+{
+  "versao": 1,
+  "status": "ESCOLHIDO_EXTRACAO_PENDENTE",
+  "origem_decisao": "Delegação expressa do responsável: escolher livro de apoio, preferencialmente em português.",
+  "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+  "autor": "Markus Vinicius Nahas",
+  "edicao": 7,
+  "ano": 2017,
+  "idioma": "pt-BR",
+  "publicacao_autor": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+  "download": "https://www.sbafs.org.br/admin/files/papers/file_lIduWnhVZnP7.pdf",
+  "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+  "bytes": 6781926,
+  "paginas_fisicas": 354,
+  "paginas_ficha_catalografica": 362,
+  "direitos": "Copyright 2017 Markus Vinicius Nahas. Disponibilização digital gratuita pelo autor via SBAFS. Expediente restringe uso comercial sem autorização; não atribuir licença Creative Commons.",
+  "finalidades": [
+    "DUVIDAS",
+    "GERACAO_GERAL"
+  ],
+  "capitulos_prioritarios": [
+    {
+      "numero": 4,
+      "titulo": "Aptidão Musculoesquelética: Força e Mobilidade"
+    },
+    {
+      "numero": 6,
+      "titulo": "Orientações Gerais para a Prática de Exercícios"
+    }
+  ],
+  "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
+  "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
+  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os sete documentos do corpus inicial não foram substituídos."
 }
 ````
 
@@ -6573,7 +7109,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | CONCLUIDO |
 | [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | CONCLUIDO |
 | [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | CONCLUIDO |
-| [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | PRONTO |
+| [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | CONCLUIDO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
 | [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | BLOQUEADO |
@@ -7154,6 +7690,9 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - INT: `uv run --locked --env-file ../.env pytest -m integration`.
 - Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
 - Tipos: `uv run --locked mypy`.
+- RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
+  `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
+  Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
 
 Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
 `npm run lint`, `npm run typecheck` e `npm run build`. Ver
@@ -7333,7 +7872,8 @@ necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
 suas rotas manuais não dependem de abrir o índice. A [extração offline](docs/arquitetura/extracao-documental.md)
 já oferece serviço interno com proveniência e registro privado de estados.
 RAG-04 entrega [chunking e indexação com E5 CPU](docs/arquitetura/indexacao-documental.md).
-A recuperação semântica/citações pertence ao próximo cartão, RAG-05.
+RAG-05 entrega [recuperação semântica/citações](docs/arquitetura/recuperacao-semantica.md),
+sem LLM; geração/triagem/chat serão integrados pelos cartões AI.
 
 #### Embeddings e indexação offline
 
@@ -7357,6 +7897,20 @@ curador administrador ativo e versão aprovada. Não indexar páginas com qualid
 pendente. Um único processo por diretório Qdrant; manutenção e API não abrem o
 mesmo diretório simultaneamente. A coleção v2 preserva a v1 sem revisão de pesos.
 O guia detalha retomada, falhas e quatro documentos ainda pendentes de extração.
+
+#### Recuperação técnica local
+
+Com .env configurado, modelo provisionado e API parada, em backend/:
+
+~~~powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.retrieval --request CAMINHO_JSON
+~~~
+
+Entrada segue o [schema](docs/requisitos/schemas/recuperacao-v1.schema.json).
+contexto_id é um UUID do contexto autorizado; em futura rota pública o backend
+deve resolvê-lo pela sessão. A CLI é ferramenta do operador local e não substitui
+a autorização REST. Coleção vazia resulta em SEM_EVIDENCIAS. Não há chamada LLM.
+O guia detalha aprovação/revogação, saúde, cache e inicialização fria do modelo.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -7598,14 +8152,14 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `06fe84515229037b75478dd20ce7ca4418e77540bf6d4f487fc1022c7143a0c2` |
-| `AGENTS.md` | `03a6aa7031b6e62319d22a2faef9f321e2afa9d217d75a6648402a8a44cfed45` |
-| `backend/README.md` | `c89796327522b2d6c996b236592ad9d604b240ff5545759e54b058dc90555396` |
+| `AGENTS.md` | `96779619a58c189dcc3e9374a29cdcfa2ad49e475f9ebd00f24b9201c165097e` |
+| `backend/README.md` | `84cf1100cabca04445563e6bb059d1920ccea6026754e6a508aea1c264690a72` |
 | `backend/pyproject.toml` | `c0cd2be2d92c2e19f48399c12b87a651e51bad98181a7077c00f5885b44b1229` |
 | `database/README.md` | `a2380251f2d87c5434d63a7308d6801525e698c7875ee094873fc9e468abd28c` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
-| `docs/arquitetura/banco-vetorial.md` | `f6e60e6b038f4a4dbeb0addd0200cbb656d160413fedb183e6ecc712e2cd58d6` |
+| `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
@@ -7622,7 +8176,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/indexacao-documental.md` | `96394ad677ee4ae425ac63c205703b365edac4e61ad5557cad4218c3c4d1c10a` |
+| `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `6edcbc2dedf96b40a64fbbc0db3dc6f2e1f660ae2b63ab95f36ea5afb3a253dc` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `567b72d96b271b54021ae401c2d3faeb8cb8e8ff0bf09e6aa8839eec1b7b1db4` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
@@ -7631,13 +8185,14 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
-| `docs/arquitetura/rag-semantico.md` | `add38fbcec6466dacf4680e304d2077b9e528dc3ac00596580535470238a73bc` |
+| `docs/arquitetura/rag-semantico.md` | `34fab27ba60be929ecf4c6c48993ae0909f8210ccf75bf42ab0b97c21422e8cb` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/especificacao/compilacao-spec.json` | `27850f7347b26f800207823fe3139b06adc246a70eb21cd7e220bec5a4972f04` |
+| `docs/arquitetura/recuperacao-semantica.md` | `0dd94359f90e31897bb0852cd3e4b319edbff29f81aaa74b65872d7cf169c3af` |
+| `docs/especificacao/compilacao-spec.json` | `aa176828706104eef5f7255d388aad43db4c34c87bf438faf4603220245784b8` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `44e8252dbd52d67e7af6670bc6e9cb5c4601d9e66b93fc9c4affe7c95373cfca` |
+| `docs/especificacao/visao-geral.md` | `29779c41dfb21617e9c3d14af48e75ae46584cc4635da1440249790943d1bb4c` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `797397d5c6886bf187f93542c56137212d571d1d873b952011ea7d35d8c5c4b5` |
+| `docs/prompts/README.md` | `6b9856c830b9b8e5d726dea29212123de8551df47630bf8534074b92cb4bd0ab` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -7646,7 +8201,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
 | `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
+| `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
+| `docs/requisitos/schemas/recuperacao-v1.schema.json` | `5057b3ff3fb127d06b57def109815030a771caeec5cf056f19a7d490e4bcc012` |
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
@@ -7657,6 +8214,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
 | `materiais/rag/catalogo.json` | `900c71447794cbc7af45260132ac5f6e0e2a8dd6102a2a25e35eaa08ca6ef96b` |
 | `materiais/rag/corpus-inicial.json` | `c661217e4b8e3159c285ed8b7fe50aea17c9ea6855f45c912c3862a485b9ea52` |
+| `materiais/rag/livro-de-apoio.json` | `12e6f5ef500dc7ab7e7ca80bad979d8696e5e84455cb5a8c5e6f8b2e6f25829f` |
 | `scripts/gerar_spec.py` | `b4347fe17f55bd989bcfd731049a39dd9ed57481bd447dc73c925f61827b0124` |
 
 Manutenção no projeto: `python scripts/gerar_spec.py --write` atualiza

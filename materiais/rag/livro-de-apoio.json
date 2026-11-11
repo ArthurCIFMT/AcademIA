@@ -1,0 +1,34 @@
+{
+  "versao": 1,
+  "status": "ESCOLHIDO_EXTRACAO_PENDENTE",
+  "origem_decisao": "Delegação expressa do responsável: escolher livro de apoio, preferencialmente em português.",
+  "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+  "autor": "Markus Vinicius Nahas",
+  "edicao": 7,
+  "ano": 2017,
+  "idioma": "pt-BR",
+  "publicacao_autor": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+  "download": "https://www.sbafs.org.br/admin/files/papers/file_lIduWnhVZnP7.pdf",
+  "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+  "bytes": 6781926,
+  "paginas_fisicas": 354,
+  "paginas_ficha_catalografica": 362,
+  "direitos": "Copyright 2017 Markus Vinicius Nahas. Disponibilização digital gratuita pelo autor via SBAFS. Expediente restringe uso comercial sem autorização; não atribuir licença Creative Commons.",
+  "finalidades": [
+    "DUVIDAS",
+    "GERACAO_GERAL"
+  ],
+  "capitulos_prioritarios": [
+    {
+      "numero": 4,
+      "titulo": "Aptidão Musculoesquelética: Força e Mobilidade"
+    },
+    {
+      "numero": 6,
+      "titulo": "Orientações Gerais para a Prática de Exercícios"
+    }
+  ],
+  "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
+  "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
+  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os sete documentos do corpus inicial não foram substituídos."
+}

@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "d77632083fb4cbec1cf2512760b5265f74fa818d",
+  "base_implementacao": "fd46db9fdce388250247c1b785eeae6876c5434a",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -160,6 +160,28 @@
         {
           "arquivo": "docs/requisitos/schemas/selecao-indexacao-v1.schema.json",
           "titulo": "Contrato JSON da seleção de trechos para indexar",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/arquitetura/recuperacao-semantica.md",
+          "titulo": "Busca, citações, escopo e estados de evidência"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/recuperacao-v1.schema.json",
+          "titulo": "Schemas JSON de recuperação",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/escopo-evidencia-v1.schema.json",
+          "titulo": "Anotação técnica de condição, população e intervenção",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "materiais/rag/livro-de-apoio.json",
+          "titulo": "Livro em português escolhido e pendências de extração",
           "tipo": "codigo",
           "linguagem": "json"
         }

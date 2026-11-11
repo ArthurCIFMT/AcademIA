@@ -131,4 +131,6 @@ O [relatório RAG-03](../testes/extracao-corpus-rag03.json) mantém quatro fonte
 REVISAO_NECESSARIA: BR-MS-001, INT-BJSM-001, INT-SPMED-001 e BR-SBC-001.
 Não foram promovidas por esta entrega. As três extrações concluídas ainda exigem
 seleção de trechos úteis; não houve carga automática integral do acervo no banco
-de desenvolvimento. Não existe avaliação semântica de RAG-05 ou ensaio LLM de AI-06.
+de desenvolvimento. O aceite RAG-04 não incluiu avaliação semântica;
+RAG-05 acrescentou [ensaio delimitado](recuperacao-semantica.md). O ensaio LLM
+permanece em AI-06.
