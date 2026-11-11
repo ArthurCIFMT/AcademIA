@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from uuid import UUID, uuid4
 from zoneinfo import ZoneInfo
 
@@ -271,3 +271,20 @@ def append_evaluation(
     )
     session.add(evaluation)
     return evaluation
+
+
+def assessment_references(
+    session: Session, client_id: UUID, snapshot_id: UUID
+) -> list[tuple[UUID, datetime]]:
+    """Referências de avaliações dentro do snapshot do cliente já autorizado."""
+    return [
+        (reference, when)
+        for reference, when in session.execute(
+            select(Evaluation.id, Evaluation.registrado_em)
+            .where(
+                Evaluation.cliente_id == client_id,
+                Evaluation.onboarding_id == snapshot_id,
+            )
+            .order_by(Evaluation.registrado_em.desc(), Evaluation.id.desc())
+        )
+    ]

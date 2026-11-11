@@ -94,6 +94,9 @@ class OnboardingInvitation(Base):
 class Evaluation(Base):
     __tablename__ = "avaliacao"
     __table_args__ = (
+        UniqueConstraint(
+            "cliente_id", "onboarding_id", "id", name="uq_avaliacao_cliente_snapshot_id"
+        ),
         ForeignKeyConstraint(
             ["cliente_id", "onboarding_id"],
             ["academia.onboarding_versao.cliente_id", "academia.onboarding_versao.id"],

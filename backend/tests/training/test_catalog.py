@@ -9,8 +9,8 @@ import httpx
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import Connection, func, inspect, select
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy import Connection, delete, func, inspect, select, update
+from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.schema import CreateSchema, DropSchema
 
@@ -21,12 +21,16 @@ from app.database.connection import (
     create_session_factory,
 )
 from app.main import create_app
+from app.modules.assignments.models import Assignment
+from app.modules.assignments.service import ChangeAssignment, change_assignment
 from app.modules.audit.models import AuditRecord
 from app.modules.identity.accounts import create_account
 from app.modules.identity.models import AccountState, Role, UserRole
 from app.modules.identity.passwords import Passwords
 from app.modules.identity.service import utc_now
 from app.modules.identity.settings import AuthSettings
+from app.modules.onboarding.schemas import Completion, DraftChange, DraftData
+from app.modules.onboarding.service import complete_draft, save_draft
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
 from app.modules.training.catalog import (
     CatalogError,
@@ -36,6 +40,14 @@ from app.modules.training.catalog import (
 )
 from app.modules.training.models import Exercise, ExerciseResource
 from app.modules.training.schemas import ExerciseFields, normalize_name
+from app.modules.training.workout_models import WorkoutDay, WorkoutItem, WorkoutVersion
+from app.modules.training.workout_schemas import CreateWorkout, WorkoutItemInput
+from app.modules.training.workouts import (
+    create_draft,
+    get_workout,
+    retention_candidates,
+)
+from app.policies.access import Actor
 
 _ROOT = Path(__file__).resolve().parents[3]
 _PATH = "/api/v1/exercicios"
@@ -327,6 +339,8 @@ def test_migration_and_repeatable_seed(migration: tuple[Connection, Config]) -> 
     command.upgrade(config, "0008")
     assert not inspect(connection).has_table("exercicio", schema="academia")
     command.upgrade(config, "0009")
+    assert inspect(connection).has_table("exercicio", schema="academia")
+    command.upgrade(config, "head")
     command.check(config)
     seed_catalog(connection)
     seed_catalog(connection)
@@ -377,6 +391,484 @@ def test_concurrent_normalized_names_commit_only_once() -> None:
                 assert (
                     session.scalar(select(func.count()).select_from(AuditRecord)) == 1
                 )
+        finally:
+            with engine.begin() as connection:
+                connection.execute(DropSchema(schema, cascade=True))
+    finally:
+        engine.dispose()
+
+
+_WORKOUT = "/api/v1/treinos/clientes/{}/"
+_MANUAL_ITEM = {
+    "exercicio_id": str(_BODYWEIGHT),
+    "equipamento_ids": [],
+    "series": 3,
+    "repeticoes": "8 a 12",
+    "carga_kg": "12.50",
+    "intervalo_segundos": 60,
+    "cadencia": "2-0-2",
+    "observacoes": "Registro sintético",
+}
+
+
+def workout_people(
+    factory: sessionmaker[Session],
+) -> tuple[dict[Role, UUID], Actor, UUID]:
+    actors = seed_people(factory)
+    with factory.begin() as session:
+        client_id = actors[Role.CLIENTE]
+        draft = save_draft(
+            session,
+            client_id,
+            client_id,
+            DraftChange(
+                versao_base=None,
+                revisao=None,
+                dados=DraftData(
+                    altura_cm=170,
+                    peso_kg=70,
+                    objetivo_principal="FORCA",
+                    experiencia="INICIANTE",
+                    nivel_atividade="LEVE",
+                    dias_semana=3,
+                    duracao_sessao_min=60,
+                    possui_condicoes_saude="NAO",
+                    condicoes_saude=[],
+                    usa_medicamentos="NAO",
+                    medicamentos=[],
+                    possui_dor_lesao_limitacao="NAO",
+                    limitacoes=[],
+                    restricao_exercicio_declarada="NAO",
+                    evento_saude_importante_recente="NAO",
+                    observacoes="",
+                ),
+            ),
+        )
+        snapshot = complete_draft(
+            session,
+            client_id,
+            client_id,
+            Completion(versao_base=None, revisao=draft.revisao),
+        )
+        admin = Actor(actors[Role.ADMINISTRADOR], frozenset({Role.ADMINISTRADOR}))
+        change_assignment(
+            session,
+            client_id,
+            ChangeAssignment(
+                instrutor_id=actors[Role.INSTRUTOR],
+                vigente_id=None,
+            ),
+            admin,
+            uuid4(),
+        )
+    return (
+        actors,
+        Actor(actors[Role.INSTRUTOR], frozenset({Role.INSTRUTOR})),
+        snapshot.id,
+    )
+
+
+def manual_payload(snapshot_id: UUID, base_id: UUID | None = None) -> dict[str, object]:
+    return {
+        "solicitacao_id": str(uuid4()),
+        "versao_base_id": str(base_id) if base_id else None,
+        "onboarding_id": str(snapshot_id),
+        "avaliacao_id": None,
+        "dias": [{"titulo": "Dia A", "itens": [_MANUAL_ITEM]}],
+    }
+
+
+def publish_fixture(session: Session, client_id: UUID, version_id: UUID) -> None:
+    session.execute(
+        update(WorkoutVersion)
+        .where(WorkoutVersion.cliente_id == client_id, WorkoutVersion.vigente.is_(True))
+        .values(estado_publicacao="SUBSTITUIDO", vigente=False)
+    )
+    session.execute(
+        update(WorkoutVersion)
+        .where(WorkoutVersion.id == version_id)
+        .values(
+            estado_publicacao="PUBLICADO",
+            vigente=True,
+            publicada_em=utc_now(),
+        )
+    )
+
+
+def test_workout_json_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
+    paths = create_app().openapi()["paths"]
+    root = "/api/v1/treinos/clientes/{client_id}"
+    assert "201" in paths[root + "/rascunhos"]["post"]["responses"]
+    assert "put" in paths[root + "/rascunhos/{version_id}"]
+    assert not any("publicar" in path for path in paths)
+    value = WorkoutItemInput.model_validate(_MANUAL_ITEM)
+    assert str(value.carga_kg) == "12.50"
+    for invalid in (
+        {"series": 0},
+        {"intervalo_segundos": -1},
+        {"carga_kg": "1.234"},
+        {"series": True},
+    ):
+        with pytest.raises(ValueError):
+            WorkoutItemInput.model_validate({**_MANUAL_ITEM, **invalid})
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_manual_draft_replay_snapshots_and_scope(
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
+    monkeypatch.setenv("GROQ_API_KEY", "")
+    monkeypatch.setenv("ACADEMIA_QDRANT_PATH", "servico-indisponivel-no-teste")
+    actors, instructor, snapshot_id = workout_people(sessions)
+    client_id = actors[Role.CLIENTE]
+    app = create_app(
+        identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
+    )
+    api = httpx.ASGITransport(app=app)
+    root = _WORKOUT.format(client_id)
+    body = manual_payload(snapshot_id)
+    async with (
+        httpx.AsyncClient(
+            transport=api, base_url=_ORIGIN, headers={"Origin": _ORIGIN}
+        ) as trainer,
+        httpx.AsyncClient(
+            transport=api, base_url=_ORIGIN, headers={"Origin": _ORIGIN}
+        ) as client,
+    ):
+        client_headers = await login(client, Role.CLIENTE)
+        assert (
+            await client.post(root + "rascunhos", json=body, headers=client_headers)
+        ).status_code == 403
+        headers = await login(trainer, Role.INSTRUTOR)
+        context = await trainer.get(root + "contexto")
+        assert context.status_code == 200 and context.json()["onboarding"]["id"] == str(
+            snapshot_id
+        )
+        assert (await trainer.post(root + "rascunhos", json=body)).status_code == 403
+        invalid_reference = await trainer.post(
+            root + "rascunhos",
+            json={**body, "avaliacao_id": str(uuid4())},
+            headers=headers,
+        )
+        assert invalid_reference.status_code == 422
+        created = await trainer.post(root + "rascunhos", json=body, headers=headers)
+        assert (
+            created.status_code == 201
+            and created.headers["cache-control"] == "no-store"
+        )
+        original = created.json()
+        assert original["origem"] == "MANUAL" and original["autor_id"] == str(
+            instructor.user_id
+        )
+        assert (
+            original["estado_publicacao"] == "RASCUNHO" and original["vigente"] is False
+        )
+        version_id = UUID(original["id"])
+        assert (
+            await trainer.post(root + "rascunhos", json=body, headers=headers)
+        ).json() == original
+        with sessions.begin() as session:
+            publish_fixture(session, client_id, version_id)
+        invalid_edit = {
+            key: value
+            for key, value in body.items()
+            if key not in {"solicitacao_id", "versao_base_id"}
+        }
+        assert (
+            await trainer.put(
+                root + "rascunhos/" + str(version_id),
+                json={**invalid_edit, "revisao": 1},
+                headers=headers,
+            )
+        ).status_code == 409
+        with sessions.begin() as session:
+            session.execute(
+                update(Exercise)
+                .where(Exercise.id == _BODYWEIGHT)
+                .values(
+                    nome="Nome atual do catálogo",
+                    descricao="Descrição atual do catálogo",
+                )
+            )
+        history = (await trainer.get(root + "versoes/" + str(version_id))).json()
+        assert history["dias"] == original["dias"]
+        assert (
+            history["dias"][0]["itens"][0]["exercicio_snapshot"]["nome"]
+            != "Nome atual do catálogo"
+        )
+        next_body = manual_payload(snapshot_id, version_id)
+        copied = await trainer.post(root + "rascunhos", json=next_body, headers=headers)
+        assert copied.status_code == 201
+        next_value = copied.json()
+        assert next_value["numero"] == 2 and next_value["versao_base_id"] == str(
+            version_id
+        )
+        assert (
+            next_value["dias"][0]["itens"][0]["exercicio_snapshot"]["nome"]
+            == "Nome atual do catálogo"
+        )
+        assert (
+            await trainer.get(root + "versoes/" + str(version_id))
+        ).json() == history
+        version_path = root + "rascunhos/" + next_value["id"]
+        update_body = {
+            **invalid_edit,
+            "revisao": 1,
+            "dias": [{"titulo": "Dia B", "itens": [{**_MANUAL_ITEM, "series": 4}]}],
+        }
+        saved = await trainer.put(version_path, json=update_body, headers=headers)
+        assert saved.status_code == 200 and saved.json()["revisao"] == 2
+        assert saved.json()["dias"][0]["itens"][0]["series"] == 4
+        assert (
+            await trainer.put(version_path, json=update_body, headers=headers)
+        ).status_code == 409
+        assert (
+            await trainer.get(_WORKOUT.format(uuid4()) + "versoes/" + next_value["id"])
+        ).status_code == 403
+        with sessions.begin() as session:
+            session.execute(
+                update(Exercise).where(Exercise.id == _BODYWEIGHT).values(ativo=False)
+            )
+        declined = await trainer.put(
+            version_path, json={**update_body, "revisao": 2}, headers=headers
+        )
+        assert declined.status_code == 409
+        retained = (await trainer.get(root + "versoes/" + next_value["id"])).json()
+        assert retained == saved.json()
+        with sessions.begin() as session:
+            session.add(
+                UserRole(
+                    id=uuid4(),
+                    usuario_id=actors[Role.ADMINISTRADOR],
+                    papel=Role.INSTRUTOR,
+                )
+            )
+        admin_headers = await login(client, Role.ADMINISTRADOR)
+        assert (await client.get(root + "contexto")).status_code == 403
+        with sessions.begin() as session:
+            previous = session.scalar(
+                select(Assignment).where(
+                    Assignment.cliente_id == client_id,
+                    Assignment.fim.is_(None),
+                )
+            )
+            assert previous is not None
+            change_assignment(
+                session,
+                client_id,
+                ChangeAssignment(
+                    instrutor_id=actors[Role.ADMINISTRADOR], vigente_id=previous.id
+                ),
+                Actor(actors[Role.ADMINISTRADOR], frozenset({Role.ADMINISTRADOR})),
+                uuid4(),
+            )
+        assert (await trainer.get(root + "contexto")).status_code == 403
+        assert (
+            await trainer.put(
+                version_path, json={**update_body, "revisao": 2}, headers=headers
+            )
+        ).status_code == 403
+        assert (await client.get(root + "contexto")).status_code == 200
+        assert (
+            await client.put(
+                version_path, json={**update_body, "revisao": 2}, headers=admin_headers
+            )
+        ).status_code == 403
+
+
+@pytest.mark.database
+def test_published_workout_immutability_retention_structure_and_numbering(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot_id = workout_people(sessions)
+    client_id = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = create_draft(
+            session,
+            instructor,
+            client_id,
+            CreateWorkout.model_validate(manual_payload(snapshot_id)),
+            uuid4(),
+        )
+        publish_fixture(session, client_id, first.id)
+        item_id = session.scalar(select(WorkoutItem.id))
+    with pytest.raises(DBAPIError, match="imutável"), sessions.begin() as session:
+        session.execute(
+            update(WorkoutItem).where(WorkoutItem.id == item_id).values(series=9)
+        )
+    with pytest.raises(DBAPIError, match="imutável"), sessions.begin() as session:
+        session.execute(
+            update(WorkoutVersion)
+            .where(WorkoutVersion.id == first.id)
+            .values(autor_id=actors[Role.ADMINISTRADOR])
+        )
+    with pytest.raises(DBAPIError, match="preservados"), sessions.begin() as session:
+        session.execute(delete(WorkoutVersion).where(WorkoutVersion.id == first.id))
+    with pytest.raises(DBAPIError, match="imutável"), sessions.begin() as session:
+        session.execute(
+            update(WorkoutVersion)
+            .where(WorkoutVersion.id == first.id)
+            .values(
+                estado_publicacao="CONTEUDO_EXPIRADO",
+                vigente=False,
+                conteudo_excluido_em=utc_now(),
+                motivo_exclusao="LIMITE_15",
+            )
+        )
+    with (
+        pytest.raises(IntegrityError, match="uq_ficha_vigente"),
+        sessions.begin() as session,
+    ):
+        contender = create_draft(
+            session,
+            instructor,
+            client_id,
+            CreateWorkout.model_validate(manual_payload(snapshot_id, first.id)),
+            uuid4(),
+        )
+        session.execute(
+            update(WorkoutVersion)
+            .where(WorkoutVersion.id == contender.id)
+            .values(
+                estado_publicacao="PUBLICADO",
+                vigente=True,
+                publicada_em=utc_now(),
+            )
+        )
+    with (
+        pytest.raises(IntegrityError, match="fk_ficha_onboarding_cliente"),
+        sessions.begin() as session,
+    ):
+        session.add(
+            WorkoutVersion(
+                id=uuid4(),
+                cliente_id=client_id,
+                numero=2,
+                origem="MANUAL",
+                autor_id=instructor.user_id,
+                onboarding_id=uuid4(),
+                estado_publicacao="RASCUNHO",
+                vigente=False,
+                revision=1,
+            )
+        )
+    with sessions.begin() as session:
+        previous = first.id
+        for _ in range(15):
+            version = create_draft(
+                session,
+                instructor,
+                client_id,
+                CreateWorkout.model_validate(manual_payload(snapshot_id, previous)),
+                uuid4(),
+            )
+            publish_fixture(session, client_id, version.id)
+            previous = version.id
+        assert retention_candidates(session, client_id) == [first.id]
+        extra = create_draft(
+            session,
+            instructor,
+            client_id,
+            CreateWorkout.model_validate(manual_payload(snapshot_id, previous)),
+            uuid4(),
+        )
+        assert extra.numero == 17 and retention_candidates(session, client_id) == [
+            first.id
+        ]
+        session.execute(
+            update(WorkoutVersion)
+            .where(WorkoutVersion.id == first.id)
+            .values(
+                estado_publicacao="CONTEUDO_EXPIRADO",
+                conteudo_excluido_em=utc_now(),
+                motivo_exclusao="LIMITE_15",
+            )
+        )
+        day_ids = select(WorkoutDay.id).where(WorkoutDay.versao_id == first.id)
+        session.execute(delete(WorkoutItem).where(WorkoutItem.dia_id.in_(day_ids)))
+        session.execute(delete(WorkoutDay).where(WorkoutDay.versao_id == first.id))
+        expired = get_workout(session, instructor, client_id, first.id)
+        assert expired.dias == [] and expired.numero == 1
+        assert retention_candidates(session, client_id) == []
+        next_draft = create_draft(
+            session,
+            instructor,
+            client_id,
+            CreateWorkout.model_validate(manual_payload(snapshot_id, previous)),
+            uuid4(),
+        )
+        assert next_draft.numero == 18
+
+
+@pytest.mark.database
+def test_workout_migration_keeps_existing_catalog(
+    migration: tuple[Connection, Config],
+) -> None:
+    connection, config = migration
+    command.upgrade(config, "0009")
+    assert not inspect(connection).has_table("versao_ficha", schema="academia")
+    command.upgrade(config, "0010")
+    command.check(config)
+    command.downgrade(config, "0009")
+    assert not inspect(connection).has_table("versao_ficha", schema="academia")
+    assert inspect(connection).has_table("exercicio", schema="academia")
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("same_request", [False, True])
+def test_draft_creation_is_serialized_and_idempotent(same_request: bool) -> None:
+    engine = create_database_engine("test")
+    schema = "trn02_" + uuid4().hex
+    try:
+        with engine.begin() as connection:
+            check_database(connection, "test")
+            connection.execute(CreateSchema(schema))
+        try:
+            scoped = engine.execution_options(schema_translate_map={"academia": schema})
+            Base.metadata.create_all(scoped)
+            factory = create_session_factory(scoped)
+            actors, instructor, snapshot_id = workout_people(factory)
+            with factory.begin() as session:
+                session.add(
+                    Exercise(
+                        id=_BODYWEIGHT,
+                        nome="Movimento sintético",
+                        nome_normalizado="movimento sintético",
+                        descricao="Descrição sintética",
+                        grupo_muscular="Grupo",
+                        ativo=True,
+                        dispensa_equipamento=True,
+                        revision=1,
+                    )
+                )
+            body = manual_payload(snapshot_id)
+            inputs = [
+                CreateWorkout.model_validate(body),
+                CreateWorkout.model_validate(
+                    body if same_request else {**body, "solicitacao_id": str(uuid4())}
+                ),
+            ]
+            barrier = Barrier(2)
+
+            def create(data: CreateWorkout) -> int:
+                barrier.wait(timeout=5)
+                with factory.begin() as session:
+                    result = create_draft(
+                        session, instructor, actors[Role.CLIENTE], data, uuid4()
+                    )
+                return result.numero
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                assert sorted(pool.map(create, inputs)) == (
+                    [1, 1] if same_request else [1, 2]
+                )
+            with factory.begin() as session:
+                count = session.scalar(select(func.count()).select_from(WorkoutVersion))
+                assert count == (1 if same_request else 2)
         finally:
             with engine.begin() as connection:
                 connection.execute(DropSchema(schema, cascade=True))

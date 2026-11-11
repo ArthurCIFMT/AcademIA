@@ -1,0 +1,37 @@
+.training-editor fieldset {
+  display: grid;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.8rem;
+  border: 1px solid #cadbd4;
+  border-radius: 0.65rem;
+  background: #fff;
+}
+.training-editor label {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.training-editor input,
+.training-editor select,
+.training-editor textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.35rem;
+  font: inherit;
+}
+.training-editor textarea { min-height: 4rem; }
+.training-editor .training-day { background: #f4f8f6; }
+.training-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.5rem;
+}
+.training-history { padding-left: 1.25rem; overflow-wrap: anywhere; }
+.training-editor button:disabled { opacity: 0.65; cursor: default; }
+@media (max-width: 30rem) {
+  .training-editor fieldset { padding: 0.55rem; }
+  .training-actions button { width: 100%; }
+}

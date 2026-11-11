@@ -216,6 +216,7 @@ Unicidades: cliente_id+numero.
 | publicada_em | timestamptz | opcional | — |
 | conteudo_excluido_em | timestamptz | opcional | — |
 | motivo_exclusao | varchar(40) | opcional | — |
+| revision | integer | required | — |
 
 ## dia_ficha — MOD-04
 

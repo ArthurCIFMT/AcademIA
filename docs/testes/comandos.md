@@ -318,3 +318,27 @@ do inventário como administrador. Confira a elegibilidade após cada mudança.
 
 O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
 O schema sintético foi removido ao final.
+
+## Editor de ficha manual
+
+Em `backend/`, rode BE, API e a suíte de treino com PostgreSQL:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/training
+```
+
+A suite verifica rascunho e repetição idempotente, autoria, designação,
+snapshots, atualização concorrente de revisão e numeração serializada.
+Os testes de banco usam publicação controlada pela fixture para verificar
+imutabilidade e expurgo de conteúdo. O seletor do limite de quinze
+desconsidera rascunhos e preserva a vigente.
+
+Em `frontend/`, rode `npm test -- --maxWorkers=2`, lint, tipos e build.
+No ensaio de navegador em 390 px, entre como instrutor designado a cliente
+com onboarding concluído, monte um dia com exercício e prescrição, salve
+e recarregue. Reabra, altere e salve. Troque o responsável e confira que
+o anterior perdeu acesso e o sucessor pode copiar a versão com sua autoria.
+
+O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
+A troca de instrutor preservou a autoria e a prescrição anteriores.
+O schema sintético foi removido ao final.

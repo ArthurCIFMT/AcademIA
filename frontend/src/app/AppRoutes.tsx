@@ -7,6 +7,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
+import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
 import { PendingNotices } from "../features/notifications/PendingNotices";
@@ -33,7 +34,8 @@ function SessionBoundary() {
   const isEquipmentAdmin = useMatch(equipmentAdminPath) !== null;
   const isAdminExercises = useMatch(adminExercisePath) !== null;
   const isInstructorExercises = useMatch(instructorExercisePath) !== null;
-  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises);
+  const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
+  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -79,7 +81,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -135,6 +137,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {feature === "onboarding" && isClient && <OwnOnboardingPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {staffContent}
       {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
+      {feature === "training-editor" && isInstructor && <WorkoutEditorPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "assessments" && isInstructor && <AssessmentPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {feature === "my-assignments" && isInstructor && <MyAssignmentsPage />}
       {feature === "clients" && canManageClients &&
@@ -175,6 +178,7 @@ export function AppRoutes() {
           <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
           <Route path="/area/administracao/designacoes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="assignments" />} />
           <Route path="/area/instrutor/clientes" element={<AreaPage requiredRole="INSTRUTOR" feature="my-assignments" />} />
+          <Route path="/area/instrutor/clientes/:clientId/treinos" element={<AreaPage requiredRole="INSTRUTOR" feature="training-editor" />} />
           <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
           <Route path={onboardingPath} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
           {roles.map((role) => (

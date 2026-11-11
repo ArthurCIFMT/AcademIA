@@ -196,7 +196,7 @@ def require_prescribable(
     session: Session,
     exercise_id: UUID,
     equipment_ids: Sequence[UUID],
-) -> None:
+) -> dict[str, object]:
     """Confere a alternativa escolhida dentro da transação de gravação da ficha."""
     row = _row(session, exercise_id, lock=True, shared=True)
     chosen = frozenset(equipment_ids)
@@ -213,6 +213,10 @@ def require_prescribable(
         require_available(session, chosen)
     except EquipmentUnavailable:
         raise CatalogError(409) from None
+    snapshot = _summary(row).model_dump(mode="json")
+    snapshot["catalogo_revisao"] = row.revision
+    snapshot["equipamento_ids"] = [str(value) for value in sorted(chosen)]
+    return snapshot
 
 
 def _save(

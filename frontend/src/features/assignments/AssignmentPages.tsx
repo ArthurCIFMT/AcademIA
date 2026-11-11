@@ -213,6 +213,9 @@ export function MyAssignmentsPage() {
                 {item.nome} · Desde {dateLabel(item.inicio)}{" "}
                 <Link to={encodeURIComponent(item.id) + "/avaliacoes"} aria-label={"Avaliações de " + item.nome}>
                   Avaliações
+                </Link>{" "}
+                <Link to={encodeURIComponent(item.id) + "/treinos"} aria-label={"Fichas de " + item.nome}>
+                  Fichas de treino
                 </Link>
               </li>
             ))}</ul>

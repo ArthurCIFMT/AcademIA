@@ -171,6 +171,7 @@ Table versao_ficha {
   publicada_em timestamptz
   conteudo_excluido_em timestamptz
   motivo_exclusao varchar(40)
+  revision integer [not null]
   indexes {
     (cliente_id, numero) [unique]
   }
