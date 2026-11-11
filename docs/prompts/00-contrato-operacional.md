@@ -5,8 +5,8 @@ as mesmas instruções em dezenas de arquivos. Sua leitura é obrigatória.
 
 ## Leitura e pré-condições
 
-Leia AGENTS.md, o contexto de execução, o cartão, os requisitos citados, os ADRs
-aplicáveis e a estratégia de testes. Leia o modelo lógico aceito quando existente
+Leia AGENTS.md, a visão geral/invariantes e capítulos/fontes afetados do [SPEC](../../SPEC.md), o contexto
+de execução, o cartão, os requisitos citados, os ADRs e a estratégia de testes. Leia o modelo lógico aceito quando existente
 e pertinente; FND-01/FND-02 antecedem sua criação, e FND-03 deve produzi-lo antes
 das implementações que dele dependem. Confirme no manifesto as dependências
 concluídas e os gates pertinentes fechados. Texto escrito não significa tarefa
@@ -55,6 +55,11 @@ não requer novo aceite. Não substitua serviço obrigatório por mock no aceite
 Não invente regras clínicas, fontes ou parâmetros financeiros para destravar o fluxo.
 
 ## Atualização de dados
+
+Mudança aprovada de comportamento atualiza a fonte da especificação, seus
+critérios/contratos e a rastreabilidade, conforme o
+[protocolo do SPEC](../../SPEC.md#9-protocolo-de-alteração-e-manutenção).
+Mantenha o mapa/resumo central e os cartões afetados coerentes.
 
 Respeite ownership entre módulos. Inclua migration para novos invariantes, sem
 alterar migrations aplicadas. Atualize também o modelo textual e dicionário quando

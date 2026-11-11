@@ -25,6 +25,6 @@ o identificador de correlação e a mensagem fixa.
 Cada resposta traz `X-Correlation-ID`. Um único UUID válido fornecido pelo
 cliente é propagado. Nos demais casos, o servidor gera um UUID.
 
-Consultas paginadas usam `page` a partir de 1 e `page_size` padrão 20,
+Consultas paginadas de domínio usam `pagina` a partir de 1 e `limite` padrão 20,
 com máximo 100. Timestamps têm deslocamento explícito na entrada e saem em
 ISO 8601 UTC. Datas civis, como nascimento e vencimento, usam `YYYY-MM-DD`.

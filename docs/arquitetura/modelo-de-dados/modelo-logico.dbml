@@ -1,4 +1,4 @@
-// Modelo lógico AcademIA v1, sem migrations de aplicação.
+// Modelo lógico AcademIA v1: capacidades entregues e futuras; schema físico nas migrations.
 Project AcademIA {
   database_type: 'PostgreSQL'
 }

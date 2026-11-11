@@ -2,6 +2,8 @@
 
 ## Organização e uso
 
+- [SPEC completo](../../SPEC.md): especificação portátil e mapa de fontes oficiais.
+  Prompts são instrumentos de planejamento/execução e consultam essa base.
 - [Mestre de planejamento](00-prompt-mestre.md): produz plano completo em chat,
   com resumo e detalhamento; o limite didático de 40 linhas foi retirado.
 - [Contexto de execução](00-contexto-de-execucao.md): acompanha a tarefa escolhida.
@@ -19,7 +21,8 @@ Foram redigidos 61 prompts operacionais. P00 representa a preparação Git já
 concluída. Os cartões escritos são documentos revisáveis; nenhum módulo funcional
 foi implementado pela criação desses arquivos.
 
-Leia AGENTS.md, contexto, contrato e cartão; resolva dependências/ADRs antes de
+Leia AGENTS.md, SPEC.md e suas fontes afetadas, contexto, contrato e cartão;
+resolva dependências/ADRs antes de
 executar. O mestre de planejamento não é uma segunda tarefa a executar junto.
 Cada cartão inclui módulo, requisitos, escopo, entregáveis, aceite e testes.
 
@@ -95,6 +98,13 @@ módulos antes de INF-01, conforme orientação do professor.
 | TRN-03 | CONCLUIDO | [Publicação, parecer e retenção](../arquitetura/publicacao-e-parecer.md) e [testes](../testes/comandos.md#publicação-e-parecer-posterior). Revisão 0011, 78 BE, 9 API, 67 DB/INT, 36 testes de treino e 55 FE aprovados. Ruff, mypy, lint, tipos, build, DOC e Edge a 390 px aprovados. Publicação PENDENTE, duas rejeições, limite 15, concorrência, rollback, troca de responsável e falha SMTP verificados. Tela/exportação do cliente seguem em TRN-04. |
 
 | TRN-04 | CONCLUIDO | [Consulta móvel e exportação](../arquitetura/ficha-do-cliente.md) e [testes](../testes/comandos.md#consulta-móvel-e-exportação-do-treino). 79 BE, 9 API, 43 testes de treino e 64 FE aprovados. Ruff, mypy, lint, tipos, build, DOC e Edge a 390 px aprovados. Consulta antes do parecer, JSON, histórico, recursos indisponíveis e isolamento/expiração verificados. Schema 0011 reutilizado, sem dependência nova. |
+
+Consolidação documental em 2026-11-11: [SPEC completo e portátil](../../SPEC.md),
+conteúdo das fontes oficiais incorporado, evolução do MER e roteiro para
+reconstrução por outra IA. Leitura pelos agentes/prompts e referências de estágio
+atualizadas. A entrega não altera os 61 cartões nem o estado das capacidades
+funcionais. Verificação: `python scripts/gerar_spec.py --check`,
+`python scripts/verificar_documentacao.py` e `git diff --check`.
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.

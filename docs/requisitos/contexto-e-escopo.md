@@ -2,10 +2,12 @@
 
 ## Estado do documento
 
-- Versão: 0.7
-- Data de consolidação: 2026-11-04
+- Versão: 0.8
+- Data de consolidação: 2026-11-11
 - Origem: descrição, MER e decisões fornecidas pelo responsável do projeto.
-- Situação: base para revisão antes da implementação.
+- Situação: especificação vigente do produto em implementação incremental.
+- Entrada central e retrato das entregas: [SPEC](../../SPEC.md); execução por cartão
+  e evidências no [manifesto](../prompts/README.md).
 
 ## Contexto
 
@@ -118,6 +120,6 @@ local persistente, embeddings E5-small e Groq/Llama estão definidos nos
 [ADRs aceitos](../arquitetura/decisoes/README.md).
 [Campos/triagem](onboarding-e-triagem.md), [configuração IA](configuracao-ia-rag.md)
 e [modelo lógico](../arquitetura/modelo-de-dados/modelo-logico.dbml) são fontes vigentes.
-Serviços e chave do provedor serão configurados na implementação, sem prometer
+Serviços de IA, pesos e chave do provedor serão configurados nas respectivas entregas, sem prometer
 qualidade/velocidade não testadas. Reservas, detalhes de acesso e gateway continuam
 tardios. Ver [prontidão](../arquitetura/preparacao-implementacao.md).

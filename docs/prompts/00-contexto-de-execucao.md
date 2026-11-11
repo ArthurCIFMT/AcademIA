@@ -22,13 +22,17 @@ módulos. Não antecipe capacidades de prompts futuros.
 Antes de agir:
 
 1. leia integralmente o `AGENTS.md` aplicável;
-2. leia `docs/requisitos/contexto-e-escopo.md`;
-3. leia os RF, RN, RNF e MRF citados pelo prompt operacional;
-4. leia os ADRs e documentos arquiteturais citados;
-5. verifique dependências e estado em `docs/prompts/README.md`;
-6. examine o estado e o diff do repositório sem apagar alterações alheias.
+2. leia a visão geral/invariantes e os capítulos/fontes da capacidade no [SPEC](../../SPEC.md);
+3. leia `docs/requisitos/contexto-e-escopo.md`;
+4. leia os RF, RN, RNF e MRF citados pelo prompt operacional;
+5. leia os ADRs e documentos arquiteturais citados;
+6. verifique dependências e estado em `docs/prompts/README.md`;
+7. examine o estado e o diff do repositório sem apagar alterações alheias.
 
 ### Precedência e conflitos
+
+SPEC.md organiza a especificação do produto; contexto/contrato/cartão orientam
+a execução da tarefa. Resumos e prompts não substituem as fontes aprovadas.
 
 Dentro do material do projeto, considere a seguinte precedência:
 

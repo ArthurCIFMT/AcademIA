@@ -9,5 +9,6 @@ A seleção técnica foi delegada pelo responsável em 2026-11-04.
 - [ADR-005 — Serviços locais e entrega incremental](ADR-005-servicos-locais-e-entrega.md)
 
 GATE-01–GATE-06 ficam fechados quanto às decisões documentais.
-Serviços, chave pessoal e qualidade real não foram configurados/testados.
+O estado dos serviços entregues está no [manifesto](../../prompts/README.md).
+Chave pessoal e ensaios reais de IA/RAG pertencem às entregas correspondentes.
 GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão concluídos.

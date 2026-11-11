@@ -1,0 +1,295 @@
+{
+  "versao": 1,
+  "revisado_em": "2026-11-11",
+  "base_implementacao": "930d16cd76b15033a5c363399f8d920059b4a326",
+  "visao_geral": "docs/especificacao/visao-geral.md",
+  "secoes": [
+    {
+      "titulo": "12. Requisitos funcionais e critérios de aceite completos",
+      "fontes": [
+        {
+          "arquivo": "docs/requisitos/requisitos-funcionais.md",
+          "titulo": "Requisitos funcionais"
+        }
+      ]
+    },
+    {
+      "titulo": "13. Regras de negócio completas",
+      "fontes": [
+        {
+          "arquivo": "docs/requisitos/regras-de-negocio.md",
+          "titulo": "Regras de negócio"
+        }
+      ]
+    },
+    {
+      "titulo": "14. Requisitos não funcionais e restrições",
+      "fontes": [
+        {
+          "arquivo": "docs/requisitos/requisitos-nao-funcionais.md",
+          "titulo": "Requisitos não funcionais"
+        }
+      ]
+    },
+    {
+      "titulo": "15. Macrorequisitos de IA e RAG completos",
+      "fontes": [
+        {
+          "arquivo": "docs/requisitos/macrorequisitos-ia-rag.md",
+          "titulo": "Atores, módulos e critérios de aceite"
+        }
+      ]
+    },
+    {
+      "titulo": "16. Decisões técnicas aceitas",
+      "fontes": [
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md",
+          "titulo": "Stack e fronteiras"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md",
+          "titulo": "Identidade e autenticação"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md",
+          "titulo": "Academia única, Git e tempo"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md",
+          "titulo": "RAG, modelos e corpus"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md",
+          "titulo": "Serviços locais"
+        }
+      ]
+    },
+    {
+      "titulo": "17. Modelo de dados, relacionamentos e invariantes",
+      "nota": "Modelo lógico do escopo completo, incluindo capacidades futuras. Não representa todas essas tabelas já instaladas. A origem e a evolução do MER estão no capítulo 10.",
+      "fontes": [
+        {
+          "arquivo": "docs/arquitetura/modelo-de-dados/modelo-logico.dbml",
+          "titulo": "Modelo DBML completo",
+          "tipo": "codigo",
+          "linguagem": "dbml"
+        },
+        {
+          "arquivo": "docs/arquitetura/modelo-de-dados/dicionario.md",
+          "titulo": "Dicionário dos campos"
+        },
+        {
+          "arquivo": "docs/arquitetura/modelo-de-dados/invariantes-e-estados.md",
+          "titulo": "Constraints, transações e estados"
+        }
+      ]
+    },
+    {
+      "titulo": "18. Onboarding, triagem e contratos de dados",
+      "fontes": [
+        {
+          "arquivo": "docs/requisitos/onboarding-e-triagem.md",
+          "titulo": "Campos, regras e estados"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/onboarding-v1.schema.json",
+          "titulo": "JSON Schema do onboarding",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/casos-triagem-v1.json",
+          "titulo": "Casos sintéticos e resultados esperados",
+          "tipo": "codigo",
+          "linguagem": "json"
+        }
+      ]
+    },
+    {
+      "titulo": "19. IA e RAG semântico: arquitetura, parâmetros e corpus",
+      "fontes": [
+        {
+          "arquivo": "docs/arquitetura/rag-semantico.md",
+          "titulo": "Orquestração e contratos"
+        },
+        {
+          "arquivo": "docs/arquitetura/modelo-de-dados/dados-rag-ia.md",
+          "titulo": "Dados privados e evidências"
+        },
+        {
+          "arquivo": "docs/requisitos/configuracao-ia-rag.md",
+          "titulo": "Limites e avaliação"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/configuracao-ia-v1.json",
+          "titulo": "Configuração canônica",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "materiais/rag/catalogo.json",
+          "titulo": "Seleção inicial com fontes, finalidade, licenças e hashes",
+          "tipo": "corpus",
+          "selecao": "materiais/rag/corpus-inicial.json"
+        }
+      ]
+    },
+    {
+      "titulo": "20. Contratos e fluxos detalhados dos módulos",
+      "fontes": [
+        {
+          "arquivo": "docs/arquitetura/modulos.md",
+          "titulo": "Responsabilidade e comunicação"
+        },
+        {
+          "arquivo": "docs/arquitetura/contratos-rest.md",
+          "titulo": "REST e erros"
+        },
+        {
+          "arquivo": "docs/arquitetura/autorizacao.md",
+          "titulo": "Políticas por perfil e recurso"
+        },
+        {
+          "arquivo": "docs/arquitetura/autenticacao.md",
+          "titulo": "Sessão, primeiro acesso e recuperação"
+        },
+        {
+          "arquivo": "docs/arquitetura/clientes.md",
+          "titulo": "Clientes"
+        },
+        {
+          "arquivo": "docs/arquitetura/funcionarios.md",
+          "titulo": "Funcionários"
+        },
+        {
+          "arquivo": "docs/arquitetura/designacoes.md",
+          "titulo": "Designações"
+        },
+        {
+          "arquivo": "docs/arquitetura/onboarding.md",
+          "titulo": "Convites e avaliações"
+        },
+        {
+          "arquivo": "docs/arquitetura/equipamentos.md",
+          "titulo": "Equipamentos"
+        },
+        {
+          "arquivo": "docs/arquitetura/catalogo-exercicios.md",
+          "titulo": "Exercícios e recursos"
+        },
+        {
+          "arquivo": "docs/arquitetura/fichas-manuais.md",
+          "titulo": "Editor manual"
+        },
+        {
+          "arquivo": "docs/arquitetura/publicacao-e-parecer.md",
+          "titulo": "Publicação, parecer e retenção"
+        },
+        {
+          "arquivo": "docs/arquitetura/ficha-do-cliente.md",
+          "titulo": "Consulta e exportação"
+        },
+        {
+          "arquivo": "docs/arquitetura/auditoria-e-eventos.md",
+          "titulo": "Auditoria e eventos"
+        },
+        {
+          "arquivo": "docs/arquitetura/notificacoes.md",
+          "titulo": "Avisos e e-mail"
+        },
+        {
+          "arquivo": "docs/arquitetura/fluxos-atualizados.md",
+          "titulo": "Integrações de treino e acesso"
+        }
+      ]
+    },
+    {
+      "titulo": "21. Sequência de implementação e criação de prompts",
+      "fontes": [
+        {
+          "arquivo": "docs/especificacao/roteiro-reconstrucao.md",
+          "titulo": "Como planejar e fragmentar a implementação"
+        },
+        {
+          "arquivo": "docs/prompts/README.md",
+          "titulo": "Gates documentados",
+          "inicio": "## Gates",
+          "fim": "## Registro de execuções"
+        },
+        {
+          "arquivo": "docs/prompts/README.md",
+          "titulo": "Etapas, dependências e fases",
+          "inicio": "## Fundação",
+          "fim": "## Leitura antes da implementação"
+        },
+        {
+          "arquivo": "docs/arquitetura/rastreabilidade-prompts.md",
+          "titulo": "Requisitos por etapa"
+        }
+      ]
+    },
+    {
+      "titulo": "22. Critérios globais de teste e trabalho dos agentes",
+      "fontes": [
+        {
+          "arquivo": "docs/testes/estrategia.md",
+          "titulo": "Estratégia incremental"
+        },
+        {
+          "arquivo": "docs/testes/rag-ia-semantico.md",
+          "titulo": "Avaliação e segurança de IA/RAG"
+        },
+        {
+          "arquivo": "AGENTS.md",
+          "titulo": "Regras permanentes de trabalho"
+        }
+      ]
+    },
+    {
+      "titulo": "23. Execução local e dependências do estágio entregue",
+      "fontes": [
+        {
+          "arquivo": "database/README.md",
+          "titulo": "PostgreSQL e migrations"
+        },
+        {
+          "arquivo": "backend/README.md",
+          "titulo": "Backend"
+        },
+        {
+          "arquivo": "frontend/README.md",
+          "titulo": "Frontend"
+        },
+        {
+          "arquivo": "docs/instalacao/primeiro-administrador.md",
+          "titulo": "Bootstrap"
+        },
+        {
+          "arquivo": "backend/pyproject.toml",
+          "titulo": "Manifesto Python",
+          "tipo": "codigo",
+          "linguagem": "toml"
+        },
+        {
+          "arquivo": "frontend/package.json",
+          "titulo": "Manifesto frontend",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": ".env.example",
+          "titulo": "Exemplo de ambiente do backend",
+          "tipo": "codigo",
+          "linguagem": "dotenv"
+        },
+        {
+          "arquivo": "frontend/.env.example",
+          "titulo": "Exemplo de ambiente do frontend",
+          "tipo": "codigo",
+          "linguagem": "dotenv"
+        }
+      ]
+    }
+  ]
+}

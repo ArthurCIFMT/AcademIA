@@ -1,7 +1,9 @@
 # Invariantes e estados — modelo v1
 
 [Modelo DBML](modelo-logico.dbml) / [JSON](modelo-logico.json) / [dicionário](dicionario.md).
-Artefatos lógicos aceitos por delegação; nenhuma tabela/migration aplicada.
+Artefatos lógicos aceitos por delegação, com capacidades entregues e futuras.
+O [manifesto](../../prompts/README.md) e as [migrations](../../../database/README.md)
+distinguem a implementação física disponível do restante do modelo.
 Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabelas.
 
 ## Garantias a materializar nas migrations

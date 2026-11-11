@@ -30,12 +30,17 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 
 ## Estágio atual
 
-O projeto está na fase de especificação e fundação. Antes de implementar um módulo,
-consulte os requisitos e as regras de negócio versionados em `docs/`. Não invente
+O projeto está em implementação incremental do MVP. O manifesto em
+`docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
+alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos
+e fontes do escopo afetado. Não invente
 requisitos para preencher lacunas: registre a dúvida ou a decisão necessária.
 
 ## Fontes de verdade
 
+- `SPEC.md`: especificação completa e portátil, com visão geral, requisitos,
+  contratos, dados, decisões, estágio e roteiro por prompts. É gerada de fontes
+  especializadas versionadas; os capítulos incorporados preservam seus conteúdos.
 - `docs/requisitos/`: requisitos funcionais, macrorequisitos e regras de negócio.
 - `docs/arquitetura/`: modelo de dados e decisões arquiteturais.
 - `docs/prompts/`: prompt mestre, prompts operacionais e ordem de execução.
@@ -65,7 +70,7 @@ necessária para sua entrega.
   uv, Ruff, mypy e pytest/HTTPX. ADRs aceitos em docs/arquitetura/decisoes/.
 - Autenticação integrada por sessão opaca/Argon2id, sem Keycloak no MVP; estados
   de conta e perfis independentes conforme ADR-002.
-- Node 24 LTS/npm no frontend; versões exatas serão travadas nos scaffolds.
+- Node 24 LTS/npm no frontend; versões exatas ficam registradas nos lockfiles.
 - Usar PostgreSQL para dados relacionais.
 - Expor contratos externos por REST, JSON e OpenAPI.
 - Representar uma identidade por `USUARIO`, com papéis acumuláveis: cliente,
@@ -93,8 +98,8 @@ necessária para sua entrega.
   treinos executados. Aplicar também a regra específica de rejeitadas (RF-17/RF-35).
 - Interface, prescrições e explicações são em português; fontes estrangeiras são
   permitidas com recuperação multilíngue e explicação/tradução fiel rastreável.
-- Dados de exemplo de equipamentos serão criados apenas na implementação, como
-  fixtures/seeds sintéticos de testes, sem cadastrar dados nesta fase documental.
+- Dados de exemplo de equipamentos e exercícios usam fixtures/seeds sintéticos
+  de testes, conforme o escopo da entrega de implementação.
 - Deixar pagamentos e cobrança automatizada para uma fase posterior.
 - Containerizar a aplicação somente depois do MVP e da maioria dos módulos.
 
@@ -108,7 +113,9 @@ necessária para sua entrega.
 
 ## Regras para implementação
 
-- Leia o prompt operacional completo antes de alterar arquivos.
+- Leia a visão geral/invariantes de `SPEC.md`, os capítulos/fontes afetados
+  e o prompt operacional completo antes de
+  alterar arquivos. Em manutenção documental, siga o escopo solicitado.
 - Não altere arquivos fora do escopo do prompt.
 - Preserve mudanças preexistentes que não pertençam à tarefa.
 - Prefira mudanças pequenas, testáveis e reversíveis.
@@ -117,7 +124,12 @@ necessária para sua entrega.
 - Não codifique URLs, credenciais, chaves ou segredos no código.
 - Use variáveis de ambiente e mantenha um `.env.example` sem valores sensíveis.
 - Não silencie erros, testes falhos ou validações para concluir uma tarefa.
-- Atualize a documentação quando uma decisão ou contrato for alterado.
+- Atualize a fonte especializada quando um requisito, decisão ou contrato mudar;
+  mantenha critérios de aceite, rastreabilidade e prompts afetados coerentes.
+  Atualize a visão geral/roteiro em `docs/especificacao/` quando necessário.
+  Recompile `SPEC.md` por `python scripts/gerar_spec.py --write` e verifique por
+  `python scripts/gerar_spec.py --check`; fontes e cópia acompanham o mesmo commit.
+  Não edite manualmente o arquivo gerado nem mantenha cópias independentes.
 
 ## Banco de dados
 
@@ -197,6 +209,8 @@ necessária para sua entrega.
 
 Verificação documental disponível, a partir da raiz, com Python 3.10+:
 `python scripts/verificar_documentacao.py` (somente leitura, sem dependências externas).
+A cópia completa do SPEC é verificada por `python scripts/gerar_spec.py --check`
+e atualizada por `python scripts/gerar_spec.py --write`.
 
 Backend, a partir de `backend/` com uv e Python 3.12:
 

@@ -1,4 +1,8 @@
-# Prontidão documental para implementar
+# Registro da preparação documental
+
+Documento histórico da preparação de 2026-11-04, com continuidade registrada
+abaixo. A especificação central está em [SPEC.md](../../SPEC.md) e o estado
+atual de execução está no [manifesto](../prompts/README.md).
 
 Data: 2026-11-04. Autoridade: responsável determinou academia única e delegou
 frameworks, campos e regras técnicas. Não há necessidade de nova aprovação genérica.
@@ -35,25 +39,24 @@ integrados indicados no [manifesto](../prompts/README.md).
 [configuração IA](../requisitos/configuracao-ia-rag.md),
 [corpus](../../materiais/rag/corpus-inicial.json).
 
-## Próximos prompts prontos
+## Continuidade da implementação
 
-FND-04 concluiu a estrutura inicial da API Python em 2026-11-07. O [guia do backend](../../backend/README.md)
-registra inicialização, healthcheck e verificações. FND-05 entregou bancos PostgreSQL
-separados, SQLAlchemy, transações e a revisão Alembic inicial. Ver [guia do banco](../../database/README.md).
-FND-06 entregou os [contratos REST](contratos-rest.md) e FND-07 a base do
-[frontend](../../frontend/README.md). FND-08 concluiu a fundação com
-[auditoria e eventos](auditoria-e-eventos.md). IAM-01 entregou o
-[adaptador de autenticação](autenticacao.md) e IAM-02 ligou os usuários,
-sessões e primeiro acesso ao PostgreSQL. IAM-03 entregou a
-[política de autorização](autorizacao.md). IAM-04 segue com login no frontend.
-A chave pessoal GROQ_API_KEY só é necessária na integração real de IA; ausência
-não bloqueia fundação, cadastros e treino manual. Pesos de embedding e serviços
-locais serão instalados nos prompts correspondentes; não inventar resultados.
+A fundação, identidade/pessoas, notificações, onboarding/avaliações, equipamentos
+e treino manual até TRN-04 foram entregues. A sequência segue em RAG-01.
+Consulte o manifesto para dependências, critérios e evidências por cartão,
+e o [SPEC](../../SPEC.md) para o retrato por capacidade.
+
+Os guias de [backend](../../backend/README.md), [banco](../../database/README.md) e
+[frontend](../../frontend/README.md) descrevem a execução local.
+A chave pessoal GROQ_API_KEY e os pesos de embeddings são necessários às entregas
+de IA/RAG correspondentes; a ausência não impede cadastros ou treino manual.
 
 ## Verificação executada na preparação de 2026-11-04
 
 Retrato histórico anterior à [auditoria de 2026-11-06](../analises/2026-11-06-auditoria-rf-rn-ia.md).
-O modelo atual mantém 42 tabelas, com 61 referências; os resultados abaixo são do modelo anterior.
+As contagens abaixo pertencem à preparação histórica. Consulte o
+[modelo lógico vigente](modelo-de-dados/modelo-logico.dbml) e execute o
+verificador documental para obter as contagens atuais.
 
 - Parser oficial @dbml/core 11.0.1: DBML válido, 42 tabelas e 60 referências.
 - Ajv 8.20.0 / draft 2020-12: schema válido e 10 casos sintéticos de contrato passaram.
@@ -64,5 +67,5 @@ O modelo atual mantém 42 tabelas, com 61 referências; os resultados abaixo sã
   como testes executados do backend ou LLM.
 
 Ferramentas DBML/Ajv foram executadas em diretório temporário fora do repositório,
-sem adicionar dependências à aplicação inexistente. Fixtures de contrato estão em
+sem adicionar dependências à aplicação naquele marco. Fixtures de contrato estão em
 [casos](../testes/contratos-onboarding-v1.json). Não são teste de FastAPI/LLM reais.

@@ -1,53 +1,70 @@
 # AcademIA
 
-Projeto acadêmico para gestão de academia e geração assistida de fichas de treino.
+Aplicação web acadêmica para gestão de uma academia e geração assistida de treinos.
 
-## Planejamento
+## Comece pela especificação
 
-- [Auditoria atual de RFs, regras, IA e referências (2026-11-06)](docs/analises/2026-11-06-auditoria-rf-rn-ia.md)
+O [SPEC.md](SPEC.md) é a especificação completa para compreender ou reconstruir
+o sistema em outra IA. Ele incorpora requisitos/critérios, regras, decisões
+técnicas, evolução do MER, modelo de dados, contratos, parâmetros de IA/RAG,
+corpus, testes e sequência de prompts. Pode ser transportado como arquivo único.
 
-- [Prontidão para implementar](docs/arquitetura/preparacao-implementacao.md)
-- [Decisões técnicas aceitas](docs/arquitetura/decisoes/README.md)
-- [Campos e regras do onboarding](docs/requisitos/onboarding-e-triagem.md)
-- [Modelo lógico](docs/arquitetura/modelo-de-dados/modelo-logico.dbml)
+As fontes especializadas continuam versionadas; a compilação mantém a cópia
+completa sincronizada. A [visão geral](docs/especificacao/visao-geral.md) orienta
+a leitura e o [roteiro](docs/especificacao/roteiro-reconstrucao.md) explica como
+fragmentar uma reconstrução sem enviar o documento inteiro em cada prompt.
 
-- [Revisão antes da implementação e pendências](docs/testes/revisao-dos-prompts.md)
-- [Revisão didática e consistência dos prompts](docs/analises/2026-11-04-revisao-didatica-e-consistencia.md)
-- [Contexto e escopo](docs/requisitos/contexto-e-escopo.md)
-- [Requisitos funcionais](docs/requisitos/requisitos-funcionais.md)
-- [Regras de negócio](docs/requisitos/regras-de-negocio.md)
-- [Requisitos não funcionais](docs/requisitos/requisitos-nao-funcionais.md)
-- [Registro de normalização](docs/requisitos/registro-de-normalizacao.md)
-- [Macrorequisitos de IA e RAG](docs/requisitos/macrorequisitos-ia-rag.md)
-- [Funcionamento da IA/RAG e fichas rejeitadas](docs/arquitetura/funcionamento-ia-rag.md)
-- [Arquitetura do orquestrador e RAG semântico](docs/arquitetura/rag-semantico.md)
-- [Extensão de dados de RAG/IA](docs/arquitetura/modelo-de-dados/dados-rag-ia.md)
-- [Revisão do escopo de IA](docs/analises/2026-11-04-revisao-ia-semantica.md)
-- [Conjunto de testes do RAG e IA](docs/testes/rag-ia-semantico.md)
-- [Acervo bibliográfico para o RAG](materiais/rag/README.md)
-- [Módulos](docs/arquitetura/modulos.md)
-- [Fluxos atualizados: treino, matrícula e biometria](docs/arquitetura/fluxos-atualizados.md)
-- [Revisão da cobertura dos módulos](docs/arquitetura/revisao-modulos.md)
-- [Análise do MER original, preservado](docs/arquitetura/revisao-mer.md)
-- [Prompt mestre](docs/prompts/00-prompt-mestre.md)
-- [Contexto de execução](docs/prompts/00-contexto-de-execucao.md)
-- [Manifesto dos prompts](docs/prompts/README.md)
-- [Comparação com o modelo do professor](docs/prompts/comparacao-modelo-professor.md)
-- [Estratégia de testes](docs/testes/estrategia.md)
+O [AGENTS.md](AGENTS.md) define as regras de trabalho dos agentes.
+O [prompt mestre](docs/prompts/00-prompt-mestre.md) orienta planejamento e os
+[prompts operacionais](docs/prompts/README.md) delimitam tarefas de implementação.
 
-O mestre produz o plano. A implementação incremental usa `AGENTS.md`, o contexto
-de execução, o contrato comum e um prompt operacional escolhido de cada vez.
-Os 61 cartões foram redigidos; a criação da documentação não implementa o sistema.
+## Estado e navegação
 
-Para a leitura manual: comece pela revisão, confira decisões e escopo, leia o mestre
-e depois percorra o manifesto por dependências. A preparação documental FND-01–FND-03 foi concluída por delegação;
-FND-04 (backend) e FND-07 (frontend) estão prontos para iniciar. Serviços e
-integrações reais ainda serão configurados/testados nas implementações.
+O [manifesto](docs/prompts/README.md) registra capacidades entregues, pendentes,
+dependências e evidências. O resumo por módulo está no
+[SPEC](SPEC.md#5-capacidades-e-estágio-da-implementação). Funcionalidade descrita
+em um requisito ou cartão não significa implementação concluída.
 
-Verificação documental reutilizável (Python 3.10+, sem pacotes externos):
+- [Requisitos funcionais](docs/requisitos/requisitos-funcionais.md),
+  [regras de negócio](docs/requisitos/regras-de-negocio.md) e
+  [requisitos não funcionais](docs/requisitos/requisitos-nao-funcionais.md).
+- [Macrorequisitos IA/RAG](docs/requisitos/macrorequisitos-ia-rag.md) e
+  [arquitetura semântica](docs/arquitetura/rag-semantico.md).
+- [Módulos](docs/arquitetura/modulos.md) e [ADRs aceitos](docs/arquitetura/decisoes/README.md).
+- [Modelo lógico](docs/arquitetura/modelo-de-dados/modelo-logico.dbml) e
+  [análise do MER preservado](docs/arquitetura/revisao-mer.md).
+- [Estratégia](docs/testes/estrategia.md) e [comandos/resultados](docs/testes/comandos.md).
+- [Materiais para RAG](materiais/rag/README.md).
+
+## Execução local
+
+Siga os guias de [PostgreSQL e migrations](database/README.md),
+[backend Python](backend/README.md), [frontend React](frontend/README.md) e
+[primeiro administrador](docs/instalacao/primeiro-administrador.md).
+Os exemplos de ambiente são versionados; credenciais locais ficam fora do Git.
+
+## Trabalho com IA e evolução
+
+Leia AGENTS.md, SPEC.md e as fontes da capacidade antes de executar o cartão
+escolhido. A especificação define o produto e os contratos; o prompt organiza
+a entrega. Mudanças aprovadas atualizam a fonte especializada, os critérios,
+a rastreabilidade e os cartões afetados, conforme o
+[protocolo do SPEC](SPEC.md#9-protocolo-de-alteração-e-manutenção).
+
+O [registro de preparação](docs/arquitetura/preparacao-implementacao.md) e as
+[análises datadas](docs/analises/2026-11-06-auditoria-rf-rn-ia.md) preservam decisões
+e verificações históricas. Use o manifesto para acompanhar a execução atual.
+
+## Verificação documental
+
+Python 3.10+, sem dependências externas:
 
 ```text
+python scripts/gerar_spec.py --check
 python scripts/verificar_documentacao.py
 ```
 
-Ela não implementa a aplicação, não valida decisões clínicas e não aprova corpus.
+Após alterar uma fonte, execute `python scripts/gerar_spec.py --write` e
+versione fonte/cópia juntas. A verificação detecta cópia desatualizada e a
+auditoria confere a estrutura documental. Os testes da aplicação e os
+ensaios de integrações/IA têm comandos e evidências próprios.

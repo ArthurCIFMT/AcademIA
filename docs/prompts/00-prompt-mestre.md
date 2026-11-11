@@ -16,23 +16,28 @@ Comece com um resumo breve e apresente as tabelas e detalhes necessários em seg
 
 ## 2. Fontes de verdade e estado real
 
+A especificação do produto está organizada em [SPEC.md](../../SPEC.md) e nas
+fontes especializadas que ele vincula. Este prompt orienta planejamento a partir
+dessa especificação. Os cartões operacionais delimitam a execução.
+
 Leia, nesta ordem:
 
 1. [AGENTS.md](../../AGENTS.md), inclusive eventuais instruções locais aplicáveis.
-2. [Contexto e escopo](../requisitos/contexto-e-escopo.md).
-3. [RFs](../requisitos/requisitos-funcionais.md), [RNs](../requisitos/regras-de-negocio.md),
+2. [SPEC central](../../SPEC.md), com seu mapa de fontes e estágio de capacidades.
+3. [Contexto e escopo](../requisitos/contexto-e-escopo.md).
+4. [RFs](../requisitos/requisitos-funcionais.md), [RNs](../requisitos/regras-de-negocio.md),
    [RNFs](../requisitos/requisitos-nao-funcionais.md) e
    [MRFs](../requisitos/macrorequisitos-ia-rag.md).
-4. [Registro de normalizações](../requisitos/registro-de-normalizacao.md).
-5. [Decisões iniciais](../arquitetura/decisoes-iniciais.md), ADRs que efetivamente
+5. [Registro de normalizações](../requisitos/registro-de-normalizacao.md).
+6. [Decisões iniciais](../arquitetura/decisoes-iniciais.md), ADRs que efetivamente
    existirem e seu estado de aceitação.
-6. [Módulos](../arquitetura/modulos.md), [rastreabilidade](../arquitetura/rastreabilidade.md)
+7. [Módulos](../arquitetura/modulos.md), [rastreabilidade](../arquitetura/rastreabilidade.md)
    e [rastreabilidade dos cartões](../arquitetura/rastreabilidade-prompts.md).
-7. [MER original](../arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png)
+8. [MER original](../arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png)
    e [análise do MER](../arquitetura/revisao-mer.md); o relatório não é um novo MER.
-8. [Fluxos atualizados](../arquitetura/fluxos-atualizados.md), incluindo parecer,
+9. [Fluxos atualizados](../arquitetura/fluxos-atualizados.md), incluindo parecer,
    matrícula, API facial real e catraca fictícia.
-9. [Manifesto](README.md), [estratégia de testes](../testes/estrategia.md)
+10. [Manifesto](README.md), [estratégia de testes](../testes/estrategia.md)
    e [registro de comandos](../testes/comandos.md).
 
 Inspecione arquivos, estado Git e evidências para distinguir textos escritos de

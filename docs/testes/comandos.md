@@ -416,3 +416,29 @@ Resultado: 79 BE, 9 API, 43 testes de treino (42 na rodada completa e 1 caso
 adicional de isolamento) e 64 FE aprovados. Ruff, formato, mypy, lint,
 tipos, build, verificação documental e ensaio Edge aprovados.
 Schema permanece na migration 0011. Não houve integração LLM/RAG neste cartão.
+
+
+## SPEC portátil e sincronização das fontes
+
+A partir da raiz, com Python 3.10+ e sem dependências externas:
+
+```text
+python scripts/gerar_spec.py --write
+python scripts/gerar_spec.py --check
+python scripts/verificar_documentacao.py
+```
+
+O primeiro comando monta somente SPEC.md a partir das fontes explícitas em
+docs/especificacao/compilacao-spec.json. O modo --check é somente leitura e
+falha quando a cópia diverge. Os hashes de texto normalizado e o plano de
+compilação permitem identificar o instantâneo usado.
+
+A verificação desta entrega inclui geração determinística, recusa de cópia
+desatualizada sem escrever, conferência do conteúdo em arquivo portátil isolado,
+schemas/configurações JSON íntegros e preservação dos requisitos/critério,
+modelo de dados, corpus e sequência de cartões. O compilador não lê .env real,
+baixa arquivos ou altera código, banco, materiais e migrations.
+
+A alteração é documental e adiciona apenas o compilador reutilizável.
+Testes funcionais de backend/frontend e ensaios de IA não são reexecutados para
+validar esta consolidação; os resultados dessas entregas permanecem históricos.
