@@ -19,6 +19,7 @@ import_module("app.modules.identity.models")
 import_module("app.modules.notifications.models")
 import_module("app.modules.onboarding.models")
 import_module("app.modules.people.profiles")
+import_module("app.modules.training.models")
 
 
 def include_name(name: str | None, type_: str, _parent_names: object) -> bool:

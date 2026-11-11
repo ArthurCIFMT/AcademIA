@@ -292,6 +292,8 @@ def test_equipment_migration_and_fresh_locking_read(
     command.upgrade(config, "0007")
     assert not inspect(connection).has_table("equipamento", schema="academia")
     command.upgrade(config, "0008")
+    assert inspect(connection).has_table("equipamento", schema="academia")
+    command.upgrade(config, "head")
     command.check(config)
     factory = create_session_factory(connection)
     equipment_id = uuid4()

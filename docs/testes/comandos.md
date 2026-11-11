@@ -297,3 +297,24 @@ Inative o mesmo registro e confira que ele permanece no inventário.
 
 O ensaio no Edge a 390 px passou com Vite, FastAPI e PostgreSQL de teste.
 O schema e as fotos sintéticas do ensaio foram removidos ao final.
+
+## Catálogo de exercícios
+
+Em `backend/`, rode BE, API e a suíte do catálogo com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/training
+```
+
+Os testes carregam e repetem o
+[seed sintético](../../database/seeds/catalogo_exercicios_sintetico.sql)
+dentro da transação de teste. Eles verificam permissões, auditoria, unicidade
+concorrente, reativação, alternativas completas, falta de equipamento e migration.
+
+Em `frontend/`, rode `npm test -- --maxWorkers=2`, `npm run lint`,
+`npm run typecheck` e `npm run build`. Para o ensaio no navegador, entre como
+instrutor, cadastre um exercício com duas alternativas e altere a disponibilidade
+do inventário como administrador. Confira a elegibilidade após cada mudança.
+
+O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
+O schema sintético foi removido ao final.

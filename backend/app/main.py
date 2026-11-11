@@ -12,6 +12,7 @@ from app.modules.notifications.http import notification_router
 from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
 from app.modules.people.staff_http import staff_router
+from app.modules.training.http import exercise_router
 
 
 def create_app(
@@ -31,5 +32,6 @@ def create_app(
     app.include_router(client_router(get_sessions))
     app.include_router(onboarding_router(get_sessions))
     app.include_router(equipment_router(get_sessions))
+    app.include_router(exercise_router(get_sessions))
     install_assignments(app, get_sessions)
     return app

@@ -7,6 +7,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
+import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
 import { PendingNotices } from "../features/notifications/PendingNotices";
 import { ClientDirectory } from "../features/clients/ClientDirectory";
@@ -24,11 +25,15 @@ const areas = {
 
 const onboardingPath = "/area/cliente/onboarding";
 const equipmentAdminPath = "/area/administracao/equipamentos";
+const adminExercisePath = "/area/administracao/exercicios";
+const instructorExercisePath = "/area/instrutor/exercicios";
 
 function SessionBoundary() {
   const isOnboarding = useMatch(onboardingPath) !== null;
   const isEquipmentAdmin = useMatch(equipmentAdminPath) !== null;
-  const session = useSession(isOnboarding || isEquipmentAdmin);
+  const isAdminExercises = useMatch(adminExercisePath) !== null;
+  const isInstructorExercises = useMatch(instructorExercisePath) !== null;
+  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -74,7 +79,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -121,6 +126,11 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
         <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
       </p>}
       {isInstructor && <p><Link to="/area/instrutor/clientes">Meus clientes</Link></p>}
+      {(isAdmin || isInstructor) && feature !== "exercises" && (
+        <p><Link to={isAdmin ? adminExercisePath : instructorExercisePath}>Catálogo de exercícios</Link></p>
+      )}
+      {feature === "exercises" && (isAdmin || isInstructor) &&
+        <ExerciseCatalog key={state.session.user_id} csrf={state.session.csrf_token} />}
       {isClient && feature !== "onboarding" && <p><Link to={onboardingPath}>Meu onboarding</Link></p>}
       {feature === "onboarding" && isClient && <OwnOnboardingPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {staffContent}
@@ -157,6 +167,8 @@ export function AppRoutes() {
         <Route element={<SessionBoundary />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/area" element={<AreaPage />} />
+          <Route path={adminExercisePath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="exercises" />} />
+          <Route path={instructorExercisePath} element={<AreaPage requiredRole="INSTRUTOR" feature="exercises" />} />
           <Route path={equipmentAdminPath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
           <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
           <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />

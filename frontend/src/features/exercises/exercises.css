@@ -1,0 +1,57 @@
+.exercise-list {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.exercise-list li,
+.exercise-form fieldset {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #cadbd4;
+  border-radius: 0.65rem;
+  background: white;
+  overflow-wrap: anywhere;
+}
+
+.exercise-list h4 {
+  margin: 0;
+}
+
+.exercise-form fieldset {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.exercise-form input:not([type="checkbox"]),
+.exercise-form textarea {
+  box-sizing: border-box;
+  min-height: 44px;
+  width: 100%;
+  font: inherit;
+}
+
+.exercise-form textarea {
+  min-height: 5rem;
+}
+
+.exercise-form .exercise-combination label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+}
+
+.exercise-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block: 1rem;
+}
+
+.exercise-form button:disabled,
+.exercise-actions button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
