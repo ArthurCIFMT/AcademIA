@@ -1776,3 +1776,279 @@ def test_rejection_and_expiry_roll_back_as_one_operation(
         assert (
             visible_published(session, instructor, client).ficha.id == second.ficha.id
         )
+
+
+# TRN-04: consulta/exportação próprias e recursos atuais sobre conteúdo imutável.
+def test_published_read_and_export_openapi(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
+    api = create_app().openapi()
+    root = "/api/v1/treinos/clientes/{client_id}/publicadas"
+    assert "200" in api["paths"][root]["get"]["responses"]
+    for suffix in ("/ficha", "/exportacao"):
+        response = api["paths"][root + "/{version_id}" + suffix]["get"]["responses"][
+            "200"
+        ]
+        assert response["content"]["application/json"]["schema"]["$ref"].endswith(
+            "/PublishedWorkout"
+        )
+    schema = api["components"]["schemas"]["PublishedWorkout"]
+    assert schema["properties"]["schema_version"]["const"] == 1
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+@pytest.mark.parametrize("state", [None, "ACEITO", "REJEITADO"])
+async def test_client_reads_and_exports_without_waiting_for_review(
+    sessions: sessionmaker[Session],
+    state: str | None,
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client_id = actors[Role.CLIENTE]
+    app = create_app(
+        identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
+    )
+    transport = httpx.ASGITransport(app=app)
+    root = f"/api/v1/treinos/clientes/{client_id}/publicadas"
+
+    def browser() -> httpx.AsyncClient:
+        return httpx.AsyncClient(
+            transport=transport, base_url=_ORIGIN, headers={"Origin": _ORIGIN}
+        )
+
+    async with browser() as own, browser() as admin, browser() as trainer:
+        assert (await own.get(root)).status_code == 401
+        await login(own, Role.CLIENTE)
+        assert (await own.get(root)).json()["itens"] == []
+        with sessions.begin() as session:
+            data = CreateWorkout.model_validate(manual_payload(snapshot))
+            data.dias[0].itens[0].exercicio_id = _ALTERNATIVES
+            data.dias[0].itens[0].equipamento_ids = [_C]
+            data.dias.append(
+                WorkoutDayInput(
+                    titulo="Dia B",
+                    itens=[WorkoutItemInput.model_validate(_MANUAL_ITEM)],
+                )
+            )
+            draft = create_draft(session, instructor, client_id, data, uuid4())
+        assert (await own.get(root)).json()["itens"] == []
+        assert (await own.get(root + f"/{draft.id}/exportacao")).status_code == 404
+        with sessions.begin() as session:
+            publish_manual(
+                session,
+                instructor,
+                client_id,
+                draft.id,
+                publication_input(draft),
+                uuid4(),
+            )
+            if state:
+                record_opinion(
+                    session,
+                    instructor,
+                    client_id,
+                    draft.id,
+                    opinion_input(state),
+                    uuid4(),
+                )
+        history = (await own.get(root)).json()
+        assert history["versao_vigente_id"] == str(draft.id)
+        assert history["itens"][0]["parecer_estado"] == (state or "PENDENTE")
+        detail = await own.get(root + f"/{draft.id}/ficha")
+        assert (
+            detail.status_code == 200 and detail.headers["cache-control"] == "no-store"
+        )
+        before = detail.json()
+        assert [day["titulo"] for day in before["ficha"]["dias"]] == ["Dia A", "Dia B"]
+        assert before["equipamentos"] == [
+            {"id": str(_C), "nome": "[SINTÉTICO] Recurso C", "disponivel": True}
+        ]
+        exported = await own.get(root + f"/{draft.id}/exportacao")
+        assert exported.status_code == 200
+        assert exported.headers["cache-control"] == "no-store"
+        assert exported.headers["x-content-type-options"] == "nosniff"
+        assert exported.headers["content-type"].startswith("application/json")
+        assert exported.headers["content-disposition"].startswith(
+            'attachment; filename="academia-treino-1-'
+        )
+        assert exported.json()["schema_version"] == 1
+        assert exported.json()["ficha"] == before["ficha"]
+        assert exported.json()["parecer"]["estado"] == (state or "PENDENTE")
+        with sessions.begin() as session:
+            session.execute(
+                update(Equipment).where(Equipment.id == _C).values(operacional=False)
+            )
+        after = (await own.get(root + f"/{draft.id}/ficha")).json()
+        assert after["ficha"] == before["ficha"]
+        assert after["equipamentos"][0]["disponivel"] is False
+        assert (await own.get(root + f"/{draft.id}/exportacao")).json()["equipamentos"][
+            0
+        ]["disponivel"] is False
+        assert (await own.get(root + f"/{uuid4()}/ficha")).status_code == 404
+        assert (await own.get(root + f"/{uuid4()}/exportacao")).status_code == 404
+        foreign = f"/api/v1/treinos/clientes/{uuid4()}/publicadas"
+        assert (await own.get(foreign)).status_code == 403
+        assert (await own.get(foreign + f"/{draft.id}/ficha")).status_code == 403
+        assert (await own.get(foreign + f"/{draft.id}/exportacao")).status_code == 403
+        await login(admin, Role.ADMINISTRADOR)
+        assert (await admin.get(root)).status_code == 403
+        assert (await admin.get(root + f"/{draft.id}/exportacao")).status_code == 403
+        await login(trainer, Role.INSTRUTOR)
+        assert (await trainer.get(root + f"/{draft.id}/exportacao")).status_code == 200
+        # Retirar a designação não afeta a consulta/exportação do próprio cliente.
+        with sessions.begin() as session:
+            current = session.scalar(
+                select(Assignment).where(
+                    Assignment.cliente_id == client_id, Assignment.fim.is_(None)
+                )
+            )
+            assert current
+            current.fim = utc_now()
+        assert (await trainer.get(root + f"/{draft.id}/exportacao")).status_code == 403
+        assert (await own.get(root + f"/{draft.id}/exportacao")).status_code == 200
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+@pytest.mark.parametrize("reason", ["LIMITE_15", "REJEITADA_ANTERIOR"])
+async def test_expired_workouts_disappear_from_client_history_and_export(
+    sessions: sessionmaker[Session],
+    reason: str,
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client_id = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client_id, snapshot)
+        decision = "REJEITADO" if reason == "REJEITADA_ANTERIOR" else "ACEITO"
+        record_opinion(
+            session,
+            instructor,
+            client_id,
+            first.ficha.id,
+            opinion_input(decision),
+            uuid4(),
+        )
+        current = first
+        for _ in range(1 if reason == "REJEITADA_ANTERIOR" else 15):
+            current = draft_and_publish(
+                session, instructor, client_id, snapshot, current.ficha.id
+            )
+        if reason == "REJEITADA_ANTERIOR":
+            record_opinion(
+                session,
+                instructor,
+                client_id,
+                current.ficha.id,
+                opinion_input("REJEITADO"),
+                uuid4(),
+            )
+        pending_draft = create_draft(
+            session,
+            instructor,
+            client_id,
+            CreateWorkout.model_validate(manual_payload(snapshot, current.ficha.id)),
+            uuid4(),
+        )
+        retained = review_detail(session, instructor, client_id, first.ficha.id)
+        assert retained.ficha.motivo_exclusao == reason and retained.ficha.dias == []
+    app = create_app(
+        identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
+    )
+    root = f"/api/v1/treinos/clientes/{client_id}/publicadas"
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app),
+        base_url=_ORIGIN,
+        headers={"Origin": _ORIGIN},
+    ) as own:
+        await login(own, Role.CLIENTE)
+        history = (await own.get(root)).json()
+        ids = [item["id"] for item in history["itens"]]
+        assert str(first.ficha.id) not in ids and str(pending_draft.id) not in ids
+        assert len(ids) == (1 if reason == "REJEITADA_ANTERIOR" else 15)
+        assert history["versao_vigente_id"] == str(current.ficha.id)
+        for suffix in ("/ficha", "/exportacao"):
+            assert (
+                await own.get(root + f"/{first.ficha.id}" + suffix)
+            ).status_code == 404
+            assert (
+                await own.get(root + f"/{pending_draft.id}" + suffix)
+            ).status_code == 404
+        assert (
+            await own.get(root + f"/{current.ficha.id}/exportacao")
+        ).status_code == 200
+        if reason == "LIMITE_15":
+            historical = ids[-1]
+            exported = (await own.get(root + f"/{historical}/exportacao")).json()
+            assert exported["ficha"]["vigente"] is False and exported["ficha"]["dias"]
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_real_clients_cannot_read_or_export_each_others_workouts(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot_id = workout_people(sessions)
+    own_id = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        source = get_current_snapshot(session, own_id)
+        assert source
+        other = create_account(
+            session,
+            "outro-cliente-trn04@example.test",
+            state=AccountState.ATIVO,
+            password_hash=Passwords().hash(_PASSWORD),
+            now=utc_now(),
+        )
+        session.add(
+            ClientProfile(
+                usuario_id=other,
+                nome="Outro cliente sintético",
+                ativo=True,
+                data_nascimento=_DATE,
+            )
+        )
+        session.add(UserRole(id=uuid4(), usuario_id=other, papel=Role.CLIENTE))
+        session.flush()
+        draft = save_draft(
+            session,
+            other,
+            other,
+            DraftChange(
+                versao_base=None,
+                revisao=None,
+                dados=DraftData.model_validate(source.dados.model_dump()),
+            ),
+        )
+        snapshot = complete_draft(
+            session, other, other, Completion(versao_base=None, revisao=draft.revisao)
+        )
+        change_assignment(
+            session,
+            other,
+            ChangeAssignment(instrutor_id=instructor.user_id, vigente_id=None),
+            Actor(actors[Role.ADMINISTRADOR], frozenset({Role.ADMINISTRADOR})),
+            uuid4(),
+        )
+        foreign = draft_and_publish(session, instructor, other, snapshot.id)
+        own = draft_and_publish(session, instructor, own_id, snapshot_id)
+    app = create_app(
+        identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
+    )
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app),
+        base_url=_ORIGIN,
+        headers={"Origin": _ORIGIN},
+    ) as client:
+        await login(client, Role.CLIENTE)
+        own_root = f"/api/v1/treinos/clientes/{own_id}/publicadas"
+        other_root = f"/api/v1/treinos/clientes/{other}/publicadas"
+        assert (await client.get(other_root)).status_code == 403
+        assert (
+            await client.get(own_root + f"/{own.ficha.id}/exportacao")
+        ).status_code == 200
+        for suffix in ("/ficha", "/exportacao"):
+            assert (
+                await client.get(other_root + f"/{foreign.ficha.id}" + suffix)
+            ).status_code == 403
+            assert (
+                await client.get(own_root + f"/{foreign.ficha.id}" + suffix)
+            ).status_code == 404

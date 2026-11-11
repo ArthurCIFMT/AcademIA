@@ -4,6 +4,7 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -16,6 +17,8 @@ from app.modules.training.publication import (
     review_queue,
     send_review_notice,
 )
+from app.modules.training.published import published_history, read_published
+from app.modules.training.published_schemas import PublishedHistory, PublishedWorkout
 from app.modules.training.review_schemas import (
     PublishWorkout,
     RetryNotice,
@@ -131,6 +134,40 @@ def review_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRoute
             MailStatus(estado=result.state, tentativas=result.attempts)
             if result
             else None
+        )
+
+    @router.get("/publicadas")
+    def retained(
+        client_id: UUID, actor: AuthenticatedActor, response: Response
+    ) -> PublishedHistory:
+        with transaction(response) as session:
+            return published_history(session, actor, client_id)
+
+    @router.get("/publicadas/{version_id}/ficha")
+    def retained_version(
+        client_id: UUID, version_id: UUID, actor: AuthenticatedActor, response: Response
+    ) -> PublishedWorkout:
+        with transaction(response) as session:
+            return read_published(session, actor, client_id, version_id)
+
+    @router.get(
+        "/publicadas/{version_id}/exportacao",
+        response_model=PublishedWorkout,
+        response_class=JSONResponse,
+    )
+    def export(
+        client_id: UUID, version_id: UUID, actor: AuthenticatedActor, response: Response
+    ) -> JSONResponse:
+        with transaction(response) as session:
+            data = read_published(session, actor, client_id, version_id)
+        filename = f"academia-treino-{data.ficha.numero}-{version_id}.json"
+        return JSONResponse(
+            data.model_dump(mode="json"),
+            headers={
+                "Cache-Control": "no-store",
+                "Content-Disposition": f'attachment; filename="{filename}"',
+                "X-Content-Type-Options": "nosniff",
+            },
         )
 
     @router.get("/atual")

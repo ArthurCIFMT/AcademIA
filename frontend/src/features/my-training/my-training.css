@@ -1,0 +1,14 @@
+.my-training { width: 100%; max-width: 48rem; overflow-wrap: anywhere; }
+.my-training select { display: block; width: 100%; box-sizing: border-box; margin-block: .5rem 1rem; }
+.my-training-prescription h4, .my-training-day h5 { font-size: 1.15rem; }
+.my-training-item h6 { font-size: 1rem; margin-block: .5rem; }
+.my-training-day, .my-training-opinion { border: 1px solid #bcc7cd; border-radius: .5rem; padding: .8rem; margin-block: 1rem; }
+.my-training-item { border-bottom: 1px solid #d9e0e4; padding-block: .7rem; }
+.my-training ol { padding-left: 1.25rem; }
+.my-training dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .75rem; }
+.my-training dt { font-weight: 600; }
+.my-training dd { margin: .3rem 0; }
+.my-training-warning { border-left: .25rem solid #9c6012; padding: .7rem; background: #fff6de; color: #533308; }
+.my-training button { margin-block: .5rem; white-space: normal; }
+
+.my-training label { display: block; margin-top: 1rem; }

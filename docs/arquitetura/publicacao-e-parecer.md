@@ -23,8 +23,8 @@ MOD-06 antes de publicar. Esta entrega não implementa nem libera geração por 
 Na mesma transação, a vigente anterior passa a SUBSTITUIDO, o rascunho passa a
 PUBLICADO/vigente, a retenção é aplicada e o aviso interno/auditoria são
 persistidos. A versão começa PENDENTE. Consulta própria já funciona pela API,
-inclusive sem responsável atual. A tela móvel do cliente e a exportação seguem
-em TRN-04; o chat segue nos cartões AI.
+inclusive sem responsável atual. A consulta móvel e a exportação foram entregues em [TRN-04](ficha-do-cliente.md).
+O chat segue nos cartões AI.
 
 ## Parecer e fila
 

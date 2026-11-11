@@ -381,3 +381,38 @@ Resultado local desta entrega: 78 BE, 9 API, 67 DB/INT, 36 testes de treino e
 55 FE aprovados. Ruff, mypy, lint, tipos, build, verificador documental e
 ensaio no Edge aprovados. As duas linhas longas antigas nas migrations 0004 e
 0006 permanecem fora da alteração; o lint cobre backend e migration 0011.
+
+## Consulta móvel e exportação do treino
+
+Em `backend/`, rode BE, API e os testes do módulo com PostgreSQL:
+
+```powershell
+uv run --locked pytest
+uv run --locked pytest tests/contracts
+uv run --locked --env-file ../.env pytest -o addopts='' tests/training
+```
+
+TRN-04 verifica estado vazio, rascunho invisível, ficha PENDENTE/ACEITA/REJEITADA,
+dois dias de prescrição, recursos indisponíveis sem alterar snapshots,
+exportação JSON/headers, histórico limitado e conteúdo expirado por ambas as
+regras. Dois clientes reais de teste comprovam recusa ao trocar cliente ou
+versão na consulta/exportação. Instrutor sem designação perde acesso e
+o próprio cliente continua consultando.
+
+Em `frontend/`, rode `npm test -- --maxWorkers=2`, `npm run lint`,
+`npm run typecheck` e `npm run build`. Os testes cobrem o fluxo de consulta,
+parecer independente, estados vazio/erro, histórico removido, download com
+sessão/no-store, cancelamento e limpeza após recusa.
+
+Ensaio Edge a 390 px com Vite, FastAPI e PostgreSQL de teste: abrir **Meus
+treinos** vazio, publicar como instrutor, consultar como cliente com PENDENTE,
+baixar e ler o JSON, mudar um equipamento para não operacional e conferir
+o aviso sem trocar a prescrição. Depois, rejeitar A, publicar B e consultar
+A histórica; rejeitar B retira A do seletor e recusa sua exportação direta.
+O esquema temporário foi removido. A interface não apresentou transbordamento
+horizontal; o snapshot visual foi inspecionado.
+
+Resultado: 79 BE, 9 API, 43 testes de treino (42 na rodada completa e 1 caso
+adicional de isolamento) e 64 FE aprovados. Ruff, formato, mypy, lint,
+tipos, build, verificação documental e ensaio Edge aprovados.
+Schema permanece na migration 0011. Não houve integração LLM/RAG neste cartão.

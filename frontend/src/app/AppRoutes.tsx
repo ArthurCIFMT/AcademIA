@@ -8,6 +8,7 @@ import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/Recover
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
 import { TrainingQueuePage, TrainingReviewPage } from "../features/training-review/TrainingReview";
+import { MyTrainingPage } from "../features/my-training/MyTraining";
 import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
@@ -83,7 +84,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" | "my-training" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -125,6 +126,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {isAdmin && <p><Link to="/area/administracao/funcionarios">Gerenciar funcionários</Link></p>}
       {isAdmin && feature !== "equipment" && <p><Link to={equipmentAdminPath}>Gerenciar equipamentos</Link></p>}
       {isClient && <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>}
+      {isClient && feature !== "my-training" && <p><Link to="/area/cliente/treinos">Meus treinos</Link></p>}
       {feature === "equipment" && isAdmin && <EquipmentInventoryPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {canManageClients && <p>
         <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
@@ -142,6 +144,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
       {feature === "training-review" && isInstructor && <TrainingReviewPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "training-queue" && isInstructor && <TrainingQueuePage key={state.session.user_id} />}
+      {feature === "my-training" && isClient && <MyTrainingPage key={state.session.user_id} clientId={state.session.user_id} />}
       {feature === "training-editor" && isInstructor && <WorkoutEditorPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "assessments" && isInstructor && <AssessmentPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {feature === "my-assignments" && isInstructor && <MyAssignmentsPage />}
@@ -187,6 +190,7 @@ export function AppRoutes() {
           <Route path="/area/instrutor/clientes/:clientId/treinos/:versionId/revisao" element={<AreaPage requiredRole="INSTRUTOR" feature="training-review" />} />
           <Route path="/area/instrutor/clientes/:clientId/treinos" element={<AreaPage requiredRole="INSTRUTOR" feature="training-editor" />} />
           <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
+          <Route path="/area/cliente/treinos" element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
           <Route path={onboardingPath} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
           {roles.map((role) => (
             <Route key={role} path={"/area/" + areas[role].path} element={<AreaPage requiredRole={role} />} />
