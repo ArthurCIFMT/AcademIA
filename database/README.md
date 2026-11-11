@@ -40,6 +40,7 @@ A revisão `0004` cria [notificações](../docs/arquitetura/notificacoes.md) e e
 A revisão `0005` cria [designações](../docs/arquitetura/designacoes.md) e seu histórico.
 A revisão `0006` cria [versões de onboarding e avaliações](../docs/arquitetura/onboarding.md).
 A revisão `0007` cria os [convites e sessões restritas](../docs/arquitetura/onboarding.md#convite-inicial-e-sessão-restrita).
+A revisão `0008` cria o [inventário de equipamentos](../docs/arquitetura/equipamentos.md).
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da

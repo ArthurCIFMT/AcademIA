@@ -6,6 +6,7 @@ import { AssignmentPage, MyAssignmentsPage } from "../features/assignments/Assig
 import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
+import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
 import { PendingNotices } from "../features/notifications/PendingNotices";
 import { ClientDirectory } from "../features/clients/ClientDirectory";
@@ -22,10 +23,12 @@ const areas = {
 } satisfies Record<Role, { path: string; link: string; title: string }>;
 
 const onboardingPath = "/area/cliente/onboarding";
+const equipmentAdminPath = "/area/administracao/equipamentos";
 
 function SessionBoundary() {
   const isOnboarding = useMatch(onboardingPath) !== null;
-  const session = useSession(isOnboarding);
+  const isEquipmentAdmin = useMatch(equipmentAdminPath) !== null;
+  const session = useSession(isOnboarding || isEquipmentAdmin);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -71,7 +74,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -111,6 +114,9 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
         </nav>
       )}
       {isAdmin && <p><Link to="/area/administracao/funcionarios">Gerenciar funcionários</Link></p>}
+      {isAdmin && feature !== "equipment" && <p><Link to={equipmentAdminPath}>Gerenciar equipamentos</Link></p>}
+      {isClient && <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>}
+      {feature === "equipment" && isAdmin && <EquipmentInventoryPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {canManageClients && <p>
         <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
       </p>}
@@ -139,9 +145,11 @@ export function AppRoutes() {
           <>
             <p>Gestão de academia e acompanhamento de treinos.</p>
             <Link to="/login">Entrar</Link>
+            <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>
             <ServiceStatus />
           </>
         } />
+        <Route path="/equipamentos" element={<EquipmentCatalogPage />} />
         <Route path="/recuperar-acesso" element={<RequestRecoveryPage />} />
         <Route path="/redefinir-senha" element={<ResetPasswordPage />} />
         <Route path="/primeiro-acesso" element={<ResetPasswordPage firstAccess />} />
@@ -149,6 +157,7 @@ export function AppRoutes() {
         <Route element={<SessionBoundary />}>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/area" element={<AreaPage />} />
+          <Route path={equipmentAdminPath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
           <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
           <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
           <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />

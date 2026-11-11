@@ -277,3 +277,23 @@ Entre como sucessor, consulte a avaliação original e registre outra.
 
 O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
 O schema sintético foi removido ao final.
+
+## Inventário e catálogo de equipamentos
+
+No backend, rode as suites BE, API e o ensaio abaixo com PostgreSQL de teste.
+A suite cobre a migration 0008, validação e armazenamento da foto, permissões,
+controle de revisão e revalidação de disponibilidade.
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/equipment
+```
+
+No frontend, rode `npm test -- --maxWorkers=2`, `npm run lint`,
+`npm run typecheck` e `npm run build`. Para o ensaio no navegador, cadastre
+um equipamento sintético com foto em **Gerenciar equipamentos**. Abra o
+catálogo público em 390 px e confira nome, descrição e foto. Desmarque
+**Operacional** no painel, atualize o catálogo e verifique a retirada da oferta.
+Inative o mesmo registro e confira que ele permanece no inventário.
+
+O ensaio no Edge a 390 px passou com Vite, FastAPI e PostgreSQL de teste.
+O schema e as fotos sintéticas do ensaio foram removidos ao final.

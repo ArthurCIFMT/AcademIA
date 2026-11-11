@@ -89,6 +89,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | ONB-01 | CONCLUIDO | [Contrato do convite e da sessão restrita](../arquitetura/onboarding.md#convite-inicial-e-sessão-restrita) e [comandos](../testes/comandos.md#convite-inicial-de-onboarding). Migration 0007, 57 BE, 9 API e 41 DB/INT aprovados com PostgreSQL e Mailpit. Ruff e mypy passaram no backend e na migration nova. O lint abrangente ainda aponta duas linhas longas nas migrations 0004 e 0006. |
 | ONB-03 | CONCLUIDO | [Formulário e consulta](../arquitetura/onboarding.md#interface-do-cliente) e [roteiro](../testes/comandos.md#formulário-responsivo-do-onboarding). 38 FE, 9 API e 27 testes de onboarding aprovados. Lint, tipos e build aprovados. Ensaio Edge em 390 px com Vite, FastAPI, PostgreSQL e Mailpit confirmou rascunho, retomada, conclusão, nova versão e isolamento. |
 | ONB-04 | CONCLUIDO | [Avaliação por designação](../arquitetura/onboarding.md#avaliação-pelo-instrutor-designado) e [testes](../testes/comandos.md#avaliação-profissional-por-designação). 58 BE, 9 API, 43 DB/INT, 30 de onboarding e 42 FE aprovados. Ruff, mypy, lint, tipos, build e ensaio Edge a 390 px aprovados. A tabela da migration 0006 foi reutilizada. |
+| EQP-01 | CONCLUIDO | [Inventário e disponibilidade](../arquitetura/equipamentos.md) e [testes](../testes/comandos.md#inventário-e-catálogo-de-equipamentos). Revisão 0008, 64 BE, 9 API, 45 DB/INT, 8 testes do módulo e 45 FE aprovados. Ruff, mypy, lint, tipos e build passaram. Edge a 390 px verificou foto no catálogo, indisponibilidade e inativação no PostgreSQL. |
 
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
@@ -134,7 +135,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [EQP-01](07-complementares/EQP-01.md) | Equipamentos disponíveis e cadastro administrativo | MOD-10 | FND-05, IAM-03, IAM-04 | PRONTO |
+| [EQP-01](07-complementares/EQP-01.md) | Equipamentos disponíveis e cadastro administrativo | MOD-10 | FND-05, IAM-03, IAM-04 | CONCLUIDO |
 
 O caminho histórico 07-complementares foi preservado; a fase do cartão é MVP.
 Dados de exemplo serão criados somente ao implementar os testes/seeds.
@@ -143,7 +144,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04, MOD-10 | FND-05, IAM-03, IAM-04, EQP-01 | BLOQUEADO |
+| [TRN-01](04-treinos/TRN-01.md) | Catálogo de exercícios | MOD-04, MOD-10 | FND-05, IAM-03, IAM-04, EQP-01 | PRONTO |
 | [TRN-02](04-treinos/TRN-02.md) | Ficha manual e versões imutáveis | MOD-04 | TRN-01, ONB-02, PES-03 | BLOQUEADO |
 | [TRN-03](04-treinos/TRN-03.md) | Publicação e avaliação posterior da ficha | MOD-04, MOD-02, MOD-12 | TRN-02, PES-03, NTF-01 | BLOQUEADO |
 | [TRN-04](04-treinos/TRN-04.md) | Ficha atual no celular e exportação autorizada | MOD-04 | TRN-03, IAM-04 | BLOQUEADO |
@@ -231,8 +232,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03 e ONB-01 a ONB-04 estão concluídos.
-EQP-01 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04 e EQP-01 estão concluídos.
+TRN-01 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

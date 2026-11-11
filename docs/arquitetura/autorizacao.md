@@ -8,6 +8,7 @@ inativo retira apenas as permissões daquele perfil.
 | Operação | Papel e condição |
 |---|---|
 | Administrar contas, papéis, funcionários e designações | Administrador ativo |
+| Manter inventário e disponibilidade de equipamentos | Administrador ativo |
 | Manter cadastro básico de clientes | Administrador ou atendente ativo |
 | Ler onboarding, saúde ou ficha | Cliente titular ou instrutor com vínculo vigente |
 | Editar o próprio onboarding e usar contexto privado da IA | Cliente titular |

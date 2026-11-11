@@ -1,0 +1,83 @@
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.equipment-card {
+  min-width: 0;
+  padding: 1rem;
+  background: white;
+  border: 1px solid #cadbd4;
+  border-radius: 0.65rem;
+  overflow-wrap: anywhere;
+}
+
+.equipment-card h3,
+.equipment-card h4 {
+  margin-block: 0 0.5rem;
+}
+
+.equipment-card p {
+  margin-block: 0.5rem;
+}
+
+.equipment-photo {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 0.75rem;
+  object-fit: contain;
+  background: #f4f8f6;
+  border-radius: 0.4rem;
+}
+
+.equipment-form fieldset {
+  display: grid;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid #cadbd4;
+  border-radius: 0.65rem;
+  background: white;
+}
+
+.equipment-form legend,
+.equipment-form label {
+  font-weight: 600;
+}
+
+.equipment-form input:not([type="checkbox"]),
+.equipment-form textarea {
+  box-sizing: border-box;
+  min-height: 44px;
+  width: 100%;
+  font: inherit;
+}
+
+.equipment-form textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.equipment-checkbox {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.5rem;
+}
+
+.equipment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block: 1rem;
+}
+
+.equipment-actions button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}

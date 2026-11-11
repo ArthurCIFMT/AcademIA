@@ -15,6 +15,7 @@ class Actor:
 class Operation(StrEnum):
     MANAGE_ACCOUNTS = "manage_accounts"
     MANAGE_EMPLOYEES = "manage_employees"
+    MANAGE_EQUIPMENT = "manage_equipment"
     MANAGE_CLIENTS = "manage_clients"
     MANAGE_ASSIGNMENTS = "manage_assignments"
     READ_ONBOARDING = "read_onboarding"
@@ -34,6 +35,7 @@ class AssignmentReader(Protocol):
 
 _ADMINISTRATIVE = {
     Operation.MANAGE_ACCOUNTS: frozenset({Role.ADMINISTRADOR}),
+    Operation.MANAGE_EQUIPMENT: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_EMPLOYEES: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_CLIENTS: frozenset({Role.ADMINISTRADOR, Role.ATENDENTE}),
     Operation.MANAGE_ASSIGNMENTS: frozenset({Role.ADMINISTRADOR}),

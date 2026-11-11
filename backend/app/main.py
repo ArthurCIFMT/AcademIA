@@ -5,6 +5,7 @@ from app.core.config import Settings
 from app.core.health import router as health_router
 from app.core.http import error_schemas, install_http_contract
 from app.modules.assignments.http import install_assignments
+from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
 from app.modules.notifications.http import notification_router
@@ -29,5 +30,6 @@ def create_app(
     app.include_router(staff_router(get_sessions))
     app.include_router(client_router(get_sessions))
     app.include_router(onboarding_router(get_sessions))
+    app.include_router(equipment_router(get_sessions))
     install_assignments(app, get_sessions)
     return app
