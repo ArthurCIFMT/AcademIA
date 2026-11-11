@@ -1,3 +1,6 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -9,6 +12,7 @@ from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
 from app.modules.knowledge.http import corpus_router
+from app.modules.knowledge.vector.runtime import close_vector_store
 from app.modules.notifications.http import notification_router
 from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
@@ -18,13 +22,26 @@ from app.modules.training.review_http import review_queue_router
 from app.modules.training.workout_http import workout_router
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    try:
+        yield
+    finally:
+        close_vector_store()
+
+
 def create_app(
     *,
     identity_sessions: sessionmaker[Session] | None = None,
     auth_settings: AuthSettings | None = None,
 ) -> FastAPI:
     settings = Settings()
-    app = FastAPI(title=settings.app_name, version="0.1.0", responses=error_schemas())
+    app = FastAPI(
+        title=settings.app_name,
+        version="0.1.0",
+        responses=error_schemas(),
+        lifespan=lifespan,
+    )
     install_http_contract(app)
     app.include_router(health_router)
     get_sessions = install_identity(

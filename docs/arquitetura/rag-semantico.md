@@ -109,6 +109,12 @@ Literatura é compartilhada aprovada; conversas, snapshots, resumos e fichas sã
 dados privados operacionais. Retenção de execução não é o limite de 15 fichas.
 Não executar implementação por apenas ler esta especificação.
 
+## Conexão vetorial implementada
+
+RAG-02 entregou a [porta Qdrant local persistente](banco-vetorial.md), com
+identidade por coleção, conexão sob demanda, singleton e erros controlados.
+Não corresponde ainda à extração/indexação ou recuperação semântica.
+
 ## Configuração inicial aceita
 
 Qdrant local persistente (um processo), E5-small/384/cosseno, chunks 300 tokens

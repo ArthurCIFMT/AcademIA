@@ -42,7 +42,8 @@ integrados indicados no [manifesto](../prompts/README.md).
 ## Continuidade da implementação
 
 A fundação, identidade/pessoas, notificações, onboarding/avaliações, equipamentos
-e treino manual até TRN-04 foram entregues. A sequência segue em RAG-01.
+e treino manual até TRN-04 foram entregues. RAG-01 concluiu a curadoria e
+RAG-02 entregou a conexão Qdrant persistente. A sequência segue em RAG-03.
 Consulte o manifesto para dependências, critérios e evidências por cartão,
 e o [SPEC](../../SPEC.md) para o retrato por capacidade.
 

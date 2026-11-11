@@ -61,3 +61,4 @@ embeddings_cache/
 # Corpus privado em tempo de execução
 backend/data/
 /data/corpus/
+/data/qdrant/

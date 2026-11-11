@@ -41,3 +41,18 @@ uv run --locked mypy
 `uv.lock` fixa versões diretas e transitivas. Uvicorn executa a API e
 Pydantic Settings valida o ambiente. Pytest e HTTPX exercitam a aplicação,
 enquanto Ruff e mypy verificam estilo e tipos.
+
+## Banco vetorial local
+
+A conexão Qdrant usa um único processo e diretório persistente separado do
+PostgreSQL. Após uv sync --locked, com a API parada, execute a partir de backend/:
+
+```powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
+```
+
+O [guia vetorial](../docs/arquitetura/banco-vetorial.md) descreve configuração,
+coleção versionada, persistência, falhas e exclusão entre processos. Não é
+necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
+suas rotas manuais não dependem de abrir o índice. Extração/indexação e busca
+serão implementadas nos cartões seguintes.

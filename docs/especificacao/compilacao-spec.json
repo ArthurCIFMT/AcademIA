@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "e648a120e1133870a57fa1e383965b80f6cfcad7",
+  "base_implementacao": "cab6e0db995aa32453a7e1a97fb4c2cdb732fe61",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -132,6 +132,10 @@
           "titulo": "Seleção inicial com fontes, finalidade, licenças e hashes",
           "tipo": "corpus",
           "selecao": "materiais/rag/corpus-inicial.json"
+        },
+        {
+          "arquivo": "docs/arquitetura/banco-vetorial.md",
+          "titulo": "Conexão Qdrant persistente e identidade do espaço vetorial"
         }
       ]
     },

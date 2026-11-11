@@ -479,3 +479,51 @@ Sem transbordamento horizontal. Schema e conta sintéticos removidos ao final.
 Esse ensaio não usa LLM, embeddings, busca vetorial nem produz evidência de qualidade
 RAG: são etapas posteriores. Importação na aplicação de uso é ação explícita do
 administrador pela tela; os testes não alteram o corpus do banco de desenvolvimento.
+
+## Conexão vetorial local
+
+RAG-02 usa o [Qdrant local persistente](../arquitetura/banco-vetorial.md).
+A partir de backend/, sem servidor Qdrant, Docker, PostgreSQL ou pesos de embeddings
+para os testes específicos deste adaptador:
+
+```powershell
+uv sync --locked
+uv run --locked pytest tests/knowledge/test_vector.py
+uv run --locked pytest -m integration tests/knowledge/test_vector.py
+uv run --locked pytest -o addopts='' tests/knowledge/test_vector.py
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+```
+
+O primeiro pytest seleciona unitários (doubles); o segundo integra o engine real;
+o terceiro executa os dois conjuntos. Cada integração usa diretório temporário
+exclusivo, sem compartilhar índices locais do projeto. O ensaio entre processos
+abre subprocessos Python e confirma recusa por lock, liberação e reabertura.
+Vetores são sintéticos de dimensão 384; não são embeddings E5 nem literatura.
+A persistência foi comprovada com um ponto e sua busca técnica após reabrir o engine.
+A consulta de teste não é aceite de relevância/latência de RAG-05.
+
+Verificação manual, com a API parada, em backend/:
+
+```powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
+```
+
+Resultado esperado: status OK, modelo intfloat/multilingual-e5-small,
+dimensão 384, Cosine, nome versionado e fingerprint. Execução seguinte preserva
+a coleção. Falha retorna JSON com código técnico e exit code 1, sem caminho/segredo.
+Não usar a CLI na mesma pasta enquanto outro processo mantém o engine aberto.
+
+Evidência de 2026-11-11: 32 testes específicos (24 unitários e 8 integrações reais)
+aprovados; regressão com 111 BE, 9 API e 87 DB/INT, incluindo PostgreSQL e Mailpit
+locais, aprovada. Ruff/formato, mypy em 106 arquivos, SPEC e DOC aprovados.
+Verificados metadados persistidos, rejeição de dimensão/métrica/modelo/revisão
+incompatíveis, preservação de dados, erro de armazenamento, singleton/threads,
+lock entre processos e liberação no shutdown. API continua disponível sem abrir
+o índice, inclusive com configuração vetorial inválida.
+
+Frontend e schema PostgreSQL não foram alterados; não há nova migration ou rota
+vetorial REST. A dependência qdrant-client e suas transitivas foram travadas sem
+atualizar versões preexistentes. Extração/indexação/busca e fixação da revisão dos
+pesos ficam para RAG-03–RAG-05; sem novo ensaio de qualidade de IA nesta entrega.

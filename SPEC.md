@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após RAG-01. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-02. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria entregue; extração, vetores e busca pendentes |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria e conexão Qdrant entregues; extração, indexação e busca pendentes |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,9 +139,9 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-02 a RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-02. A implementação de curadoria não conclui os demais módulos,
-não acrescenta um cartão à sequência e não fecha o aceite integrado do MVP.
+O MVP ainda requer RAG-03 a RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é RAG-03. Curadoria e conexão vetorial não concluem os demais módulos.
+Esta entrega não acrescenta cartões à sequência nem fecha o aceite integrado do MVP.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -3662,6 +3662,12 @@ Literatura é compartilhada aprovada; conversas, snapshots, resumos e fichas sã
 dados privados operacionais. Retenção de execução não é o limite de 15 fichas.
 Não executar implementação por apenas ler esta especificação.
 
+#### Conexão vetorial implementada
+
+RAG-02 entregou a [porta Qdrant local persistente](docs/arquitetura/banco-vetorial.md), com
+identidade por coleção, conexão sob demanda, singleton e erros controlados.
+Não corresponde ainda à extração/indexação ou recuperação semântica.
+
 #### Configuração inicial aceita
 
 Qdrant local persistente (um processo), E5-small/384/cosseno, chunks 300 tokens
@@ -4266,6 +4272,132 @@ Fonte versionada: [materiais/rag/catalogo.json](materiais/rag/catalogo.json).
   ]
 }
 ````
+### 6. Conexão Qdrant persistente e identidade do espaço vetorial
+
+Fonte versionada: [docs/arquitetura/banco-vetorial.md](docs/arquitetura/banco-vetorial.md).
+
+MOD-05 usa qdrant-client 1.20.0 em modo local persistente, conforme ADR-004/005.
+É o engine vetorial real da biblioteca, separado do PostgreSQL; não exige serviço
+HTTP, contêiner, credencial ou chave de LLM no MVP. Requisitos: MRF01/MRF02,
+RN-39 e RNF-05/08/10. Fontes oficiais da integração:
+[cliente e modo local](https://github.com/qdrant/qdrant-client/tree/v1.20.0),
+[coleções e metadados](https://github.com/qdrant/qdrant-client/blob/v1.20.0/qdrant_client/qdrant_client.py)
+e [distribuição Python](https://pypi.org/project/qdrant-client/1.20.0/).
+
+#### Escopo entregue e porta
+
+A porta interna VectorStore fornece check() → CollectionStatus e close().
+QdrantStore implementa essa porta; tipos públicos não importam classes Qdrant.
+O estado informa coleção, modelo/revisão, dimensão, métrica, fingerprint e contagem.
+Esta etapa não expõe uma nova API REST nem cria tabela/migration PostgreSQL.
+A composição do FastAPI fecha o recurso no shutdown; esse ponto fora da pasta
+vector/ é necessário ao ciclo de vida da conexão previsto pelo cartão.
+
+Não existem ainda extração, chunking, cálculo de embeddings, indexação de
+literatura ou recuperação de evidências. Os cartões RAG-03–RAG-05 ampliarão a
+porta. Esta entrega não envia arquivos/perguntas para LLM, não baixa pesos E5 e
+não mede a relevância ou latência semântica. Vetores sintéticos dos testes ficam
+em diretórios temporários, fora do acervo e do banco de desenvolvimento.
+
+#### Configuração e identidade da coleção
+
+Valores vêm de ambiente (padrões técnicos aceitos nos ADRs e no .env.example).
+Caminho relativo é resolvido a partir do processo; o guia inicia em backend/.
+Recomenda-se caminho absoluto local se o diretório de execução puder variar.
+
+| Variável | Padrão/semântica |
+|---|---|
+| ACADEMIA_VECTOR_MODE | local; qualquer outro modo é recusado nesta fase |
+| ACADEMIA_VECTOR_PATH | data/qdrant; persistente, específico, não :memory: nem raiz de unidade |
+| ACADEMIA_VECTOR_COLLECTION | academia_rag_e5_v1; nome deve terminar em _vN |
+| ACADEMIA_VECTOR_EMBEDDING_MODEL | intfloat/multilingual-e5-small |
+| ACADEMIA_VECTOR_DIMENSION | 384 |
+| ACADEMIA_VECTOR_MODEL_REVISION | Ausente até RAG-04; quando definida, hash exato de 40–64 caracteres hexadecimais |
+
+Métrica cosseno, normalização e prefixos query:/passage: são parte do espaço
+versionado, conforme a configuração canônica. Não mudar modelo/dimensão por
+fallback. Alterações de configuração seguem o protocolo da SPEC e a decisão
+aprovada; parâmetros futuros não significam autorização para trocar a arquitetura.
+ACADEMIA_VECTOR_URL não é usada para abrir servidor: se informada, gera erro de
+configuração. Modo servidor e migração/reindexação ficam para a infraestrutura final.
+
+Cada coleção guarda nos próprios metadados um schema_version e o embedding_space:
+modelo, revisão, dimensão, métrica, normalização e prefixos, mais SHA-256 da
+serialização JSON canônica desse espaço. O schema da identidade é 1. O nome _v1
+identifica a coleção inicial; novas configurações usam nova versão de coleção.
+
+A abertura verifica tanto os parâmetros físicos (vetor denso único, dimensão,
+cosseno, sem multivetor/esparso) quanto a identidade registrada. Coleção existente
+sem metadados ou incompatível é recusada, inclusive se vazia. Não adotar vetores
+por terem apenas a mesma dimensão. Não sobrescrever identidade, recriar coleção,
+apagar pontos, reindexar ou trocar nome automaticamente para esconder conflito.
+
+Revisão de pesos nula significa somente conexão inicial, não embedding validado.
+RAG-04 deverá fixar a revisão real dos pesos e abrir uma nova coleção versionada
+compatível antes da ingestão. Alterar essa revisão mantendo o nome atual deve
+produzir CONFIGURACAO_INCOMPATIVEL; isso impede misturar espaços silenciosamente.
+Ingestão completa e proveniência continuam sendo condições adicionais ao uso.
+
+#### Ciclo de vida, concorrência e falhas
+
+get_vector_store() mantém singleton por processo, protegido por lock. A instância
+é criada sob demanda e só abre Qdrant na primeira operação check(). A importação
+da aplicação e rotas manuais não abrem o índice nem validam sua configuração.
+O engine mantém exclusão entre processos no diretório; usar um worker Uvicorn.
+Não compartilhar esse diretório entre backend, ferramenta de manutenção ou outro
+worker. Uma instância herdada de outro PID é recusada antes do acesso ao engine.
+
+O adaptador serializa operações em RLock; o cliente é habilitado para chamadas
+em threads distintas somente porque esse lock controla todo acesso interno.
+No shutdown do FastAPI, close_vector_store() fecha a conexão e libera o diretório.
+A CLI também fecha o recurso ao terminar. Após alterar variáveis, reinicie o
+processo para não substituir a configuração de uma conexão já em uso.
+
+| Código | Situação | Resultado |
+|---|---|---|
+| CONFIGURACAO_INVALIDA | Modo, URL, nome, dimensão ou revisão inválidos | Não abrir engine |
+| CONFIGURACAO_INCOMPATIVEL | Coleção com espaço/parâmetros diferentes | Preservar coleção/pontos e interromper operação |
+| SERVICO_INDISPONIVEL | Diretório ocupado/inacessível, erro do engine ou instância de outro processo | Falha técnica explícita; não retornar recuperação vazia ou fictícia |
+
+A verificação de conexão não repete automaticamente operações. Nova ação explícita
+pode tentar reconectar; não existe fallback para memória, PostgreSQL, outro modelo
+ou coleções de teste. Erros públicos não incluem caminhos, segredos ou exceções
+brutas do SDK. Falhas futuras de busca deverão manter a distinção entre ausência
+de evidência e indisponibilidade. Rotas de treino manual continuam independentes.
+
+#### Execução e verificação local antes do Docker
+
+Com a API parada, a partir de backend/ e com o ambiente do projeto configurado:
+
+```powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
+```
+
+O comando cria a coleção vazia se inexistente e confere a existente. Sucesso retorna
+JSON status=OK com a configuração e points; falha retorna JSON status=ERRO,
+code/message em português e exit code 1. JSON usa escapes ASCII, compatíveis com
+UTF-8 e pipes do Windows. Não imprime caminho físico. Execute novamente depois
+para comprovar reabertura; não apagar meta.json ou arquivos de lock manualmente.
+
+Durante a API em execução, futuros consumidores internos usam a porta singleton;
+a CLI em outro processo será recusada enquanto a mesma pasta estiver ocupada.
+Para inspecionar simultaneamente sem interferir no acervo, configure diretório
+exclusivo de teste em ACADEMIA_VECTOR_PATH. Diretórios padrão ficam fora do Git.
+Variáveis de URL/chave de um servidor remoto não são necessárias neste MVP.
+
+#### Curadoria e próximos passos
+
+A conexão não decide aprovação de corpus. RAG-04/05 deverão combinar a identidade
+do espaço com [referências aprovadas e revalidação](docs/arquitetura/corpus.md#integração-e-invalidação),
+extração/indexação completa e proveniência. Qdrant não é a autoridade de aprovação;
+metadados vetoriais não desbloqueiam versão revogada nem documentos TESTE.
+Não indexar onboarding, dados biométricos, inventário ou conversas como literatura.
+
+A dependência qdrant-client é necessária para o engine real e traz nove pacotes
+novos no lockfile, incluindo ela própria; versões preexistentes foram preservadas.
+Não instalar extras de inferência/fastembed ou provedores nesta etapa.
+Testes e evidências estão no [registro de comandos](docs/testes/comandos.md#conexão-vetorial-local).
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -5823,7 +5955,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [RAG-01](docs/prompts/05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | CONCLUIDO |
-| [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | PRONTO |
+| [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | CONCLUIDO |
 | [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | PRONTO |
 | [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
 | [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
@@ -6569,6 +6701,21 @@ uv run --locked mypy
 `uv.lock` fixa versões diretas e transitivas. Uvicorn executa a API e
 Pydantic Settings valida o ambiente. Pytest e HTTPX exercitam a aplicação,
 enquanto Ruff e mypy verificam estilo e tipos.
+
+#### Banco vetorial local
+
+A conexão Qdrant usa um único processo e diretório persistente separado do
+PostgreSQL. Após uv sync --locked, com a API parada, execute a partir de backend/:
+
+```powershell
+uv run --locked --env-file ../.env python -m app.modules.knowledge.vector
+```
+
+O [guia vetorial](docs/arquitetura/banco-vetorial.md) descreve configuração,
+coleção versionada, persistência, falhas e exclusão entre processos. Não é
+necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
+suas rotas manuais não dependem de abrir o índice. Extração/indexação e busca
+serão implementadas nos cartões seguintes.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -6656,6 +6803,7 @@ dependencies = [
     "pydantic-settings>=2,<3",
     "uvicorn>=0.34,<1",
     "pillow>=13,<14",
+    "qdrant-client==1.20.0",
 ]
 
 [dependency-groups]
@@ -6675,7 +6823,7 @@ testpaths = ["tests"]
 addopts = "-m 'not database and not integration'"
 markers = [
     "database: migrations em PostgreSQL de teste",
-    "integration: integração com PostgreSQL de teste",
+    "integration: integração com PostgreSQL de teste ou Qdrant local real",
 ]
 
 [tool.ruff]
@@ -6765,6 +6913,14 @@ ACADEMIA_EQUIPMENT_IMAGES_DIR=uploads/equipamentos
 # Corpus privado. Diretório relativo ao processo do backend.
 ACADEMIA_CORPUS_DIR=data/corpus
 # ACADEMIA_RAG_MATERIALS_DIR: opcional; padrão é materiais/rag do repositório.
+
+# Qdrant local persistente: um worker, diretório exclusivo; sem servidor/Docker.
+ACADEMIA_VECTOR_MODE=local
+ACADEMIA_VECTOR_PATH=data/qdrant
+ACADEMIA_VECTOR_COLLECTION=academia_rag_e5_v1
+ACADEMIA_VECTOR_EMBEDDING_MODEL=intfloat/multilingual-e5-small
+ACADEMIA_VECTOR_DIMENSION=384
+# ACADEMIA_VECTOR_MODEL_REVISION: hash exato dos pesos, definido em RAG-04.
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -6784,14 +6940,15 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `1d146165a2e5fcc65604bb070a5c4056d58087d79669e07b1b3007a79102532d` |
+| `.env.example` | `4f12753186e7f4d4e7b74cc58172532936449cc93657a67abcd81029863bd6f4` |
 | `AGENTS.md` | `03a6aa7031b6e62319d22a2faef9f321e2afa9d217d75a6648402a8a44cfed45` |
-| `backend/README.md` | `a35a8aa7563e03486b6f54d3163d0b70866d0fa40caaaea21440ddfb232ec6e7` |
-| `backend/pyproject.toml` | `f58f05e091754f89ff3f39811d45b08455f56dbb813daf5ba4f61233c243ae16` |
+| `backend/README.md` | `3795e502cac8a287ae54cdfc4a82bbf2b9c1320036db118f9af9063cc3f79765` |
+| `backend/pyproject.toml` | `cb94b2d0a62c18e9b3245d5e934a72d0a99f82ecd0ed532a35166f96c835855f` |
 | `database/README.md` | `10eb39d85d11d4a4d4ad969e7556a6d0339107fcf4e36924a112e6eed0a194a3` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
+| `docs/arquitetura/banco-vetorial.md` | `d2c20b0f4cd80b521eba9ecaf4c7de9e1951d7fec4bbef2b1f4bf732a2364971` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
@@ -6815,13 +6972,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
-| `docs/arquitetura/rag-semantico.md` | `f48d869d1c8fd0141e4c65a41576df8837fbb4641bfca32d60086028df8e58db` |
+| `docs/arquitetura/rag-semantico.md` | `2c834c69f92119a20b3f718dc2c4008660a2a5187db516615f221565cde3087b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/especificacao/compilacao-spec.json` | `43ef00a06e1789bdad4e115f165293c01d46d3b3614050d0e569d9587ad219c1` |
+| `docs/especificacao/compilacao-spec.json` | `e63c7530901f36ddc549b63efc3634a98e0667fe335200729cb8e99c27d320f0` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `602f4d455d77586d89c719f0e47eb3f76686584884448a6b34ae68d69d1d606a` |
+| `docs/especificacao/visao-geral.md` | `0606c6ca97ba1865688fe601b6133ca6e94624b111e6c0d379cb927a9a6636d8` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `de63b9bf28fffe1e2afa8ee44542df83f3d89718fa779e3276866203aafff2d9` |
+| `docs/prompts/README.md` | `79ea8031df791763452e4d8efb9723fa58a9258d1deae0dc56f8dff349884041` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
