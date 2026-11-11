@@ -342,3 +342,42 @@ o anterior perdeu acesso e o sucessor pode copiar a versão com sua autoria.
 O ensaio passou no Edge a 390 px com Vite, FastAPI e PostgreSQL de teste.
 A troca de instrutor preservou a autoria e a prescrição anteriores.
 O schema sintético foi removido ao final.
+
+## Publicação e parecer posterior
+
+Em `backend/`, rode BE, API e DB/INT com o PostgreSQL de teste:
+
+```powershell
+uv run --locked pytest
+uv run --locked pytest tests/contracts
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked --env-file ../.env pytest -o addopts='' tests/training
+```
+
+Para incluir o ensaio de e-mail já existente, mantenha Mailpit local ativo e
+defina `ACADEMIA_TEST_MAILPIT=1`. Os testes desta entrega também simulam falha SMTP
+controlada, verificando persistência da ficha, fila e estado/reenvio do aviso.
+
+TRN-03 verifica publicação com PENDENTE, isolamento, troca/ausência de instrutor,
+revisão/snapshot/catálogo/inventário superados, motivo obrigatório, replay, parecer
+imutável e rejeição fora de ordem. A retenção cruza 15 → 16 com primeira versão
+aceita ou rejeitada. Falhas injetadas após expurgo demonstram rollback da
+publicação e do parecer. Concorrência usa conexões PostgreSQL independentes em
+schema sintético, enquanto a suite de migrations verifica os gatilhos reais.
+O schema temporário é removido e os testes transacionais revertem seus dados.
+
+Em `frontend/`, rode `npm test -- --maxWorkers=2`, lint, tipos e build.
+Os testes cobrem publicação, parecer, falha de rede com repetição da mesma chave,
+perda de acesso, conteúdo expirado, fila e estado vazio.
+
+Ensaio Edge a 390 px com Vite, FastAPI, PostgreSQL de teste e Mailpit local:
+instrutor designado monta/salva/publica, cliente consulta a API ainda com PENDENTE,
+instrutor rejeita A, copia e publica B, confere que A continua visível e rejeita B.
+A API passa a retornar dias vazios de A, conserva seu motivo/auditoria e mantém
+B rejeitada consultável. Fila fica vazia depois dos pareceres. Não houve
+transbordamento horizontal. O schema sintético foi removido ao final.
+
+Resultado local desta entrega: 78 BE, 9 API, 67 DB/INT, 36 testes de treino e
+55 FE aprovados. Ruff, mypy, lint, tipos, build, verificador documental e
+ensaio no Edge aprovados. As duas linhas longas antigas nas migrations 0004 e
+0006 permanecem fora da alteração; o lint cobre backend e migration 0011.

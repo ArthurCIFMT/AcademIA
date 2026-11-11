@@ -13,6 +13,7 @@ from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
 from app.modules.people.staff_http import staff_router
 from app.modules.training.http import exercise_router
+from app.modules.training.review_http import review_queue_router
 from app.modules.training.workout_http import workout_router
 
 
@@ -35,5 +36,6 @@ def create_app(
     app.include_router(equipment_router(get_sessions))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
+    app.include_router(review_queue_router(get_sessions))
     install_assignments(app, get_sessions)
     return app

@@ -20,17 +20,30 @@ from app.database.connection import (
     create_database_engine,
     create_session_factory,
 )
+from app.events.contracts import AuditEvent
 from app.main import create_app
 from app.modules.assignments.models import Assignment
 from app.modules.assignments.service import ChangeAssignment, change_assignment
 from app.modules.audit.models import AuditRecord
+from app.modules.equipment.models import Equipment
 from app.modules.identity.accounts import create_account
 from app.modules.identity.models import AccountState, Role, UserRole
 from app.modules.identity.passwords import Passwords
 from app.modules.identity.service import utc_now
 from app.modules.identity.settings import AuthSettings
-from app.modules.onboarding.schemas import Completion, DraftChange, DraftData
-from app.modules.onboarding.service import complete_draft, save_draft
+from app.modules.notifications.models import DeliveryState, Notification
+from app.modules.onboarding.schemas import (
+    Completion,
+    ConfirmUpdate,
+    DraftChange,
+    DraftData,
+)
+from app.modules.onboarding.service import (
+    complete_draft,
+    confirm_update,
+    get_current_snapshot,
+    save_draft,
+)
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
 from app.modules.training.catalog import (
     CatalogError,
@@ -39,13 +52,39 @@ from app.modules.training.catalog import (
     require_prescribable,
 )
 from app.modules.training.models import Exercise, ExerciseResource
+from app.modules.training.publication import (
+    publish_manual,
+    published_workout,
+    record_opinion,
+    review_detail,
+    review_queue,
+)
+from app.modules.training.review_schemas import (
+    PublishWorkout,
+    ReviewDetail,
+    ReviewWorkout,
+)
 from app.modules.training.schemas import ExerciseFields, normalize_name
-from app.modules.training.workout_models import WorkoutDay, WorkoutItem, WorkoutVersion
-from app.modules.training.workout_schemas import CreateWorkout, WorkoutItemInput
+from app.modules.training.workout_models import (
+    WorkoutDay,
+    WorkoutItem,
+    WorkoutOpinion,
+    WorkoutValidation,
+    WorkoutVersion,
+)
+from app.modules.training.workout_schemas import (
+    CreateWorkout,
+    UpdateWorkout,
+    WorkoutDayInput,
+    WorkoutItemInput,
+    WorkoutView,
+)
 from app.modules.training.workouts import (
+    WorkoutError,
     create_draft,
     get_workout,
     retention_candidates,
+    update_draft,
 )
 from app.policies.access import Actor
 
@@ -812,6 +851,8 @@ def test_workout_migration_keeps_existing_catalog(
     command.upgrade(config, "0009")
     assert not inspect(connection).has_table("versao_ficha", schema="academia")
     command.upgrade(config, "0010")
+    assert inspect(connection).has_table("versao_ficha", schema="academia")
+    command.upgrade(config, "head")
     command.check(config)
     command.downgrade(config, "0009")
     assert not inspect(connection).has_table("versao_ficha", schema="academia")
@@ -874,3 +915,864 @@ def test_draft_creation_is_serialized_and_idempotent(same_request: bool) -> None
                 connection.execute(DropSchema(schema, cascade=True))
     finally:
         engine.dispose()
+
+
+def visible_published(
+    session: Session,
+    actor: Actor,
+    client: UUID,
+    version: UUID | None = None,
+) -> ReviewDetail:
+    value = published_workout(session, actor, client, version)
+    assert value is not None
+    return value
+
+
+# TRN-03: mesmos fixtures isolados e dados sintéticos do catálogo/rascunho.
+def publication_input(
+    workout: object, request_id: UUID | None = None
+) -> PublishWorkout:
+    assert isinstance(workout, WorkoutView)
+    return PublishWorkout(
+        solicitacao_id=request_id or uuid4(),
+        revisao=workout.revisao,
+        onboarding_id=workout.onboarding_id,
+        versao_base_id=workout.versao_base_id,
+        restricoes_conferidas=True,
+    )
+
+
+def draft_and_publish(
+    session: Session,
+    actor: Actor,
+    client: UUID,
+    snapshot: UUID,
+    base: UUID | None = None,
+) -> ReviewDetail:
+    draft = create_draft(
+        session,
+        actor,
+        client,
+        CreateWorkout.model_validate(manual_payload(snapshot, base)),
+        uuid4(),
+    )
+    return publish_manual(
+        session, actor, client, draft.id, publication_input(draft), uuid4()
+    )
+
+
+def opinion_input(state: str) -> ReviewWorkout:
+    return ReviewWorkout.model_validate(
+        {
+            "solicitacao_id": str(uuid4()),
+            "estado": state,
+            "motivo": "Parecer sintético." if state == "REJEITADO" else None,
+        }
+    )
+
+
+@pytest.mark.parametrize("reason", [None, "", "   ", "\x00"])
+def test_rejection_requires_a_nonempty_safe_reason(reason: str | None) -> None:
+    with pytest.raises(ValueError):
+        ReviewWorkout.model_validate(
+            {
+                "solicitacao_id": str(uuid4()),
+                "estado": "REJEITADO",
+                "motivo": reason,
+            }
+        )
+
+
+def test_publication_and_review_openapi(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
+    paths = create_app().openapi()["paths"]
+    base = "/api/v1/treinos/clientes/{client_id}"
+    for suffix in ("/versoes/{version_id}/publicacao", "/versoes/{version_id}/parecer"):
+        assert "200" in paths[base + suffix]["post"]["responses"]
+    assert "/api/v1/treinos/pendentes" in paths
+    with pytest.raises(ValueError):
+        PublishWorkout.model_validate(
+            {
+                "solicitacao_id": str(uuid4()),
+                "revisao": 1,
+                "onboarding_id": str(uuid4()),
+                "versao_base_id": None,
+                "restricoes_conferidas": False,
+            }
+        )
+
+
+@pytest.mark.integration
+def test_publication_pending_review_and_rejection_replacement(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    own = Actor(client, frozenset({Role.CLIENTE}))
+    reject_a, reject_b = opinion_input("REJEITADO"), opinion_input("REJEITADO")
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        assert first.parecer.estado == "PENDENTE" and first.validacao
+        visible = published_workout(session, own, client)
+        assert visible and visible.ficha.id == first.ficha.id and visible.ficha.dias
+        queue = review_queue(session, instructor, 1, 20)
+        assert [item.versao_id for item in queue.itens] == [first.ficha.id]
+        record_opinion(session, instructor, client, first.ficha.id, reject_a, uuid4())
+        assert visible_published(session, own, client).parecer.estado == "REJEITADO"
+        second = draft_and_publish(
+            session, instructor, client, snapshot, first.ficha.id
+        )
+        assert second.parecer.estado == "PENDENTE"
+        assert visible_published(session, own, client, first.ficha.id).ficha.dias
+        # Publicar B não apaga A. Aceitar outra versão também não.
+        third = draft_and_publish(
+            session, instructor, client, snapshot, second.ficha.id
+        )
+        record_opinion(
+            session,
+            instructor,
+            client,
+            third.ficha.id,
+            opinion_input("ACEITO"),
+            uuid4(),
+        )
+        assert visible_published(session, own, client, first.ficha.id).ficha.dias
+        record_opinion(session, instructor, client, second.ficha.id, reject_b, uuid4())
+        old = published_workout(session, own, client, first.ficha.id)
+        assert (
+            old
+            and old.ficha.dias == []
+            and old.ficha.motivo_exclusao == "REJEITADA_ANTERIOR"
+        )
+        assert old.parecer.estado == "REJEITADO" and old.parecer.motivo
+        assert visible_published(session, own, client, second.ficha.id).ficha.dias
+        assert visible_published(session, own, client).ficha.id == third.ficha.id
+        # Replay não recria parecer, não apaga o novo rejeitado nem muda a vigente.
+        record_opinion(session, instructor, client, first.ficha.id, reject_a, uuid4())
+        record_opinion(session, instructor, client, second.ficha.id, reject_b, uuid4())
+        assert session.scalar(select(func.count()).select_from(WorkoutOpinion)) == 3
+        assert session.scalar(select(func.count()).select_from(WorkoutValidation)) == 3
+        assert (
+            session.scalar(
+                select(func.count())
+                .select_from(Notification)
+                .where(Notification.canal == "INTERNO")
+            )
+            == 3
+        )
+
+
+@pytest.mark.integration
+def test_late_rejection_purges_the_older_version_not_the_latest(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        second = draft_and_publish(
+            session, instructor, client, snapshot, first.ficha.id
+        )
+        record_opinion(
+            session,
+            instructor,
+            client,
+            second.ficha.id,
+            opinion_input("REJEITADO"),
+            uuid4(),
+        )
+        late = record_opinion(
+            session,
+            instructor,
+            client,
+            first.ficha.id,
+            opinion_input("REJEITADO"),
+            uuid4(),
+        )
+        assert late.ficha.dias == [] and late.parecer.estado == "REJEITADO"
+        current = published_workout(session, instructor, client)
+        assert current and current.ficha.id == second.ficha.id and current.ficha.dias
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("first_state", ["ACEITO", "REJEITADO"])
+def test_publication_retains_15_and_preserves_metadata(
+    sessions: sessionmaker[Session], first_state: str
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        record_opinion(
+            session,
+            instructor,
+            client,
+            first.ficha.id,
+            opinion_input(first_state),
+            uuid4(),
+        )
+        current = first
+        for _ in range(14):
+            current = draft_and_publish(
+                session, instructor, client, snapshot, current.ficha.id
+            )
+        assert (
+            session.scalar(
+                select(func.count())
+                .select_from(WorkoutVersion)
+                .where(WorkoutVersion.conteudo_excluido_em.is_(None))
+            )
+            == 15
+        )
+        last_draft = create_draft(
+            session,
+            instructor,
+            client,
+            CreateWorkout.model_validate(manual_payload(snapshot, current.ficha.id)),
+            uuid4(),
+        )
+        data = publication_input(last_draft)
+        result = publish_manual(
+            session, instructor, client, last_draft.id, data, uuid4()
+        )
+        assert result.ficha.numero == 16 and result.ficha.vigente
+        expired = review_detail(session, instructor, client, first.ficha.id)
+        assert expired.ficha.dias == [] and expired.ficha.motivo_exclusao == "LIMITE_15"
+        assert expired.parecer.estado == first_state
+        assert session.scalar(select(func.count()).select_from(WorkoutDay)) == 15
+        assert session.scalar(select(func.count()).select_from(WorkoutItem)) == 15
+        assert session.scalar(select(func.count()).select_from(WorkoutVersion)) == 16
+        assert session.scalar(select(func.count()).select_from(WorkoutValidation)) == 16
+        replay = publish_manual(
+            session, instructor, client, last_draft.id, data, uuid4()
+        )
+        assert replay.ficha.id == result.ficha.id
+        assert session.scalar(select(func.count()).select_from(WorkoutVersion)) == 16
+        assert (
+            session.scalar(
+                select(func.count())
+                .select_from(AuditRecord)
+                .where(AuditRecord.acao == "workout.content_expired")
+            )
+            == 1
+        )
+        next_draft = create_draft(
+            session,
+            instructor,
+            client,
+            CreateWorkout.model_validate(manual_payload(snapshot, last_draft.id)),
+            uuid4(),
+        )
+        assert next_draft.numero == 17
+
+
+@pytest.mark.integration
+def test_publication_revalidates_snapshot_inventory_and_draft(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        empty = create_draft(
+            session,
+            instructor,
+            client,
+            CreateWorkout.model_validate(
+                {**manual_payload(snapshot, first.ficha.id), "dias": []}
+            ),
+            uuid4(),
+        )
+        with pytest.raises(WorkoutError) as failure:
+            publish_manual(
+                session, instructor, client, empty.id, publication_input(empty), uuid4()
+            )
+        assert failure.value.status == 422
+        data = CreateWorkout.model_validate(manual_payload(snapshot, first.ficha.id))
+        data.dias[0].itens[0].exercicio_id = _ALTERNATIVES
+        data.dias[0].itens[0].equipamento_ids = [_C]
+        draft = create_draft(session, instructor, client, data, uuid4())
+        # Inventário deixou de atender a alternativa após salvar.
+        session.execute(
+            update(Equipment).where(Equipment.id == _C).values(operacional=False)
+        )
+        with pytest.raises(WorkoutError) as failure:
+            publish_manual(
+                session, instructor, client, draft.id, publication_input(draft), uuid4()
+            )
+        assert failure.value.status == 409
+        session.execute(
+            update(Equipment).where(Equipment.id == _C).values(operacional=True)
+        )
+        # Revisão obsoleta é rejeitada.
+        with pytest.raises(WorkoutError):
+            publish_manual(
+                session,
+                instructor,
+                client,
+                draft.id,
+                publication_input(draft).model_copy(update={"revisao": 2}),
+                uuid4(),
+            )
+        # Novo snapshot não é convertido em autorização implícita da ficha antiga.
+        previous = get_current_snapshot(session, client)
+        assert previous
+        confirm_update(
+            session,
+            client,
+            client,
+            ConfirmUpdate(
+                versao_base=previous.id, confirmado=True, dados=previous.dados
+            ),
+        )
+        with pytest.raises(WorkoutError) as failure:
+            publish_manual(
+                session, instructor, client, draft.id, publication_input(draft), uuid4()
+            )
+        assert failure.value.status == 409
+        assert visible_published(session, instructor, client).ficha.id == first.ficha.id
+
+
+@pytest.mark.integration
+def test_publication_and_expiry_roll_back_together(
+    sessions: sessionmaker[Session], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        current = draft_and_publish(session, instructor, client, snapshot)
+        first_id = current.ficha.id
+        for _ in range(14):
+            current = draft_and_publish(
+                session, instructor, client, snapshot, current.ficha.id
+            )
+        draft = create_draft(
+            session,
+            instructor,
+            client,
+            CreateWorkout.model_validate(manual_payload(snapshot, current.ficha.id)),
+            uuid4(),
+        )
+
+    def fail_notice(*args: object) -> bool:
+        raise RuntimeError("Falha transacional sintética")
+
+    monkeypatch.setattr(
+        "app.modules.training.publication.notify_workout_review", fail_notice
+    )
+    with pytest.raises(RuntimeError), sessions.begin() as session:
+        publish_manual(
+            session, instructor, client, draft.id, publication_input(draft), uuid4()
+        )
+    with sessions.begin() as session:
+        assert (
+            visible_published(session, instructor, client).ficha.id == current.ficha.id
+        )
+        assert review_detail(session, instructor, client, first_id).ficha.dias
+        assert (
+            get_workout(session, instructor, client, draft.id).estado_publicacao
+            == "RASCUNHO"
+        )
+        assert session.get(WorkoutValidation, draft.id) is None
+
+
+@pytest.mark.database
+def test_publication_migration_and_immutable_reviews(
+    migration: tuple[Connection, Config],
+) -> None:
+    connection, config = migration
+    command.upgrade(config, "0010")
+    assert not inspect(connection).has_table("validacao_ficha", schema="academia")
+    command.upgrade(config, "head")
+    command.check(config)
+    factory = create_session_factory(connection)
+    seed_catalog(connection)
+    actors, instructor, snapshot = workout_people(factory)
+    with factory.begin() as session:
+        first = draft_and_publish(session, instructor, actors[Role.CLIENTE], snapshot)
+        opinion = record_opinion(
+            session,
+            instructor,
+            actors[Role.CLIENTE],
+            first.ficha.id,
+            opinion_input("ACEITO"),
+            uuid4(),
+        )
+    for model in (WorkoutOpinion, WorkoutValidation):
+        with pytest.raises(DBAPIError, match="imutável"), factory.begin() as session:
+            session.execute(delete(model))
+    assert opinion.parecer.instrutor_id == instructor.user_id
+    command.downgrade(config, "0010")
+    assert inspect(connection).has_table("parecer", schema="academia")
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_publication_api_permissions_mail_failure_replay_and_reassignment(
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client_id = actors[Role.CLIENTE]
+    app = create_app(
+        identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
+    )
+    transport = httpx.ASGITransport(app=app)
+    deliveries: list[object] = []
+
+    def failing_mail(_self: object, message: object) -> DeliveryState:
+        deliveries.append(message)
+        return DeliveryState.FALHOU
+
+    monkeypatch.setattr(
+        "app.modules.notifications.email.LocalSmtp.deliver", failing_mail
+    )
+
+    def browser() -> httpx.AsyncClient:
+        return httpx.AsyncClient(
+            transport=transport, base_url=_ORIGIN, headers={"Origin": _ORIGIN}
+        )
+
+    root = f"/api/v1/treinos/clientes/{client_id}"
+    async with browser() as trainer, browser() as own, browser() as admin:
+        assert (await own.get(root + "/atual")).status_code == 401
+        headers = await login(trainer, Role.INSTRUTOR)
+        own_headers = await login(own, Role.CLIENTE)
+        await login(admin, Role.ADMINISTRADOR)
+        assert (await own.get(root + "/atual")).json() is None
+        draft_response = await trainer.post(
+            root + "/rascunhos", headers=headers, json=manual_payload(snapshot)
+        )
+        assert draft_response.status_code == 201
+        draft = WorkoutView.model_validate(draft_response.json())
+        path = root + f"/versoes/{draft.id}"
+        data = publication_input(draft).model_dump(mode="json")
+        assert (await own.get(root + f"/publicadas/{draft.id}")).status_code == 404
+        assert (
+            await own.post(path + "/publicacao", headers=own_headers, json=data)
+        ).status_code == 403
+        assert (await admin.get(path + "/revisao")).status_code == 403
+        assert (await trainer.post(path + "/publicacao", json=data)).status_code == 403
+        publication = await trainer.post(
+            path + "/publicacao", headers=headers, json=data
+        )
+        assert publication.status_code == 200
+        assert publication.headers["cache-control"] == "no-store"
+        assert publication.json()["aviso_email"] == {
+            "estado": "FALHOU",
+            "tentativas": 1,
+        }
+        assert (
+            await trainer.post(path + "/publicacao", headers=headers, json=data)
+        ).status_code == 200
+        assert len(deliveries) == 1
+        visible = (await own.get(root + "/atual")).json()
+        assert visible["parecer"]["estado"] == "PENDENTE" and visible["ficha"]["dias"]
+        assert (
+            await own.get(f"/api/v1/treinos/clientes/{uuid4()}/atual")
+        ).status_code == 403
+        assert (
+            len((await trainer.get("/api/v1/treinos/pendentes")).json()["itens"]) == 1
+        )
+        assert (await own.get("/api/v1/treinos/pendentes")).status_code == 403
+        retry = await trainer.post(
+            path + "/aviso", headers=headers, json={"tentativa_anterior": 1}
+        )
+        assert retry.json() == {"estado": "FALHOU", "tentativas": 2}
+        await trainer.post(
+            path + "/aviso", headers=headers, json={"tentativa_anterior": 1}
+        )
+        assert len(deliveries) == 2
+        rejected = opinion_input("REJEITADO").model_dump(mode="json")
+        assert (
+            await trainer.post(
+                path + "/parecer", headers=headers, json={**rejected, "motivo": "  "}
+            )
+        ).status_code == 422
+        assert (
+            await own.post(path + "/parecer", headers=own_headers, json=rejected)
+        ).status_code == 403
+        result = await trainer.post(path + "/parecer", headers=headers, json=rejected)
+        assert result.status_code == 200 and result.json()["parecer"][
+            "instrutor_id"
+        ] == str(instructor.user_id)
+        assert (
+            await trainer.post(path + "/parecer", headers=headers, json=rejected)
+        ).json() == result.json()
+        assert (
+            await trainer.post(
+                path + "/parecer",
+                headers=headers,
+                json=opinion_input("ACEITO").model_dump(mode="json"),
+            )
+        ).status_code == 409
+        assert (await own.get(root + "/atual")).json()["parecer"][
+            "estado"
+        ] == "REJEITADO"
+        assert (await own.get(root + "/atual")).json()["ficha"]["dias"]
+        assert (await trainer.get("/api/v1/treinos/pendentes")).json()["total"] == 0
+        with sessions.begin() as session:
+            notice = session.scalar(
+                select(Notification).where(Notification.canal == "EMAIL")
+            )
+            assert notice and notice.estado == "FALHOU"
+            # Trocar o responsável remove a autorização do autor histórico.
+            successor = create_account(
+                session,
+                "sucessor@example.test",
+                state=AccountState.ATIVO,
+                password_hash=Passwords().hash(_PASSWORD),
+                now=utc_now(),
+            )
+            session.add(
+                EmployeeProfile(
+                    usuario_id=successor,
+                    nome="Sucessor sintético",
+                    cargo="Instrutor",
+                    ativo=True,
+                    data_admissao=_DATE,
+                )
+            )
+            session.add(
+                UserRole(id=uuid4(), usuario_id=successor, papel=Role.INSTRUTOR)
+            )
+            current = session.scalar(
+                select(Assignment).where(
+                    Assignment.cliente_id == client_id, Assignment.fim.is_(None)
+                )
+            )
+            assert current
+            change_assignment(
+                session,
+                client_id,
+                ChangeAssignment(instrutor_id=successor, vigente_id=current.id),
+                Actor(actors[Role.ADMINISTRADOR], frozenset({Role.ADMINISTRADOR})),
+                uuid4(),
+            )
+        assert (await trainer.get(path + "/revisao")).status_code == 403
+        assert (
+            await trainer.post(path + "/parecer", headers=headers, json=rejected)
+        ).status_code == 403
+        assert (await own.get(root + "/atual")).status_code == 200
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("operation", ["publish", "replay", "reject"])
+def test_concurrent_publication_and_rejection(operation: str) -> None:
+    engine = create_database_engine("test")
+    schema = "trn03_" + uuid4().hex
+    try:
+        with engine.begin() as connection:
+            check_database(connection, "test")
+            connection.execute(CreateSchema(schema))
+        try:
+            scoped = engine.execution_options(schema_translate_map={"academia": schema})
+            Base.metadata.create_all(scoped)
+            factory = create_session_factory(scoped)
+            actors, instructor, snapshot = workout_people(factory)
+            client = actors[Role.CLIENTE]
+            with factory.begin() as session:
+                session.add(
+                    Exercise(
+                        id=_BODYWEIGHT,
+                        nome="Movimento sintético",
+                        nome_normalizado="movimento sintético",
+                        descricao="Sintético",
+                        grupo_muscular="Grupo",
+                        ativo=True,
+                        dispensa_equipamento=True,
+                        revision=1,
+                    )
+                )
+            with factory.begin() as session:
+                previous = None
+                # A concorrência também cruza o limiar da 16ª publicação.
+                for _ in range(15):
+                    previous = draft_and_publish(
+                        session, instructor, client, snapshot, previous
+                    ).ficha.id
+                assert previous
+                if operation == "reject":
+                    first = draft_and_publish(
+                        session, instructor, client, snapshot, previous
+                    ).ficha
+                    second = draft_and_publish(
+                        session, instructor, client, snapshot, first.id
+                    ).ficha
+                    versions = [first, second]
+                else:
+                    first = create_draft(
+                        session,
+                        instructor,
+                        client,
+                        CreateWorkout.model_validate(
+                            manual_payload(snapshot, previous)
+                        ),
+                        uuid4(),
+                    )
+                    second = (
+                        first
+                        if operation == "replay"
+                        else create_draft(
+                            session,
+                            instructor,
+                            client,
+                            CreateWorkout.model_validate(
+                                manual_payload(snapshot, previous)
+                            ),
+                            uuid4(),
+                        )
+                    )
+                    versions = [first, second]
+            request_id = uuid4()
+            inputs = [publication_input(version, request_id) for version in versions]
+            decisions = [opinion_input("REJEITADO"), opinion_input("REJEITADO")]
+            barrier = Barrier(2)
+
+            def perform(index: int) -> int:
+                barrier.wait(timeout=10)
+                try:
+                    with factory.begin() as session:
+                        if operation == "reject":
+                            record_opinion(
+                                session,
+                                instructor,
+                                client,
+                                versions[index].id,
+                                decisions[index],
+                                uuid4(),
+                            )
+                        else:
+                            publish_manual(
+                                session,
+                                instructor,
+                                client,
+                                versions[index].id,
+                                inputs[index],
+                                uuid4(),
+                            )
+                    return 200
+                except WorkoutError as failure:
+                    return failure.status
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                assert sorted(pool.map(perform, [0, 1])) == (
+                    [200, 409] if operation == "publish" else [200, 200]
+                )
+            with factory.begin() as session:
+                assert (
+                    session.scalar(
+                        select(func.count())
+                        .select_from(WorkoutVersion)
+                        .where(WorkoutVersion.vigente.is_(True))
+                    )
+                    == 1
+                )
+                assert session.scalar(
+                    select(func.count())
+                    .select_from(WorkoutVersion)
+                    .where(
+                        WorkoutVersion.estado_publicacao.in_(
+                            ("PUBLICADO", "SUBSTITUIDO")
+                        )
+                    )
+                ) in range(16)
+                if operation == "reject":
+                    assert (
+                        review_detail(
+                            session, instructor, client, versions[0].id
+                        ).ficha.dias
+                        == []
+                    )
+                    assert (
+                        visible_published(session, instructor, client).ficha.id
+                        == versions[1].id
+                    )
+                    assert visible_published(session, instructor, client).ficha.dias
+        finally:
+            with engine.begin() as connection:
+                connection.execute(DropSchema(schema, cascade=True))
+    finally:
+        engine.dispose()
+
+
+@pytest.mark.integration
+def test_pending_queue_follows_assignment_and_own_read_needs_no_instructor(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        current = session.scalar(
+            select(Assignment).where(
+                Assignment.cliente_id == client, Assignment.fim.is_(None)
+            )
+        )
+        assert current
+        current.fim = utc_now()
+        session.flush()
+        assert review_queue(session, instructor, 1, 20).total == 0
+        own = Actor(client, frozenset({Role.CLIENTE}))
+        assert visible_published(session, own, client).parecer.estado == "PENDENTE"
+        with pytest.raises(WorkoutError):
+            record_opinion(
+                session,
+                instructor,
+                client,
+                first.ficha.id,
+                opinion_input("ACEITO"),
+                uuid4(),
+            )
+        successor = create_account(
+            session,
+            "novo-responsavel@example.test",
+            state=AccountState.ATIVO,
+            password_hash=Passwords().hash(_PASSWORD),
+            now=utc_now(),
+        )
+        session.add(
+            EmployeeProfile(
+                usuario_id=successor,
+                nome="Responsável sintético",
+                cargo="Instrutor",
+                ativo=True,
+                data_admissao=_DATE,
+            )
+        )
+        session.add(UserRole(id=uuid4(), usuario_id=successor, papel=Role.INSTRUTOR))
+        change_assignment(
+            session,
+            client,
+            ChangeAssignment(instrutor_id=successor, vigente_id=None),
+            Actor(actors[Role.ADMINISTRADOR], frozenset({Role.ADMINISTRADOR})),
+            uuid4(),
+        )
+        next_actor = Actor(successor, frozenset({Role.INSTRUTOR}))
+        assert (
+            review_queue(session, next_actor, 1, 20).itens[0].versao_id
+            == first.ficha.id
+        )
+        decision = record_opinion(
+            session,
+            next_actor,
+            client,
+            first.ficha.id,
+            opinion_input("ACEITO"),
+            uuid4(),
+        )
+        assert decision.parecer.instrutor_id == successor
+
+
+@pytest.mark.integration
+def test_catalog_changes_require_resaving_before_publication(
+    sessions: sessionmaker[Session],
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        draft = create_draft(
+            session,
+            instructor,
+            client,
+            CreateWorkout.model_validate(manual_payload(snapshot)),
+            uuid4(),
+        )
+        session.execute(
+            update(Exercise)
+            .where(Exercise.id == _BODYWEIGHT)
+            .values(revision=2, descricao="Descrição sintética atualizada")
+        )
+        with pytest.raises(WorkoutError) as error:
+            publish_manual(
+                session, instructor, client, draft.id, publication_input(draft), uuid4()
+            )
+        assert error.value.status == 409
+        updated = update_draft(
+            session,
+            instructor,
+            client,
+            draft.id,
+            UpdateWorkout(
+                onboarding_id=snapshot,
+                revisao=draft.revisao,
+                dias=[
+                    WorkoutDayInput.model_validate(
+                        day.model_dump(
+                            exclude={"itens": {"__all__": {"exercicio_snapshot"}}}
+                        )
+                    )
+                    for day in draft.dias
+                ],
+            ),
+            uuid4(),
+        )
+        published = publish_manual(
+            session, instructor, client, draft.id, publication_input(updated), uuid4()
+        )
+        assert (
+            published.ficha.dias[0].itens[0].exercicio_snapshot["catalogo_revisao"] == 2
+        )
+
+
+@pytest.mark.integration
+def test_rejection_and_expiry_roll_back_as_one_operation(
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    actors, instructor, snapshot = workout_people(sessions)
+    client = actors[Role.CLIENTE]
+    with sessions.begin() as session:
+        first = draft_and_publish(session, instructor, client, snapshot)
+        record_opinion(
+            session,
+            instructor,
+            client,
+            first.ficha.id,
+            opinion_input("REJEITADO"),
+            uuid4(),
+        )
+        second = draft_and_publish(
+            session, instructor, client, snapshot, first.ficha.id
+        )
+    from app.modules.audit.service import record_audit as original
+
+    def fail_after_expiry(session: Session, event: AuditEvent) -> bool:
+        if event.action == "workout.rejected":
+            raise RuntimeError("Falha sintética após expurgo")
+        return original(session, event)
+
+    request = opinion_input("REJEITADO")
+    with monkeypatch.context() as scoped_patch:
+        scoped_patch.setattr(
+            "app.modules.training.publication.record_audit", fail_after_expiry
+        )
+        with pytest.raises(RuntimeError), sessions.begin() as session:
+            record_opinion(
+                session, instructor, client, second.ficha.id, request, uuid4()
+            )
+    with sessions.begin() as session:
+        assert review_detail(session, instructor, client, first.ficha.id).ficha.dias
+        assert (
+            review_detail(session, instructor, client, second.ficha.id).parecer.estado
+            == "PENDENTE"
+        )
+        record_opinion(session, instructor, client, second.ficha.id, request, uuid4())
+        assert (
+            review_detail(session, instructor, client, first.ficha.id).ficha.dias == []
+        )
+        # Replay da publicação antiga não ressuscita conteúdo ou promove a vigente.
+        validation = session.get(WorkoutValidation, first.ficha.id)
+        assert validation
+        repeated = publish_manual(
+            session,
+            instructor,
+            client,
+            first.ficha.id,
+            publication_input(first.ficha, validation.solicitacao_id),
+            uuid4(),
+        )
+        assert repeated.ficha.dias == []
+        assert (
+            visible_published(session, instructor, client).ficha.id == second.ficha.id
+        )

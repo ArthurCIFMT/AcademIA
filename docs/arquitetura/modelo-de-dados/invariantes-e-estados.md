@@ -22,6 +22,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 - Rejeitar versão posterior exclui conteúdo da rejeitada retida anterior, sem apagar
   aceita pela regra específica; parecer atrasado é ordenado por número da versão,
   não só pela hora do evento. Limite global de 15 continua independente.
+- Validação técnica de publicação manual é imutável por versão/revisão;
+  registra responsável e conferência explícita de restrições, separada do parecer.
+- Parecer conclusivo é único por versão, imutável e exige motivo na rejeição.
+  PENDENTE é a ausência de parecer conclusivo no fluxo implementado.
 - Nova versão não herda parecer; origem MANUAL exige instrutor autor/designação;
   IA identifica execução, não inventa autor humano. Parecer nunca bloqueia consulta.
 - Item mantém snapshot de nome/descrição usado; edição do catálogo não reescreve

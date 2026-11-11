@@ -249,9 +249,23 @@ Unicidades: dia_id+ordem.
 | observacoes | text | opcional | — |
 | exercicio_snapshot | jsonb | required | — |
 
+## validacao_ficha — MOD-04
+
+Validação técnica da publicação manual por revisão, imutável e separada do parecer.
+
+| Campo | Tipo | Regras | Referência |
+|---|---|---|---|
+| versao_id | uuid | pk | versao_ficha.id |
+| solicitacao_id | uuid | required | — |
+| validado_por | uuid | required | usuario.id |
+| revisao | integer | required, >= 1 | — |
+| restricoes_conferidas | boolean | required, true | — |
+| validado_em | timestamptz | required, UTC | — |
+
 ## parecer — MOD-04
 
-Parecer independente de publicação; histórico atribuível, sem herdar aceite
+Parecer conclusivo imutável por versão. Índice parcial único em versao_id quando
+estado difere de PENDENTE. Rejeição exige motivo; nova versão não herda aceite.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|

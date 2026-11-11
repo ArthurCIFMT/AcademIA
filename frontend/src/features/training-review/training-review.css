@@ -1,0 +1,6 @@
+.training-review { max-width: 48rem; overflow-wrap: anywhere; }
+.training-review li, .training-review section { margin-block: 1rem; }
+.training-review fieldset { display: grid; gap: .65rem; min-width: 0; }
+.training-review textarea, .training-review select { max-width: 100%; box-sizing: border-box; }
+.training-review button { margin: .4rem .4rem .4rem 0; white-space: normal; }
+.training-review label { display: block; margin-block: .65rem; }

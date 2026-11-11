@@ -142,6 +142,16 @@ class WorkoutItem(Base):
 class WorkoutOpinion(Base):
     __tablename__ = "parecer"
     __table_args__ = (
+        Index(
+            "uq_parecer_conclusivo",
+            "versao_id",
+            unique=True,
+            postgresql_where=text("estado <> 'PENDENTE'"),
+        ),
+        CheckConstraint(
+            "estado <> 'REJEITADO' OR length(btrim(motivo)) > 0 AND motivo IS NOT NULL",
+            name="ck_parecer_rejeicao_motivo",
+        ),
         CheckConstraint(
             "estado IN ('PENDENTE', 'ACEITO', 'REJEITADO')", name="ck_parecer_estado"
         ),
@@ -155,3 +165,21 @@ class WorkoutOpinion(Base):
     estado: Mapped[str] = mapped_column(String(20))
     motivo: Mapped[str | None] = mapped_column(Text)
     criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class WorkoutValidation(Base):
+    __tablename__ = "validacao_ficha"
+    __table_args__ = (
+        CheckConstraint(
+            "revisao >= 1 AND restricoes_conferidas", name="ck_validacao_ficha"
+        ),
+    )
+
+    versao_id: Mapped[UUID] = mapped_column(
+        ForeignKey("academia.versao_ficha.id"), primary_key=True
+    )
+    solicitacao_id: Mapped[UUID]
+    validado_por: Mapped[UUID] = mapped_column(ForeignKey("academia.usuario.id"))
+    revisao: Mapped[int]
+    restricoes_conferidas: Mapped[bool]
+    validado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))

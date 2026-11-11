@@ -206,6 +206,16 @@ Table item_ficha {
   Note: 'Owner MOD-04. Nome/descrição do exercício usados são snapshot do item, preservados contra edição do catálogo'
 }
 
+Table validacao_ficha {
+  versao_id uuid [pk]
+  solicitacao_id uuid [not null]
+  validado_por uuid [not null]
+  revisao integer [not null]
+  restricoes_conferidas boolean [not null]
+  validado_em timestamptz [not null]
+  Note: 'Owner MOD-04. Validação técnica da publicação manual por revisão; imutável e separada do parecer'
+}
+
 Table parecer {
   id uuid [pk]
   versao_id uuid [not null]
@@ -213,7 +223,7 @@ Table parecer {
   estado varchar(20) [not null]
   motivo text
   criado_em timestamptz [not null]
-  Note: 'Owner MOD-04. Parecer independente de publicação; histórico atribuível, sem herdar aceite'
+  Note: 'Owner MOD-04. Parecer conclusivo imutável por versão; índice parcial versao_id onde estado != PENDENTE; rejeição exige motivo'
 }
 
 Table documento {
@@ -543,3 +553,6 @@ Ref: pagamento.cliente_id > cliente.usuario_id
 Ref: pagamento.plano_id > plano.id
 Ref: notificacao.destinatario_id > usuario.id
 Ref: auditoria.ator_id > usuario.id
+
+Ref: validacao_ficha.versao_id > versao_ficha.id
+Ref: validacao_ficha.validado_por > usuario.id

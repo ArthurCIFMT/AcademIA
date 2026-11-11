@@ -58,8 +58,8 @@ autoria, numeração e proveniência. `retention_candidates` seleciona
 conteúdo que excede as quinze versões publicadas completas, incluindo
 a vigente na retenção e desconsiderando rascunhos.
 
-TRN-03 utilizará esses invariantes para publicar, trocar a vigente,
-aplicar retenção e registrar pareceres. O expurgo marca conteúdo
+TRN-03 implementa [publicação, retenção e pareceres](publicacao-e-parecer.md)
+utilizando esses invariantes. O expurgo marca conteúdo
 expirado com motivo e data, remove itens antes dos dias e preserva os
 metadados. Consultas de conteúdo expirado retornam a identificação e
 uma lista vazia de dias. A estrutura preserva referências futuras de

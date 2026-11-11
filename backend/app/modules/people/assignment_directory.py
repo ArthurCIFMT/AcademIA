@@ -80,6 +80,12 @@ class AssignmentDirectory:
             )
         )
 
+    def instructor_reference(self, user_id: UUID) -> InstructorReference | None:
+        row = self.session.execute(
+            self._instructors().where(User.id == user_id)
+        ).first()
+        return InstructorReference(*row) if row else None
+
     def instructor_is_active(self, user_id: UUID) -> bool:
         return (
             self.session.execute(self._instructors().where(User.id == user_id)).first()

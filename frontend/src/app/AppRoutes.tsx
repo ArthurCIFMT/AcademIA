@@ -7,6 +7,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
+import { TrainingQueuePage, TrainingReviewPage } from "../features/training-review/TrainingReview";
 import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
@@ -35,7 +36,8 @@ function SessionBoundary() {
   const isAdminExercises = useMatch(adminExercisePath) !== null;
   const isInstructorExercises = useMatch(instructorExercisePath) !== null;
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
-  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor);
+  const isTrainingReview = useMatch("/area/instrutor/clientes/:clientId/treinos/:versionId/revisao") !== null;
+  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -81,7 +83,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -128,6 +130,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
         <Link to={"/area/" + areas[requiredRole].path + "/clientes"}>Gerenciar clientes</Link>
       </p>}
       {isInstructor && <p><Link to="/area/instrutor/clientes">Meus clientes</Link></p>}
+      {isInstructor && <p><Link to="/area/instrutor/revisoes">Avaliar fichas publicadas</Link></p>}
       {(isAdmin || isInstructor) && feature !== "exercises" && (
         <p><Link to={isAdmin ? adminExercisePath : instructorExercisePath}>Catálogo de exercícios</Link></p>
       )}
@@ -137,6 +140,8 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {feature === "onboarding" && isClient && <OwnOnboardingPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {staffContent}
       {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
+      {feature === "training-review" && isInstructor && <TrainingReviewPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
+      {feature === "training-queue" && isInstructor && <TrainingQueuePage key={state.session.user_id} />}
       {feature === "training-editor" && isInstructor && <WorkoutEditorPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "assessments" && isInstructor && <AssessmentPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {feature === "my-assignments" && isInstructor && <MyAssignmentsPage />}
@@ -178,6 +183,8 @@ export function AppRoutes() {
           <Route path="/area/atendimento/clientes" element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
           <Route path="/area/administracao/designacoes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="assignments" />} />
           <Route path="/area/instrutor/clientes" element={<AreaPage requiredRole="INSTRUTOR" feature="my-assignments" />} />
+          <Route path="/area/instrutor/revisoes" element={<AreaPage requiredRole="INSTRUTOR" feature="training-queue" />} />
+          <Route path="/area/instrutor/clientes/:clientId/treinos/:versionId/revisao" element={<AreaPage requiredRole="INSTRUTOR" feature="training-review" />} />
           <Route path="/area/instrutor/clientes/:clientId/treinos" element={<AreaPage requiredRole="INSTRUTOR" feature="training-editor" />} />
           <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
           <Route path={onboardingPath} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />

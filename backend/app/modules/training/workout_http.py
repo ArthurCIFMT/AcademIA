@@ -95,4 +95,8 @@ def workout_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRout
                 request.state.correlation_id,
             )
 
+    # Publicação/revisão pertencem ao mesmo módulo e usam a mesma sessão autenticada.
+    from app.modules.training.review_http import review_router
+
+    router.include_router(review_router(get_sessions))
     return router

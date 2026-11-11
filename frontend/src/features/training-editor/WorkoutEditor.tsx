@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { reviewPath } from "../training-review/TrainingReview";
 import { ApiError } from "../../lib/api/auth";
 import { loadWorkspace, loadWorkout, saveWorkout, type Context, type Content, type Day, type History,
   type Item, type Workout, type WorkoutMeta } from "./api";
@@ -222,6 +223,7 @@ function Workspace({ clientId, csrf, userId }: { clientId: string; csrf: string;
               setEditor({ value, copy: false }); setFormKey((key) => key + 1);
               setNotice("Rascunho salvo."); reload(1);
             }} />
+          {editor.value && !editor.copy && <p><Link to={reviewPath(clientId, editor.value.id)}>Publicar ou avaliar a versão salva</Link></p>}
           <button type="button" onClick={() => { setEditor(null); setNotice(""); }}>
             Descartar alterações não salvas e voltar
           </button>
@@ -234,6 +236,7 @@ function Workspace({ clientId, csrf, userId }: { clientId: string; csrf: string;
           <ul className="training-history">{history.itens.map((version) => (
             <li key={version.id}>
               <p>Versão {version.numero} · {version.origem} · {version.estado_publicacao}</p>
+              <p><Link to={reviewPath(clientId, version.id)}>Publicar ou avaliar versão {version.numero}</Link></p>
               {version.estado_publicacao !== "CONTEUDO_EXPIRADO" && <button type="button" disabled={opening}
                 onClick={() => void open(version)}>
                 {version.estado_publicacao === "RASCUNHO" && version.autor_id === userId ? "Editar rascunho" : "Copiar para novo rascunho"} {version.numero}

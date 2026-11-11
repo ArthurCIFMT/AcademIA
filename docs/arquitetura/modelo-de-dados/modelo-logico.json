@@ -889,9 +889,53 @@
       ]
     },
     {
+      "name": "validacao_ficha",
+      "owner": "MOD-04",
+      "note": "Validação técnica da publicação manual por revisão; registro imutável separado do parecer",
+      "columns": [
+        {
+          "name": "versao_id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": "versao_ficha.id"
+        },
+        {
+          "name": "solicitacao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "validado_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "revisao",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "restricoes_conferidas",
+          "type": "boolean",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "validado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
       "name": "parecer",
       "owner": "MOD-04",
-      "note": "Parecer independente de publicação; histórico atribuível, sem herdar aceite",
+      "note": "Parecer conclusivo imutável por versão; índice parcial versao_id onde estado != PENDENTE; rejeição exige motivo",
       "columns": [
         {
           "name": "id",

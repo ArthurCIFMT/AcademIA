@@ -10,7 +10,10 @@ from app.events.contracts import AuditEvent
 from app.modules.assignments.models import Assignment
 from app.modules.audit.service import record_audit
 from app.modules.identity.service import utc_now
-from app.modules.people.assignment_directory import AssignmentDirectory
+from app.modules.people.assignment_directory import (
+    AssignmentDirectory,
+    InstructorReference,
+)
 from app.policies.access import Actor
 
 
@@ -92,6 +95,12 @@ class PostgresAssignmentReader:
     def __init__(self, session: Session) -> None:
         self.session = session
         self.directory = AssignmentDirectory(session)
+
+    def review_recipient(self, client_id: UUID) -> InstructorReference | None:
+        current = _current(self.session, client_id)
+        if current is None or not self.is_active(current.instrutor_id, client_id):
+            return None
+        return self.directory.instructor_reference(current.instrutor_id)
 
     def is_active(self, instructor_id: UUID, client_id: UUID) -> bool:
         current = _current(self.session, client_id)
