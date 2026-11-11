@@ -89,6 +89,12 @@ class Retriever:
         source = session.get(DocumentVersion, p.documento_versao_id)
         if not fragment or not ingestion or not source:
             raise ValueError("Proveniência ausente.")
+        selection = ingestion.configuracao.get("selection")
+        if (
+            not isinstance(selection, dict)
+            or selection.get("finalidade") != request.finalidade
+        ):
+            raise ValueError("Finalidade incompatível com a seleção aprovada.")
         if (
             fragment.ingestao_id != ingestion.id
             or fragment.vetor_id != hit.id
@@ -106,6 +112,7 @@ class Retriever:
             or ingestion.documento_versao_id != source.id
             or ingestion.aprovacao_revisao != p.aprovacao_revisao
             or ingestion.config_hash != p.config_hash
+            or request.finalidade not in p.metadados.finalidades
             or p.space_sha256 != self.encoder.space.fingerprint
             or source.metadados != p.metadados.model_dump(mode="json")
         ):

@@ -5056,7 +5056,9 @@ Arquivos __init__ dos testes permitem reutilizar fixtures sem duplicar módulos 
 3. Buscar por cosseno até 40 candidatos, com filtros Qdrant obrigatórios de ingestão,
    finalidade e fingerprint. Os IDs permitidos vêm do backend, não da pergunta.
 4. Reconsultar aprovação no PG depois da busca; revalidar fragmento/checkpoint,
-   versão, revisão, configuração, hash, metadados e coordenadas. Payload e checksum
+   versão, revisão, configuração, hash, metadados e coordenadas. A finalidade
+   também precisa constar dos metadados aprovados e da seleção imutável do PG,
+   mesmo se o payload for adulterado com checksum recalculado. Payload e checksum
    incompatíveis geram falha técnica; não entregar fonte possivelmente adulterada.
 5. Aplicar limiar inicial 0,80, ordenar por score e ID para desempate, deduplicar por
    versão/hash e retornar até top_k. Evidências são candidatas: similaridade não é
@@ -8187,12 +8189,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
 | `docs/arquitetura/rag-semantico.md` | `34fab27ba60be929ecf4c6c48993ae0909f8210ccf75bf42ab0b97c21422e8cb` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/arquitetura/recuperacao-semantica.md` | `0dd94359f90e31897bb0852cd3e4b319edbff29f81aaa74b65872d7cf169c3af` |
+| `docs/arquitetura/recuperacao-semantica.md` | `c22907197b37f909c5693fdb97df2a0c10784a406cffc3da6bc351dddb354645` |
 | `docs/especificacao/compilacao-spec.json` | `aa176828706104eef5f7255d388aad43db4c34c87bf438faf4603220245784b8` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
 | `docs/especificacao/visao-geral.md` | `29779c41dfb21617e9c3d14af48e75ae46584cc4635da1440249790943d1bb4c` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `6b9856c830b9b8e5d726dea29212123de8551df47630bf8534074b92cb4bd0ab` |
+| `docs/prompts/README.md` | `8fdb4b9f347d88e297b019f18c2cc182e58fd984bcc719593b099ca6a2a84e38` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |

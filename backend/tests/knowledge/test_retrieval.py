@@ -12,6 +12,7 @@ from app.modules.knowledge.retrieval.contracts import Annotation, Hit, Request, 
 from app.modules.knowledge.retrieval.service import Retriever
 from app.modules.knowledge.schemas import Decision, Purpose
 from app.modules.knowledge.service import decide
+from app.modules.knowledge.vector.points import Point
 from app.modules.knowledge.vector.qdrant import QdrantStore
 from app.modules.knowledge.vector.settings import VectorSettings
 from tests.knowledge.test_indexing import FakeEncoder, setup
@@ -297,5 +298,29 @@ def test_low_score_is_insufficient_and_cache_is_bounded(
             result = service.retrieve(request())
             assert result.estado == "EVIDENCIA_INSUFICIENTE" and not result.evidencias
         assert len(service._cache) == 1
+    finally:
+        store.close()
+
+
+@pytest.mark.integration
+def test_forged_purpose_is_rejected_against_postgres_selection(
+    sessions: sessionmaker[Session], tmp_path: Path
+) -> None:
+    actor, _, _, extraction, selection = setup(sessions, tmp_path)
+    encoder = QueryDouble()
+    store = QdrantStore(VectorSettings(path=str(tmp_path / "qdrant")))
+    try:
+        ingestion = Indexer(sessions, store, encoder, lock_root=tmp_path / "locks").run(
+            actor, extraction, selection
+        )
+        vector = [1.0] + [0.0] * 383
+        hit = store.search(vector, [ingestion.id], "DUVIDAS", 1)[0]
+        forged = hit.payload.model_copy(update={"finalidade": "TRIAGEM"})
+        store.upsert([Point(id=hit.id, vector=vector, payload=forged)])
+        result = Retriever(sessions, store, encoder).retrieve(
+            request(finalidade="TRIAGEM")
+        )
+        assert result.estado == "SERVICO_INDISPONIVEL"
+        assert result.motivo == "PROVENIENCIA_INVALIDA" and not result.evidencias
     finally:
         store.close()

@@ -30,7 +30,9 @@ Arquivos __init__ dos testes permitem reutilizar fixtures sem duplicar módulos 
 3. Buscar por cosseno até 40 candidatos, com filtros Qdrant obrigatórios de ingestão,
    finalidade e fingerprint. Os IDs permitidos vêm do backend, não da pergunta.
 4. Reconsultar aprovação no PG depois da busca; revalidar fragmento/checkpoint,
-   versão, revisão, configuração, hash, metadados e coordenadas. Payload e checksum
+   versão, revisão, configuração, hash, metadados e coordenadas. A finalidade
+   também precisa constar dos metadados aprovados e da seleção imutável do PG,
+   mesmo se o payload for adulterado com checksum recalculado. Payload e checksum
    incompatíveis geram falha técnica; não entregar fonte possivelmente adulterada.
 5. Aplicar limiar inicial 0,80, ordenar por score e ID para desempate, deduplicar por
    versão/hash e retornar até top_k. Evidências são candidatas: similaridade não é

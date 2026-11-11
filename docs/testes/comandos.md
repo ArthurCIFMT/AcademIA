@@ -658,9 +658,11 @@ alto não recebe suporte de saúde automaticamente. O livro Nahas foi escolhido 
 registrado como referência pendente de extração válida; os quatro PDFs anteriores
 não foram promovidos. Não há migration, dependência nova ou alteração de frontend.
 
-Evidência de 2026-11-11: 15 testes específicos aprovados (6 BE e 9 INT,
+Evidência de 2026-11-11: 16 testes específicos aprovados (6 BE e 10 INT,
 incluindo E5/Qdrant/PostgreSQL reais e o ensaio rotulado). Regressão: 154 BE,
-114 DB/INT com Mailpit e 9 API aprovados. Ruff/formato, mypy em 136 arquivos,
+114 DB/INT com Mailpit e 9 API aprovados; a regressão adicional de finalidade
+adulterada passou em execução complementar, totalizando 115 DB/INT verificados.
+Ruff/formato, mypy em 136 arquivos,
 SPEC e DOC verificados. Neste conjunto: recall@5=100%, recall PT/EN=100% e
 abstenção fora de escopo=100%. Tempos exatos, inicialização e tamanho da amostra
 estão no relatório JSON; esses resultados não são métricas da futura LLM.
