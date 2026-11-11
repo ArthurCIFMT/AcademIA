@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "21f3e5815ff549b573fdb46f29bb1bd1e66dd8d5",
+  "base_implementacao": "d77632083fb4cbec1cf2512760b5265f74fa818d",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -144,6 +144,22 @@
         {
           "arquivo": "docs/testes/extracao-corpus-rag03.json",
           "titulo": "Ensaio técnico dos sete documentos selecionados",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/arquitetura/indexacao-documental.md",
+          "titulo": "Fragmentação, embeddings CPU, checkpoints e ativação"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/embedding-e5-v1.json",
+          "titulo": "Revisão de pesos, SHA-256 e configuração E5",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/selecao-indexacao-v1.schema.json",
+          "titulo": "Contrato JSON da seleção de trechos para indexar",
           "tipo": "codigo",
           "linguagem": "json"
         }

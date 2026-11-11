@@ -321,7 +321,7 @@ Unicidades: documento_id+numero; ambiente+sha256.
 
 ## ingestao — MOD-05
 
-Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção
+Migration 0013: plano e proveniência imutáveis; ativação exige todos os checkpoints e aprovação vigente
 
 Unicidades: documento_versao_id+config_hash.
 
@@ -329,25 +329,44 @@ Unicidades: documento_versao_id+config_hash.
 |---|---|---|---|
 | id | uuid | pk | — |
 | documento_versao_id | uuid | required | documento_versao.id |
-| config_hash | char(64) | required | — |
+| aprovacao_revisao | integer | required | — |
+| extracao_id | uuid | required | — |
+| config_hash | varchar(64) | required | — |
+| configuracao | jsonb | required | — |
+| plano_hash | varchar(64) | required | — |
+| colecao | varchar(100) | required | — |
 | estado | varchar(25) | required | — |
+| total | integer | required | — |
+| erro_codigo | varchar(80) | opcional | — |
+| criado_por | uuid | required | usuario.id |
 | iniciada_em | timestamptz | required | — |
 | concluida_em | timestamptz | opcional | — |
+| revision | integer | required | — |
 
 ## fragmento — MOD-05
 
-Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência
+Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em
+
+Unicidades: ingestao_id+ordem.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | ingestao_id | uuid | required | ingestao.id |
-| pagina_inicio | integer | required | — |
-| pagina_fim | integer | required | — |
+| ordem | integer | required | — |
+| pagina_inicio | integer | opcional | — |
+| pagina_fim | integer | opcional | — |
+| linha_inicio | integer | opcional | — |
+| linha_fim | integer | opcional | — |
 | secao | text | opcional | — |
-| texto_hash | char(64) | required | — |
+| inicio | integer | required | — |
+| fim | integer | required | — |
+| texto_hash | varchar(64) | required | — |
+| tokens | integer | required | — |
+| input_tokens | integer | required | — |
 | vetor_id | uuid | required unique | — |
 | colecao | varchar(100) | required | — |
+| indexado_em | timestamptz | opcional | — |
 
 ## conversa — MOD-06
 

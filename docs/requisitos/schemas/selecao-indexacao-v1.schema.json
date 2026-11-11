@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "Span": {
+      "additionalProperties": false,
+      "properties": {
+        "pagina": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Pagina"
+        },
+        "inicio": {
+          "minimum": 0,
+          "title": "Inicio",
+          "type": "integer"
+        },
+        "fim": {
+          "exclusiveMinimum": 0,
+          "title": "Fim",
+          "type": "integer"
+        },
+        "secao": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Secao"
+        },
+        "tipo": {
+          "default": "PARAGRAFO",
+          "enum": [
+            "PARAGRAFO",
+            "TABELA"
+          ],
+          "title": "Tipo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pagina",
+        "inicio",
+        "fim"
+      ],
+      "title": "Span",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "finalidade": {
+      "enum": [
+        "DUVIDAS",
+        "GERACAO_GERAL",
+        "TRIAGEM",
+        "DUVIDAS_SAUDE_GERAL"
+      ],
+      "title": "Finalidade",
+      "type": "string"
+    },
+    "motivo_curadoria": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Motivo Curadoria",
+      "type": "string"
+    },
+    "trechos": {
+      "items": {
+        "$ref": "#/$defs/Span"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "title": "Trechos",
+      "type": "array"
+    }
+  },
+  "required": [
+    "finalidade",
+    "motivo_curadoria",
+    "trechos"
+  ],
+  "title": "Selection",
+  "type": "object"
+}

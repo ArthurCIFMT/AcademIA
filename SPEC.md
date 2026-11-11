@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após RAG-03. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-04. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, conexão e extração entregues; quatro fontes com revisão técnica pendente; indexação e busca futuras |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração e indexação idempotente com E5 CPU entregues; quatro fontes com revisão técnica pendente; recuperação semântica futura |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,9 +139,12 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-04/RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-04. As pendências de extração estão no contrato/relatório do módulo.
-Esta entrega não acrescenta cartões à sequência nem fecha o aceite integrado do MVP.
+O MVP ainda requer RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é RAG-05. As pendências de extração estão no contrato/relatório do módulo.
+A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
+a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
+O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
+ou avaliação de relevância da busca. Esta entrega não fecha o aceite do MVP.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -1460,26 +1463,46 @@ Table documento_versao {
 Table ingestao {
   id uuid [pk]
   documento_versao_id uuid [not null]
-  config_hash char(64) [not null]
+  aprovacao_revisao integer [not null]
+  extracao_id uuid [not null]
+  config_hash varchar(64) [not null]
+  configuracao jsonb [not null]
+  plano_hash varchar(64) [not null]
+  colecao varchar(100) [not null]
   estado varchar(25) [not null]
+  total integer [not null]
+  erro_codigo varchar(80)
+  criado_por uuid [not null]
   iniciada_em timestamptz [not null]
   concluida_em timestamptz
+  revision integer [not null]
   indexes {
     (documento_versao_id, config_hash) [unique]
   }
-  Note: 'Owner MOD-05. Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção'
+  Note: 'Migration 0013: plano e proveniência imutáveis; ativação exige todos os checkpoints e aprovação vigente'
 }
 
 Table fragmento {
   id uuid [pk]
   ingestao_id uuid [not null]
-  pagina_inicio integer [not null]
-  pagina_fim integer [not null]
+  ordem integer [not null]
+  pagina_inicio integer
+  pagina_fim integer
+  linha_inicio integer
+  linha_fim integer
   secao text
-  texto_hash char(64) [not null]
+  inicio integer [not null]
+  fim integer [not null]
+  texto_hash varchar(64) [not null]
+  tokens integer [not null]
+  input_tokens integer [not null]
   vetor_id uuid [not null, unique]
   colecao varchar(100) [not null]
-  Note: 'Owner MOD-05. Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência'
+  indexado_em timestamptz
+  indexes {
+    (ingestao_id, ordem) [unique]
+  }
+  Note: 'Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em'
 }
 
 Table conversa {
@@ -1735,6 +1758,7 @@ Ref: documento_versao.criado_por > usuario.id
 Ref: documento_versao.aprovado_por > usuario.id
 Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
+Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
 Ref: conversa.cliente_id > cliente.usuario_id
 Ref: mensagem.conversa_id > conversa.id
@@ -2095,7 +2119,7 @@ Unicidades: documento_id+numero; ambiente+sha256.
 
 #### ingestao — MOD-05
 
-Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção
+Migration 0013: plano e proveniência imutáveis; ativação exige todos os checkpoints e aprovação vigente
 
 Unicidades: documento_versao_id+config_hash.
 
@@ -2103,25 +2127,44 @@ Unicidades: documento_versao_id+config_hash.
 |---|---|---|---|
 | id | uuid | pk | — |
 | documento_versao_id | uuid | required | documento_versao.id |
-| config_hash | char(64) | required | — |
+| aprovacao_revisao | integer | required | — |
+| extracao_id | uuid | required | — |
+| config_hash | varchar(64) | required | — |
+| configuracao | jsonb | required | — |
+| plano_hash | varchar(64) | required | — |
+| colecao | varchar(100) | required | — |
 | estado | varchar(25) | required | — |
+| total | integer | required | — |
+| erro_codigo | varchar(80) | opcional | — |
+| criado_por | uuid | required | usuario.id |
 | iniciada_em | timestamptz | required | — |
 | concluida_em | timestamptz | opcional | — |
+| revision | integer | required | — |
 
 #### fragmento — MOD-05
 
-Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência
+Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em
+
+Unicidades: ingestao_id+ordem.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | ingestao_id | uuid | required | ingestao.id |
-| pagina_inicio | integer | required | — |
-| pagina_fim | integer | required | — |
+| ordem | integer | required | — |
+| pagina_inicio | integer | opcional | — |
+| pagina_fim | integer | opcional | — |
+| linha_inicio | integer | opcional | — |
+| linha_fim | integer | opcional | — |
 | secao | text | opcional | — |
-| texto_hash | char(64) | required | — |
+| inicio | integer | required | — |
+| fim | integer | required | — |
+| texto_hash | varchar(64) | required | — |
+| tokens | integer | required | — |
+| input_tokens | integer | required | — |
 | vetor_id | uuid | required unique | — |
 | colecao | varchar(100) | required | — |
+| indexado_em | timestamptz | opcional | — |
 
 #### conversa — MOD-06
 
@@ -2437,6 +2480,13 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   data e revisão, revogação também exige motivo e preserva aprovação anterior.
 - Versão de documento aprovada e ingestão completa antes do uso ativo. Chunks
   compartilham modelo/dimensão/coleção; Qdrant não é autoridade de aprovação.
+- Ingestão (0013): unique(versão,config_hash), plano/configuração/proveniência
+  imutáveis e curador identificado. Fragmentos únicos por ingestão/ordem e vetor_id;
+  página física PDF ou linhas TXT, offsets e hash, até 300 tokens de conteúdo e
+  512 de entrada. Checkpoint só após confirmação do vetor. Trigger exige contagem
+  total indexada antes de CONCLUIDA; gate de uso revalida aprovação/revisão no PG.
+  Falha parcial fica inativa; retomada reconcilia recibos Qdrant e checkpoints sem
+  duplicar embeddings íntegros. Não apagar metadados para esconder falhas.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.
   Chamadas LLM são únicas por etapa; estado interrompido não dispara replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
@@ -2469,6 +2519,7 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 | Ficha | RASCUNHO → PUBLICADO → SUBSTITUIDO; conteúdo expurgado recebe CONTEUDO_EXPIRADO |
 | Parecer | PENDENTE → ACEITO/REJEITADO; decisões históricas atribuíveis |
 | Documento | PENDENTE → APROVADO → REVOGADO; ativação exige ingestão completa |
+| Ingestão | PROCESSANDO → CONCLUIDA/FALHA/REVOGADA; FALHA retoma PROCESSANDO; PENDENTE_TRATAMENTO exige revisão; reparo de CONCLUIDA retorna PROCESSANDO |
 | Matrícula | ATIVA → VENCIDA/ENCERRADA; renovação preserva histórico |
 | Acesso | RECEBIDO → IDENTIFICADO/DESCONHECIDO → ALLOW/DENY; passagem é evento separado |
 | Comando | CRIADO → ACEITO/FALHOU/EXPIRADO; aceito não implica passagem |
@@ -3667,8 +3718,10 @@ Não executar implementação por apenas ler esta especificação.
 RAG-02 entregou a [porta Qdrant local persistente](docs/arquitetura/banco-vetorial.md), com
 identidade por coleção, conexão sob demanda, singleton e erros controlados.
 RAG-03 entregou [extração offline e proveniência](docs/arquitetura/extracao-documental.md), com
-pendências de OCR/revisão explícitas; RAG-04/05 continuam responsáveis pela
-indexação/ativação e recuperação semântica.
+pendências de OCR/revisão explícitas. RAG-04 entregou
+[indexação idempotente e E5 CPU](docs/arquitetura/indexacao-documental.md), seleção técnica de
+trechos, checkpoints e ativação condicionada à aprovação vigente. RAG-05 será
+responsável pela recuperação/citações e seu ensaio de relevância/latência.
 
 #### Configuração inicial aceita
 
@@ -3682,7 +3735,8 @@ especializada persistente para protótipo; modo servidor só na fase apropriada.
 Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquitetura/modelo-de-dados/dados-rag-ia.md).
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
-([RAG-01](docs/arquitetura/corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
+([RAG-01](docs/arquitetura/corpus.md)); ingestão e fragmentos entregues na migration 0013
+([RAG-04](docs/arquitetura/indexacao-documental.md)); orquestrador aguarda seus cartões.
 RAG-03 mantém [artefatos privados de extração](docs/arquitetura/extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
@@ -3797,7 +3851,9 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v1.json](docs/requisi
     "device": "cpu",
     "normalize": true,
     "query_prefix": "query: ",
-    "passage_prefix": "passage: "
+    "passage_prefix": "passage: ",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "max_input_tokens": 512
   },
   "retrieval": {
     "chunk_tokens": 300,
@@ -4293,15 +4349,19 @@ e [distribuição Python](https://pypi.org/project/qdrant-client/1.20.0/).
 A porta interna VectorStore fornece check() → CollectionStatus e close().
 QdrantStore implementa essa porta; tipos públicos não importam classes Qdrant.
 O estado informa coleção, modelo/revisão, dimensão, métrica, fingerprint e contagem.
-Esta etapa não expõe uma nova API REST nem cria tabela/migration PostgreSQL.
+RAG-02 não criou rota REST ou tabela PostgreSQL. RAG-04 estende a porta
+VectorIndex com present(payloads esperados) e upsert(points), sem expor tipos SDK;
+a migration 0013 registra plano e checkpoints no PG. Não há busca pública nesta fase.
 A composição do FastAPI fecha o recurso no shutdown; esse ponto fora da pasta
 vector/ é necessário ao ciclo de vida da conexão previsto pelo cartão.
 
-Não existem ainda extração, chunking, cálculo de embeddings, indexação de
-literatura ou recuperação de evidências. Os cartões RAG-03–RAG-05 ampliarão a
-porta. Esta entrega não envia arquivos/perguntas para LLM, não baixa pesos E5 e
-não mede a relevância ou latência semântica. Vetores sintéticos dos testes ficam
-em diretórios temporários, fora do acervo e do banco de desenvolvimento.
+RAG-03 entregou extração e RAG-04 entregou [embeddings/indexação](docs/arquitetura/indexacao-documental.md).
+Payload versionado e seu checksum ligam cada vetor ao texto/hash e à versão,
+configuração, finalidade, página/linhas e seção. present verifica esses vínculos,
+dimensão e normalização; upsert é idempotente por ID. Nenhuma dessas operações
+aprova a literatura. Recuperação e avaliação semântica são RAG-05.
+Testes usam diretórios temporários; o ensaio E5 real não publica literatura
+sintética no banco de desenvolvimento. Esta entrega não chama LLM.
 
 #### Configuração e identidade da coleção
 
@@ -4313,10 +4373,10 @@ Recomenda-se caminho absoluto local se o diretório de execução puder variar.
 |---|---|
 | ACADEMIA_VECTOR_MODE | local; qualquer outro modo é recusado nesta fase |
 | ACADEMIA_VECTOR_PATH | data/qdrant; persistente, específico, não :memory: nem raiz de unidade |
-| ACADEMIA_VECTOR_COLLECTION | academia_rag_e5_v1; nome deve terminar em _vN |
+| ACADEMIA_VECTOR_COLLECTION | academia_rag_e5_v2; nome deve terminar em _vN |
 | ACADEMIA_VECTOR_EMBEDDING_MODEL | intfloat/multilingual-e5-small |
 | ACADEMIA_VECTOR_DIMENSION | 384 |
-| ACADEMIA_VECTOR_MODEL_REVISION | Ausente até RAG-04; quando definida, hash exato de 40–64 caracteres hexadecimais |
+| ACADEMIA_VECTOR_MODEL_REVISION | 614241f622f53c4eeff9890bdc4f31cfecc418b3, igual ao encoder fixado |
 
 Métrica cosseno, normalização e prefixos query:/passage: são parte do espaço
 versionado, conforme a configuração canônica. Não mudar modelo/dimensão por
@@ -4327,8 +4387,8 @@ configuração. Modo servidor e migração/reindexação ficam para a infraestru
 
 Cada coleção guarda nos próprios metadados um schema_version e o embedding_space:
 modelo, revisão, dimensão, métrica, normalização e prefixos, mais SHA-256 da
-serialização JSON canônica desse espaço. O schema da identidade é 1. O nome _v1
-identifica a coleção inicial; novas configurações usam nova versão de coleção.
+serialização JSON canônica desse espaço. O schema da identidade é 1. A coleção _v1 foi criada para a conexão inicial
+sem revisão; _v2 fixa os pesos reais. Configurações diferentes exigem nova coleção.
 
 A abertura verifica tanto os parâmetros físicos (vetor denso único, dimensão,
 cosseno, sem multivetor/esparso) quanto a identidade registrada. Coleção existente
@@ -4336,11 +4396,11 @@ sem metadados ou incompatível é recusada, inclusive se vazia. Não adotar veto
 por terem apenas a mesma dimensão. Não sobrescrever identidade, recriar coleção,
 apagar pontos, reindexar ou trocar nome automaticamente para esconder conflito.
 
-Revisão de pesos nula significa somente conexão inicial, não embedding validado.
-RAG-04 deverá fixar a revisão real dos pesos e abrir uma nova coleção versionada
-compatível antes da ingestão. Alterar essa revisão mantendo o nome atual deve
-produzir CONFIGURACAO_INCOMPATIVEL; isso impede misturar espaços silenciosamente.
-Ingestão completa e proveniência continuam sendo condições adicionais ao uso.
+A v1 sem revisão permanece preservada. RAG-04 usa por padrão a v2 compatível
+com a revisão real fixada; apontar a configuração nova para a v1 deve retornar
+CONFIGURACAO_INCOMPATIVEL. Não apagar/recriar a coleção antiga para contornar a
+verificação. Ingestão recusa revisão nula ou divergente do encoder. Ingestão
+completa e proveniência continuam sendo condições adicionais ao uso.
 
 #### Ciclo de vida, concorrência e falhas
 
@@ -4392,15 +4452,18 @@ Variáveis de URL/chave de um servidor remoto não são necessárias neste MVP.
 
 #### Curadoria e próximos passos
 
-A conexão não decide aprovação de corpus. RAG-04/05 deverão combinar a identidade
+A conexão não decide aprovação de corpus. RAG-04 combina a identidade
 do espaço com [referências aprovadas e revalidação](docs/arquitetura/corpus.md#integração-e-invalidação),
-extração/indexação completa e proveniência. Qdrant não é a autoridade de aprovação;
+extração/indexação completa e proveniência. RAG-05 deve reusar esse gate.
+Qdrant não é a autoridade de aprovação;
 metadados vetoriais não desbloqueiam versão revogada nem documentos TESTE.
 Não indexar onboarding, dados biométricos, inventário ou conversas como literatura.
 
 A dependência qdrant-client é necessária para o engine real e traz nove pacotes
 novos no lockfile, incluindo ela própria; versões preexistentes foram preservadas.
-Não instalar extras de inferência/fastembed ou provedores nesta etapa.
+Esse registro se refere à entrega RAG-02; RAG-04 adiciona as dependências CPU
+justificadas no [contrato de indexação](docs/arquitetura/indexacao-documental.md). Não usar
+fastembed ou outro modelo como fallback.
 Testes e evidências estão no [registro de comandos](docs/testes/comandos.md#conexão-vetorial-local).
 ### 7. Extração offline, proveniência e bloqueios de qualidade
 
@@ -4516,7 +4579,8 @@ sem reprocessamento silencioso. Esses hashes detectam inconsistência e não
 substituem as permissões do diretório privado.
 
 Não há nova migration, tabela, tela ou API REST neste cartão. A tabela relacional
-INGESTAO e fragmentos pertencem a RAG-04; artefatos de extração são derivados locais
+INGESTAO e fragmentos foram entregues em [RAG-04](docs/arquitetura/indexacao-documental.md);
+artefatos de extração são derivados locais
 versionados por configuração, prontos para ser consumidos pela etapa seguinte.
 A extração não abre Qdrant e falhas não interferem no treino manual.
 
@@ -4670,6 +4734,283 @@ Fonte versionada: [docs/testes/extracao-corpus-rag03.json](docs/testes/extracao-
       "paginas_pendentes": []
     }
   ]
+}
+````
+### 9. Fragmentação, embeddings CPU, checkpoints e ativação
+
+Fonte versionada: [docs/arquitetura/indexacao-documental.md](docs/arquitetura/indexacao-documental.md).
+
+MOD-05 transforma uma seleção técnica de literatura aprovada em fragmentos e
+vetores persistentes. Entrega MRF01/MRF11/MRF15 e RNF-17; não chama LLM, decide
+triagem ou implementa busca semântica. Recuperação/citações são RAG-05.
+
+#### Entrada e delimitação
+
+O serviço Indexer recebe ExtractionResult CONCLUIDA, Selection e curador ativo
+(administrador, conforme a política MANAGE_CORPUS). Reconsulta papéis e aprovação
+vigente no PostgreSQL antes da preparação, dos lotes e da conclusão. Documento
+TESTE ou versão revogada não pode ativar ingestão de literatura.
+
+Selection é JSON estrito, schema_version=1, com finalidade aprovada no documento,
+motivo_curadoria e trechos de parágrafos/tabelas selecionados. Seu
+[JSON Schema](docs/requisitos/schemas/selecao-indexacao-v1.schema.json) integra a SPEC.
+Cada trecho declara página física PDF (1-based) ou null para TXT, offsets inicio
+inclusivo/fim exclusivo em caracteres do texto extraído, seção e tipo
+PARAGRAFO/TABELA. Offsets não são bytes nem a numeração impressa do livro.
+A seleção é feita sobre o artefato de extração, sem editar o PDF original.
+
+Cabe ao curador selecionar conteúdo útil inteiro e conferir sua leitura. Não
+promover bibliografia, rodapés, tabelas partidas ou colunas intercaladas apenas
+porque o texto pôde ser extraído. O motivo e a seleção ficam na configuração
+imutável da ingestão. Um conjunto concluído cobre essa seleção explícita, não
+significa que todas as páginas do livro foram indexadas. Outra seleção/configuração
+produz nova identidade e exige indexação completa independente.
+
+#### Fragmentação e proveniência
+
+- Conteúdo: até 300 tokens do tokenizer E5. Entrada completa com título/seção,
+  prefixo passage: e tokens especiais: até 512. Não há truncamento silencioso.
+- Respeitar página, seção, parágrafo e tabela. Junção apenas de átomos contíguos
+  separados por espaços/quebras; conservar texto, símbolos, unidades e negações.
+- Sobreposição alvo 48 tokens, usando átomos inteiros: pode ser zero ou superar
+  48 para não quebrar contexto, mantendo o teto de 300.
+- Parágrafo/tabela indivisível acima do limite, origem inválida ou contexto de
+  título excessivo deixa PENDENTE_TRATAMENTO, sem vetores ativos. Corrigir/revisar
+  a seleção ou a extração; não descartar ressalvas para caber no limite.
+- Payload versionado contém texto/hash, metadados bibliográficos, finalidade,
+  versão/aprovação, ingestão/fragmento, configuração/espaço, página ou linhas TXT,
+  offsets e seção. PG guarda os vínculos/checkpoints; texto/vetor ficam no Qdrant.
+
+#### Modelo local e dependências
+
+E5-small multilíngue CPU, 384 dimensões normalizadas e cosseno; query: para
+perguntas e passage: para documentos. Revisão fixa
+614241f622f53c4eeff9890bdc4f31cfecc418b3. Os
+[hashes e versões](docs/requisitos/schemas/embedding-e5-v1.json) permitem reprodução.
+
+sentence-transformers 6.2.0 executa o modelo; torch 2.15.0 é a runtime CPU;
+tokenizers conta a entrada sem truncamento; huggingface-hub 2.4.0 provisiona os
+arquivos fixados. São dependências necessárias desta entrega; uv.lock fixa as
+transitivas. Não se instala GPU, provedor pago, OCR ou LLM.
+Fontes técnicas: [modelo E5](https://huggingface.co/intfloat/multilingual-e5-small),
+[SentenceTransformer](https://sbert.net/docs/package_reference/sentence_transformer/model.html)
+e [SDK Qdrant](https://github.com/qdrant/qdrant-client/tree/v1.20.0).
+
+O provisionamento explícito baixa apenas uma lista de arquivos do commit fixado,
+sem credencial, gera academia-model.json e verifica SHA-256. Na primeira carga o
+encoder confere os arquivos contra o manifesto. Na inferência, arquivos são locais,
+HF offline, trust_remote_code=False e pesos safetensors; não há download automático.
+Modelo roda em subprocesso persistente, serializado, limitado a CPU e threads.
+Timeout encerra o subprocesso; uma resposta tardia não publica conteúdo. Shutdown
+libera worker e Qdrant. Importar a API não carrega pesos nem abre o índice.
+
+#### Persistência, retomada e ativação
+
+Migration 0013 cria INGESTAO e FRAGMENTO, sem modificar migrations anteriores.
+IDs UUID5 derivam da versão/configuração e ordem/hash do texto. A configuração
+fixa extração/hash, seleção, modelo/revisão/espaço, coleção e limites. Unicidade
+versão+config_hash e ingestão+ordem impede duplicação. Proveniência é imutável;
+checkpoints e estados mudam controladamente, com revisão e auditoria.
+
+1. Preparar plano completo no PG, adquirir lock por ingestão e validar espaço.
+2. Conferir pontos existentes pelo ID, payload/hash, dimensão e normalização.
+3. Gerar somente faltantes, fazer upsert e confirmar recibo no Qdrant.
+4. Persistir checkpoint por fragmento; ativar CONCLUIDA somente com todos os
+   pontos confirmados e versão ainda aprovada. Trigger confere contagem SQL.
+
+Não há transação distribuída PG/Qdrant. Se o processo parar após gravar vetor e
+antes do checkpoint, a retomada reconhece o ponto íntegro e evita novo embedding.
+Replay completo não duplica pontos nem evento de conclusão. Vetor ausente/inválido
+exige reparo dos faltantes; estado retorna PROCESSANDO até concluir.
+
+Lotes padrão 8 (configurável 1–32), timeout 60 s por tentativa (máximo 180 s),
+orçamento 180 s por lote e até 3 tentativas para erro transitório/rate limit,
+com backoff 1/2 s. JSON/vetor inválido não abre loop de reparo. O modelo local
+não depende de rate limit remoto; o contrato/teste mantém essa falha explícita.
+Falha do Qdrant fica registrada, com retomada por ação explícita. Não reiniciar
+orçamento do lote ao repetir transporte. Nenhuma transação SQL fica aberta
+aguardando embeddings ou Qdrant.
+
+Estados: PROCESSANDO, FALHA, CONCLUIDA, PENDENTE_TRATAMENTO e REVOGADA.
+Falha/resultado parcial nunca é ativo. available_ingestions combina CONCLUIDA,
+coleção/espaço, ambiente LITERATURA e revisão de aprovação atual no PG. Revogar
+retira elegibilidade imediatamente, mesmo com vetores físicos ainda presentes;
+RAG-05 deve usar esse gate, não confiar apenas no payload. Literatura nunca recebe
+onboarding, biometria, inventário ou conversas privadas.
+
+#### Operação local
+
+A partir de backend/, configurar .env conforme o exemplo, aplicar migration 0013
+e parar a API antes de abrir o mesmo diretório Qdrant em uma CLI:
+
+~~~powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.embeddings.provision
+uv run --locked --env-file ../.env python -m app.modules.knowledge.ingestion --actor UUID_CURADOR --version UUID_VERSAO --selection CAMINHO_JSON
+~~~
+
+O primeiro comando de módulo precisa de internet apenas para obter os pesos.
+O segundo requer banco configurado, versão aprovada e seleção técnica real;
+responde JSON com identidade, estado/contagens/erro controlado. Só CONCLUIDA
+retorna exit code 0. Caminhos relativos partem de backend/. Pesos, locks, extrações
+e índice ficam ignorados pelo Git; não publicar esses diretórios.
+
+Coleção padrão academia_rag_e5_v2 fixa a revisão. A v1 de RAG-02 sem revisão é
+preservada; trocar revisão mantendo coleção incompatível falha, sem apagar dados.
+Um worker por diretório local; não executar API e manutenção simultaneamente.
+
+#### Evidências e pendências
+
+[Testes e comandos](docs/testes/comandos.md#indexação-e-embeddings-locais) incluem
+falhas/retomada, crash entre vetor e checkpoint, imutabilidade SQL, migração de
+ida/volta, Qdrant real, E5 CPU real e pipeline PG/Qdrant/E5 com texto sintético.
+Teste com double não demonstra qualidade do modelo. O ensaio real comprova
+indexação técnica, não pertinência ou latência de recuperação/chat.
+
+O [relatório RAG-03](docs/testes/extracao-corpus-rag03.json) mantém quatro fontes
+REVISAO_NECESSARIA: BR-MS-001, INT-BJSM-001, INT-SPMED-001 e BR-SBC-001.
+Não foram promovidas por esta entrega. As três extrações concluídas ainda exigem
+seleção de trechos úteis; não houve carga automática integral do acervo no banco
+de desenvolvimento. Não existe avaliação semântica de RAG-05 ou ensaio LLM de AI-06.
+### 10. Revisão de pesos, SHA-256 e configuração E5
+
+Fonte versionada: [docs/requisitos/schemas/embedding-e5-v1.json](docs/requisitos/schemas/embedding-e5-v1.json).
+
+````json
+{
+  "files": {
+    "1_Pooling/config.json": "987f7a67a38fa564c849bb5d277c52ab9088a84368fc0be31a354125aebb12a0",
+    "config.json": "69137736cab8b8903a07fe8afaafdda25aac55415a12a55d1bffa9f581abf959",
+    "model.safetensors": "1a55775f53449dac10a2bcbc312469fac40b96d53198c407081a831f81c98477",
+    "modules.json": "c6e29747481e8b5dd2b58401966aeac910de39092f90cda9a704b1545f902b04",
+    "sentence_bert_config.json": "948201d8329907aae938fa62f9ceeed53f5694dacc2b87b9f3b78b37ee986529",
+    "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+    "special_tokens_map.json": "d05497f1da52c5e09554c0cd874037a083e1dc1b9cfd48034d1c717f1afc07a7",
+    "tokenizer.json": "0b44a9d7b51c3c62626640cda0e2c2f70fdacdc25bbbd68038369d14ebdf4c39",
+    "tokenizer_config.json": "a1d6bc8734a6f635dc158508bef000f8e2e5a759c7d92f984b2c86e5ff53425b"
+  },
+  "model": "intfloat/multilingual-e5-small",
+  "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+  "schema_version": 1,
+  "dimension": 384,
+  "metric": "Cosine",
+  "normalize": true,
+  "device": "cpu",
+  "query_prefix": "query: ",
+  "passage_prefix": "passage: ",
+  "max_input_tokens": 512,
+  "collection": "academia_rag_e5_v2",
+  "dependencies": {
+    "sentence_transformers": "6.2.0",
+    "torch": "2.15.0",
+    "tokenizers": "0.23.3",
+    "huggingface_hub": "2.4.0"
+  }
+}
+````
+### 11. Contrato JSON da seleção de trechos para indexar
+
+Fonte versionada: [docs/requisitos/schemas/selecao-indexacao-v1.schema.json](docs/requisitos/schemas/selecao-indexacao-v1.schema.json).
+
+````json
+{
+  "$defs": {
+    "Span": {
+      "additionalProperties": false,
+      "properties": {
+        "pagina": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Pagina"
+        },
+        "inicio": {
+          "minimum": 0,
+          "title": "Inicio",
+          "type": "integer"
+        },
+        "fim": {
+          "exclusiveMinimum": 0,
+          "title": "Fim",
+          "type": "integer"
+        },
+        "secao": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Secao"
+        },
+        "tipo": {
+          "default": "PARAGRAFO",
+          "enum": [
+            "PARAGRAFO",
+            "TABELA"
+          ],
+          "title": "Tipo",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pagina",
+        "inicio",
+        "fim"
+      ],
+      "title": "Span",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "finalidade": {
+      "enum": [
+        "DUVIDAS",
+        "GERACAO_GERAL",
+        "TRIAGEM",
+        "DUVIDAS_SAUDE_GERAL"
+      ],
+      "title": "Finalidade",
+      "type": "string"
+    },
+    "motivo_curadoria": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Motivo Curadoria",
+      "type": "string"
+    },
+    "trechos": {
+      "items": {
+        "$ref": "#/$defs/Span"
+      },
+      "maxItems": 10000,
+      "minItems": 1,
+      "title": "Trechos",
+      "type": "array"
+    }
+  },
+  "required": [
+    "finalidade",
+    "motivo_curadoria",
+    "trechos"
+  ],
+  "title": "Selection",
+  "type": "object"
 }
 ````
 
@@ -6023,7 +6364,7 @@ com revisão, hash e metadados. is_approved consulta o estado atual no PostgreSQ
 para cada novo uso, inclusive cache. Revogação aumenta a revisão e retorna falso
 para a referência antiga sem apagar o arquivo ou fontes históricas.
 
-RAG-02–RAG-05 deverão usar essa porta e exigir também extração/indexação completa,
+Os consumidores RAG-04/RAG-05 devem usar essa porta e exigir também extração/indexação completa,
 validando antes de entregar trechos. Um vetor ainda existente no Qdrant não torna
 a versão autorizada. Nesta etapa não existe busca/cache ativo para invalidar.
 Não há LLM, embeddings, contexto de cliente ou acesso direto a outro módulo.
@@ -6231,8 +6572,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [RAG-01](docs/prompts/05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | CONCLUIDO |
 | [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | CONCLUIDO |
 | [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | CONCLUIDO |
-| [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | PRONTO |
-| [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
+| [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | CONCLUIDO |
+| [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | PRONTO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | BLOQUEADO |
 | [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | BLOQUEADO |
@@ -6904,6 +7245,7 @@ A revisão `0009` cria o [catálogo de exercícios](docs/arquitetura/catalogo-ex
 A revisão `0010` cria as [fichas manuais e invariantes de versões](docs/arquitetura/fichas-manuais.md).
 A revisão `0011` registra a [validação de publicação e os pareceres imutáveis](docs/arquitetura/publicacao-e-parecer.md).
 A revisão `0012` cria [documentos, versões e decisões de curadoria](docs/arquitetura/corpus.md), com proveniência protegida.
+A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -6990,7 +7332,31 @@ coleção versionada, persistência, falhas e exclusão entre processos. Não é
 necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
 suas rotas manuais não dependem de abrir o índice. A [extração offline](docs/arquitetura/extracao-documental.md)
 já oferece serviço interno com proveniência e registro privado de estados.
-Indexação e busca serão implementadas nos cartões seguintes.
+RAG-04 entrega [chunking e indexação com E5 CPU](docs/arquitetura/indexacao-documental.md).
+A recuperação semântica/citações pertence ao próximo cartão, RAG-05.
+
+#### Embeddings e indexação offline
+
+Com `.env` configurado, migration 0013 aplicada e a API parada, em `backend/`:
+
+```powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.embeddings.provision
+uv run --locked --env-file ../.env python -m app.modules.knowledge.ingestion --actor UUID_CURADOR --version UUID_VERSAO --selection CAMINHO_JSON
+```
+
+O provisionamento obtém os pesos fixados do E5 (internet, aproximadamente 470 MB),
+sem chave de LLM. A inferência depois é local CPU/offline. Pesos ficam em
+`backend/models/multilingual-e5-small` e fora do Git; configure caminho absoluto
+por ACADEMIA_EMBEDDING_PATH se necessário. Modelo e SHA-256 estão no
+[manifesto](docs/requisitos/schemas/embedding-e5-v1.json).
+
+A seleção JSON segue o [schema](docs/requisitos/schemas/selecao-indexacao-v1.schema.json)
+e usa offsets do artefato extraído, não texto copiado manualmente do PDF. Exige
+curador administrador ativo e versão aprovada. Não indexar páginas com qualidade
+pendente. Um único processo por diretório Qdrant; manutenção e API não abrem o
+mesmo diretório simultaneamente. A coleção v2 preserva a v1 sem revisão de pesos.
+O guia detalha retomada, falhas e quatro documentos ainda pendentes de extração.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -7081,6 +7447,10 @@ dependencies = [
     "qdrant-client==1.20.0",
     "pypdf==7.0.1",
     "portalocker==4.4.2",
+    "sentence-transformers==6.2.0",
+    "tokenizers>=0.22,<1",
+    "huggingface-hub==2.4.0",
+    "torch==2.15.0",
 ]
 
 [dependency-groups]
@@ -7194,13 +7564,20 @@ ACADEMIA_CORPUS_DIR=data/corpus
 # Qdrant local persistente: um worker, diretório exclusivo; sem servidor/Docker.
 ACADEMIA_VECTOR_MODE=local
 ACADEMIA_VECTOR_PATH=data/qdrant
-ACADEMIA_VECTOR_COLLECTION=academia_rag_e5_v1
+ACADEMIA_VECTOR_COLLECTION=academia_rag_e5_v2
 ACADEMIA_VECTOR_EMBEDDING_MODEL=intfloat/multilingual-e5-small
 ACADEMIA_VECTOR_DIMENSION=384
-# ACADEMIA_VECTOR_MODEL_REVISION: hash exato dos pesos, definido em RAG-04.
+ACADEMIA_VECTOR_MODEL_REVISION=614241f622f53c4eeff9890bdc4f31cfecc418b3
 
 # Resultados privados de extração por versão/configuração, fora do Git.
 ACADEMIA_EXTRACTION_DIR=data/extracoes
+
+# Modelo público local; baixar explicitamente pelo módulo embeddings.provision.
+ACADEMIA_EMBEDDING_PATH=models/multilingual-e5-small
+ACADEMIA_EMBEDDING_BATCH_SIZE=8
+ACADEMIA_EMBEDDING_TIMEOUT_SECONDS=60
+ACADEMIA_EMBEDDING_CPU_THREADS=2
+ACADEMIA_INDEX_LOCK_DIR=data/indexacao
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -7220,19 +7597,19 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `50d9b067a55190e9e39b07ad72b0c195f4bc90c9543a457afb684cf5d5417902` |
+| `.env.example` | `06fe84515229037b75478dd20ce7ca4418e77540bf6d4f487fc1022c7143a0c2` |
 | `AGENTS.md` | `03a6aa7031b6e62319d22a2faef9f321e2afa9d217d75a6648402a8a44cfed45` |
-| `backend/README.md` | `36a86d52d0d5ff90bb6c496aa688eca20b5801807119633d04c320921d71c6ea` |
-| `backend/pyproject.toml` | `96bb1a8b66783be3307c4b3cf562d30d757512db6249b9ee2636696ce804c5f8` |
-| `database/README.md` | `10eb39d85d11d4a4d4ad969e7556a6d0339107fcf4e36924a112e6eed0a194a3` |
+| `backend/README.md` | `c89796327522b2d6c996b236592ad9d604b240ff5545759e54b058dc90555396` |
+| `backend/pyproject.toml` | `c0cd2be2d92c2e19f48399c12b87a651e51bad98181a7077c00f5885b44b1229` |
+| `database/README.md` | `a2380251f2d87c5434d63a7308d6801525e698c7875ee094873fc9e468abd28c` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
-| `docs/arquitetura/banco-vetorial.md` | `d2c20b0f4cd80b521eba9ecaf4c7de9e1951d7fec4bbef2b1f4bf732a2364971` |
+| `docs/arquitetura/banco-vetorial.md` | `f6e60e6b038f4a4dbeb0addd0200cbb656d160413fedb183e6ecc712e2cd58d6` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
-| `docs/arquitetura/corpus.md` | `6121322eedf344a5a55215e5b051a7058ac15266d7369c3cb9440082c128ed24` |
+| `docs/arquitetura/corpus.md` | `50e5423e4035b5e5b5a0c9b342a06282583313dcbcc6156ce8e2a788e7aafdf0` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
@@ -7240,34 +7617,37 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
-| `docs/arquitetura/extracao-documental.md` | `9a418bd150a3a19ee8076795525f60218b0c72fc673680c4f377e10f5f31bf05` |
+| `docs/arquitetura/extracao-documental.md` | `84c29f3d468fb044b258d55bb37ded383cb1a92a1095a8dd32a405bc951c58d6` |
 | `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `8ba63fd7559969e8c5d7b79f10f7b6cad0637703d79c16f9a3aab3bd5bfaf9be` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `b014bdcdc44db04fdee3423c3841556ada3ee32cbb6a3a1f184db76319739989` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6af4922b8e2d33510094a2f4afba32e15b4f40921ebdb768e66f046eabf797b` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `8d9a5fcbd6e8211ff94916e75185c60092842c85255b652c56835708ab0621e4` |
+| `docs/arquitetura/indexacao-documental.md` | `96394ad677ee4ae425ac63c205703b365edac4e61ad5557cad4218c3c4d1c10a` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `6edcbc2dedf96b40a64fbbc0db3dc6f2e1f660ae2b63ab95f36ea5afb3a253dc` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `567b72d96b271b54021ae401c2d3faeb8cb8e8ff0bf09e6aa8839eec1b7b1db4` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `92e9288458409b0d18243e4e46c990bce4f9971e890831c14aa2910d999da498` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
-| `docs/arquitetura/rag-semantico.md` | `b2082ad8fd5aa83affc592893bf4bbe943e10089afc1ac455ef86a2a6f69ccaa` |
+| `docs/arquitetura/rag-semantico.md` | `add38fbcec6466dacf4680e304d2077b9e528dc3ac00596580535470238a73bc` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/especificacao/compilacao-spec.json` | `06bcda80c0b6897665305ef629914bd6fcef31345be8d3fdfc880d97cd6aa084` |
+| `docs/especificacao/compilacao-spec.json` | `27850f7347b26f800207823fe3139b06adc246a70eb21cd7e220bec5a4972f04` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `9ca858958b21cf928609d18265da4a72b3a3c217e5092763aec6d1edd473954e` |
+| `docs/especificacao/visao-geral.md` | `44e8252dbd52d67e7af6670bc6e9cb5c4601d9e66b93fc9c4affe7c95373cfca` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `f9b0acb49d182bfbe1cba2d9e478071e9a3e1718f018bb7503e43b7081b694bc` |
+| `docs/prompts/README.md` | `797397d5c6886bf187f93542c56137212d571d1d873b952011ea7d35d8c5c4b5` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
 | `docs/requisitos/requisitos-funcionais.md` | `8a334908f715122efbb013d80d30846a61c94f18e16cc8c75c0658776b772250` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
-| `docs/requisitos/schemas/configuracao-ia-v1.json` | `b12a4242ff4a516b8069659480da7a51573eef00b6833a18054dbe78f2714e70` |
+| `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
+| `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
+| `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |

@@ -571,3 +571,48 @@ aprovados; regressão com 135 BE, 9 API e 97 DB/INT, incluindo Mailpit, aprovada
 Ruff/formato, mypy em 115 arquivos, SPEC e DOC aprovados. Sem testes de frontend
 nesta entrega, pois a interface não foi alterada. O ensaio não promove os quatro
 documentos pendentes e não demonstra qualidade/velocidade de respostas da IA.
+
+## Indexação e embeddings locais
+
+RAG-04 entrega [seleção/chunking, E5 CPU e indexação](../arquitetura/indexacao-documental.md).
+A partir de backend/, com PostgreSQL de teste e pesos locais provisionados:
+
+~~~powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.embeddings.provision
+uv run --locked pytest tests/knowledge/test_indexing.py
+$env:ACADEMIA_TEST_EMBEDDINGS_REAL = '1'
+uv run --locked --env-file ../.env pytest -m 'database or integration' tests/knowledge/test_indexing.py
+uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_indexing.py tests/knowledge/test_vector.py
+uv run --locked ruff check . ../database/migrations/env.py ../database/migrations/versions/0013_knowledge_indexing.py
+uv run --locked ruff format --check . ../database/migrations/env.py ../database/migrations/versions/0013_knowledge_indexing.py
+uv run --locked mypy app tests ../database/migrations/env.py ../database/migrations/versions/0013_knowledge_indexing.py
+~~~
+
+O primeiro pytest seleciona unitários. Integração usa diretório Qdrant temporário,
+PostgreSQL real e, com a flag, pesos E5 CPU reais. Sem a flag, dois testes E5 ficam
+explicitamente skipped; isso não é aceite de embeddings reais. Se usar outro
+caminho, configurar ACADEMIA_EMBEDDING_PATH absoluto. Não requer chave de LLM ou GPU.
+A API deve estar parada ao operar seu diretório vetorial por CLI; testes isolados
+não compartilham o índice de desenvolvimento. O provisionamento é o único passo
+que precisa de internet. Pesos, índices, extrações e dados de teste não entram no Git.
+
+Cobertura: limites 300/48/512, parágrafo/tabela indivisível, símbolos/negações,
+finalidade aprovada e origem, vetores normalizados/finitos/384, rate limit e timeout
+com retry limitado, encerramento do worker, idempotência, falha parcial/retomada,
+crash entre vetor e checkpoint, payload corrompido, revogação e migration ida/volta.
+O ensaio completo E5 + PG + Qdrant usa texto sintético delimitado e comprova a
+integração técnica. Não demonstra qualidade de busca ou resposta, nem ativa as
+quatro fontes com revisão técnica pendente do RAG-03. Não houve teste de frontend,
+pois a interface não foi alterada. Permanecem as duas linhas longas preexistentes
+nas migrations 0004/0006; esta entrega verifica o backend e a migration nova.
+
+Evidência de 2026-11-11: 21 testes RAG-04 (13 unitários e 8 DB/INT), junto aos
+32 testes de conexão, totalizaram 53 aprovados com E5 real habilitado. A regressão
+geral passou com 148 BE, 9 API e 104 DB/INT, incluindo Mailpit; o caso adicional
+de corrupção/reparo passou na execução complementar, totalizando 105 DB/INT
+verificados. Ruff/formato e mypy em 129 arquivos aprovados. SPEC e DOC aprovados.
+A primeira tentativa de integração encontrou PostgreSQL parado; após iniciá-lo,
+os ensaios foram repetidos com sucesso. Nenhum teste foi ignorado para obter aceite.
+Dependências anteriores do lockfile foram preservadas; 51 entradas novas cobrem
+a inferência e plataformas alternativas do lock, sem significar instalação de GPU.

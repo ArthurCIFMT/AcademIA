@@ -44,7 +44,9 @@ integrados indicados no [manifesto](../prompts/README.md).
 A fundação, identidade/pessoas, notificações, onboarding/avaliações, equipamentos
 e treino manual até TRN-04 foram entregues. RAG-01 concluiu a curadoria e
 RAG-02 entregou a conexão Qdrant persistente; RAG-03 entregou extração e
-proveniência, com pendências de qualidade registradas. A sequência segue em RAG-04.
+proveniência, com pendências de qualidade registradas. RAG-04 entregou chunking,
+embeddings locais e indexação idempotente com migration 0013. A sequência segue
+em RAG-05 (recuperação/citações), preservando quatro fontes de extração pendente.
 Consulte o manifesto para dependências, critérios e evidências por cartão,
 e o [SPEC](../../SPEC.md) para o retrato por capacidade.
 

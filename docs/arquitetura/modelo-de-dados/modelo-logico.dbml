@@ -268,26 +268,46 @@ Table documento_versao {
 Table ingestao {
   id uuid [pk]
   documento_versao_id uuid [not null]
-  config_hash char(64) [not null]
+  aprovacao_revisao integer [not null]
+  extracao_id uuid [not null]
+  config_hash varchar(64) [not null]
+  configuracao jsonb [not null]
+  plano_hash varchar(64) [not null]
+  colecao varchar(100) [not null]
   estado varchar(25) [not null]
+  total integer [not null]
+  erro_codigo varchar(80)
+  criado_por uuid [not null]
   iniciada_em timestamptz [not null]
   concluida_em timestamptz
+  revision integer [not null]
   indexes {
     (documento_versao_id, config_hash) [unique]
   }
-  Note: 'Owner MOD-05. Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção'
+  Note: 'Migration 0013: plano e proveniência imutáveis; ativação exige todos os checkpoints e aprovação vigente'
 }
 
 Table fragmento {
   id uuid [pk]
   ingestao_id uuid [not null]
-  pagina_inicio integer [not null]
-  pagina_fim integer [not null]
+  ordem integer [not null]
+  pagina_inicio integer
+  pagina_fim integer
+  linha_inicio integer
+  linha_fim integer
   secao text
-  texto_hash char(64) [not null]
+  inicio integer [not null]
+  fim integer [not null]
+  texto_hash varchar(64) [not null]
+  tokens integer [not null]
+  input_tokens integer [not null]
   vetor_id uuid [not null, unique]
   colecao varchar(100) [not null]
-  Note: 'Owner MOD-05. Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência'
+  indexado_em timestamptz
+  indexes {
+    (ingestao_id, ordem) [unique]
+  }
+  Note: 'Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em'
 }
 
 Table conversa {
@@ -543,6 +563,7 @@ Ref: documento_versao.criado_por > usuario.id
 Ref: documento_versao.aprovado_por > usuario.id
 Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
+Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
 Ref: conversa.cliente_id > cliente.usuario_id
 Ref: mensagem.conversa_id > conversa.id

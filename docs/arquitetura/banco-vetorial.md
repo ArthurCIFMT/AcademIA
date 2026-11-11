@@ -1,4 +1,4 @@
-# Conexão vetorial — RAG-02
+# Banco vetorial — RAG-02 e RAG-04
 
 MOD-05 usa qdrant-client 1.20.0 em modo local persistente, conforme ADR-004/005.
 É o engine vetorial real da biblioteca, separado do PostgreSQL; não exige serviço
@@ -13,15 +13,19 @@ e [distribuição Python](https://pypi.org/project/qdrant-client/1.20.0/).
 A porta interna VectorStore fornece check() → CollectionStatus e close().
 QdrantStore implementa essa porta; tipos públicos não importam classes Qdrant.
 O estado informa coleção, modelo/revisão, dimensão, métrica, fingerprint e contagem.
-Esta etapa não expõe uma nova API REST nem cria tabela/migration PostgreSQL.
+RAG-02 não criou rota REST ou tabela PostgreSQL. RAG-04 estende a porta
+VectorIndex com present(payloads esperados) e upsert(points), sem expor tipos SDK;
+a migration 0013 registra plano e checkpoints no PG. Não há busca pública nesta fase.
 A composição do FastAPI fecha o recurso no shutdown; esse ponto fora da pasta
 vector/ é necessário ao ciclo de vida da conexão previsto pelo cartão.
 
-Não existem ainda extração, chunking, cálculo de embeddings, indexação de
-literatura ou recuperação de evidências. Os cartões RAG-03–RAG-05 ampliarão a
-porta. Esta entrega não envia arquivos/perguntas para LLM, não baixa pesos E5 e
-não mede a relevância ou latência semântica. Vetores sintéticos dos testes ficam
-em diretórios temporários, fora do acervo e do banco de desenvolvimento.
+RAG-03 entregou extração e RAG-04 entregou [embeddings/indexação](indexacao-documental.md).
+Payload versionado e seu checksum ligam cada vetor ao texto/hash e à versão,
+configuração, finalidade, página/linhas e seção. present verifica esses vínculos,
+dimensão e normalização; upsert é idempotente por ID. Nenhuma dessas operações
+aprova a literatura. Recuperação e avaliação semântica são RAG-05.
+Testes usam diretórios temporários; o ensaio E5 real não publica literatura
+sintética no banco de desenvolvimento. Esta entrega não chama LLM.
 
 ## Configuração e identidade da coleção
 
@@ -33,10 +37,10 @@ Recomenda-se caminho absoluto local se o diretório de execução puder variar.
 |---|---|
 | ACADEMIA_VECTOR_MODE | local; qualquer outro modo é recusado nesta fase |
 | ACADEMIA_VECTOR_PATH | data/qdrant; persistente, específico, não :memory: nem raiz de unidade |
-| ACADEMIA_VECTOR_COLLECTION | academia_rag_e5_v1; nome deve terminar em _vN |
+| ACADEMIA_VECTOR_COLLECTION | academia_rag_e5_v2; nome deve terminar em _vN |
 | ACADEMIA_VECTOR_EMBEDDING_MODEL | intfloat/multilingual-e5-small |
 | ACADEMIA_VECTOR_DIMENSION | 384 |
-| ACADEMIA_VECTOR_MODEL_REVISION | Ausente até RAG-04; quando definida, hash exato de 40–64 caracteres hexadecimais |
+| ACADEMIA_VECTOR_MODEL_REVISION | 614241f622f53c4eeff9890bdc4f31cfecc418b3, igual ao encoder fixado |
 
 Métrica cosseno, normalização e prefixos query:/passage: são parte do espaço
 versionado, conforme a configuração canônica. Não mudar modelo/dimensão por
@@ -47,8 +51,8 @@ configuração. Modo servidor e migração/reindexação ficam para a infraestru
 
 Cada coleção guarda nos próprios metadados um schema_version e o embedding_space:
 modelo, revisão, dimensão, métrica, normalização e prefixos, mais SHA-256 da
-serialização JSON canônica desse espaço. O schema da identidade é 1. O nome _v1
-identifica a coleção inicial; novas configurações usam nova versão de coleção.
+serialização JSON canônica desse espaço. O schema da identidade é 1. A coleção _v1 foi criada para a conexão inicial
+sem revisão; _v2 fixa os pesos reais. Configurações diferentes exigem nova coleção.
 
 A abertura verifica tanto os parâmetros físicos (vetor denso único, dimensão,
 cosseno, sem multivetor/esparso) quanto a identidade registrada. Coleção existente
@@ -56,11 +60,11 @@ sem metadados ou incompatível é recusada, inclusive se vazia. Não adotar veto
 por terem apenas a mesma dimensão. Não sobrescrever identidade, recriar coleção,
 apagar pontos, reindexar ou trocar nome automaticamente para esconder conflito.
 
-Revisão de pesos nula significa somente conexão inicial, não embedding validado.
-RAG-04 deverá fixar a revisão real dos pesos e abrir uma nova coleção versionada
-compatível antes da ingestão. Alterar essa revisão mantendo o nome atual deve
-produzir CONFIGURACAO_INCOMPATIVEL; isso impede misturar espaços silenciosamente.
-Ingestão completa e proveniência continuam sendo condições adicionais ao uso.
+A v1 sem revisão permanece preservada. RAG-04 usa por padrão a v2 compatível
+com a revisão real fixada; apontar a configuração nova para a v1 deve retornar
+CONFIGURACAO_INCOMPATIVEL. Não apagar/recriar a coleção antiga para contornar a
+verificação. Ingestão recusa revisão nula ou divergente do encoder. Ingestão
+completa e proveniência continuam sendo condições adicionais ao uso.
 
 ## Ciclo de vida, concorrência e falhas
 
@@ -112,13 +116,16 @@ Variáveis de URL/chave de um servidor remoto não são necessárias neste MVP.
 
 ## Curadoria e próximos passos
 
-A conexão não decide aprovação de corpus. RAG-04/05 deverão combinar a identidade
+A conexão não decide aprovação de corpus. RAG-04 combina a identidade
 do espaço com [referências aprovadas e revalidação](corpus.md#integração-e-invalidação),
-extração/indexação completa e proveniência. Qdrant não é a autoridade de aprovação;
+extração/indexação completa e proveniência. RAG-05 deve reusar esse gate.
+Qdrant não é a autoridade de aprovação;
 metadados vetoriais não desbloqueiam versão revogada nem documentos TESTE.
 Não indexar onboarding, dados biométricos, inventário ou conversas como literatura.
 
 A dependência qdrant-client é necessária para o engine real e traz nove pacotes
 novos no lockfile, incluindo ela própria; versões preexistentes foram preservadas.
-Não instalar extras de inferência/fastembed ou provedores nesta etapa.
+Esse registro se refere à entrega RAG-02; RAG-04 adiciona as dependências CPU
+justificadas no [contrato de indexação](indexacao-documental.md). Não usar
+fastembed ou outro modelo como fallback.
 Testes e evidências estão no [registro de comandos](../testes/comandos.md#conexão-vetorial-local).

@@ -4,6 +4,7 @@ from typing import Annotated, Literal, Self
 from pydantic import Field, SecretStr, StringConstraints, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.modules.knowledge.embeddings.settings import REVISION
 from app.modules.knowledge.vector.contracts import EmbeddingSpace
 
 
@@ -18,9 +19,9 @@ class VectorSettings(BaseSettings):
     )
     collection: Annotated[
         str, StringConstraints(pattern=r"^[a-z][a-z0-9_-]{1,55}_v[1-9][0-9]*$")
-    ] = "academia_rag_e5_v1"
+    ] = "academia_rag_e5_v2"
     embedding_model: str = "intfloat/multilingual-e5-small"
-    model_revision: str | None = None
+    model_revision: str | None = REVISION
     dimension: Annotated[int, Field(ge=1, le=65536)] = 384
     # Modo servidor será implementado na fase de infraestrutura, sem fallback.
     url: SecretStr | None = Field(default=None, repr=False)

@@ -43,6 +43,13 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   data e revisão, revogação também exige motivo e preserva aprovação anterior.
 - Versão de documento aprovada e ingestão completa antes do uso ativo. Chunks
   compartilham modelo/dimensão/coleção; Qdrant não é autoridade de aprovação.
+- Ingestão (0013): unique(versão,config_hash), plano/configuração/proveniência
+  imutáveis e curador identificado. Fragmentos únicos por ingestão/ordem e vetor_id;
+  página física PDF ou linhas TXT, offsets e hash, até 300 tokens de conteúdo e
+  512 de entrada. Checkpoint só após confirmação do vetor. Trigger exige contagem
+  total indexada antes de CONCLUIDA; gate de uso revalida aprovação/revisão no PG.
+  Falha parcial fica inativa; retomada reconcilia recibos Qdrant e checkpoints sem
+  duplicar embeddings íntegros. Não apagar metadados para esconder falhas.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.
   Chamadas LLM são únicas por etapa; estado interrompido não dispara replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
@@ -75,6 +82,7 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 | Ficha | RASCUNHO → PUBLICADO → SUBSTITUIDO; conteúdo expurgado recebe CONTEUDO_EXPIRADO |
 | Parecer | PENDENTE → ACEITO/REJEITADO; decisões históricas atribuíveis |
 | Documento | PENDENTE → APROVADO → REVOGADO; ativação exige ingestão completa |
+| Ingestão | PROCESSANDO → CONCLUIDA/FALHA/REVOGADA; FALHA retoma PROCESSANDO; PENDENTE_TRATAMENTO exige revisão; reparo de CONCLUIDA retorna PROCESSANDO |
 | Matrícula | ATIVA → VENCIDA/ENCERRADA; renovação preserva histórico |
 | Acesso | RECEBIDO → IDENTIFICADO/DESCONHECIDO → ALLOW/DENY; passagem é evento separado |
 | Comando | CRIADO → ACEITO/FALHOU/EXPIRADO; aceito não implica passagem |

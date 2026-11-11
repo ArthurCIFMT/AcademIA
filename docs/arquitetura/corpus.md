@@ -98,7 +98,7 @@ com revisão, hash e metadados. is_approved consulta o estado atual no PostgreSQ
 para cada novo uso, inclusive cache. Revogação aumenta a revisão e retorna falso
 para a referência antiga sem apagar o arquivo ou fontes históricas.
 
-RAG-02–RAG-05 deverão usar essa porta e exigir também extração/indexação completa,
+Os consumidores RAG-04/RAG-05 devem usar essa porta e exigir também extração/indexação completa,
 validando antes de entregar trechos. Um vetor ainda existente no Qdrant não torna
 a versão autorizada. Nesta etapa não existe busca/cache ativo para invalidar.
 Não há LLM, embeddings, contexto de cliente ou acesso direto a outro módulo.

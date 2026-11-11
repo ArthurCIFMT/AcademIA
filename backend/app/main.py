@@ -11,6 +11,7 @@ from app.modules.assignments.http import install_assignments
 from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
+from app.modules.knowledge.embeddings.runtime import close_encoder
 from app.modules.knowledge.http import corpus_router
 from app.modules.knowledge.vector.runtime import close_vector_store
 from app.modules.notifications.http import notification_router
@@ -27,7 +28,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
-        close_vector_store()
+        try:
+            close_vector_store()
+        finally:
+            close_encoder()
 
 
 def create_app(

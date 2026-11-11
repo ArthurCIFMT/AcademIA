@@ -1163,7 +1163,7 @@
     {
       "name": "ingestao",
       "owner": "MOD-05",
-      "note": "Unicidade doc_versao+config_hash; reindexação é nova configuração/coleção",
+      "note": "Owner MOD-05. Migration 0013: plano e proveniência imutáveis; ativação exige todos os checkpoints e aprovação vigente",
       "columns": [
         {
           "name": "id",
@@ -1178,8 +1178,38 @@
           "ref": "documento_versao.id"
         },
         {
+          "name": "aprovacao_revisao",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "extracao_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "config_hash",
-          "type": "char(64)",
+          "type": "varchar(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "configuracao",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "plano_hash",
+          "type": "varchar(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "colecao",
+          "type": "varchar(100)",
           "flags": "required",
           "ref": null
         },
@@ -1188,6 +1218,24 @@
           "type": "varchar(25)",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "total",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "erro_codigo",
+          "type": "varchar(80)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
         },
         {
           "name": "iniciada_em",
@@ -1199,6 +1247,12 @@
           "name": "concluida_em",
           "type": "timestamptz",
           "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
           "ref": null
         }
       ],
@@ -1212,7 +1266,7 @@
     {
       "name": "fragmento",
       "owner": "MOD-05",
-      "note": "Texto/vetor e metadados pesquisáveis no Qdrant; PG controla aprovação/proveniência",
+      "note": "Owner MOD-05. Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em",
       "columns": [
         {
           "name": "id",
@@ -1227,15 +1281,33 @@
           "ref": "ingestao.id"
         },
         {
-          "name": "pagina_inicio",
+          "name": "ordem",
           "type": "integer",
           "flags": "required",
           "ref": null
         },
         {
+          "name": "pagina_inicio",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        },
+        {
           "name": "pagina_fim",
           "type": "integer",
-          "flags": "required",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "linha_inicio",
+          "type": "integer",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "linha_fim",
+          "type": "integer",
+          "flags": "",
           "ref": null
         },
         {
@@ -1245,8 +1317,32 @@
           "ref": null
         },
         {
+          "name": "inicio",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "texto_hash",
-          "type": "char(64)",
+          "type": "varchar(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tokens",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "input_tokens",
+          "type": "integer",
           "flags": "required",
           "ref": null
         },
@@ -1261,9 +1357,20 @@
           "type": "varchar(100)",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "indexado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        [
+          "ingestao_id",
+          "ordem"
+        ]
+      ]
     },
     {
       "name": "conversa",

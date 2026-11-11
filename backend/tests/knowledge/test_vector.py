@@ -82,7 +82,7 @@ def test_default_space_matches_approved_configuration(tmp_path: Path) -> None:
     assert space.normalized == canonical["embedding"]["normalize"]
     assert space.query_prefix == canonical["embedding"]["query_prefix"]
     assert space.passage_prefix == canonical["embedding"]["passage_prefix"]
-    assert space.revision is None  # Fixação dos pesos é tarefa RAG-04.
+    assert space.revision == "614241f622f53c4eeff9890bdc4f31cfecc418b3"  # RAG-04
     assert (
         settings.model_copy(
             update={"embedding_model": "outro-modelo"}

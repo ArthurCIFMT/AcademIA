@@ -5,16 +5,16 @@ from pydantic import ValidationError
 from app.modules.knowledge.vector.contracts import (
     VectorError,
     VectorErrorCode,
-    VectorStore,
 )
+from app.modules.knowledge.vector.points import VectorIndex
 from app.modules.knowledge.vector.qdrant import QdrantStore
 from app.modules.knowledge.vector.settings import VectorSettings
 
 _lock = RLock()
-_store: VectorStore | None = None
+_store: VectorIndex | None = None
 
 
-def get_vector_store() -> VectorStore:
+def get_vector_store() -> VectorIndex:
     """Uma instância por processo, aberta somente ao chamar check/operação vetorial."""
     global _store
     with _lock:

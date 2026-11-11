@@ -1,7 +1,8 @@
 # Dados do orquestrador, RAG e IA
 
 Modelo do escopo completo: documento/versão implementados na migration 0012
-([RAG-01](../corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
+([RAG-01](../corpus.md)); ingestão e fragmentos entregues na migration 0013
+([RAG-04](../indexacao-documental.md)); orquestrador aguarda seus cartões.
 RAG-03 mantém [artefatos privados de extração](../extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.

@@ -56,4 +56,28 @@ coleção versionada, persistência, falhas e exclusão entre processos. Não é
 necessário instalar um servidor nem Docker. A API fecha a conexão no shutdown;
 suas rotas manuais não dependem de abrir o índice. A [extração offline](../docs/arquitetura/extracao-documental.md)
 já oferece serviço interno com proveniência e registro privado de estados.
-Indexação e busca serão implementadas nos cartões seguintes.
+RAG-04 entrega [chunking e indexação com E5 CPU](../docs/arquitetura/indexacao-documental.md).
+A recuperação semântica/citações pertence ao próximo cartão, RAG-05.
+
+## Embeddings e indexação offline
+
+Com `.env` configurado, migration 0013 aplicada e a API parada, em `backend/`:
+
+```powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.embeddings.provision
+uv run --locked --env-file ../.env python -m app.modules.knowledge.ingestion --actor UUID_CURADOR --version UUID_VERSAO --selection CAMINHO_JSON
+```
+
+O provisionamento obtém os pesos fixados do E5 (internet, aproximadamente 470 MB),
+sem chave de LLM. A inferência depois é local CPU/offline. Pesos ficam em
+`backend/models/multilingual-e5-small` e fora do Git; configure caminho absoluto
+por ACADEMIA_EMBEDDING_PATH se necessário. Modelo e SHA-256 estão no
+[manifesto](../docs/requisitos/schemas/embedding-e5-v1.json).
+
+A seleção JSON segue o [schema](../docs/requisitos/schemas/selecao-indexacao-v1.schema.json)
+e usa offsets do artefato extraído, não texto copiado manualmente do PDF. Exige
+curador administrador ativo e versão aprovada. Não indexar páginas com qualidade
+pendente. Um único processo por diretório Qdrant; manutenção e API não abrem o
+mesmo diretório simultaneamente. A coleção v2 preserva a v1 sem revisão de pesos.
+O guia detalha retomada, falhas e quatro documentos ainda pendentes de extração.

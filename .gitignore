@@ -63,3 +63,4 @@ backend/data/
 /data/corpus/
 /data/qdrant/
 /data/extracoes/
+/data/indexacao/

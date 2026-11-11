@@ -3,14 +3,17 @@ from collections.abc import Callable
 from contextlib import suppress
 from pathlib import Path
 from threading import RLock
+from uuid import UUID
 
 from qdrant_client import QdrantClient, models
 
+from app.modules.knowledge.embeddings.encoder import EmbeddingError, validate_vectors
 from app.modules.knowledge.vector.contracts import (
     CollectionStatus,
     VectorError,
     VectorErrorCode,
 )
+from app.modules.knowledge.vector.points import Payload, Point
 from app.modules.knowledge.vector.settings import VectorSettings
 
 ClientFactory = Callable[[Path], QdrantClient]
@@ -111,3 +114,80 @@ class QdrantStore:
                 except Exception:
                     raise VectorError(VectorErrorCode.SERVICO_INDISPONIVEL) from None
                 self._client = None
+
+    def upsert(self, points: list[Point]) -> None:
+        with self._lock:
+            self.check()
+            if not self.settings.space.revision:
+                raise VectorError(VectorErrorCode.CONFIGURACAO_INCOMPATIVEL)
+            try:
+                for point in points:
+                    point.check(
+                        self.settings.space.dimension, self.settings.space.fingerprint
+                    )
+                assert self._client is not None
+                self._client.upsert(
+                    self.settings.collection,
+                    points=[
+                        models.PointStruct(
+                            id=str(p.id),
+                            vector=p.vector,
+                            payload={
+                                **p.payload.model_dump(mode="json"),
+                                "payload_sha256": p.payload.fingerprint,
+                            },
+                        )
+                        for p in points
+                    ],
+                    wait=True,
+                )
+            except Exception:
+                raise VectorError(VectorErrorCode.SERVICO_INDISPONIVEL) from None
+
+    def present(self, expected: dict[UUID, Payload]) -> set[UUID]:
+        with self._lock:
+            self.check()
+            assert self._client is not None
+            found: set[UUID] = set()
+            try:
+                ids = list(expected)
+                for start in range(0, len(ids), 128):
+                    records = self._client.retrieve(
+                        self.settings.collection,
+                        ids=[str(x) for x in ids[start : start + 128]],
+                        with_payload=True,
+                        with_vectors=True,
+                    )
+                    for record in records:
+                        try:
+                            id = UUID(str(record.id))
+                            payload = dict(record.payload or {})
+                            checksum = payload.pop("payload_sha256", None)
+                            parsed = Payload.model_validate(payload)
+                            parsed.check()
+                        except (ValueError, TypeError):
+                            continue
+                        if (
+                            id in expected
+                            and parsed == expected[id]
+                            and checksum == parsed.fingerprint
+                            and isinstance(record.vector, list)
+                        ):
+                            try:
+                                validate_vectors(
+                                    [
+                                        [
+                                            float(x)
+                                            for x in record.vector
+                                            if isinstance(x, (float, int))
+                                        ]
+                                    ],
+                                    1,
+                                    self.settings.space.dimension,
+                                )
+                            except (ValueError, TypeError, EmbeddingError):
+                                continue
+                            found.add(id)
+                return found
+            except Exception:
+                raise VectorError(VectorErrorCode.SERVICO_INDISPONIVEL) from None

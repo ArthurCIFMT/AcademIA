@@ -102,7 +102,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após RAG-03. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-04. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -112,7 +112,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](../../docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](../../docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](../../docs/arquitetura/catalogo-exercicios.md), [editor manual](../../docs/arquitetura/fichas-manuais.md), [publicação/parecer](../../docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](../../docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, conexão e extração entregues; quatro fontes com revisão técnica pendente; indexação e busca futuras |
+| MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração e indexação idempotente com E5 CPU entregues; quatro fontes com revisão técnica pendente; recuperação semântica futura |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](../../docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](../../docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -121,9 +121,12 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-04/RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-04. As pendências de extração estão no contrato/relatório do módulo.
-Esta entrega não acrescenta cartões à sequência nem fecha o aceite integrado do MVP.
+O MVP ainda requer RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é RAG-05. As pendências de extração estão no contrato/relatório do módulo.
+A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
+a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
+O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
+ou avaliação de relevância da busca. Esta entrega não fecha o aceite do MVP.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 

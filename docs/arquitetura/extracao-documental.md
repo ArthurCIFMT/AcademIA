@@ -110,7 +110,8 @@ sem reprocessamento silencioso. Esses hashes detectam inconsistência e não
 substituem as permissões do diretório privado.
 
 Não há nova migration, tabela, tela ou API REST neste cartão. A tabela relacional
-INGESTAO e fragmentos pertencem a RAG-04; artefatos de extração são derivados locais
+INGESTAO e fragmentos foram entregues em [RAG-04](indexacao-documental.md);
+artefatos de extração são derivados locais
 versionados por configuração, prontos para ser consumidos pela etapa seguinte.
 A extração não abre Qdrant e falhas não interferem no treino manual.
 
