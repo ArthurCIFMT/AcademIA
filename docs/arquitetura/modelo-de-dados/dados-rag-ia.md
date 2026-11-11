@@ -1,6 +1,7 @@
 # Dados do orquestrador, RAG e IA
 
-Especificação para FND-03 e migrations futuras; não é schema físico implementado.
+Modelo do escopo completo: documento/versão implementados na migration 0012
+([RAG-01](../corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
 MER original permanece preservado. Substitui a extensão agentiva.
 
 | Conceito | Proprietário / persistência | Relações e invariantes |
@@ -35,5 +36,5 @@ Modelo lógico, campos, retenção e orçamento foram definidos na preparação:
 [modelo DBML](modelo-logico.dbml), [dicionário](dicionario.md),
 [invariantes](invariantes-e-estados.md) e
 [campos/triagem](../../requisitos/onboarding-e-triagem.md).
-Migrations e serviços reais permanecem tarefas de implementação. [Arquitetura](../rag-semantico.md) e
+Os demais serviços e migrations permanecem tarefas de implementação. [Arquitetura](../rag-semantico.md) e
 [macrorequisitos](../../requisitos/macrorequisitos-ia-rag.md).

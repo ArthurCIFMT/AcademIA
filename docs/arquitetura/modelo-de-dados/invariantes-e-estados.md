@@ -37,6 +37,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   trim + espaços internos colapsados + lowercase, mantido pelo serviço e constraint.
 - Exercício ativo: grupo de alternativa não vazio, todos seus recursos disponíveis,
   OU dispensa explícita sem recurso obrigatório. Relação grupo/recurso é única.
+- Documento único por ambiente/catálogo; versão única por documento/número e
+  ambiente/hash. Escopo TESTE não integra referências de literatura, mesmo aprovado.
+  Conteúdo e metadados bibliográficos são imutáveis; aprovação/revogação têm autor,
+  data e revisão, revogação também exige motivo e preserva aprovação anterior.
 - Versão de documento aprovada e ingestão completa antes do uso ativo. Chunks
   compartilham modelo/dimensão/coleção; Qdrant não é autoridade de aprovação.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.

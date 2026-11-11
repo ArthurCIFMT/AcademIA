@@ -8,6 +8,7 @@ import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/Recover
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
 import { TrainingQueuePage, TrainingReviewPage } from "../features/training-review/TrainingReview";
+import { CorpusPage } from "../features/corpus/CorpusPage";
 import { MyTrainingPage } from "../features/my-training/MyTraining";
 import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
@@ -38,7 +39,8 @@ function SessionBoundary() {
   const isInstructorExercises = useMatch(instructorExercisePath) !== null;
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
   const isTrainingReview = useMatch("/area/instrutor/clientes/:clientId/treinos/:versionId/revisao") !== null;
-  const session = useSession(isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
+  const isCorpus = useMatch("/area/administracao/corpus") !== null;
+  const session = useSession(isCorpus || isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -84,7 +86,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" | "my-training" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" | "my-training" | "corpus" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -124,6 +126,8 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
         </nav>
       )}
       {isAdmin && <p><Link to="/area/administracao/funcionarios">Gerenciar funcionários</Link></p>}
+      {isAdmin && feature !== "corpus" && <p><Link to="/area/administracao/corpus">Gerenciar corpus RAG</Link></p>}
+      {isAdmin && feature === "corpus" && <CorpusPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {isAdmin && feature !== "equipment" && <p><Link to={equipmentAdminPath}>Gerenciar equipamentos</Link></p>}
       {isClient && <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>}
       {isClient && feature !== "my-training" && <p><Link to="/area/cliente/treinos">Meus treinos</Link></p>}
@@ -180,6 +184,7 @@ export function AppRoutes() {
           <Route path="/area" element={<AreaPage />} />
           <Route path={adminExercisePath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="exercises" />} />
           <Route path={instructorExercisePath} element={<AreaPage requiredRole="INSTRUTOR" feature="exercises" />} />
+          <Route path="/area/administracao/corpus" element={<AreaPage requiredRole="ADMINISTRADOR" feature="corpus" />} />
           <Route path={equipmentAdminPath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
           <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
           <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />

@@ -228,22 +228,41 @@ Table parecer {
 
 Table documento {
   id uuid [pk]
-  catalogo_id varchar(40) [not null, unique]
+  ambiente varchar(15) [not null]
+  catalogo_id varchar(40) [not null]
   titulo text [not null]
   origem_url text [not null]
   licenca text [not null]
+  indexes {
+    (ambiente, catalogo_id) [unique]
+    (id, ambiente) [unique]
+  }
 }
 
 Table documento_versao {
   id uuid [pk]
   documento_id uuid [not null]
-  sha256 char(64) [not null]
+  ambiente varchar(15) [not null]
+  numero integer [not null]
+  sha256 varchar(64) [not null]
   idioma varchar(12) [not null]
   arquivo_ref text [not null]
+  formato varchar(3) [not null]
+  tamanho_bytes integer [not null]
+  metadados jsonb [not null]
+  criado_por uuid [not null]
+  criado_em timestamptz [not null]
   estado varchar(25) [not null]
   aprovado_por uuid
   aprovado_em timestamptz
+  revogado_por uuid
+  revogado_em timestamptz
+  motivo_revogacao text
   revision integer [not null]
+  indexes {
+    (documento_id, numero) [unique]
+    (ambiente, sha256) [unique]
+  }
 }
 
 Table ingestao {
@@ -520,7 +539,9 @@ Ref: item_ficha.exercicio_id > exercicio.id
 Ref: parecer.versao_id > versao_ficha.id
 Ref: parecer.instrutor_id > funcionario.usuario_id
 Ref: documento_versao.documento_id > documento.id
+Ref: documento_versao.criado_por > usuario.id
 Ref: documento_versao.aprovado_por > usuario.id
+Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: fragmento.ingestao_id > ingestao.id
 Ref: conversa.cliente_id > cliente.usuario_id

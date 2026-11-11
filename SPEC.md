@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após TRN-04. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após RAG-01. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual entregue; integração da geração depende de IA |
-| MOD-05 — Conhecimento | [Corpus, ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Especificado; implementação pendente |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria entregue; extração, vetores e busca pendentes |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Especificado; implementação pendente |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer RAG-01 a RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
-sequência é RAG-01. Esta consolidação documental não implementa esses módulos,
+O MVP ainda requer RAG-02 a RAG-05, AI-01 a AI-06 e TST-01. O próximo cartão na
+sequência é RAG-02. A implementação de curadoria não conclui os demais módulos,
 não acrescenta um cartão à sequência e não fecha o aceite integrado do MVP.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
@@ -1420,22 +1420,41 @@ Table parecer {
 
 Table documento {
   id uuid [pk]
-  catalogo_id varchar(40) [not null, unique]
+  ambiente varchar(15) [not null]
+  catalogo_id varchar(40) [not null]
   titulo text [not null]
   origem_url text [not null]
   licenca text [not null]
+  indexes {
+    (ambiente, catalogo_id) [unique]
+    (id, ambiente) [unique]
+  }
 }
 
 Table documento_versao {
   id uuid [pk]
   documento_id uuid [not null]
-  sha256 char(64) [not null]
+  ambiente varchar(15) [not null]
+  numero integer [not null]
+  sha256 varchar(64) [not null]
   idioma varchar(12) [not null]
   arquivo_ref text [not null]
+  formato varchar(3) [not null]
+  tamanho_bytes integer [not null]
+  metadados jsonb [not null]
+  criado_por uuid [not null]
+  criado_em timestamptz [not null]
   estado varchar(25) [not null]
   aprovado_por uuid
   aprovado_em timestamptz
+  revogado_por uuid
+  revogado_em timestamptz
+  motivo_revogacao text
   revision integer [not null]
+  indexes {
+    (documento_id, numero) [unique]
+    (ambiente, sha256) [unique]
+  }
 }
 
 Table ingestao {
@@ -1712,7 +1731,9 @@ Ref: item_ficha.exercicio_id > exercicio.id
 Ref: parecer.versao_id > versao_ficha.id
 Ref: parecer.instrutor_id > funcionario.usuario_id
 Ref: documento_versao.documento_id > documento.id
+Ref: documento_versao.criado_por > usuario.id
 Ref: documento_versao.aprovado_por > usuario.id
+Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: fragmento.ingestao_id > ingestao.id
 Ref: conversa.cliente_id > cliente.usuario_id
@@ -2031,26 +2052,45 @@ estado difere de PENDENTE. Rejeição exige motivo; nova versão não herda acei
 
 #### documento — MOD-05
 
+Curadoria RAG-01; identidade e origem iniciais imutáveis; edições possuem snapshot bibliográfico próprio
+
+Unicidades: ambiente+catalogo_id; id+ambiente.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| catalogo_id | varchar(40) | required unique | — |
+| ambiente | varchar(15) | required | — |
+| catalogo_id | varchar(40) | required | — |
 | titulo | text | required | — |
 | origem_url | text | required | — |
 | licenca | text | required | — |
 
 #### documento_versao — MOD-05
 
+Curadoria RAG-01; FK composta documento_id+ambiente; snapshot imutável, estados PENDENTE/APROVADO/REVOGADO, responsáveis e revisão
+
+Unicidades: documento_id+numero; ambiente+sha256.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | documento_id | uuid | required | documento.id |
-| sha256 | char(64) | required | — |
+| ambiente | varchar(15) | required | — |
+| numero | integer | required | — |
+| sha256 | varchar(64) | required | — |
 | idioma | varchar(12) | required | — |
 | arquivo_ref | text | required | — |
+| formato | varchar(3) | required | — |
+| tamanho_bytes | integer | required | — |
+| metadados | jsonb | required | — |
+| criado_por | uuid | required | usuario.id |
+| criado_em | timestamptz | required | — |
 | estado | varchar(25) | required | — |
 | aprovado_por | uuid | opcional | usuario.id |
 | aprovado_em | timestamptz | opcional | — |
+| revogado_por | uuid | opcional | usuario.id |
+| revogado_em | timestamptz | opcional | — |
+| motivo_revogacao | text | opcional | — |
 | revision | integer | required | — |
 
 #### ingestao — MOD-05
@@ -2391,6 +2431,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   trim + espaços internos colapsados + lowercase, mantido pelo serviço e constraint.
 - Exercício ativo: grupo de alternativa não vazio, todos seus recursos disponíveis,
   OU dispensa explícita sem recurso obrigatório. Relação grupo/recurso é única.
+- Documento único por ambiente/catálogo; versão única por documento/número e
+  ambiente/hash. Escopo TESTE não integra referências de literatura, mesmo aprovado.
+  Conteúdo e metadados bibliográficos são imutáveis; aprovação/revogação têm autor,
+  data e revisão, revogação também exige motivo e preserva aprovação anterior.
 - Versão de documento aprovada e ingestão completa antes do uso ativo. Chunks
   compartilham modelo/dimensão/coleção; Qdrant não é autoridade de aprovação.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.
@@ -3629,7 +3673,8 @@ especializada persistente para protótipo; modo servidor só na fase apropriada.
 
 Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquitetura/modelo-de-dados/dados-rag-ia.md).
 
-Especificação para FND-03 e migrations futuras; não é schema físico implementado.
+Modelo do escopo completo: documento/versão implementados na migration 0012
+([RAG-01](docs/arquitetura/corpus.md)); ingestão, fragmentos e orquestrador aguardam seus cartões.
 MER original permanece preservado. Substitui a extensão agentiva.
 
 | Conceito | Proprietário / persistência | Relações e invariantes |
@@ -3664,7 +3709,7 @@ Modelo lógico, campos, retenção e orçamento foram definidos na preparação:
 [modelo DBML](docs/arquitetura/modelo-de-dados/modelo-logico.dbml), [dicionário](docs/arquitetura/modelo-de-dados/dicionario.md),
 [invariantes](docs/arquitetura/modelo-de-dados/invariantes-e-estados.md) e
 [campos/triagem](docs/requisitos/onboarding-e-triagem.md).
-Migrations e serviços reais permanecem tarefas de implementação. [Arquitetura](docs/arquitetura/rag-semantico.md) e
+Os demais serviços e migrations permanecem tarefas de implementação. [Arquitetura](docs/arquitetura/rag-semantico.md) e
 [macrorequisitos](docs/requisitos/macrorequisitos-ia-rag.md).
 ### 3. Limites e avaliação
 
@@ -5470,6 +5515,125 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
+### 17. Curadoria, versões e revogação do corpus
+
+Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
+
+MOD-05 mantém literatura e proveniência para o RAG semântico. Esta entrega
+implementa curadoria, arquivos e versões; busca, extração, fragmentos e vetores
+pertencem a RAG-02–RAG-05. Requisitos: MRF01, MRF11 e MRF15; RN-23 e RN-28.
+
+#### Responsável e acesso
+
+O papel ADMINISTRADOR é o curador autorizado inicial, pela política
+MANAGE_CORPUS. Instrutor, atendente e cliente não recebem essa permissão
+implicitamente. É uma seleção técnica do trabalho acadêmico, sem aprovação
+médica ou jurídica externa. A tela fica em **Administração → Gerenciar corpus RAG**.
+Todas as rotas exigem sessão; escritas exigem CSRF e origem válida. Arquivos
+baixados mantêm essas permissões; respostas privadas usam no-store.
+
+#### Registro e versionamento
+
+Um documento agrupa edições por ambiente + identificador de catálogo.
+Cada versão tem UUID, número sequencial, SHA-256 dos bytes, formato, tamanho,
+idioma, snapshot bibliográfico, criador/data e revisão concorrente.
+Metadados incluem título, URL HTTP(S) da fonte, licença, autores (até 100), ano,
+finalidades, limites e página/seção declaradas. Título, licença, limites, seção
+e cada autor admitem até 500 caracteres. Informações não fornecidas permanecem ausentes.
+
+Os ambientes LITERATURA e TESTE são separados por constraints. Mesmo aprovada,
+uma versão TESTE nunca integra as referências de literatura de produção.
+O cadastro exige confirmação de que o arquivo é literatura sem dados privados;
+não oferece upload de anamneses, biometria ou inventário como literatura.
+Essa declaração e a curadoria não são um detector automático de dados pessoais.
+
+Reenvio do mesmo hash no mesmo ambiente retorna a versão original, inclusive
+se revogada; não altera seus metadados, nem cria outra aprovação. Conteúdo
+alterado com o mesmo identificador cria a próxima edição em quarentena.
+Para corrigir metadados sem novos bytes, é necessário um refinamento posterior
+com histórico próprio; esta etapa não reescreve referências já registradas.
+
+Transições: PENDENTE → APROVADO → REVOGADO. A versão nasce em quarentena;
+aprovar confere novamente a integridade do arquivo e identifica responsável/data.
+Revogar exige motivo, autor e data; é terminal para aquela versão. A nova edição
+não revoga silenciosamente a anterior. Edições aprovadas podem coexistir e a
+curadoria revoga as que não devam continuar em uso.
+
+A revisão impede sobrescrita concorrente (409). Repetição da mesma decisão,
+com revisão de origem e mesmo autor/motivo, devolve o resultado sem nova auditoria.
+Locks transacionais por hash/documento e constraints impedem duplicação e números
+repetidos em conexões independentes. A migration 0012 protege conteúdo,
+proveniência, aprovação anterior e histórico contra UPDATE/DELETE indevidos.
+
+#### Contratos REST e JSON
+
+Prefixo: /api/v1/corpus; DTOs estritos e OpenAPI gerados pelo backend.
+
+| Método/caminho relativo | Comportamento |
+|---|---|
+| GET / | Histórico paginado (pagina/limite, até 100), filtro opcional ambiente |
+| POST / | Registro JSON: catalogo_id, ambiente, formato, metadados, arquivo_base64 e conteudo_literatura_confirmado=true; retorna versão, 201 inclusive replay |
+| POST /importacao-inicial | Confere o acervo local versionado e sua seleção; retorna quantidades, sem baixar conteúdo externo |
+| GET /{id} | Snapshot e decisões da versão, sem caminho físico do arquivo |
+| POST /{id}/decisao | revisao, estado APROVADO/REVOGADO, motivo obrigatório na revogação |
+| GET /{id}/arquivo | Cópia íntegra para curador autenticado, como attachment/nosniff; inclui versões revogadas para histórico |
+
+Erros usam o envelope comum: 401/403 por acesso, 404 por versão inexistente,
+409 por conflito/arquivo ausente ou alterado/importação inconsistente,
+413 por corpo excessivo, 422 por JSON/campos/formato inválidos. Não retornar
+bytes, caminhos privados ou formulário completo em mensagens de validação.
+
+#### Arquivos e importação inicial
+
+Configuração: ACADEMIA_CORPUS_DIR (padrão data/corpus relativo ao processo;
+no guia de execução a partir de backend, equivale a backend/data/corpus).
+Configure caminho absoluto para manter o mesmo armazenamento ao mudar de diretório.
+Arquivos e suas cópias de segurança ficam fora do Git. O banco guarda referências
+internas por hash; o nome original recebido não determina o caminho salvo.
+A escrita usa temporário + criação exclusiva atômica e confere hash em repetição.
+Leituras/aprovação conferem o hash; referências não aceitam travessia de diretório.
+Falha de transação pode deixar blob sem registro, nunca versão parcialmente publicada;
+limpeza desses órfãos não é automática nesta entrega.
+
+Limite: 25 MiB por arquivo, PDF ou TXT UTF-8 não vazio. JSON transporta bytes em
+base64 estrito, sem alterar o original. O limite do corpo inclui base64 e metadados.
+PDF é conferido pela assinatura inicial; validação de extração/OCR é RAG-03.
+Páginas/seções declaradas não são páginas extraídas e não simulam citações prontas.
+A URL é apenas metadado: o servidor não busca o endereço informado no cadastro.
+
+A importação lê materiais/rag/catalogo.json e corpus-inicial.json na raiz do
+projeto (opcional ACADEMIA_RAG_MATERIALS_DIR). Aceita somente os arquivos locais
+em documentos/, verifica os hashes de ambos os manifests e prepara todo o lote
+antes de registrar no banco. Mantém os 18 documentos: a seleção técnica existente
+de sete documentos é aprovada com o curador que acionou a importação; os outros
+11 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
+Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
+e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.
+
+#### Integração e invalidação
+
+A porta tipada approved_references fornece somente versões LITERATURA/APROVADO
+com revisão, hash e metadados. is_approved consulta o estado atual no PostgreSQL
+para cada novo uso, inclusive cache. Revogação aumenta a revisão e retorna falso
+para a referência antiga sem apagar o arquivo ou fontes históricas.
+
+RAG-02–RAG-05 deverão usar essa porta e exigir também extração/indexação completa,
+validando antes de entregar trechos. Um vetor ainda existente no Qdrant não torna
+a versão autorizada. Nesta etapa não existe busca/cache ativo para invalidar.
+Não há LLM, embeddings, contexto de cliente ou acesso direto a outro módulo.
+Auditoria usa a interface pública MOD-12, com eventos corpus.registered,
+corpus.approved e corpus.revoked, sem copiar o documento em logs.
+
+#### Verificação e alcance
+
+Testes do módulo cobrem contratos, autorização/CSRF, quarentena, hash, versões,
+aprovação/revogação/replay, isolamento TESTE, concorrência, migration ida/volta,
+proteção de histórico, arquivo corrompido e importação dos PDFs reais.
+Consulte os [comandos](docs/testes/comandos.md#corpus-documental).
+A tela integra os pontos de composição existentes de rotas, navegação e políticas;
+essas alterações equivalentes são necessárias ao escopo funcional do cartão.
+Nenhuma dependência nova foi adicionada. A qualidade de extração, busca e respostas
+permanece nos cartões posteriores, incluindo o ensaio real de AI-06.
 
 ## 21. Sequência de implementação e criação de prompts
 
@@ -5658,9 +5822,9 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [RAG-01](docs/prompts/05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | PRONTO |
-| [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | BLOQUEADO |
-| [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | BLOQUEADO |
+| [RAG-01](docs/prompts/05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | CONCLUIDO |
+| [RAG-02](docs/prompts/05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | PRONTO |
+| [RAG-03](docs/prompts/05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | PRONTO |
 | [RAG-04](docs/prompts/05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
 | [RAG-05](docs/prompts/05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
@@ -6333,6 +6497,7 @@ A revisão `0008` cria o [inventário de equipamentos](docs/arquitetura/equipame
 A revisão `0009` cria o [catálogo de exercícios](docs/arquitetura/catalogo-exercicios.md).
 A revisão `0010` cria as [fichas manuais e invariantes de versões](docs/arquitetura/fichas-manuais.md).
 A revisão `0011` registra a [validação de publicação e os pareceres imutáveis](docs/arquitetura/publicacao-e-parecer.md).
+A revisão `0012` cria [documentos, versões e decisões de curadoria](docs/arquitetura/corpus.md), com proveniência protegida.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -6596,6 +6761,10 @@ ACADEMIA_SMTP_TIMEOUT=5
 
 # Diretório local privado das imagens de equipamentos, relativo ao processo da API.
 ACADEMIA_EQUIPMENT_IMAGES_DIR=uploads/equipamentos
+
+# Corpus privado. Diretório relativo ao processo do backend.
+ACADEMIA_CORPUS_DIR=data/corpus
+# ACADEMIA_RAG_MATERIALS_DIR: opcional; padrão é materiais/rag do repositório.
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -6615,17 +6784,18 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `5fb37f66f220943bb27152649fbfdc651316c7105bdba92d39f4e5f39772d4e6` |
+| `.env.example` | `1d146165a2e5fcc65604bb070a5c4056d58087d79669e07b1b3007a79102532d` |
 | `AGENTS.md` | `03a6aa7031b6e62319d22a2faef9f321e2afa9d217d75a6648402a8a44cfed45` |
 | `backend/README.md` | `a35a8aa7563e03486b6f54d3163d0b70866d0fa40caaaea21440ddfb232ec6e7` |
 | `backend/pyproject.toml` | `f58f05e091754f89ff3f39811d45b08455f56dbb813daf5ba4f61233c243ae16` |
-| `database/README.md` | `7586eb0648462ca07aad8f6fc4d7fbf266796f913fae432e7cb3fa1231ef3be8` |
+| `database/README.md` | `10eb39d85d11d4a4d4ad969e7556a6d0339107fcf4e36924a112e6eed0a194a3` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
+| `docs/arquitetura/corpus.md` | `6121322eedf344a5a55215e5b051a7058ac15266d7369c3cb9440082c128ed24` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
@@ -6637,21 +6807,21 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `0c23f352193855c97a6198a41217f8ce9e5a7413e9935c7c9b67c6276c67a1b3` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `05c0b64cf7acd7dfd678a6662ac168c03363b819cefc5556f67daeacbd550b3a` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `53fabfafbf1221b1a5f0c14753a65555665ea111a418e9840a106961cfdf3dc1` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `854064da6d4b9d20f3d0c6511fb9ea2a342f264b18c9334c73a11dd71ac6a446` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `dc1bf9a93611859370da63c12926bba71fc63e1e6a9e9b09f94aab9a31f1db2d` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `b014bdcdc44db04fdee3423c3841556ada3ee32cbb6a3a1f184db76319739989` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6af4922b8e2d33510094a2f4afba32e15b4f40921ebdb768e66f046eabf797b` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `8d9a5fcbd6e8211ff94916e75185c60092842c85255b652c56835708ab0621e4` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `305d4814eadbf72c28ad3d908e5b3599e408123776b4d38bcbdf2b0603fb7760` |
 | `docs/arquitetura/rag-semantico.md` | `f48d869d1c8fd0141e4c65a41576df8837fbb4641bfca32d60086028df8e58db` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/especificacao/compilacao-spec.json` | `e360b3d88efb5b4e725f1ace1e06a42d0e24c4efed2d99e168b6549d7900a4c9` |
+| `docs/especificacao/compilacao-spec.json` | `43ef00a06e1789bdad4e115f165293c01d46d3b3614050d0e569d9587ad219c1` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `d0e32e7bbc8e70689451781151b8061d5eef234d719dcc6dc8947d920dddef72` |
+| `docs/especificacao/visao-geral.md` | `602f4d455d77586d89c719f0e47eb3f76686584884448a6b34ae68d69d1d606a` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `fe45151b69a6b0eb6acb108f7cb858f2beafa0568671c2c0fae87a33058141f4` |
+| `docs/prompts/README.md` | `de63b9bf28fffe1e2afa8ee44542df83f3d89718fa779e3276866203aafff2d9` |
 | `docs/requisitos/configuracao-ia-rag.md` | `b46cc3aea6df82ad6e0967eee4904857c44c57fd8cf8657c457635e0cd2118db` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |

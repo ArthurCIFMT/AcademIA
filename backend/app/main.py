@@ -8,6 +8,7 @@ from app.modules.assignments.http import install_assignments
 from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
+from app.modules.knowledge.http import corpus_router
 from app.modules.notifications.http import notification_router
 from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
@@ -30,6 +31,7 @@ def create_app(
         app, settings=auth_settings, sessions=identity_sessions
     )
     app.include_router(notification_router(get_sessions))
+    app.include_router(corpus_router(get_sessions))
     app.include_router(staff_router(get_sessions))
     app.include_router(client_router(get_sessions))
     app.include_router(onboarding_router(get_sessions))

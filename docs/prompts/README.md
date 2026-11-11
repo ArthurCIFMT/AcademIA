@@ -96,8 +96,8 @@ módulos antes de INF-01, conforme orientação do professor.
 | TRN-01 | CONCLUIDO | [Catálogo e disponibilidade](../arquitetura/catalogo-exercicios.md) e [testes](../testes/comandos.md#catálogo-de-exercícios). Revisão 0009, 72 BE, 9 API, 48 DB/INT, 11 testes do módulo e 48 FE aprovados. Ruff, mypy, lint, tipos e build passaram. Edge a 390 px com PostgreSQL verificou cadastro, alternativas, inativação e nome duplicado. |
 | TRN-02 | CONCLUIDO | [Rascunho manual e versões](../arquitetura/fichas-manuais.md) e [testes](../testes/comandos.md#editor-de-ficha-manual). Revisão 0010, 73 BE, 9 API, 53 DB/INT, 17 testes de treino e 51 FE aprovados. Ruff, mypy, lint, tipos e build passaram. Edge a 390 px verificou rascunho, retomada e troca de autor por cópia. Publicação e aplicação da retenção seguem em TRN-03. |
 | TRN-03 | CONCLUIDO | [Publicação, parecer e retenção](../arquitetura/publicacao-e-parecer.md) e [testes](../testes/comandos.md#publicação-e-parecer-posterior). Revisão 0011, 78 BE, 9 API, 67 DB/INT, 36 testes de treino e 55 FE aprovados. Ruff, mypy, lint, tipos, build, DOC e Edge a 390 px aprovados. Publicação PENDENTE, duas rejeições, limite 15, concorrência, rollback, troca de responsável e falha SMTP verificados. Tela/exportação do cliente seguem em TRN-04. |
-
 | TRN-04 | CONCLUIDO | [Consulta móvel e exportação](../arquitetura/ficha-do-cliente.md) e [testes](../testes/comandos.md#consulta-móvel-e-exportação-do-treino). 79 BE, 9 API, 43 testes de treino e 64 FE aprovados. Ruff, mypy, lint, tipos, build, DOC e Edge a 390 px aprovados. Consulta antes do parecer, JSON, histórico, recursos indisponíveis e isolamento/expiração verificados. Schema 0011 reutilizado, sem dependência nova. |
+| RAG-01 | CONCLUIDO | [Curadoria e versões](../arquitetura/corpus.md) e [testes](../testes/comandos.md#corpus-documental). Migration 0012; 14 testes do módulo, 87 BE, 9 API, 79 DB/INT com Mailpit e 69 FE aprovados. Ruff, mypy, lint, tipos, build, SPEC e DOC aprovados. Edge a 390 px confirmou cadastro TXT, aprovação, download, revogação e importação real dos 18 PDFs (7 selecionados/11 em quarentena), sem indexação antecipada. |
 
 Consolidação documental em 2026-11-11: [SPEC completo e portátil](../../SPEC.md),
 conteúdo das fontes oficiais incorporado, evolução do MER e roteiro para
@@ -168,9 +168,9 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [RAG-01](05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | PRONTO |
-| [RAG-02](05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | BLOQUEADO |
-| [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | BLOQUEADO |
+| [RAG-01](05-ia-rag/RAG-01.md) | Corpus, versões e aprovação documental | MOD-05 | FND-03, FND-05, IAM-03, GATE-04, IAM-04 | CONCLUIDO |
+| [RAG-02](05-ia-rag/RAG-02.md) | Conexão ao banco vetorial especializado | MOD-05 | FND-04, FND-06, RAG-01, GATE-06 | PRONTO |
+| [RAG-03](05-ia-rag/RAG-03.md) | Extração PDF e TXT com proveniência | MOD-05 | FND-04, RAG-01 | PRONTO |
 | [RAG-04](05-ia-rag/RAG-04.md) | Chunking, embeddings e indexação idempotente | MOD-05 | FND-05, RAG-02, RAG-03 | BLOQUEADO |
 | [RAG-05](05-ia-rag/RAG-05.md) | Recuperação, citações e avaliação vetorial | MOD-05 | RAG-04 | BLOQUEADO |
 | [AI-01](05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | PRONTO |
@@ -247,8 +247,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01 e TRN-01 a TRN-04 estão concluídos.
-RAG-01 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 estão concluídos.
+RAG-02 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

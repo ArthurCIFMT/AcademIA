@@ -57,3 +57,7 @@ playwright-report/
 # Local AI/model artifacts
 models/
 embeddings_cache/
+
+# Corpus privado em tempo de execução
+backend/data/
+/data/corpus/

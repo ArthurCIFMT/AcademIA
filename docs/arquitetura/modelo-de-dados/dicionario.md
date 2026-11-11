@@ -278,26 +278,45 @@ estado difere de PENDENTE. Rejeição exige motivo; nova versão não herda acei
 
 ## documento — MOD-05
 
+Curadoria RAG-01; identidade e origem iniciais imutáveis; edições possuem snapshot bibliográfico próprio
+
+Unicidades: ambiente+catalogo_id; id+ambiente.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| catalogo_id | varchar(40) | required unique | — |
+| ambiente | varchar(15) | required | — |
+| catalogo_id | varchar(40) | required | — |
 | titulo | text | required | — |
 | origem_url | text | required | — |
 | licenca | text | required | — |
 
 ## documento_versao — MOD-05
 
+Curadoria RAG-01; FK composta documento_id+ambiente; snapshot imutável, estados PENDENTE/APROVADO/REVOGADO, responsáveis e revisão
+
+Unicidades: documento_id+numero; ambiente+sha256.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | documento_id | uuid | required | documento.id |
-| sha256 | char(64) | required | — |
+| ambiente | varchar(15) | required | — |
+| numero | integer | required | — |
+| sha256 | varchar(64) | required | — |
 | idioma | varchar(12) | required | — |
 | arquivo_ref | text | required | — |
+| formato | varchar(3) | required | — |
+| tamanho_bytes | integer | required | — |
+| metadados | jsonb | required | — |
+| criado_por | uuid | required | usuario.id |
+| criado_em | timestamptz | required | — |
 | estado | varchar(25) | required | — |
 | aprovado_por | uuid | opcional | usuario.id |
 | aprovado_em | timestamptz | opcional | — |
+| revogado_por | uuid | opcional | usuario.id |
+| revogado_em | timestamptz | opcional | — |
+| motivo_revogacao | text | opcional | — |
 | revision | integer | required | — |
 
 ## ingestao — MOD-05

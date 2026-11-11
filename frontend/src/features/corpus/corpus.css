@@ -1,0 +1,7 @@
+.corpus { max-width: 52rem; overflow-wrap: anywhere; }
+.corpus fieldset { display: grid; gap: .7rem; min-width: 0; margin-block: 1rem; }
+.corpus label { display: block; margin-block: .5rem; }
+.corpus input:not([type=checkbox]), .corpus textarea, .corpus select { display: block; width: 100%; box-sizing: border-box; }
+.corpus input[type=checkbox] { margin-right: .5rem; }
+.corpus button { margin: .4rem; white-space: normal; }
+.corpus-detail { border: 1px solid #bac7cd; padding: .8rem; border-radius: .5rem; }

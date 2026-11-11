@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "930d16cd76b15033a5c363399f8d920059b4a326",
+  "base_implementacao": "e648a120e1133870a57fa1e383965b80f6cfcad7",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -201,6 +201,10 @@
         {
           "arquivo": "docs/arquitetura/fluxos-atualizados.md",
           "titulo": "Integrações de treino e acesso"
+        },
+        {
+          "arquivo": "docs/arquitetura/corpus.md",
+          "titulo": "Curadoria, versões e revogação do corpus"
         }
       ]
     },

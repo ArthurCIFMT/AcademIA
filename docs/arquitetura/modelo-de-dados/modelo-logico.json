@@ -979,7 +979,7 @@
     {
       "name": "documento",
       "owner": "MOD-05",
-      "note": "",
+      "note": "Curadoria RAG-01; identidade e origem iniciais imutáveis; edições possuem snapshot bibliográfico próprio",
       "columns": [
         {
           "name": "id",
@@ -988,9 +988,15 @@
           "ref": null
         },
         {
+          "name": "ambiente",
+          "type": "varchar(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "catalogo_id",
           "type": "varchar(40)",
-          "flags": "required unique",
+          "flags": "required",
           "ref": null
         },
         {
@@ -1012,12 +1018,21 @@
           "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        [
+          "ambiente",
+          "catalogo_id"
+        ],
+        [
+          "id",
+          "ambiente"
+        ]
+      ]
     },
     {
       "name": "documento_versao",
       "owner": "MOD-05",
-      "note": "",
+      "note": "Curadoria RAG-01; FK composta documento_id+ambiente; snapshot imutável, estados PENDENTE/APROVADO/REVOGADO, responsáveis e revisão",
       "columns": [
         {
           "name": "id",
@@ -1032,8 +1047,20 @@
           "ref": "documento.id"
         },
         {
+          "name": "ambiente",
+          "type": "varchar(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "numero",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
           "name": "sha256",
-          "type": "char(64)",
+          "type": "varchar(64)",
           "flags": "required",
           "ref": null
         },
@@ -1046,6 +1073,36 @@
         {
           "name": "arquivo_ref",
           "type": "text",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "formato",
+          "type": "varchar(3)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tamanho_bytes",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "metadados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "criado_em",
+          "type": "timestamptz",
           "flags": "required",
           "ref": null
         },
@@ -1068,13 +1125,40 @@
           "ref": null
         },
         {
+          "name": "revogado_por",
+          "type": "uuid",
+          "flags": "",
+          "ref": "usuario.id"
+        },
+        {
+          "name": "revogado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo_revogacao",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
           "name": "revision",
           "type": "integer",
           "flags": "required",
           "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        [
+          "documento_id",
+          "numero"
+        ],
+        [
+          "ambiente",
+          "sha256"
+        ]
+      ]
     },
     {
       "name": "ingestao",

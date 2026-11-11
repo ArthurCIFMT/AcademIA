@@ -442,3 +442,40 @@ baixa arquivos ou altera código, banco, materiais e migrations.
 A alteração é documental e adiciona apenas o compilador reutilizável.
 Testes funcionais de backend/frontend e ensaios de IA não são reexecutados para
 validar esta consolidação; os resultados dessas entregas permanecem históricos.
+
+## Corpus documental
+
+RAG-01 implementa [curadoria e proveniência](../arquitetura/corpus.md), sem
+extração/indexação/busca antecipadas. A partir de backend/, com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge
+uv run --locked pytest
+uv run --locked pytest tests/contracts
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked ruff check . ../database/migrations/env.py ../database/migrations/versions/0012_corpus.py
+uv run --locked ruff format --check . ../database/migrations/env.py ../database/migrations/versions/0012_corpus.py
+uv run --locked mypy app tests ../database/migrations/env.py ../database/migrations/versions/0012_corpus.py
+```
+
+Na raiz: python scripts/gerar_spec.py --check e
+python scripts/verificar_documentacao.py. No frontend/: npm test, npm run lint,
+npm run typecheck e npm run build. Os ambientes/lockfiles seguem os guias existentes.
+O Mailpit de loopback estava ativo para incluir os cenários SMTP de regressão.
+
+Evidência de 2026-11-11: 14 testes específicos, 87 BE, 9 API, 79 DB/INT e
+69 FE passaram; Ruff/formato, mypy (101 arquivos), lint, tipos e build passaram.
+A migration foi aplicada/revertida em teste e conferida com Alembic check.
+Metadados, quarentena, isolamento, concorrência e proteção do histórico foram
+verificados. A importação dos 18 PDFs reais manteve os sete selecionados aprovados
+e os 11 de reserva pendentes; repetição não duplicou nem removeu revogações.
+Arquivo alterado abortou o lote sem cadastros parciais; autoria completa foi preservada.
+
+Ensaio Edge headless com viewport de 390 px, Vite, FastAPI e PostgreSQL reais:
+login sintético → cadastro TXT UTF-8 em TESTE → aprovação → download → revogação →
+importação dos PDFs locais → filtro de literatura e conferência da persistência.
+Sem transbordamento horizontal. Schema e conta sintéticos removidos ao final.
+Esse ensaio não usa LLM, embeddings, busca vetorial nem produz evidência de qualidade
+RAG: são etapas posteriores. Importação na aplicação de uso é ação explícita do
+administrador pela tela; os testes não alteram o corpus do banco de desenvolvimento.

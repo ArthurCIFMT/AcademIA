@@ -44,6 +44,7 @@ A revisão `0008` cria o [inventário de equipamentos](../docs/arquitetura/equip
 A revisão `0009` cria o [catálogo de exercícios](../docs/arquitetura/catalogo-exercicios.md).
 A revisão `0010` cria as [fichas manuais e invariantes de versões](../docs/arquitetura/fichas-manuais.md).
 A revisão `0011` registra a [validação de publicação e os pareceres imutáveis](../docs/arquitetura/publicacao-e-parecer.md).
+A revisão `0012` cria [documentos, versões e decisões de curadoria](../docs/arquitetura/corpus.md), com proveniência protegida.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
