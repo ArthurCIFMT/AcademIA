@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "b397fb5534253c8f7f0340de31e80eeb7426d651",
+  "base_implementacao": "91c6c0c59661fddc834bf7211719317a743b8adb",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -214,6 +214,16 @@
         {
           "arquivo": "docs/arquitetura/geracao-persistente.md",
           "titulo": "Persistência, API de geração e publicação IA com revalidação transacional"
+        },
+        {
+          "arquivo": "docs/arquitetura/solicitacao-e-acompanhamento-ia.md",
+          "titulo": "Tela, fontes, pendências de contexto e aviso único na geração"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/acompanhamento-ia-v1.schema.json",
+          "titulo": "DTOs de acompanhamento da geração e solicitação de aviso",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },

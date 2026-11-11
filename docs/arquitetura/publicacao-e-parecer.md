@@ -73,7 +73,7 @@ Prefixo de cliente: `/api/v1/treinos/clientes/{client_id}`.
 | GET /versoes/{version_id}/revisao | Instrutor designado consulta conteúdo salvo, parecer e validação separados. |
 | POST /versoes/{version_id}/publicacao | `solicitacao_id`, `revisao`, `onboarding_id`, `versao_base_id` e `restricoes_conferidas=true`. Retorna treino e estado do aviso por e-mail. |
 | POST /versoes/{version_id}/parecer | `solicitacao_id`, `estado` ACEITO/REJEITADO e `motivo` opcional no aceite. |
-| POST /versoes/{version_id}/aviso | Reenvio explícito com `tentativa_anterior` 1 ou 2; respeita idempotência e limite do MOD-12. |
+| POST /versoes/{version_id}/aviso | Reenvio explícito com `tentativa_anterior` null para primeiro envio, ou 1/2 para repetir falha; respeita idempotência e limite do MOD-12. |
 | GET /atual | Cliente próprio/instrutor designado consulta a vigente ou `null`. |
 | GET /publicadas/{version_id} | Mesma autorização; rascunho retorna 404, expirada não retorna conteúdo. |
 
@@ -105,3 +105,10 @@ ValidatedGeneration/treinos, sem passar pelo atalho de publicação manual.
 Reutiliza validação, retenção, pendência/aviso e parecer posterior do mesmo domínio.
 Explicação da versão é imutável; o expurgo remove-a junto à prescrição. Não existe
 cópia da ficha na execução IA que possa restaurar conteúdo expirado.
+
+## Acompanhamento AI-04
+
+[Interface e fontes](solicitacao-e-acompanhamento-ia.md) mostram contexto da
+geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
+tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
+falha exata. A tela lê o ledger atual antes do reenvio.

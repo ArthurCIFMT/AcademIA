@@ -393,10 +393,18 @@ def send_review_notice(
     version_id: UUID,
     *,
     retry_after: int | None = None,
+    generated_request: bool = False,
 ) -> DeliveryResult | None:
     with sessions.begin() as session:
-        _authorize(session, actor, client_id)
+        if generated_request:
+            from app.modules.training.generated import lock_generation_client
+
+            actor = lock_generation_client(session, actor, client_id)
+        else:
+            _authorize(session, actor, client_id)
         row = _version(session, client_id, version_id)
+        if generated_request and row.origem != "IA":
+            raise WorkoutError(403)
         if row.estado_publicacao not in ("PUBLICADO", "SUBSTITUIDO") or _opinion(
             session, row.id
         ):

@@ -32,6 +32,7 @@ from app.modules.training.generated import (
     lock_generation_client,
     publish_generated,
 )
+from app.modules.training.publication import send_review_notice
 from app.modules.training.workout_schemas import (
     WorkoutContent,
     WorkoutDayInput,
@@ -196,7 +197,7 @@ class GenerationService:
         runtime_llm = self.llm or owned_llm
         assert runtime_llm is not None
         try:
-            return Orchestrator(
+            result = Orchestrator(
                 FixedContext(),
                 LazyEvidence(),
                 runtime_llm,
@@ -204,6 +205,18 @@ class GenerationService:
                 config=config,
                 clock=self.clock,
             ).execute(actor, client_id, request)
+            if result.estado == "PUBLICADA" and result.versao_publicada_id:
+                try:
+                    send_review_notice(
+                        self.sessions,
+                        actor,
+                        client_id,
+                        result.versao_publicada_id,
+                        generated_request=True,
+                    )
+                except WorkoutError:
+                    pass  # Designação mudou; publicação e fila já estão persistidas.
+            return result
         finally:
             if owned_llm:
                 owned_llm.close()

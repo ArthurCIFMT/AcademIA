@@ -1,0 +1,801 @@
+{
+  "schema_version": 1,
+  "acompanhamento": {
+    "$defs": {
+      "Consumption": {
+        "additionalProperties": false,
+        "properties": {
+          "etapa": {
+            "enum": [
+              "TRIAGEM",
+              "GERACAO",
+              "CHAT"
+            ],
+            "title": "Etapa",
+            "type": "string"
+          },
+          "chamadas_fisicas": {
+            "title": "Chamadas Fisicas",
+            "type": "integer"
+          },
+          "limite_saida_tokens": {
+            "title": "Limite Saida Tokens",
+            "type": "integer"
+          },
+          "prompt_bytes": {
+            "title": "Prompt Bytes",
+            "type": "integer"
+          },
+          "prompt_sha256": {
+            "title": "Prompt Sha256",
+            "type": "string"
+          },
+          "uso": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "consumo_desconhecido": {
+            "default": true,
+            "title": "Consumo Desconhecido",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "etapa",
+          "chamadas_fisicas",
+          "limite_saida_tokens",
+          "prompt_bytes",
+          "prompt_sha256"
+        ],
+        "title": "Consumption",
+        "type": "object"
+      },
+      "ExecutionView": {
+        "additionalProperties": false,
+        "properties": {
+          "solicitacao_id": {
+            "format": "uuid",
+            "title": "Solicitacao Id",
+            "type": "string"
+          },
+          "estado": {
+            "title": "Estado",
+            "type": "string"
+          },
+          "motivo": {
+            "title": "Motivo",
+            "type": "string"
+          },
+          "versao_publicada_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Versao Publicada Id"
+          },
+          "consumo": {
+            "items": {
+              "$ref": "#/$defs/Consumption"
+            },
+            "title": "Consumo",
+            "type": "array"
+          }
+        },
+        "required": [
+          "solicitacao_id",
+          "estado",
+          "motivo",
+          "versao_publicada_id",
+          "consumo"
+        ],
+        "title": "ExecutionView",
+        "type": "object"
+      },
+      "GenerationContext": {
+        "properties": {
+          "execucao_id": {
+            "format": "uuid",
+            "title": "Execucao Id",
+            "type": "string"
+          },
+          "iniciada_em": {
+            "format": "date-time",
+            "title": "Iniciada Em",
+            "type": "string"
+          },
+          "modelo": {
+            "title": "Modelo",
+            "type": "string"
+          },
+          "versao_prompts": {
+            "title": "Versao Prompts",
+            "type": "string"
+          },
+          "regra_versao": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regra Versao"
+          },
+          "fontes": {
+            "items": {
+              "$ref": "#/$defs/Source"
+            },
+            "title": "Fontes",
+            "type": "array"
+          },
+          "contexto": {
+            "$ref": "#/$defs/TrainingContext"
+          },
+          "politica_alterada": {
+            "title": "Politica Alterada",
+            "type": "boolean"
+          },
+          "fontes_alteradas": {
+            "title": "Fontes Alteradas",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "execucao_id",
+          "iniciada_em",
+          "modelo",
+          "versao_prompts",
+          "regra_versao",
+          "fontes",
+          "contexto",
+          "politica_alterada",
+          "fontes_alteradas"
+        ],
+        "title": "GenerationContext",
+        "type": "object"
+      },
+      "NoticeStatus": {
+        "properties": {
+          "instrutor_designado_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrutor Designado Id"
+          },
+          "interno_registrado": {
+            "title": "Interno Registrado",
+            "type": "boolean"
+          },
+          "email_estado": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email Estado"
+          },
+          "email_tentativas": {
+            "title": "Email Tentativas",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "instrutor_designado_id",
+          "interno_registrado",
+          "email_estado",
+          "email_tentativas"
+        ],
+        "title": "NoticeStatus",
+        "type": "object"
+      },
+      "OpinionView": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Id"
+          },
+          "estado": {
+            "default": "PENDENTE",
+            "enum": [
+              "PENDENTE",
+              "ACEITO",
+              "REJEITADO"
+            ],
+            "title": "Estado",
+            "type": "string"
+          },
+          "instrutor_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instrutor Id"
+          },
+          "criado_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Criado Em"
+          },
+          "motivo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Motivo"
+          }
+        },
+        "title": "OpinionView",
+        "type": "object"
+      },
+      "ReviewDetail": {
+        "properties": {
+          "ficha": {
+            "$ref": "#/$defs/WorkoutView"
+          },
+          "parecer": {
+            "$ref": "#/$defs/OpinionView"
+          },
+          "validacao": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ValidationView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "ficha",
+          "parecer",
+          "validacao"
+        ],
+        "title": "ReviewDetail",
+        "type": "object"
+      },
+      "Source": {
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "documento_versao_id",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao"
+        ],
+        "title": "Source",
+        "type": "object"
+      },
+      "TrainingContext": {
+        "properties": {
+          "treino": {
+            "$ref": "#/$defs/ReviewDetail"
+          },
+          "onboarding_usado_id": {
+            "format": "uuid",
+            "title": "Onboarding Usado Id",
+            "type": "string"
+          },
+          "onboarding_atual_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Onboarding Atual Id"
+          },
+          "pendencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Pendencias",
+            "type": "array"
+          },
+          "aviso": {
+            "$ref": "#/$defs/NoticeStatus"
+          }
+        },
+        "required": [
+          "treino",
+          "onboarding_usado_id",
+          "onboarding_atual_id",
+          "pendencias",
+          "aviso"
+        ],
+        "title": "TrainingContext",
+        "type": "object"
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "properties": {
+          "prompt_tokens": {
+            "minimum": 0,
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "minimum": 0,
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "minimum": 0,
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage",
+        "type": "object"
+      },
+      "ValidationView": {
+        "properties": {
+          "revisao": {
+            "title": "Revisao",
+            "type": "integer"
+          },
+          "validado_por": {
+            "format": "uuid",
+            "title": "Validado Por",
+            "type": "string"
+          },
+          "validado_em": {
+            "format": "date-time",
+            "title": "Validado Em",
+            "type": "string"
+          }
+        },
+        "required": [
+          "revisao",
+          "validado_por",
+          "validado_em"
+        ],
+        "title": "ValidationView",
+        "type": "object"
+      },
+      "WorkoutDayView": {
+        "properties": {
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/$defs/WorkoutItemView"
+            },
+            "title": "Itens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titulo",
+          "itens"
+        ],
+        "title": "WorkoutDayView",
+        "type": "object"
+      },
+      "WorkoutItemView": {
+        "additionalProperties": false,
+        "properties": {
+          "exercicio_id": {
+            "format": "uuid",
+            "title": "Exercicio Id",
+            "type": "string"
+          },
+          "equipamento_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Equipamento Ids",
+            "type": "array"
+          },
+          "series": {
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Series",
+            "type": "integer"
+          },
+          "repeticoes": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Repeticoes",
+            "type": "string"
+          },
+          "carga_kg": {
+            "anyOf": [
+              {
+                "maximum": 999999.99,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Carga Kg"
+          },
+          "intervalo_segundos": {
+            "maximum": 3600,
+            "minimum": 0,
+            "title": "Intervalo Segundos",
+            "type": "integer"
+          },
+          "cadencia": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cadencia"
+          },
+          "observacoes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Observacoes"
+          },
+          "exercicio_snapshot": {
+            "additionalProperties": true,
+            "title": "Exercicio Snapshot",
+            "type": "object"
+          }
+        },
+        "required": [
+          "exercicio_id",
+          "equipamento_ids",
+          "series",
+          "repeticoes",
+          "intervalo_segundos",
+          "exercicio_snapshot"
+        ],
+        "title": "WorkoutItemView",
+        "type": "object"
+      },
+      "WorkoutView": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "numero": {
+            "title": "Numero",
+            "type": "integer"
+          },
+          "origem": {
+            "enum": [
+              "MANUAL",
+              "IA"
+            ],
+            "title": "Origem",
+            "type": "string"
+          },
+          "autor_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Autor Id"
+          },
+          "onboarding_id": {
+            "format": "uuid",
+            "title": "Onboarding Id",
+            "type": "string"
+          },
+          "avaliacao_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avaliacao Id"
+          },
+          "versao_base_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Versao Base Id"
+          },
+          "estado_publicacao": {
+            "enum": [
+              "RASCUNHO",
+              "PUBLICADO",
+              "SUBSTITUIDO",
+              "CONTEUDO_EXPIRADO"
+            ],
+            "title": "Estado Publicacao",
+            "type": "string"
+          },
+          "vigente": {
+            "title": "Vigente",
+            "type": "boolean"
+          },
+          "publicada_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publicada Em"
+          },
+          "conteudo_excluido_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conteudo Excluido Em"
+          },
+          "motivo_exclusao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Exclusao"
+          },
+          "revisao": {
+            "title": "Revisao",
+            "type": "integer"
+          },
+          "explicacao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Explicacao"
+          },
+          "dias": {
+            "items": {
+              "$ref": "#/$defs/WorkoutDayView"
+            },
+            "title": "Dias",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "numero",
+          "origem",
+          "autor_id",
+          "onboarding_id",
+          "avaliacao_id",
+          "versao_base_id",
+          "estado_publicacao",
+          "vigente",
+          "publicada_em",
+          "conteudo_excluido_em",
+          "motivo_exclusao",
+          "revisao",
+          "dias"
+        ],
+        "title": "WorkoutView",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "execucao": {
+        "$ref": "#/$defs/ExecutionView"
+      },
+      "geracao": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/GenerationContext"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "execucao",
+      "geracao"
+    ],
+    "title": "FollowupView",
+    "type": "object"
+  },
+  "reenvio": {
+    "additionalProperties": false,
+    "properties": {
+      "tentativa_anterior": {
+        "anyOf": [
+          {
+            "maximum": 2,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Tentativa Anterior"
+      }
+    },
+    "required": [
+      "tentativa_anterior"
+    ],
+    "title": "RetryNotice",
+    "type": "object"
+  }
+}

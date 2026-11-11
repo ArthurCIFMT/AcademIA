@@ -796,3 +796,52 @@ Ruff/formato e mypy em 182 arquivos aprovados; SPEC/DOC verificados.
 Frontend não executado pois nenhuma interface mudou. AI-04 entregará a tela;
 AI-05 chat/adaptação públicos; AI-06 provedor real/qualidade/latência, sem dispensar
 o E2E e o aceite do MVP em TST-01. Pendências anteriores do corpus permanecem.
+
+## Acompanhamento e interface AI-04
+
+[Contrato](../arquitetura/solicitacao-e-acompanhamento-ia.md) e
+[schemas portáveis](../requisitos/schemas/acompanhamento-ia-v1.schema.json).
+Em backend/:
+
+~~~powershell
+uv run --locked pytest tests/ai/test_followup_unit.py
+uv run --locked --env-file ../.env pytest -m integration tests/ai/test_followup.py
+uv run --locked pytest
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked pytest tests/contracts
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Em frontend/: npm test, npm run lint, npm run typecheck e npm run build.
+Nesta sessão, os mesmos scripts foram resolvidos pelo Node 24 empacotado:
+node node_modules/vitest/vitest.mjs run; node node_modules/eslint/bin/eslint.js .;
+node node_modules/typescript/bin/tsc --noEmit; node node_modules/vite/bin/vite.js build.
+Lockfiles/dependências preservados; sem nova instalação ou pacote.
+
+Testes React: uma geração por clique, UUID/CSRF, retomada somente por GET,
+bloqueio/insuficiência/abstenção/timeout, cancelamento com resposta tardia, perda
+de acesso removendo conteúdo/fontes, ID inexistente e URL insegura, revisão IA
+com aceite/rejeição e reenvio da tentativa efetivamente salva sem republicar.
+Os quatro testes anteriores da revisão manual seguem passando.
+
+Quatro integrações novas usam PostgreSQL/Qdrant reais e o cenário sintético de
+AI-03: fontes/parecer antes do aceite, falha SMTP sem perder fila, replay sem novo
+envio, repetição explícita idempotente, sem instrutor, onboarding atualizado,
+fonte revogada, troca de designação e permissões das APIs. O transporte SMTP é
+controlado, assim como o texto Groq/embeddings da fixture; não é ensaio do modelo.
+E5/Mailpit reais continuam na regressão via flags documentadas.
+Oito unitários cobrem contrato de tentativa inicial/limitada, minimização de fonte
+e correspondência da cópia portátil com os modelos da API.
+
+Evidência de 2026-11-11: 22 testes novos aprovados (8 BE/4 INT/10 FE).
+Regressão: 246 BE e um contrato BE complementar (247 verificados), 142 DB/INT
+com E5/Mailpit, 9 API (subconjunto de BE), 79 FE. Após acrescentar aviso de fonte
+alterada, repetidos os quatro INT e 14 FE afetados, com build/tipos/lint aprovados.
+Ruff/formato e mypy em 187 arquivos aprovados; SPEC/DOC verificados.
+Preview do build em navegador headless, com respostas controladas: 390 e 1280 px,
+sem overflow horizontal ou erro JavaScript, geração única e consulta sem POST.
+Esse ensaio visual não é E2E com backend/provedor real: AI-06/TST-01 permanecem abertos.
+Artefatos temporários de navegador/visualização ficam fora do repositório.
+Schema físico permanece 0014; MER preservado. Chat/adaptação públicos seguem em AI-05.

@@ -2,7 +2,7 @@ import { requestApi } from "../../lib/api/auth";
 import type { Workout } from "../training-editor/api";
 
 export type Detail = {
-  ficha: Workout & { vigente: boolean; motivo_exclusao: string | null; publicada_em: string | null };
+  ficha: Workout & { explicacao?: string | null; vigente: boolean; motivo_exclusao: string | null; publicada_em: string | null };
   parecer: { id: string | null; estado: "PENDENTE" | "ACEITO" | "REJEITADO";
     instrutor_id: string | null; criado_em: string | null; motivo: string | null };
   validacao: { revisao: number; validado_por: string; validado_em: string } | null;
@@ -34,6 +34,6 @@ export async function review(client: string, id: string, csrf: string,
   body: { solicitacao_id: string; estado: "ACEITO" | "REJEITADO"; motivo: string | null }): Promise<Detail> {
   return (await mutate(version(client, id) + "/parecer", csrf, body)).json() as Promise<Detail>;
 }
-export async function resend(client: string, id: string, csrf: string, previous: number): Promise<MailStatus | null> {
+export async function resend(client: string, id: string, csrf: string, previous: number | null): Promise<MailStatus | null> {
   return (await mutate(version(client, id) + "/aviso", csrf, { tentativa_anterior: previous })).json() as Promise<MailStatus | null>;
 }

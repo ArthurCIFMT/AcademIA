@@ -127,3 +127,10 @@ Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
 Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
 sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
 não representam aceite de qualidade/latência da Groq, que permanece em AI-06.
+
+## Acompanhamento AI-04
+
+GET próprio de execucoes/{id}/acompanhamento e contexto de versão IA para titular/
+instrutor designado, sob /api/v1/ia/fichas, sem resumo privado.
+[Contrato](../docs/arquitetura/solicitacao-e-acompanhamento-ia.md). O aviso usa o
+mesmo evento de TRN-03 e SMTP fora da transação; GET não tenta envio.

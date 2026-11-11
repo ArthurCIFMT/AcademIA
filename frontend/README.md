@@ -17,3 +17,10 @@ npm run lint
 npm run typecheck
 npm run build
 ```
+
+## Geração e acompanhamento AI-04
+
+Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
+URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
+fontes e parecer; o instrutor usa a revisão existente.
+[Contrato completo](../docs/arquitetura/solicitacao-e-acompanhamento-ia.md).

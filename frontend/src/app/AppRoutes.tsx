@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { AITrainingPage } from "../features/ai-training/AITraining";
 import { Link, NavLink, Navigate, Outlet, Route, Routes, useMatch, useOutletContext } from "react-router-dom";
 
 import { AssessmentPage } from "../features/assessments/AssessmentPage";
@@ -40,7 +41,8 @@ function SessionBoundary() {
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
   const isTrainingReview = useMatch("/area/instrutor/clientes/:clientId/treinos/:versionId/revisao") !== null;
   const isCorpus = useMatch("/area/administracao/corpus") !== null;
-  const session = useSession(isCorpus || isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
+  const isAIGeneration = useMatch("/area/cliente/treino-ia") !== null;
+  const session = useSession(isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
   const { state } = session;
 
   if (state.status === "checking") return <p role="status">Verificando sessão…</p>;
@@ -86,7 +88,7 @@ function AccessDenied() {
   );
 }
 
-function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" | "my-training" | "corpus" }) {
+function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "ai-training" | "staff" | "clients" | "assignments" | "my-assignments" | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review" | "training-queue" | "my-training" | "corpus" }) {
   const { state, signOut, retrySession } = useOutletContext<SessionController>();
 
   if (state.status === "denied") {
@@ -130,6 +132,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {isAdmin && feature === "corpus" && <CorpusPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {isAdmin && feature !== "equipment" && <p><Link to={equipmentAdminPath}>Gerenciar equipamentos</Link></p>}
       {isClient && <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>}
+      {isClient && feature !== "ai-training" && <p><Link to="/area/cliente/treino-ia">Gerar treino com IA</Link></p>}
       {isClient && feature !== "my-training" && <p><Link to="/area/cliente/treinos">Meus treinos</Link></p>}
       {feature === "equipment" && isAdmin && <EquipmentInventoryPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {canManageClients && <p>
@@ -148,6 +151,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "s
       {feature === "assignments" && isAdmin && <AssignmentPage csrf={state.session.csrf_token} />}
       {feature === "training-review" && isInstructor && <TrainingReviewPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "training-queue" && isInstructor && <TrainingQueuePage key={state.session.user_id} />}
+      {feature === "ai-training" && isClient && <AITrainingPage key={state.session.user_id} csrf={state.session.csrf_token} />}
       {feature === "my-training" && isClient && <MyTrainingPage key={state.session.user_id} clientId={state.session.user_id} />}
       {feature === "training-editor" && isInstructor && <WorkoutEditorPage key={state.session.user_id} csrf={state.session.csrf_token} userId={state.session.user_id} />}
       {feature === "assessments" && isInstructor && <AssessmentPage key={state.session.user_id} csrf={state.session.csrf_token} />}
@@ -195,6 +199,7 @@ export function AppRoutes() {
           <Route path="/area/instrutor/clientes/:clientId/treinos/:versionId/revisao" element={<AreaPage requiredRole="INSTRUTOR" feature="training-review" />} />
           <Route path="/area/instrutor/clientes/:clientId/treinos" element={<AreaPage requiredRole="INSTRUTOR" feature="training-editor" />} />
           <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
+          <Route path="/area/cliente/treino-ia" element={<AreaPage requiredRole="CLIENTE" feature="ai-training" />} />
           <Route path="/area/cliente/treinos" element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
           <Route path={onboardingPath} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
           {roles.map((role) => (

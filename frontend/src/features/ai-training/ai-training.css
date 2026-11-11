@@ -1,0 +1,6 @@
+.ai-training { max-width: 60rem; }
+.ai-training button { margin: .35rem .5rem .35rem 0; }
+.ai-training article, .ai-context { border: 1px solid #c9d3df; border-radius: .7rem; margin: 1rem 0; padding: 1rem; }
+.ai-context [role="note"] { background: #fff6db; color: #493a0a; padding: .8rem; border-radius: .4rem; }
+.ai-training p, .ai-context p, .ai-context small { overflow-wrap: anywhere; }
+.ai-context li, .ai-training article li { margin-bottom: 1rem; }

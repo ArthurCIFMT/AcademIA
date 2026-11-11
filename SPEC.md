@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-03. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-04. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -129,9 +129,9 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-01 — Identidade/pessoas | [Autenticação](docs/arquitetura/autenticacao.md), [clientes](docs/arquitetura/clientes.md) e [funcionários](docs/arquitetura/funcionarios.md) | Entregue nos cartões IAM/PES correspondentes |
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
-| MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; interface de solicitação pendente |
+| MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
-| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; interfaces de solicitação/chat pendentes |
+| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; chat/adaptação públicos pendentes |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
 | MOD-09 — Agenda | [Aulas e eventual reserva](docs/requisitos/requisitos-funcionais.md) | Planejado; reserva depende do gate próprio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-04 a AI-06 e TST-01. O próximo cartão na
-sequência é AI-04. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-05, AI-06 e TST-01. O próximo cartão na
+sequência é AI-05. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -8640,6 +8640,908 @@ Isso comprova integração de código/contratos, não adequação clínica, fide
 semântica da resposta real ou desempenho do provedor gratuito. E5/Mailpit reais
 continuam na regressão dos módulos anteriores. A extração/revisão pendente de
 materiais não foi declarada concluída nem substituída por fontes inventadas.
+### 19. Tela, fontes, pendências de contexto e aviso único na geração
+
+Fonte versionada: [docs/arquitetura/solicitacao-e-acompanhamento-ia.md](docs/arquitetura/solicitacao-e-acompanhamento-ia.md).
+
+#### Entrega e composição
+
+A rota /area/cliente/treino-ia permite solicitar, consultar e cancelar geração.
+A requisição permanece identificada na URL, sem salvar anamnese, ficha, credencial
+ou contexto em localStorage. Recarregar, retomar a URL ou focar a janela apenas
+consulta; nunca dispara outra geração automaticamente. Nova geração é uma ação
+explícita com outro UUID. O backend resolve o titular pela sessão.
+
+AI-03 continua responsável por gerar/publicar e TRN-03 por parecer, retenção e
+aviso. Não há outra publicação ou entidade de aprovação neste cartão.
+[Contrato de geração](docs/arquitetura/geracao-persistente.md), [parecer](docs/arquitetura/publicacao-e-parecer.md)
+e [schemas portáveis](docs/requisitos/schemas/acompanhamento-ia-v1.schema.json).
+
+Ajustes equivalentes necessários: AppRoutes.tsx registra rota/link e mantém a
+sessão da edição; notifications/review_status.py é uma porta de consulta ao aviso
+que pertence ao MOD-12, sem acesso cruzado às suas tabelas. O envio já existente
+do MOD-04 recebe modo interno para geração própria, revalidando conta/contexto e
+origem IA; esse modo não é parâmetro REST. Nenhuma dependência ou migration nova.
+
+#### Experiência do cliente
+
+A tela distingue andamento, ficha publicada, bloqueio, dados insuficientes,
+abstenção/conflito, falha técnica, saída inválida, limite, timeout e cancelamento.
+Há link para conferir onboarding e para consultar fichas já existentes. Ausência
+não é interpretada como saudável. Nenhum laudo ou aceite prévio foi acrescentado.
+
+POST ocorre somente por clique explícito, com solicitacao_id e CSRF. A consulta
+em andamento repete GET a cada dois segundos; ao encerrar ou desmontar, interrompe
+essa consulta. Cancelar usa o DELETE existente; interromper a requisição do
+navegador não equivale a cancelar a execução no servidor. Em erro de transporte,
+orientar consulta do estado salvo; não abrir outro POST automaticamente.
+Identificador inválido não é enviado. Troca de usuário desmonta estado anterior;
+respostas antigas não podem preencher uma solicitação diferente.
+
+A ficha retornada pelo MOD-04 é exibida por dias/itens, com explicação, carga,
+cadência, séries/repetições/intervalo, parecer, responsável, motivo e data.
+Parecer PENDENTE/REJEITADO não bloqueia consulta de conteúdo ainda retido. Expurgado
+não reaparece via execução: a tela mostra metadados/aviso e link para histórico.
+Sem instrutor, indicar pendência de designação e manter acesso à ficha.
+O chat público continua em AI-05; esta entrega não o declara implementado.
+
+Fontes mostram título/link seguro, idioma, página/linhas e seção. IDs e versão
+documental ficam em detalhe expandível. Texto não é interpretado como HTML;
+URLs aceitam somente http/https. Fontes e contexto são bibliográficos/metadados:
+não devolver resumo completo, anamnese, mensagens ou resposta bruta do modelo.
+
+#### Acompanhamento e revisão
+
+| GET /api/v1/ia/fichas/... | Permissão/resultado |
+|---|---|
+| execucoes/{id}/acompanhamento | Somente ator da execução, cliente ativo; recibo e contexto/ficha publicada quando houver |
+| clientes/{client_id}/versoes/{version_id}/contexto | Cliente próprio ou instrutor atualmente designado; fontes, versão e estado atual do contexto da ficha IA |
+
+Ambas usam no-store. Sem sessão: 401; contexto proibido: 403; execução alheia/
+inexistente ou versão sem geração: 404 conforme o contrato. O administrador não
+recebe permissão clínica por seu papel. Perfil/designação são revalidados no
+backend. Não há seleção de cliente ou conteúdo por parâmetros do modelo.
+
+O instrutor usa a tela de revisão existente, com fontes/contexto, link para
+onboarding/avaliações e o mesmo formulário de aceitar/rejeitar/copiar para edição.
+Parecer identifica a versão e é imutável. Trocar instrutor retira acesso do anterior;
+o designado atual vê a pendência pela fila, independentemente de e-mail antigo.
+
+Mudança posterior de onboarding, catálogo/recursos, política ou aprovação das fontes
+aparece como pendência/alerta de contexto atual, sem reescrever a ficha ou zerar
+parecer já concluído. Não criar outro aceite. A publicação já revalida antes do
+commit em AI-03. Referência a fonte revogada é histórica e não autoriza novo uso.
+
+#### Um único fluxo de aviso
+
+Após uma geração nova publicada, chamar o envio existente de TRN-03 fora da
+transação de publicação, com o mesmo evento uuid5(versão, publicacao).
+Ausência de instrutor não falha a geração. O ledger do MOD-12 reserva e limita
+tentativas; replay não reenvia automaticamente e GET nunca envia/cria aviso.
+Falha de SMTP mantém publicação/fila e é apresentada como FALHOU/INCERTO.
+
+No endpoint de aviso já existente, tentativa_anterior=null solicita o primeiro
+envio quando ainda não há ledger; 1/2 pede repetição explícita da tentativa falha
+correspondente, até três tentativas. Repetir a mesma ação não envia outra mensagem.
+O instrutor vê a tentativa realmente salva, inclusive ao abrir a página depois.
+A consulta ao aviso acompanha o destinatário atualmente designado, sem expor e-mail,
+corpo ou credenciais, e sem recriar aviso de um destinatário anterior.
+
+#### Verificação
+
+[Comandos e resultados](docs/testes/comandos.md#acompanhamento-e-interface-ai-04).
+Testes React verificam ações, retomada, bloqueios, cancelamento e limpeza de acesso.
+Integrações PostgreSQL/Qdrant exercitam fontes reais da fixture, registro único,
+falha/reenvio SMTP controlado, designação, parecer e endpoints autenticados.
+O contrato Groq e o transporte do aviso são controlados nas integrações novas;
+qualidade/latência reais do provedor ficam em AI-06, e o E2E do MVP em TST-01.
+### 20. DTOs de acompanhamento da geração e solicitação de aviso
+
+Fonte versionada: [docs/requisitos/schemas/acompanhamento-ia-v1.schema.json](docs/requisitos/schemas/acompanhamento-ia-v1.schema.json).
+
+````json
+{
+  "schema_version": 1,
+  "acompanhamento": {
+    "$defs": {
+      "Consumption": {
+        "additionalProperties": false,
+        "properties": {
+          "etapa": {
+            "enum": [
+              "TRIAGEM",
+              "GERACAO",
+              "CHAT"
+            ],
+            "title": "Etapa",
+            "type": "string"
+          },
+          "chamadas_fisicas": {
+            "title": "Chamadas Fisicas",
+            "type": "integer"
+          },
+          "limite_saida_tokens": {
+            "title": "Limite Saida Tokens",
+            "type": "integer"
+          },
+          "prompt_bytes": {
+            "title": "Prompt Bytes",
+            "type": "integer"
+          },
+          "prompt_sha256": {
+            "title": "Prompt Sha256",
+            "type": "string"
+          },
+          "uso": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Usage"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null
+          },
+          "consumo_desconhecido": {
+            "default": true,
+            "title": "Consumo Desconhecido",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "etapa",
+          "chamadas_fisicas",
+          "limite_saida_tokens",
+          "prompt_bytes",
+          "prompt_sha256"
+        ],
+        "title": "Consumption",
+        "type": "object"
+      },
+      "ExecutionView": {
+        "additionalProperties": false,
+        "properties": {
+          "solicitacao_id": {
+            "format": "uuid",
+            "title": "Solicitacao Id",
+            "type": "string"
+          },
+          "estado": {
+            "title": "Estado",
+            "type": "string"
+          },
+          "motivo": {
+            "title": "Motivo",
+            "type": "string"
+          },
+          "versao_publicada_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Versao Publicada Id"
+          },
+          "consumo": {
+            "items": {
+              "$ref": "#/$defs/Consumption"
+            },
+            "title": "Consumo",
+            "type": "array"
+          }
+        },
+        "required": [
+          "solicitacao_id",
+          "estado",
+          "motivo",
+          "versao_publicada_id",
+          "consumo"
+        ],
+        "title": "ExecutionView",
+        "type": "object"
+      },
+      "GenerationContext": {
+        "properties": {
+          "execucao_id": {
+            "format": "uuid",
+            "title": "Execucao Id",
+            "type": "string"
+          },
+          "iniciada_em": {
+            "format": "date-time",
+            "title": "Iniciada Em",
+            "type": "string"
+          },
+          "modelo": {
+            "title": "Modelo",
+            "type": "string"
+          },
+          "versao_prompts": {
+            "title": "Versao Prompts",
+            "type": "string"
+          },
+          "regra_versao": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regra Versao"
+          },
+          "fontes": {
+            "items": {
+              "$ref": "#/$defs/Source"
+            },
+            "title": "Fontes",
+            "type": "array"
+          },
+          "contexto": {
+            "$ref": "#/$defs/TrainingContext"
+          },
+          "politica_alterada": {
+            "title": "Politica Alterada",
+            "type": "boolean"
+          },
+          "fontes_alteradas": {
+            "title": "Fontes Alteradas",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "execucao_id",
+          "iniciada_em",
+          "modelo",
+          "versao_prompts",
+          "regra_versao",
+          "fontes",
+          "contexto",
+          "politica_alterada",
+          "fontes_alteradas"
+        ],
+        "title": "GenerationContext",
+        "type": "object"
+      },
+      "NoticeStatus": {
+        "properties": {
+          "instrutor_designado_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instrutor Designado Id"
+          },
+          "interno_registrado": {
+            "title": "Interno Registrado",
+            "type": "boolean"
+          },
+          "email_estado": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email Estado"
+          },
+          "email_tentativas": {
+            "title": "Email Tentativas",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "instrutor_designado_id",
+          "interno_registrado",
+          "email_estado",
+          "email_tentativas"
+        ],
+        "title": "NoticeStatus",
+        "type": "object"
+      },
+      "OpinionView": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Id"
+          },
+          "estado": {
+            "default": "PENDENTE",
+            "enum": [
+              "PENDENTE",
+              "ACEITO",
+              "REJEITADO"
+            ],
+            "title": "Estado",
+            "type": "string"
+          },
+          "instrutor_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Instrutor Id"
+          },
+          "criado_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Criado Em"
+          },
+          "motivo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Motivo"
+          }
+        },
+        "title": "OpinionView",
+        "type": "object"
+      },
+      "ReviewDetail": {
+        "properties": {
+          "ficha": {
+            "$ref": "#/$defs/WorkoutView"
+          },
+          "parecer": {
+            "$ref": "#/$defs/OpinionView"
+          },
+          "validacao": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/ValidationView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "ficha",
+          "parecer",
+          "validacao"
+        ],
+        "title": "ReviewDetail",
+        "type": "object"
+      },
+      "Source": {
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "documento_versao_id",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao"
+        ],
+        "title": "Source",
+        "type": "object"
+      },
+      "TrainingContext": {
+        "properties": {
+          "treino": {
+            "$ref": "#/$defs/ReviewDetail"
+          },
+          "onboarding_usado_id": {
+            "format": "uuid",
+            "title": "Onboarding Usado Id",
+            "type": "string"
+          },
+          "onboarding_atual_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Onboarding Atual Id"
+          },
+          "pendencias": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Pendencias",
+            "type": "array"
+          },
+          "aviso": {
+            "$ref": "#/$defs/NoticeStatus"
+          }
+        },
+        "required": [
+          "treino",
+          "onboarding_usado_id",
+          "onboarding_atual_id",
+          "pendencias",
+          "aviso"
+        ],
+        "title": "TrainingContext",
+        "type": "object"
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "properties": {
+          "prompt_tokens": {
+            "minimum": 0,
+            "title": "Prompt Tokens",
+            "type": "integer"
+          },
+          "completion_tokens": {
+            "minimum": 0,
+            "title": "Completion Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "minimum": 0,
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ],
+        "title": "Usage",
+        "type": "object"
+      },
+      "ValidationView": {
+        "properties": {
+          "revisao": {
+            "title": "Revisao",
+            "type": "integer"
+          },
+          "validado_por": {
+            "format": "uuid",
+            "title": "Validado Por",
+            "type": "string"
+          },
+          "validado_em": {
+            "format": "date-time",
+            "title": "Validado Em",
+            "type": "string"
+          }
+        },
+        "required": [
+          "revisao",
+          "validado_por",
+          "validado_em"
+        ],
+        "title": "ValidationView",
+        "type": "object"
+      },
+      "WorkoutDayView": {
+        "properties": {
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/$defs/WorkoutItemView"
+            },
+            "title": "Itens",
+            "type": "array"
+          }
+        },
+        "required": [
+          "titulo",
+          "itens"
+        ],
+        "title": "WorkoutDayView",
+        "type": "object"
+      },
+      "WorkoutItemView": {
+        "additionalProperties": false,
+        "properties": {
+          "exercicio_id": {
+            "format": "uuid",
+            "title": "Exercicio Id",
+            "type": "string"
+          },
+          "equipamento_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Equipamento Ids",
+            "type": "array"
+          },
+          "series": {
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Series",
+            "type": "integer"
+          },
+          "repeticoes": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Repeticoes",
+            "type": "string"
+          },
+          "carga_kg": {
+            "anyOf": [
+              {
+                "maximum": 999999.99,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Carga Kg"
+          },
+          "intervalo_segundos": {
+            "maximum": 3600,
+            "minimum": 0,
+            "title": "Intervalo Segundos",
+            "type": "integer"
+          },
+          "cadencia": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cadencia"
+          },
+          "observacoes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Observacoes"
+          },
+          "exercicio_snapshot": {
+            "additionalProperties": true,
+            "title": "Exercicio Snapshot",
+            "type": "object"
+          }
+        },
+        "required": [
+          "exercicio_id",
+          "equipamento_ids",
+          "series",
+          "repeticoes",
+          "intervalo_segundos",
+          "exercicio_snapshot"
+        ],
+        "title": "WorkoutItemView",
+        "type": "object"
+      },
+      "WorkoutView": {
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "numero": {
+            "title": "Numero",
+            "type": "integer"
+          },
+          "origem": {
+            "enum": [
+              "MANUAL",
+              "IA"
+            ],
+            "title": "Origem",
+            "type": "string"
+          },
+          "autor_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Autor Id"
+          },
+          "onboarding_id": {
+            "format": "uuid",
+            "title": "Onboarding Id",
+            "type": "string"
+          },
+          "avaliacao_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avaliacao Id"
+          },
+          "versao_base_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Versao Base Id"
+          },
+          "estado_publicacao": {
+            "enum": [
+              "RASCUNHO",
+              "PUBLICADO",
+              "SUBSTITUIDO",
+              "CONTEUDO_EXPIRADO"
+            ],
+            "title": "Estado Publicacao",
+            "type": "string"
+          },
+          "vigente": {
+            "title": "Vigente",
+            "type": "boolean"
+          },
+          "publicada_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publicada Em"
+          },
+          "conteudo_excluido_em": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conteudo Excluido Em"
+          },
+          "motivo_exclusao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Exclusao"
+          },
+          "revisao": {
+            "title": "Revisao",
+            "type": "integer"
+          },
+          "explicacao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Explicacao"
+          },
+          "dias": {
+            "items": {
+              "$ref": "#/$defs/WorkoutDayView"
+            },
+            "title": "Dias",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "numero",
+          "origem",
+          "autor_id",
+          "onboarding_id",
+          "avaliacao_id",
+          "versao_base_id",
+          "estado_publicacao",
+          "vigente",
+          "publicada_em",
+          "conteudo_excluido_em",
+          "motivo_exclusao",
+          "revisao",
+          "dias"
+        ],
+        "title": "WorkoutView",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "execucao": {
+        "$ref": "#/$defs/ExecutionView"
+      },
+      "geracao": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/GenerationContext"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "execucao",
+      "geracao"
+    ],
+    "title": "FollowupView",
+    "type": "object"
+  },
+  "reenvio": {
+    "additionalProperties": false,
+    "properties": {
+      "tentativa_anterior": {
+        "anyOf": [
+          {
+            "maximum": 2,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Tentativa Anterior"
+      }
+    },
+    "required": [
+      "tentativa_anterior"
+    ],
+    "title": "RetryNotice",
+    "type": "object"
+  }
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -9512,7 +10414,7 @@ Prefixo de cliente: `/api/v1/treinos/clientes/{client_id}`.
 | GET /versoes/{version_id}/revisao | Instrutor designado consulta conteúdo salvo, parecer e validação separados. |
 | POST /versoes/{version_id}/publicacao | `solicitacao_id`, `revisao`, `onboarding_id`, `versao_base_id` e `restricoes_conferidas=true`. Retorna treino e estado do aviso por e-mail. |
 | POST /versoes/{version_id}/parecer | `solicitacao_id`, `estado` ACEITO/REJEITADO e `motivo` opcional no aceite. |
-| POST /versoes/{version_id}/aviso | Reenvio explícito com `tentativa_anterior` 1 ou 2; respeita idempotência e limite do MOD-12. |
+| POST /versoes/{version_id}/aviso | Reenvio explícito com `tentativa_anterior` null para primeiro envio, ou 1/2 para repetir falha; respeita idempotência e limite do MOD-12. |
 | GET /atual | Cliente próprio/instrutor designado consulta a vigente ou `null`. |
 | GET /publicadas/{version_id} | Mesma autorização; rascunho retorna 404, expirada não retorna conteúdo. |
 
@@ -9544,6 +10446,13 @@ ValidatedGeneration/treinos, sem passar pelo atalho de publicação manual.
 Reutiliza validação, retenção, pendência/aviso e parecer posterior do mesmo domínio.
 Explicação da versão é imutável; o expurgo remove-a junto à prescrição. Não existe
 cópia da ficha na execução IA que possa restaurar conteúdo expirado.
+
+#### Acompanhamento AI-04
+
+[Interface e fontes](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) mostram contexto da
+geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
+tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
+falha exata. A tela lê o ledger atual antes do reenvio.
 ### 13. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
@@ -10212,8 +11121,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-01](docs/prompts/05-ia-rag/AI-01.md) | Triagem acadêmica do onboarding e regras de restrição | MOD-06, MOD-10 | ONB-04, TRN-01, EQP-01, GATE-04 | CONCLUIDO |
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
 | [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
-| [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | PRONTO |
-| [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | BLOQUEADO |
+| [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
+| [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | PRONTO |
 | [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
 | [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
 
@@ -11048,6 +11957,13 @@ Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
 Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
 sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
 não representam aceite de qualidade/latência da Groq, que permanece em AI-06.
+
+#### Acompanhamento AI-04
+
+GET próprio de execucoes/{id}/acompanhamento e contexto de versão IA para titular/
+instrutor designado, sob /api/v1/ia/fichas, sem resumo privado.
+[Contrato](docs/arquitetura/solicitacao-e-acompanhamento-ia.md). O aviso usa o
+mesmo evento de TRN-03 e SMTP fora da transação; GET não tenta envio.
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -11069,6 +11985,13 @@ npm run lint
 npm run typecheck
 npm run build
 ```
+
+#### Geração e acompanhamento AI-04
+
+Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
+URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
+fontes e parecer; o instrutor usa a revisão existente.
+[Contrato completo](docs/arquitetura/solicitacao-e-acompanhamento-ia.md).
 ### 4. Bootstrap
 
 Fonte versionada: [docs/instalacao/primeiro-administrador.md](docs/instalacao/primeiro-administrador.md).
@@ -11294,7 +12217,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 |---|---|
 | `.env.example` | `3ff8016d6c3a2b827011aa5f707d9aec6e94a4d438dc18780a03bcba7122651e` |
 | `AGENTS.md` | `96779619a58c189dcc3e9374a29cdcfa2ad49e475f9ebd00f24b9201c165097e` |
-| `backend/README.md` | `5e33b4749f0f1fd86f4f8d481b44c3bfa2ef9be5f21220d2bad6bbd6c022dcce` |
+| `backend/README.md` | `ba9b364e535bdb92dafae6f8f16e3e3b2582ef62b4589fb812c4830b79a41a7e` |
 | `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
 | `database/README.md` | `8932ad8684d5a6665c541d684ccf0a060d17279451e2b1b6a75853372ee0db03` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
@@ -11327,22 +12250,24 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/orquestracao-ia.md` | `18de473268ef5af9ecf51b729c75c74ec77a00e6171f5d5d8ad8756278489da0` |
-| `docs/arquitetura/publicacao-e-parecer.md` | `53f00107ae661d1aea31452a19eb1297290445fdfced347b1ae2bbf3cd43b11c` |
+| `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
+| `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `2b42c0b8db00e574d15eb3b92fb6cf679e93b706940520808a30afb26cf1c55d` |
+| `docs/especificacao/compilacao-spec.json` | `8d3ec60da393b048e973ce5165aaebe0114a08b7edfde7e1a62378c7b379b82f` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `7cd2a3988aaad7d279cbf9375e2bb6638aaed1b40024dc3c6880163953ba0b69` |
+| `docs/especificacao/visao-geral.md` | `f9064bd76c1431a5cba4ad7d5b781baa32ce39c5e0b9c54b08d3f585ff13eddd` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `0085b156ba948eae77f1c7fa542ee7ef212688dc0d8a2433a43c077024d45e00` |
+| `docs/prompts/README.md` | `0ad635afbcccc1fde2e2555ad2329a326dab219bfc15a6aef0b5ce3cb030fb30` |
 | `docs/requisitos/configuracao-ia-rag.md` | `eeae28fb33573d4d05a159b0dce82420f4f10ac9f90cc7b170c999b2a6ad1de2` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
 | `docs/requisitos/requisitos-funcionais.md` | `8a334908f715122efbb013d80d30846a61c94f18e16cc8c75c0658776b772250` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
+| `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
@@ -11357,7 +12282,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/rag-ia-semantico.md` | `7e99054ef296b7f9fa7edf8e176ae077271e32d68d59e1571e5bd2079d97e8c1` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
-| `frontend/README.md` | `0159a71d63ba13103140a46f9dd286f54b5e23a8b6b0ef88093d95153ccecc04` |
+| `frontend/README.md` | `3c622dcc58635706f80fa00c49407f745f8619cabe77bb8ab7bdec5b05b2d76d` |
 | `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
 | `materiais/rag/catalogo.json` | `900c71447794cbc7af45260132ac5f6e0e2a8dd6102a2a25e35eaa08ca6ef96b` |
 | `materiais/rag/corpus-inicial.json` | `c661217e4b8e3159c285ed8b7fe50aea17c9ea6855f45c912c3862a485b9ea52` |

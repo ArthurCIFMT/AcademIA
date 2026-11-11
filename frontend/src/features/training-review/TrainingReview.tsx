@@ -2,6 +2,9 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ApiError } from "../../lib/api/auth";
 import { publish, readDetail, readQueue, resend, review, type Detail, type MailStatus, type Queue } from "./api";
+import { versionContext, type Context } from "../ai-training/api";
+import { GenerationDetails } from "../ai-training/GenerationDetails";
+import "../ai-training/ai-training.css";
 import "./training-review.css";
 
 export const reviewPath = (client: string, version: string) =>
@@ -54,6 +57,8 @@ function VersionReview({ clientId, versionId, csrf, userId }: {
   clientId: string; versionId: string; csrf: string; userId: string;
 }) {
   const [data, setData] = useState<Detail | null>(null);
+  const [generation, setGeneration] = useState<Context | null>(null);
+  const [contextError, setContextError] = useState("");
   const [refresh, setRefresh] = useState(0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -67,7 +72,24 @@ function VersionReview({ clientId, versionId, csrf, userId }: {
   useEffect(() => {
     const controller = new AbortController();
     void readDetail(clientId, versionId, controller.signal).then(
-      (value) => { if (!controller.signal.aborted) { setData(value); setError(""); setConfirmed(false); } },
+      async (value) => {
+        if (controller.signal.aborted) return;
+        setData(value); setError(""); setConfirmed(false); setGeneration(null); setContextError("");
+        if (value.ficha.origem === "IA") {
+          try {
+            const context = await versionContext(clientId, versionId, controller.signal);
+            if (!controller.signal.aborted) {
+              setGeneration(context);
+              const notice = context.contexto.aviso;
+              setMail(notice.email_estado ? { estado: notice.email_estado as MailStatus["estado"], tentativas: notice.email_tentativas } : null);
+            }
+          } catch (failure) {
+            if (controller.signal.aborted) return;
+            if (failure instanceof ApiError && [401, 403].includes(failure.status)) { setData(null); setError(failureMessage(failure)); }
+            else setContextError("Não foi possível consultar as fontes e os avisos. Recarregue para conferir o contexto atual.");
+          }
+        }
+      },
       (failure: unknown) => { if (!controller.signal.aborted) { setData(null); setError(failureMessage(failure)); } },
     );
     const focus = () => { if (!busyRef.current) { setData(null); setRefresh((value) => value + 1); } };
@@ -104,7 +126,11 @@ function VersionReview({ clientId, versionId, csrf, userId }: {
   async function sendNotice() {
     if (busy) return;
     busyRef.current = true; setBusy(true); setError("");
-    try { setMail(await resend(clientId, versionId, csrf, mail?.tentativas ?? 1)); }
+    try {
+      const delivered = await resend(clientId, versionId, csrf, mail?.tentativas ?? null);
+      setMail(delivered);
+      setGeneration((current) => current ? { ...current, contexto: { ...current.contexto, aviso: { ...current.contexto.aviso, email_estado: delivered?.estado ?? null, email_tentativas: delivered?.tentativas ?? 0 } } } : null);
+    }
     catch (failure) {
       if (failure instanceof ApiError && [401, 403].includes(failure.status)) setData(null);
       setError(failureMessage(failure));
@@ -121,13 +147,16 @@ function VersionReview({ clientId, versionId, csrf, userId }: {
     <p>Parecer {data.parecer.estado}</p>
     {data.parecer.criado_em && <p>Instrutor {data.parecer.instrutor_id} · {new Date(data.parecer.criado_em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}</p>}
     {data.parecer.motivo && <p>Motivo · {data.parecer.motivo}</p>}
+    {data.ficha.explicacao && !expired && <p>{data.ficha.explicacao}</p>}
+    {generation && <><GenerationDetails data={generation} /><p><Link to={"/area/instrutor/clientes/" + encodeURIComponent(clientId) + "/avaliacoes"}>Conferir onboarding e avaliações atuais</Link></p></>}
+    {contextError && <p role="status">{contextError}</p>}
     {expired ? <p>O conteúdo desta versão foi excluído pela retenção. Seus metadados permanecem registrados.</p> :
       data.ficha.dias.map((day, index) => <section key={index}>
         <h5>{day.titulo}</h5>
         <ol>{day.itens.map((item, position) => <li key={position}>
           <strong>{String(item.exercicio_snapshot?.nome ?? "Exercício")}</strong>
           <p>{item.series} séries · {item.repeticoes} repetições · Intervalo {item.intervalo_segundos}s</p>
-          <p>Carga {item.carga_kg ?? "não informada"} kg · Cadência {item.cadencia ?? "não informada"}</p>
+          <p>Carga {item.carga_kg === null ? "não informada" : item.carga_kg + " kg"} · Cadência {item.cadencia ?? "não informada"}</p>
           {item.observacoes && <p>{item.observacoes}</p>}
         </li>)}</ol>
       </section>)}
@@ -155,7 +184,7 @@ function VersionReview({ clientId, versionId, csrf, userId }: {
           <button type="submit">Registrar parecer</button>
         </fieldset>
       </form>
-      {mail && <p role="status">Aviso por e-mail · {mail.estado} · Tentativa {mail.tentativas}</p>}
+      {mail && !generation && <p role="status">Aviso por e-mail · {mail.estado} · Tentativa {mail.tentativas}</p>}
       {(!mail || (mail.estado === "FALHOU" && mail.tentativas < 3)) &&
         <button type="button" disabled={busy} onClick={() => void sendNotice()}>Tentar envio do aviso</button>}
     </>}

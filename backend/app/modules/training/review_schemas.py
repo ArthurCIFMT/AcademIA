@@ -68,4 +68,4 @@ class ReviewQueue(BaseModel):
 
 
 class RetryNotice(PrivateInput):
-    tentativa_anterior: Annotated[int, Field(strict=True, ge=1, le=2)]
+    tentativa_anterior: Annotated[int, Field(strict=True, ge=1, le=2)] | None
