@@ -22,6 +22,8 @@ class GroqAdapter:
         transport: httpx.BaseTransport | None = None,
         clock: Callable[[], float] = time.perf_counter,
     ) -> None:
+        if config.provider != "groq":
+            raise ValueError("Provedor incompatível com adaptador Groq.")
         self.config, self.settings, self.clock = (
             config,
             settings or GroqSettings(),

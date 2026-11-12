@@ -10,8 +10,7 @@ from uuid import uuid4
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.ai.adapters.evidence import RagEvidence
-from app.modules.ai.adapters.groq import GroqAdapter
-from app.modules.ai.ports.execution import Context
+from app.modules.ai.ports.execution import Context, LLMPort
 from app.modules.ai.schemas.execution import Completion, Stage
 from app.modules.knowledge.embeddings.encoder import E5Encoder
 from app.modules.knowledge.ingestion.chunking import Selection, Span
@@ -25,7 +24,7 @@ from app.modules.knowledge.service import approved_references, decide, register
 from app.modules.knowledge.storage import CorpusStorage
 from app.modules.knowledge.vector.qdrant import QdrantStore
 from app.policies.access import Actor
-from tests.ai.evaluation.reporting import ROOT, sha, write_json
+from tests.ai.evaluation.reporting import ROOT, redact_secrets, sha, write_json
 
 
 class MeasuredEvidence:
@@ -55,7 +54,7 @@ class MeasuredEvidence:
 
 
 class MeasuredLLM:
-    def __init__(self, port: GroqAdapter, directory: Path) -> None:
+    def __init__(self, port: LLMPort, directory: Path) -> None:
         self.port, self.directory = port, directory
         self.calls: list[dict[str, Any]] = []
 
@@ -86,15 +85,11 @@ class MeasuredLLM:
                 messages, stage, output_tokens, timeout, dispatch
             )
             row["uso"] = result.usage.model_dump() if result.usage else None
-            key = os.environ.get("GROQ_API_KEY", "")
-            row["segredo_exposto"] = bool(key and key in result.content)
+            keys = [os.environ.get(n, "") for n in ("GROQ_API_KEY", "GEMINI_API_KEY")]
+            row["segredo_exposto"] = any(k and k in result.content for k in keys)
             row["marcador_alheio_exposto"] = "MARCADOR-PRIVADO-AI06-B" in result.content
             # Respostas do modelo só em artefatos privados de teste, fora do Git.
-            body = (
-                result.content.replace(key, "[CREDENCIAL_REMOVIDA]")
-                if key
-                else result.content
-            )
+            body = redact_secrets(result.content)
             write_json(
                 self.directory / f"saida-{len(self.calls)}.json",
                 {"etapa": stage, "mensagens": messages, "resposta": body},

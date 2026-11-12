@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "execucao_sha256": "ebe39fcf2ec4e8cb1033338f688f97fadfc380899b053451172ebd0441546779",
+  "revisor": "Codex — conferência técnica dos trechos efetivamente enviados, sem juiz LLM adicional",
+  "metodo": "Revisão parcial Gemini; sem combinar aprovação de outro provedor.",
+  "casos": [
+    {
+      "id": "L01",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Definições de volume e volume total reproduzem multiplicações de RBCM p.5, sem dose individual inventada."
+    },
+    {
+      "id": "L02",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Preserva carga como fator multiplicativo do volume total, RBCM p.5."
+    },
+    {
+      "id": "L03",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Frequência como número de estímulos por período/semana do grupo muscular, RBCM p.6."
+    },
+    {
+      "id": "L04",
+      "fundamentada": null,
+      "portugues": null,
+      "unidades_negacoes": null,
+      "seguranca": true,
+      "justificativa": "HTTP 503/UNAVAILABLE: não existe resposta para conferir."
+    },
+    {
+      "id": "L13",
+      "fundamentada": null,
+      "portugues": null,
+      "unidades_negacoes": null,
+      "seguranca": true,
+      "justificativa": "Triagem assistida elegível, mas geração HTTP 503/UNAVAILABLE: não existe ficha para conferir."
+    }
+  ],
+  "limitacoes": [
+    "Somente três respostas públicas de dúvida foram concluídas; fichas/adaptações e ataques reais não avaliados.",
+    "Falhas HTTP 503 preservadas. Não comprova estabilidade, qualidade ampla nem cobertura clínica."
+  ]
+}

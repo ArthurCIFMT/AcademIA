@@ -261,6 +261,7 @@ def main() -> int:
                                 "VITE_API_BASE_URL": "/api",
                             }
                             env.pop("GROQ_API_KEY", None)
+                            env.pop("GEMINI_API_KEY", None)
                             node = Path(args.node).resolve()
                             env["PATH"] = (
                                 str(node.parent) + os.pathsep + env.get("PATH", "")

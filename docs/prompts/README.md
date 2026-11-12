@@ -153,6 +153,19 @@ falhas críticas observadas; duas gerações HTTP 400 e erro de fidelidade/unida
 em L24 impedem qualificá-lo. Não misturar resultados para aprovar AI-06.
 AI-06/TST-01 continuam EM_EXECUCAO e PG-01 ABERTO.
 
+### Integração Gemini — 2026-11-12
+
+[ADR-009](../arquitetura/decisoes/ADR-009-gemini-api.md) e [resultado](../testes/ai06-gemini.md):
+chave validada e salva somente em .env; perfil reserva-gemini/API nativa pronto,
+sem nova dependência, migration, ferramenta ou fallback automático. Principal
+permanece 120B. Testes unitários, integração/publicação/replay e avaliação
+determinística (125 backend/20 frontend) aprovados. No ensaio real, três dúvidas
+concluídas, semântica conferida; três lotes encerrados por HTTP 503/UNAVAILABLE.
+Nenhuma ficha/adaptação concluída no Gemini. Relatórios/consumo/rodada exploratória
+separados; candidato não qualificado. A identidade agora inclui adaptadores e
+composição; resultados pré-Gemini são históricos, sem união com o código novo.
+AI-06/TST-01 continuam EM_EXECUCAO; PG-01 ABERTO.
+
 ### Execução local parcial TST-01 — 2026-11-12
 
 Por solicitação do responsável, trabalho independente de quota foi executado
@@ -307,7 +320,8 @@ FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contrat
 AI-06 está em execução: correção de livro/idioma e triagem v3 entregue,
 mas o novo ensaio está incompleto por quota diária TPD. Uma extrapolação de chat
 permanece na revisão parcial. Uma nova retomada concluiu L13; ver a seção de reserva explícita. Retomar os oito casos restantes e consolidar antes
-de concluir o aceite de TST-01. Sua execução local parcial foi autorizada e realizada. Gates pós-MVP e marcos permanecem abertos até evidências reais.
+de concluir o aceite de TST-01. Após ADR-009, respeitar a nova identidade e o
+conjunto completo da implementação atual descrito na seção Gemini. Sua execução local parcial foi autorizada e realizada. Gates pós-MVP e marcos permanecem abertos até evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

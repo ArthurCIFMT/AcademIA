@@ -16,9 +16,10 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.database.base import Base
 from app.modules.ai.adapters.evidence import RagEvidence
+from app.modules.ai.adapters.gemini import GeminiAdapter
 from app.modules.ai.adapters.groq import GroqAdapter
 from app.modules.ai.generation import GenerationService
-from app.modules.ai.orchestration.settings import Config, GroqSettings
+from app.modules.ai.orchestration.settings import Config, GeminiSettings, GroqSettings
 from app.modules.ai.persistence.models import Execution, TriageRecord
 from app.modules.ai.persistence.state import PostgresState
 from app.modules.ai.ports.execution import ExecutionConflict
@@ -49,7 +50,13 @@ class Provider:
 
     def handle(self, req: httpx.Request) -> httpx.Response:
         raw = json.loads(req.content)
-        payload = json.loads(raw["messages"][1]["content"])["dados_nao_confiaveis"]
+        native = "contents" in raw
+        content = (
+            raw["contents"][0]["parts"][0]["text"]
+            if native
+            else raw["messages"][1]["content"]
+        )
+        payload = json.loads(content)["dados_nao_confiaveis"]
         self.calls.append(payload)
         self.hook()
         result: dict[str, Any]
@@ -88,6 +95,27 @@ class Provider:
                 "explicacao": "Proposta sintética com literatura de teste.",
                 "evidencias_ids": [payload["evidencias"][0]["fragmento_id"]],
             }
+        if native:
+            return httpx.Response(
+                200,
+                json={
+                    "modelVersion": Config.load().model,
+                    "candidates": [
+                        {
+                            "finishReason": "STOP",
+                            "content": {
+                                "role": "model",
+                                "parts": [{"text": json.dumps(result)}],
+                            },
+                        }
+                    ],
+                    "usageMetadata": {
+                        "promptTokenCount": 100,
+                        "candidatesTokenCount": 50,
+                        "totalTokenCount": 150,
+                    },
+                },
+            )
         return httpx.Response(
             200,
             json={
@@ -105,6 +133,22 @@ class Provider:
                 },
             },
         )
+
+
+def provider_adapter(provider: Provider) -> GroqAdapter | GeminiAdapter:
+    config = Config.load()
+    transport = httpx.MockTransport(provider.handle)
+    if config.provider == "gemini":
+        return GeminiAdapter(
+            config,
+            GeminiSettings(api_key=SecretStr("synthetic-test-key")),
+            transport=transport,
+        )
+    return GroqAdapter(
+        config,
+        GroqSettings(api_key=SecretStr("synthetic-test-key")),
+        transport=transport,
+    )
 
 
 Scenario = tuple[dict[str, Actor], GenerationService, Provider]
@@ -153,11 +197,7 @@ def scenario(sessions: sessionmaker[Session], tmp_path: Path) -> Iterator[Scenar
             selection.model_copy(update={"finalidade": purpose}),
         )
     provider = Provider()
-    adapter = GroqAdapter(
-        Config.load(),
-        GroqSettings(api_key=SecretStr("synthetic-test-key")),
-        transport=httpx.MockTransport(provider.handle),
-    )
+    adapter = provider_adapter(provider)
     evidence = RagEvidence(Retriever(sessions, store, encoder), sessions, store.check)
     service = GenerationService(sessions, llm=adapter, evidence=evidence)
     try:

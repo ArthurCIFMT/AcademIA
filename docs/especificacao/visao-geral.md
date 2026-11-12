@@ -135,6 +135,11 @@ por quota. Isso não aprova os demais perfis ou AI-06. A [reserva explícita](..
 prepara GPT-OSS 20B com a mesma chave, mas seu ensaio encontrou JSON recusado na
 geração e falha de fidelidade/unidades no chat; candidato não qualificado, sem
 troca automática ou alteração do principal (ADR-008).
+A [integração Gemini](../testes/ai06-gemini.md) acrescentou perfil explícito e
+adaptador nativo sem trocar o principal. Acesso/JSON e regressões passaram; o
+ensaio real foi interrompido por HTTP 503 e não qualifica o candidato. A nova
+identidade inclui configuração/adaptadores/fábrica/composição; evidências
+anteriores não aprovam a nova implementação nem se unem a ela.
 TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
 registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,

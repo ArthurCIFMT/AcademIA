@@ -8,7 +8,7 @@ from app.contracts.structured import digest
 from app.contracts.training.generated import ValidatedGeneration
 from app.modules.ai.adapters.context import PostgresContext
 from app.modules.ai.adapters.evidence import RagEvidence
-from app.modules.ai.adapters.groq import GroqAdapter
+from app.modules.ai.adapters.factory import create_adapter
 from app.modules.ai.adapters.health_config import ConfiguredContext, load_health_config
 from app.modules.ai.orchestration.service import Orchestrator
 from app.modules.ai.orchestration.settings import Config
@@ -195,7 +195,7 @@ class GenerationService:
                 )
 
         if self.llm is None:
-            owned_llm = GroqAdapter(config)
+            owned_llm = create_adapter(config)
         runtime_llm = self.llm or owned_llm
         assert runtime_llm is not None
         try:

@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Self
 from urllib.parse import urlsplit
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.contracts.structured import StrictModel, digest
@@ -12,9 +12,9 @@ from app.modules.ai.schemas.execution import Stage
 
 class Config(StrictModel):
     versao: Literal[2]
-    provider: Literal["groq"]
-    model: Literal["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
-    reasoning_effort: Literal["low"]
+    provider: Literal["groq", "gemini"]
+    model: Literal["openai/gpt-oss-120b", "openai/gpt-oss-20b", "gemini-3.5-flash-lite"]
+    reasoning_effort: Literal["low", "minimal"]
     include_reasoning: Literal[False]
     base_url: str
     response_format: Literal["json_object"]
@@ -26,11 +26,30 @@ class Config(StrictModel):
     retention: dict[str, object]
     quality: dict[str, object]
 
+    @model_validator(mode="after")
+    def provider_contract(self) -> Self:
+        if self.provider == "groq":
+            valid = (
+                self.model in {"openai/gpt-oss-120b", "openai/gpt-oss-20b"}
+                and self.base_url == "https://api.groq.com/openai/v1"
+                and self.reasoning_effort == "low"
+            )
+        else:
+            valid = (
+                self.model == "gemini-3.5-flash-lite"
+                and self.base_url == "https://generativelanguage.googleapis.com/v1beta"
+                and self.reasoning_effort == "minimal"
+            )
+        if not valid:
+            raise ValueError("Contrato de provedor/modelo/endpoint incompatível.")
+        return self
+
     @classmethod
     def load(cls) -> "Config":
         profiles = {
             "principal": "configuracao-ia-v2.json",
             "reserva-groq20b": "configuracao-ia-reserva-groq20b-v2.json",
+            "reserva-gemini": "configuracao-ia-reserva-gemini-v2.json",
         }
         profile = os.environ.get("ACADEMIA_LLM_PROFILE", "principal")
         if profile not in profiles:
@@ -108,3 +127,15 @@ class GroqSettings(BaseSettings):
         ):
             raise ValueError("Endpoint incompatível com o provedor configurado.")
         return endpoint + "/chat/completions"
+
+
+class GeminiSettings(GroqSettings):
+    api_key: SecretStr = Field(
+        default=SecretStr(""), validation_alias="GEMINI_API_KEY", repr=False
+    )
+
+    def endpoint(self, config: Config) -> str:
+        if config.provider != "gemini":
+            raise ValueError("Provedor incompatível com credencial Gemini.")
+        base = super().endpoint(config).removesuffix("/chat/completions")
+        return base + "/models/" + config.model + ":generateContent"

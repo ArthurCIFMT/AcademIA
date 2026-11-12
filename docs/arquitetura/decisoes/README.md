@@ -18,3 +18,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-007 — Livro e fundamentação](ADR-007-livro-e-fundamentacao.md): aceita; extração com escopo explícito, consultas fixas e instruções de idioma/evidências.
 
 - [ADR-008 — Reserva LLM explícita](ADR-008-reserva-llm-explicita.md): mecanismo aceito; GPT-OSS 20B candidato sujeito a ensaio separado, sem fallback automático.
+
+- [ADR-009 — Gemini API](ADR-009-gemini-api.md): integração explícita nativa, credencial separada e avaliação por modelo.

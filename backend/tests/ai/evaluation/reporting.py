@@ -140,6 +140,11 @@ def identity() -> dict[str, Any]:
             ).hexdigest()
             for p in (
                 "backend/app/modules/ai/prompts/v1.py",
+                "backend/app/modules/ai/orchestration/settings.py",
+                "backend/app/modules/ai/adapters/factory.py",
+                "backend/app/modules/ai/adapters/groq.py",
+                "backend/app/modules/ai/adapters/gemini.py",
+                "backend/app/modules/ai/generation.py",
                 "backend/app/modules/ai/orchestration/queries.py",
                 "backend/app/modules/ai/orchestration/service.py",
                 "backend/app/modules/ai/orchestration/presentation.py",
@@ -161,15 +166,22 @@ def identity() -> dict[str, Any]:
     }
 
 
+def redact_secrets(body: str) -> str:
+    import os
+
+    for name in ("GROQ_API_KEY", "GEMINI_API_KEY"):
+        key = os.environ.get(name, "")
+        if key:
+            body = body.replace(key, "[CREDENCIAL_REMOVIDA]")
+    return body
+
+
 def write_json(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(".tmp")
-    import os
 
     body = json.dumps(data, ensure_ascii=False, indent=2) + "\n"
-    key = os.environ.get("GROQ_API_KEY", "")
-    if key:
-        body = body.replace(key, "[CREDENCIAL_REMOVIDA]")
+    body = redact_secrets(body)
     temporary.write_text(body, encoding="utf-8")
     temporary.replace(path)
 

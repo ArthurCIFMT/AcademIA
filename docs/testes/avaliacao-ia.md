@@ -31,7 +31,8 @@ Escolher pasta nova por execução; runner recusa sobrescrever evidência anteri
 backend/data/ é ignorado pelo Git. --node pode indicar o executável Node 24.
 ACADEMIA_EMBEDDING_PATH aponta para os pesos E5 verificados. O runner ativa o
 ensaio E5, sem substituí-lo por double; ausência dos pesos não vira aprovação.
-Modo real exige GROQ_API_KEY no ambiente local. O programa não imprime a chave.
+Modo real exige a chave do perfil selecionado: GROQ_API_KEY para Groq ou
+GEMINI_API_KEY para Gemini. O programa não imprime a chave.
 ACADEMIA_LLM_PROXY_URL é opcional/explícito; TLS e host do modelo permanecem
 validados e o adaptador não herda proxies de requisições de usuário.
 
@@ -137,3 +138,11 @@ A [avaliação de reserva](ai06-reserva.md) registra L13 concluído pelo princip
 nova recusa TPD e ensaio separado do GPT-OSS 20B. O candidato não foi qualificado;
 principal continua 120B. Seleção por ACADEMIA_LLM_PROFILE não repete chamadas
 em caso de falha nem permite unir resultados de modelos diferentes.
+
+## Integração Gemini e versão de código
+
+A [ADR-009](../arquitetura/decisoes/ADR-009-gemini-api.md) e o [ensaio separado](ai06-gemini.md)
+registram a integração nativa. O candidato ainda não foi qualificado: três lotes
+encerraram por HTTP 503. Configuração/fábrica/adaptadores/composição agora fazem
+parte da identidade; relatórios anteriores da Groq não aprovam o código novo e
+não podem ser unidos às novas partes. Principal permanece 120B, sem fallback.

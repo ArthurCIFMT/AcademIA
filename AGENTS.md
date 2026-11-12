@@ -190,6 +190,9 @@ necessária para sua entrega.
 - Perfil padrão principal mantém GPT-OSS 120B; reserva-groq20b seleciona
   explicitamente o candidato GPT-OSS 20B (ADR-008), com a mesma chave. Não há
   troca automática: qualificação exige AI-06 separado, sem misturar modelos.
+- Perfil reserva-gemini seleciona explicitamente gemini-3.5-flash-lite por API
+  nativa (ADR-009), com GEMINI_API_KEY local separada. Nenhuma troca automática;
+  qualificação exige seu próprio AI-06 e pensamentos não são conteúdo público.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
@@ -233,7 +236,8 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - Tipos: `uv run --locked mypy`.
 - IA: com banco de teste e E5 local, executar em backend/
   `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/deterministico-N`.
-  Para provedor real, usar --mode real e outra pasta nova, com GROQ_API_KEY;
+  Para provedor real, usar --mode real e outra pasta nova, com a chave do perfil
+  selecionado (GROQ_API_KEY ou GEMINI_API_KEY);
   consolidação/revisão não repete chamadas. Ver docs/testes/avaliacao-ia.md.
 - E2E: iniciar Mailpit e usar academia_test vazio; definir `ACADEMIA_E2E=1` e executar
   em backend/ `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N`.

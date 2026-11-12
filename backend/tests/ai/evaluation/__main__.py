@@ -81,10 +81,14 @@ def main() -> int:
     env["ACADEMIA_AI_EVALUATION_OUTPUT"] = str(output)
     env["ACADEMIA_TEST_EMBEDDINGS_REAL"] = "1"
     if args.mode == "real":
-        if not env.get("GROQ_API_KEY", "").strip():
+        from app.modules.ai.adapters.factory import credential_name
+        from app.modules.ai.orchestration.settings import Config
+
+        key_name = credential_name(Config.load())
+        if not env.get(key_name, "").strip():
             report.update(estado="PENDENTE_CREDENCIAL", casos=[])
             write_json(output / "relatorio.json", report)
-            print("Ensaio real pendente: configure GROQ_API_KEY no ambiente local.")
+            print(f"Ensaio real pendente: configure {key_name} no ambiente local.")
             return 2
         env["ACADEMIA_AI_REAL"] = "1"
         if args.cases:
@@ -93,6 +97,13 @@ def main() -> int:
     else:
         targets = sorted({t for c in dataset["cenarios"] for t in c["testes"]})
         targets += ["tests/contracts"]
+        from app.modules.ai.orchestration.settings import Config
+
+        if Config.load().provider == "gemini":
+            targets += [
+                "tests/ai/test_gemini.py",
+                "tests/ai/test_gemini_integration.py",
+            ]
         env["ACADEMIA_RAG_REPORT"] = str(output / "recuperacao-real.json")
     command = [
         sys.executable,
@@ -139,7 +150,14 @@ def main() -> int:
                 "src/features/training-review",
             ]
             fe = subprocess.run(
-                fe_command, cwd=ROOT / "frontend", env=env, capture_output=True
+                fe_command,
+                cwd=ROOT / "frontend",
+                env={
+                    k: v
+                    for k, v in env.items()
+                    if k not in {"GROQ_API_KEY", "GEMINI_API_KEY"}
+                },
+                capture_output=True,
             )
             (output / "frontend.log").write_bytes(fe.stdout + fe.stderr)
         frontend_ok = (

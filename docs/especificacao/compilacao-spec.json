@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-12",
-  "base_implementacao": "3c6b82fd5592e857d9e1f0f340198b196c4882e0",
+  "base_implementacao": "d48edc7b96620d1d7348d37f5a0fba3ebf27858c",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -74,6 +74,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md",
           "titulo": "Seleção explícita de reserva LLM e qualificação separada"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-009-gemini-api.md",
+          "titulo": "Gemini nativo, credencial separada e avaliação por provedor"
         }
       ]
     },
@@ -270,6 +274,12 @@
           "titulo": "Configuração candidata de reserva GPT-OSS 20B",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json",
+          "titulo": "Configuração candidata Gemini 3.5 Flash-Lite",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },
@@ -447,6 +457,10 @@
         {
           "arquivo": "docs/testes/ai06-reserva.md",
           "titulo": "Retomada AI-06 e avaliação separada do candidato de reserva"
+        },
+        {
+          "arquivo": "docs/testes/ai06-gemini.md",
+          "titulo": "Ensaio separado Gemini e critérios de qualificação"
         }
       ]
     },

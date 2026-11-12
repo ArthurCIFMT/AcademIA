@@ -154,3 +154,11 @@ continua sendo GPT-OSS 120B. A escolha é de ambiente confiável antes da execu�
 HTTP 429 nunca muda o perfil ou repete uma etapa. Configuração/modelo ficam no
 fingerprint e na evidência; ensaios de modelos diferentes não podem ser unidos.
 Estado da qualificação em [avaliação de reserva](../testes/ai06-reserva.md).
+
+## Adaptador Gemini
+
+A [ADR-009](decisoes/ADR-009-gemini-api.md) acrescenta seleção explícita de
+gemini-3.5-flash-lite pela mesma porta LLM, com API REST nativa, JSON e validação
+backend. A fábrica usa somente a credencial do provedor selecionado. Não há
+troca automática, ferramenta ou retry. Pensamentos mínimos contam no consumo
+mas não são devolvidos/armazenados como conteúdo. [Ensaio](../testes/ai06-gemini.md).

@@ -75,7 +75,7 @@ Para revisar o principal, usar os trechos/saídas correspondentes e o hash real 
 
 ## Outra reserva gratuita
 
-O responsável informou não possuir chave de outro provedor. Não foi criada conta,
+Na rodada da ADR-008, o responsável ainda não possuía chave de outro provedor. Não foi criada conta,
 contratado plano ou inventada credencial. Uma próxima opção para avaliar é a
 [Gemini API no nível gratuito](https://ai.google.dev/gemini-api/docs/pricing),
 com modelo elegível e [quota real da conta](https://ai.google.dev/gemini-api/docs/rate-limits).
@@ -85,3 +85,9 @@ Não prometer que seus resultados serão melhores ou que a quota é ilimitada.
 OpenRouter também tem [modelos gratuitos com limites](https://openrouter.ai/docs/api_reference/limits),
 mas não foi conectado. Não usar roteador aleatório nem cobrar saldo para obter
 mais quota. Novas chaves na mesma organização não são solução de disponibilidade.
+
+Atualização posterior: o responsável forneceu chave Gemini, validada/configurada
+localmente na [ADR-009](../arquitetura/decisoes/ADR-009-gemini-api.md). O [ensaio Gemini](ai06-gemini.md)
+é separado e não qualificado por indisponibilidade. A identidade do código foi
+ampliada; os oito casos não concluídos mencionados acima são retrato da versão
+anterior. O aceite atual exige conjunto completo consistente da nova composição.

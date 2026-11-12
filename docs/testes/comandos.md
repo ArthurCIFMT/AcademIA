@@ -1145,3 +1145,38 @@ Comandos reproduzíveis e limites no guia. Na máquina, uv sem cache configurado
 foi recusado pelo sandbox; as verificações usaram o ambiente Python 3.12 já
 instalado, sem mudar lockfile/dependências. A cópia do projeto é revalidada antes
 do commit. SPEC/DOC/diff verificados na entrega; AI-06/TST-01 ainda EM_EXECUCAO.
+
+## Integração Gemini em AI-06 — 2026-11-12
+
+[ADR-009](../arquitetura/decisoes/ADR-009-gemini-api.md), [guia](ai06-gemini.md) e
+[consolidação separada](ai06-gemini/consolidacao.json). Novo adaptador HTTPX
+nativo, configuração selecionada por perfil, credencial separada, sem dependência
+ou migration. API key validada por GET de modelos e teste mínimo, somente em .env.
+
+Testes efetivamente executados na preparação:
+
+- 322 unitários backend aprovados, 167 fora dos marcadores selecionados.
+- 64 testes relacionados aprovados em rodada complementar, incluindo integração
+  PostgreSQL/Qdrant, publicação PENDENTE e replay; não somar aos totais gerais.
+- 94 testes de contratos/orquestração/retomada aprovados sob perfil Gemini.
+- Modo determinístico do AI-06: 125 backend, 20 frontend; 30 cenários SV/SC
+  com estado esperado. Contratos Gemini adicionais incluídos; fixtures de domínio
+  suportam o provedor selecionado. Testes HTTP próprios Groq ficam em seu perfil.
+- Oito jornadas E2E aprovadas, IA controlada, navegador/API/banco/e-mail reais;
+  ambas as chaves removidas do processo do navegador e rollback confirmado.
+- Ruff/formato e mypy (224 fontes) aprovados. SPEC/DOC/diff verificados na entrega.
+
+Modo real: real-02-final, real-03-retomada e real-04-fichas-seguranca encerraram
+com pytest/código 1 por PROVEDOR_INDISPONIVEL (Google HTTP 503/UNAVAILABLE).
+Três respostas válidas conferidas em português; zero fichas/adaptações concluídas.
+União conserva sete chamadas/6.365 tokens conhecidos e consumo desconhecido em
+três falhas. Uma rodada exploratória foi interrompida após duas respostas para
+fixar código/hashes; diagnóstico separado, fora do aceite. Um teste mínimo
+3.1 Flash-Lite terminou em ReadTimeout e não originou perfil ou aceite.
+Não rotular esses resultados como sucesso de IA real. Sem fallback/retry interno.
+
+O campo codigo_sha256 passa a incluir configuração, adaptadores, fábrica e
+composição. A consolidação anterior principal agora marca incompatibilidade de
+identidade; respostas anteriores ficam preservadas, sem juntá-las ao novo código
+ou ao Gemini. AI-06/TST-01 EM_EXECUCAO; PG-01 ABERTO. Reprodução de todos os
+comandos/perfis no guia; cópia real revalidada antes do commit.

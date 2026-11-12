@@ -11,6 +11,12 @@ from app.modules.ai.orchestration.settings import Config, GroqSettings
 from app.modules.ai.ports.execution import ProviderError
 
 
+@pytest.fixture(autouse=True)
+def groq_contract_profile(monkeypatch: pytest.MonkeyPatch) -> None:
+    if Config.load().provider == "gemini":
+        monkeypatch.setenv("ACADEMIA_LLM_PROFILE", "principal")
+
+
 def envelope(content: str = "{}") -> dict[str, object]:
     return {
         "model": Config.load().model,

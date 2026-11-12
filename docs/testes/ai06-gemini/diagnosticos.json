@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "acesso_http": 200,
+  "chave_configurada_localmente": true,
+  "teste_minimo": {
+    "status_http": 200,
+    "erro": null,
+    "modelVersion": "gemini-3.5-flash-lite",
+    "uso": {
+      "promptTokenCount": 16,
+      "candidatesTokenCount": 9,
+      "totalTokenCount": 25,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 16
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "finish": [
+      "STOP"
+    ],
+    "resposta": [
+      "{\n  \"ok\": true\n}"
+    ],
+    "limites_erro": []
+  },
+  "gemini31": {
+    "tipo": "OBSERVACAO_DO_COMANDO_FORA_DO_ACEITE",
+    "resultado": "httpx.ReadTimeout",
+    "timeout_configurado_segundos": 20,
+    "perfil_nao_implementado": true,
+    "tokens_desconhecidos": true
+  },
+  "exploratoria": {
+    "estado": "INTERROMPIDA_PARA_CONGELAR_CODIGO_ANTES_DO_ACEITE",
+    "fora_do_aceite": true,
+    "casos_concluidos": [
+      "L01",
+      "L02"
+    ],
+    "chamadas_http": 2,
+    "tokens_conhecidos": 3155
+  },
+  "nota": "Diagnósticos e rodada interrompida não entram nas métricas de qualidade/latência. Fatura não é medida."
+}

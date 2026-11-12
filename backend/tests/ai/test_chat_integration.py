@@ -7,17 +7,14 @@ from uuid import UUID, uuid4
 
 import httpx
 import pytest
-from pydantic import SecretStr
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.ai.adapters.evidence import RagEvidence
-from app.modules.ai.adapters.groq import GroqAdapter
 from app.modules.ai.adapters.health_config import ConfiguredContext
 from app.modules.ai.chat.models import Message
 from app.modules.ai.chat.service import ChatService
 from app.modules.ai.generation import GenerationService
-from app.modules.ai.orchestration.settings import Config, GroqSettings
 from app.modules.ai.persistence.state import RateLimited
 from app.modules.ai.ports.execution import Context, ExecutionConflict, ProviderError
 from app.modules.ai.schemas.execution import Completion, RunRequest, Stage
@@ -37,7 +34,7 @@ from app.modules.training.workout_models import WorkoutVersion
 from app.modules.training.workouts import WorkoutError
 from app.policies.access import Actor
 from tests.ai.test_execution import request
-from tests.ai.test_generation import Provider, Scenario
+from tests.ai.test_generation import Provider, Scenario, provider_adapter
 from tests.ai.test_triage import BASE
 from tests.ai.test_triage_integration import complete, exercise, seed
 from tests.knowledge.test_indexing import migration as migration
@@ -101,11 +98,7 @@ def chat_scenario(
             selection.model_copy(update={"finalidade": purpose}),
         )
     provider = Provider()
-    adapter = GroqAdapter(
-        Config.load(),
-        GroqSettings(api_key=SecretStr("synthetic-test-key")),
-        transport=httpx.MockTransport(provider.handle),
-    )
+    adapter = provider_adapter(provider)
     evidence = RagEvidence(Retriever(sessions, store, encoder), sessions, store.check)
     service = GenerationService(sessions, llm=adapter, evidence=evidence)
     try:

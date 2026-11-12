@@ -153,6 +153,11 @@ por quota. Isso não aprova os demais perfis ou AI-06. A [reserva explícita](do
 prepara GPT-OSS 20B com a mesma chave, mas seu ensaio encontrou JSON recusado na
 geração e falha de fidelidade/unidades no chat; candidato não qualificado, sem
 troca automática ou alteração do principal (ADR-008).
+A [integração Gemini](docs/testes/ai06-gemini.md) acrescentou perfil explícito e
+adaptador nativo sem trocar o principal. Acesso/JSON e regressões passaram; o
+ensaio real foi interrompido por HTTP 503 e não qualifica o candidato. A nova
+identidade inclui configuração/adaptadores/fábrica/composição; evidências
+anteriores não aprovam a nova implementação nem se unem a ela.
 TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](docs/testes/ai06-consolidacao.json)
 registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
@@ -1393,6 +1398,66 @@ Mesmo provedor não oferece independência contra indisponibilidade da Groq.
 Gemini API/OpenRouter são alternativas futuras com chave própria, contrato,
 configuração e ensaio separados; não foram conectados nem receberam dados.
 Sem reserva qualificada, preservar falha controlada e treino manual disponível.
+
+Evolução posterior em 2026-11-12: [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md) implementa a
+integração Gemini após fornecimento da chave; isso não qualifica automaticamente
+nenhum modelo nem altera a escolha padrão.
+### 9. Gemini nativo, credencial separada e avaliação por provedor
+
+Fonte versionada: [docs/arquitetura/decisoes/ADR-009-gemini-api.md](docs/arquitetura/decisoes/ADR-009-gemini-api.md).
+
+Status: ACEITA quanto à integração por solicitação do responsável em 2026-11-12.
+A qualificação de qualidade/tempo continua dependente do AI-06 do próprio modelo.
+
+O responsável forneceu credencial Gemini para avaliar uma reserva independente
+da quota Groq. A chave foi validada por listagem autenticada de modelos e salva
+apenas no .env local ignorado pelo Git. Não contratar cobrança, plano pago,
+batch/flex, busca Google ou outra ferramenta. Não copiar a chave para o frontend.
+
+Escolher o ID fixo gemini-3.5-flash-lite: retornado pela conta, com
+[entrada/saída no nível gratuito](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite)
+e [saída estruturada](https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash-lite).
+Não usar aliases latest, preview ou redirecionamento de modelos antigos.
+Os modelos 2.5 possuem restrições para novos projetos; não pressupor acesso por
+aparecerem na listagem. Preço comercial publicado não autoriza ativar faturamento.
+
+Integrar a API REST nativa generateContent por HTTPX já instalado. O adaptador
+recebe as mesmas duas mensagens do prompt versionado e monta systemInstruction
+mais um conteúdo user. responseMimeType=application/json, candidateCount=1,
+thinkingLevel=minimal/includeThoughts=false; validar o conteúdo pelo schema do
+backend. Não solicitar ferramentas, cachedContent, URL context ou grounding.
+Metadados de raciocínio não são conteúdo público nem artefato de avaliação.
+
+Usar [perfil reserva-gemini](docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json)
+por ACADEMIA_LLM_PROFILE explícito. Principal permanece 120B. Configuração valida
+provider/modelo/host/esforço em conjunto; perfil não aceita URL ou modelo arbitrário.
+GEMINI_API_KEY nunca é substituída por GROQ_API_KEY. A fábrica escolhe um adaptador
+por configuração, sem fallback ou nova chamada após falha.
+
+Endpoint Google é HTTPS fixo, credencial em cabeçalho x-goog-api-key, sem query de
+segredo. Redirects e proxies herdados do ambiente HTTP são desabilitados. Proxy de
+saída usa apenas a configuração local confiável já existente. Reutilizar o slot
+síncrono de uma chamada, limites de bytes/timeout/contexto e uma tentativa por
+etapa. Resposta com modelo divergente, código, ferramenta, raciocínio, truncamento
+ou consumo incoerente não é entregue ao domínio. Contabilizar tokens de resposta
+mais pensamentos no total de saída; não esconder o custo de raciocínio mínimo.
+
+Credenciais dos dois provedores são removidas dos relatórios e do processo de
+testes do frontend. O E2E com IA controlada também remove ambas as chaves. Dados
+reais de clientes não participam dos ensaios. Um teste mínimo de conexão confirma
+apenas acesso/JSON, não adequação de fichas ou aprovação de corpus.
+
+Identidade de AI-06 passa a incluir adaptadores, fábrica, configuração e composição
+de geração. Relatórios de antes dessa integração permanecem históricos; seus hashes
+não podem ser unidos à nova execução. Cada modelo precisa de amostra completa,
+revisão semântica vinculada e ensaio determinístico próprio. Não mudar metas para
+aprovar um modelo nem escolher resultados melhores entre provedores.
+
+Quota, segurança e qualidade reais estão em [avaliação Gemini](docs/testes/ai06-gemini.md).
+Serviço nativo e parâmetros: [generateContent](https://ai.google.dev/api/generate-content),
+[pensamento](https://ai.google.dev/gemini-api/docs/thinking) e
+[limites](https://ai.google.dev/gemini-api/docs/rate-limits). A API não comprova fatura
+ou plano financeiro da conta; registrar tokens, sem alegar custo monetário medido.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
@@ -5473,6 +5538,17 @@ ACADEMIA_LLM_PROFILE=principal é o padrão; reserva-groq20b é seleção explí
 sem fallback/retry automático. Todos os demais parâmetros e limiares permanecem
 iguais. Não altera a configuração principal nem aprova qualidade por herança.
 Conferir [estado do ensaio](docs/testes/ai06-reserva.md) antes de usar a reserva.
+
+#### Candidato Gemini
+
+A [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md) autoriza o perfil
+[reserva-gemini](docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json), API nativa
+gemini-3.5-flash-lite, credencial GEMINI_API_KEY separada e esforço mínimo.
+Contexto, corpus, schema, limite por etapa e metas permanecem iguais. Tokens
+de pensamentos são somados à saída; includeThoughts=false não equivale a
+consumo zero. A seleção é explícita antes da execução, sem fallback automático.
+[Estado de qualificação](docs/testes/ai06-gemini.md); respostas de modelos distintos
+não são intercambiáveis como evidência de aceite.
 ### 4. Configuração canônica
 
 Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisitos/schemas/configuracao-ia-v2.json).
@@ -7466,6 +7542,14 @@ continua sendo GPT-OSS 120B. A escolha é de ambiente confiável antes da execu�
 HTTP 429 nunca muda o perfil ou repete uma etapa. Configuração/modelo ficam no
 fingerprint e na evidência; ensaios de modelos diferentes não podem ser unidos.
 Estado da qualificação em [avaliação de reserva](docs/testes/ai06-reserva.md).
+
+#### Adaptador Gemini
+
+A [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md) acrescenta seleção explícita de
+gemini-3.5-flash-lite pela mesma porta LLM, com API REST nativa, JSON e validação
+backend. A fábrica usa somente a credencial do provedor selecionado. Não há
+troca automática, ferramenta ou retry. Pensamentos mínimos contam no consumo
+mas não são devolvidos/armazenados como conteúdo. [Ensaio](docs/testes/ai06-gemini.md).
 ### 17. Schemas JSON de entrada, respostas e resultado interno de execução
 
 Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requisitos/schemas/execucao-ia-v1.schema.json).
@@ -10626,6 +10710,86 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-reserva-groq20b-v2.js
   "include_reasoning": false
 }
 ````
+### 27. Configuração candidata Gemini 3.5 Flash-Lite
+
+Fonte versionada: [docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json](docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json).
+
+````json
+{
+  "versao": 2,
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "response_format": "json_object",
+  "temperature": 0.2,
+  "concurrency": 1,
+  "embedding": {
+    "model": "intfloat/multilingual-e5-small",
+    "dimension": 384,
+    "device": "cpu",
+    "normalize": true,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: ",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "max_input_tokens": 512
+  },
+  "retrieval": {
+    "chunk_tokens": 300,
+    "overlap_tokens": 48,
+    "top_k": 5,
+    "max_top_k": 8,
+    "min_score_inicial": 0.8,
+    "metric": "cosine",
+    "max_chunks_pacote": 5
+  },
+  "limits": {
+    "question_chars": 1000,
+    "history_messages": 6,
+    "history_total_chars": 3000,
+    "resumo_chars": 2400,
+    "candidates": 40,
+    "prompt_utf8_bytes": 24000,
+    "chat": {
+      "output_tokens": 600,
+      "timeout_seconds": 20,
+      "max_new_executions_per_client": 6,
+      "execution_window_seconds": 60
+    },
+    "triage": {
+      "output_tokens": 400,
+      "timeout_seconds": 25
+    },
+    "generation": {
+      "output_tokens": 4096,
+      "timeout_seconds": 60
+    },
+    "execution_timeout_seconds": 100,
+    "llm_attempts_per_stage": 1,
+    "network_attempts_retrieval_ingestion": 3,
+    "backoff_seconds": [
+      1,
+      2
+    ]
+  },
+  "retention": {
+    "chat_days": 90,
+    "execution_days": 90,
+    "published_versions": 15
+  },
+  "quality": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "reasoning_effort": "minimal",
+  "include_reasoning": false
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -12770,6 +12934,9 @@ necessária para sua entrega.
 - Perfil padrão principal mantém GPT-OSS 120B; reserva-groq20b seleciona
   explicitamente o candidato GPT-OSS 20B (ADR-008), com a mesma chave. Não há
   troca automática: qualificação exige AI-06 separado, sem misturar modelos.
+- Perfil reserva-gemini seleciona explicitamente gemini-3.5-flash-lite por API
+  nativa (ADR-009), com GEMINI_API_KEY local separada. Nenhuma troca automática;
+  qualificação exige seu próprio AI-06 e pensamentos não são conteúdo público.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
@@ -12813,7 +12980,8 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - Tipos: `uv run --locked mypy`.
 - IA: com banco de teste e E5 local, executar em backend/
   `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/deterministico-N`.
-  Para provedor real, usar --mode real e outra pasta nova, com GROQ_API_KEY;
+  Para provedor real, usar --mode real e outra pasta nova, com a chave do perfil
+  selecionado (GROQ_API_KEY ou GEMINI_API_KEY);
   consolidação/revisão não repete chamadas. Ver docs/testes/avaliacao-ia.md.
 - E2E: iniciar Mailpit e usar academia_test vazio; definir `ACADEMIA_E2E=1` e executar
   em backend/ `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N`.
@@ -12895,7 +13063,8 @@ Escolher pasta nova por execução; runner recusa sobrescrever evidência anteri
 backend/data/ é ignorado pelo Git. --node pode indicar o executável Node 24.
 ACADEMIA_EMBEDDING_PATH aponta para os pesos E5 verificados. O runner ativa o
 ensaio E5, sem substituí-lo por double; ausência dos pesos não vira aprovação.
-Modo real exige GROQ_API_KEY no ambiente local. O programa não imprime a chave.
+Modo real exige a chave do perfil selecionado: GROQ_API_KEY para Groq ou
+GEMINI_API_KEY para Gemini. O programa não imprime a chave.
 ACADEMIA_LLM_PROXY_URL é opcional/explícito; TLS e host do modelo permanecem
 validados e o adaptador não herda proxies de requisições de usuário.
 
@@ -13001,6 +13170,14 @@ A [avaliação de reserva](docs/testes/ai06-reserva.md) registra L13 concluído 
 nova recusa TPD e ensaio separado do GPT-OSS 20B. O candidato não foi qualificado;
 principal continua 120B. Seleção por ACADEMIA_LLM_PROFILE não repete chamadas
 em caso de falha nem permite unir resultados de modelos diferentes.
+
+#### Integração Gemini e versão de código
+
+A [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md) e o [ensaio separado](docs/testes/ai06-gemini.md)
+registram a integração nativa. O candidato ainda não foi qualificado: três lotes
+encerraram por HTTP 503. Configuração/fábrica/adaptadores/composição agora fazem
+parte da identidade; relatórios anteriores da Groq não aprovam o código novo e
+não podem ser unidos às novas partes. Principal permanece 120B, sem fallback.
 ### 5. Curadoria e perfis sintéticos comuns de academia
 
 Fonte versionada: [docs/testes/preparacao-ai06.md](docs/testes/preparacao-ai06.md).
@@ -14147,7 +14324,7 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   "estado": "PENDENTE_OU_REPROVADO",
   "aceite_ia_real": false,
   "criterios": {
-    "mesma_configuracao_e_casos": true,
+    "mesma_configuracao_e_casos": false,
     "deterministico_aprovado": true,
     "amostra_completa": false,
     "casos_obrigatorios": false,
@@ -14172,7 +14349,7 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
     "real": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8",
     "revisao": "b43bf1bf5b0d9d01244b0e9629f3411c92511e6477ce3f7571c93475da92da94"
   },
-  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
+  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01. Composição/adaptadores agora possuem fingerprint ampliado. Relatórios anteriores continuam históricos e não se unem à nova implementação."
 }
 ````
 ### 11. Correções de fundamentação e idioma e reprodução
@@ -14999,7 +15176,7 @@ Para revisar o principal, usar os trechos/saídas correspondentes e o hash real 
 
 #### Outra reserva gratuita
 
-O responsável informou não possuir chave de outro provedor. Não foi criada conta,
+Na rodada da ADR-008, o responsável ainda não possuía chave de outro provedor. Não foi criada conta,
 contratado plano ou inventada credencial. Uma próxima opção para avaliar é a
 [Gemini API no nível gratuito](https://ai.google.dev/gemini-api/docs/pricing),
 com modelo elegível e [quota real da conta](https://ai.google.dev/gemini-api/docs/rate-limits).
@@ -15009,6 +15186,110 @@ Não prometer que seus resultados serão melhores ou que a quota é ilimitada.
 OpenRouter também tem [modelos gratuitos com limites](https://openrouter.ai/docs/api_reference/limits),
 mas não foi conectado. Não usar roteador aleatório nem cobrar saldo para obter
 mais quota. Novas chaves na mesma organização não são solução de disponibilidade.
+
+Atualização posterior: o responsável forneceu chave Gemini, validada/configurada
+localmente na [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md). O [ensaio Gemini](docs/testes/ai06-gemini.md)
+é separado e não qualificado por indisponibilidade. A identidade do código foi
+ampliada; os oito casos não concluídos mencionados acima são retrato da versão
+anterior. O aceite atual exige conjunto completo consistente da nova composição.
+### 16. Ensaio separado Gemini e critérios de qualificação
+
+Fonte versionada: [docs/testes/ai06-gemini.md](docs/testes/ai06-gemini.md).
+
+#### Estado atual
+
+**Integração entregue; modelo ainda não qualificado.** Principal continua Groq/
+GPT-OSS 120B. A chave fornecida pelo responsável foi aceita pela API oficial e
+salva somente em .env ignorado pelo Git; o arquivo temporário foi removido.
+Não criar nem contratar faturamento, serviços pagos ou fallback automático.
+
+A [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md) define o candidato
+fixo gemini-3.5-flash-lite e o perfil reserva-gemini. Listagem de modelos e teste
+mínimo retornaram HTTP 200/JSON válido; isso demonstra acesso, não qualidade de
+fichas. Foi observado o ID exato do modelo, sem alias latest ou roteador.
+Uma chamada mínima adicional ao 3.1 Flash-Lite terminou em ReadTimeout (20 s);
+não foi criado perfil do 3.1, nem usado seu resultado como parte do ensaio.
+
+#### Resultados reais e limites
+
+[Ensaio unido](docs/testes/ai06-gemini/ensaio-real.json), [resumo](docs/testes/ai06-gemini/resumo.json),
+[revisão vinculada](docs/testes/ai06-gemini/revisao-tecnica.json),
+[consolidação](docs/testes/ai06-gemini/consolidacao.json),
+[códigos HTTP](docs/testes/ai06-gemini/limites.json) e [diagnósticos](docs/testes/ai06-gemini/diagnosticos.json).
+
+- Três execuções consistentes encerraram por HTTP 503/UNAVAILABLE, não por chave
+  inválida ou quota 429. Cada uma fez uma tentativa por etapa e encerrou o lote.
+- Cinco casos foram exercitados; três dúvidas (L01–L03) produziram o resultado
+  esperado, com português e multiplicações/definições conferidos em RBCM p.5/6.
+  L04 e a geração L13 falharam por provedor. Os 22 demais casos ficam pendentes.
+- Chat válido: n=3, mediana 1,414 s, p95 5,197 s, apenas tempo do serviço.
+  Não estimar tempo de geração/adaptação a partir de falhas ou abstenções.
+- Não houve ficha publicada neste ensaio Gemini. Triagem elegível de L13 não é
+  qualidade de ficha. Adaptações e ataques SC-01/02 não foram concluídos no
+  modelo real; testes determinísticos continuam sendo evidência distinta.
+- As partes registram sete chamadas físicas, 6.365 tokens conhecidos e consumo
+  desconhecido em três recusas HTTP. Não inferir custo monetário/fatura zero.
+- Uma rodada exploratória anterior teve duas dúvidas concluídas e foi interrompida
+  para fixar o código/hashes antes do aceite. Ela não é unida às partes finais,
+  nem utilizada para substituir respostas desfavoráveis. Seu consumo é separado.
+
+As partes originais ficam nos subdiretórios real-02-final, real-03-retomada e
+real-04-fichas-seguranca, com relatorio.json em cada um. A união preserva as
+recusas anteriores e não troca resposta concluída/falha de qualidade. A revisão
+não inventa avaliação de saída inexistente. Modelos/configurações diferentes
+não se unem; partes pré-Gemini da Groq permanecem históricas.
+
+**AI-06/TST-01 permanecem EM_EXECUCAO; PG-01 ABERTO.** Teste mínimo, JSON válido,
+boa latência de três dúvidas ou mocks não aprovam o LLM real. Não foi afrouxado
+nenhum limiar, bloqueio de saúde, restrição de recursos ou permissão.
+
+#### Verificação local
+
+Regressão unitária: 322 testes aprovados; 167 fora dos marcadores selecionados.
+Verificações específicas: 64 aprovados na preparação, incluindo integração real
+PostgreSQL/Qdrant, publicação PENDENTE e replay sem outra chamada. Outra execução
+sob perfil Gemini verificou 94 testes de contrato/orquestração/retomada.
+A [avaliação determinística Gemini](docs/testes/ai06-gemini/deterministico.json) aprovou
+125 testes backend, 20 de interface e os 30 cenários SV/SC com estados esperados.
+Inclui o contrato nativo Gemini; os testes específicos Groq conservam seu próprio
+perfil. Fixtures de domínio suportam as duas representações HTTP para exercitar
+a configuração selecionada. Esses testes não enviam dados a LLM real.
+[Regressão E2E controlada](docs/testes/ai06-gemini/e2e-controlado.json): oito jornadas
+aprovadas em navegador/API/PostgreSQL/SMTP locais, sem chamada de provedor;
+rollback confirmado. Não substitui o ensaio real nem encerra TST-01.
+Ruff/formato e mypy (224 fontes) aprovados. Sem dependência nova ou migration.
+
+#### Reprodução
+
+Com banco academia_test dedicado, E5 local e .env com chave separada, em backend/:
+
+~~~powershell
+$env:ACADEMIA_LLM_PROFILE = 'reserva-gemini'
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/gemini-det-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --output ./data/avaliacao/gemini-real-N
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_gemini.py tests/ai/test_gemini_integration.py
+# Retornar explicitamente ao padrão após o ensaio:
+$env:ACADEMIA_LLM_PROFILE = 'principal'
+~~~
+
+Pasta nova em cada execução. Uma retomada explícita pode usar --cases com IDs
+não concluídos, seguida de merge de partes da mesma configuração/código.
+Não repetir resposta de qualidade falha para escolher outra mais favorável.
+O serviço não faz retry; uma nova execução tem nova chave idempotente.
+Consolidar somente com amostra completa, revisão vinculada e ensaio determinístico.
+
+O adaptador REST nativo recebe as mesmas mensagens e contextos minimizados,
+com saída JSON, sem ferramentas/pesquisa/código/SQL. Timeout, chave ausente, quota,
+truncamento, envelope inválido, modelo divergente e ferramentas inesperadas têm
+erros controlados, sem publicação. Os tokens de pensamento são contabilizados,
+mas pensamentos não são salvos como conteúdo. Ambas as chaves são removidas dos
+relatórios e dos processos de teste do navegador/frontend.
+
+A identidade passou a incluir configuração, adaptadores, fábrica e composição de
+geração. A consolidação principal anterior agora identifica incompatibilidade com
+os hashes atuais, mantendo evidências antigas sem aprovar código novo. Para
+concluir AI-06 na implementação atual, executar um conjunto completo consistente
+do perfil escolhido, sem juntar os três chats Gemini às fichas antigas da Groq.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -15518,7 +15799,9 @@ ACADEMIA_INDEX_LOCK_DIR=data/indexacao
 
 # LLM gratuito Groq; credencial pessoal. Testes AI-02 usam transporte controlado.
 GROQ_API_KEY=
-# Perfil principal GPT-OSS 120B; reserva-groq20b é candidato em avaliação.
+# Gemini é credencial separada; perfil reserva-gemini exige avaliação própria.
+GEMINI_API_KEY=
+# Perfil principal GPT-OSS 120B; reservas explícitas: reserva-groq20b/reserva-gemini.
 # Não há troca automática por quota. Cada perfil exige seu próprio AI-06.
 ACADEMIA_LLM_PROFILE=principal
 # Modelo/endpoint/limites em docs/requisitos/schemas/configuracao-ia-v2.json.
@@ -15547,8 +15830,8 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `36120b4b22b5a19e0aefb97123c139b5ade83b7c981e27ebe1ee531d0131aeee` |
-| `AGENTS.md` | `630a49dfba592b1ab1ae02a409e8a8c1eee71d8eb66d3e08011c392241e49f7e` |
+| `.env.example` | `c337599b3e095ae7462404805c11fc45407142e0b674b6c7358854c352fb31c0` |
+| `AGENTS.md` | `d2e44ebe0c267d987f6d0b50dcdb48e5d9dba660c8c61a45a24a21bcc5ce27f7` |
 | `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
@@ -15568,7 +15851,8 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `92df90d8c5ec4d3031612205e4f2d3c1c56864bdbc662dfad5961138093c2b0c` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
-| `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `83de897d5b915a9a87ab109b0bb841f037b5127eceadc3e20dbd8edb9ac3d42d` |
+| `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
+| `docs/arquitetura/decisoes/ADR-009-gemini-api.md` | `1f7bdddf0ef704f2b992ebb6cad302518bc12b41878a3abb2c7f868c6eccb3cc` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
@@ -15585,19 +15869,19 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `1da59cd93e0ef50088d685cc7492074ba3e2792b2e377e621e0787cb6d912fd1` |
+| `docs/arquitetura/orquestracao-ia.md` | `224a7c05c52a580adb9c775f4da9f03e13f9ad623bf04eed5a58e16fd51f00cc` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `dbabb4995e21a91dcb16f0b35b6d87544d0cf57cee16c1eceea5ed74a4523135` |
+| `docs/especificacao/compilacao-spec.json` | `6fc22b3c36552daabb557cd03e00500a22579fa4032d75b195a6a260412f7d58` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `0fc0e0d5f3709be689cb5eec97a3a658a8d0949fa34ad2978aec03eb4062c07f` |
+| `docs/especificacao/visao-geral.md` | `01f913899e90de2358e55a75c2bfc2317bc1240876d3ae8ddce650cd5bd62483` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `823a7daa9743744604f7420acb4287dd736b2450b01715028e7fc1b1f402b375` |
-| `docs/requisitos/configuracao-ia-rag.md` | `d5d50ececeeeeacfe9bcbc488a049584b807f0fda64002c9367b9517c6efd073` |
+| `docs/prompts/README.md` | `f6ab0be18e22d6400da227abd7371fedd46839167480e41e329cd391423a3aee` |
+| `docs/requisitos/configuracao-ia-rag.md` | `09a3597d793427016f041e7b500bdec241b99a5cf244743ee86589e629ce047e` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
@@ -15605,6 +15889,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
+| `docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json` | `7e450a4d985eac5d2c3a277a1edddb268b95d9d6dda4358e29a2d5a7db9a0c09` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-groq20b-v2.json` | `53ce5c82a458b1d36b1a6ba2543a1ac4d2d52c3fbc86f0cfa21dc60111a691e0` |
 | `docs/requisitos/schemas/configuracao-ia-v2.json` | `bdc90488f905a591b2261af5afdae0e0c0ab4f6566216b6b2003fba84f6135ce` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
@@ -15619,12 +15904,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
 | `docs/testes/ai06-casos-v2.json` | `c87cf3a59358b49fb12363cb224f271988d25e86fb0e02771caf6df9dd03b818` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
-| `docs/testes/ai06-consolidacao.json` | `78432890120b39042809ebc3d63c7cf8656307fa1c59c8a2d31ff4733250c72a` |
+| `docs/testes/ai06-consolidacao.json` | `68e1add452af4f63ec56d5961bdf69aa17a2d3cd371037ced41b67013851acfc` |
 | `docs/testes/ai06-corpus-v2.json` | `51e471e5cdf112fd16f0282b5b3cbfa1029924679711b5286e2cbf9da30de349` |
 | `docs/testes/ai06-correcao-fundamentacao.md` | `035cab5e76b7fa1808689ffb13d0346bdc29765ec0e8ddd9d35b32d647f8d252` |
-| `docs/testes/ai06-reserva.md` | `d3fb3257a32623305763821732b1b513f8dfc3ef6c063eb53cce6c5e40527185` |
+| `docs/testes/ai06-gemini.md` | `024b1afa3ba2ce637ac345b73476cc4b928424029f1734ec00395ee57f5b386b` |
+| `docs/testes/ai06-reserva.md` | `b96334b0c13137c355df720052d0a8a2cf408b03e46a800eeb42a97888b30dee` |
 | `docs/testes/ai06-resumo.json` | `a5eb25faa5928ab862a3c6dec7b8866ae07deccd5c7712b20929116de529df06` |
-| `docs/testes/avaliacao-ia.md` | `9697940e4e98a4d2e2099587aa5bda9de408ee759fd59026f2c129ecc59588fd` |
+| `docs/testes/avaliacao-ia.md` | `592a1669c7b45ee7574d58e70f0195ec38dd85f0c18067be8d45029323d51bc9` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `6ecf81e94a81ea6a08dbf720ac19705cc2b16c4e6ebabf73d45bc6d09fbcf355` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |

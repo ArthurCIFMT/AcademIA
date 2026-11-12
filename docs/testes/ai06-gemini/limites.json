@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "observacao": "Somente HTTP/status/retry sanitizados, sem mensagens brutas ou credenciais.",
+  "respostas": [
+    {
+      "parte": "real-02-final",
+      "status_http": 503,
+      "tempo_utc": 1794507162.8688798,
+      "retry_after": null,
+      "estado_erro": "UNAVAILABLE",
+      "limites": []
+    },
+    {
+      "parte": "real-03-retomada",
+      "status_http": 200,
+      "tempo_utc": 1794507348.6786373,
+      "retry_after": null
+    },
+    {
+      "parte": "real-03-retomada",
+      "status_http": 200,
+      "tempo_utc": 1794507369.824586,
+      "retry_after": null
+    },
+    {
+      "parte": "real-03-retomada",
+      "status_http": 200,
+      "tempo_utc": 1794507395.0269077,
+      "retry_after": null
+    },
+    {
+      "parte": "real-03-retomada",
+      "status_http": 503,
+      "tempo_utc": 1794507421.3284106,
+      "retry_after": null,
+      "estado_erro": "UNAVAILABLE",
+      "limites": []
+    },
+    {
+      "parte": "real-04-fichas-seguranca",
+      "status_http": 200,
+      "tempo_utc": 1794507575.003352,
+      "retry_after": null
+    },
+    {
+      "parte": "real-04-fichas-seguranca",
+      "status_http": 503,
+      "tempo_utc": 1794507582.7332475,
+      "retry_after": null,
+      "estado_erro": "UNAVAILABLE",
+      "limites": []
+    }
+  ]
+}

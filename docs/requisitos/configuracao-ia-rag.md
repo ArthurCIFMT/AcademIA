@@ -71,3 +71,14 @@ ACADEMIA_LLM_PROFILE=principal é o padrão; reserva-groq20b é seleção explí
 sem fallback/retry automático. Todos os demais parâmetros e limiares permanecem
 iguais. Não altera a configuração principal nem aprova qualidade por herança.
 Conferir [estado do ensaio](../testes/ai06-reserva.md) antes de usar a reserva.
+
+## Candidato Gemini
+
+A [ADR-009](../arquitetura/decisoes/ADR-009-gemini-api.md) autoriza o perfil
+[reserva-gemini](schemas/configuracao-ia-reserva-gemini-v2.json), API nativa
+gemini-3.5-flash-lite, credencial GEMINI_API_KEY separada e esforço mínimo.
+Contexto, corpus, schema, limite por etapa e metas permanecem iguais. Tokens
+de pensamentos são somados à saída; includeThoughts=false não equivale a
+consumo zero. A seleção é explícita antes da execução, sem fallback automático.
+[Estado de qualificação](../testes/ai06-gemini.md); respostas de modelos distintos
+não são intercambiáveis como evidência de aceite.

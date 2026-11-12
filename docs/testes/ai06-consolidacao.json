@@ -3,7 +3,7 @@
   "estado": "PENDENTE_OU_REPROVADO",
   "aceite_ia_real": false,
   "criterios": {
-    "mesma_configuracao_e_casos": true,
+    "mesma_configuracao_e_casos": false,
     "deterministico_aprovado": true,
     "amostra_completa": false,
     "casos_obrigatorios": false,
@@ -28,5 +28,5 @@
     "real": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8",
     "revisao": "b43bf1bf5b0d9d01244b0e9629f3411c92511e6477ce3f7571c93475da92da94"
   },
-  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
+  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01. Composição/adaptadores agora possuem fingerprint ampliado. Relatórios anteriores continuam históricos e não se unem à nova implementação."
 }

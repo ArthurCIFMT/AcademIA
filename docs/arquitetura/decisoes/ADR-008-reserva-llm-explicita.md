@@ -36,3 +36,7 @@ Mesmo provedor não oferece independência contra indisponibilidade da Groq.
 Gemini API/OpenRouter são alternativas futuras com chave própria, contrato,
 configuração e ensaio separados; não foram conectados nem receberam dados.
 Sem reserva qualificada, preservar falha controlada e treino manual disponível.
+
+Evolução posterior em 2026-11-12: [ADR-009](ADR-009-gemini-api.md) implementa a
+integração Gemini após fornecimento da chave; isso não qualifica automaticamente
+nenhum modelo nem altera a escolha padrão.

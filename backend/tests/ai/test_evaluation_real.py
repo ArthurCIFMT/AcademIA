@@ -11,10 +11,10 @@ from sqlalchemy import Connection, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.ai.adapters.evidence import RagEvidence
-from app.modules.ai.adapters.groq import GroqAdapter
+from app.modules.ai.adapters.factory import create_adapter, credential_name
 from app.modules.ai.chat.service import ChatService
 from app.modules.ai.generation import GenerationService
-from app.modules.ai.orchestration.settings import Config, GroqSettings
+from app.modules.ai.orchestration.settings import Config
 from app.modules.ai.schemas.execution import RunRequest
 from app.modules.assignments.service import ChangeAssignment, change_assignment
 from app.modules.knowledge.embeddings.encoder import E5Encoder
@@ -136,7 +136,9 @@ def test_real_semantic_llm_benchmark(
     migration: tuple[Connection, Any],
     tmp_path: Path,
 ) -> None:
-    assert GroqSettings().api_key.get_secret_value(), "Credencial real ausente."
+    assert os.environ.get(credential_name(Config.load()), "").strip(), (
+        "Credencial real ausente."
+    )
     output = Path(os.environ["ACADEMIA_AI_EVALUATION_OUTPUT"])
     people = seed(sessions)
     actor = people["cliente"]
@@ -145,7 +147,7 @@ def test_real_semantic_llm_benchmark(
     cases = select_cases(dataset, os.environ.get("ACADEMIA_AI_CASE_IDS"))
     encoder = E5Encoder()
     store = QdrantStore(VectorSettings(path=str(tmp_path / "qdrant")))
-    adapter = GroqAdapter(Config.load(), GroqSettings())
+    adapter = create_adapter(Config.load())
     storage = CorpusStorage(tmp_path / "corpus")
     rows: list[dict[str, Any]] = []
     try:

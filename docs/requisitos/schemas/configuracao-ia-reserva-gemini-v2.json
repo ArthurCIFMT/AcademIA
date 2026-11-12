@@ -1,0 +1,74 @@
+{
+  "versao": 2,
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "response_format": "json_object",
+  "temperature": 0.2,
+  "concurrency": 1,
+  "embedding": {
+    "model": "intfloat/multilingual-e5-small",
+    "dimension": 384,
+    "device": "cpu",
+    "normalize": true,
+    "query_prefix": "query: ",
+    "passage_prefix": "passage: ",
+    "revision": "614241f622f53c4eeff9890bdc4f31cfecc418b3",
+    "max_input_tokens": 512
+  },
+  "retrieval": {
+    "chunk_tokens": 300,
+    "overlap_tokens": 48,
+    "top_k": 5,
+    "max_top_k": 8,
+    "min_score_inicial": 0.8,
+    "metric": "cosine",
+    "max_chunks_pacote": 5
+  },
+  "limits": {
+    "question_chars": 1000,
+    "history_messages": 6,
+    "history_total_chars": 3000,
+    "resumo_chars": 2400,
+    "candidates": 40,
+    "prompt_utf8_bytes": 24000,
+    "chat": {
+      "output_tokens": 600,
+      "timeout_seconds": 20,
+      "max_new_executions_per_client": 6,
+      "execution_window_seconds": 60
+    },
+    "triage": {
+      "output_tokens": 400,
+      "timeout_seconds": 25
+    },
+    "generation": {
+      "output_tokens": 4096,
+      "timeout_seconds": 60
+    },
+    "execution_timeout_seconds": 100,
+    "llm_attempts_per_stage": 1,
+    "network_attempts_retrieval_ingestion": 3,
+    "backoff_seconds": [
+      1,
+      2
+    ]
+  },
+  "retention": {
+    "chat_days": 90,
+    "execution_days": 90,
+    "published_versions": 15
+  },
+  "quality": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "reasoning_effort": "minimal",
+  "include_reasoning": false
+}
