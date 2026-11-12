@@ -51,6 +51,8 @@ def test_http_contract_no_tools_no_retry_and_actual_usage() -> None:
         assert request.method == "POST"
         assert str(request.url) == Config.load().base_url + "/chat/completions"
         assert body["response_format"] == {"type": "json_object"}
+        assert body["model"] == "openai/gpt-oss-120b"
+        assert body["reasoning_effort"] == "low" and body["include_reasoning"] is False
         assert body["max_completion_tokens"] == 600 and body["n"] == 1
         assert not body["stream"] and "tools" not in body and "max_tokens" not in body
         return httpx.Response(200, json=envelope())
@@ -178,3 +180,13 @@ def test_timeout_detects_late_success() -> None:
             client.complete([], "CHAT", 600, 20, lambda: None)
     finally:
         client.close()
+
+
+def test_explicit_proxy_is_optional_validated_and_not_printed() -> None:
+    assert GroqSettings(proxy_url=SecretStr("")).proxy_endpoint() is None
+    secret = "http://user:synthetic-secret@127.0.0.1:9999"
+    settings = GroqSettings(proxy_url=SecretStr(secret))
+    assert settings.proxy_endpoint() == secret and secret not in repr(settings)
+    for bad in ["file:///tmp/proxy", "http://", "http://example.test/path?x=1"]:
+        with pytest.raises(ValueError, match="Proxy de saída inválido"):
+            GroqSettings(proxy_url=SecretStr(bad)).proxy_endpoint()

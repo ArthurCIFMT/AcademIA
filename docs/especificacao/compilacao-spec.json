@@ -1,7 +1,7 @@
 {
   "versao": 1,
-  "revisado_em": "2026-11-11",
-  "base_implementacao": "03013b6a7bfc08eb083fc9a5a9071cd4d050654e",
+  "revisado_em": "2026-11-12",
+  "base_implementacao": "bf9957f623d3263ede9d46ebe56d56dc92c8ee39",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -62,6 +62,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md",
           "titulo": "Serviços locais"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md",
+          "titulo": "Migração explícita para o modelo Groq vigente"
         }
       ]
     },
@@ -138,7 +142,7 @@
           "titulo": "Limites e avaliação"
         },
         {
-          "arquivo": "docs/requisitos/schemas/configuracao-ia-v1.json",
+          "arquivo": "docs/requisitos/schemas/configuracao-ia-v2.json",
           "titulo": "Configuração canônica",
           "tipo": "codigo",
           "linguagem": "json"
@@ -355,6 +359,28 @@
         {
           "arquivo": "AGENTS.md",
           "titulo": "Regras permanentes de trabalho"
+        },
+        {
+          "arquivo": "docs/testes/avaliacao-ia.md",
+          "titulo": "Runner, métricas, revisão e limites da avaliação IA"
+        },
+        {
+          "arquivo": "docs/testes/ai06-casos-v1.json",
+          "titulo": "Rastreabilidade SV/SC e amostras reais rotuladas",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/ai06-resumo.json",
+          "titulo": "Métricas reais e limitações observadas no AI-06",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/ai06-consolidacao.json",
+          "titulo": "Critérios de aceite da avaliação ainda não atendidos",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },

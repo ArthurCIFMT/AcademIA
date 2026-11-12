@@ -73,7 +73,7 @@ def fake_client(settings: VectorSettings) -> MagicMock:
 def test_default_space_matches_approved_configuration(tmp_path: Path) -> None:
     settings = policy(tmp_path)
     canonical = json.loads(
-        (ROOT / "docs/requisitos/schemas/configuracao-ia-v1.json").read_text()
+        (ROOT / "docs/requisitos/schemas/configuracao-ia-v2.json").read_text()
     )
     space = settings.space
     assert space.model == canonical["embedding"]["model"]

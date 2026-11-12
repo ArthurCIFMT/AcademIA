@@ -1,6 +1,6 @@
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-11.
+Versão documental: 1.0. Revisão: 2026-11-12.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -102,7 +102,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-05. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-05 e execução parcial de AI-06. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -122,7 +122,10 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
 O MVP ainda requer AI-06 e TST-01. O próximo cartão na
-sequência é AI-06. As pendências de extração estão no contrato/relatório do módulo.
+sequência é concluir AI-06. O [runner e a migração autorizada de modelo](../../docs/testes/avaliacao-ia.md)
+estão implementados. O ensaio real verificou chat, mas oito gerações/adaptações
+abstiveram-se por ausência de evidências de triagem na amostra. Não há aceite de
+ficha real/latência de geração nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -135,8 +138,9 @@ AI-01 entrega [triagem e preparação autorizada](../../docs/arquitetura/triagem
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
-e publicação transacional. Testes não comprovam qualidade/latência da Groq real;
-essa avaliação e revisão pendente do corpus não foram declaradas concluídas.
+e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real
+parcial do GPT-OSS 120B conforme ADR-006; geração válida/latência ainda não foram
+comprovadas. As pendências do corpus e o aceite da IA permanecem explícitos.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -186,7 +190,7 @@ Preservar também os seguintes invariantes:
 | Área | Especificação/contrato verificável |
 |---|---|
 | Campos do onboarding e triagem | [Campos/regras](../../docs/requisitos/onboarding-e-triagem.md), [JSON Schema](../../docs/requisitos/schemas/onboarding-v1.schema.json) e [casos sintéticos](../../docs/testes/casos-triagem-v1.json) |
-| IA e RAG | [Parâmetros](../../docs/requisitos/configuracao-ia-rag.md), [configuração JSON](../../docs/requisitos/schemas/configuracao-ia-v1.json), [dados RAG/IA](../../docs/arquitetura/modelo-de-dados/dados-rag-ia.md) e [cenários de avaliação](../../docs/testes/rag-ia-semantico.md) |
+| IA e RAG | [Parâmetros](../../docs/requisitos/configuracao-ia-rag.md), [configuração JSON](../../docs/requisitos/schemas/configuracao-ia-v2.json), [dados RAG/IA](../../docs/arquitetura/modelo-de-dados/dados-rag-ia.md) e [cenários de avaliação](../../docs/testes/rag-ia-semantico.md) |
 | Literatura | [Acervo](../../materiais/rag/README.md), [catálogo](../../materiais/rag/catalogo.json) e [seleção inicial](../../materiais/rag/corpus-inicial.json) |
 | REST e DTOs implementados | [Convenções](../../docs/arquitetura/contratos-rest.md), documentos do módulo e OpenAPI gerado conforme [guia do backend](../../backend/README.md) |
 | Aceite funcional e regressão | Critérios de cada RF/MRF, [estratégia](../../docs/testes/estrategia.md), [regressões RF/RN](../../docs/testes/aceite-rf-rn-2026-11-06.md) e testes do módulo |

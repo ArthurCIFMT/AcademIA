@@ -45,3 +45,6 @@ Fontes: [Qdrant local](https://github.com/qdrant/qdrant-client#local-mode),
 [limites](https://console.groq.com/docs/rate-limits),
 [JSON](https://console.groq.com/docs/structured-outputs).
 São escolhas técnicas; velocidade e qualidade não foram ensaiadas nesta entrega.
+
+Atualização em AI-06: a escolha inicial do LLM foi substituída pela
+[ADR-006](ADR-006-modelo-groq-vigente.md), sem modificar E5/Qdrant ou o fluxo fixo.

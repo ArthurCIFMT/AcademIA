@@ -10,9 +10,11 @@ from app.modules.ai.schemas.execution import Stage
 
 
 class Config(StrictModel):
-    versao: Literal[1]
+    versao: Literal[2]
     provider: Literal["groq"]
-    model: Literal["llama-3.3-70b-versatile"]
+    model: Literal["openai/gpt-oss-120b"]
+    reasoning_effort: Literal["low"]
+    include_reasoning: Literal[False]
     base_url: str
     response_format: Literal["json_object"]
     temperature: float
@@ -27,7 +29,7 @@ class Config(StrictModel):
     def load(cls) -> "Config":
         path = (
             Path(__file__).resolve().parents[5]
-            / "docs/requisitos/schemas/configuracao-ia-v1.json"
+            / "docs/requisitos/schemas/configuracao-ia-v2.json"
         )
         return cls.model_validate_json(path.read_bytes())
 
@@ -59,7 +61,28 @@ class GroqSettings(BaseSettings):
         default=SecretStr(""), validation_alias="GROQ_API_KEY", repr=False
     )
     base_url: str | None = None
+    proxy_url: SecretStr | None = Field(default=None, repr=False)
     max_response_bytes: Annotated[int, Field(ge=1024, le=1048576)] = 131072
+
+    def proxy_endpoint(self) -> str | None:
+        raw = self.proxy_url.get_secret_value().strip() if self.proxy_url else ""
+        if not raw:
+            return None
+        try:
+            parsed = urlsplit(raw)
+            valid = (
+                parsed.scheme in {"http", "https"}
+                and bool(parsed.hostname)
+                and parsed.path in {"", "/"}
+                and not parsed.query
+                and not parsed.fragment
+                and (parsed.port is None or 1 <= parsed.port <= 65535)
+            )
+        except ValueError:
+            valid = False
+        if not valid:
+            raise ValueError("Proxy de saída inválido.")
+        return raw
 
     def endpoint(self, config: Config) -> str:
         endpoint = (self.base_url or config.base_url).rstrip("/")

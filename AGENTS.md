@@ -184,7 +184,7 @@ necessária para sua entrega.
 - Saídas usam JSON Schema e referências reais. Modelo não escreve domínio, executa
   SQL livre nem atribui aceite humano. Registrar estados, fontes e consumo sem
   raciocínio interno ou dados sensíveis desnecessários em logs.
-- LLM inicial Groq / llama-3.3-70b-versatile, plano gratuito, chave em ambiente;
+- LLM vigente Groq / openai/gpt-oss-120b (ADR-006), plano gratuito, chave em ambiente;
   json_object com validação backend. Não contratar plano pago ou fazer fallback
   oculto. Qualidade/tempo só são aprovados no ensaio real de AI-06.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
@@ -221,6 +221,10 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - INT: `uv run --locked --env-file ../.env pytest -m integration`.
 - Lint e formato: `uv run --locked ruff check .` e `uv run --locked ruff format --check .`.
 - Tipos: `uv run --locked mypy`.
+- IA: com banco de teste e E5 local, executar em backend/
+  `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/deterministico-N`.
+  Para provedor real, usar --mode real e outra pasta nova, com GROQ_API_KEY;
+  consolidação/revisão não repete chamadas. Ver docs/testes/avaliacao-ia.md.
 - RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.

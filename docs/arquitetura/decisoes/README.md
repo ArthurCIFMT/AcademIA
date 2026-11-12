@@ -12,3 +12,5 @@ GATE-01–GATE-06 ficam fechados quanto às decisões documentais.
 O estado dos serviços entregues está no [manifesto](../../prompts/README.md).
 Chave pessoal e ensaios reais de IA/RAG pertencem às entregas correspondentes.
 GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão concluídos.
+
+- [ADR-006 — Modelo Groq vigente](ADR-006-modelo-groq-vigente.md): ACEITA; migração explícita para GPT-OSS 120B.

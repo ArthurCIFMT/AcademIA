@@ -16,7 +16,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | E2E | PENDENTE | TST-01 |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py` em backend/; exige flag E5 real e pesos locais | Disponível no RAG-05; configuração abaixo |
-| IA | PENDENTE | AI-06 |
+| IA | `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N`; modo real/revisão no guia | AI-06: [runner e pré-condições](avaliacao-ia.md) |
 | INF | PENDENTE | INF-01 configura build/smoke; INF-04 amplia integração |
 
 Após cada configuração, substituir PENDENTE por comando exato, diretório de execução
@@ -904,3 +904,78 @@ reais integram somente as regressões correspondentes. Não foi feita chamada Gr
 real, medição de qualidade/latência ou E2E navegador/backend real. Essas entregas
 permanecem em AI-06 e TST-01; pendências do corpus/livro não foram dadas como
 resolvidas. A migration nova é 0015; MER original e migrations aplicadas preservados.
+
+## Avaliação automatizada AI-06
+
+[Guia](avaliacao-ia.md), [matriz de casos](ai06-casos-v1.json),
+[determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
+[revisão técnica](ai06-revisao-tecnica.json) e
+[consolidação](ai06-consolidacao.json). Migração expressamente autorizada:
+[ADR-006](../arquitetura/decisoes/ADR-006-modelo-groq-vigente.md).
+
+Em backend/:
+
+~~~powershell
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --output ./data/avaliacao/real-N
+uv run --locked python -m tests.ai.evaluation --mode consolidate --deterministic-report ../docs/testes/ai06-deterministico.json --real-report ../docs/testes/ai06-ensaio-real.json --review ../docs/testes/ai06-revisao-tecnica.json --output ./data/avaliacao/consolidado-N
+uv run --locked pytest
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai
+uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_evaluation_attack.py
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+E5 real exige ACADEMIA_EMBEDDING_PATH e ACADEMIA_TEST_EMBEDDINGS_REAL=1.
+Chave/proxy são ambiente local, sem cópia no Git. O modo real não é executado
+implicitamente em pytest; sua ausência é skip identificado, não aceite da IA.
+Pastas de saída novas preservam recibos; não sobrescrever um ensaio já concluído.
+RAG/FE do runner resolvem Node 24 e entrypoints dos scripts npm existentes.
+
+Evidência consolidada em 2026-11-12: 107 testes de backend/API/integração selecionados
+e 20 FE aprovados no modo determinístico com configuração v2, incluindo E5/Qdrant
+reais e testes de retenção, falhas, isolamento, concorrência e limites.
+Mais um teste PostgreSQL/Qdrant/E5 real confirmou a recuperação da fixture
+maliciosa antes do ensaio LLM (1 aprovado; sem provedor).
+Regressão BE: 267 aprovados; testes complementares de remoção de credencial
+e portabilidade do hash também passaram (269 BE distintos verificados). Ruff/formato e mypy
+em 208 arquivos aprovados. A cópia no projeto é revalidada antes do commit.
+
+Ensaio real final: 24 casos executados, 16 conforme esperado. Dez dúvidas de
+conteúdo e dois ataques produziram respostas com schema/fontes válidos; duas
+perguntas fora do escopo abstiveram-se; caso grave bloqueado e onboarding ausente
+insuficiente. SC-01/SC-02 não modificaram ficha nem expuseram os marcadores testados;
+SC-02 teve trecho malicioso efetivamente recuperado. Não é garantia universal.
+
+Cinco gerações e três adaptações retornaram ABSTENCAO/EVIDENCIA_INSUFICIENTE
+antes da geração LLM, porque a amostra ativada contém apenas DUVIDAS/GERACAO_GERAL.
+Consequentemente, o teste real retornou falha, e a consolidação retornou
+PENDENTE_OU_REPROVADO. Não relaxar bloqueios para aumentar a taxa de sucesso.
+Resultado de geração válida: 0/8. Latência de criação efetiva de ficha não foi medida.
+Essa falha impede concluir AI-06 e mantém TST-01/aceite do MVP pendentes.
+
+Doze chamadas LLM, 27.142 tokens conhecidos (24.842 entrada/2.300 saída), nenhum
+consumo desconhecido no lote final. Chat: p50 1,097 s/p95 1,688 s em 14 casos
+(inclui duas abstenções). Recuperação com embedding/SQL/Qdrant: p95 0,173 s
+em 22 buscas aquecidas. Esses tempos são do serviço de aplicação e dessa pequena
+amostra; não incluem UI/HTTP, preparação, carga inicial E5 ou pausas entre casos.
+Nenhuma abstenção rápida é apresentada como benchmark de geração de ficha.
+A revisão técnica do agente verificou 12 respostas contra as evidências, incluindo
+tradução EN→PT e unidades/negações; L08 apresentou lista não exaustiva de variáveis.
+Custo monetário não é informado pela API; não declarar fatura zero medida.
+
+Histórico exploratório preservado fora do Git: modelo antigo indisponível (404),
+ajuste explícito de proxy, uma rodada interrompida por finalidade de corpus
+incorreta e um preparo SC-02 recusado pela separação do ambiente documental TESTE.
+Esses ensaios não compõem o aceite. Foram corrigidos o preparador e suas guardas,
+sem promover literatura de saúde ou retirar filtros de produção.
+O lote final e os relatórios publicados usam somente a seleção permitida.
+
+Pendência concreta: selecionar/indexar trechos pertinentes de fontes de TRIAGEM
+já aprovadas (BR-SBC-002 tem extração concluída, mas requer seleção técnica dos
+trechos) e avaliar se são adequados aos casos do ensaio; manter documentos ainda
+pendentes fora do índice. Depois repetir geração/adaptação e medir ficha válida.
+A amostra atual não prova que o modelo seja incapaz de gerar fichas quando houver
+contexto/evidência suficientes; esse fluxo permaneceu sem ensaio de geração real.
+Sem laudo, aprovação médica externa, mudança de regra clínica ou novo plano pago.

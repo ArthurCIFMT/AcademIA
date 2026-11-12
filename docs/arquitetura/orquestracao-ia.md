@@ -108,7 +108,8 @@ reinício. A API foi ativada pelo adaptador durável de AI-03. Retenção de
 
 GroqAdapter usa HTTPX síncrono, um slot global por processo, redirects/proxy de
 ambiente desativados, timeout e tamanho máximo de resposta. Usa o endpoint aprovado,
-modelo llama-3.3-70b-versatile, json_object, n=1 e max_completion_tokens. Uma
+modelo vigente openai/gpt-oss-120b (ADR-006), json_object, n=1 e
+max_completion_tokens. Uma
 tentativa por etapa, sem retry/fallback oculto. HTTP 429 encerra; nova ação explícita
 pode abrir outra execução. O tempo em fila consome o orçamento da etapa.
 Cancelamento impede despacho ainda pendente e descarta resposta em voo; não promete

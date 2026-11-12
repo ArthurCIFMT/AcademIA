@@ -1,7 +1,7 @@
 # Configuração de IA e critérios de avaliação
 
 Status: DEFINIDA por delegação em 2026-11-04.
-Valores canônicos: [configuração v1](schemas/configuracao-ia-v1.json).
+Valores canônicos: [configuração v2](schemas/configuracao-ia-v2.json).
 [Triagem e onboarding](onboarding-e-triagem.md), [ADR](../arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md).
 
 A configuração fixa modelos, limite por rota, chunking/busca, retenção e metas.
@@ -44,7 +44,7 @@ Nenhuma avaliação real foi executada nesta preparação.
 
 ## Proteção contra abuso no chat
 
-A configuração v1 define até **6 novas execuções em 60 segundos**, em janela
+A configuração vigente define até **6 novas execuções em 60 segundos**, em janela
 móvel por cliente autenticado, compartilhada entre dúvidas e adaptações
 iniciadas pelo chat. A cota é reservada de forma atômica para que requisições
 concorrentes com chaves diferentes não ultrapassem o teto. Ao atingir o
@@ -54,3 +54,11 @@ execução do próprio cliente e não abre outra execução nem consome nova vag
 Os demais limites de tamanho, tempo, contexto e chamadas continuam aplicáveis.
 Os casos de regressão estão na
 [matriz de segurança](../testes/rag-ia-semantico.md#segurança-do-chat-e-do-rag).
+
+## Migração de modelo em AI-06
+
+Por autorização expressa em 2026-11-11, a
+[ADR-006](../arquitetura/decisoes/ADR-006-modelo-groq-vigente.md) substitui o
+modelo inicial descontinuado por openai/gpt-oss-120b na configuração v2,
+com reasoning_effort=low/include_reasoning=false. A v1 permanece histórica.
+Demais limites/metas não foram afrouxados; ausência de evidência continua abstenção.

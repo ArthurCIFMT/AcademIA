@@ -28,7 +28,11 @@ class GroqAdapter:
             clock,
         )
         self._client = httpx.Client(
-            transport=transport or httpx.HTTPTransport(retries=0),
+            transport=transport
+            or httpx.HTTPTransport(
+                proxy=self.settings.proxy_endpoint(),
+                retries=0,
+            ),
             trust_env=False,
             follow_redirects=False,
         )
@@ -64,6 +68,8 @@ class GroqAdapter:
                 "model": self.config.model,
                 "messages": messages,
                 "temperature": self.config.temperature,
+                "reasoning_effort": self.config.reasoning_effort,
+                "include_reasoning": self.config.include_reasoning,
                 "response_format": {"type": "json_object"},
                 "max_completion_tokens": output_tokens,
                 "stream": False,

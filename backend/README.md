@@ -149,3 +149,17 @@ sem mapeamento/evidência pertinente, adaptação por saúde abstém-se.
 Não colocar configurações privadas ou dados pessoais no Git/corpus.
 A manutenção de AI-03 também expurga mensagens com mais de 90 dias.
 Testes controlados não representam aceite do provedor real (AI-06).
+
+## Avaliação IA e modelo vigente — AI-06
+
+Configuração v2: Groq/openai/gpt-oss-120b, reasoning_effort=low e
+include_reasoning=false; sem alterar etapas ou limites. A v1 é histórica.
+GROQ_API_KEY e eventual ACADEMIA_LLM_PROXY_URL são apenas ambiente local.
+O adaptador conserva host/TLS, sem retries, ferramentas ou fallback.
+[ADR-006](../docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md).
+
+O [runner de avaliação](../docs/testes/avaliacao-ia.md) executa modos
+determinístico/real e consolidação independente. Em backend/:
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N
+Usar outra pasta nova no modo real. Saídas/logs privados não entram no Git.
+Falha ou abstenção permanece no relatório; o runner não repara resultados.

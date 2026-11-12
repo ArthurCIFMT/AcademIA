@@ -79,3 +79,10 @@ O relatório registra ID do caso, ambiente, modelo e revisão do corpus quando
 aplicáveis, comando, resultado esperado/observado e contagem de chamadas.
 Use marcadores sintéticos e contagens no lugar de copiar dados sensíveis ou
 credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
+
+## Execução incremental em AI-06
+
+O [runner e os relatórios](avaliacao-ia.md) registram execução determinística e
+LLM real. A [consolidação vigente](ai06-consolidacao.json) não aprova AI-06:
+a amostra não ativou fontes de TRIAGEM e as gerações/adaptações abstiveram-se.
+O plano acima permanece critério de aceite; falhas não foram dispensadas.
