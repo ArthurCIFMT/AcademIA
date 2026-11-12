@@ -48,7 +48,9 @@ def test_profiles_preserve_unknowns_and_realistic_differences() -> None:
         data["perfis"]["saude-desconhecida"]["dados"]["possui_condicoes_saude"]
         == "NAO_SEI"
     )
-    assert data["real"][-3]["esperado"] == "DADOS_INSUFICIENTES"
+    legacy = json.loads((ROOT / "docs/testes/ai06-casos-v3.json").read_text("utf-8"))
+    labels = {c["id"]: c["esperado"] for c in legacy["real"]}
+    assert labels["L25"] == labels["L26"] == "DADOS_INSUFICIENTES"
 
 
 def test_selection_matches_original_and_requires_completed_extraction() -> None:
@@ -116,7 +118,9 @@ def test_supplement_reaches_triage_and_generation_without_llm(
     store = QdrantStore(VectorSettings(path=str(tmp_path / "qdrant")))
     try:
         encoder.queries(["Inicialização"], 90)
-        initial_literature(sessions, people["admin"], storage, encoder, store, tmp_path)
+        gold = initial_literature(
+            sessions, people["admin"], storage, encoder, store, tmp_path
+        )
         port = RagEvidence(Retriever(sessions, store, encoder), sessions, store.check)
         actor = people["cliente"]
         rows = []
@@ -172,6 +176,18 @@ def test_supplement_reaches_triage_and_generation_without_llm(
                     "Nahas" in e.titulo or "Qualidade de Vida" in e.titulo
                     for e in result.evidencias
                 )
+        # Verificar o resumo EN por hash/texto: idioma do documento é pt-BR.
+        case = next(c for c in load_dataset()["real"] if c["id"] == "L09")
+        bilingual = port.retrieve(
+            Context(actor.user_id, actor.user_id, "fixture"),
+            "DUVIDAS",
+            case["consulta"],
+        )
+        assert bilingual.estado == "EVIDENCIAS_ENCONTRADAS"
+        assert any(
+            e.texto_hash == gold["abstract"] and "frequency" in e.texto.lower()
+            for e in bilingual.evidencias
+        )
         report = os.environ.get("ACADEMIA_AI_CORPUS_REPORT")
         if report:
             write_json(Path(report), {"sem_llm": True, "consultas": rows})

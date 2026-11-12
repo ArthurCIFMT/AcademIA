@@ -24,7 +24,7 @@ def json_sha(path: Path) -> str:
 
 def load_dataset() -> dict[str, Any]:
     data: dict[str, Any] = json.loads(
-        (ROOT / "docs/testes/ai06-casos-v3.json").read_text("utf-8")
+        (ROOT / "docs/testes/ai06-casos-v4.json").read_text("utf-8")
     )
     ids = [c["id"] for c in data["cenarios"]]
     expected = {f"SV-{n:02}" for n in range(1, 25)} | {
@@ -33,8 +33,8 @@ def load_dataset() -> dict[str, Any]:
     if len(ids) != len(expected) or set(ids) != expected:
         raise ValueError("Matriz SV/SC incompleta ou duplicada.")
     live = data["real"]
-    if len(live) < 24 or len({c["id"] for c in live}) != len(live):
-        raise ValueError("Amostra real incompleta ou duplicada.")
+    if [c["id"] for c in live] != ["L09", "L13", "L18", "L23", "L24"]:
+        raise ValueError("Amostra acadêmica incompleta, alterada ou duplicada.")
     return data
 
 
@@ -116,7 +116,7 @@ def identity() -> dict[str, Any]:
     from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 
     paths = [
-        "docs/testes/ai06-casos-v3.json",
+        "docs/testes/ai06-casos-v4.json",
         "docs/testes/casos-triagem-v1.json",
         "docs/testes/rag05-consultas-v1.json",
         "materiais/rag/corpus-inicial.json",

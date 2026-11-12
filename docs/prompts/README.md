@@ -191,6 +191,19 @@ L17–L27 não executados. L03/L04 conservam falha de fundamentação. Nova iden
 e revisão parcial vinculadas; não unir resultados v2/v3. Sem mudança funcional,
 MER ou dependências. AI-06/TST-01 EM_EXECUCAO e PG-01 ABERTO.
 
+### Amostra real mínima AI-06 — 2026-11-12
+
+[ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md) e
+[guia vigente](../testes/ai06-enxuto.md): cinco cenários reais/até sete chamadas,
+com 30 cenários locais e oito perfis preservados. Exemplos com até quatro
+exercícios por dia, preferindo quatro viáveis, e uma/duas séries; dias conforme
+onboarding. Resultados v3 e falhas L03/L04 permanecem históricos. Mudança não
+ativa troca automática de provedor; modelos continuam avaliados separadamente.
+117 testes backend e 20 frontend no runner local aprovados. Na rodada real,
+L09 respondeu e L13 publicou dois dias com quatro exercícios/dia em 5,813 s.
+L18 recusado por quota, L23/L24 não executados. AI-06/TST-01 EM_EXECUCAO,
+PG-01 ABERTO; retomada apenas dos três casos sem conclusão.
+
 ## Fundação
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
@@ -330,12 +343,10 @@ contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e de
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
-AI-06 está em execução: [demonstração acadêmica v3](../testes/ai06-academico.md)
-com três fichas curtas publicadas, quota interrompendo L16 e onze casos não
-executados. Duas respostas de chat não têm fundamentação completa. A retomada
-usa somente L16–L27 e preserva respostas concluídas; não une amostras/modelos
-diferentes. TST-01 tem execução local parcial aprovada, com consolidação final
-dependente de AI-06. Gates pós-MVP e PG-01 continuam abertos.
+AI-06 usa a [amostra acadêmica v4](../testes/ai06-enxuto.md): cinco cenários
+reais, até sete chamadas e exemplos com até quatro exercícios por dia.
+A execução local parcial de TST-01 permanece evidência controlada; não aprova
+o LLM. Consultar os relatórios atuais antes de fechar AI-06/TST-01 ou PG-01.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

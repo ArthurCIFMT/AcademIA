@@ -60,7 +60,7 @@
     "published_versions": 15
   },
   "quality": {
-    "min_cases": 24,
+    "min_cases": 5,
     "retrieval_recall_at_5": 0.8,
     "supported_answers_fraction": 0.9,
     "eligible_valid_plan_fraction": 0.8,

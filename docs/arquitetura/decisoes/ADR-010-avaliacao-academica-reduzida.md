@@ -1,6 +1,8 @@
 # ADR-010 — Amostra acadêmica reduzida e avaliação estável
 
 Status: ACEITA por autorização expressa do responsável em 2026-11-12.
+Quantidade/tamanho da amostra substituídos pela [ADR-011](ADR-011-amostra-real-minima.md);
+insumos estáveis, opcionais e invariantes continuam aplicáveis.
 
 O responsável autorizou demonstrações menos complexas, com menos séries, campos
 opcionais a definir e menos retrabalho. Aplicar o [escopo didático](../../requisitos/escopo-ia-academico.md)

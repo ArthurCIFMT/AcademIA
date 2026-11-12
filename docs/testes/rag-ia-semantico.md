@@ -82,10 +82,12 @@ credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
 
 ## Execução incremental em AI-06
 
-O [runner e os relatórios](avaliacao-ia.md) registram execução determinística e
-LLM real. A [consolidação vigente](ai06-consolidacao.json) não aprova AI-06:
-a correção ativou recortes válidos do livro Nahas, prompt em português/triagem
-v3 e duas buscas fixas. O ensaio da nova versão ainda é parcial por cota diária
-TPD da Groq. Uma ficha publicada não substitui os demais casos e os ataques
-reais pendentes. Ensaios anteriores e falhas de fundamentação/idioma estão no histórico.
-O plano acima permanece critério de aceite; falhas não foram dispensadas.
+O [runner](avaliacao-ia.md) separa os 30 cenários locais dos cinco cenários
+reais da [amostra v4](ai06-enxuto.md), conforme ADR-011. Há até sete chamadas,
+com exemplos de até quatro exercícios/dia e uma/duas séries; dias conforme
+onboarding. Mínimo real reduzido expressamente, demais limiares preservados.
+A [consolidação vigente](ai06-consolidacao.json) ainda não aprova AI-06: dúvida
+e geração concluídas, adaptação recusada por quota e dois ataques reais não
+executados. Testes locais passaram; não substituem qualidade/segurança real.
+Histórico v3, incluindo extrapolações L03/L04, permanece preservado sem correção
+implícita ou união com a v4. Retomar apenas os casos sem conclusão.

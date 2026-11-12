@@ -17,7 +17,7 @@ def test_matrix_is_complete_and_selectors_exist() -> None:
     from tests.ai.evaluation.reporting import ROOT
 
     data = load_dataset()
-    assert len(data["cenarios"]) == 30 and len(data["real"]) == 27
+    assert len(data["cenarios"]) == 30 and len(data["real"]) == 5
     for case in data["cenarios"]:
         for selector in case["testes"]:
             file, name = selector.split("::")

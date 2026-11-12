@@ -3,7 +3,7 @@
 ## Escopo entregue
 
 Runner em backend/tests/ai/evaluation, matriz
-[SV/SC e 27 amostras](ai06-casos-v3.json) e
+[SV/SC e 27 amostras](ai06-casos-v4.json) e
 [configuração vigente](../requisitos/schemas/configuracao-ia-v2.json).
 Modos separados: determinístico, real, união de partes e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
@@ -60,13 +60,15 @@ APROVADO_DETERMINISTICO da dependência de LLM real de SV-19/20 e SC-01/02.
 Os testes novos acrescentam recuperação de cota após a janela, 16ª versão
 indisponível no chat e montagem manual com os três serviços IA indisponíveis.
 
-Amostra real: 12 dúvidas PT (incluindo alvo em resumo EN e fora de escopo),
-cinco gerações, três adaptações, um grave, um sem onboarding, dois ataques,
-um caso de dor de gravidade desconhecida, um NAO_SEI e uma restrição declarada.
-Expectativas derivam dos casos de triagem/RAG e cenários versionados; são regras
-acadêmicas, não rótulos de diagnóstico. Candidatos/cadastros são sintéticos.
-Adaptação parte de ficha manual de fixture, declarada antes do cronômetro;
-essa preparação não é contabilizada como geração LLM.
+Amostra acadêmica v4: cinco cenários reais, até sete chamadas LLM. L09 testa
+pergunta PT com resumo EN; L13 gera ficha, L18 adapta uma série para duas;
+L23/L24 exercitam injeção na mensagem/documento. Os 30 cenários SV/SC e oito
+perfis permanecem no conjunto local, sem uso de quota LLM. Mínimo real reduzido
+expressamente de 24 para cinco conforme ADR-011. Demais limiares permanecem.
+Geração: até quatro exercícios/dia, preferencialmente quatro viáveis, uma/duas
+séries e dias conforme onboarding. Isso não exige quatro dias de treino.
+Adaptação usa ficha manual de fixture, declarada antes do cronômetro; a montagem
+da base não é geração LLM nem consome quota do provedor.
 
 Publicação, contexto, triagem e retenção usam os serviços de aplicação reais.
 Cada amostra desfaz seus dados operacionais por savepoint. Fontes/vetores ficam
@@ -75,6 +77,9 @@ Somente documentos/hash/finalidade já selecionados podem entrar como literatura
 O ataque SC-02 simula um documento aprovado contaminado somente no banco/índice
 de teste, identificado como fixture e sem integrar o corpus de uso. Seu fragmento deve chegar ao LLM para que
 esse teste seja considerado exercitado. Caso contrário, registrar a lacuna.
+
+Com uma geração e uma adaptação, p50/p95 são apenas descritivos, sem estimativa
+robusta de desempenho. Declarar n e os limites; não alegar ampla cobertura.
 
 São registrados estado/motivo, fontes/hash/IDs, recuperação do alvo, buscas,
 tempo total por finalidade, chamadas físicas, bytes/hash de prompt e tokens.
@@ -149,12 +154,14 @@ não podem ser unidos às novas partes. Principal permanece 120B, sem fallback.
 
 ## Escopo reduzido da amostra vigente
 
-A [amostra v3 e reprodução](ai06-academico.md), por autorização do responsável,
-usa fichas de demonstração menores e progressão 1→2 séries. Não reduz a matriz
-crítica, os limiares ou campos obrigatórios. Insumos e avaliador são fixados antes
-do ensaio; partes v2 não se unem à v3. Dados opcionais null não são falhas, nem
-ausências de saúde presumidas como negativas.
+A [amostra v4 e reprodução](ai06-enxuto.md) fixa cinco cenários reais, até sete
+chamadas, e até quatro exercícios por dia com uma/duas séries. Mantém os 30
+cenários locais e oito perfis. O mínimo real foi reduzido expressamente, e os
+demais limiares, campos de saúde e bloqueios permanecem. Não definir quatro
+dias por causa do número de exercícios. Insumos são fixados antes do ensaio;
+relatórios anteriores não se unem à versão vigente.
 
-A execução vigente e a retomada dos doze casos sem conclusão estão no
-[guia da amostra acadêmica v3](ai06-academico.md). Resultados das preparações
-anteriores são históricos; não se unem à nova amostra/código para obter aceite.
+A [ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md) registra a
+redução e os limites de uma futura troca automática de provedor. A seleção
+implementada ainda é explícita, sem fallback no ensaio. A redução não corrige
+as extrapolações L03/L04 preservadas no histórico.

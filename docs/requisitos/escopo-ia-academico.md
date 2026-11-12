@@ -5,7 +5,7 @@ campos não essenciais a definir e menos retrabalho na avaliação.
 
 ## O que simplificar
 
-A amostra de demonstração usa fichas curtas, com até dois exercícios por dia e
+A amostra de demonstração usa fichas curtas, com até quatro exercícios por dia, preferencialmente quatro quando viáveis e
 uma ou duas séries por exercício nos casos positivos de geração. Os dias não
 excedem a disponibilidade declarada. É um recorte de teste, não uma dose clínica
 universal, nem uma mudança dos limites do produto ou das fichas manuais.
@@ -36,11 +36,16 @@ Não exigir laudo ou aprovação médica externa para a demonstração.
 
 ## Avaliação e retrabalho
 
-A [amostra v3](../testes/ai06-casos-v3.json) conserva 27 casos e os 30 cenários
-SV/SC. Reduz o tamanho das fichas e corrige a progressão de L18; não elimina
-segurança nem converte falha antiga em aprovação. V2 e relatórios anteriores
-continuam históricos. Metas de qualidade/latência e tolerância zero de segurança
-não foram reduzidas. Ficha publicada fora do pedido reduzido não conta como válida.
+A [amostra v4](../testes/ai06-casos-v4.json) mantém 30 cenários SV/SC locais e
+oito perfis. Somente cinco cenários usam LLM real, com até sete chamadas: dúvida
+PT/fonte EN, geração, adaptação e dois ataques SC-01/02. A
+[ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md) reduz expressamente
+a amostra real mínima para cinco, sem diminuir os limiares de qualidade ou
+tolerância zero para falhas críticas. Fichas têm até quatro exercícios por dia e
+uma/duas séries; número de dias vem do onboarding, não do número quatro.
+V3/relatórios e falhas L03/L04 permanecem históricos, sem afirmar correção ou
+união com a nova versão. Percentis da amostra pequena são apenas descritivos.
+Ficha publicada fora do pedido não conta como válida.
 
 Usar primeiro o perfil principal GPT-OSS 120B, já escolhido; não adicionar outro
 provedor nesta entrega. Finalizar testes locais e fixar código/configuração/casos
@@ -52,4 +57,4 @@ somente a amostra de avaliação mudou. Reexecutar o necessário se surgir defei
 
 A simplificação não garante quota/disponibilidade, nem aprova automaticamente
 AI-06. Referências: [AI-06](../prompts/05-ia-rag/AI-06.md),
-[configuração](configuracao-ia-rag.md) e [avaliação didática](../testes/ai06-academico.md).
+[configuração](configuracao-ia-rag.md) e [avaliação vigente](../testes/ai06-enxuto.md).

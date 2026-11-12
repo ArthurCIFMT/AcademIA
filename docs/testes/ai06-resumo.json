@@ -1,57 +1,57 @@
 {
   "schema_version": 1,
   "estado": "PARCIAL_BLOQUEADO_POR_QUOTA",
-  "amostra_versao": 3,
-  "casos_planejados": 27,
-  "casos_executados": 16,
-  "casos_pendentes_provedor": 11,
+  "amostra_versao": 4,
+  "casos_planejados": 5,
+  "casos_executados": 3,
+  "casos_pendentes_provedor": 2,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 15,
+  "casos_corretos_automaticos": 2,
   "recall_amostra": {
-    "numerador": 10,
-    "denominador": 10
+    "numerador": 1,
+    "denominador": 1
   },
   "fichas_elegiveis_validas": {
-    "numerador": 3,
-    "denominador": 4
+    "numerador": 1,
+    "denominador": 2
   },
   "respostas_fundamentadas": {
     "numerador": null,
     "denominador": null,
     "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 18,
+  "chamadas_fisicas": 4,
   "consumo_desconhecido": 1,
-  "tokens_conhecidos": 35621,
-  "tokens_entrada_conhecidos": 29986,
-  "tokens_saida_conhecidos": 5635,
+  "tokens_conhecidos": 8437,
+  "tokens_entrada_conhecidos": 6317,
+  "tokens_saida_conhecidos": 2120,
   "rotas": {
     "DUVIDA": {
-      "n": 12,
-      "p50_ms": 1043.187700000999,
-      "p95_ms": 1462.220100002014
+      "n": 1,
+      "p50_ms": 1667.2562000021571,
+      "p95_ms": 1667.2562000021571
     },
     "GERACAO": {
-      "n": 4,
-      "p50_ms": 4526.129099998798,
-      "p95_ms": 4653.840500002843
+      "n": 1,
+      "p50_ms": 5813.001200003782,
+      "p95_ms": 5813.001200003782
     },
     "ADAPTACAO": {
-      "n": 0,
-      "p50_ms": null,
-      "p95_ms": null
+      "n": 1,
+      "p50_ms": 455.2062000002479,
+      "p95_ms": 455.2062000002479
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
-      "n": 10,
-      "p50_ms": 1100.221300002886,
-      "p95_ms": 1462.220100002014
+      "n": 1,
+      "p50_ms": 1667.2562000021571,
+      "p95_ms": 1667.2562000021571
     },
     "GERACAO": {
-      "n": 3,
-      "p50_ms": 4544.366199988872,
-      "p95_ms": 4653.840500002843
+      "n": 1,
+      "p50_ms": 5813.001200003782,
+      "p95_ms": 5813.001200003782
     },
     "ADAPTACAO": {
       "n": 0,
@@ -60,12 +60,12 @@
     }
   },
   "busca": {
-    "n": 24,
-    "p50_ms": 54.20299999968847,
-    "p95_ms": 216.198499998427
+    "n": 5,
+    "p50_ms": 62.637199996970594,
+    "p95_ms": 99.45840000000317
   },
   "limiares": {
-    "min_cases": 24,
+    "min_cases": 5,
     "retrieval_recall_at_5": 0.8,
     "supported_answers_fraction": 0.9,
     "eligible_valid_plan_fraction": 0.8,
@@ -75,5 +75,5 @@
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "Três fichas curtas publicadas. L16 interrompido; L17–L27 pendentes. L03/L04 não fundamentadas; sem aceite AI-06/MVP."
+  "nota": "Uma ficha com quatro exercícios/dia publicada. L18 interrompido por quota; L23/L24 pendentes. Sem aceite AI-06/MVP."
 }

@@ -129,26 +129,25 @@ O [runner](../../docs/testes/avaliacao-ia.md) e a [correção](../../docs/testes
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
 As versões anteriores e suas falhas foram preservadas. A
-[ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md) e o
-[escopo acadêmico](../requisitos/escopo-ia-academico.md) registram a redução
-explícita dos pedidos sintéticos, sem reduzir segurança ou preencher saúde
-ausente. A [amostra v3](../testes/ai06-casos-v3.json) conserva os 27 casos e
-30 cenários; o avaliador valida o tamanho/séries da ficha publicada.
+[ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md) e o
+[escopo acadêmico](../requisitos/escopo-ia-academico.md) fixam a
+[amostra v4](../testes/ai06-casos-v4.json): cinco cenários reais, até sete
+chamadas, 30 cenários locais e oito perfis preservados. Exemplos com até quatro
+exercícios por dia (preferir quatro viáveis), uma/duas séries e carga/cadência
+a definir. Os dias vêm do onboarding; não se impõem quatro dias.
 
-O [ensaio atual](../testes/ai06-academico.md) publicou três fichas curtas (L13–L15)
-em 4,508–4,654 s. L16 foi interrompido por quota, L17–L27 não executados;
-adaptações e ataques reais ainda não foram avaliados nesta versão. L03/L04
-conservam extrapolações de fundamentação. Os 116 testes backend e 20 frontend
-do runner determinístico passaram, mas não substituem a avaliação real.
-A [consolidação vigente](../testes/ai06-consolidacao.json) mantém AI-06 e TST-01
-em execução e PG-01 aberto. Há roteiro de retomada somente dos casos sem
-conclusão, sem repetir respostas concluídas ou unir versões/modelos.
+O [guia vigente](../testes/ai06-enxuto.md) e a
+[consolidação](../testes/ai06-consolidacao.json) registram o resultado real e
+o estágio. A redução não corrige as falhas de chat L03/L04, preservadas nos
+[relatórios v3](../testes/historico/ai06-2026-11-12-amostra-v3/README.md).
+Não unir versões/modelos ou repetir resposta concluída para escolher melhor.
+Com amostra pequena, percentis são apenas descritivos. Treino manual, saúde
+ausente, bloqueios, recursos e isolamento continuam obrigatórios.
 
 A [reserva 20B](../testes/ai06-reserva.md) e a
 [integração Gemini](../testes/ai06-gemini.md) permanecem candidatas explícitas
-não qualificadas pelos ensaios anteriores. Não existe fallback automático ou
-pago. [Resultados anteriores](../testes/historico/ai06-2026-11-12-pre-academico/README.md)
-continuam disponíveis; não aprovam a nova identidade de código/amostra.
+não qualificadas pelos ensaios anteriores. Troca automática gratuita é possível
+como evolução, mas ainda não está implementada. Não existe fallback pago.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus

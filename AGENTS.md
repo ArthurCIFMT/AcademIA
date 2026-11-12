@@ -205,9 +205,11 @@ necessária para sua entrega.
   Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
-- Demonstração acadêmica reduzida segue ADR-010 e docs/requisitos/escopo-ia-academico.md:
-  amostra v3 com fichas pequenas e carga/cadência a definir, preservando dados de
-  saúde, segurança e recursos. Não editar insumos do ensaio enquanto ele roda.
+- Demonstração acadêmica reduzida segue ADR-011 e docs/requisitos/escopo-ia-academico.md:
+  amostra v4 com cinco cenários reais/até sete chamadas. Exemplos com até quatro
+  exercícios por dia (preferir quatro viáveis) e uma/duas séries, carga/cadência
+  a definir. Preservar 30 cenários locais, saúde, segurança e recursos. Não editar
+  insumos do ensaio enquanto ele roda.
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 ## Testes

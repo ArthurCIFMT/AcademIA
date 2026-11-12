@@ -1,5 +1,8 @@
 # AI-06 — Demonstração acadêmica reduzida
 
+Histórico da amostra v3, substituída pela [amostra v4](ai06-enxuto.md).
+Não executar a retomada v3 como aceite da versão vigente.
+
 [Escopo aprovado](../requisitos/escopo-ia-academico.md) e
 [ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md).
 Amostra vigente: [v3](ai06-casos-v3.json); v2 continua histórica.
@@ -55,9 +58,9 @@ vinculada; falha de provedor ou preparo local não significa aceite do MVP.
 
 ## Resultados de 2026-11-12
 
-[Determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
-[resumo](ai06-resumo.json), [revisão parcial](ai06-revisao-tecnica.json) e
-[consolidação](ai06-consolidacao.json). Os [relatórios anteriores](historico/ai06-2026-11-12-pre-academico/README.md)
+[Determinístico](historico/ai06-2026-11-12-amostra-v3/ai06-deterministico.json), [ensaio real](historico/ai06-2026-11-12-amostra-v3/ai06-ensaio-real.json),
+[resumo](historico/ai06-2026-11-12-amostra-v3/ai06-resumo.json), [revisão parcial](historico/ai06-2026-11-12-amostra-v3/ai06-revisao-tecnica.json) e
+[consolidação](historico/ai06-2026-11-12-amostra-v3/ai06-consolidacao.json). Os [relatórios anteriores](historico/ai06-2026-11-12-pre-academico/README.md)
 foram preservados antes de substituir os caminhos vigentes. Não misturar amostras v2/v3.
 
 - Determinístico: 116 testes backend/API/integração e 20 frontend aprovados;

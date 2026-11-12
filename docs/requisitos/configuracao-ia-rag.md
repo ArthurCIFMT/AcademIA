@@ -32,8 +32,9 @@ metadados mínimos de auditoria ligados à ficha não são apagados por essa lim
 Não duplicar conteúdo de ficha eliminada como execução consultável. Retenção de
 15 versões permanece independente. Diretórios locais e pesos fora do Git.
 
-Avaliação: mínimo 24 casos revisados, incluindo o conjunto SV-01–SV-24 e perguntas
-PT/EN adequadas. Recordar top-K contra fragmentos esperados, suporte/fidelidade
+Avaliação acadêmica vigente (ADR-011): cinco cenários revisados com LLM real,
+até sete chamadas, e conjunto local completo SV-01–SV-24/SC-01–SC-06.
+Incluir dúvida PT com fonte EN, geração, adaptação e os dois ataques reais. Recordar top-K contra fragmentos esperados, suporte/fidelidade
 das respostas e saída válida em casos elegíveis. Critérios de sucesso constam no
 JSON: bloqueios críticos, mistura de clientes ou recurso inexistente têm tolerância zero.
 Amostra maior e relatório por rota devem informar numerador/denominador e falhas.
@@ -86,8 +87,14 @@ não são intercambiáveis como evidência de aceite.
 ## Demonstração acadêmica reduzida
 
 O [escopo aprovado](escopo-ia-academico.md) e a [ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md)
-reduzem os pedidos da amostra v3 para até dois exercícios/dia e uma/duas séries.
+registraram os exemplos iniciais. A [ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md)
+fixa a amostra v4 com cinco cenários reais, até quatro exercícios/dia
+(preferencialmente quatro quando viáveis) e uma/duas séries.
 São limites dos exemplos, não uma dose universal ou nova restrição do produto.
 Carga/cadência null e observações opcionais vazias já são aceitos; campos de
 saúde ausentes continuam explícitos e bloqueios/evidências permanecem.
-Modelo, corpus, prompts de produção, schemas, orçamento e metas não mudam.
+Modelo, corpus, prompts de produção, schemas e limites de chamadas por execução
+não mudam. Somente quality.min_cases passa de 24 para cinco nos três perfis.
+O [guia vigente](../testes/ai06-enxuto.md) separa a amostra real dos testes locais.
+Troca automática é possível como evolução descrita na ADR-011, mas não está
+implementada/ativada; hoje os perfis de reserva continuam explícitos.

@@ -22,3 +22,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-009 — Gemini API](ADR-009-gemini-api.md): integração explícita nativa, credencial separada e avaliação por modelo.
 
 - [ADR-010 — Avaliação acadêmica reduzida](ADR-010-avaliacao-academica-reduzida.md): amostra v3 curta, opcionais explícitos e versão estável, sem retirar critérios críticos.
+
+- [ADR-011 — Amostra real mínima e quatro exercícios por dia](ADR-011-amostra-real-minima.md).

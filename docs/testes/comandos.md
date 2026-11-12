@@ -907,7 +907,7 @@ resolvidas. A migration nova é 0015; MER original e migrations aplicadas preser
 
 ## Avaliação automatizada AI-06
 
-[Guia](avaliacao-ia.md), [matriz vigente](ai06-casos-v3.json),
+[Guia](avaliacao-ia.md), [matriz vigente](ai06-casos-v4.json),
 [determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
 [revisão técnica](ai06-revisao-tecnica.json) e
 [consolidação](ai06-consolidacao.json). Migração expressamente autorizada:
@@ -1181,7 +1181,7 @@ identidade; respostas anteriores ficam preservadas, sem juntá-las ao novo códi
 ou ao Gemini. AI-06/TST-01 EM_EXECUCAO; PG-01 ABERTO. Reprodução de todos os
 comandos/perfis no guia; cópia real revalidada antes do commit.
 
-## Escopo acadêmico reduzido de AI-06 — 2026-11-12
+## Escopo acadêmico reduzido de AI-06 — 2026-11-12 (histórico v3)
 
 [ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md),
 [escopo aprovado](../requisitos/escopo-ia-academico.md), [amostra v3](ai06-casos-v3.json)
@@ -1215,3 +1215,38 @@ Consolidação: PENDENTE_OU_REPROVADO, com identidade e revisão parcial vincula
 AI-06/TST-01 EM_EXECUCAO; PG-01 ABERTO. Revalidar seleção relacionada na cópia
 do projeto antes do commit. A retomada explícita documentada preserva os casos
 concluídos e a falha de quota. Não unir as evidências da antiga amostra v2.
+
+## Cinco cenários reais de AI-06 — 2026-11-12
+
+[ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md),
+[amostra v4](ai06-casos-v4.json) e [guia/resultados/retomada](ai06-enxuto.md).
+Cinco cenários reais/até sete chamadas, mantendo 30 cenários locais e oito
+perfis. Exemplos com até quatro exercícios por dia, preferir quatro viáveis,
+uma/duas séries e dias conforme onboarding. Testes locais não gastam quota LLM.
+quality.min_cases passa expressamente de 24 para cinco nos três perfis; sem
+alteração de schemas de saída, runtime, banco, MER, dependências ou interface.
+
+Verificação focal, em backend/:
+
+~~~powershell
+uv run --locked pytest -o addopts='' tests/ai/test_academic_scope.py tests/ai/test_evaluation_reporting.py tests/ai/test_evaluation_resume.py tests/ai/test_evaluation_corpus.py::test_profiles_preserve_unknowns_and_realistic_differences
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_evaluation_corpus.py::test_supplement_reaches_triage_and_generation_without_llm
+~~~
+
+29 testes da primeira seleção e uma integração real PostgreSQL/Qdrant/E5
+aprovados. O teste de EN corrige uma expectativa sobre metadados: o documento
+bilíngue tem idioma primário pt-BR; o resumo EN é verificado por hash/texto.
+Não foi reduzido limiar nem trocada a fonte para aprovar a busca.
+Runner determinístico: 117 backend e 20 frontend, 30 cenários esperados.
+Ruff/formato/mypy e SPEC/DOC verificados; revalidação na cópia do projeto antes
+do commit. E2E não repetido: aplicativo/interface permanecem iguais; oito
+jornadas anteriores são evidência controlada de TST-01, não de qualidade LLM.
+
+Ensaio real único: L09 respondeu em 1,667 s e L13 publicou ficha com dois dias,
+quatro exercícios/dia e uma série de 10–12, em 5,813 s. Fontes/português/recursos
+conferidos. L18 falhou por quota na triagem; L23/L24 não foram executados.
+Quatro chamadas/8.437 tokens conhecidos/um consumo desconhecido, sem retry ou
+troca de modelo. Busca p95 0,099 s (n=5); adaptação sem tempo válido medido.
+Consolidação PENDENTE_OU_REPROVADO, com identidade/revisão vinculadas. AI-06 e
+TST-01 EM_EXECUCAO, PG-01 ABERTO. Retomar só L18,L23,L24; não repetir L09/L13.
+Troca automática foi analisada, permanece evolução não implementada/ativada.

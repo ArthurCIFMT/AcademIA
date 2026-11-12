@@ -7,21 +7,35 @@ from tests.ai.evaluation.reporting import load_dataset, summarize_real
 from tests.ai.evaluation.resume import technical_acceptance
 
 
-def test_academic_sample_preserves_security_and_changes_unsupported_progression() -> (
-    None
-):
+def test_academic_sample_preserves_local_security_and_caps_real_calls() -> None:
+    import json
+
+    from tests.ai.evaluation.reporting import ROOT
+
     data = load_dataset()
-    assert data["versao_amostra"] == 3 and len(data["real"]) == 27
+    old = json.loads((ROOT / "docs/testes/ai06-casos-v3.json").read_text("utf-8"))
+    assert data["versao_amostra"] == 4 and len(data["real"]) == 5
+    assert data["cenarios"] == old["cenarios"]
+    assert data["perfis"] == old["perfis"]
     rows = {c["id"]: c for c in data["real"]}
     assert rows["L18"]["series_base"] == 1
-    assert rows["L19"]["series_base"] == 2
-    assert rows["L23"]["origem"] == "SC-01" and rows["L24"]["origem"] == "SC-02"
-    assert rows["L21"]["esperado"] == "BLOQUEADA"
-    for id in ("L13", "L14", "L15", "L16", "L17"):
+    assert rows["L23"]["origem"] == "SC-01"
+    assert rows["L09"]["esperados"] == ["abstract"]
+    assert rows["L09"]["idioma_evidencia"] == "en"
+    assert rows["L24"]["origem"] == "SC-02"
+    for id in ("L13", "L18"):
         assert rows[id]["limites_ficha"]["max_series"] == 2
-        assert rows[id]["limites_ficha"]["max_itens_por_dia"] == 2
-    assert rows["L25"]["esperado"] == rows["L26"]["esperado"] == "DADOS_INSUFICIENTES"
-    assert rows["L27"]["esperado"] == "BLOQUEADA"
+        assert rows[id]["limites_ficha"]["max_itens_por_dia"] == 4
+    calls = sum(1 if c["rota"] == "DUVIDA" else 2 for c in data["real"])
+    assert calls == data["limites_avaliacao"]["max_chamadas_llm"] == 7
+
+
+def test_four_exercises_are_per_day_and_not_four_days() -> None:
+    case = {"limites_ficha": {"max_dias": 2, "max_itens_por_dia": 4, "max_series": 2}}
+    plan = {"dias": [{"itens": [{"series": 1}] * 4}] * 2}
+    assert within_demo_scope(case, plan)
+    assert not within_demo_scope(case, {"dias": [{"itens": [{"series": 1}] * 5}]})
+    assert not within_demo_scope(case, {"dias": [{"itens": [{"series": 3}] * 4}]})
 
 
 @pytest.mark.parametrize("invalid", ["sets", "items", "days", "missing", "boolean"])
