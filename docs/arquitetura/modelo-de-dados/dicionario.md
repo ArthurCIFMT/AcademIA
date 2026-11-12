@@ -372,26 +372,32 @@ Unicidades: ingestao_id+ordem.
 
 ## conversa — MOD-06
 
+Migration 0015: uma conversa por cliente; identidade coincide com a do titular.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
-| id | uuid | pk | — |
-| cliente_id | uuid | required | cliente.usuario_id |
-| criada_em | timestamptz | required | — |
+| id | uuid | pk | cliente.usuario_id |
 
 ## mensagem — MOD-06
 
-Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado
+Um turno/pergunta por solicitação. Resposta normalizada em execucao_ia;
+sem duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
+FK composta conversa_id+versao_contexto_id referencia versao_ficha.cliente_id+id.
+Índice de histórico conversa_id+criada_em. Pergunta de 1 a 1.000 caracteres,
+pedido JSON objeto congelado pelo servidor. Estado reserva/preparação/recibo.
 
-Unicidades: conversa_id+request_id+papel.
+Unicidades: conversa_id+solicitacao_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | conversa_id | uuid | required | conversa.id |
-| request_id | uuid | required | — |
-| papel | varchar(20) | required | — |
-| texto | text | required | — |
-| estado | varchar(25) | required | — |
+| solicitacao_id | uuid | required | — |
+| pergunta | text | required | — |
+| estado | text | required | — |
+| erro_codigo | text | opcional | — |
+| pedido | jsonb | required | — |
+| versao_contexto_id | uuid | opcional | versao_ficha.id |
 | criada_em | timestamptz | required | — |
 
 ## execucao_ia — MOD-06

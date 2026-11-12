@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-11",
-  "base_implementacao": "91c6c0c59661fddc834bf7211719317a743b8adb",
+  "base_implementacao": "03013b6a7bfc08eb083fc9a5a9071cd4d050654e",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -222,6 +222,22 @@
         {
           "arquivo": "docs/requisitos/schemas/acompanhamento-ia-v1.schema.json",
           "titulo": "DTOs de acompanhamento da geração e solicitação de aviso",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/arquitetura/chat-e-adaptacao.md",
+          "titulo": "Chat privado, confirmação e adaptação versionada"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/chat-ia-v1.schema.json",
+          "titulo": "DTOs de pedido e turno de chat",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/suporte-saude-ia-v1.schema.json",
+          "titulo": "Configuração privada de suporte técnico de saúde",
           "tipo": "codigo",
           "linguagem": "json"
         }

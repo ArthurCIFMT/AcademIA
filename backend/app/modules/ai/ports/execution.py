@@ -7,6 +7,7 @@ from app.modules.ai.schemas.execution import (
     Completion,
     Consumption,
     PlanAnswer,
+    PlanOutline,
     RunRequest,
     RunResult,
     Stage,
@@ -28,7 +29,7 @@ class Context:
     health_scope: Scope | None = None
     forbidden_ids: frozenset[UUID] = frozenset()
     base_version_id: UUID | None = None
-    base_plan: PlanAnswer | None = None
+    base_plan: PlanAnswer | PlanOutline | None = None
 
 
 class ContextPort(Protocol):

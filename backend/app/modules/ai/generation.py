@@ -9,6 +9,7 @@ from app.contracts.training.generated import ValidatedGeneration
 from app.modules.ai.adapters.context import PostgresContext
 from app.modules.ai.adapters.evidence import RagEvidence
 from app.modules.ai.adapters.groq import GroqAdapter
+from app.modules.ai.adapters.health_config import ConfiguredContext, load_health_config
 from app.modules.ai.orchestration.service import Orchestrator
 from app.modules.ai.orchestration.settings import Config
 from app.modules.ai.orchestration.validation import validate_plan
@@ -53,7 +54,7 @@ class GenerationService:
         clock: Callable[[], float] = time.perf_counter,
     ) -> None:
         self.sessions, self.llm, self.evidence = sessions, llm, evidence
-        self.contexts, self.clock = contexts or PostgresContext(sessions), clock
+        self.contexts, self.clock = contexts or ConfiguredContext(sessions), clock
 
     def authorize(self, actor: Actor, client_id: UUID) -> None:
         with self.sessions.begin() as session:
@@ -124,10 +125,6 @@ class GenerationService:
         return publish
 
     def generate(self, actor: Actor, client_id: UUID, request: RunRequest) -> RunResult:
-        if request.finalidade != "GERACAO":
-            raise ValueError(
-                "Esta entrega expõe somente geração; chat/adaptação em AI-05."
-            )
         self.authorize(actor, client_id)
         existing = PostgresState(self.sessions, clock=self.clock).lookup(
             actor, client_id, request
@@ -172,12 +169,17 @@ class GenerationService:
                     if service.evidence is None:
                         store = get_vector_store()
                         service.evidence = RagEvidence(
-                            Retriever(service.sessions, store, get_encoder()),
+                            Retriever(
+                                service.sessions,
+                                store,
+                                get_encoder(),
+                                annotations=tuple(load_health_config().anotacoes),
+                            ),
                             service.sessions,
                             store.check,
                         )
                     return service.evidence.retrieve(context, purpose, query, scope)
-                except (EmbeddingError, VectorError, OSError):
+                except (EmbeddingError, VectorError, OSError, ValueError):
                     return Result(
                         estado="SERVICO_INDISPONIVEL",
                         evidencias=[],

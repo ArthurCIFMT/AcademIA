@@ -77,6 +77,33 @@
         ],
         "default": null,
         "title": "Versao Base Id"
+      },
+      "onboarding_confirmado_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Onboarding Confirmado Id"
+      },
+      "dia_alvo": {
+        "anyOf": [
+          {
+            "maximum": 6,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Dia Alvo"
       }
     },
     "required": [

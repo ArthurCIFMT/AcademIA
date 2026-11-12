@@ -35,6 +35,8 @@ class RunRequest(StrictModel):
     ] = ""
     historico: Annotated[list[HistoryMessage], Field(max_length=6)] = []
     versao_base_id: UUID | None = None
+    onboarding_confirmado_id: UUID | None = None
+    dia_alvo: Annotated[int, Field(strict=True, ge=1, le=6)] | None = None
 
     @model_validator(mode="after")
     def limits(self) -> Self:
@@ -100,6 +102,10 @@ class PlanDay(StrictModel):
         str, StringConstraints(strip_whitespace=True, min_length=1, max_length=60)
     ]
     itens: Annotated[list[PlanItem], Field(min_length=1, max_length=6)]
+
+
+class PlanOutline(StrictModel):
+    dias: Annotated[list[PlanDay], Field(min_length=1, max_length=6)]
 
 
 class PlanAnswer(StrictModel):
@@ -168,3 +174,11 @@ class RunResult(StrictModel):
     modelo: str
     versao_prompts: str
     configuracao_sha256: str
+
+
+def request_payload(request: RunRequest) -> dict[str, object]:
+    data = request.model_dump(mode="json")
+    for key in ("dia_alvo", "onboarding_confirmado_id"):
+        if data.get(key) is None:
+            data.pop(key, None)
+    return data

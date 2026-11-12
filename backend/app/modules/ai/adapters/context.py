@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.contracts.structured import digest
 from app.modules.ai.ports.execution import Context, ContextDenied
-from app.modules.ai.schemas.execution import PlanAnswer, RunRequest
+from app.modules.ai.schemas.execution import PlanAnswer, PlanOutline, RunRequest
 from app.modules.ai.triage.service import TriagePermissionError, TriageService
 from app.modules.assignments.service import PostgresAssignmentReader
 from app.modules.identity.roles import effective_roles
@@ -21,7 +21,8 @@ class PostgresContext:
         self,
         sessions: sessionmaker[Session],
         *,
-        base_reader: Callable[[Actor, UUID, UUID], PlanAnswer | None] | None = None,
+        base_reader: Callable[[Actor, UUID, UUID], PlanAnswer | PlanOutline | None]
+        | None = None,
         scope_resolver: Callable[[UUID], Scope | None] | None = None,
     ) -> None:
         self.sessions = sessions
@@ -56,6 +57,11 @@ class PostgresContext:
             preparation = TriageService(self.sessions).evaluate(fresh, client_id)
         except TriagePermissionError:
             raise ContextDenied() from None
+        if request.finalidade == "ADAPTACAO" and (
+            not preparation.snapshot
+            or preparation.snapshot.id != request.onboarding_confirmado_id
+        ):
+            raise ContextDenied()
         with self.sessions.begin() as session:
             candidates = tuple(eligible_exercises(session))
         if (

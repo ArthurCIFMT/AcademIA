@@ -338,7 +338,7 @@ def test_migration_roundtrip_and_metadata(
     assert not compare_metadata(context, Base.metadata)
     command.downgrade(config, "0013")
     command.upgrade(config, "head")
-    assert connection.scalar(text("SELECT version_num FROM alembic_version")) == "0014"
+    assert connection.scalar(text("SELECT version_num FROM alembic_version")) == "0015"
 
 
 @pytest.mark.integration

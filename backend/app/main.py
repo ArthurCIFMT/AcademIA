@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.core.config import Settings
 from app.core.health import router as health_router
 from app.core.http import error_schemas, install_http_contract
+from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
 from app.modules.assignments.http import install_assignments
@@ -60,6 +61,7 @@ def create_app(
     app.include_router(onboarding_router(get_sessions))
     app.include_router(triage_router(get_sessions))
     app.include_router(generation_router(get_sessions))
+    app.include_router(chat_router(get_sessions))
     app.include_router(equipment_router(get_sessions))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))

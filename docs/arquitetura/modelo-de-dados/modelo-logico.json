@@ -1381,25 +1381,13 @@
     {
       "name": "conversa",
       "owner": "MOD-06",
-      "note": "",
+      "note": "Migration 0015: uma conversa por cliente; PK também é FK do titular",
       "columns": [
         {
           "name": "id",
           "type": "uuid",
           "flags": "pk",
-          "ref": null
-        },
-        {
-          "name": "cliente_id",
-          "type": "uuid",
-          "flags": "required",
           "ref": "cliente.usuario_id"
-        },
-        {
-          "name": "criada_em",
-          "type": "timestamptz",
-          "flags": "required",
-          "ref": null
         }
       ],
       "unique": []
@@ -1407,7 +1395,7 @@
     {
       "name": "mensagem",
       "owner": "MOD-06",
-      "note": "Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado",
+      "note": "Migration 0015: um turno por pedido; resposta em execucao_ia, sem duplicar prescrição; FK composta titular/versão e expurgo privado em 90 dias",
       "columns": [
         {
           "name": "id",
@@ -1422,28 +1410,40 @@
           "ref": "conversa.id"
         },
         {
-          "name": "request_id",
+          "name": "solicitacao_id",
           "type": "uuid",
           "flags": "required",
           "ref": null
         },
         {
-          "name": "papel",
-          "type": "varchar(20)",
-          "flags": "required",
-          "ref": null
-        },
-        {
-          "name": "texto",
+          "name": "pergunta",
           "type": "text",
           "flags": "required",
           "ref": null
         },
         {
           "name": "estado",
-          "type": "varchar(25)",
+          "type": "text",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "erro_codigo",
+          "type": "text",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "pedido",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "versao_contexto_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "versao_ficha.id"
         },
         {
           "name": "criada_em",
@@ -1455,8 +1455,7 @@
       "unique": [
         [
           "conversa_id",
-          "request_id",
-          "papel"
+          "solicitacao_id"
         ]
       ]
     },

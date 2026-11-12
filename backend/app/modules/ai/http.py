@@ -8,7 +8,11 @@ from app.contracts.structured import StrictModel
 from app.modules.ai.followup import FollowupService, GenerationContext, version_context
 from app.modules.ai.generation import GenerationService
 from app.modules.ai.persistence.state import RateLimited
-from app.modules.ai.ports.execution import ContextDenied, ExecutionConflict
+from app.modules.ai.ports.execution import (
+    ContextDenied,
+    ExecutionConflict,
+    ProviderError,
+)
 from app.modules.ai.schemas.execution import Consumption, RunRequest, RunResult
 from app.modules.training.workouts import WorkoutError
 from app.policies.access import Operation
@@ -65,6 +69,8 @@ def generation_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIR
             raise HTTPException(403) from None
         except ExecutionConflict:
             raise HTTPException(409) from None
+        except ProviderError:
+            raise HTTPException(503) from None
         except RateLimited as error:
             raise HTTPException(
                 429, headers={"Retry-After": str(error.retry_after)}

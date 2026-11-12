@@ -313,22 +313,24 @@ Table fragmento {
 
 Table conversa {
   id uuid [pk]
-  cliente_id uuid [not null]
-  criada_em timestamptz [not null]
+  Note: 'Migration 0015: uma conversa por cliente; PK também é FK do titular'
 }
 
 Table mensagem {
   id uuid [pk]
   conversa_id uuid [not null]
-  request_id uuid [not null]
-  papel varchar(20) [not null]
-  texto text [not null]
-  estado varchar(25) [not null]
+  solicitacao_id uuid [not null]
+  pergunta text [not null]
+  estado text [not null]
+  erro_codigo text
+  pedido jsonb [not null]
+  versao_contexto_id uuid
   criada_em timestamptz [not null]
   indexes {
-    (conversa_id, request_id, papel) [unique]
+    (conversa_id, solicitacao_id) [unique]
+    (conversa_id, criada_em)
   }
-  Note: 'Owner MOD-06. Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado'
+  Note: 'Migration 0015: um turno; resposta em execucao_ia; FK composta titular/versão; pergunta/pedido privados por 90 dias'
 }
 
 Table execucao_ia {
@@ -583,8 +585,10 @@ Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
-Ref: conversa.cliente_id > cliente.usuario_id
+Ref: conversa.id > cliente.usuario_id
 Ref: mensagem.conversa_id > conversa.id
+Ref: mensagem.versao_contexto_id > versao_ficha.id
+Ref: mensagem.(conversa_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
 Ref: execucao_ia.cliente_id > cliente.usuario_id
 Ref: execucao_ia.onboarding_id > onboarding_versao.id
 Ref: execucao_ia.versao_base_id > versao_ficha.id

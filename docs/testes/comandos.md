@@ -845,3 +845,62 @@ sem overflow horizontal ou erro JavaScript, geração única e consulta sem POST
 Esse ensaio visual não é E2E com backend/provedor real: AI-06/TST-01 permanecem abertos.
 Artefatos temporários de navegador/visualização ficam fora do repositório.
 Schema físico permanece 0014; MER preservado. Chat/adaptação públicos seguem em AI-05.
+
+## Chat e adaptação AI-05
+
+[Contrato](../arquitetura/chat-e-adaptacao.md),
+[pedido/turno](../requisitos/schemas/chat-ia-v1.schema.json) e
+[suporte técnico](../requisitos/schemas/suporte-saude-ia-v1.schema.json).
+Em backend/:
+
+~~~powershell
+uv run --locked pytest tests/ai/test_chat_unit.py tests/ai/test_chat_contracts.py
+uv run --locked --env-file ../.env pytest -m integration tests/ai/test_chat.py tests/ai/test_chat_integration.py tests/ai/test_chat_concurrency.py
+uv run --locked pytest
+uv run --locked --env-file ../.env pytest -m 'database or integration'
+uv run --locked pytest tests/contracts
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Em frontend/: npm test, npm run lint, npm run typecheck, npm run build.
+Nesta sessão, executados os entrypoints desses scripts pelo Node 24 empacotado
+conforme AI-04. Dependências e lockfiles preservados; nenhum pacote novo.
+Para reduzir concorrência de processos de teste, Vitest também foi executado
+com --maxWorkers=1, sem alterar configurações ou critérios de aceite.
+
+Cobertura nova: 10 BE, 17 INT e 6 FE. Sessão/CSRF, BOLA com dois clientes,
+entrada/JSON/citações inválidos, fonte revogada, expurgo privado, preparação
+indisponível, texto/links inertes, replay, cota compartilhada e rajada concorrente.
+Uma adaptação positiva comprova nova versão PENDENTE, manutenção do outro dia
+e diferenças consultadas por MOD-04. Falha, snapshot superado, novo relato e
+alteração fora do alvo preservam a vigente. Suporte sintético curado demonstra
+abstenção sem evidência específica e publicação apenas com escopo pertinente.
+
+SC-01/02: teste envia pergunta/documento sintéticos com tentativa de instrução,
+confere fronteira de dados e nenhuma publicação no fluxo DUVIDA. Isso verifica
+o contrato com modelo controlado, sem alegar imunidade semântica do LLM real.
+SC-03: histórico e IDs próprios antes de qualquer chamada;
+SC-04: HTML é texto, URL javascript não é link e schema extra é rejeitado;
+SC-06: oito conexões concorrentes permitem seis execuções, negam duas antes
+de RAG e não repetem chamada no replay. Adaptação usa a mesma cota.
+
+Evidência de 2026-11-11: 257 BE e 9 API aprovados (API é subconjunto de BE).
+Na regressão PostgreSQL/Qdrant com E5 e Mailpit reais, 158 DB/INT passaram e
+uma fixture nova de revogação falhou por omitir os metadados exigidos pelo banco.
+Fixture corrigida, sem mudar trigger/constraint; os 17 INT do chat foram repetidos
+e passaram. Total: 159 DB/INT distintos verificados, incluindo roundtrip de
+migrations até 0015 e comparação de metadados ORM/schema.
+Frontend: 83 de 84 passaram na execução paralela; um teste antigo de avaliações
+excedeu espera de carregamento. Os 84 passaram com um worker, sem mudar esse teste.
+Após corrigir corrida de GET antes de criar o turno, seis testes de chat passaram
+(85 FE distintos verificados). Tipos/lint/build frontend e Ruff/formato/mypy
+em 199 arquivos aprovados; SPEC e links verificados.
+Revalidar o conjunto afetado na pasta do projeto antes de publicar o commit.
+
+Limites: textos LLM e embeddings das fixtures novas são controlados. E5/Mailpit
+reais integram somente as regressões correspondentes. Não foi feita chamada Groq
+real, medição de qualidade/latência ou E2E navegador/backend real. Essas entregas
+permanecem em AI-06 e TST-01; pendências do corpus/livro não foram dadas como
+resolvidas. A migration nova é 0015; MER original e migrations aplicadas preservados.

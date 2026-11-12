@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "pedido": {
+    "additionalProperties": false,
+    "properties": {
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "mensagem": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "title": "Mensagem",
+        "type": "string"
+      },
+      "finalidade": {
+        "default": "DUVIDA",
+        "enum": [
+          "DUVIDA",
+          "ADAPTACAO"
+        ],
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "versao_base_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Base Id"
+      },
+      "onboarding_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Onboarding Id"
+      },
+      "dia_alvo": {
+        "anyOf": [
+          {
+            "maximum": 6,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Dia Alvo"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "mensagem"
+    ],
+    "title": "Ask",
+    "type": "object"
+  },
+  "turno": {
+    "$defs": {
+      "ChatAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "idioma": {
+            "const": "pt-BR",
+            "title": "Idioma",
+            "type": "string"
+          },
+          "tipo": {
+            "enum": [
+              "INFORMACAO",
+              "ABSTENCAO"
+            ],
+            "title": "Tipo",
+            "type": "string"
+          },
+          "texto": {
+            "maxLength": 6000,
+            "minLength": 1,
+            "title": "Texto",
+            "type": "string"
+          },
+          "evidencias_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Evidencias Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "idioma",
+          "tipo",
+          "texto",
+          "evidencias_ids"
+        ],
+        "title": "ChatAnswer",
+        "type": "object"
+      },
+      "Source": {
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "documento_versao_id",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao"
+        ],
+        "title": "Source",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "pergunta": {
+        "title": "Pergunta",
+        "type": "string"
+      },
+      "criada_em": {
+        "format": "date-time",
+        "title": "Criada Em",
+        "type": "string"
+      },
+      "finalidade": {
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "estado": {
+        "title": "Estado",
+        "type": "string"
+      },
+      "motivo": {
+        "title": "Motivo",
+        "type": "string"
+      },
+      "resposta": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ChatAnswer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fontes": {
+        "items": {
+          "$ref": "#/$defs/Source"
+        },
+        "title": "Fontes",
+        "type": "array"
+      },
+      "versao_publicada_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Versao Publicada Id"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "pergunta",
+      "criada_em",
+      "finalidade",
+      "estado",
+      "motivo",
+      "resposta",
+      "fontes",
+      "versao_publicada_id"
+    ],
+    "title": "ChatView",
+    "type": "object"
+  }
+}

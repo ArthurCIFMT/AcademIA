@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from datetime import datetime, timedelta
 from uuid import UUID, uuid4, uuid5
 
-from sqlalchemy import func, select, text
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.contracts.structured import digest
@@ -23,6 +23,7 @@ from app.modules.ai.schemas.execution import (
     RunRequest,
     RunResult,
     Stage,
+    request_payload,
 )
 from app.modules.audit.service import record_audit
 from app.modules.identity.service import utc_now
@@ -126,7 +127,7 @@ class PostgresState:
             return None
         with self._locked(actor, request.solicitacao_id) as (session, row):
             if row.cliente_id != client_id or row.request_hash != digest(
-                request.model_dump(mode="json")
+                request_payload(request)
             ):
                 raise ExecutionConflict()
             self._expire(session, row)
@@ -150,24 +151,21 @@ class PostgresState:
             if old:
                 if (
                     old.cliente_id != client_id
-                    or old.request_hash != digest(request.model_dump(mode="json"))
+                    or old.request_hash != digest(request_payload(request))
                     or old.entrada_hash != input_hash
                 ):
                     raise ExecutionConflict()
                 self._expire(session, old)
                 return False, self._view(session, old)
             now = self.now()
+            from app.modules.ai.chat.quota import occupied_slots
+
             count = (
-                session.scalar(
-                    select(func.count())
-                    .select_from(Execution)
-                    .where(
-                        Execution.cliente_id == client_id,
-                        Execution.iniciada_em > now - timedelta(seconds=60),
-                        Execution.finalidade.in_(["DUVIDA", "ADAPTACAO"]),
-                    )
+                occupied_slots(
+                    session, client_id, self.id(actor, request.solicitacao_id)
                 )
-                or 0
+                if request.finalidade in {"DUVIDA", "ADAPTACAO"}
+                else 0
             )
             if request.finalidade in {"DUVIDA", "ADAPTACAO"} and count >= 6:
                 raise RateLimited()
@@ -181,7 +179,7 @@ class PostgresState:
                 cliente_id=client_id,
                 idempotency_key=f"{actor.user_id}:{request.solicitacao_id}",
                 entrada_hash=input_hash,
-                request_hash=digest(request.model_dump(mode="json")),
+                request_hash=digest(request_payload(request)),
                 finalidade=request.finalidade,
                 estado="EM_EXECUCAO",
                 onboarding_id=prep.snapshot.id if prep and prep.snapshot else None,

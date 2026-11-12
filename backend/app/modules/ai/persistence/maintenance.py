@@ -17,6 +17,9 @@ def strip_private(result: RunResult) -> RunResult:
 
 
 def purge_expired(sessions: sessionmaker[Session]) -> int:
+    from app.modules.ai.chat.service import purge_messages
+
+    purge_messages(sessions)
     cutoff = utc_now() - timedelta(days=90)
     with sessions.begin() as session:
         rows = list(

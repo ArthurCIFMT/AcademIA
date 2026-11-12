@@ -79,3 +79,14 @@ Acrescenta execucao_ia, triagem, etapa_ia e evidencia_execucao; constraints de
 idempotência, contexto e consumo, índices e explicacao expurgável da versao_ficha.
 [Contrato](../docs/arquitetura/geracao-persistente.md). Nenhuma migration anterior
 foi alterada. Upgrade/downgrade e comparação ORM/schema são testados em PostgreSQL.
+
+## Marco AI-05 — migration 0015
+
+0014 → 0015 acrescenta conversa (PK/FK do cliente) e mensagem por turno
+(entrada privada, estado, pedido congelado e versão de contexto).
+Unicidade conversa/solicitação e FK composta cliente/versão impedem mistura
+de contextos. Resposta fica na execução IA existente; ficha não é duplicada.
+A manutenção de AI-03 remove mensagens após 90 dias e preserva recibos.
+Upgrade/downgrade e comparação ORM/schema integram os testes relacionados.
+MER original e migrations anteriores preservados; modelo lógico/dicionário
+registram essa normalização. [Contrato](../docs/arquitetura/chat-e-adaptacao.md).

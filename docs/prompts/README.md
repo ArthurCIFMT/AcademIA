@@ -123,6 +123,8 @@ funcionais. Verificação: `python scripts/gerar_spec.py --check`,
 Acrescente linha por tarefa realmente executada com comandos, resultado e commit
 ou link de relatório. A numeração das seções não substitui as dependências.
 
+| AI-05 | CONCLUIDO | [Chat/adaptação](../arquitetura/chat-e-adaptacao.md), [schemas](../requisitos/schemas/chat-ia-v1.schema.json), migration 0015 e [evidências](../testes/comandos.md#chat-e-adaptação-ai-05). Conversa própria, RAG fixo sem anamnese em dúvida, confirmação de snapshot/base/dia na adaptação, diff e publicação PENDENTE por MOD-04. Cota atômica compartilhada, replay, retenção/redação de contexto e saída inerte. 10 BE/17 INT/6 FE novos; 257 BE, 159 DB/INT distintos e 85 FE distintos verificados, 9 API. Ruff/formato/mypy (199 arquivos), frontend tipos/lint/build e SPEC/DOC aprovados. Sem dependência nova; fixtures LLM controladas. AI-06 permanece avaliação real e TST-01 aceite E2E. |
+
 ## Fundação
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
@@ -191,8 +193,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-02](05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
 | [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
 | [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
-| [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | PRONTO |
-| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
+| [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
+| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | PRONTO |
 | [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
 
 ## Pós-MVP — matrícula e controle de acesso
@@ -261,8 +263,8 @@ Consultar a [revisão vigente](../testes/revisao-dos-prompts.md), depois mestre,
 contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e decisões
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
-FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-04 também estão concluídos.
-AI-05 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
+FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
+AI-06 é o próximo prompt recomendado para o MVP. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

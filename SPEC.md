@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-04. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-05. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -131,7 +131,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
-| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; chat/adaptação públicos pendentes |
+| MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
 | MOD-09 — Agenda | [Aulas e eventual reserva](docs/requisitos/requisitos-funcionais.md) | Planejado; reserva depende do gate próprio |
@@ -139,8 +139,8 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-05, AI-06 e TST-01. O próximo cartão na
-sequência é AI-05. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-06 e TST-01. O próximo cartão na
+sequência é AI-06. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -1518,22 +1518,24 @@ Table fragmento {
 
 Table conversa {
   id uuid [pk]
-  cliente_id uuid [not null]
-  criada_em timestamptz [not null]
+  Note: 'Migration 0015: uma conversa por cliente; PK também é FK do titular'
 }
 
 Table mensagem {
   id uuid [pk]
   conversa_id uuid [not null]
-  request_id uuid [not null]
-  papel varchar(20) [not null]
-  texto text [not null]
-  estado varchar(25) [not null]
+  solicitacao_id uuid [not null]
+  pergunta text [not null]
+  estado text [not null]
+  erro_codigo text
+  pedido jsonb [not null]
+  versao_contexto_id uuid
   criada_em timestamptz [not null]
   indexes {
-    (conversa_id, request_id, papel) [unique]
+    (conversa_id, solicitacao_id) [unique]
+    (conversa_id, criada_em)
   }
-  Note: 'Owner MOD-06. Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado'
+  Note: 'Migration 0015: um turno; resposta em execucao_ia; FK composta titular/versão; pergunta/pedido privados por 90 dias'
 }
 
 Table execucao_ia {
@@ -1788,8 +1790,10 @@ Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
-Ref: conversa.cliente_id > cliente.usuario_id
+Ref: conversa.id > cliente.usuario_id
 Ref: mensagem.conversa_id > conversa.id
+Ref: mensagem.versao_contexto_id > versao_ficha.id
+Ref: mensagem.(conversa_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
 Ref: execucao_ia.cliente_id > cliente.usuario_id
 Ref: execucao_ia.onboarding_id > onboarding_versao.id
 Ref: execucao_ia.versao_base_id > versao_ficha.id
@@ -2200,26 +2204,32 @@ Unicidades: ingestao_id+ordem.
 
 #### conversa — MOD-06
 
+Migration 0015: uma conversa por cliente; identidade coincide com a do titular.
+
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
-| id | uuid | pk | — |
-| cliente_id | uuid | required | cliente.usuario_id |
-| criada_em | timestamptz | required | — |
+| id | uuid | pk | cliente.usuario_id |
 
 #### mensagem — MOD-06
 
-Idempotência por conversa+request_id+papel; histórico não é contexto ilimitado
+Um turno/pergunta por solicitação. Resposta normalizada em execucao_ia;
+sem duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
+FK composta conversa_id+versao_contexto_id referencia versao_ficha.cliente_id+id.
+Índice de histórico conversa_id+criada_em. Pergunta de 1 a 1.000 caracteres,
+pedido JSON objeto congelado pelo servidor. Estado reserva/preparação/recibo.
 
-Unicidades: conversa_id+request_id+papel.
+Unicidades: conversa_id+solicitacao_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | conversa_id | uuid | required | conversa.id |
-| request_id | uuid | required | — |
-| papel | varchar(20) | required | — |
-| texto | text | required | — |
-| estado | varchar(25) | required | — |
+| solicitacao_id | uuid | required | — |
+| pergunta | text | required | — |
+| estado | text | required | — |
+| erro_codigo | text | opcional | — |
+| pedido | jsonb | required | — |
+| versao_contexto_id | uuid | opcional | versao_ficha.id |
 | criada_em | timestamptz | required | — |
 
 #### execucao_ia — MOD-06
@@ -5140,7 +5150,8 @@ Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquit
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](docs/arquitetura/corpus.md)); ingestão e fragmentos entregues na migration 0013
 ([RAG-04](docs/arquitetura/indexacao-documental.md)); orquestrador/triagem/etapas/evidências entregues na migration 0014
-([AI-03](docs/arquitetura/geracao-persistente.md)).
+([AI-03](docs/arquitetura/geracao-persistente.md)); conversa/mensagem privadas entregues na
+migration 0015 ([AI-05](docs/arquitetura/chat-e-adaptacao.md)).
 RAG-03 mantém [artefatos privados de extração](docs/arquitetura/extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
@@ -7180,6 +7191,33 @@ Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requ
         ],
         "default": null,
         "title": "Versao Base Id"
+      },
+      "onboarding_confirmado_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Onboarding Confirmado Id"
+      },
+      "dia_alvo": {
+        "anyOf": [
+          {
+            "maximum": 6,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Dia Alvo"
       }
     },
     "required": [
@@ -8609,8 +8647,10 @@ Graves/dados insuficientes são barrados pelo mesmo motor de AI-01. Ausente não
 saudável. Para saúde declarada, a porta de contexto exige escopo técnico curado
 que cubra as restrições e RAG-05 deve retornar suporte pertinente; fonte genérica
 ou pontuação alta não basta. Sem esse mapeamento/evidência, abster-se.
-Não inventar mapeamentos clínicos para ativar casos: a composição padrão mantém
-essa abstenção, e a composição por portas admite o mapeamento aprovado do cenário.
+Não inventar mapeamentos clínicos para ativar casos. AI-05 acrescenta o
+[mapeamento técnico opcional de cenários](docs/arquitetura/chat-e-adaptacao.md#suporte-técnico-para-cenários-de-saúde);
+sem configuração pertinente, a composição padrão mantém essa abstenção.
+A composição por portas também admite o mapeamento aprovado do cenário.
 Sem embeddings, corpus ou LLM disponível, retornar falha/abstenção controlada.
 Treino manual permanece independente. Não exigir laudo ou aprovação médica.
 
@@ -9540,6 +9580,549 @@ Fonte versionada: [docs/requisitos/schemas/acompanhamento-ia-v1.schema.json](doc
     "title": "RetryNotice",
     "type": "object"
   }
+}
+````
+### 21. Chat privado, confirmação e adaptação versionada
+
+Fonte versionada: [docs/arquitetura/chat-e-adaptacao.md](docs/arquitetura/chat-e-adaptacao.md).
+
+#### Entrega e fronteiras
+
+MOD-06 persiste perguntas privadas e coordena etapas fixas; MOD-05 recupera
+evidências aprovadas; MOD-03 fornece snapshots confirmados; MOD-04 consulta e
+publica versões por seus serviços públicos. Nenhum acesso direto às tabelas
+internas desses módulos foi introduzido. A composição em app/main.py e as portas
+existentes de contexto, estado, geração e publicação foram estendidas para conectar
+o chat. Não há dependências novas, Docker, planner ou ferramentas escolhidas pelo LLM.
+
+A interface em /area/cliente/assistente aceita dúvida geral sem onboarding,
+ficha ou parecer. Uma pergunta usa até três perguntas anteriores do mesmo cliente
+e da mesma versão de contexto, limitadas a 3.000 caracteres no total, mais os
+trechos recuperados. Respostas anteriores, fichas completas, anamnese e livros
+não são carregados no contexto de dúvidas. Sem evidência, abster-se.
+A resposta em português é informação e nunca altera uma ficha.
+
+#### Contratos REST
+
+Todas as rotas exigem sessão de cliente ativo, permissão própria e no-store.
+O cliente é resolvido pela sessão; não há cliente_id ou conversa_id na entrada.
+POST exige também CSRF/Origin. Autorização ocorre antes de histórico/RAG/provedor.
+
+| Método e rota | Comportamento |
+|---|---|
+| POST /api/v1/ia/chat | Criar/repetir explicitamente um turno idempotente |
+| GET /api/v1/ia/chat?page=1 | Histórico do contexto vigente, páginas de até 20 turnos |
+| GET /api/v1/ia/chat/contexto/adaptacao | IDs da ficha e snapshot atuais, número do snapshot e títulos dos dias; sem dados médicos |
+| GET /api/v1/ia/chat/{solicitacao_id} | Retomar recibo próprio sem executar geração |
+| GET /api/v1/ia/chat/{solicitacao_id}/diferencas | Consultar antes/depois retidos de uma adaptação publicada |
+
+[Schema de pedido e turno](docs/requisitos/schemas/chat-ia-v1.schema.json).
+Pedido DUVIDA: solicitacao_id UUID, mensagem de 1 a 1.000 caracteres e finalidade
+opcional DUVIDA. Campos extras, controles inválidos e seletores de contexto são
+rejeitados (422). Pedido ADAPTACAO exige finalidade, versao_base_id, onboarding_id
+e dia_alvo inteiro de 1 a 6. Não aceita histórico/estado/fontes enviados pelo cliente.
+O backend converte o snapshot confirmado para onboarding_confirmado_id do
+[contrato interno](docs/requisitos/schemas/execucao-ia-v1.schema.json).
+
+Turno: solicitacao_id, pergunta, criada_em UTC, finalidade, estado, motivo,
+resposta textual estruturada ou null, fontes bibliográficas e versao_publicada_id
+ou null. Não retorna resumo de saúde nem proposta de ficha na resposta do chat.
+As diferenças reutilizam os DTOs públicos de consulta de ficha e informam
+conteudo_expirado; não constituem uma segunda cópia da prescrição.
+
+401 sem sessão; 403 sem permissão/CSRF; 404 para turno ausente/alheio; 409 para
+pedido divergente, snapshot/base superados ou diferenças indisponíveis; 422 para
+entrada inválida; 429 com Retry-After: 60; 503 para preparação indisponível.
+Falhas ocorridas dentro do orquestrador permanecem estados de execução no recibo.
+Uma reserva sem execução é AGUARDANDO e, após 100 segundos, INTERROMPIDA;
+falha de preparação deixa FALHA/PREPARACAO_RECUSADA, sem detalhes sensíveis.
+
+#### Adaptação explícita
+
+1. Cliente atualiza/confirma os dados no formulário autenticado existente de
+   onboarding; a interface de chat apenas oferece o link, sem escrever em MOD-03.
+2. Ao selecionar adaptação, consultar metadados atuais, escolher um dia e confirmar
+   que o onboarding reflete a situação relatada. Snapshot e base são reenviados.
+3. Backend valida titularidade, snapshot confirmado, base vigente/retida e dia.
+   Resolve resumo minimizado, política e recursos por contratos existentes.
+4. Executar nova triagem (até uma análise LLM) e geração (até uma chamada).
+   Novo relato relevante detectado exige atualização confirmada; grave bloqueia,
+   insuficiência não vira saúde presumida. Sem suporte de saúde pertinente ou
+   com conflito, abster-se. Não há retry/reparo automático ou fallback pago.
+5. Validar JSON, referências, catálogo e recursos. O dia-alvo pode mudar; quantidade
+   de dias e todos os demais dias devem ser idênticos à base. Sem mudança efetiva,
+   abster-se. Alteração de outra parte é recusada.
+6. Publicação transacional por MOD-04 revalida snapshot, fontes e inventário,
+   cria nova vigente com parecer PENDENTE e aviso ao instrutor. Consulta independe
+   do aceite. Erro preserva a vigente anterior. Reutiliza retenção de 15 versões
+   completas e regra específica de rejeitadas; não muda snapshots de execução.
+
+#### Suporte técnico para cenários de saúde
+
+A configuração opcional ACADEMIA_RAG_HEALTH_CONFIG aponta para JSON local privado,
+com no máximo 1 MiB, conforme
+[schema de suporte](docs/requisitos/schemas/suporte-saude-ia-v1.schema.json).
+schema_version=1; cenarios associa SHA-256 exato do resumo estruturado autorizado
+a um escopo de condição/população/intervenção; anotacoes contém até 200 anotações
+técnicas de suporte/conflito identificadas por hash do arquivo e do trecho.
+O hash do resumo é produzido pelo serviço de triagem; não deve ser fabricado ou
+calculado a partir de descrição livre. Alteração do resumo invalida a associação.
+
+Somente o responsável técnico configura cenários/evidências; usuário da API ou
+modelo não escolhe escopo nem escreve essas anotações. Sem configuração,
+restrições declaradas permanecem sem suporte e geram abstenção conservadora.
+Arquivo inválido/ausente quando configurado retorna erro controlado, sem fallback
+para saudável. Configuração participa do fingerprint revalidado antes da publicação.
+Busca deve ainda recuperar evidência pertinente aprovada; associação sozinha não
+libera geração e não remove bloqueio determinístico. Não há aprovação médica,
+diagnóstico ou inferência clínica nova. Hashes de cenários privados ficam fora do
+corpus compartilhado e do Git. DUVIDA não usa esse mapeamento de saúde.
+
+#### Persistência, orçamento e retenção
+
+Migration 0015 cria conversa (uma por cliente, PK igual ao cliente) e mensagem
+(um turno/pergunta, pedido congelado pelo servidor, estado e referência de
+contexto). O resultado do assistente fica em execucao_ia; não duplicar ficha ou
+resposta em mensagem. Chave única conversa+solicitacao e FK composta garantem
+que a versão de contexto pertence ao mesmo cliente. Explicação e comparação
+de fichas são resolvidas pelo serviço de MOD-04.
+
+Dúvida/adaptação compartilham seis novas execuções em 60 segundos por cliente.
+Reserva transacional com advisory lock PostgreSQL ocorre antes de RAG/embeddings;
+reservas de mensagens ainda sem execução também ocupam vaga. O claim de execução
+exclui sua própria reserva e não cobra duas vezes. Concorrência/replay não ampliam
+o orçamento. GERACAO inicial conserva o limite próprio vigente.
+Cada etapa reserva despacho e consumo na persistência de AI-03, sem segurar
+transação SQL durante a rede. Consulta GET, foco e recarga nunca geram POST.
+Retry de transporte é explícito com o mesmo UUID; entrada diferente exige UUID novo.
+Após 100 segundos, uma reserva abandonada sem execução não pode ser reaberta.
+Execução terminal nunca repete chamada LLM ao reusar UUID.
+
+Histórico serve apenas o contexto atual, incluindo o turno da adaptação que o
+publicou, e os últimos 90 dias. Não reenviar perguntas de versões substituídas.
+Consulta direta de dúvida antiga retira resposta/fontes se mudou o contexto;
+revogação de evidência também retira resposta/fontes. Comparação lê apenas
+conteúdo ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
+A manutenção existente de AI-03 também expurga perguntas/pedidos após 90 dias,
+preservando recibos e contadores de auditoria. Esse prazo independe das 15 fichas.
+
+#### Interface e segurança
+
+Mensagem/resposta é texto React, sem HTML/Markdown executável. URLs bibliográficas
+aceitam somente http/https e usam noopener/noreferrer. Troca/revogação de sessão
+remove conteúdo privado; retomada usa UUID na URL e somente GET.
+Falha/429 não abre retry automático. A confirmação de adaptação é invalidada se
+snapshot ou base mudar. A ficha publicada abre no recurso existente de consulta.
+
+Mensagens e documentos são dados sem autoridade para SQL, ferramentas,
+permissões ou publicação. JSON Schema, referências reais, titularidade, validações
+em código e publicação por contrato limitam os efeitos. Não alegar imunidade
+semântica a prompt injection com base em um modelo simulado.
+
+#### Verificação e limites
+
+[Comandos e evidências](docs/testes/comandos.md#chat-e-adaptação-ai-05).
+SC-01/02/03/04/06: isolamento com dois clientes, documento/pergunta maliciosos
+em fronteira de dados, rejeição de referências/JSON inválidos, texto HTML inerte,
+links inseguros bloqueados e cota atômica concorrente/replay.
+Testes usam PostgreSQL/Qdrant reais e respostas/embeddings sintéticos controlados;
+a regressão também exercita E5 e Mailpit reais. Não comprova qualidade/latência do
+LLM gratuito. AI-06 e o E2E TST-01 permanecem abertos, assim como as pendências
+técnicas anteriores do corpus/livro.
+### 22. DTOs de pedido e turno de chat
+
+Fonte versionada: [docs/requisitos/schemas/chat-ia-v1.schema.json](docs/requisitos/schemas/chat-ia-v1.schema.json).
+
+````json
+{
+  "schema_version": 1,
+  "pedido": {
+    "additionalProperties": false,
+    "properties": {
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "mensagem": {
+        "maxLength": 1000,
+        "minLength": 1,
+        "title": "Mensagem",
+        "type": "string"
+      },
+      "finalidade": {
+        "default": "DUVIDA",
+        "enum": [
+          "DUVIDA",
+          "ADAPTACAO"
+        ],
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "versao_base_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Base Id"
+      },
+      "onboarding_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Onboarding Id"
+      },
+      "dia_alvo": {
+        "anyOf": [
+          {
+            "maximum": 6,
+            "minimum": 1,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Dia Alvo"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "mensagem"
+    ],
+    "title": "Ask",
+    "type": "object"
+  },
+  "turno": {
+    "$defs": {
+      "ChatAnswer": {
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "const": 1,
+            "default": 1,
+            "title": "Schema Version",
+            "type": "integer"
+          },
+          "idioma": {
+            "const": "pt-BR",
+            "title": "Idioma",
+            "type": "string"
+          },
+          "tipo": {
+            "enum": [
+              "INFORMACAO",
+              "ABSTENCAO"
+            ],
+            "title": "Tipo",
+            "type": "string"
+          },
+          "texto": {
+            "maxLength": 6000,
+            "minLength": 1,
+            "title": "Texto",
+            "type": "string"
+          },
+          "evidencias_ids": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 5,
+            "title": "Evidencias Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "idioma",
+          "tipo",
+          "texto",
+          "evidencias_ids"
+        ],
+        "title": "ChatAnswer",
+        "type": "object"
+      },
+      "Source": {
+        "properties": {
+          "fragmento_id": {
+            "format": "uuid",
+            "title": "Fragmento Id",
+            "type": "string"
+          },
+          "documento_versao_id": {
+            "format": "uuid",
+            "title": "Documento Versao Id",
+            "type": "string"
+          },
+          "titulo": {
+            "title": "Titulo",
+            "type": "string"
+          },
+          "origem_url": {
+            "title": "Origem Url",
+            "type": "string"
+          },
+          "idioma": {
+            "title": "Idioma",
+            "type": "string"
+          },
+          "pagina": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pagina"
+          },
+          "linha_inicio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Inicio"
+          },
+          "linha_fim": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Linha Fim"
+          },
+          "secao": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secao"
+          }
+        },
+        "required": [
+          "fragmento_id",
+          "documento_versao_id",
+          "titulo",
+          "origem_url",
+          "idioma",
+          "pagina",
+          "linha_inicio",
+          "linha_fim",
+          "secao"
+        ],
+        "title": "Source",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "solicitacao_id": {
+        "format": "uuid",
+        "title": "Solicitacao Id",
+        "type": "string"
+      },
+      "pergunta": {
+        "title": "Pergunta",
+        "type": "string"
+      },
+      "criada_em": {
+        "format": "date-time",
+        "title": "Criada Em",
+        "type": "string"
+      },
+      "finalidade": {
+        "title": "Finalidade",
+        "type": "string"
+      },
+      "estado": {
+        "title": "Estado",
+        "type": "string"
+      },
+      "motivo": {
+        "title": "Motivo",
+        "type": "string"
+      },
+      "resposta": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ChatAnswer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "fontes": {
+        "items": {
+          "$ref": "#/$defs/Source"
+        },
+        "title": "Fontes",
+        "type": "array"
+      },
+      "versao_publicada_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Versao Publicada Id"
+      }
+    },
+    "required": [
+      "solicitacao_id",
+      "pergunta",
+      "criada_em",
+      "finalidade",
+      "estado",
+      "motivo",
+      "resposta",
+      "fontes",
+      "versao_publicada_id"
+    ],
+    "title": "ChatView",
+    "type": "object"
+  }
+}
+````
+### 23. Configuração privada de suporte técnico de saúde
+
+Fonte versionada: [docs/requisitos/schemas/suporte-saude-ia-v1.schema.json](docs/requisitos/schemas/suporte-saude-ia-v1.schema.json).
+
+````json
+{
+  "$defs": {
+    "Annotation": {
+      "additionalProperties": false,
+      "properties": {
+        "arquivo_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Arquivo Sha256",
+          "type": "string"
+        },
+        "texto_hash": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Texto Hash",
+          "type": "string"
+        },
+        "escopo": {
+          "$ref": "#/$defs/Scope"
+        },
+        "posicao": {
+          "enum": [
+            "SUPORTE",
+            "CONTRAINDICACAO"
+          ],
+          "title": "Posicao",
+          "type": "string"
+        },
+        "justificativa": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Justificativa",
+          "type": "string"
+        }
+      },
+      "required": [
+        "arquivo_sha256",
+        "texto_hash",
+        "escopo",
+        "posicao",
+        "justificativa"
+      ],
+      "title": "Annotation",
+      "type": "object"
+    },
+    "Scope": {
+      "additionalProperties": false,
+      "properties": {
+        "condicao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Condicao",
+          "type": "string"
+        },
+        "populacao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Populacao",
+          "type": "string"
+        },
+        "intervencao": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Intervencao",
+          "type": "string"
+        }
+      },
+      "required": [
+        "condicao",
+        "populacao",
+        "intervencao"
+      ],
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "cenarios": {
+      "default": {},
+      "patternProperties": {
+        "^[a-f0-9]{64}$": {
+          "$ref": "#/$defs/Scope"
+        }
+      },
+      "title": "Cenarios",
+      "type": "object"
+    },
+    "anotacoes": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Annotation"
+      },
+      "maxItems": 200,
+      "title": "Anotacoes",
+      "type": "array"
+    }
+  },
+  "title": "HealthConfig",
+  "type": "object"
 }
 ````
 
@@ -11122,8 +11705,8 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-02](docs/prompts/05-ia-rag/AI-02.md) | Schemas, prompts e orquestrador de etapas fixas | MOD-06 | AI-01, RAG-05 | CONCLUIDO |
 | [AI-03](docs/prompts/05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
 | [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
-| [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | PRONTO |
-| [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | BLOQUEADO |
+| [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
+| [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | PRONTO |
 | [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
 
 #### Pós-MVP — matrícula e controle de acesso
@@ -11826,6 +12409,17 @@ Acrescenta execucao_ia, triagem, etapa_ia e evidencia_execucao; constraints de
 idempotência, contexto e consumo, índices e explicacao expurgável da versao_ficha.
 [Contrato](docs/arquitetura/geracao-persistente.md). Nenhuma migration anterior
 foi alterada. Upgrade/downgrade e comparação ORM/schema são testados em PostgreSQL.
+
+#### Marco AI-05 — migration 0015
+
+0014 → 0015 acrescenta conversa (PK/FK do cliente) e mensagem por turno
+(entrada privada, estado, pedido congelado e versão de contexto).
+Unicidade conversa/solicitação e FK composta cliente/versão impedem mistura
+de contextos. Resposta fica na execução IA existente; ficha não é duplicada.
+A manutenção de AI-03 remove mensagens após 90 dias e preserva recibos.
+Upgrade/downgrade e comparação ORM/schema integram os testes relacionados.
+MER original e migrations anteriores preservados; modelo lógico/dicionário
+registram essa normalização. [Contrato](docs/arquitetura/chat-e-adaptacao.md).
 ### 2. Backend
 
 Fonte versionada: [backend/README.md](backend/README.md).
@@ -11964,6 +12558,21 @@ GET próprio de execucoes/{id}/acompanhamento e contexto de versão IA para titu
 instrutor designado, sob /api/v1/ia/fichas, sem resumo privado.
 [Contrato](docs/arquitetura/solicitacao-e-acompanhamento-ia.md). O aviso usa o
 mesmo evento de TRN-03 e SMTP fora da transação; GET não tenta envio.
+
+#### Chat e adaptação — AI-05
+
+Aplicar migration 0015. Rotas próprias em /api/v1/ia/chat exigem sessão/CSRF;
+GET não dispara geração. Dúvida funciona sem onboarding; adaptação confirma
+snapshot/base e dia-alvo antes de nova triagem/publicação. O limite compartilhado
+é seis novas dúvidas/adaptações por minuto/cliente. Replay conserva o UUID.
+[Contrato completo](docs/arquitetura/chat-e-adaptacao.md) e
+[schema](docs/requisitos/schemas/chat-ia-v1.schema.json).
+A configuração local opcional ACADEMIA_RAG_HEALTH_CONFIG usa o
+[schema de suporte](docs/requisitos/schemas/suporte-saude-ia-v1.schema.json);
+sem mapeamento/evidência pertinente, adaptação por saúde abstém-se.
+Não colocar configurações privadas ou dados pessoais no Git/corpus.
+A manutenção de AI-03 também expurga mensagens com mais de 90 dias.
+Testes controlados não representam aceite do provedor real (AI-06).
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -11992,6 +12601,17 @@ Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
 URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
 fontes e parecer; o instrutor usa a revisão existente.
 [Contrato completo](docs/arquitetura/solicitacao-e-acompanhamento-ia.md).
+
+#### Chat do cliente — AI-05
+
+/area/cliente/assistente oferece dúvidas sem exigir ficha/onboarding/parecer.
+Adaptação pede confirmação dos dados já salvos no formulário autenticado,
+base atual e dia-alvo; publica nova versão PENDENTE depois das validações.
+Retomada por UUID/foco usa GET; envio/reenvio exige ação explícita.
+Texto não executa HTML; fonte aceita somente http/https.
+Os testes de training-chat cobrem envio, retomada, falha, autorização,
+confirmação de adaptação e 429 sem repetição automática.
+[Contrato](docs/arquitetura/chat-e-adaptacao.md).
 ### 4. Bootstrap
 
 Fonte versionada: [docs/instalacao/primeiro-administrador.md](docs/instalacao/primeiro-administrador.md).
@@ -12196,6 +12816,9 @@ ACADEMIA_INDEX_LOCK_DIR=data/indexacao
 # LLM gratuito Groq; credencial pessoal. Testes AI-02 usam transporte controlado.
 GROQ_API_KEY=
 # Modelo/endpoint/limites em docs/requisitos/schemas/configuracao-ia-v1.json.
+
+# Opcional: arquivo técnico curado de cenários/escopos e anotações pertinentes.
+# ACADEMIA_RAG_HEALTH_CONFIG=
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -12215,16 +12838,17 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `3ff8016d6c3a2b827011aa5f707d9aec6e94a4d438dc18780a03bcba7122651e` |
+| `.env.example` | `40074ee927088541b305aa9a1286612bf0f93741b82c496c6991c98f783ab41d` |
 | `AGENTS.md` | `96779619a58c189dcc3e9374a29cdcfa2ad49e475f9ebd00f24b9201c165097e` |
-| `backend/README.md` | `ba9b364e535bdb92dafae6f8f16e3e3b2582ef62b4589fb812c4830b79a41a7e` |
+| `backend/README.md` | `0a1aebd73fbe83a48e2e935d77870e6aa879d552d579919d2c68c01f8cece61c` |
 | `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
-| `database/README.md` | `8932ad8684d5a6665c541d684ccf0a060d17279451e2b1b6a75853372ee0db03` |
+| `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
+| `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `50e5423e4035b5e5b5a0c9b342a06282583313dcbcc6156ce8e2a788e7aafdf0` |
@@ -12240,12 +12864,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/geracao-persistente.md` | `c36a512af7ac1f1d617ab3caf718c7ab5625727818117eba4cd0548a21427af5` |
+| `docs/arquitetura/geracao-persistente.md` | `12bd2e9cb9513606d35ddcd9f6062b029d444be32bdc37a1302a02a49bcee9c1` |
 | `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `9fcb6a9eaf5b4fa1711d509ac5201bec332e379e71781c0c8f6b8bfa96ade925` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `a7e5574518d6c33cab48fee61b1a479871e006a7c363eaeaf60cb320a51a683d` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `00a51d77798ead39a9f4c09f0bffcb8852d94d6eb8972268fd0157c7ca61a8a8` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `e67719b92d533b59609ca38fc01fe93a2812baeb162fb4672607dec23a4c7bab` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `96eef65d338dfd8e6e6b2df8c5f53c7f710926d5447b74163e13304351744209` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `66a73587ce0b53d1de35adf9573cd65637ed50302eb9d0b406b04764ffddc8bd` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
@@ -12256,11 +12880,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `8d3ec60da393b048e973ce5165aaebe0114a08b7edfde7e1a62378c7b379b82f` |
+| `docs/especificacao/compilacao-spec.json` | `b5bb52eed37e0441c527f6807cf833ed9a7eb19831c79c7375245aa8fadf0a23` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `f9064bd76c1431a5cba4ad7d5b781baa32ce39c5e0b9c54b08d3f585ff13eddd` |
+| `docs/especificacao/visao-geral.md` | `7f56f19e9674dc581336e4408e31bf6e67eacbecf23d42fa58698558b3389a4a` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `0ad635afbcccc1fde2e2555ad2329a326dab219bfc15a6aef0b5ce3cb030fb30` |
+| `docs/prompts/README.md` | `9c7968945c6555a2a096e599fbe66eb13194b77ad36bded387618041f9dba89d` |
 | `docs/requisitos/configuracao-ia-rag.md` | `eeae28fb33573d4d05a159b0dce82420f4f10ac9f90cc7b170c999b2a6ad1de2` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -12268,13 +12892,15 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/requisitos-funcionais.md` | `8a334908f715122efbb013d80d30846a61c94f18e16cc8c75c0658776b772250` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
+| `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
 | `docs/requisitos/schemas/configuracao-ia-v1.json` | `0f16e53ae74a1bce60582dc7b421d85c23d5e652f5510b27a81aed3252a95faf` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
-| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `ea2941a15950289ce5a0301336973d9fb74b4c82379a6644dc44f8eaf14d0eff` |
+| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `701f010c395b67e68ec7408c6ccf8b6dd2070937f3793c44de4e0ed52209938b` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
 | `docs/requisitos/schemas/recuperacao-v1.schema.json` | `5057b3ff3fb127d06b57def109815030a771caeec5cf056f19a7d490e4bcc012` |
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
+| `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
@@ -12282,7 +12908,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/rag-ia-semantico.md` | `7e99054ef296b7f9fa7edf8e176ae077271e32d68d59e1571e5bd2079d97e8c1` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
-| `frontend/README.md` | `3c622dcc58635706f80fa00c49407f745f8619cabe77bb8ab7bdec5b05b2d76d` |
+| `frontend/README.md` | `4cf2b14dbc19a8b9c1c859d30a15e15110ddfd2bb69ecec893180516958b87f6` |
 | `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
 | `materiais/rag/catalogo.json` | `900c71447794cbc7af45260132ac5f6e0e2a8dd6102a2a25e35eaa08ca6ef96b` |
 | `materiais/rag/corpus-inicial.json` | `c661217e4b8e3159c285ed8b7fe50aea17c9ea6855f45c912c3862a485b9ea52` |

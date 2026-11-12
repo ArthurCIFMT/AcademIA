@@ -24,3 +24,14 @@ Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
 URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
 fontes e parecer; o instrutor usa a revisão existente.
 [Contrato completo](../docs/arquitetura/solicitacao-e-acompanhamento-ia.md).
+
+## Chat do cliente — AI-05
+
+/area/cliente/assistente oferece dúvidas sem exigir ficha/onboarding/parecer.
+Adaptação pede confirmação dos dados já salvos no formulário autenticado,
+base atual e dia-alvo; publica nova versão PENDENTE depois das validações.
+Retomada por UUID/foco usa GET; envio/reenvio exige ação explícita.
+Texto não executa HTML; fonte aceita somente http/https.
+Os testes de training-chat cobrem envio, retomada, falha, autorização,
+confirmação de adaptação e 429 sem repetição automática.
+[Contrato](../docs/arquitetura/chat-e-adaptacao.md).

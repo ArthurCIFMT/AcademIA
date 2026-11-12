@@ -76,8 +76,10 @@ Graves/dados insuficientes são barrados pelo mesmo motor de AI-01. Ausente não
 saudável. Para saúde declarada, a porta de contexto exige escopo técnico curado
 que cubra as restrições e RAG-05 deve retornar suporte pertinente; fonte genérica
 ou pontuação alta não basta. Sem esse mapeamento/evidência, abster-se.
-Não inventar mapeamentos clínicos para ativar casos: a composição padrão mantém
-essa abstenção, e a composição por portas admite o mapeamento aprovado do cenário.
+Não inventar mapeamentos clínicos para ativar casos. AI-05 acrescenta o
+[mapeamento técnico opcional de cenários](chat-e-adaptacao.md#suporte-técnico-para-cenários-de-saúde);
+sem configuração pertinente, a composição padrão mantém essa abstenção.
+A composição por portas também admite o mapeamento aprovado do cenário.
 Sem embeddings, corpus ou LLM disponível, retornar falha/abstenção controlada.
 Treino manual permanece independente. Não exigir laudo ou aprovação médica.
 

@@ -349,6 +349,7 @@ class Orchestrator:
                     {
                         "resumo": summary.model_dump(mode="json"),
                         "solicitacao": request.mensagem,
+                        "dia_alvo": request.dia_alvo,
                         "candidatos": [
                             c.model_dump(mode="json") for c in context.candidates
                         ],
@@ -365,6 +366,22 @@ class Orchestrator:
                 assert isinstance(plan, PlanAnswer)
                 phase("VALIDACAO")
                 validate_plan(plan, context, evidence)
+                if request.finalidade == "ADAPTACAO":
+                    if (
+                        not context.base_plan
+                        or not request.dia_alvo
+                        or request.dia_alvo > len(context.base_plan.dias)
+                        or len(plan.dias) != len(context.base_plan.dias)
+                    ):
+                        raise ValueError("DIFF_INVALIDO")
+                    if (
+                        context.base_plan.dias[request.dia_alvo - 1]
+                        == plan.dias[request.dia_alvo - 1]
+                    ):
+                        raise Stop("ABSTENCAO", "SEM_ALTERACOES")
+                    for index, old in enumerate(context.base_plan.dias, 1):
+                        if index != request.dia_alvo and old != plan.dias[index - 1]:
+                            raise ValueError("ALTERACAO_FORA_DO_DIA_ALVO")
                 result = result.model_copy(
                     update={
                         "estado": "PRONTA_PARA_PUBLICACAO",

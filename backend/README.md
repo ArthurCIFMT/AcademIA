@@ -134,3 +134,18 @@ GET próprio de execucoes/{id}/acompanhamento e contexto de versão IA para titu
 instrutor designado, sob /api/v1/ia/fichas, sem resumo privado.
 [Contrato](../docs/arquitetura/solicitacao-e-acompanhamento-ia.md). O aviso usa o
 mesmo evento de TRN-03 e SMTP fora da transação; GET não tenta envio.
+
+## Chat e adaptação — AI-05
+
+Aplicar migration 0015. Rotas próprias em /api/v1/ia/chat exigem sessão/CSRF;
+GET não dispara geração. Dúvida funciona sem onboarding; adaptação confirma
+snapshot/base e dia-alvo antes de nova triagem/publicação. O limite compartilhado
+é seis novas dúvidas/adaptações por minuto/cliente. Replay conserva o UUID.
+[Contrato completo](../docs/arquitetura/chat-e-adaptacao.md) e
+[schema](../docs/requisitos/schemas/chat-ia-v1.schema.json).
+A configuração local opcional ACADEMIA_RAG_HEALTH_CONFIG usa o
+[schema de suporte](../docs/requisitos/schemas/suporte-saude-ia-v1.schema.json);
+sem mapeamento/evidência pertinente, adaptação por saúde abstém-se.
+Não colocar configurações privadas ou dados pessoais no Git/corpus.
+A manutenção de AI-03 também expurga mensagens com mais de 90 dias.
+Testes controlados não representam aceite do provedor real (AI-06).
