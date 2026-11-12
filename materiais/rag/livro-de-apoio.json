@@ -30,5 +30,5 @@
   ],
   "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
   "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
-  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os sete documentos do corpus inicial não foram substituídos."
+  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os documentos do corpus inicial não foram substituídos."
 }

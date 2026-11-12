@@ -29,6 +29,7 @@ from app.modules.training.review_schemas import PublishWorkout
 from app.modules.training.workout_models import WorkoutVersion
 from app.modules.training.workout_schemas import CreateWorkout
 from app.modules.training.workouts import create_draft
+from tests.ai.evaluation.fixtures import catalog_fixture, profile_data
 from tests.ai.evaluation.live_support import (
     MeasuredEvidence,
     MeasuredLLM,
@@ -38,15 +39,14 @@ from tests.ai.evaluation.live_support import (
 from tests.ai.evaluation.reporting import load_dataset, timings, write_json
 from tests.ai.test_chat_integration import adaptation
 from tests.ai.test_triage import CASES
-from tests.ai.test_triage_integration import exercise, seed
+from tests.ai.test_triage_integration import seed
 from tests.knowledge.test_indexing import migration as migration
 from tests.knowledge.test_indexing import sessions as sessions
 
 
 def prepare_onboarding(
-    sessions: sessionmaker[Session], client: Any, grave: bool
+    sessions: sessionmaker[Session], client: Any, data: dict[str, Any]
 ) -> Any:
-    entry = next(c for c in CASES if c["id"] == ("T04" if grave else "T01"))
     with sessions.begin() as session:
         draft = save_draft(
             session,
@@ -55,7 +55,7 @@ def prepare_onboarding(
             DraftChange(
                 versao_base=None,
                 revisao=None,
-                dados=DraftData.model_validate(entry["entrada"]["dados"]),
+                dados=DraftData.model_validate(data),
             ),
         )
         return complete_draft(
@@ -139,7 +139,8 @@ def test_real_semantic_llm_benchmark(
     output = Path(os.environ["ACADEMIA_AI_EVALUATION_OUTPUT"])
     people = seed(sessions)
     actor = people["cliente"]
-    item = exercise(sessions, people["admin"])
+    item = catalog_fixture(sessions, people["admin"])
+    dataset = load_dataset()
     encoder = E5Encoder()
     store = QdrantStore(VectorSettings(path=str(tmp_path / "qdrant")))
     adapter = GroqAdapter(Config.load(), GroqSettings())
@@ -153,7 +154,7 @@ def test_real_semantic_llm_benchmark(
             sessions, people["admin"], storage, encoder, store, tmp_path
         )
         terminal_provider = False
-        for case in load_dataset()["real"]:
+        for case in dataset["real"]:
             if terminal_provider:
                 rows.append(
                     {
@@ -170,7 +171,7 @@ def test_real_semantic_llm_benchmark(
                 snapshot = None
                 if case["rota"] != "DUVIDA" and case["origem"] != "triagem:T02":
                     snapshot = prepare_onboarding(
-                        sessions, actor, case["origem"] == "triagem:T04"
+                        sessions, actor, profile_data(case, dataset, CASES)
                     )
                 measured = MeasuredEvidence(
                     RagEvidence(
@@ -336,7 +337,7 @@ def test_real_semantic_llm_benchmark(
                 ),
                 "limites": [
                     "Serviço real; exclui fixture, aquecimento, HTTP/UI e pausas.",
-                    "Corpus: sete recortes RAG-05; não representa cobertura ampla.",
+                    "Corpus: recortes RAG-05 e suplemento AI-06; cobertura limitada.",
                     "Publicações/ataques ficam no banco e índice isolados.",
                 ],
             }

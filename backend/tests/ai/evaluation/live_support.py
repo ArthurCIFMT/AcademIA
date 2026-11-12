@@ -243,6 +243,49 @@ def initial_literature(
         ],
         purposes=purposes,
     )
+    supplement = json.loads(
+        (ROOT / "docs/testes/ai06-corpus-v1.json").read_text("utf-8")
+    )
+    for selection in supplement["documentos"]:
+        entry = next(
+            d for d in catalog["documentos"] if d["id"] == selection["fonte_id"]
+        )
+        source = ROOT / "materiais/rag" / entry["arquivo"]
+        if not entry["aprovado_para_rag"] or sha(source) != selection["arquivo_sha256"]:
+            raise ValueError("Fonte suplementar diferente da curadoria.")
+        index_source(
+            sessions,
+            actor,
+            storage,
+            encoder,
+            store,
+            directory,
+            body=source.read_bytes(),
+            format="PDF",
+            catalog_id=entry["id"],
+            metadata=Metadata(
+                titulo=entry["titulo"],
+                origem_url=entry["url"],
+                licenca=entry["licenca"],
+                idioma=entry["idioma"],
+                autores=entry["autores"],
+                ano=entry["ano"],
+                paginas_declaradas=entry["paginas_pdf"],
+                finalidades=selection["finalidades"],
+                limites=supplement["limites"],
+            ),
+            spans=[
+                Span(
+                    **{
+                        k: v
+                        for k, v in s.items()
+                        if k in {"pagina", "inicio", "fim", "secao"}
+                    }
+                )
+                for s in selection["trechos"]
+            ],
+            purposes=selection["finalidades"],
+        )
     return {s["id"]: s["texto_hash"] for s in dataset["trechos"]}
 
 

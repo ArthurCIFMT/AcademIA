@@ -74,7 +74,7 @@ DADOS_INSUFICIENTES, BLOQUEADA, ABSTENCAO e CONFLITO são resultados distintos.
 
 ## Orçamentos e contrato de StatePort
 
-Valores vêm da configuração v1: prompt até 24000 bytes UTF-8, resumo até 2400
+Valores vêm da configuração vigente (v2, ADR-006): prompt até 24000 bytes UTF-8, resumo até 2400
 caracteres, até 40 candidatos e cinco trechos por pacote; pergunta até 1000
 caracteres, seis mensagens de histórico/3000 caracteres. Excesso termina sem
 truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 4096;

@@ -1,7 +1,7 @@
 {
-  "versao_catalogo": 2,
+  "versao_catalogo": 3,
   "coletado_em": "2026-11-03",
-  "finalidade": "Coleção preservada; seleção técnica delegada de 7 documentos para ingestão do protótipo. Sem embeddings, indexação ou teste LLM executados nesta preparação.",
+  "finalidade": "Coleção preservada; oito documentos selecionados tecnicamente para ingestão. Seleção não equivale à extração completa nem à aprovação de qualidade do LLM.",
   "quantidade_pdfs": 18,
   "paginas_pdf_total": 783,
   "documentos": [
@@ -684,8 +684,16 @@
       "tamanho_bytes": 251271,
       "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
       "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
-      "situacao": "COLETADO_PENDENTE_REVISAO",
-      "aprovado_para_rag": false
+      "situacao": "SELECIONADO_TECNICAMENTE",
+      "aprovado_para_rag": true,
+      "selecao_tecnica": {
+        "data": "2026-11-12",
+        "origem": "Delegação do responsável: preparar exemplos comuns e evidências para AI-06",
+        "finalidades": [
+          "TRIAGEM"
+        ],
+        "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
+      }
     },
     {
       "id": "BR-SBC-003",
@@ -840,5 +848,5 @@
       "aprovado_para_rag": false
     }
   ],
-  "atualizado_em": "2026-11-04"
+  "atualizado_em": "2026-11-12"
 }

@@ -85,7 +85,9 @@ def test_manual_workout_does_not_depend_on_any_ai_service(
 
     people = seed(sessions)
     item = exercise(sessions, people["admin"])
-    snapshot = prepare_onboarding(sessions, people["cliente"], False)
+    from tests.ai.test_triage import BASE
+
+    snapshot = prepare_onboarding(sessions, people["cliente"], BASE)
 
     def fail(*args: object, **kwargs: object) -> None:
         raise AssertionError("Fluxo manual não deve chamar IA/embedding/Qdrant.")

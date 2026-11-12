@@ -123,9 +123,11 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 
 O MVP ainda requer AI-06 e TST-01. O próximo cartão na
 sequência é concluir AI-06. O [runner e a migração autorizada de modelo](../../docs/testes/avaliacao-ia.md)
-estão implementados. O ensaio real verificou chat, mas oito gerações/adaptações
-abstiveram-se por ausência de evidências de triagem na amostra. Não há aceite de
-ficha real/latência de geração nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
+estão implementados. A [preparação complementar](../../docs/testes/preparacao-ai06.md)
+incluiu exemplos comuns e evidências de triagem. Os 27 casos atenderam às
+expectativas automáticas, com cinco gerações e três adaptações publicadas em teste.
+Latência foi medida, mas cinco gerações não passaram na revisão de fundamentação
+e L16 contém títulos em inglês. Não há aceite de qualidade da IA nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -138,9 +140,9 @@ AI-01 entrega [triagem e preparação autorizada](../../docs/arquitetura/triagem
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
-e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real
-parcial do GPT-OSS 120B conforme ADR-006; geração válida/latência ainda não foram
-comprovadas. As pendências do corpus e o aceite da IA permanecem explícitos.
+e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
+ADR-006. Geração/publicação e latência foram exercitadas; fundamentação e idioma
+das fichas ainda impedem concluir o aceite. As pendências do corpus e o aceite da IA permanecem explícitos.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 

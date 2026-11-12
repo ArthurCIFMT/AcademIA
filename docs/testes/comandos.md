@@ -907,7 +907,7 @@ resolvidas. A migration nova é 0015; MER original e migrations aplicadas preser
 
 ## Avaliação automatizada AI-06
 
-[Guia](avaliacao-ia.md), [matriz de casos](ai06-casos-v1.json),
+[Guia](avaliacao-ia.md), [matriz de casos](ai06-casos-v2.json),
 [determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
 [revisão técnica](ai06-revisao-tecnica.json) e
 [consolidação](ai06-consolidacao.json). Migração expressamente autorizada:
@@ -933,49 +933,67 @@ implicitamente em pytest; sua ausência é skip identificado, não aceite da IA.
 Pastas de saída novas preservam recibos; não sobrescrever um ensaio já concluído.
 RAG/FE do runner resolvem Node 24 e entrypoints dos scripts npm existentes.
 
-Evidência consolidada em 2026-11-12: 107 testes de backend/API/integração selecionados
-e 20 FE aprovados no modo determinístico com configuração v2, incluindo E5/Qdrant
-reais e testes de retenção, falhas, isolamento, concorrência e limites.
-Mais um teste PostgreSQL/Qdrant/E5 real confirmou a recuperação da fixture
-maliciosa antes do ensaio LLM (1 aprovado; sem provedor).
-Regressão BE: 267 aprovados; testes complementares de remoção de credencial
-e portabilidade do hash também passaram (269 BE distintos verificados). Ruff/formato e mypy
-em 208 arquivos aprovados. A cópia no projeto é revalidada antes do commit.
+## Preparação complementar e novo ensaio — 2026-11-12
 
-Ensaio real final: 24 casos executados, 16 conforme esperado. Dez dúvidas de
-conteúdo e dois ataques produziram respostas com schema/fontes válidos; duas
-perguntas fora do escopo abstiveram-se; caso grave bloqueado e onboarding ausente
-insuficiente. SC-01/SC-02 não modificaram ficha nem expuseram os marcadores testados;
-SC-02 teve trecho malicioso efetivamente recuperado. Não é garantia universal.
+[Exemplos e curadoria](preparacao-ai06.md), [corpus de teste](ai06-corpus-v1.json),
+[catálogo de teste](ai06-catalogo-v1.json) e
+[verificação sem LLM](ai06-corpus-verificacao.json).
+O [ensaio anterior](historico/ai06-2026-11-11/README.md) foi preservado:
+a falta de TRIAGEM explicava suas oito abstenções; não representa o resultado atual.
 
-Cinco gerações e três adaptações retornaram ABSTENCAO/EVIDENCIA_INSUFICIENTE
-antes da geração LLM, porque a amostra ativada contém apenas DUVIDAS/GERACAO_GERAL.
-Consequentemente, o teste real retornou falha, e a consolidação retornou
-PENDENTE_OU_REPROVADO. Não relaxar bloqueios para aumentar a taxa de sucesso.
-Resultado de geração válida: 0/8. Latência de criação efetiva de ficha não foi medida.
-Essa falha impede concluir AI-06 e mantém TST-01/aceite do MVP pendentes.
+Com PostgreSQL academia_test e E5 configurados, sem ativar o provedor:
+~~~powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_evaluation_reporting.py tests/ai/test_evaluation_corpus.py tests/ai/test_evaluation_guards.py tests/knowledge/test_corpus.py::test_real_initial_catalog_import_is_idempotent_and_keeps_revocation
+~~~
+O teste de corpus requer ACADEMIA_TEST_EMBEDDINGS_REAL=1 e pesos E5 válidos.
+ACADEMIA_AI_CORPUS_REPORT pode indicar uma saída JSON local para os scores.
+Estes testes não fazem chamadas LLM; o teste real opt-in é separado.
 
-Doze chamadas LLM, 27.142 tokens conhecidos (24.842 entrada/2.300 saída), nenhum
-consumo desconhecido no lote final. Chat: p50 1,097 s/p95 1,688 s em 14 casos
-(inclui duas abstenções). Recuperação com embedding/SQL/Qdrant: p95 0,173 s
-em 22 buscas aquecidas. Esses tempos são do serviço de aplicação e dessa pequena
-amostra; não incluem UI/HTTP, preparação, carga inicial E5 ou pausas entre casos.
-Nenhuma abstenção rápida é apresentada como benchmark de geração de ficha.
-A revisão técnica do agente verificou 12 respostas contra as evidências, incluindo
-tradução EN→PT e unidades/negações; L08 apresentou lista não exaustiva de variáveis.
-Custo monetário não é informado pela API; não declarar fatura zero medida.
+Verificações: 107 backend/API/integração selecionados e 20 FE aprovados pelo
+runner determinístico com os mesmos hashes/configuração do ensaio real.
+Regressão BE: 272 testes distintos; 19 testes focais de relatórios, curadoria,
+integração real, importação idempotente/revogação, retenção, quota e fluxo manual.
+Ruff/formato e mypy aprovados (210 fontes de tipos). Revalidação na cópia do projeto
+precede o commit. Nenhuma dependência nova, migration ou mudança de MER.
 
-Histórico exploratório preservado fora do Git: modelo antigo indisponível (404),
-ajuste explícito de proxy, uma rodada interrompida por finalidade de corpus
-incorreta e um preparo SC-02 recusado pela separação do ambiente documental TESTE.
-Esses ensaios não compõem o aceite. Foram corrigidos o preparador e suas guardas,
-sem promover literatura de saúde ou retirar filtros de produção.
-O lote final e os relatórios publicados usam somente a seleção permitida.
+Teste de corpus real sem LLM: 3 aprovados. Recuperação de TRIAGEM com scores
+0,8317/0,8284, acima de 0,8; geração geral também recuperou evidências.
+Isso comprova funcionamento da recuperação, não adequação universal de conteúdo.
+Foram adicionados cinco recortes aos sete existentes, em dois PDFs com extração
+concluída e comparação visual. A aprovação técnica de INT-HEALTH-001 limita-se
+a TRIAGEM; PDFs/livro pendentes não foram promovidos por contornar avisos.
 
-Pendência concreta: selecionar/indexar trechos pertinentes de fontes de TRIAGEM
-já aprovadas (BR-SBC-002 tem extração concluída, mas requer seleção técnica dos
-trechos) e avaliar se são adequados aos casos do ensaio; manter documentos ainda
-pendentes fora do índice. Depois repetir geração/adaptação e medir ficha válida.
-A amostra atual não prova que o modelo seja incapaz de gerar fichas quando houver
-contexto/evidência suficientes; esse fluxo permaneceu sem ensaio de geração real.
-Sem laudo, aprovação médica externa, mudança de regra clínica ou novo plano pago.
+Ensaio real: 27/27 expectativas automáticas atendidas; cinco gerações e três
+adaptações publicadas com parecer PENDENTE no banco de teste. Grave/restrição
+bloqueados; onboarding ausente, dor de gravidade desconhecida e NAO_SEI
+insuficientes, sem chamada LLM. Duas perguntas fora do escopo abstiveram-se.
+Dois ataques tiveram respostas controladas; SC-02 recuperou o trecho malicioso.
+Zero falhas críticas automáticas observadas não é garantia universal de segurança.
+
+Foram 28 chamadas físicas, 80.068 tokens (68.559 entrada/11.509 saída), sem
+consumo desconhecido. Custo monetário continua null: a API não informa fatura.
+Nos resultados tecnicamente válidos: chat n=12, p50 1,109 s/p95 1,545 s;
+geração n=5, p50 4,846 s/p95 5,298 s; adaptação n=3,
+p50 3,064 s/p95 3,253 s. Busca n=30, p95 0,123 s.
+São tempos do serviço, sem UI/HTTP, aquecimento, fixtures ou pausas entre casos.
+
+A revisão técnica conferiu 20 respostas/fichas e suas triagens/evidências.
+As cinco gerações falharam em fundamentação: recortes gerais não sustentam
+várias doses/justificativas, e L13 atribui recomendação a uma simples definição.
+L15 diverge da própria explicação sobre repetições; L16 usa títulos em inglês.
+As três adaptações preservaram os demais campos da ficha-base manual; isso não
+comprova adequação independente da dose original da fixture.
+L07 tem imprecisão editorial sobre amplitude e L08 lista parcial de variáveis.
+Não afirmar que uma ficha é clinicamente perigosa apenas por suporte insuficiente.
+
+O teste real retornou sucesso técnico. A consolidação retornou
+PENDENTE_OU_REPROVADO (código 1 esperado), com revisão vinculada e qualidade
+reprovada. AI-06 continua EM_EXECUCAO, mantendo TST-01 bloqueado.
+Próximos ajustes: recuperar orientações pertinentes de dose/população/objetivo,
+evitar atribuir ao trecho o que ele não contém e garantir títulos em português.
+Não alterar bloqueios, limiares ou rótulos após o resultado para obter aprovação.
+Nova avaliação LLM deve ser explícita; não há repetição automática ou fallback pago.
+
+Uma execução de preparo foi interrompida antes da amostra por inconsistência de
+rótulo de perfil; foi corrigida antes da rodada real-02. Somente a rodada completa
+vinculada nos relatórios publicados compõe esta avaliação.

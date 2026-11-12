@@ -84,5 +84,7 @@ credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
 
 O [runner e os relatórios](avaliacao-ia.md) registram execução determinística e
 LLM real. A [consolidação vigente](ai06-consolidacao.json) não aprova AI-06:
-a amostra não ativou fontes de TRIAGEM e as gerações/adaptações abstiveram-se.
+a preparação complementar ativou trechos de TRIAGEM e o fluxo passou a publicar
+fichas no teste, porém a revisão reprovou fundamentação das gerações e idioma
+em L16. O ensaio anterior sem TRIAGEM permanece no histórico.
 O plano acima permanece critério de aceite; falhas não foram dispensadas.

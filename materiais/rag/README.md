@@ -3,7 +3,7 @@
 Coleta inicial em 3 de novembro e ampliação autorizada em 4 de novembro de 2026.
 Esta pasta reúne **18 PDFs originais, com 783 páginas PDF: 8 em português e 10 em
 inglês**. A ampliação acrescentou 11 documentos e 457 páginas, sem alterar os sete
-originais. A coleta inicial reuniu candidatos. Na preparação técnica posterior, sete foram
+originais. A coleta inicial reuniu candidatos. Na preparação técnica inicial, sete foram
 selecionados por delegação para ingestão; os demais continuam em reserva. Nenhum
 foi indexado nem usado para treinar/ajustar modelo nesta preparação. As alterações de especificação
 autorizadas estão descritas em [funcionamento da IA/RAG](../../docs/arquitetura/funcionamento-ia-rag.md).
@@ -102,8 +102,8 @@ uma adaptação. Cada adaptação por saúde precisa de suporte pertinente efeti
 recuperado do corpus aprovado, conforme RF-15/RF-19 e MRF11. Revisões narrativas,
 comentários e diretrizes têm papéis distintos; fontes podem compartilhar estudos.
 
-O catálogo atual registra sete documentos selecionados tecnicamente para ingestão
-e onze em reserva; conferir [manifesto inicial](corpus-inicial.json). A seleção
+O catálogo atual registra oito documentos selecionados tecnicamente para ingestão
+e dez em reserva; conferir [manifesto inicial](corpus-inicial.json). A seleção
 não significa chunks/índice prontos nem qualidade de geração comprovada.
 
 ## Uso no fluxo vigente de IA
@@ -114,14 +114,14 @@ Não remover automaticamente referências de saúde ou exercícios: avaliar trec
 pertinentes por finalidade e manter pendentes fora do índice ativo. Livro/material
 de exercícios segue a seleção registrada abaixo; os 18 PDFs não comprovam cobertura
 suficiente para todo treino/condição. Inventário/catálogo ficam em PostgreSQL.
-Os PDFs permanecem intactos. A seleção técnica posterior aprovou sete para
+Os PDFs permanecem intactos. A seleção técnica posterior aprovou oito para
 ingestão; nenhum foi reindexado nesta preparação.
 
 ## Corpus inicial definido
 
 A seleção vigente está em [corpus-inicial.json](corpus-inicial.json) e no catálogo:
-sete documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
-PDFs. Outros onze seguem pendentes. Não confundir seleção com chunks/índice pronto
+oito documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
+PDFs. Outros dez seguem pendentes. Não confundir seleção com chunks/índice pronto
 ou qualidade de geração comprovada. O material especializado inicial é esse
 conjunto. A referência em livro foi escolhida posteriormente, conforme abaixo.
 RAG-01 importa aprovação/proveniência;
@@ -143,4 +143,8 @@ no pypdf e precisa de tratamento técnico antes de ativação. Páginas 81 e 130
 físicas foram conferidas visualmente; a numeração impressa é distinta. O arquivo
 oficial possui 354 páginas físicas, embora a ficha catalográfica declare 362.
 O Git guarda referência/hash; a cópia local de leitura fica fora do repositório.
-Os sete selecionados e os 11 documentos de reserva do catálogo permanecem intactos.
+Os oito selecionados e os dez documentos em reserva mantêm seus PDFs intactos.
+
+A seleção técnica de 2026-11-12 acrescentou INT-HEALTH-001 apenas para TRIAGEM.
+Os recortes revisados e os limites estão na [preparação do AI-06](../../docs/testes/preparacao-ai06.md).
+Esta mudança não resolve os PDFs/livro cuja extração continua pendente.

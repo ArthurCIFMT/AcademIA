@@ -3,7 +3,7 @@
 ## Escopo entregue
 
 Runner em backend/tests/ai/evaluation, matriz
-[SV/SC e 24 amostras](ai06-casos-v1.json) e
+[SV/SC e 27 amostras](ai06-casos-v2.json) e
 [configuração vigente](../requisitos/schemas/configuracao-ia-v2.json).
 Modos separados: determinístico, real e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
@@ -60,7 +60,8 @@ Os testes novos acrescentam recuperação de cota após a janela, 16ª versão
 indisponível no chat e montagem manual com os três serviços IA indisponíveis.
 
 Amostra real: 12 dúvidas PT (incluindo alvo em resumo EN e fora de escopo),
-cinco gerações, três adaptações, um grave, um sem onboarding e dois ataques.
+cinco gerações, três adaptações, um grave, um sem onboarding, dois ataques,
+um caso de dor de gravidade desconhecida, um NAO_SEI e uma restrição declarada.
 Expectativas derivam dos casos de triagem/RAG e cenários versionados; são regras
 acadêmicas, não rótulos de diagnóstico. Candidatos/cadastros são sintéticos.
 Adaptação parte de ficha manual de fixture, declarada antes do cronômetro;
@@ -112,7 +113,9 @@ instalação e aceite ponta a ponta do MVP.
 Os [comandos e resultados](comandos.md#avaliação-automatizada-ai-06) registram os
 ensaios efetivamente realizados. Execuções exploratórias interrompidas ou com
 modelo indisponível permanecem identificadas como tais; não compõem o aceite.
-Pendências anteriores do corpus/livro não foram resolvidas por reclassificar fontes.
+A [preparação complementar](preparacao-ai06.md) documenta a seleção técnica
+de TRIAGEM e os perfis comuns. PDFs/livro com extração pendente mantêm esse estado.
+O [ensaio anterior](historico/ai06-2026-11-11/README.md) permanece preservado.
 
 [Resumo das métricas](ai06-resumo.json), [ensaio real](ai06-ensaio-real.json),
 [revisão técnica](ai06-revisao-tecnica.json) e [consolidação](ai06-consolidacao.json).

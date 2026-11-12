@@ -19,22 +19,19 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
     same = same and det.get("fontes_sha256") == live.get("fontes_sha256")
     same = same and live.get("configuracao_sha256") == Config.load().fingerprint
     bound = rubric.get("execucao_sha256") == json_sha(real)
-    reviews_ok = (
+    reviews_bound = (
         bound
         and bool(evaluated)
-        and all(
-            r["id"] in reviewed
-            and all(
-                reviewed[r["id"]].get(field) is True
-                for field in (
-                    "fundamentada",
-                    "portugues",
-                    "unidades_negacoes",
-                    "seguranca",
-                )
-            )
-            for r in evaluated
+        and len(rubric.get("casos", [])) == len(evaluated)
+        and len(reviewed) == len(evaluated)
+        and set(reviewed) == {r["id"] for r in evaluated}
+    )
+    reviews_ok = reviews_bound and all(
+        all(
+            reviewed[r["id"]].get(field) is True
+            for field in ("fundamentada", "portugues", "unidades_negacoes", "seguranca")
         )
+        for r in evaluated
     )
     eligible = [r for r in rows if r.get("esperado") == "PUBLICADA"]
     valid = sum(r.get("estado") == "PUBLICADA" for r in eligible)
@@ -62,7 +59,8 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
         and valid / len(eligible) >= float(str(goals["eligible_valid_plan_fraction"])),
         "recuperacao": bool(positives)
         and recalled / len(positives) >= float(str(goals["retrieval_recall_at_5"])),
-        "revisao_semantica_vinculada": reviews_ok,
+        "revisao_semantica_vinculada": reviews_bound,
+        "revisao_semantica_aprovada": reviews_ok,
         "latencia_de_respostas_validas_medida": all(
             latencies.get(route, {}).get("n", 0) > 0
             and latencies.get(route, {}).get("p95_ms") is not None

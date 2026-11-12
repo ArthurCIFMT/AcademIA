@@ -131,10 +131,14 @@ ou link de relatório. A numeração das seções não substitui as dependência
 e [consolidação](../testes/ai06-consolidacao.json). Configuração v2/GPT-OSS 120B
 autorizada na ADR-006; v1 histórica, sem fallback pago. Matriz SV-01–24/SC-01–06,
 107 testes selecionados de backend/API/integração e 20 FE aprovados; E5/Qdrant
-reais. Regressão BE 267 + dois testes complementares, 269 distintos verificados.
-Ensaio real final 24 casos: 16 atendidos, 8 gerações/adaptações abstidas por falta
-de evidência TRIAGEM na amostra. Zero falhas críticas observadas; qualidade de
-ficha real e sua latência continuam pendentes. Estado EM_EXECUCAO; TST-01 bloqueado.
+reais. [Preparação complementar](../testes/preparacao-ai06.md): perfis comuns,
+catálogo/inventário sintéticos e trechos TRIAGEM revisados.
+Ensaio vigente: 27/27 expectativas automáticas atendidas; 5 gerações e 3 adaptações
+publicadas no banco de teste. p95: chat 1,545 s; geração 5,298 s; adaptação 3,253 s.
+Revisão técnica reprovou fundamentação das cinco gerações e idioma em L16.
+Consolidação permanece PENDENTE_OU_REPROVADO; AI-06 EM_EXECUCAO e TST-01 bloqueado.
+Regressão BE: 272 testes distintos verificados; corpus/integração e relatórios
+também revalidados. Resultados anteriores preservados no histórico.
 
 ## Fundação
 
@@ -275,9 +279,9 @@ contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e de
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
-AI-06 está em execução: runner e migração do modelo entregues, mas a geração
-real continua sem aceite por falta de evidência de triagem na amostra. Concluir
-a curadoria pertinente e repetir esses casos antes de liberar TST-01. Gates pós-MVP e marcos
+AI-06 está em execução: triagem e geração real agora foram exercitadas,
+mas a revisão encontrou justificativas sem suporte e títulos em inglês.
+Corrigir fundamentação/idioma e repetir avaliação explícita antes de liberar TST-01. Gates pós-MVP e marcos
 de execução permanecem abertos até suas evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

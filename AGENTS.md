@@ -190,7 +190,7 @@ necessária para sua entrega.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
-- Livro/conhecimento inicial: sete documentos selecionados em materiais/rag/corpus-inicial.json;
+- Livro/conhecimento inicial: oito documentos selecionados em materiais/rag/corpus-inicial.json;
   ativação depende da extração/indexação válida, não de uma nova aprovação externa.
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 

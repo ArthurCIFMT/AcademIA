@@ -1,0 +1,35 @@
+{
+  "sem_llm": true,
+  "consultas": [
+    {
+      "finalidade": "TRIAGEM",
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "scores": [
+        0.831721593432849,
+        0.8284436555096517
+      ]
+    },
+    {
+      "finalidade": "GERACAO_GERAL",
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "scores": [
+        0.8606798195528726,
+        0.8601802733805168,
+        0.8526027646668157,
+        0.8482209289360996,
+        0.847043526661424
+      ]
+    },
+    {
+      "finalidade": "GERACAO_GERAL",
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "scores": [
+        0.866912276994397,
+        0.8637086648823478,
+        0.8630967321739963,
+        0.8606171404125489,
+        0.8592982510283975
+      ]
+    }
+  ]
+}

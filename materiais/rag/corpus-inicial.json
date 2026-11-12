@@ -65,6 +65,14 @@
         "DUVIDAS_SAUDE_GERAL"
       ],
       "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+    },
+    {
+      "id": "INT-HEALTH-001",
+      "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "finalidades": [
+        "TRIAGEM"
+      ],
+      "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
     }
   ],
   "ativacao": "Aprovação técnica não é índice pronto. Ativar somente após extração válida, proveniência, escopo e testes de recuperação; demais 11 documentos permanecem reserva pendente.",

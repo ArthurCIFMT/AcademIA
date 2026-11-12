@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "origem": "Seleção técnica delegada em 2026-11-12; conferência visual das páginas 2 e 3 e comparação com extração original. PDF integral preservado.",
+  "limites": "Somente ensaio isolado; regras de triagem acadêmica permanecem independentes. Não copiar o GAQ nem inferir aptidão clínica de respostas negativas. Sem cobertura para adaptar por dor ou doença.",
+  "documentos": [
+    {
+      "fonte_id": "BR-RBCM-001",
+      "arquivo_sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ],
+      "trechos": [
+        {
+          "id": "aplicacao-volume",
+          "pagina": 24,
+          "inicio": 1102,
+          "fim": 2278,
+          "secao": "Aplicações práticas: volume e frequência; limites da revisão",
+          "texto_hash": "ea5d4971105de1caa7de8c62330ad56a49d3cb369e87dc95153ae184d4da65d7"
+        },
+        {
+          "id": "aplicacao-intervalo",
+          "pagina": 25,
+          "inicio": 2266,
+          "fim": 2827,
+          "secao": "Intervalos e individualização; início da frase seguinte excluído",
+          "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5"
+        },
+        {
+          "id": "limites-prescricao",
+          "pagina": 26,
+          "inicio": 0,
+          "fim": 1411,
+          "secao": "Limitações da revisão e generalização",
+          "texto_hash": "97aa7b36a3d2b31c314d2e8cc6b61161d8918d4e1d2acc7b153b5184062cf899"
+        }
+      ]
+    },
+    {
+      "fonte_id": "INT-HEALTH-001",
+      "arquivo_sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "finalidades": [
+        "TRIAGEM"
+      ],
+      "trechos": [
+        {
+          "id": "triagem-negativas",
+          "pagina": 2,
+          "inicio": 1362,
+          "fim": 2883,
+          "secao": "Interpretação contextual e atualização do questionário",
+          "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667"
+        },
+        {
+          "id": "triagem-limites",
+          "pagina": 3,
+          "inicio": 926,
+          "fim": 2517,
+          "secao": "Limitações: amostra idosa; não validação do formulário AcademIA",
+          "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1"
+        }
+      ]
+    }
+  ]
+}

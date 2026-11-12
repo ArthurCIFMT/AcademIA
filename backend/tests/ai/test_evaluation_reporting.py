@@ -17,7 +17,7 @@ def test_matrix_is_complete_and_selectors_exist() -> None:
     from tests.ai.evaluation.reporting import ROOT
 
     data = load_dataset()
-    assert len(data["cenarios"]) == 30 and len(data["real"]) == 24
+    assert len(data["cenarios"]) == 30 and len(data["real"]) == 27
     for case in data["cenarios"]:
         for selector in case["testes"]:
             file, name = selector.split("::")
@@ -221,3 +221,51 @@ def test_review_hash_is_portable_across_json_format_and_line_endings(
     assert json_sha(first) == json_sha(second)
     second.write_text('{"a":2,"b":2}', encoding="utf-8")
     assert json_sha(first) != json_sha(second)
+
+
+def test_bound_review_can_reject_quality_without_appearing_unlinked(
+    tmp_path: Path,
+) -> None:
+    import json
+
+    from tests.ai.evaluation.consolidation import consolidate
+    from tests.ai.evaluation.reporting import json_sha
+
+    det, real, review = (tmp_path / n for n in ("det.json", "real.json", "review.json"))
+    det.write_text("{}")
+    real.write_text(
+        json.dumps(
+            {
+                "observacoes": {
+                    "casos": [
+                        {
+                            "id": "L13",
+                            "chamadas": [{}],
+                            "estado": "PUBLICADA",
+                            "esperado": "PUBLICADA",
+                        }
+                    ]
+                }
+            }
+        )
+    )
+    review.write_text(
+        json.dumps(
+            {
+                "execucao_sha256": json_sha(real),
+                "casos": [
+                    {
+                        "id": "L13",
+                        "fundamentada": False,
+                        "portugues": True,
+                        "unidades_negacoes": True,
+                        "seguranca": True,
+                    }
+                ],
+            }
+        )
+    )
+    result = consolidate(det, real, review)
+    assert result["criterios"]["revisao_semantica_vinculada"]
+    assert not result["criterios"]["revisao_semantica_aprovada"]
+    assert not result["aceite_ia_real"]

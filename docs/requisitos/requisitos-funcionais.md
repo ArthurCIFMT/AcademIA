@@ -188,7 +188,7 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
 - CA-15.12: Pedido de geração tem chave idempotente, cliente e entrada identificados; replay não chama LLM/publica outra versão e mesma chave com entrada divergente retorna conflito.
 - CA-15.13: Timeout, quota, chave ausente, cancelamento, JSON inválido ou resposta tardia encerram a tentativa sem nova versão e sem corromper a vigente; não há retry LLM automático ou contratação/fallback pago oculto.
 - CA-15.14: Instrutor designado cria rascunho manual por dias/itens, preenche séries/repetições/carga/intervalos e publica pelo mesmo serviço de domínio, com origem MANUAL, autoria e snapshot do catálogo; cliente/instrutor alheio não cria ficha para terceiro.
-- CA-15.15: Geração usa a configuração v1 e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
+- CA-15.15: Geração usa a configuração vigente (v2, ADR-006) e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
 
 ### RF-16 — Visualizar ficha de treino atual
 

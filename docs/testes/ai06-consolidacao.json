@@ -8,17 +8,18 @@
     "amostra_completa": true,
     "casos_obrigatorios": true,
     "sem_falha_critica": true,
-    "fichas_validas": false,
+    "fichas_validas": true,
     "recuperacao": true,
     "revisao_semantica_vinculada": true,
-    "latencia_de_respostas_validas_medida": false,
-    "metas_de_latencia": false
+    "revisao_semantica_aprovada": false,
+    "latencia_de_respostas_validas_medida": true,
+    "metas_de_latencia": true
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "68793e920f6f28fe40e10dcad4eafef7245180a43581e78a36f2e23ca241d286",
-    "real": "f893ef6f84cc594f111bd47d96c4975dcf7ad406ebd25ace147b1fe36c990abf",
-    "revisao": "508007f38fd302d4132acc7bca9a3fb5aca8aa532fcae3b70450c73e62bb1537"
+    "deterministico": "a6ede84bee51d36202291bd343ea1ce7cf13aa896a64c1c5f6a7c5a95d425811",
+    "real": "b1bbc970012647f534e053f18f99dee5c02532960a2d0e4cd2a469f7ae6d9c63",
+    "revisao": "4cd781417937e47182a1fcf24ca655a758977fbbf66bfd38264cc50956246f6e"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }

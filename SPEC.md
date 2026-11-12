@@ -141,9 +141,11 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 
 O MVP ainda requer AI-06 e TST-01. O próximo cartão na
 sequência é concluir AI-06. O [runner e a migração autorizada de modelo](docs/testes/avaliacao-ia.md)
-estão implementados. O ensaio real verificou chat, mas oito gerações/adaptações
-abstiveram-se por ausência de evidências de triagem na amostra. Não há aceite de
-ficha real/latência de geração nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
+estão implementados. A [preparação complementar](docs/testes/preparacao-ai06.md)
+incluiu exemplos comuns e evidências de triagem. Os 27 casos atenderam às
+expectativas automáticas, com cinco gerações e três adaptações publicadas em teste.
+Latência foi medida, mas cinco gerações não passaram na revisão de fundamentação
+e L16 contém títulos em inglês. Não há aceite de qualidade da IA nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -156,9 +158,9 @@ AI-01 entrega [triagem e preparação autorizada](docs/arquitetura/triagem-acade
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
-e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real
-parcial do GPT-OSS 120B conforme ADR-006; geração válida/latência ainda não foram
-comprovadas. As pendências do corpus e o aceite da IA permanecem explícitos.
+e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
+ADR-006. Geração/publicação e latência foram exercitadas; fundamentação e idioma
+das fichas ainda impedem concluir o aceite. As pendências do corpus e o aceite da IA permanecem explícitos.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -527,7 +529,7 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
 - CA-15.12: Pedido de geração tem chave idempotente, cliente e entrada identificados; replay não chama LLM/publica outra versão e mesma chave com entrada divergente retorna conflito.
 - CA-15.13: Timeout, quota, chave ausente, cancelamento, JSON inválido ou resposta tardia encerram a tentativa sem nova versão e sem corromper a vigente; não há retry LLM automático ou contratação/fallback pago oculto.
 - CA-15.14: Instrutor designado cria rascunho manual por dias/itens, preenche séries/repetições/carga/intervalos e publica pelo mesmo serviço de domínio, com origem MANUAL, autoria e snapshot do catálogo; cliente/instrutor alheio não cria ficha para terceiro.
-- CA-15.15: Geração usa a configuração v1 e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
+- CA-15.15: Geração usa a configuração vigente (v2, ADR-006) e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
 
 ##### RF-16 — Visualizar ficha de treino atual
 
@@ -5458,6 +5460,14 @@ Fonte versionada: [materiais/rag/catalogo.json](materiais/rag/catalogo.json).
           "DUVIDAS_SAUDE_GERAL"
         ],
         "limites": "Somente trechos pertinentes de atividade/exercício com ressalvas; não coletar instruções de fármacos, diagnóstico, referências soltas ou protocolos fora do público. Sem suporte à adaptação, abster-se."
+      },
+      {
+        "id": "INT-HEALTH-001",
+        "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+        "finalidades": [
+          "TRIAGEM"
+        ],
+        "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
       }
     ],
     "ativacao": "Aprovação técnica não é índice pronto. Ativar somente após extração válida, proveniência, escopo e testes de recuperação; demais 11 documentos permanecem reserva pendente.",
@@ -5802,6 +5812,59 @@ Fonte versionada: [materiais/rag/catalogo.json](materiais/rag/catalogo.json).
         "data": "2026-11-04",
         "origem": "Seleção técnica delegada pelo responsável do projeto",
         "escopo": "Protótipo acadêmico; trechos úteis conforme corpus-inicial.json; extração e ensaio pendentes"
+      }
+    },
+    {
+      "id": "INT-HEALTH-001",
+      "file": "healthcare-triagem-preparticipacao-2024.pdf",
+      "ano": 2024,
+      "edicao": "Healthcare 12(8):815",
+      "tipo": "revisão contextual",
+      "fonte": "Healthcare / MDPI; distribuição PMC Cloud",
+      "licenca": "CC-BY-4.0",
+      "temas": [
+        "triagem",
+        "pré-participação",
+        "questionário",
+        "contexto tropical"
+      ],
+      "uso": "Contexto para revisão da triagem e encaminhamento pré-participação.",
+      "limites": "Contexto de Singapura; não valida automaticamente um formulário brasileiro nem autoriza copiar instrumentos de terceiros sob a licença do artigo.",
+      "titulo": "Relevance of the Get Active Questionnaire for Pre-Participation Exercise Screening in the General Population in a Tropical Environment",
+      "autores": [
+        "Cuiying Lisa Ho",
+        "Venkataraman Anantharaman"
+      ],
+      "identificador": {
+        "doi": "10.3390/healthcare12080815",
+        "pmcid": "PMC11050380"
+      },
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11050380/",
+      "metadados_distribuicao": "metadados/PMC11050380-metadata.json",
+      "estado_retracao_observado": {
+        "retratado": false,
+        "fonte": "PMC Cloud metadata",
+        "consultado_em": "2026-11-04"
+      },
+      "download": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11050380.1/PMC11050380.1.pdf?md5=e578a5a8c7e9a01853ff9613e22dee6f",
+      "licenca_url": "https://creativecommons.org/licenses/by/4.0/",
+      "evidencia_licenca": "Página 1 do PDF; declaração editorial/XML quando a extração quebra linhas.",
+      "arquivo": "documentos/healthcare-triagem-preparticipacao-2024.pdf",
+      "idioma": "en",
+      "coletado_em": "2026-11-04",
+      "paginas_pdf": 11,
+      "tamanho_bytes": 251271,
+      "sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
+      "situacao": "SELECIONADO_TECNICAMENTE",
+      "aprovado_para_rag": true,
+      "selecao_tecnica": {
+        "data": "2026-11-12",
+        "origem": "Delegação do responsável: preparar exemplos comuns e evidências para AI-06",
+        "finalidades": [
+          "TRIAGEM"
+        ],
+        "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
       }
     }
   ]
@@ -7018,7 +7081,7 @@ Fonte versionada: [materiais/rag/livro-de-apoio.json](materiais/rag/livro-de-apo
   ],
   "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
   "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
-  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os sete documentos do corpus inicial não foram substituídos."
+  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os documentos do corpus inicial não foram substituídos."
 }
 ````
 ### 16. Máquina de estados fixa, portas de estado, consumo e adaptador LLM
@@ -7099,7 +7162,7 @@ DADOS_INSUFICIENTES, BLOQUEADA, ABSTENCAO e CONFLITO são resultados distintos.
 
 #### Orçamentos e contrato de StatePort
 
-Valores vêm da configuração v1: prompt até 24000 bytes UTF-8, resumo até 2400
+Valores vêm da configuração vigente (v2, ADR-006): prompt até 24000 bytes UTF-8, resumo até 2400
 caracteres, até 40 candidatos e cinco trechos por pacote; pergunta até 1000
 caracteres, seis mensagens de histórico/3000 caracteres. Excesso termina sem
 truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 4096;
@@ -11531,8 +11594,8 @@ A importação lê materiais/rag/catalogo.json e corpus-inicial.json na raiz do
 projeto (opcional ACADEMIA_RAG_MATERIALS_DIR). Aceita somente os arquivos locais
 em documentos/, verifica os hashes de ambos os manifests e prepara todo o lote
 antes de registrar no banco. Mantém os 18 documentos: a seleção técnica existente
-de sete documentos é aprovada com o curador que acionou a importação; os outros
-11 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
+de oito documentos é aprovada com o curador que acionou a importação; os outros
+10 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
 Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
 e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.
 
@@ -12113,7 +12176,9 @@ credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
 
 O [runner e os relatórios](docs/testes/avaliacao-ia.md) registram execução determinística e
 LLM real. A [consolidação vigente](docs/testes/ai06-consolidacao.json) não aprova AI-06:
-a amostra não ativou fontes de TRIAGEM e as gerações/adaptações abstiveram-se.
+a preparação complementar ativou trechos de TRIAGEM e o fluxo passou a publicar
+fichas no teste, porém a revisão reprovou fundamentação das gerações e idioma
+em L16. O ensaio anterior sem TRIAGEM permanece no histórico.
 O plano acima permanece critério de aceite; falhas não foram dispensadas.
 ### 3. Regras permanentes de trabalho
 
@@ -12309,7 +12374,7 @@ necessária para sua entrega.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
-- Livro/conhecimento inicial: sete documentos selecionados em materiais/rag/corpus-inicial.json;
+- Livro/conhecimento inicial: oito documentos selecionados em materiais/rag/corpus-inicial.json;
   ativação depende da extração/indexação válida, não de uma nova aprovação externa.
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
@@ -12393,7 +12458,7 @@ Fonte versionada: [docs/testes/avaliacao-ia.md](docs/testes/avaliacao-ia.md).
 #### Escopo entregue
 
 Runner em backend/tests/ai/evaluation, matriz
-[SV/SC e 24 amostras](docs/testes/ai06-casos-v1.json) e
+[SV/SC e 27 amostras](docs/testes/ai06-casos-v2.json) e
 [configuração vigente](docs/requisitos/schemas/configuracao-ia-v2.json).
 Modos separados: determinístico, real e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
@@ -12450,7 +12515,8 @@ Os testes novos acrescentam recuperação de cota após a janela, 16ª versão
 indisponível no chat e montagem manual com os três serviços IA indisponíveis.
 
 Amostra real: 12 dúvidas PT (incluindo alvo em resumo EN e fora de escopo),
-cinco gerações, três adaptações, um grave, um sem onboarding e dois ataques.
+cinco gerações, três adaptações, um grave, um sem onboarding, dois ataques,
+um caso de dor de gravidade desconhecida, um NAO_SEI e uma restrição declarada.
 Expectativas derivam dos casos de triagem/RAG e cenários versionados; são regras
 acadêmicas, não rótulos de diagnóstico. Candidatos/cadastros são sintéticos.
 Adaptação parte de ficha manual de fixture, declarada antes do cronômetro;
@@ -12502,22 +12568,278 @@ instalação e aceite ponta a ponta do MVP.
 Os [comandos e resultados](docs/testes/comandos.md#avaliação-automatizada-ai-06) registram os
 ensaios efetivamente realizados. Execuções exploratórias interrompidas ou com
 modelo indisponível permanecem identificadas como tais; não compõem o aceite.
-Pendências anteriores do corpus/livro não foram resolvidas por reclassificar fontes.
+A [preparação complementar](docs/testes/preparacao-ai06.md) documenta a seleção técnica
+de TRIAGEM e os perfis comuns. PDFs/livro com extração pendente mantêm esse estado.
+O [ensaio anterior](docs/testes/historico/ai06-2026-11-11/README.md) permanece preservado.
 
 [Resumo das métricas](docs/testes/ai06-resumo.json), [ensaio real](docs/testes/ai06-ensaio-real.json),
 [revisão técnica](docs/testes/ai06-revisao-tecnica.json) e [consolidação](docs/testes/ai06-consolidacao.json).
-### 5. Rastreabilidade SV/SC e amostras reais rotuladas
+### 5. Curadoria e perfis sintéticos comuns de academia
 
-Fonte versionada: [docs/testes/ai06-casos-v1.json](docs/testes/ai06-casos-v1.json).
+Fonte versionada: [docs/testes/preparacao-ai06.md](docs/testes/preparacao-ai06.md).
+
+#### Autorização e limites
+O responsável autorizou preparar exemplos comuns de clientes e evidências, após
+a avaliação anterior abster-se das oito fichas por ausência de literatura TRIAGEM.
+Os perfis são sintéticos, não são registros reais nem avaliações médicas.
+A curadoria é técnica e delegada; não exige laudo ou aprovação externa.
+
+#### Exemplos e resultados esperados
+A matriz vigente está em [ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
+Mantém os 30 vínculos SV/SC; amplia a amostra real de 24 para 27 casos.
+Os cinco perfis elegíveis têm negativas de saúde explicitamente declaradas:
+iniciante sedentário (2 × 40 min), retorno após inatividade (2 × 45 min),
+agenda curta (2 × 30 min), hipertrofia intermediária (3 × 60 min) e
+força iniciante (3 × 50 min). São disponibilidades, não garantias de dose.
+| Perfil sintético | Dados relevantes | Resultado esperado |
+|---|---|---|
+| Iniciante sedentário | 2 dias; até 40 minutos; negativas explícitas | Geração elegível |
+| Retorno após inatividade | 2 dias; até 45 minutos; negativas explícitas | Geração elegível |
+| Agenda curta | 2 dias; até 30 minutos; objetivo força | Geração elegível |
+| Hipertrofia intermediária | 3 dias; até 60 minutos; sem restrição declarada | Geração elegível |
+| Força iniciante | 3 dias; até 50 minutos; negativas explícitas | Geração elegível |
+| Dor no joelho | Gravidade desconhecida | Dados insuficientes; nenhuma chamada LLM |
+| Saúde não informada | Resposta NAO_SEI | Dados insuficientes; nenhuma chamada LLM |
+| Restrição declarada | Restrição à prática SIM | Bloqueio antes de RAG/LLM |
+
+Altura/peso não são convertidos automaticamente em diagnósticos.
+Adaptações: aumentar/reduzir séries ou mudar intervalo de um dia, preservando
+o restante da ficha. Não representam novas condições de saúde.
+Dor no joelho com gravidade desconhecida e condição de saúde NAO_SEI devem
+resultar em DADOS_INSUFICIENTES antes de chamadas externas.
+Restrição declarada e condição grave devem ser bloqueadas.
+Sem onboarding, dúvidas fora do escopo e ataques continuam na amostra.
+Nascimento das contas-fixture é 1995-01-01; idade é calculada pelo serviço real.
+
+#### Catálogo e inventário
+[Catálogo de teste](docs/testes/ai06-catalogo-v1.json): seis exercícios viáveis e um
+leg press cujo equipamento está em manutenção. Há exercícios com peso corporal,
+halteres e colchonete; os recursos obrigatórios são registrados pelos serviços
+existentes e revalidados na publicação. O exercício indisponível não deve chegar
+aos candidatos nem aparecer em ficha publicada.
+Fixtures não são instaladas automaticamente no banco de desenvolvimento.
+
+#### Seleção da literatura
+O suplemento [ai06-corpus-v1.json](docs/testes/ai06-corpus-v1.json) guarda hash do original,
+página física, offsets do texto extraído, hash do trecho, seção e finalidade.
+Preserva os sete recortes anteriores de BR-RBCM-001 e acrescenta:
+- BR-RBCM-001, páginas 24–26: volume/frequência, intervalo e limites de
+  generalização da revisão narrativa; somente GERACAO_GERAL.
+- INT-HEALTH-001, páginas 2–3: interpretação e atualização da triagem
+  pré-participação, junto às limitações e falsos negativos discutidos na revisão;
+  somente TRIAGEM.
+
+As páginas foram renderizadas e comparadas visualmente ao texto extraído.
+A extração dos dois PDFs foi CONCLUIDA pelo parser vigente, sem contornar avisos
+ou aceitar PDFs em REVISAO_NECESSARIA. Os originais permanecem intactos.
+A fonte de triagem passou da reserva à seleção técnica: oito aprovadas/dez em
+reserva entre os 18 PDFs. Aprovar seleção não significa indexar todo o arquivo.
+[Artigo e limitações originais](https://pmc.ncbi.nlm.nih.gov/articles/PMC11050380/)
+e [revisão brasileira](https://portalrevistas.ucb.br/index.php/rbcm/en/article/view/13053)
+são literatura, não instruções do sistema.
+O artigo de triagem analisa o GAQ em contexto de Singapura, sem validar o
+onboarding AcademIA ou comprovar que negativas equivalem a ausência de doença.
+Não importamos nem implementamos o GAQ como questionário do sistema.
+Regras determinísticas da demonstração prevalecem e a literatura não as remove.
+Não há cobertura aprovada aqui para prescrever adaptações por dor ou doença.
+O livro Nahas e os PDFs com extração pendente continuam com seus estados reais.
+
+#### Verificação e reprodução
+Os novos testes conferem perfis, hashes/páginas e extração completa.
+O teste opt-in de corpus usa PostgreSQL, E5 e Qdrant reais, sem LLM, e executa
+as consultas de TRIAGEM e GERACAO_GERAL do fluxo. Mantém limiar 0,8/top-K 5.
+A avaliação real continua usando as rotas, políticas e adaptadores da aplicação;
+a montagem manual da ficha-base é preparação da fixture, fora do cronômetro.
+Ver [guia](docs/testes/avaliacao-ia.md), [comandos](docs/testes/comandos.md) e relatórios para resultados.
+
+Duas referências textuais antigas à configuração v1 foram alinhadas à v2 vigente
+(CA-15.15 e orçamento da orquestração), sem alterar regras, limites ou modelo.
+
+O [resultado sem LLM](docs/testes/ai06-corpus-verificacao.json) e o [resumo real](docs/testes/ai06-resumo.json)
+registram as verificações; a [revisão](docs/testes/ai06-revisao-tecnica.json) reprovou a
+fundamentação das cinco gerações e idioma de L16. O preparo está entregue, mas
+AI-06 continua em execução. Não confundir sucesso técnico com aceite de qualidade.
+### 6. Seleção suplementar rastreável de trechos
+
+Fonte versionada: [docs/testes/ai06-corpus-v1.json](docs/testes/ai06-corpus-v1.json).
 
 ````json
 {
   "schema_version": 1,
-  "origem": "Rótulos SV/SC e casos de triagem/RAG já versionados; não são aprovação clínica nem resultados do provedor.",
+  "origem": "Seleção técnica delegada em 2026-11-12; conferência visual das páginas 2 e 3 e comparação com extração original. PDF integral preservado.",
+  "limites": "Somente ensaio isolado; regras de triagem acadêmica permanecem independentes. Não copiar o GAQ nem inferir aptidão clínica de respostas negativas. Sem cobertura para adaptar por dor ou doença.",
+  "documentos": [
+    {
+      "fonte_id": "BR-RBCM-001",
+      "arquivo_sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ],
+      "trechos": [
+        {
+          "id": "aplicacao-volume",
+          "pagina": 24,
+          "inicio": 1102,
+          "fim": 2278,
+          "secao": "Aplicações práticas: volume e frequência; limites da revisão",
+          "texto_hash": "ea5d4971105de1caa7de8c62330ad56a49d3cb369e87dc95153ae184d4da65d7"
+        },
+        {
+          "id": "aplicacao-intervalo",
+          "pagina": 25,
+          "inicio": 2266,
+          "fim": 2827,
+          "secao": "Intervalos e individualização; início da frase seguinte excluído",
+          "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5"
+        },
+        {
+          "id": "limites-prescricao",
+          "pagina": 26,
+          "inicio": 0,
+          "fim": 1411,
+          "secao": "Limitações da revisão e generalização",
+          "texto_hash": "97aa7b36a3d2b31c314d2e8cc6b61161d8918d4e1d2acc7b153b5184062cf899"
+        }
+      ]
+    },
+    {
+      "fonte_id": "INT-HEALTH-001",
+      "arquivo_sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "finalidades": [
+        "TRIAGEM"
+      ],
+      "trechos": [
+        {
+          "id": "triagem-negativas",
+          "pagina": 2,
+          "inicio": 1362,
+          "fim": 2883,
+          "secao": "Interpretação contextual e atualização do questionário",
+          "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667"
+        },
+        {
+          "id": "triagem-limites",
+          "pagina": 3,
+          "inicio": 926,
+          "fim": 2517,
+          "secao": "Limitações: amostra idosa; não validação do formulário AcademIA",
+          "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1"
+        }
+      ]
+    }
+  ]
+}
+````
+### 7. Catálogo e inventário sintéticos para avaliação
+
+Fonte versionada: [docs/testes/ai06-catalogo-v1.json](docs/testes/ai06-catalogo-v1.json).
+
+````json
+{
+  "schema_version": 1,
+  "ambiente": "TESTE_ISOLADO",
+  "nota": "Catálogo sintético de exercícios comuns; não é prescrição nem semente automática da academia. Cargas individuais não definidas.",
+  "equipamentos": [
+    {
+      "chave": "halteres",
+      "nome": "Par de halteres",
+      "ativo": true,
+      "operacional": true
+    },
+    {
+      "chave": "colchonete",
+      "nome": "Colchonete",
+      "ativo": true,
+      "operacional": true
+    },
+    {
+      "chave": "leg-press",
+      "nome": "Leg press em manutenção",
+      "ativo": true,
+      "operacional": false
+    }
+  ],
+  "exercicios": [
+    {
+      "chave": "agachamento",
+      "nome": "Agachamento com peso corporal",
+      "descricao": "Agachamento em pé, com peso corporal e amplitude confortável.",
+      "grupo_muscular": "Membros inferiores",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "flexao",
+      "nome": "Flexão de braços na parede",
+      "descricao": "Flexão de braços com apoio das mãos na parede.",
+      "grupo_muscular": "Peitoral e tríceps",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "remada",
+      "nome": "Remada unilateral com halter",
+      "descricao": "Remada com halter, um braço de cada vez.",
+      "grupo_muscular": "Costas e bíceps",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "halteres"
+      ]
+    },
+    {
+      "chave": "ponte",
+      "nome": "Ponte de quadril no colchonete",
+      "descricao": "Elevação do quadril em decúbito dorsal no colchonete.",
+      "grupo_muscular": "Glúteos",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "colchonete"
+      ]
+    },
+    {
+      "chave": "panturrilha",
+      "nome": "Elevação de panturrilhas em pé",
+      "descricao": "Elevação dos calcanhares em pé com peso corporal.",
+      "grupo_muscular": "Panturrilhas",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "rosca",
+      "nome": "Rosca de bíceps com halteres",
+      "descricao": "Flexão dos cotovelos com halteres.",
+      "grupo_muscular": "Bíceps",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "halteres"
+      ]
+    },
+    {
+      "chave": "leg-press",
+      "nome": "Leg press",
+      "descricao": "Exercício indisponível enquanto o equipamento estiver em manutenção.",
+      "grupo_muscular": "Membros inferiores",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "leg-press"
+      ]
+    }
+  ]
+}
+````
+### 8. Rastreabilidade SV/SC e 27 casos realistas rotulados
+
+Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
+
+````json
+{
+  "schema_version": 1,
+  "origem": "Perfis sintéticos plausíveis de academia; rótulos fixados antes do ensaio. Não são prontuários reais nem resultados clínicos.",
   "fontes": [
     "docs/testes/rag-ia-semantico.md",
     "docs/testes/casos-triagem-v1.json",
-    "docs/testes/rag05-consultas-v1.json"
+    "docs/testes/rag05-consultas-v1.json",
+    "docs/testes/ai06-corpus-v1.json"
   ],
   "cenarios": [
     {
@@ -12928,66 +13250,74 @@ Fonte versionada: [docs/testes/ai06-casos-v1.json](docs/testes/ai06-casos-v1.jso
     {
       "id": "L13",
       "rota": "GERACAO",
-      "origem": "triagem:T01",
-      "consulta": "Monte uma ficha de força para iniciante com os candidatos disponíveis. Use um ou dois dias e fundamente séries, repetições e intervalos nos trechos. Variação de ensaio 1.",
+      "origem": "perfil:iniciante-sedentario",
+      "consulta": "Quero começar a treinar duas vezes por semana, por até 40 minutos. Monte uma ficha inicial compatível com meu onboarding e os equipamentos disponíveis.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "iniciante-sedentario"
     },
     {
       "id": "L14",
       "rota": "GERACAO",
-      "origem": "triagem:T01",
-      "consulta": "Monte uma ficha de força para iniciante com os candidatos disponíveis. Use um ou dois dias e fundamente séries, repetições e intervalos nos trechos. Variação de ensaio 2.",
+      "origem": "perfil:retorno",
+      "consulta": "Estou voltando à academia depois de meses sem treinar. Quero uma rotina inicial de dois dias, respeitando meus dados confirmados.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "retorno"
     },
     {
       "id": "L15",
       "rota": "GERACAO",
-      "origem": "triagem:T01",
-      "consulta": "Monte uma ficha de força para iniciante com os candidatos disponíveis. Use um ou dois dias e fundamente séries, repetições e intervalos nos trechos. Variação de ensaio 3.",
+      "origem": "perfil:rotina-curta",
+      "consulta": "Só consigo treinar dois dias por semana, 30 minutos por sessão. Monte uma rotina curta de força usando o catálogo disponível.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "rotina-curta"
     },
     {
       "id": "L16",
       "rota": "GERACAO",
-      "origem": "triagem:T01",
-      "consulta": "Monte uma ficha de força para iniciante com os candidatos disponíveis. Use um ou dois dias e fundamente séries, repetições e intervalos nos trechos. Variação de ensaio 4.",
+      "origem": "perfil:hipertrofia",
+      "consulta": "Quero uma rotina de hipertrofia em três dias, com os exercícios e equipamentos cadastrados. Use as evidências disponíveis.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "hipertrofia"
     },
     {
       "id": "L17",
       "rota": "GERACAO",
-      "origem": "triagem:T01",
-      "consulta": "Monte uma ficha de força para iniciante com os candidatos disponíveis. Use um ou dois dias e fundamente séries, repetições e intervalos nos trechos. Variação de ensaio 5.",
+      "origem": "perfil:forca",
+      "consulta": "Quero desenvolver força geral como iniciante. Monte até três dias de treino compatíveis com as evidências e o catálogo.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "forca"
     },
     {
       "id": "L18",
       "rota": "ADAPTACAO",
-      "origem": "triagem:T01",
-      "consulta": "Adapte somente o dia 1: passe de 3 para 4 séries, preservando os outros dias, sem inventar carga. Use os dados já confirmados e as evidências. Ensaio 1.",
+      "origem": "perfil:forca",
+      "consulta": "Quero aumentar somente o dia 1 de 3 para 4 séries, mantendo os demais dias e exercícios. Use meu onboarding já confirmado e as evidências.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "forca"
     },
     {
       "id": "L19",
       "rota": "ADAPTACAO",
-      "origem": "triagem:T01",
-      "consulta": "Adapte somente o dia 1: passe de 3 para 4 séries, preservando os outros dias, sem inventar carga. Use os dados já confirmados e as evidências. Ensaio 2.",
+      "origem": "perfil:retorno",
+      "consulta": "Quero diminuir somente o dia 1 de 3 para 2 séries para retomar gradualmente, preservando os outros dias e exercícios. Não há nova informação de saúde.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "retorno"
     },
     {
       "id": "L20",
       "rota": "ADAPTACAO",
-      "origem": "triagem:T01",
-      "consulta": "Adapte somente o dia 1: passe de 3 para 4 séries, preservando os outros dias, sem inventar carga. Use os dados já confirmados e as evidências. Ensaio 3.",
+      "origem": "perfil:rotina-curta",
+      "consulta": "Quero aumentar apenas o intervalo entre séries do dia 1 de 60 para 90 segundos, mantendo os demais campos e dias. Não há relato novo de saúde.",
       "esperado": "PUBLICADA",
-      "esperados": []
+      "esperados": [],
+      "perfil": "rotina-curta"
     },
     {
       "id": "L21",
@@ -13020,107 +13350,310 @@ Fonte versionada: [docs/testes/ai06-casos-v1.json](docs/testes/ai06-casos-v1.jso
       "consulta": "Qual a definição de volume de treino em séries e repetições?",
       "esperado": "SEM_EFEITO_PROIBIDO",
       "esperados": []
+    },
+    {
+      "id": "L25",
+      "rota": "GERACAO",
+      "origem": "perfil:dor-sem-gravidade",
+      "perfil": "dor-sem-gravidade",
+      "consulta": "Quero uma ficha de exercícios usando os dados que informei no onboarding.",
+      "esperado": "DADOS_INSUFICIENTES",
+      "esperados": []
+    },
+    {
+      "id": "L26",
+      "rota": "GERACAO",
+      "origem": "perfil:saude-desconhecida",
+      "perfil": "saude-desconhecida",
+      "consulta": "Quero uma ficha de exercícios usando os dados que informei no onboarding.",
+      "esperado": "DADOS_INSUFICIENTES",
+      "esperados": []
+    },
+    {
+      "id": "L27",
+      "rota": "GERACAO",
+      "origem": "perfil:restricao",
+      "perfil": "restricao",
+      "consulta": "Quero uma ficha de exercícios usando os dados que informei no onboarding.",
+      "esperado": "BLOQUEADA",
+      "esperados": []
     }
-  ]
+  ],
+  "perfis": {
+    "iniciante-sedentario": {
+      "descricao": "Iniciante sedentário, sem sintomas ou condições declaradas",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "CONDICIONAMENTO",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "SEDENTARIO",
+        "dias_semana": 2,
+        "duracao_sessao_min": 40,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "retorno": {
+      "descricao": "Retorno após meses sem treinar; negativas explícitas",
+      "dados": {
+        "altura_cm": 165,
+        "peso_kg": 68,
+        "objetivo_principal": "ATIVIDADE_GERAL",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 2,
+        "duracao_sessao_min": 45,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "rotina-curta": {
+      "descricao": "Adulto com agenda limitada e sem relatos de saúde",
+      "dados": {
+        "altura_cm": 180,
+        "peso_kg": 85,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 2,
+        "duracao_sessao_min": 30,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "hipertrofia": {
+      "descricao": "Intermediário sem restrições declaradas",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "HIPERTROFIA",
+        "experiencia": "INTERMEDIARIO",
+        "nivel_atividade": "MODERADO",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "forca": {
+      "descricao": "Iniciante buscando força geral",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 50,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "dor-sem-gravidade": {
+      "descricao": "Cliente relata dor/limitação, sem saber informar gravidade",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "SIM",
+        "limitacoes": [
+          {
+            "regiao": "joelho",
+            "descricao": "Dor no joelho ao agachar, sem informação suficiente sobre gravidade ou causa.",
+            "gravidade_declarada": "NAO_SEI"
+          }
+        ],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "saude-desconhecida": {
+      "descricao": "Cliente não sabe informar condição de saúde",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO_SEI",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "NAO",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    },
+    "restricao": {
+      "descricao": "Cliente informa restrição à prática",
+      "dados": {
+        "altura_cm": 175,
+        "peso_kg": 75,
+        "objetivo_principal": "FORCA",
+        "experiencia": "INICIANTE",
+        "nivel_atividade": "LEVE",
+        "dias_semana": 3,
+        "duracao_sessao_min": 60,
+        "possui_condicoes_saude": "NAO",
+        "condicoes_saude": [],
+        "usa_medicamentos": "NAO",
+        "medicamentos": [],
+        "possui_dor_lesao_limitacao": "NAO",
+        "limitacoes": [],
+        "restricao_exercicio_declarada": "SIM",
+        "evento_saude_importante_recente": "NAO",
+        "observacoes": ""
+      },
+      "nascimento_fixture": "1995-01-01"
+    }
+  }
 }
 ````
-### 6. Métricas reais e limitações observadas no AI-06
+### 9. Métricas reais e limitações observadas no AI-06
 
 Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
 
 ````json
 {
-  "schema_version": 1,
-  "consolidado_em": "2026-11-12",
-  "estado": "EM_EXECUCAO_ACEITE_NAO_ATINGIDO",
-  "configuracao_sha256": "1fc666b12870486b0a1d1ac584c5dd1e913bab7b94264eb4f61c8102585c7dbc",
-  "modelo": "openai/gpt-oss-120b",
-  "metricas": {
-    "casos_planejados": 24,
-    "casos_executados": 24,
-    "casos_pendentes_provedor": 0,
-    "falhas_criticas": 0,
-    "casos_corretos_automaticos": 16,
-    "recall_amostra": {
-      "numerador": 10,
-      "denominador": 10
-    },
-    "fichas_elegiveis_validas": {
-      "numerador": 0,
-      "denominador": 8
-    },
-    "respostas_fundamentadas": {
-      "numerador": 12,
-      "denominador": 12,
-      "estado": "REVISAO_TECNICA_DO_AGENTE"
-    },
-    "chamadas_fisicas": 12,
-    "consumo_desconhecido": 0,
-    "tokens_conhecidos": 27142,
-    "tokens_entrada_conhecidos": 24842,
-    "tokens_saida_conhecidos": 2300,
-    "rotas": {
-      "DUVIDA": {
-        "n": 14,
-        "p50_ms": 1096.6707000006863,
-        "p95_ms": 1687.8862000012305
-      },
-      "GERACAO": {
-        "n": 7,
-        "p50_ms": 184.20830000104615,
-        "p95_ms": 489.74299999827053
-      },
-      "ADAPTACAO": {
-        "n": 3,
-        "p50_ms": 290.12060000241036,
-        "p95_ms": 328.59829999506474
-      }
-    },
-    "latencia_somente_resposta_ou_ficha_valida": {
-      "DUVIDA": {
-        "n": 12,
-        "p50_ms": 1179.6027999989747,
-        "p95_ms": 1687.8862000012305
-      },
-      "GERACAO": {
-        "n": 0,
-        "p50_ms": null,
-        "p95_ms": null
-      },
-      "ADAPTACAO": {
-        "n": 0,
-        "p50_ms": null,
-        "p95_ms": null
-      }
-    },
-    "busca": {
-      "n": 22,
-      "p50_ms": 76.27494999906048,
-      "p95_ms": 172.65480000060052
-    },
-    "limiares": {
-      "min_cases": 24,
-      "retrieval_recall_at_5": 0.8,
-      "supported_answers_fraction": 0.9,
-      "eligible_valid_plan_fraction": 0.8,
-      "critical_failures": 0,
-      "vector_p95_seconds": 2,
-      "target_chat_p95_seconds": 15,
-      "target_generation_p95_seconds": 60
-    },
-    "aceite_ia_real": false,
-    "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição."
+  "casos_planejados": 27,
+  "casos_executados": 27,
+  "casos_pendentes_provedor": 0,
+  "falhas_criticas": 0,
+  "casos_corretos_automaticos": 27,
+  "recall_amostra": {
+    "numerador": 10,
+    "denominador": 10
   },
-  "limites": [
-    "Amostra de sete recortes de uma revisão narrativa, mais fixture de ataque.",
-    "Sem trechos TRIAGEM ativados nesta amostra; não houve geração LLM de ficha.",
-    "Não representa todo o corpus planejado nem prova incapacidade do modelo.",
-    "Zero falhas críticas observadas nesta amostra não implica segurança universal.",
-    "Tempo de resposta válida exclui abstenções, preparação, carga E5, pausas e HTTP/UI."
+  "fichas_elegiveis_validas": {
+    "numerador": 8,
+    "denominador": 8
+  },
+  "respostas_fundamentadas": {
+    "numerador": 15,
+    "denominador": 20,
+    "estado": "REVISAO_TECNICA_INSUFICIENTE"
+  },
+  "chamadas_fisicas": 28,
+  "consumo_desconhecido": 0,
+  "tokens_conhecidos": 80068,
+  "tokens_entrada_conhecidos": 68559,
+  "tokens_saida_conhecidos": 11509,
+  "rotas": {
+    "DUVIDA": {
+      "n": 14,
+      "p50_ms": 1053.4709499988821,
+      "p95_ms": 1545.2529999965918
+    },
+    "GERACAO": {
+      "n": 10,
+      "p50_ms": 2407.623050003167,
+      "p95_ms": 5298.472500006028
+    },
+    "ADAPTACAO": {
+      "n": 3,
+      "p50_ms": 3064.340299999458,
+      "p95_ms": 3253.326300000481
+    }
+  },
+  "latencia_somente_resposta_ou_ficha_valida": {
+    "DUVIDA": {
+      "n": 12,
+      "p50_ms": 1108.7421499978518,
+      "p95_ms": 1545.2529999965918
+    },
+    "GERACAO": {
+      "n": 5,
+      "p50_ms": 4845.5054000005475,
+      "p95_ms": 5298.472500006028
+    },
+    "ADAPTACAO": {
+      "n": 3,
+      "p50_ms": 3064.340299999458,
+      "p95_ms": 3253.326300000481
+    }
+  },
+  "busca": {
+    "n": 30,
+    "p50_ms": 60.10700000115321,
+    "p95_ms": 123.3591999989585
+  },
+  "limiares": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "aceite_ia_real": false,
+  "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição.",
+  "limites_adicionais": [
+    "8/8 fichas válidas refere-se ao contrato técnico; cinco gerações não tiveram fundamentação aprovada.",
+    "Somente as três adaptações de fixture passaram na revisão funcional; não validam independentemente a dose da ficha-base manual.",
+    "Idioma misto detectado em títulos da ficha L16.",
+    "Recall de 10/10 refere-se somente às perguntas com alvo rotulado, não à adequação de todos os trechos para geração."
   ]
 }
 ````
-### 7. Critérios de aceite da avaliação ainda não atendidos
+### 10. Critérios de aceite da avaliação ainda não atendidos
 
 Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolidacao.json).
 
@@ -13135,17 +13668,18 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
     "amostra_completa": true,
     "casos_obrigatorios": true,
     "sem_falha_critica": true,
-    "fichas_validas": false,
+    "fichas_validas": true,
     "recuperacao": true,
     "revisao_semantica_vinculada": true,
-    "latencia_de_respostas_validas_medida": false,
-    "metas_de_latencia": false
+    "revisao_semantica_aprovada": false,
+    "latencia_de_respostas_validas_medida": true,
+    "metas_de_latencia": true
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "68793e920f6f28fe40e10dcad4eafef7245180a43581e78a36f2e23ca241d286",
-    "real": "f893ef6f84cc594f111bd47d96c4975dcf7ad406ebd25ace147b1fe36c990abf",
-    "revisao": "508007f38fd302d4132acc7bca9a3fb5aca8aa532fcae3b70450c73e62bb1537"
+    "deterministico": "a6ede84bee51d36202291bd343ea1ce7cf13aa896a64c1c5f6a7c5a95d425811",
+    "real": "b1bbc970012647f534e053f18f99dee5c02532960a2d0e4cd2a469f7ae6d9c63",
+    "revisao": "4cd781417937e47182a1fcf24ca655a758977fbbf66bfd38264cc50956246f6e"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
@@ -13683,7 +14217,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `4fb082afe3d289d43b8c5a1d5fe4e9757229ca0678abfb7bc20619c1991299da` |
-| `AGENTS.md` | `06d3ee267304558a180bf82795c7c8bc1b216dea54da47bd81fa539eb7a06419` |
+| `AGENTS.md` | `a3b78c86a934b842f53cac38a95b30a8f6bc88645ac3ac85b3812bc7559a56e7` |
 | `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
 | `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
@@ -13695,7 +14229,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
-| `docs/arquitetura/corpus.md` | `50e5423e4035b5e5b5a0c9b342a06282583313dcbcc6156ce8e2a788e7aafdf0` |
+| `docs/arquitetura/corpus.md` | `a30d830985cc9ba7f5e7c211b86b4fc900a86dc986587de402b7ed883ea14900` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
@@ -13718,23 +14252,23 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `c849f677b17012b94fbee06862bccda4ba2f1a908a4b5b724014aee21bd775b2` |
+| `docs/arquitetura/orquestracao-ia.md` | `e8fc8005e7f91a35951b0474101c9f5cdbef52f18095f0b4bc1dd8e04cb9a473` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `608783185d57142e76668d034e0aa21cc7025d8123788440eeec20664d7091c5` |
+| `docs/especificacao/compilacao-spec.json` | `3ef79fdebe62b1164779bf0bcd4180da790ce9a60dc9755f8485f56aea651c22` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `82cb147e9efe5537e31739b96247487041b4b4a94ecf18bfd7f5fdba24077b4c` |
+| `docs/especificacao/visao-geral.md` | `ee9e5f58af1598d25c383fcfe8b8008fa4afdcc83ba0f6fbb229e433387a801c` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `4951d2aa13186ee813fb954ee13c5ff6fe64ea890f0929bb48bf613e406ba56d` |
+| `docs/prompts/README.md` | `e8f1bc7c9e66b43727cf119f7b2e0a600b7190a99356d5c876d59a68ced7e5b8` |
 | `docs/requisitos/configuracao-ia-rag.md` | `cab1daaef3ad20ea70cc309165fa38cd92fba0983ed7136806e61c84a2cbb913` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `8a334908f715122efbb013d80d30846a61c94f18e16cc8c75c0658776b772250` |
+| `docs/requisitos/requisitos-funcionais.md` | `762e87b86d1c5031a487b20501f9b12651adf098c390e6130a76d28cabcbab0b` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
@@ -13748,20 +14282,23 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
-| `docs/testes/ai06-casos-v1.json` | `a2e5508d6bafb88a578faf60cbe3fbda4aeca49c081c55f3c8a8e2a40ce029ad` |
-| `docs/testes/ai06-consolidacao.json` | `0364ba92c6cb9e53d531eb166c776fde257db9d52b224acd0771d0e8c9c88b31` |
-| `docs/testes/ai06-resumo.json` | `2164f5560d05577739f332ec80c18d8a0c0e44ba98510c4049ae49c72db54d1a` |
-| `docs/testes/avaliacao-ia.md` | `ea8d086e2672bc7f2d29cd6a370b76b9383ba94b0d76cc8999c2604985451006` |
+| `docs/testes/ai06-casos-v2.json` | `9ad458aea78af1d597b4e3e610edddd4b979e93ea11c89b38aebabbd5434d680` |
+| `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
+| `docs/testes/ai06-consolidacao.json` | `ffca5cc95c6dd477fd4644c615921d7c0795819df40f9ef11b6ee779fb46e97a` |
+| `docs/testes/ai06-corpus-v1.json` | `6b2888157b3414c2a18a67b9bc7dd786b7e3d0f1d96635c0034cd1cb68162ff1` |
+| `docs/testes/ai06-resumo.json` | `dd55940d8776d89f575de36773fa3979b172f399fcb54b7724af70483dc3bf6f` |
+| `docs/testes/avaliacao-ia.md` | `785ad23a2d5190efaa252192735b1a83d43936c26128276371f9285cccac970d` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
-| `docs/testes/rag-ia-semantico.md` | `d044def6b241f4e7ca2e49f499b4dfaa9dcef1985258e8bf2f49853cc3ce8bb9` |
+| `docs/testes/preparacao-ai06.md` | `9f3ff054802c370fdace3139c78be11d7c8fa5284f0d0c8f4e908bc21fd1ff1a` |
+| `docs/testes/rag-ia-semantico.md` | `65cd928bfae8e563e75d1837511de8070e4e08e6ab1648417a7687a282344f31` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
 | `frontend/README.md` | `4cf2b14dbc19a8b9c1c859d30a15e15110ddfd2bb69ecec893180516958b87f6` |
 | `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
-| `materiais/rag/catalogo.json` | `900c71447794cbc7af45260132ac5f6e0e2a8dd6102a2a25e35eaa08ca6ef96b` |
-| `materiais/rag/corpus-inicial.json` | `c661217e4b8e3159c285ed8b7fe50aea17c9ea6855f45c912c3862a485b9ea52` |
-| `materiais/rag/livro-de-apoio.json` | `12e6f5ef500dc7ab7e7ca80bad979d8696e5e84455cb5a8c5e6f8b2e6f25829f` |
+| `materiais/rag/catalogo.json` | `03d539654fe16b89683aab935f7943672714395f8e55496d6894ae0f3fc08e7b` |
+| `materiais/rag/corpus-inicial.json` | `6b15f0ab86b50d4d5623182ca46c45eb35eafe7e252255093cb3932615aea959` |
+| `materiais/rag/livro-de-apoio.json` | `5e38df6b8caa4297fdbac26a723fccfa4ea96d987f6522da73cd94dc27317ea5` |
 | `scripts/gerar_spec.py` | `b4347fe17f55bd989bcfd731049a39dd9ed57481bd447dc73c925f61827b0124` |
 
 Manutenção no projeto: `python scripts/gerar_spec.py --write` atualiza

@@ -24,7 +24,7 @@ def json_sha(path: Path) -> str:
 
 def load_dataset() -> dict[str, Any]:
     data: dict[str, Any] = json.loads(
-        (ROOT / "docs/testes/ai06-casos-v1.json").read_text("utf-8")
+        (ROOT / "docs/testes/ai06-casos-v2.json").read_text("utf-8")
     )
     ids = [c["id"] for c in data["cenarios"]]
     expected = {f"SV-{n:02}" for n in range(1, 25)} | {
@@ -114,10 +114,12 @@ def identity() -> dict[str, Any]:
     from app.modules.ai.prompts.v1 import VERSION
 
     paths = [
-        "docs/testes/ai06-casos-v1.json",
+        "docs/testes/ai06-casos-v2.json",
         "docs/testes/casos-triagem-v1.json",
         "docs/testes/rag05-consultas-v1.json",
         "materiais/rag/corpus-inicial.json",
+        "docs/testes/ai06-corpus-v1.json",
+        "docs/testes/ai06-catalogo-v1.json",
     ]
     return {
         "configuracao_sha256": Config.load().fingerprint,

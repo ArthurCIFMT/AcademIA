@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "ambiente": "TESTE_ISOLADO",
+  "nota": "Catálogo sintético de exercícios comuns; não é prescrição nem semente automática da academia. Cargas individuais não definidas.",
+  "equipamentos": [
+    {
+      "chave": "halteres",
+      "nome": "Par de halteres",
+      "ativo": true,
+      "operacional": true
+    },
+    {
+      "chave": "colchonete",
+      "nome": "Colchonete",
+      "ativo": true,
+      "operacional": true
+    },
+    {
+      "chave": "leg-press",
+      "nome": "Leg press em manutenção",
+      "ativo": true,
+      "operacional": false
+    }
+  ],
+  "exercicios": [
+    {
+      "chave": "agachamento",
+      "nome": "Agachamento com peso corporal",
+      "descricao": "Agachamento em pé, com peso corporal e amplitude confortável.",
+      "grupo_muscular": "Membros inferiores",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "flexao",
+      "nome": "Flexão de braços na parede",
+      "descricao": "Flexão de braços com apoio das mãos na parede.",
+      "grupo_muscular": "Peitoral e tríceps",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "remada",
+      "nome": "Remada unilateral com halter",
+      "descricao": "Remada com halter, um braço de cada vez.",
+      "grupo_muscular": "Costas e bíceps",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "halteres"
+      ]
+    },
+    {
+      "chave": "ponte",
+      "nome": "Ponte de quadril no colchonete",
+      "descricao": "Elevação do quadril em decúbito dorsal no colchonete.",
+      "grupo_muscular": "Glúteos",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "colchonete"
+      ]
+    },
+    {
+      "chave": "panturrilha",
+      "nome": "Elevação de panturrilhas em pé",
+      "descricao": "Elevação dos calcanhares em pé com peso corporal.",
+      "grupo_muscular": "Panturrilhas",
+      "dispensa_equipamento": true,
+      "recursos": []
+    },
+    {
+      "chave": "rosca",
+      "nome": "Rosca de bíceps com halteres",
+      "descricao": "Flexão dos cotovelos com halteres.",
+      "grupo_muscular": "Bíceps",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "halteres"
+      ]
+    },
+    {
+      "chave": "leg-press",
+      "nome": "Leg press",
+      "descricao": "Exercício indisponível enquanto o equipamento estiver em manutenção.",
+      "grupo_muscular": "Membros inferiores",
+      "dispensa_equipamento": false,
+      "recursos": [
+        "leg-press"
+      ]
+    }
+  ]
+}
