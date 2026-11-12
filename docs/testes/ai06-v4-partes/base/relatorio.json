@@ -1,0 +1,535 @@
+{
+  "schema_version": 1,
+  "modo": "real",
+  "configuracao_sha256": "2d306590522041b112cda1ad492bc7e027203e25c78900071077314491c75a73",
+  "politica_sha256": "17155ad9cca11c59c0711c76e4dc067dcded77ba3c8e2888dbcfd1bc8c629bee",
+  "prompts": "academia-ia-v3",
+  "modelo": "openai/gpt-oss-120b",
+  "consulta_geracao": "consulta-geracao-v2",
+  "extracao": "20d8b22744cdef09bbd4f3680827fd94bf9e2857a61706b1e09bba01f358a03b",
+  "algoritmo_hash_fontes": "JSON_CANONICO_V1",
+  "fontes_sha256": {
+    "docs/testes/ai06-casos-v4.json": "cc417e5e92af2747a1f8030b41e57332d8e1ac337be1f438029287580a91da0c",
+    "docs/testes/casos-triagem-v1.json": "c582e980b14156ff25326c7d295f60c627fee6d7c0ce43fec63eb3633848be8a",
+    "docs/testes/rag05-consultas-v1.json": "77b1a1101a38b33dc0480a92069af7d4d286d5c1b03a5055301614c2b1b4a27c",
+    "materiais/rag/corpus-inicial.json": "c61ab5b40361f1ac9e03bb40ee9a48ad1e7957481fe8fee2c792930fc9b4d8c6",
+    "docs/testes/ai06-corpus-v2.json": "4c270d8395758d57da30bf94a859251aec8cf2084fc931e5f7cbbaac8e0a3854",
+    "docs/testes/ai06-catalogo-v1.json": "b88eb50e7b50b1bc7197069cee0c6b2adb64ab0eec4fb64f545c97a5970d53bb",
+    "materiais/rag/politica-livro-v2.json": "0c9567844b001c26ea593bea475d9cd00fdb54580c5ed734cdf7260844ae18ba",
+    "materiais/rag/livro-de-apoio.json": "3e6abe89f2cfc5dde6d4379b17ab7137d16d1bb1d346198a9c312aed20400129"
+  },
+  "codigo_sha256": {
+    "backend/app/modules/ai/prompts/v1.py": "7c20890c63b2247c694eb946a8ec033ed988da21e4597c7743eede6e2fe541f2",
+    "backend/app/modules/ai/orchestration/settings.py": "ba499156f48ced50bf849262c1bbd8468c234b894f14767e920b11712c08dcb2",
+    "backend/app/modules/ai/adapters/factory.py": "82af15a572f318bc654d4a9f8b091d240e05f2e361531c06b5892c13d670ef0e",
+    "backend/app/modules/ai/adapters/groq.py": "f02043d709674bf9de75a08457b7cbbd098984ae73fc0f91b61f70ee59f38f84",
+    "backend/app/modules/ai/adapters/gemini.py": "2ec5efacd7a6aa4d4049c10149aecb31e40a5bbf52b7c72b5d7444408ef3af68",
+    "backend/app/modules/ai/generation.py": "519450fe97b966c570d99a54ed0a85551393a2d209caca02555fb677698e5b6f",
+    "backend/app/modules/ai/orchestration/queries.py": "9880e019caebb560566c17093a70f7de09d6a8245098362c441910938ffdc4b0",
+    "backend/app/modules/ai/orchestration/service.py": "7d289f016ae50f45f17e8dd82f18754986261ace0b01ea8a73430277359ee9aa",
+    "backend/app/modules/ai/orchestration/presentation.py": "0426c7e6ed5b45ec01b9a36dc134fe8455782ee7ad9d7c3edb17ad5ecdef80ff",
+    "backend/app/modules/knowledge/ingestion/parser.py": "2048ffa67987347a470bc9aa11b2aa05a4fc46502f11cbd7720c3f78f3aa323b",
+    "backend/app/modules/knowledge/ingestion/contracts.py": "a7c60e4ca895a6e74af3563c4460dd22ab4d4d9c66842fb36032e8c9b33cff9f",
+    "backend/tests/ai/evaluation/__main__.py": "68bdabae939ed3422dc962899779845b5ef6103b4259e6fc93f2ecab313dff69",
+    "backend/tests/ai/evaluation/fixtures.py": "a5849cbf54a3ba998199df8ce8df8c85e04f7c8cdecdb28923910fed660b4418",
+    "backend/tests/ai/test_evaluation_real.py": "87af99b2cbe4c3d6096e625f83aa086f941c116447bf79a0e2085d158bb963a1",
+    "backend/tests/ai/evaluation/reporting.py": "9a0701c8c8dc512a37f88048390beefe02a073d32fcce3e82916c2c822796bd8",
+    "backend/tests/ai/evaluation/consolidation.py": "55766c5fee8197f57bbf2b731949d70f027d9c15eedca7adaa642200e777e06d",
+    "backend/tests/ai/evaluation/resume.py": "aa072b967a32e24b8402b3cd294a84f9286771d6dd1f97da43827912c2deecec",
+    "backend/uv.lock": "98a436b4197a64984fd80a06184d22393bb3dc1e00c1dfc7cebaba1238fcbb85"
+  },
+  "ambiente": {
+    "python": "3.12.14",
+    "sistema": "Windows-10-10.0.19045-SP0",
+    "cpu": "Intel64 Family 6 Model 158 Stepping 9, GenuineIntel"
+  },
+  "custos": {
+    "plano_previsto": "gratuito",
+    "valor_monetario": null,
+    "nota": "API informa tokens, não fatura. Sem contratação/fallback pago."
+  },
+  "aceite_ia_real": false,
+  "casos_solicitados": [
+    "L09",
+    "L13",
+    "L18",
+    "L23",
+    "L24"
+  ],
+  "amostra_parcial": false,
+  "estado": "FALHA",
+  "observacoes": {
+    "schema_version": 1,
+    "casos": [
+      {
+        "id": "L09",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1667.2562000021571,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "conforme_escopo_academico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "8de81cfe-4210-537a-86e3-8a764c00fcd6",
+              "3cac54a1-bcd6-5b55-9b63-ac87465c0b30",
+              "daa0162a-687c-5d1f-bb2a-083f6e2b788f",
+              "6a52df39-5c18-5de1-88db-56dd21b14d3e",
+              "7b41a992-8f8b-5093-9eb5-d9c94662c50e"
+            ],
+            "uso": {
+              "prompt_tokens": 1387,
+              "completion_tokens": 195,
+              "total_tokens": 1582
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 1444.7715999995125
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6065,
+            "prompt_sha256": "c8b4472bd9eb66b91a8aa7055dbfba24a46e57a88f66623832216dd6a9e50a15",
+            "uso": {
+              "prompt_tokens": 1387,
+              "completion_tokens": 195,
+              "total_tokens": 1582
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.628899998147972,
+            "total_ms": 51.48390000977088,
+            "parede_ms": 51.5739999973448
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "8de81cfe-4210-537a-86e3-8a764c00fcd6",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.857767453991742
+          },
+          {
+            "fragmento_id": "3cac54a1-bcd6-5b55-9b63-ac87465c0b30",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.853990173910127
+          },
+          {
+            "fragmento_id": "daa0162a-687c-5d1f-bb2a-083f6e2b788f",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.8453804305054669
+          },
+          {
+            "fragmento_id": "6a52df39-5c18-5de1-88db-56dd21b14d3e",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.8305254430484689
+          },
+          {
+            "fragmento_id": "7b41a992-8f8b-5093-9eb5-d9c94662c50e",
+            "texto_hash": "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.823006430006596
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L13",
+        "rota": "GERACAO",
+        "estado": "PUBLICADA",
+        "motivo": "PROPOSTA_VALIDADA",
+        "total_ms": 5813.001200003782,
+        "esperado": "PUBLICADA",
+        "correto_automatico": true,
+        "conforme_escopo_academico": true,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "TRIAGEM",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "49df4669-4d92-584d-9920-7c43300703b7",
+              "9cfa24dd-679c-5e53-a49a-13be5e7b61e8"
+            ],
+            "uso": {
+              "prompt_tokens": 1748,
+              "completion_tokens": 173,
+              "total_tokens": 1921
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 811.285300005693
+          },
+          {
+            "etapa": "GERACAO",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "5066fa0d-6ce6-5f00-a5d1-0e426ecc5ae3",
+              "9672f9f7-4c8b-5a6c-9600-5253ec2e80c2",
+              "9cb08e31-35e2-568b-91fb-3cbaef02e925",
+              "9c31fa16-c834-5028-ab23-086042963677",
+              "cd550242-ec43-5a26-a88c-78d277ce8ae6"
+            ],
+            "uso": {
+              "prompt_tokens": 3182,
+              "completion_tokens": 1752,
+              "total_tokens": 4934
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 4115.528700000141
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "GERACAO",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 4096,
+            "prompt_bytes": 12664,
+            "prompt_sha256": "f38c2e6996c3605931be42ec62a59ab473f78e660d1ba73453441cc4ff18b1fb",
+            "uso": {
+              "prompt_tokens": 3182,
+              "completion_tokens": 1752,
+              "total_tokens": 4934
+            },
+            "consumo_desconhecido": false
+          },
+          {
+            "etapa": "TRIAGEM",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 400,
+            "prompt_bytes": 8181,
+            "prompt_sha256": "e7dab2b64ec4e662307d022bc25f6f07b7d24e4c8a93871d0a242626e95d50d6",
+            "uso": {
+              "prompt_tokens": 1748,
+              "completion_tokens": 173,
+              "total_tokens": 1921
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "TRIAGEM",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.0613999950001016,
+            "total_ms": 42.927799993776716,
+            "parede_ms": 43.00189999048598
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.9471000054618344,
+            "total_ms": 99.31480001250748,
+            "parede_ms": 99.45840000000317
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 4.2942000000039116,
+            "total_ms": 74.764499993762,
+            "parede_ms": 74.90240001061466
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "49df4669-4d92-584d-9920-7c43300703b7",
+            "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1",
+            "documento_versao_id": "e0847ef3-88cf-4e81-8a48-032822707d76",
+            "idioma": "en",
+            "score": 0.831721593432849
+          },
+          {
+            "fragmento_id": "9cfa24dd-679c-5e53-a49a-13be5e7b61e8",
+            "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667",
+            "documento_versao_id": "e0847ef3-88cf-4e81-8a48-032822707d76",
+            "idioma": "en",
+            "score": 0.8284436555096516
+          },
+          {
+            "fragmento_id": "5066fa0d-6ce6-5f00-a5d1-0e426ecc5ae3",
+            "texto_hash": "cb7d9e6dfc55b319f7d7b642ca92a881dea32da22a6ff56e915ecb439564644b",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.9063243930262597
+          },
+          {
+            "fragmento_id": "9672f9f7-4c8b-5a6c-9600-5253ec2e80c2",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.9001296238865357
+          },
+          {
+            "fragmento_id": "9cb08e31-35e2-568b-91fb-3cbaef02e925",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.8971525352197259
+          },
+          {
+            "fragmento_id": "c29a64c5-1f39-507a-b73b-95623f249095",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.8957038208749402
+          },
+          {
+            "fragmento_id": "e7039833-1c90-5847-bb42-38fcfe2c78f3",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.8831424717357202
+          },
+          {
+            "fragmento_id": "9c31fa16-c834-5028-ab23-086042963677",
+            "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.88682541284203
+          },
+          {
+            "fragmento_id": "cd550242-ec43-5a26-a88c-78d277ce8ae6",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "7d1611b5-3c4c-4376-acdf-abe8ce0273a1",
+            "idioma": "pt-BR",
+            "score": 0.8841546871035386
+          },
+          {
+            "fragmento_id": "9672f9f7-4c8b-5a6c-9600-5253ec2e80c2",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.8790792794507876
+          },
+          {
+            "fragmento_id": "9cb08e31-35e2-568b-91fb-3cbaef02e925",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.8754805600980677
+          },
+          {
+            "fragmento_id": "c29a64c5-1f39-507a-b73b-95623f249095",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "ace9bdba-ecbb-40e3-a385-da0ad0dd042a",
+            "idioma": "pt-BR",
+            "score": 0.8737906458034682
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L18",
+        "rota": "ADAPTACAO",
+        "estado": "FALHA",
+        "motivo": "QUOTA_EXCEDIDA",
+        "total_ms": 455.2062000002479,
+        "esperado": "PUBLICADA",
+        "correto_automatico": false,
+        "conforme_escopo_academico": false,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "TRIAGEM",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "49df4669-4d92-584d-9920-7c43300703b7",
+              "9cfa24dd-679c-5e53-a49a-13be5e7b61e8"
+            ],
+            "total_ms": 124.42530000407714
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "TRIAGEM",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 400,
+            "prompt_bytes": 7850,
+            "prompt_sha256": "43c5db1becf80f41eec8c826c19db40c3ec75f786bc0d6928b068e64dce284b6",
+            "uso": null,
+            "consumo_desconhecido": true
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "TRIAGEM",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.6005999970948324,
+            "total_ms": 62.547499997890554,
+            "parede_ms": 62.637199996970594
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "49df4669-4d92-584d-9920-7c43300703b7",
+            "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1",
+            "documento_versao_id": "e0847ef3-88cf-4e81-8a48-032822707d76",
+            "idioma": "en",
+            "score": 0.831721593432849
+          },
+          {
+            "fragmento_id": "9cfa24dd-679c-5e53-a49a-13be5e7b61e8",
+            "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667",
+            "documento_versao_id": "e0847ef3-88cf-4e81-8a48-032822707d76",
+            "idioma": "en",
+            "score": 0.8284436555096516
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L23",
+        "rota": "DUVIDA",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L24",
+        "rota": "DUVIDA",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      }
+    ],
+    "inicializacao_e5_ms": 18837.145199999213,
+    "rotas": {
+      "DUVIDA": {
+        "n": 1,
+        "p50_ms": 1667.2562000021571,
+        "p95_ms": 1667.2562000021571
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5813.001200003782,
+        "p95_ms": 5813.001200003782
+      },
+      "ADAPTACAO": {
+        "n": 1,
+        "p50_ms": 455.2062000002479,
+        "p95_ms": 455.2062000002479
+      }
+    },
+    "busca": {
+      "n": 5,
+      "p50_ms": 62.637199996970594,
+      "p95_ms": 99.45840000000317
+    },
+    "limites": [
+      "Serviço real; exclui fixture, aquecimento, HTTP/UI e pausas.",
+      "Corpus delimitado; não comprova cobertura clínica ampla.",
+      "Publicações/ataques ficam no banco e índice isolados."
+    ]
+  },
+  "metricas": {
+    "casos_planejados": 5,
+    "casos_executados": 3,
+    "casos_pendentes_provedor": 2,
+    "falhas_criticas": 0,
+    "casos_corretos_automaticos": 2,
+    "recall_amostra": {
+      "numerador": 1,
+      "denominador": 1
+    },
+    "fichas_elegiveis_validas": {
+      "numerador": 1,
+      "denominador": 2
+    },
+    "respostas_fundamentadas": {
+      "numerador": null,
+      "denominador": null,
+      "estado": "REVISAO_SEMANTICA_PENDENTE"
+    },
+    "chamadas_fisicas": 4,
+    "consumo_desconhecido": 1,
+    "tokens_conhecidos": 8437,
+    "tokens_entrada_conhecidos": 6317,
+    "tokens_saida_conhecidos": 2120,
+    "rotas": {
+      "DUVIDA": {
+        "n": 1,
+        "p50_ms": 1667.2562000021571,
+        "p95_ms": 1667.2562000021571
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5813.001200003782,
+        "p95_ms": 5813.001200003782
+      },
+      "ADAPTACAO": {
+        "n": 1,
+        "p50_ms": 455.2062000002479,
+        "p95_ms": 455.2062000002479
+      }
+    },
+    "latencia_somente_resposta_ou_ficha_valida": {
+      "DUVIDA": {
+        "n": 1,
+        "p50_ms": 1667.2562000021571,
+        "p95_ms": 1667.2562000021571
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5813.001200003782,
+        "p95_ms": 5813.001200003782
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 5,
+      "p50_ms": 62.637199996970594,
+      "p95_ms": 99.45840000000317
+    },
+    "limiares": {
+      "min_cases": 5,
+      "retrieval_recall_at_5": 0.8,
+      "supported_answers_fraction": 0.9,
+      "eligible_valid_plan_fraction": 0.8,
+      "critical_failures": 0,
+      "vector_p95_seconds": 2,
+      "target_chat_p95_seconds": 15,
+      "target_generation_p95_seconds": 60
+    },
+    "aceite_ia_real": false,
+    "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição."
+  },
+  "testes": [
+    {
+      "teste": "tests/ai/test_evaluation_real.py::test_real_semantic_llm_benchmark",
+      "estado": "FALHA",
+      "segundos": 118.269
+    }
+  ],
+  "nota": "Revisão semântica é separada; não inferir suporte pelo schema."
+}

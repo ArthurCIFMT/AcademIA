@@ -20,11 +20,11 @@
     "denominador": null,
     "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 4,
+  "chamadas_fisicas": 5,
   "consumo_desconhecido": 1,
-  "tokens_conhecidos": 8437,
-  "tokens_entrada_conhecidos": 6317,
-  "tokens_saida_conhecidos": 2120,
+  "tokens_conhecidos": 10232,
+  "tokens_entrada_conhecidos": 7997,
+  "tokens_saida_conhecidos": 2235,
   "rotas": {
     "DUVIDA": {
       "n": 1,
@@ -38,8 +38,8 @@
     },
     "ADAPTACAO": {
       "n": 1,
-      "p50_ms": 455.2062000002479,
-      "p95_ms": 455.2062000002479
+      "p50_ms": 1506.6516999941086,
+      "p95_ms": 1506.6516999941086
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
@@ -60,8 +60,8 @@
     }
   },
   "busca": {
-    "n": 5,
-    "p50_ms": 62.637199996970594,
+    "n": 7,
+    "p50_ms": 74.90240001061466,
     "p95_ms": 99.45840000000317
   },
   "limiares": {
@@ -75,5 +75,10 @@
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "Uma ficha com quatro exercícios/dia publicada. L18 interrompido por quota; L23/L24 pendentes. Sem aceite AI-06/MVP."
+  "nota": "L09/L13 preservados. Retomada de L18 recusada por quota na geração; L23/L24 não executados. Consumo total inclui ambas as partes. Sem aceite AI-06/MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 6,
+    "tokens_conhecidos": 10232,
+    "consumo_desconhecido": 2
+  }
 }

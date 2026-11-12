@@ -103,8 +103,10 @@ constam no [registro de testes](comandos.md#aceitação-local-do-mvp-tst-01).
 
 ## Aceite ainda necessário
 
-Concluir os nove casos sem resposta e a revisão de AI-06, incluindo a extrapolação
-registrada no chat. Conferir SC-01/02 com LLM real, qualidade e latência pelas metas
-aprovadas. SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa
-avaliação; não substituem uma etapa ausente. Consolidar a matriz de aceite antes
-de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate para contornar quota.
+Concluir a adaptação L18 e os dois ataques L23/L24 da
+[amostra AI-06 v4](ai06-enxuto.md), sem refazer L09/L13. A retomada mais recente
+foi recusada por quota na geração de L18. Regras locais e duas saídas reais não
+aprovam os três casos pendentes. Conferir qualidade/latência e SC-01/02 reais;
+SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa avaliação.
+Verificar identidade do código/evidências E2E e consolidar a matriz de aceite
+antes de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate por quota.

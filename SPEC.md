@@ -159,7 +159,10 @@ O [guia vigente](docs/testes/ai06-enxuto.md) e a
 o estágio. A redução não corrige as falhas de chat L03/L04, preservadas nos
 [relatórios v3](docs/testes/historico/ai06-2026-11-12-amostra-v3/README.md).
 Não unir versões/modelos ou repetir resposta concluída para escolher melhor.
-Com amostra pequena, percentis são apenas descritivos. Treino manual, saúde
+Com amostra pequena, percentis são apenas descritivos. A última
+retomada de L18/L23/L24 preservou L09/L13; triagem de L18 passou, mas a geração
+foi recusada por quota. Os dois ataques continuam não executados. União e
+consumo de ambas as partes estão no guia, sem aceite de AI-06/TST-01 ou PG-01. Treino manual, saúde
 ausente, bloqueios, recursos e isolamento continuam obrigatórios.
 
 A [reserva 20B](docs/testes/ai06-reserva.md) e a
@@ -14236,11 +14239,11 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     "denominador": null,
     "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 4,
+  "chamadas_fisicas": 5,
   "consumo_desconhecido": 1,
-  "tokens_conhecidos": 8437,
-  "tokens_entrada_conhecidos": 6317,
-  "tokens_saida_conhecidos": 2120,
+  "tokens_conhecidos": 10232,
+  "tokens_entrada_conhecidos": 7997,
+  "tokens_saida_conhecidos": 2235,
   "rotas": {
     "DUVIDA": {
       "n": 1,
@@ -14254,8 +14257,8 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     },
     "ADAPTACAO": {
       "n": 1,
-      "p50_ms": 455.2062000002479,
-      "p95_ms": 455.2062000002479
+      "p50_ms": 1506.6516999941086,
+      "p95_ms": 1506.6516999941086
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
@@ -14276,8 +14279,8 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     }
   },
   "busca": {
-    "n": 5,
-    "p50_ms": 62.637199996970594,
+    "n": 7,
+    "p50_ms": 74.90240001061466,
     "p95_ms": 99.45840000000317
   },
   "limiares": {
@@ -14291,7 +14294,12 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "Uma ficha com quatro exercícios/dia publicada. L18 interrompido por quota; L23/L24 pendentes. Sem aceite AI-06/MVP."
+  "nota": "L09/L13 preservados. Retomada de L18 recusada por quota na geração; L23/L24 não executados. Consumo total inclui ambas as partes. Sem aceite AI-06/MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 6,
+    "tokens_conhecidos": 10232,
+    "consumo_desconhecido": 2
+  }
 }
 ````
 ### 10. Critérios de aceite da avaliação ainda não atendidos
@@ -14326,8 +14334,8 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
     "deterministico": "c8f882e82059241caab1be56052b08fd1eb290c0efe4e4ec23c361e137178d82",
-    "real": "fd2ad98a784d6290a281b2d99eba1cfcde4d03555a62658e1256a1bad4a9504c",
-    "revisao": "b7fe44ee4cb59126dd8857c1ed2b3e546b000551c3fce250419284d3f0ffb922"
+    "real": "0797ca7e61357c98adfd3e46465ac56dcbf477a7f8efbd23eefe1a8939fc02bd",
+    "revisao": "257b44ed4f793a951ab57c80d539a00ba00b66519bb0e7f5ea518b1906dfd2bc"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
@@ -14536,11 +14544,13 @@ constam no [registro de testes](docs/testes/comandos.md#aceitação-local-do-mvp
 
 #### Aceite ainda necessário
 
-Concluir os nove casos sem resposta e a revisão de AI-06, incluindo a extrapolação
-registrada no chat. Conferir SC-01/02 com LLM real, qualidade e latência pelas metas
-aprovadas. SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa
-avaliação; não substituem uma etapa ausente. Consolidar a matriz de aceite antes
-de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate para contornar quota.
+Concluir a adaptação L18 e os dois ataques L23/L24 da
+[amostra AI-06 v4](docs/testes/ai06-enxuto.md), sem refazer L09/L13. A retomada mais recente
+foi recusada por quota na geração de L18. Regras locais e duas saídas reais não
+aprovam os três casos pendentes. Conferir qualidade/latência e SC-01/02 reais;
+SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa avaliação.
+Verificar identidade do código/evidências E2E e consolidar a matriz de aceite
+antes de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate por quota.
 ### 13. Oito jornadas E2E e critérios rastreados
 
 Fonte versionada: [docs/testes/tst01-cenarios.json](docs/testes/tst01-cenarios.json).
@@ -15452,7 +15462,7 @@ persistência/idempotência antes de ser usada. Cada candidato é avaliado em se
 próprio lote v4, sem completar a avaliação de um modelo com saídas de outro.
 Não contratar faturamento nem acrescentar provedores automaticamente.
 
-#### Resultados de 2026-11-12
+#### Primeiro lote v4 — 2026-11-12
 
 [Determinístico](docs/testes/ai06-deterministico.json), [ensaio real](docs/testes/ai06-ensaio-real.json),
 [resumo](docs/testes/ai06-resumo.json), [revisão parcial](docs/testes/ai06-revisao-tecnica.json) e
@@ -15488,13 +15498,44 @@ São até quatro chamadas novas; L09/L13 não são refeitos. Em backend/:
 ~~~powershell
 $env:ACADEMIA_LLM_PROFILE = 'principal'
 uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --cases L18,L23,L24 --output ./data/avaliacao/enxuto-retomada-N
-uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-ensaio-real.json --part ./data/avaliacao/enxuto-retomada-N/relatorio.json --output ./data/avaliacao/enxuto-unido-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-v4-partes/base/relatorio.json --part ../docs/testes/ai06-v4-partes/retomada-01/relatorio.json --part ./data/avaliacao/enxuto-retomada-N/relatorio.json --output ./data/avaliacao/enxuto-unido-N
 ~~~
 
 Revisar somente as saídas novas, mantendo as justificativas de L09/L13, e gerar
 revisão completa vinculada ao relatório unido antes da consolidação. A falha
 de quota permanece nas tentativas; união recusa sobrescrever resposta concluída.
 Não repetir o lote inteiro ou testar novos provedores automaticamente.
+
+#### Retomada 01 — 2026-11-12
+
+Executados somente L18,L23,L24, preservando L09/L13. A Groq aceitou a triagem
+de L18, mas recusou a geração da adaptação por QUOTA_EXCEDIDA. Nenhuma nova
+ficha foi publicada e L23/L24 continuam não executados. Lote interrompido, sem
+retry, fallback, novo provedor ou alteração de configuração/amostra.
+
+Duas chamadas novas, 1.795 tokens conhecidos (1.680 entrada/115 saída); consumo
+desconhecido na chamada recusada. As [duas partes originais](docs/testes/ai06-v4-partes/README.md)
+conservam seis chamadas totais, 10.232 tokens conhecidos e duas falhas com consumo
+desconhecido. Métricas do conjunto selecionado registram cinco chamadas/uma falha
+de consumo desconhecido; a diferença é a tentativa anterior preservada na união.
+Não inferir fatura/custo monetário ou latência de adaptação a partir da falha.
+
+O [ensaio unido](docs/testes/ai06-ensaio-real.json) conserva a recusa anterior de L18 e todos
+os resultados já concluídos. Revisão foi vinculada ao hash da união; L18 mantém
+qualidade null por não ter saída. Identidade/código/corpus/modelo iguais.
+Consolidação PENDENTE_OU_REPROVADO; AI-06/TST-01 EM_EXECUCAO e PG-01 ABERTO.
+
+A próxima retomada ainda seleciona somente L18,L23,L24, após haver quota suficiente
+para análise e geração. Não executar novas chamadas nesta rodada. O comando merge
+acima usa todas as partes originais mais a nova parte; não passar a união como
+parte original. As expectativas permanecem fixas, sem apagar falhas ou escolher
+respostas favoráveis. Verificar relatório local E2E/evidências antes de fechar
+TST-01 quando AI-06 estiver aprovado.
+
+Verificação desta retomada: 20 testes de relatórios/retomada aprovados, sem
+chamar provedores. Auditoria reproduziu união/consolidação e confirmou L09/L13
+exatamente preservados. SPEC/DOC verificados; não houve alteração de código,
+novo requisito ou nova execução E2E/regressão completa.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -16083,11 +16124,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `7349ee138eb51fcb7b3439a7be21f87815b217f219af3cb244d396a90a65eb23` |
+| `docs/especificacao/compilacao-spec.json` | `c8d60931e7517a65b30c2e9f3ea57e6af4440db8e97a729cfa32b98f2984b14b` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `9f547b8de1ea31b5d014c5976632f470810320ba8942a8a1460126635ca4cacc` |
+| `docs/especificacao/visao-geral.md` | `9c8460e31c919a23b97ae126cbbe3a73345b00dcae90bbdd7359ec42c8f85ddb` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `72ebf06f183c9ac881e67e556b20e5e9afa833185dfa83719bfb6ce5cc87b99a` |
+| `docs/prompts/README.md` | `8b5232006be391da08511d73e0f07e65f4ad82e5140fc26727752b1a36128f77` |
 | `docs/requisitos/configuracao-ia-rag.md` | `e964dffc3bfbe58d17c0183f71554103c97319cb78b9a0e3d81516eb8357b46f` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
@@ -16108,18 +16149,18 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
 | `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
-| `docs/testes/aceitacao-mvp.md` | `e9f7203405774c81ab6b6f637969175babd628d4459e06096f572f95bdb95fed` |
+| `docs/testes/aceitacao-mvp.md` | `2dea9bc03d5547fb099df3d6da9f39a0d236e31199af43e1e546d46dc9413436` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
 | `docs/testes/ai06-academico.md` | `15a7e9d39ef00165e474b8be93ca43ed11668eed1eeb3a12c0d0acdfbfcf2089` |
 | `docs/testes/ai06-casos-v4.json` | `45e5a13ada33fd46681c592cbb4dda0294172c152dcc822e6ec065a0554d7666` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
-| `docs/testes/ai06-consolidacao.json` | `c7e353ef43ea88ac9b64fc55b1264aec8d598146495f2e257cafa069af7f02ef` |
+| `docs/testes/ai06-consolidacao.json` | `165d81394adad27a9974fd1a4faf10d3fa54ab4baf91f03ff175c6535a0233d7` |
 | `docs/testes/ai06-corpus-v2.json` | `51e471e5cdf112fd16f0282b5b3cbfa1029924679711b5286e2cbf9da30de349` |
 | `docs/testes/ai06-correcao-fundamentacao.md` | `a76d000d2b0d49c9476ab41d2149d0e16ee4d86954409158f9cfc774a11d4782` |
-| `docs/testes/ai06-enxuto.md` | `8eb2ac093fc7fd42097ae469f40982a4cd717cb9695a47d1b5e83476563827e8` |
+| `docs/testes/ai06-enxuto.md` | `0d76be97db96520479d9bb1cd0a60d91a500d4463936a1121b70c7e918e21ada` |
 | `docs/testes/ai06-gemini.md` | `024b1afa3ba2ce637ac345b73476cc4b928424029f1734ec00395ee57f5b386b` |
 | `docs/testes/ai06-reserva.md` | `9afa40f6d45caf5ee444a9784d82e370f5aab027ee31bb9aab9f96babca9c7fd` |
-| `docs/testes/ai06-resumo.json` | `5ee418b4661d6d031ea0c991f42c8a4fa34e059e51bb91e5171e2806a9d19d38` |
+| `docs/testes/ai06-resumo.json` | `d626ff78b4de00554a90c99a77c758916927e12684e9558e94fd55aee330a76f` |
 | `docs/testes/avaliacao-ia.md` | `b0417e0047a8e348648f6335f24ee0936639e61e3463c65a237e8359928e1a13` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `6ecf81e94a81ea6a08dbf720ac19705cc2b16c4e6ebabf73d45bc6d09fbcf355` |

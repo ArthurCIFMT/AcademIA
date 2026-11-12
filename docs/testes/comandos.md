@@ -1250,3 +1250,35 @@ troca de modelo. Busca p95 0,099 s (n=5); adaptação sem tempo válido medido.
 Consolidação PENDENTE_OU_REPROVADO, com identidade/revisão vinculadas. AI-06 e
 TST-01 EM_EXECUCAO, PG-01 ABERTO. Retomar só L18,L23,L24; não repetir L09/L13.
 Troca automática foi analisada, permanece evolução não implementada/ativada.
+
+## Retomada dos três casos de AI-06 v4 — 2026-11-12
+
+[Partes originais](ai06-v4-partes/README.md) e
+[guia/estado](ai06-enxuto.md#retomada-01--2026-11-12). Modelo, código, corpus e
+amostra preservados. Executado --mode real --cases L18,L23,L24; não se repetiu
+a dúvida L09 ou a geração L13.
+
+L18: triagem concluída e geração recusada por QUOTA_EXCEDIDA. L23/L24 não
+executados; nenhuma adaptação publicada. Duas chamadas, 1.795 tokens conhecidos
+e uma chamada de consumo desconhecido. Não houve retry ou fallback.
+União das duas partes: seis chamadas/10.232 tokens conhecidos/dois consumos
+desconhecidos, conservando a recusa anterior. Conjunto selecionado: cinco
+chamadas/10.232 tokens/um consumo desconhecido. Não ocultar essa diferença.
+
+--mode merge retornou FALHA porque a amostra segue incompleta. Consolidação
+sem rede retornou PENDENTE_OU_REPROVADO com identidade e revisão vinculadas;
+códigos 1 são esperados nesses estados, não aprovação. L18 sem ficha continua
+com campos de qualidade null. SPEC/DOC, identidade dos insumos e preservação
+exata de L09/L13 foram verificados. Código do aplicativo/avaliador não mudou;
+não repetir regressão completa/interface ou usar quota para testes já concluídos.
+AI-06/TST-01 EM_EXECUCAO e PG-01 ABERTO. Retomar só L18,L23,L24 após quota.
+
+Teste focal executado em backend/:
+
+~~~powershell
+uv run --locked pytest -o addopts='' tests/ai/test_evaluation_reporting.py tests/ai/test_evaluation_resume.py
+~~~
+
+20 aprovados, sem LLM real. A auditoria da união confirma identidade, hashes,
+consumo, decisão e preservação exata de L09/L13; não repetir testes completos
+quando somente relatórios/documentação mudaram.

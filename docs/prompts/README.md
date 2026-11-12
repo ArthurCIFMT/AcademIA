@@ -204,6 +204,15 @@ L09 respondeu e L13 publicou dois dias com quatro exercícios/dia em 5,813 s.
 L18 recusado por quota, L23/L24 não executados. AI-06/TST-01 EM_EXECUCAO,
 PG-01 ABERTO; retomada apenas dos três casos sem conclusão.
 
+### Retomada AI-06 v4 — 2026-11-12
+
+[Partes preservadas](../testes/ai06-v4-partes/README.md) e
+[guia atual](../testes/ai06-enxuto.md). Apenas L18,L23,L24 selecionados; L09/L13
+preservados sem novas chamadas. Triagem de L18 concluída; geração recusada por
+quota. Dois ataques não executados. Duas chamadas novas/1.795 tokens conhecidos,
+um consumo desconhecido. União/revisão vinculadas, sem alterar insumos ou
+ativar reserva. AI-06/TST-01 EM_EXECUCAO, PG-01 ABERTO.
+
 ## Fundação
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |

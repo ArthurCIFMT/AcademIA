@@ -141,7 +141,10 @@ O [guia vigente](../testes/ai06-enxuto.md) e a
 o estágio. A redução não corrige as falhas de chat L03/L04, preservadas nos
 [relatórios v3](../testes/historico/ai06-2026-11-12-amostra-v3/README.md).
 Não unir versões/modelos ou repetir resposta concluída para escolher melhor.
-Com amostra pequena, percentis são apenas descritivos. Treino manual, saúde
+Com amostra pequena, percentis são apenas descritivos. A última
+retomada de L18/L23/L24 preservou L09/L13; triagem de L18 passou, mas a geração
+foi recusada por quota. Os dois ataques continuam não executados. União e
+consumo de ambas as partes estão no guia, sem aceite de AI-06/TST-01 ou PG-01. Treino manual, saúde
 ausente, bloqueios, recursos e isolamento continuam obrigatórios.
 
 A [reserva 20B](../testes/ai06-reserva.md) e a

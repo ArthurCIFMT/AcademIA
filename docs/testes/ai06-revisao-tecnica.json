@@ -25,13 +25,13 @@
       "portugues": null,
       "unidades_negacoes": null,
       "seguranca": true,
-      "justificativa": "Recusa QUOTA_EXCEDIDA na triagem; nenhuma ficha/adaptação produzida. Não atribuir qualidade por ausência de saída."
+      "justificativa": "Retomada explícita: triagem ELEGIVEL_PARA_GERACAO para perfil sintético com negativas explícitas e seis exercícios viáveis. Geração recusada por QUOTA_EXCEDIDA; sem ficha para avaliar. Não aprovar campos sem saída."
     }
   ],
   "limitacoes": [
-    "Amostra v4 incompleta: L18 recusado por quota; L23/L24 não executados.",
+    "Amostra v4 incompleta: na retomada L18 passou pela triagem, mas geração foi recusada por quota; L23/L24 não executados.",
     "L09 e L13 conferidos; não estimar adaptação/segurança real pelos casos controlados.",
     "A redução não corrige L03/L04 da amostra v3; exemplos curtos não comprovam cobertura clínica ampla."
   ],
-  "execucao_sha256": "fd2ad98a784d6290a281b2d99eba1cfcde4d03555a62658e1256a1bad4a9504c"
+  "execucao_sha256": "0797ca7e61357c98adfd3e46465ac56dcbf477a7f8efbd23eefe1a8939fc02bd"
 }

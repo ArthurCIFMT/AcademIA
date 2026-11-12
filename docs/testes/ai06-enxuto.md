@@ -60,7 +60,7 @@ persistência/idempotência antes de ser usada. Cada candidato é avaliado em se
 próprio lote v4, sem completar a avaliação de um modelo com saídas de outro.
 Não contratar faturamento nem acrescentar provedores automaticamente.
 
-## Resultados de 2026-11-12
+## Primeiro lote v4 — 2026-11-12
 
 [Determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
 [resumo](ai06-resumo.json), [revisão parcial](ai06-revisao-tecnica.json) e
@@ -96,10 +96,41 @@ São até quatro chamadas novas; L09/L13 não são refeitos. Em backend/:
 ~~~powershell
 $env:ACADEMIA_LLM_PROFILE = 'principal'
 uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --cases L18,L23,L24 --output ./data/avaliacao/enxuto-retomada-N
-uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-ensaio-real.json --part ./data/avaliacao/enxuto-retomada-N/relatorio.json --output ./data/avaliacao/enxuto-unido-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-v4-partes/base/relatorio.json --part ../docs/testes/ai06-v4-partes/retomada-01/relatorio.json --part ./data/avaliacao/enxuto-retomada-N/relatorio.json --output ./data/avaliacao/enxuto-unido-N
 ~~~
 
 Revisar somente as saídas novas, mantendo as justificativas de L09/L13, e gerar
 revisão completa vinculada ao relatório unido antes da consolidação. A falha
 de quota permanece nas tentativas; união recusa sobrescrever resposta concluída.
 Não repetir o lote inteiro ou testar novos provedores automaticamente.
+
+## Retomada 01 — 2026-11-12
+
+Executados somente L18,L23,L24, preservando L09/L13. A Groq aceitou a triagem
+de L18, mas recusou a geração da adaptação por QUOTA_EXCEDIDA. Nenhuma nova
+ficha foi publicada e L23/L24 continuam não executados. Lote interrompido, sem
+retry, fallback, novo provedor ou alteração de configuração/amostra.
+
+Duas chamadas novas, 1.795 tokens conhecidos (1.680 entrada/115 saída); consumo
+desconhecido na chamada recusada. As [duas partes originais](ai06-v4-partes/README.md)
+conservam seis chamadas totais, 10.232 tokens conhecidos e duas falhas com consumo
+desconhecido. Métricas do conjunto selecionado registram cinco chamadas/uma falha
+de consumo desconhecido; a diferença é a tentativa anterior preservada na união.
+Não inferir fatura/custo monetário ou latência de adaptação a partir da falha.
+
+O [ensaio unido](ai06-ensaio-real.json) conserva a recusa anterior de L18 e todos
+os resultados já concluídos. Revisão foi vinculada ao hash da união; L18 mantém
+qualidade null por não ter saída. Identidade/código/corpus/modelo iguais.
+Consolidação PENDENTE_OU_REPROVADO; AI-06/TST-01 EM_EXECUCAO e PG-01 ABERTO.
+
+A próxima retomada ainda seleciona somente L18,L23,L24, após haver quota suficiente
+para análise e geração. Não executar novas chamadas nesta rodada. O comando merge
+acima usa todas as partes originais mais a nova parte; não passar a união como
+parte original. As expectativas permanecem fixas, sem apagar falhas ou escolher
+respostas favoráveis. Verificar relatório local E2E/evidências antes de fechar
+TST-01 quando AI-06 estiver aprovado.
+
+Verificação desta retomada: 20 testes de relatórios/retomada aprovados, sem
+chamar provedores. Auditoria reproduziu união/consolidação e confirmou L09/L13
+exatamente preservados. SPEC/DOC verificados; não houve alteração de código,
+novo requisito ou nova execução E2E/regressão completa.

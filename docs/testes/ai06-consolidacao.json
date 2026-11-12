@@ -25,8 +25,8 @@
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
     "deterministico": "c8f882e82059241caab1be56052b08fd1eb290c0efe4e4ec23c361e137178d82",
-    "real": "fd2ad98a784d6290a281b2d99eba1cfcde4d03555a62658e1256a1bad4a9504c",
-    "revisao": "b7fe44ee4cb59126dd8857c1ed2b3e546b000551c3fce250419284d3f0ffb922"
+    "real": "0797ca7e61357c98adfd3e46465ac56dcbf477a7f8efbd23eefe1a8939fc02bd",
+    "revisao": "257b44ed4f793a951ab57c80d539a00ba00b66519bb0e7f5ea518b1906dfd2bc"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
