@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "prompt": "TST-01",
+  "modo": "E2E_HTTP_REAL_IA_CONTROLADA",
+  "aceite_mvp_depende_de": "AI-06 completo e consolidação das evidências; mocks não aprovam o modelo real.",
+  "casos": [
+    {
+      "id": "E2E-01",
+      "atores": [
+        "Administrador",
+        "Instrutor",
+        "Cliente"
+      ],
+      "modulos": [
+        "MOD-01",
+        "MOD-02",
+        "MOD-03",
+        "MOD-04",
+        "MOD-10",
+        "MOD-12"
+      ],
+      "criterios": [
+        "CA-01.1",
+        "CA-07.1",
+        "CA-09.1",
+        "CA-10.1",
+        "CA-10.4",
+        "CA-11.3",
+        "CA-13.2",
+        "CA-14.2",
+        "CA-15.14",
+        "CA-16.1",
+        "CA-16.4",
+        "CA-32.1",
+        "CA-34.1",
+        "CA-35.1",
+        "CA-35.5"
+      ],
+      "verifica": "Cadastro/primeiro acesso e formulário no navegador; convite emitido pela API administrativa e lido no Mailpit; avaliação, equipamento/exercício, ficha manual, parecer, recarga/login e exportação. Viewport 390×844."
+    },
+    {
+      "id": "E2E-02",
+      "atores": [
+        "Dois clientes"
+      ],
+      "modulos": [
+        "MOD-01",
+        "MOD-03",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-04.5",
+        "CA-05.1",
+        "CA-05.3",
+        "CA-12.3",
+        "CA-14.3",
+        "CA-18.1",
+        "CA-18.3"
+      ],
+      "seguranca": [
+        "SC-03",
+        "SC-04"
+      ],
+      "verifica": "Resposta HTML/script do adaptador controlado é texto inerte; ID alheio, API administrativa e CSRF antigo/ausente recusados; troca de sessão não mostra marcador privado."
+    },
+    {
+      "id": "E2E-03",
+      "atores": [
+        "Clientes sintéticos"
+      ],
+      "modulos": [
+        "MOD-03",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-13.4",
+        "CA-15.1",
+        "CA-15.4",
+        "CA-18.1",
+        "CA-35.4"
+      ],
+      "verifica": "Grave bloqueado; NAO_SEI/onboarding ausente insuficientes; cliente elegível sem instrutor consulta geração controlada e chat antes de parecer."
+    },
+    {
+      "id": "E2E-04",
+      "atores": [
+        "Cliente",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-03",
+        "MOD-04",
+        "MOD-06",
+        "MOD-12"
+      ],
+      "criterios": [
+        "CA-11.4",
+        "CA-15.6",
+        "CA-15.12",
+        "CA-17.2",
+        "CA-19.2",
+        "CA-19.3",
+        "CA-19.7",
+        "CA-35.1"
+      ],
+      "verifica": "Replay/recarga não duplicam publicação/aviso. Atualização de rotina é confirmada em novo snapshot antes de adaptação explícita. Segundo dia preservado; parecer novo PENDENTE e instrutor alheio recusado."
+    },
+    {
+      "id": "E2E-05",
+      "atores": [
+        "Instrutor",
+        "Cliente"
+      ],
+      "modulos": [
+        "MOD-04"
+      ],
+      "criterios": [
+        "CA-17.6",
+        "CA-17.7",
+        "CA-35.5",
+        "CA-35.7"
+      ],
+      "verifica": "16 publicações manuais pela API real; 15 versões no seletor; conteúdo expirado não exporta; rejeitar posterior exclui conteúdo da rejeitada anterior e mantém a mais recente."
+    },
+    {
+      "id": "E2E-06",
+      "atores": [
+        "Administrador",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-04",
+        "MOD-10"
+      ],
+      "criterios": [
+        "CA-15.8",
+        "CA-32.4",
+        "CA-32.5",
+        "CA-32.7"
+      ],
+      "verifica": "Equipamento torna-se indisponível entre rascunho e publicação; API recusa 409. Instrutor não pode restaurar disponibilidade."
+    },
+    {
+      "id": "E2E-07",
+      "atores": [
+        "Cliente",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-04",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-15.11",
+        "CA-15.14",
+        "CA-18.4"
+      ],
+      "verifica": "Falha controlada do provedor no chat; criação/publicação manual no navegador e consulta após novo login continuam funcionando."
+    },
+    {
+      "id": "E2E-08",
+      "atores": [
+        "Administrador",
+        "Atendente/cliente"
+      ],
+      "modulos": [
+        "MOD-01"
+      ],
+      "criterios": [
+        "CA-03.2",
+        "CA-05.4",
+        "CA-06.3",
+        "CA-06.4"
+      ],
+      "verifica": "Perfil cliente desativado mantém funcionário operacional; recuperação via Mailpit/navegador redefine senha e revoga sessão anterior."
+    }
+  ],
+  "complementos_obrigatorios": [
+    "Concorrência e rollback: testes PostgreSQL de database/integration.",
+    "Expurgo de contexto/cache/chat e serviços IA indisponíveis: tests/ai/test_evaluation_guards.py.",
+    "PT/EN e fontes aprovadas/revogadas: RAG-05 e ensaio AI-06, separados da fixture E2E.",
+    "SC-01/SC-02 com LLM real e qualidade/tempo continuam pendentes em AI-06."
+  ]
+}

@@ -118,7 +118,8 @@ atualizar estes arquivos. Critérios numéricos de qualidade são definidos ante
 
 Na revisão didática, cobrir SV-21–SV-24: sem laudo obrigatório, confirmação de
 novo snapshot antes de adaptar, publicação/aviso únicos e ausência de retries
-automáticos das etapas LLM. Esses cenários são planos, ainda não testes executados.
+automáticos das etapas LLM. A execução e as partes pendentes estão no manifesto
+e no guia de TST-01; planejamento não equivale a aprovação.
 
 ## Detalhamento RF/RN de 2026-11-06
 
@@ -127,3 +128,11 @@ aos prompts e níveis de teste, incluindo falhas da IA, criação manual sem IA,
 sessões/perfis, compra versus matrícula e passagem versus identificação.
 O verificador documental também confere corpus selecionado e modelo JSON/DBML;
 essa checagem não executa regras de FastAPI, SQL ou provedores reais.
+
+## Execução local parcial de TST-01
+
+O [runner E2E](aceitacao-mvp.md) e os [oito cenários](tst01-cenarios.json) executam
+navegador, API e persistência reais com IA controlada. Relatório separa esse
+resultado do aceite do provedor real e de PG-01. Não substituir AI-06 pendente
+pela navegação ou por uma fixture aprovada. Concorrência permanece nos testes
+PostgreSQL próprios; o harness E2E serializa requisições para savepoints.

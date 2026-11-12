@@ -232,6 +232,9 @@ Backend, a partir de `backend/` com uv e Python 3.12:
   `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/deterministico-N`.
   Para provedor real, usar --mode real e outra pasta nova, com GROQ_API_KEY;
   consolidação/revisão não repete chamadas. Ver docs/testes/avaliacao-ia.md.
+- E2E: iniciar Mailpit e usar academia_test vazio; definir `ACADEMIA_E2E=1` e executar
+  em backend/ `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N`.
+  Node 24/Edge necessários; IA controlada não aprova AI-06/PG-01. Ver docs/testes/aceitacao-mvp.md.
 - RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.

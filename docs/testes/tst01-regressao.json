@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "backend": {
+    "aprovados": 458,
+    "falhas": 0,
+    "ignorados": [
+      {
+        "teste": "tests/ai/test_evaluation_real.py::test_real_semantic_llm_benchmark",
+        "estado": "IGNORADO"
+      }
+    ],
+    "junit_sha256": "2d55a70fc7c6da3de340b742005a0d67ef52350237e4e5604032b7171293a1ed"
+  },
+  "frontend": {
+    "aprovados": 85,
+    "falhas": 0
+  },
+  "ambiente": {
+    "python": "3.12",
+    "node": "24",
+    "postgresql": "17",
+    "embeddings": "E5 CPU real, pesos locais verificados",
+    "banco_vetorial": "Qdrant local real",
+    "smtp": "Mailpit nativo local",
+    "llm_real": "NÃO EXECUTADO; opt-in AI-06 ignorado"
+  },
+  "criticos_complementares": [
+    {
+      "teste": "tests/ai/test_chat_concurrency.py::test_chat_concurrent_reservations_replay_and_shared_quota",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_evaluation_guards.py::test_sixteenth_version_cannot_be_recovered_from_chat",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_evaluation_guards.py::test_manual_workout_does_not_depend_on_any_ai_service",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_followup.py::test_followup_sources_pending_notice_failure_and_idempotent_resend",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_generation.py::test_equipment_change_before_delivery_prevents_publication",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_generation.py::test_final_sql_guard_refuses_changed_source_or_snapshot[fonte]",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_generation.py::test_final_sql_guard_refuses_changed_source_or_snapshot[onboarding]",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/ai/test_generation_concurrency.py::test_atomic_claim_dispatch_and_shared_rate_limit_in_independent_connections",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/knowledge/test_evaluation_attack.py::test_real_attack_fixture_reaches_retrieval_without_provider",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/onboarding/test_onboarding.py::test_reissue_revokes_unused_link_and_concurrent_exchange_consumes_once",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/training/test_catalog.py::test_publication_revalidates_snapshot_inventory_and_draft",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection[publish]",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection[replay]",
+      "estado": "APROVADO"
+    },
+    {
+      "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection[reject]",
+      "estado": "APROVADO"
+    }
+  ],
+  "nota": "Regressão da aplicação, separada do E2E com fixtures. Testes reais de modelo continuam pendentes; não aprova PG-01."
+}

@@ -121,14 +121,17 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-06 e TST-01. O próximo cartão continua sendo concluir AI-06.
+O MVP ainda requer concluir AI-06 e o aceite final de TST-01. Por autorização
+do responsável, o [E2E local de TST-01](../../docs/testes/aceitacao-mvp.md) foi adiantado
+e exercitou oito jornadas reais de navegador/API/banco com IA controlada.
+O [relatório](../../docs/testes/tst01-resultado.json) não aprova o modelo real ou PG-01.
 O [runner](../../docs/testes/avaliacao-ia.md) e a [correção](../../docs/testes/ai06-correcao-fundamentacao.md)
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
 A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
 o [limite diário TPD da Groq](../../docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
 Uma ficha foi publicada em teste; isso não aprova os demais perfis ou AI-06.
-Não há liberação de TST-01. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
+TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
 registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.

@@ -13,7 +13,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | INT | `uv run --locked --env-file ../.env pytest -m integration` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | API | `uv run --locked pytest tests/contracts` em `backend/` | Disponível no FND-06 |
 | FE | `npm test` em `frontend/` | Disponível no FND-07 |
-| E2E | PENDENTE | TST-01 |
+| E2E | `ACADEMIA_E2E=1` + `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N` em backend/ | TST-01 local com IA controlada; aceite real pendente |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py` em backend/; exige flag E5 real e pesos locais | Disponível no RAG-05; configuração abaixo |
 | IA | `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N`; modo real/revisão no guia | AI-06: [runner e pré-condições](avaliacao-ia.md) |
@@ -1057,3 +1057,59 @@ L13,L14,L16,L17,L18,L19,L20,L23,L24 em pasta nova. Unir as cinco partes anterior
 e a nova por --mode merge, revisar os novos artefatos e vincular a revisão ao
 JSON unido completo antes de consolidar novamente. Exemplos de comandos e
 guardas estão no guia; nenhuma parte isolada aprova o conjunto.
+
+## Aceitação local do MVP TST-01
+
+[Guia de reprodução](aceitacao-mvp.md), [oito jornadas](tst01-cenarios.json) e
+[relatório sanitizado](tst01-resultado.json). O responsável autorizou adiantar
+trabalho independente da quota; AI-06 e PG-01 não foram dados como concluídos.
+
+~~~powershell
+# frontend/
+npm ci
+npm test
+npm run lint
+npm run typecheck
+npm run build
+
+# backend/
+uv sync --locked
+$env:ACADEMIA_E2E = '1'
+uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N
+uv run --locked pytest tests/acceptance
+uv run --locked --env-file ../.env pytest -o addopts=''
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+E2E requer Node 24/Edge, PostgreSQL academia_test vazio e Mailpit nativo. A opção
+--node aceita um caminho explícito para Node. O runner força proxy/origem locais,
+usa adaptadores controlados de IA e não chama Groq. Não substituir pela API isolada.
+A regressão completa foi executada com ACADEMIA_TEST_EMBEDDINGS_REAL=1,
+ACADEMIA_EMBEDDING_PATH apontando aos pesos E5 locais verificados e
+ACADEMIA_TEST_MAILPIT=1. ACADEMIA_AI_REAL=0; chave Groq removida do processo.
+Ausência de provedor real permanece visível; não equivale a qualidade aprovada.
+
+Resultados locais: oito jornadas E2E aprovadas, 458 testes backend aprovados e
+um ignorado (ensaio real do LLM, opt-in de AI-06); 85 testes FE aprovados.
+Ruff/formato/mypy (218 fontes), frontend lint/tipos/build e SPEC/DOC aprovados.
+A regressão cobre contratos/API, banco/migrations, concorrência, retenção/chat,
+sessões e RAG com E5/Qdrant reais; confira os seletores críticos no
+[resumo de regressão](tst01-regressao.json).
+Oito testes de guarda do relatório/banco fazem parte dos 458, não são somados
+novamente. O E2E serializado não comprova concorrência: os testes SQL a exercitam
+separadamente. Tempos do navegador são de execução do teste, não benchmark do LLM.
+
+O runner local comprovou migrations até 0015, bootstrap idempotente, transação
+revertida e schema de teste ausente ao final. A tela móvel foi conferida a 390×844.
+Revalidação na cópia do projeto precede o commit; dados/índices/logs privados não
+acompanham o Git. O formulário de convite exige clicar Abrir formulário: um timeout
+inicial vinha da ausência desse passo no roteiro, corrigido no teste. Outra rodada
+de preparação corrigiu o diretório de trabalho do Vite. Não houve defeito funcional
+mascarado, alteração de regra ou retry automático para aprovar cenário intermitente.
+
+O comando retorna sucesso para o conjunto local controlado e registra sempre
+aceite_mvp=false. TST-01 permanece EM_EXECUCAO; PG-01 ABERTO. Ainda é necessário
+completar AI-06 e consolidar as evidências reais, inclusive SC-01/02 e a revisão
+de fundamentação registrada. As dependências originais dos cartões foram preservadas.

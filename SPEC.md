@@ -139,14 +139,17 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-06 e TST-01. O próximo cartão continua sendo concluir AI-06.
+O MVP ainda requer concluir AI-06 e o aceite final de TST-01. Por autorização
+do responsável, o [E2E local de TST-01](docs/testes/aceitacao-mvp.md) foi adiantado
+e exercitou oito jornadas reais de navegador/API/banco com IA controlada.
+O [relatório](docs/testes/tst01-resultado.json) não aprova o modelo real ou PG-01.
 O [runner](docs/testes/avaliacao-ia.md) e a [correção](docs/testes/ai06-correcao-fundamentacao.md)
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
 A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
 o [limite diário TPD da Groq](docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
 Uma ficha foi publicada em teste; isso não aprova os demais perfis ou AI-06.
-Não há liberação de TST-01. [Relatórios atuais](docs/testes/ai06-consolidacao.json)
+TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](docs/testes/ai06-consolidacao.json)
 registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
@@ -12063,7 +12066,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-04](docs/prompts/05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
 | [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
 | [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | EM_EXECUCAO |
-| [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
+| [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | EM_EXECUCAO |
 
 #### Pós-MVP — matrícula e controle de acesso
 
@@ -12320,7 +12323,8 @@ atualizar estes arquivos. Critérios numéricos de qualidade são definidos ante
 
 Na revisão didática, cobrir SV-21–SV-24: sem laudo obrigatório, confirmação de
 novo snapshot antes de adaptar, publicação/aviso únicos e ausência de retries
-automáticos das etapas LLM. Esses cenários são planos, ainda não testes executados.
+automáticos das etapas LLM. A execução e as partes pendentes estão no manifesto
+e no guia de TST-01; planejamento não equivale a aprovação.
 
 #### Detalhamento RF/RN de 2026-11-06
 
@@ -12329,6 +12333,14 @@ aos prompts e níveis de teste, incluindo falhas da IA, criação manual sem IA,
 sessões/perfis, compra versus matrícula e passagem versus identificação.
 O verificador documental também confere corpus selecionado e modelo JSON/DBML;
 essa checagem não executa regras de FastAPI, SQL ou provedores reais.
+
+#### Execução local parcial de TST-01
+
+O [runner E2E](docs/testes/aceitacao-mvp.md) e os [oito cenários](docs/testes/tst01-cenarios.json) executam
+navegador, API e persistência reais com IA controlada. Relatório separa esse
+resultado do aceite do provedor real e de PG-01. Não substituir AI-06 pendente
+pela navegação ou por uma fixture aprovada. Concorrência permanece nos testes
+PostgreSQL próprios; o harness E2E serializa requisições para savepoints.
 ### 2. Avaliação e segurança de IA/RAG
 
 Fonte versionada: [docs/testes/rag-ia-semantico.md](docs/testes/rag-ia-semantico.md).
@@ -12658,6 +12670,9 @@ Backend, a partir de `backend/` com uv e Python 3.12:
   `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/deterministico-N`.
   Para provedor real, usar --mode real e outra pasta nova, com GROQ_API_KEY;
   consolidação/revisão não repete chamadas. Ver docs/testes/avaliacao-ia.md.
+- E2E: iniciar Mailpit e usar academia_test vazio; definir `ACADEMIA_E2E=1` e executar
+  em backend/ `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N`.
+  Node 24/Edge necessários; IA controlada não aprova AI-06/PG-01. Ver docs/testes/aceitacao-mvp.md.
 - RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
@@ -14104,6 +14119,656 @@ revisão vinculada. Registra consumo de todas as partes, inclusive tentativa
 interrompida/consumo desconhecido, separadamente das métricas dos casos concluídos.
 Pausas de amostragem não entram na latência do pedido; geração usa 60 s entre
 casos no lote para respeitar a janela gratuita, sem alterar o tempo da aplicação.
+### 12. Execução E2E local e limites do aceite MVP
+
+Fonte versionada: [docs/testes/aceitacao-mvp.md](docs/testes/aceitacao-mvp.md).
+
+#### Escopo e estado
+
+O responsável autorizou avançar no TST-01 enquanto a quota de AI-06 está indisponível.
+Isso libera preparar e exercitar o trabalho independente, conforme o contrato comum;
+não remove a dependência de aceite. TST-01 fica EM_EXECUCAO e PG-01 permanece ABERTO.
+
+O [runner](backend/tests/acceptance/__main__.py) inicia FastAPI/Uvicorn real,
+SPA/Vite real e Playwright/Edge. PostgreSQL e Qdrant são reais; SMTP usa Mailpit local.
+Há oito [jornadas rastreáveis](docs/testes/tst01-cenarios.json), com navegador a 1280×800 e consulta
+móvel a 390×844. Não é API isolada apresentada como navegação.
+
+O LLM é um adaptador controlado de testes, sem chave/rede Groq. Embeddings e texto
+são fixtures explicitamente sintéticas, separadas do corpus de uso. A publicação
+continua passando pelos serviços reais de triagem, autorização, catálogo, fontes,
+inventário, versões, avisos e parecer. Isso testa integração e renderização,
+sem afirmar que a IA produziu uma resposta real ou uma prescrição fundamentada.
+A emissão do convite de onboarding e as 16 publicações do cenário de retenção
+usam a API autenticada real; o preenchimento e a consulta são feitos no navegador.
+
+[Resultado sanitizado](docs/testes/tst01-resultado.json). A qualidade, PT/EN e ataques semânticos
+do modelo real dependem da [consolidação AI-06](docs/testes/ai06-consolidacao.json).
+O runner local sempre conserva aceite_mvp=false; concluir os testes locais não
+fecha PG-01 nem dispensa a revisão das evidências reais.
+
+#### Instalação e execução
+
+Pré-condições: PostgreSQL 17 com academia_test dedicado e vazio, Mailpit nativo
+em 127.0.0.1:1025/8025, Python 3.12/uv, Node 24/npm 11 e Microsoft Edge instalado.
+Configurar ACADEMIA_TEST_DATABASE_URL no .env local conforme o guia do banco.
+Não é necessário configurar GROQ_API_KEY para este ensaio.
+
+Na pasta frontend/:
+~~~powershell
+npm ci
+~~~
+
+Na pasta backend/:
+~~~powershell
+uv sync --locked
+$env:ACADEMIA_E2E = '1'
+uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N
+~~~
+
+Escolha pasta nova para cada rodada. O runner recusa sobrescrever evidências.
+Node deve estar no PATH; alternativamente informe --node com o executável Node 24.
+A opção --frontend-port muda a porta local padrão 5187. O backend usa porta local
+livre; a origem e o proxy são passados explicitamente para aquela execução.
+Não reutiliza frontend/backend de desenvolvimento ou servidor já aberto na porta.
+
+O comando npm run test:e2e existe, mas recebe ambiente/fixture do runner Python;
+não deve ser usado isoladamente contra o ambiente de desenvolvimento.
+Chromium também é selecionável com --channel chromium, após instalar o navegador
+compatível por npx playwright install chromium. A evidência desta entrega usa Edge.
+
+Playwright foi acrescentado somente às dependências de desenvolvimento, com versão
+exata 1.65.0 no lockfile; é necessário para percorrer a interface de forma reproduzível.
+Vitest exclui tests/e2e/** para não executar testes Playwright como componentes.
+Não houve alteração funcional de domínio, migration, MER ou regra de saúde.
+Referências: [servidores de teste](https://playwright.dev/docs/test-webserver) e
+[navegadores suportados](https://playwright.dev/docs/browsers).
+
+#### Isolamento e proteção dos dados
+
+O runner exige opt-in ACADEMIA_E2E=1, URL e conexão efetiva para academia_test.
+Recusa schema academia preexistente; não executa DROP/TRUNCATE sobre um banco usado.
+Aplica as migrations em transação externa, testa bootstrap repetido sem duplicar,
+cria fixtures sintéticas e usa savepoints nos serviços reais. Requisições HTTP são
+serializadas no harness para proteger a conexão única. Concorrência/carga não é
+comprovada por este navegador: continua nos testes PostgreSQL apropriados.
+
+Ao terminar, encerra o servidor e reverte a transação; uma nova conexão confirma
+que o schema de teste foi desfeito. Não aponta para academia_dev. Qdrant e arquivos
+de corpus ficam no diretório privado da rodada. Mensagens sintéticas no Mailpit
+são filtradas por destinatário de teste; o ensaio não limpa a caixa compartilhada
+nem envia mensagens a pessoas reais. Nenhum relay externo é usado.
+
+A senha dos usuários é gerada por execução e enviada somente no ambiente do processo.
+A chave Groq é removida do ambiente do runner/filhos, sem alterar o .env original.
+Não versionar fixtures privadas, logs, downloads, screenshots de falhas, índices ou
+cookies. backend/data/ já é ignorado. Só o relatório sanitizado acompanha o Git.
+O relatório vincula código da aplicação/testes e lockfiles por hash normalizado,
+registra versão do navegador, tentativas, duração, persistência e rollback.
+
+#### O que as jornadas demonstram
+
+| Jornada | Evidência local |
+|---|---|
+| E2E-01 | Bootstrap, funcionário/cliente, primeiro acesso via e-mail, designação, convite restrito, rascunho/conclusão, avaliação, equipamento/exercício e ficha manual, exportação, rejeição e persistência após novo login. |
+| E2E-02 | Dois clientes, troca de sessão, APIs/IDs alheios recusados, CSRF e HTML/script entregue pela API real sem execução no navegador. |
+| E2E-03 | Três estados de triagem com fixtures rotuladas; grave não publica, NAO_SEI/ausente insuficientes; consulta/chat sem aceite ou instrutor. |
+| E2E-04 | Replay e consulta não duplicam ficha/aviso; nova versão do onboarding exige confirmação; adaptação explícita mantém outro dia e inicia parecer PENDENTE. |
+| E2E-05 | 16 → 15 versões completas; exclusão impede consulta/exportação; rejeição posterior substitui o conteúdo da rejeitada anterior. |
+| E2E-06 | Mudança do equipamento entre rascunho/publicação provoca 409; permissão do inventário é aplicada na API. |
+| E2E-07 | Indisponibilidade controlada da IA não impede editar/publicar/consultar treino manual. |
+| E2E-08 | Papéis/perfis independentes e recuperação por e-mail com revogação de sessão anterior. |
+
+Backend/integração complementam fronteiras não demonstradas isoladamente pelo
+navegador: concorrência, expurgo de chat/cache, alterações de restrição durante
+revisão, tokens inválidos/expirados e isolamento do corpus. As evidências e comandos
+constam no [registro de testes](docs/testes/comandos.md#aceitação-local-do-mvp-tst-01).
+
+#### Aceite ainda necessário
+
+Concluir os nove casos sem resposta e a revisão de AI-06, incluindo a extrapolação
+registrada no chat. Conferir SC-01/02 com LLM real, qualidade e latência pelas metas
+aprovadas. SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa
+avaliação; não substituem uma etapa ausente. Consolidar a matriz de aceite antes
+de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate para contornar quota.
+### 13. Oito jornadas E2E e critérios rastreados
+
+Fonte versionada: [docs/testes/tst01-cenarios.json](docs/testes/tst01-cenarios.json).
+
+````json
+{
+  "schema_version": 1,
+  "prompt": "TST-01",
+  "modo": "E2E_HTTP_REAL_IA_CONTROLADA",
+  "aceite_mvp_depende_de": "AI-06 completo e consolidação das evidências; mocks não aprovam o modelo real.",
+  "casos": [
+    {
+      "id": "E2E-01",
+      "atores": [
+        "Administrador",
+        "Instrutor",
+        "Cliente"
+      ],
+      "modulos": [
+        "MOD-01",
+        "MOD-02",
+        "MOD-03",
+        "MOD-04",
+        "MOD-10",
+        "MOD-12"
+      ],
+      "criterios": [
+        "CA-01.1",
+        "CA-07.1",
+        "CA-09.1",
+        "CA-10.1",
+        "CA-10.4",
+        "CA-11.3",
+        "CA-13.2",
+        "CA-14.2",
+        "CA-15.14",
+        "CA-16.1",
+        "CA-16.4",
+        "CA-32.1",
+        "CA-34.1",
+        "CA-35.1",
+        "CA-35.5"
+      ],
+      "verifica": "Cadastro/primeiro acesso e formulário no navegador; convite emitido pela API administrativa e lido no Mailpit; avaliação, equipamento/exercício, ficha manual, parecer, recarga/login e exportação. Viewport 390×844."
+    },
+    {
+      "id": "E2E-02",
+      "atores": [
+        "Dois clientes"
+      ],
+      "modulos": [
+        "MOD-01",
+        "MOD-03",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-04.5",
+        "CA-05.1",
+        "CA-05.3",
+        "CA-12.3",
+        "CA-14.3",
+        "CA-18.1",
+        "CA-18.3"
+      ],
+      "seguranca": [
+        "SC-03",
+        "SC-04"
+      ],
+      "verifica": "Resposta HTML/script do adaptador controlado é texto inerte; ID alheio, API administrativa e CSRF antigo/ausente recusados; troca de sessão não mostra marcador privado."
+    },
+    {
+      "id": "E2E-03",
+      "atores": [
+        "Clientes sintéticos"
+      ],
+      "modulos": [
+        "MOD-03",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-13.4",
+        "CA-15.1",
+        "CA-15.4",
+        "CA-18.1",
+        "CA-35.4"
+      ],
+      "verifica": "Grave bloqueado; NAO_SEI/onboarding ausente insuficientes; cliente elegível sem instrutor consulta geração controlada e chat antes de parecer."
+    },
+    {
+      "id": "E2E-04",
+      "atores": [
+        "Cliente",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-03",
+        "MOD-04",
+        "MOD-06",
+        "MOD-12"
+      ],
+      "criterios": [
+        "CA-11.4",
+        "CA-15.6",
+        "CA-15.12",
+        "CA-17.2",
+        "CA-19.2",
+        "CA-19.3",
+        "CA-19.7",
+        "CA-35.1"
+      ],
+      "verifica": "Replay/recarga não duplicam publicação/aviso. Atualização de rotina é confirmada em novo snapshot antes de adaptação explícita. Segundo dia preservado; parecer novo PENDENTE e instrutor alheio recusado."
+    },
+    {
+      "id": "E2E-05",
+      "atores": [
+        "Instrutor",
+        "Cliente"
+      ],
+      "modulos": [
+        "MOD-04"
+      ],
+      "criterios": [
+        "CA-17.6",
+        "CA-17.7",
+        "CA-35.5",
+        "CA-35.7"
+      ],
+      "verifica": "16 publicações manuais pela API real; 15 versões no seletor; conteúdo expirado não exporta; rejeitar posterior exclui conteúdo da rejeitada anterior e mantém a mais recente."
+    },
+    {
+      "id": "E2E-06",
+      "atores": [
+        "Administrador",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-04",
+        "MOD-10"
+      ],
+      "criterios": [
+        "CA-15.8",
+        "CA-32.4",
+        "CA-32.5",
+        "CA-32.7"
+      ],
+      "verifica": "Equipamento torna-se indisponível entre rascunho e publicação; API recusa 409. Instrutor não pode restaurar disponibilidade."
+    },
+    {
+      "id": "E2E-07",
+      "atores": [
+        "Cliente",
+        "Instrutor"
+      ],
+      "modulos": [
+        "MOD-04",
+        "MOD-06"
+      ],
+      "criterios": [
+        "CA-15.11",
+        "CA-15.14",
+        "CA-18.4"
+      ],
+      "verifica": "Falha controlada do provedor no chat; criação/publicação manual no navegador e consulta após novo login continuam funcionando."
+    },
+    {
+      "id": "E2E-08",
+      "atores": [
+        "Administrador",
+        "Atendente/cliente"
+      ],
+      "modulos": [
+        "MOD-01"
+      ],
+      "criterios": [
+        "CA-03.2",
+        "CA-05.4",
+        "CA-06.3",
+        "CA-06.4"
+      ],
+      "verifica": "Perfil cliente desativado mantém funcionário operacional; recuperação via Mailpit/navegador redefine senha e revoga sessão anterior."
+    }
+  ],
+  "complementos_obrigatorios": [
+    "Concorrência e rollback: testes PostgreSQL de database/integration.",
+    "Expurgo de contexto/cache/chat e serviços IA indisponíveis: tests/ai/test_evaluation_guards.py.",
+    "PT/EN e fontes aprovadas/revogadas: RAG-05 e ensaio AI-06, separados da fixture E2E.",
+    "SC-01/SC-02 com LLM real e qualidade/tempo continuam pendentes em AI-06."
+  ]
+}
+````
+### 14. Resultado do navegador e aceite real pendente
+
+Fonte versionada: [docs/testes/tst01-resultado.json](docs/testes/tst01-resultado.json).
+
+````json
+{
+  "schema_version": 1,
+  "modo": "E2E_HTTP_REAL_IA_CONTROLADA",
+  "node": "v24.22.1",
+  "ai06": {
+    "arquivo": "docs/testes/ai06-consolidacao.json",
+    "sha256": "556764e9ed4a87b5d37218242d3458fb6b7947252d4dbdb4dcbcab3f87a68c05",
+    "aprovado": false,
+    "estado": "PENDENTE_OU_REPROVADO"
+  },
+  "codigo_sha256": {
+    "backend/app/__init__.py": "726e3dcb6acb22820c9da7c5c930a7edc9cab9b27c7deca68ad6e24157c20e94",
+    "backend/app/contracts/errors.py": "ed1a6515f21d112c6501b634edb775be4993ff657dfa9a9d808dc7de7dce8f24",
+    "backend/app/contracts/structured.py": "8af9720cb98c4cb4a719e6bc945b631eaa247360d51ab4727efe82c97e99967b",
+    "backend/app/contracts/time.py": "12e8963577dc0d356ed462a49272d35f2323175024213a73b00dc6672fb04f24",
+    "backend/app/contracts/training/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/contracts/training/generated.py": "89efbbebc0cf3cff5a6487d07b3391c8419cd0005b62509711172bf5dc54478a",
+    "backend/app/core/__init__.py": "9953c786fc38fca0756a128ccbc5178ee706fcb34823bd019d0393221ee1def5",
+    "backend/app/core/config.py": "d7ca0efbc880134e6e8cf95fcf1448131bcf4a01f16473ebfbf464b3001ec231",
+    "backend/app/core/health.py": "f5fa933fbd349e2f9079068b5261c2b8baa8c2dbfd2531ad2029380c6fb067f2",
+    "backend/app/core/http.py": "bf37ee4eea2219926398c92899dedc24d0a41366843fa9dc26996bc006e6fcea",
+    "backend/app/database/__init__.py": "93f90b22120c928eb1e1907508b3567d0ffb7b4a8d2985ebf3df3a76ca6b5aee",
+    "backend/app/database/base.py": "3d4ee4178e2a51eb335bb733f77c01692bebdb7bfbef42f77bc2557777eabcc2",
+    "backend/app/database/connection.py": "babcad6e6ca5b04dba53acafed1843d27bef4f76145ce9b90221a8ad9c526d02",
+    "backend/app/events/contracts.py": "b8f746f15aa547b8cff39e95ecb74a4b2dc5d79abcf6fc558ca1e376a051d793",
+    "backend/app/events/models.py": "5bce8827eed38a53107aa0fcf51ddba3393e1b4c895f6747d7283e653912aa92",
+    "backend/app/events/outbox.py": "6c25c282ebe3a52080dfb190be5fe40dd798b14fd89ce6d7f912cecf7968be42",
+    "backend/app/main.py": "d6a1da5a3ff598473194d4833002b900cb6a25dec0801fdfff31a77cde95cefc",
+    "backend/app/modules/ai/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/adapters/context.py": "e34d4df683b9b071b94f2300005c123cc705813705e6e33cad3b3e734254594a",
+    "backend/app/modules/ai/adapters/evidence.py": "58fc407acc6abfe181960113cda1f3b3d83450a408c62df923a699be299052c3",
+    "backend/app/modules/ai/adapters/groq.py": "ffe0a70d23c581c02d71befec2070dc4b48233b1484b0705ea92bc692f0954b7",
+    "backend/app/modules/ai/adapters/health_config.py": "c24e907243e534d778af5c2978b2ec3408270a36aa560bda4fe91f51a6c3117d",
+    "backend/app/modules/ai/chat/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/chat/http.py": "2cc24b3a099beba9f06d33d4b6100beba5c43f47302873ba7634c32a3c486cd6",
+    "backend/app/modules/ai/chat/models.py": "5031af27d95dc76b0e3f9c9885840831f10b4d2baa5d16f2a1a211a23d03dfca",
+    "backend/app/modules/ai/chat/quota.py": "410fb422f65ad95e4fb95acff280dc475b2adef16241761835a41c90a6328be1",
+    "backend/app/modules/ai/chat/service.py": "ed0bdc21bc06cf0d3d2675d715a9a4eb4ed37028421b916dbce162fae451111b",
+    "backend/app/modules/ai/chat/views.py": "367a8177188accbc1e345e4034d422b51e9858b074dc035e84d3b0a54901168c",
+    "backend/app/modules/ai/followup.py": "08d7c81fb72308347a6471df122db445a62a23e31d5331b9e67f6aa784b5ed9f",
+    "backend/app/modules/ai/generation.py": "eb230c21f2761a2f5291dac010629ac827e7e79858b62be38572ddf7519517d8",
+    "backend/app/modules/ai/http.py": "ceb461ebb080f3487aaeb14116f5c59738e474439372448be7a8f127378a8391",
+    "backend/app/modules/ai/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/orchestration/presentation.py": "0426c7e6ed5b45ec01b9a36dc134fe8455782ee7ad9d7c3edb17ad5ecdef80ff",
+    "backend/app/modules/ai/orchestration/queries.py": "9880e019caebb560566c17093a70f7de09d6a8245098362c441910938ffdc4b0",
+    "backend/app/modules/ai/orchestration/service.py": "7d289f016ae50f45f17e8dd82f18754986261ace0b01ea8a73430277359ee9aa",
+    "backend/app/modules/ai/orchestration/settings.py": "ff33fa98b03ab7aafb1666107cbe7cc86a4630a328e1b1593263138b476f0d59",
+    "backend/app/modules/ai/orchestration/validation.py": "2289e6600a3912959498173621570922f2cefc18cf79bf60066a7d832ea3f965",
+    "backend/app/modules/ai/persistence/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/persistence/maintenance.py": "984538c226893a0469aed54f676ea69648e88a2e5d67630f3518ad71c14699b2",
+    "backend/app/modules/ai/persistence/models.py": "5054452ba5ed185bc03d635f5a98a5915b2af10567ec52e7f5dfe9018de41e2c",
+    "backend/app/modules/ai/persistence/state.py": "eedc582f0ef7999eaed30bedd96b3a3180c00518195d7f659813e27cbdc43f91",
+    "backend/app/modules/ai/policies/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/policies/triage.py": "a6ceba6250ab13c5b74d16bfff35b97ecac323866cd209dd535b0ebf275452d9",
+    "backend/app/modules/ai/ports/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/ports/execution.py": "ef1675e247b26aacb3feb7dccabbe674271b5087cbdcfd9c277adcfc0ee4cda4",
+    "backend/app/modules/ai/prompts/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/prompts/v1.py": "7c20890c63b2247c694eb946a8ec033ed988da21e4597c7743eede6e2fe541f2",
+    "backend/app/modules/ai/schemas/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/schemas/execution.py": "ce5f28d38d196d0c59bec77ca8fc9e0d82d136c5d3b34b77e7ef66eb39771a6b",
+    "backend/app/modules/ai/schemas/parsing.py": "2ef00436603a822b3a188859ad8aedfe95015c938248fcc234f56b5ebd1f21f2",
+    "backend/app/modules/ai/triage/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/ai/triage/contracts.py": "0880c922a66a151d183de06e59f9cf90bff45511aa0a41e51295c78b68dd4f2f",
+    "backend/app/modules/ai/triage/engine.py": "bd2efb6af705eecc7954134b9f9bb6fb3487d8b65c3b4cb16d63889ce9289440",
+    "backend/app/modules/ai/triage/http.py": "9f13c25d7a2c7f134ad8bced03e315411069d320d8694f62c762d8cd9c169e74",
+    "backend/app/modules/ai/triage/service.py": "758eafbd4fa17b77ca96368ececbc55d94166cb66d409fc69b2090275e020181",
+    "backend/app/modules/assignments/http.py": "e003738c4083888ae1ab3178e1d602a61194f30d812877cbc1f220eba0f92376",
+    "backend/app/modules/assignments/models.py": "4c14f6b8138287b02ea1680c12ddb48d06db7670835d8ce327111d2da5b7afd9",
+    "backend/app/modules/assignments/service.py": "a4c95deb9d1e8c6cb64079d63196c10fc2e49aebca5fb5d76e5fcfe0587fdc37",
+    "backend/app/modules/audit/models.py": "bd6edd17299ee1d0db90f9a95c3240aa2a6bb68ed2dc7b465bbd55f6c1047aa4",
+    "backend/app/modules/audit/service.py": "d370add6821c0ecd64cd1995dab19ec6a3061e233e4e7caa7e4365d4be0372eb",
+    "backend/app/modules/equipment/http.py": "f5cb8084d12b84844e78c79b53d5795e28f61053620dca37370b0a01a45ad247",
+    "backend/app/modules/equipment/images.py": "41af0b4204c411c2f88c69416eb64b59ea84a7338cd6cf48384ce2ba8befedfe",
+    "backend/app/modules/equipment/models.py": "c6740b54b18f54ffb69e78cd016f944d9eab8a8cba774351b77c179b5e6b2a6d",
+    "backend/app/modules/equipment/service.py": "0538a2ab1b955a51047fa71e62cf12dec4f2cd0f4a7e5c8358e456c18c7cf660",
+    "backend/app/modules/identity/accounts.py": "7fe8dba1334e17100af0eec9926d92518e50f5e3a5a1357187eb979775dd4fd2",
+    "backend/app/modules/identity/bootstrap.py": "2e3cfef782b98a8504233441992342bbc09829651f27e0e1f21ded65c31cfe8a",
+    "backend/app/modules/identity/composition.py": "6f841f2f94d9777932acf243e148b5fbf0db1e32882aaae64bbff8ce2da02c63",
+    "backend/app/modules/identity/first_access.py": "cc246dfcbc1c5d3e4f04f2a17ec09665254cba24b3957e01a4c5b76408cc1d27",
+    "backend/app/modules/identity/http.py": "f204b1ad2677be6789f0d7ccee68e66bd326c61da3cfa2fa69bfba6ad07b226d",
+    "backend/app/modules/identity/limiter.py": "02bdec48bbdc2437b0290148c8ba200404087e4ca881bf1fd1600254cea79f32",
+    "backend/app/modules/identity/models.py": "37c63ec786cb81aa917b3665a39df38c96517c235834219fc7cbc048e685995e",
+    "backend/app/modules/identity/passwords.py": "4fc4eba201c3ff41bc3a7025575750b9f9eb28b584aa3b4b3d5142230c065277",
+    "backend/app/modules/identity/ports.py": "4b1441bf1b5ee551f3cca096128898710062e04d96833f5bf78fd54781cd387d",
+    "backend/app/modules/identity/recovery.py": "f1b7f402188a53dad3f2198d567b84a4f5b93b0e8becc42d29d9be1f3a4bbb3d",
+    "backend/app/modules/identity/repository.py": "993bc06f86a4e271c178fdcd47a2a9105065a2f43f13ab798a944be76a839b2c",
+    "backend/app/modules/identity/roles.py": "aa855605de4f4ef4accf80da2aea1390b3653b16cf9db55d25f93651fd6be487",
+    "backend/app/modules/identity/service.py": "adfdc5f1f9d639bb41c711f7813695ff36eb63c352bf4edce830eb37e4f24af3",
+    "backend/app/modules/identity/settings.py": "917f2ae66471de4ed51c8494b3d2496e8a765a59f78d790fa2312603cfbdb206",
+    "backend/app/modules/knowledge/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/knowledge/catalog.py": "b3d5e4812bf7cd8ce8a0d476706e4f8604611a5d54875cfd56d06bf032211d04",
+    "backend/app/modules/knowledge/embeddings/__init__.py": "697ff920118b92615ff1ce9903b02d06b1a3526e31508a47a15728227eaa8113",
+    "backend/app/modules/knowledge/embeddings/encoder.py": "190f2370a62d73c52995d90db76b19207da5231b38f15853e66e320bf31384b4",
+    "backend/app/modules/knowledge/embeddings/provision.py": "c2679b226efde5c0540d4d1bc14df964523db8598e41e81fb8cf44dbd6de4f04",
+    "backend/app/modules/knowledge/embeddings/runtime.py": "632e6c05576958886cd68dd30b61bc482703c5d64904dbddcea99a224a25454f",
+    "backend/app/modules/knowledge/embeddings/settings.py": "6f3ae29957ca40cabfcd22bd9fed13efcf582a53cea928a435f270e88be09999",
+    "backend/app/modules/knowledge/embeddings/worker.py": "c6d5216add42691f01a40b762376120eda16cfbc7a1353784263480ab23fbb99",
+    "backend/app/modules/knowledge/http.py": "0c1ca9c54383e3c7db2656c84c6860e6ba52b0ff6c695b9b24278d332e93559b",
+    "backend/app/modules/knowledge/ingestion/__init__.py": "af77bfeab81e06590c8d48e92c15df19ae6bdfd99a415a259c1013311e489ace",
+    "backend/app/modules/knowledge/ingestion/__main__.py": "96de240be37a7c37129cf1659829bd5d4d6853fa28feea6e70581e70b1b4b9a8",
+    "backend/app/modules/knowledge/ingestion/chunking.py": "9d3670921f17ce91b3c01049dc82f1f2c627239441a1f53a9894467df76491dd",
+    "backend/app/modules/knowledge/ingestion/contracts.py": "a7c60e4ca895a6e74af3563c4460dd22ab4d4d9c66842fb36032e8c9b33cff9f",
+    "backend/app/modules/knowledge/ingestion/index_models.py": "084bdcc81c64b8ebf20008b3b8d138b34052820785a2a0d2831a1bc750ad25dd",
+    "backend/app/modules/knowledge/ingestion/indexing.py": "963cb38b384100cb0400f02c86640cc222567c722707bfb7aa06f170fc50b746",
+    "backend/app/modules/knowledge/ingestion/parser.py": "2048ffa67987347a470bc9aa11b2aa05a4fc46502f11cbd7720c3f78f3aa323b",
+    "backend/app/modules/knowledge/ingestion/process.py": "b67b166259878d2e803fff4d6ee772204b08b63de345c2845a65b3ae39b4120f",
+    "backend/app/modules/knowledge/ingestion/service.py": "678f6a4c685f87395547c4d0e755f37baab38d780dea78581e827123b06d1813",
+    "backend/app/modules/knowledge/ingestion/worker.py": "8604440d1b42d6100dcc65e61564bc08751f368da735e48c0a9d577427950955",
+    "backend/app/modules/knowledge/models.py": "426e39faf1d866c08afb601eaba2605eeeff20f6bdc2aa8dd1e155c32db4a082",
+    "backend/app/modules/knowledge/retrieval/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/app/modules/knowledge/retrieval/__main__.py": "1fefd137ce39279090eecb2b016a1f5516b8eb650a22b6eac857933311f5720d",
+    "backend/app/modules/knowledge/retrieval/contracts.py": "2a9aab3a5300f4319c1fe61c23571ef4f618e3002c7e13844e42c12f4bafe75b",
+    "backend/app/modules/knowledge/retrieval/ports.py": "ca6ea57d282db8611833a47b0fb8423bba27f6bd227c4562803043e825140a25",
+    "backend/app/modules/knowledge/retrieval/publication.py": "291ced2dad27301b50ec1adf45332820b02f0ce9f2ecdd25b8b0eb1fa7ddec8a",
+    "backend/app/modules/knowledge/retrieval/service.py": "e4cfba8f9f7f4cc3b2ae16b9ae92244ab495285f671700d60caf79b60604f977",
+    "backend/app/modules/knowledge/schemas.py": "b638b0329a5ff6270347cfa5eeb6d3c1fa2af8a7ec7fdefed33afdaf1808811d",
+    "backend/app/modules/knowledge/service.py": "2c0e33e2a02916dbf576fada861d06325e534af82251092fd21c4eb95e84e905",
+    "backend/app/modules/knowledge/storage.py": "cd7feaf645326281dd13c353f6102f40b4d32e30a42eded08b35823731772f3a",
+    "backend/app/modules/knowledge/vector/__init__.py": "978e0c495dc0758fcc4fb3f606693ecc4ae8aaf95e9c614ffaa5eb4a3c1af80f",
+    "backend/app/modules/knowledge/vector/__main__.py": "ff5396bc4ee0e5c1abe3adcefe16f12c178adffc88e6a1fa14df0aeecf61b401",
+    "backend/app/modules/knowledge/vector/contracts.py": "ad29f660a2658765d16f808f73569aeb3951c92f8d3f2f26ed23de4560a2bd62",
+    "backend/app/modules/knowledge/vector/points.py": "a4642dd17ea93f7a4f4c6b66c422ac0adf53b10997bca9b69ce76ad4c1cf82a3",
+    "backend/app/modules/knowledge/vector/qdrant.py": "dd23e43d12c285d6f989549600299aafd928dd2b2b3d1399f09c54b107f1b2b3",
+    "backend/app/modules/knowledge/vector/runtime.py": "6a51be2a62a381e5763d7be673491952669de970cfc45cb33253999b7db11fbb",
+    "backend/app/modules/knowledge/vector/settings.py": "1c38fcc3d599e73b6555c616c8c49a3a9c1407e402761823bd4b1c55f1b54096",
+    "backend/app/modules/notifications/email.py": "25074882253d1fb6e00e594dfedbb86db3cf30fc66fbdfe5da44be8ff9578a66",
+    "backend/app/modules/notifications/http.py": "c0d65a4c993fe976c9410447735c6f90585c5d80229c83d98349b535ebc8c6b1",
+    "backend/app/modules/notifications/models.py": "caa54d3cb51559f4825e406efeebabc9cb617e8fd73f3e89216869247ef1d4f2",
+    "backend/app/modules/notifications/review_status.py": "f5aa3c8d357f7929fada18152540e1ab4b0bfff7329866b8710c8e3f197f5b8d",
+    "backend/app/modules/notifications/service.py": "97ea7f60f5b3044f46f6bd1b2a5ab52d930dcfbfc7f0a747fd8dbf52d98c25ab",
+    "backend/app/modules/onboarding/assessment.py": "7eb2c31e606ab87545e5388549a0d7d99c123535d16d8a8c95e67f07fd1c4fc0",
+    "backend/app/modules/onboarding/http.py": "9f1e47a6132c2ffc9e3952bf770486725ed09947ab67d9a7c04d8b34290b6cc4",
+    "backend/app/modules/onboarding/invitations.py": "fd0d7d55f0ab6bfee297c8cd97f9d135e58d494c348be673cb2025aea5c17763",
+    "backend/app/modules/onboarding/invitations_http.py": "09fea708dc7c1e38f5d96b7ee1dd1217fe38446832e10c82031dd4b682cca827",
+    "backend/app/modules/onboarding/models.py": "0ebddb94e9761b377e530ca99922ae3f553c09ee93450e95e74072ea3f6617e9",
+    "backend/app/modules/onboarding/schemas.py": "611c0e132bf1296fb421cbb93d93b2e8d4f466e92c4e57d13820bd9984cd4095",
+    "backend/app/modules/onboarding/service.py": "8af70c018231009c6f1fbe93b2f4ef321c6ccc73f9fa78e8fb52ca2691300ea8",
+    "backend/app/modules/people/assignment_directory.py": "b216e8bac60d06ca5ff30de51aa3c172d0de37de2f9d9790523dee6d6edaaa3f",
+    "backend/app/modules/people/clients.py": "d545e89a8b74d7aaf47085a392032833af076c941867ad9ac9bf9605deee50ea",
+    "backend/app/modules/people/clients_http.py": "e577afc3a5091ff7b90b730bfa93231bc52ef1ebdb586718eadde9d8daf97035",
+    "backend/app/modules/people/invitations.py": "973d2d912d6898d78de9fbd72ef93a186d188ebff3e866266e7b3f570a8c460c",
+    "backend/app/modules/people/onboarding_directory.py": "e79f8bf51981c47573b2842c89c2441212dd57aeca2df1dc7a611e7bd2f0eb50",
+    "backend/app/modules/people/profiles.py": "c480abc99a158947d55435f2c7a037f5a133792d4054dddec3a9275b6c1e8f21",
+    "backend/app/modules/people/staff.py": "5458b66be444c2f5c76993c8a730faad0bf7d7111a8e3e5aa4d5ef138adcf2cd",
+    "backend/app/modules/people/staff_http.py": "e4389339669ace84a43b2ceb26c44a0e33663f182b8a8074f2b958a84a4d33fc",
+    "backend/app/modules/training/catalog.py": "f1b79f5402186278407a7586570062b119c031721e115d5ae5fdce5091ec3357",
+    "backend/app/modules/training/generated.py": "b25f97784761bf62a008e5226f8d9b5af5017f0070dd1243aa1f059401c83d7a",
+    "backend/app/modules/training/generation_context.py": "3b1878f8a48e4f4deb1ca4a9a6b3943a8cc1b16d0e1c9472b64faeb0bed87859",
+    "backend/app/modules/training/http.py": "c67a1a8c649e89f0fe7c7b03e509b34cfb9f0961df265f555edef99d16097fec",
+    "backend/app/modules/training/models.py": "ea6b5edbdbe977fd6f21e1f1e49492a704478fd2b2b420d5cab6e902836c4f60",
+    "backend/app/modules/training/publication.py": "73860ea4eb40bb8fa9a5cce2cf6ce2f1eddd6b2e6ed6cfb5c855ba3940312274",
+    "backend/app/modules/training/published.py": "123cfe46242bc8515e2c42403ca88601e85d70cd5200cf712cd45f2e6998a354",
+    "backend/app/modules/training/published_schemas.py": "f617d6e1ad9f5167f68eb189bc61803017c13b56e69b669701070a3c13e733b3",
+    "backend/app/modules/training/review_http.py": "0cb7f28c41197dac515565e302b57f5727660ad73c63b29122cdc8324209ec5a",
+    "backend/app/modules/training/review_schemas.py": "87a2d1951e77a90d854600e8765483fe19b959a07f0842c9e2d46e4e02ebbc58",
+    "backend/app/modules/training/schemas.py": "4765f9eb6e739166612f458119a7c5acc2b872c7c856e47ebd7e1ec19d6aa70a",
+    "backend/app/modules/training/workout_http.py": "0e5329e33b2e8e47d9bb8043dc1272f22722b01b4105e09da621e6d06447270f",
+    "backend/app/modules/training/workout_models.py": "3ea267d918674e310ca0ef5d6e1e7a51af8d0c1892b8454e0def3d00955f04e0",
+    "backend/app/modules/training/workout_schemas.py": "86e11272c02e2439205e4cb1e4f6ed185b42180b6e7539ca588941c393baa1ab",
+    "backend/app/modules/training/workouts.py": "6fdcd64de4d346703f6e970433de19d796eaff9b4070f10b60e3454bf0f31640",
+    "backend/app/policies/access.py": "2aa59f8cda9a68d6d250c927127a9ae002f8ed1fff5489080feeb2f4d0ce7ecc",
+    "backend/app/policies/http.py": "4b21eb2e18e8cf9decfc9aefd727ebb33fbffb38a25a803be2d80eaadf1ceeb1",
+    "backend/tests/acceptance/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend/tests/acceptance/__main__.py": "9515d319ec1c917b20a313f3bf09c8c34c1204391a371223970b279888a838b0",
+    "backend/tests/acceptance/fixtures.py": "8290cfef2b47757052a181be587070f6704335c272e35c9c65d61713acf4c653",
+    "backend/tests/acceptance/test_reporting.py": "b761a8e346ececa1e4b1f6be2d6908d369d624d1d2853d4e27eed6f911e2f3b1",
+    "backend/uv.lock": "98a436b4197a64984fd80a06184d22393bb3dc1e00c1dfc7cebaba1238fcbb85",
+    "docs/testes/tst01-cenarios.json": "7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7",
+    "frontend/package-lock.json": "8ff9862905aba2dc35295cb03cfe8cf817aeb76ad4463cf3fe5dd0de671f07e8",
+    "frontend/package.json": "fb1b0c8f5bb6eddcda683e7b2186c496ee15e2481a49e9a4e173dc77b69b2537",
+    "frontend/src/app/AppRoutes.tsx": "2934f28baa920e60f1377130519db6269d36106f172fe94b9bebde9f920279d0",
+    "frontend/src/App.test.tsx": "6a517dba1092bde8ffcde01683a694691c870a0084fabdeea2d77caeb8248aad",
+    "frontend/src/App.tsx": "3c8ea24e69218fb3a3f168aa70b9e90f34f7ddfcf15a7eb993fb8c887caf9512",
+    "frontend/src/features/ai-training/ai-training.css": "65b5c6e3a61d4b9ac1f99aff1cd19a52a7afa3336f9ee79d72e7fba13e3f6901",
+    "frontend/src/features/ai-training/AITraining.test.tsx": "6a9eb1241f7928549b47753dd011c3fe80c6d21c1e4b02aa6b63828e6efe4322",
+    "frontend/src/features/ai-training/AITraining.tsx": "b7e888ca4074a2b3d6c00ef04abd49063992aaf764d7236a5f34bbed9f846f84",
+    "frontend/src/features/ai-training/api.ts": "777ce7788d4ca63e147d8679d732fea51f7d69bc0fa3acc6256f0005f56645d0",
+    "frontend/src/features/ai-training/fixtures.ts": "0d30f436b95200984ff7d83edb5d5498dc29eca32e77116f7f8498ac67427377",
+    "frontend/src/features/ai-training/GenerationDetails.tsx": "25dc3f45efa4b13d7d08782ea3a361672727fdf426c4edb9d09daebb4a981926",
+    "frontend/src/features/assessments/api.ts": "c7ca3b2da53ad6df76fd3cdb86b2f7bfc6f64cb3c26ba89469f35591ac2d982a",
+    "frontend/src/features/assessments/AssessmentPage.test.tsx": "c47597e5743f2883c511fc66056f464d700ddfbed4236c00a3994fbe2c46c81f",
+    "frontend/src/features/assessments/AssessmentPage.tsx": "44c7a18d016fca60e13583b4e38a44d9ddce38c27c45e8fb75c08483bbe8061d",
+    "frontend/src/features/assignments/api.ts": "7cc564e736c26b864e8fc71497f4882dae318f9f746b2ca48962dfefa2ef091b",
+    "frontend/src/features/assignments/AssignmentPages.test.tsx": "9f292ed8d146564dc20c4df50fd403c4eb161d37f4a0f793c56a0761e6c896bd",
+    "frontend/src/features/assignments/AssignmentPages.tsx": "bf2fa8eba2c460ba34c181bcd3fc54d51a42bb4a3ee043d26072fafd79cdd18c",
+    "frontend/src/features/assignments/assignments.css": "0e6e93a11ed2ebaf8d992534a7e8f79eb0ce4019b7ae2047fafe93094c148520",
+    "frontend/src/features/auth/auth.css": "648fdafb5cdbb3e92650c726f2baebd2d7badf938340ae25d7e4e9c32d8c7786",
+    "frontend/src/features/auth/LoginForm.tsx": "db50a7021ffb9e141a87dcd5ce094562735f090cc29a6786c909fb8b73dd222b",
+    "frontend/src/features/auth/RecoveryPages.test.tsx": "7da3b87496261a4c9fa08c504171e1e20870b6d6cc35c714dbe2caacf626b071",
+    "frontend/src/features/auth/RecoveryPages.tsx": "27dcbe43c2a07bb72cff03d5ca536dea21268833c28254362b9eebbb2d6cd4bc",
+    "frontend/src/features/auth/useSession.ts": "534fdae69a25cb21639617b68dbf1476a45368e3c9120de2acd7d16e51d587c1",
+    "frontend/src/features/clients/api.ts": "0aae13a59a817e104a28b64cac6469036202a339508931fdd55b9178235e3ed2",
+    "frontend/src/features/clients/ClientDirectory.test.tsx": "58f343d208dd39a643189128249ce0aba083ee9d8ec709672149f6d6ebfe569a",
+    "frontend/src/features/clients/ClientDirectory.tsx": "2012e3e9b62acfcc3e9784e6ef9e1ee4dbe09f928a75a7018a7f5064850147cb",
+    "frontend/src/features/clients/clients.css": "f0a43a904879dfed0c91171de8b30a89f1640af7bfa32fc86d63f2336a9c38f5",
+    "frontend/src/features/corpus/api.ts": "51265e425d1731ca477c36ad75a34faa9675c9f82ee4fcad2988dd4d3c19f9a1",
+    "frontend/src/features/corpus/corpus.css": "4105f96d17fdc69bbce6532d00d72b3a02bab1284978e172911cfcbf4759a531",
+    "frontend/src/features/corpus/CorpusPage.test.tsx": "8a9682a9d725d83bb99aff4e3982807d5a116ccaea1e12166e8f4eae7f48705e",
+    "frontend/src/features/corpus/CorpusPage.tsx": "75612b1374c072f570474ffe207badb3f0cb3632336206f25ecf33d78d4d5264",
+    "frontend/src/features/equipment/api.ts": "5db7bfebea757989fb4345637aa78270763c7d2fc81d6f6a588d80d18013dee1",
+    "frontend/src/features/equipment/equipment.css": "0efd5f2cf9458a2f5a6feb6e02348051f076218e48299afbe569a20ff018b3cf",
+    "frontend/src/features/equipment/EquipmentPages.test.tsx": "37e4d1bf14a658c9d7eb8e7afa650a793b6bf402693278c3e93f7c2dc2edb546",
+    "frontend/src/features/equipment/EquipmentPages.tsx": "78073881a01ad4be2ab4b7803b079a15b4640db87a14c7038d0cd62f17e228d0",
+    "frontend/src/features/exercises/api.ts": "b8009e0caa6d1fcefd32b1b8f6989e5ffa92ab0a9b3b10ea6d00575300cbd522",
+    "frontend/src/features/exercises/ExerciseCatalog.test.tsx": "e1eb50beed1ccec3a2d866dc2c02ef183a5b1db6035625aaf2edb747bd3611c0",
+    "frontend/src/features/exercises/ExerciseCatalog.tsx": "9bf57fc5046c76476169ca5872f5ec4279ec58c14371cc081141a0920cd8134b",
+    "frontend/src/features/exercises/exercises.css": "ab7b7ce7c3e2762d585b6943f1d00de444b2cc5b05ae587cfc8511e155d1cc77",
+    "frontend/src/features/my-training/api.ts": "ccd30b064a4e4437c403ab4411c9a1149c59c373dfde6162dbc565b309bc162a",
+    "frontend/src/features/my-training/my-training.css": "2f94de6a2089544e62291bf26587ad4c606da306a88252abf87b09999320e69b",
+    "frontend/src/features/my-training/MyTraining.test.tsx": "c40a85c064371f34a5085cdf5be61fa974ebfe93bd671fe37d5b8d54111a16d6",
+    "frontend/src/features/my-training/MyTraining.tsx": "b07d9c42c5be48201ddd29006387a8b22b3f728502aed9d48fbdf17f7b163a22",
+    "frontend/src/features/notifications/PendingNotices.test.tsx": "b8bef5351b6d374128068ccecfaa54a993f3ddd8f3ae33af467210926dae757d",
+    "frontend/src/features/notifications/PendingNotices.tsx": "8f70d7c2f95964e66ddb74e5626efdb96b80414cbe806bd966ec9b969cba9312",
+    "frontend/src/features/onboarding/api.ts": "71f25859decb72a49202532625205b1f22515f96622b8a7c854e58e535eba8a0",
+    "frontend/src/features/onboarding/form.ts": "e2500b72074a5b6023a8080e037d2eef6089e57d8b8614a70c09fdbcb7f4e864",
+    "frontend/src/features/onboarding/onboarding.css": "f846f3d614d01527c23cd837f027aed96b75c69b3ce0f791cb3793db56dfb330",
+    "frontend/src/features/onboarding/OnboardingFields.tsx": "eae4a389d055227e3a28b0959e3cc5594ec63210b70320db968ccbcb25ceeeeb",
+    "frontend/src/features/onboarding/OnboardingPages.tsx": "5e2f5233a147b059bb0cb4ef3e5ed408eb089c4f7f3015899a58e6917061b7f4",
+    "frontend/src/features/staff/api.ts": "3ec63647f740f9ed9173227e6b2ec1131bc5cf0f10226158ecfde982adb0c547",
+    "frontend/src/features/staff/staff.css": "fd37650eb88beea37c6099a8375fd0fac52d240f56a70ae5380c719eca39ad78",
+    "frontend/src/features/staff/StaffDirectory.test.tsx": "7d4cb74bbb92631cbfbf528e38f63587d86c3a8f32fcbefee422e9de0c0815f2",
+    "frontend/src/features/staff/StaffDirectory.tsx": "3c8727f0b28a5dd86e97038ca84ef8b33d847ce3163f8c5606473cdfb6838c32",
+    "frontend/src/features/status/ServiceStatus.tsx": "ba770703df7b1cb8231879d11c55436e5019f96b2854ac056f8256976f4f2d76",
+    "frontend/src/features/training-chat/api.ts": "68da79bbcbd0a33d025a504fdfc10e47473e4ffdb218ab0a348d0dc06aaa07ce",
+    "frontend/src/features/training-chat/training-chat.css": "9bd0e1d444d6a5fad622df55a30f929e09a70394069a9cdbba9a6758edab3702",
+    "frontend/src/features/training-chat/TrainingChat.test.tsx": "7eadd4070b6e1bc7d483de9c9af42e3bfd6b331cfa00e3ce13d31bbb09a96ffb",
+    "frontend/src/features/training-chat/TrainingChat.tsx": "b30ffccdfc13b6f9faa4be08c6dfcbdda85c5a432b4a34bb88aec515613123ab",
+    "frontend/src/features/training-editor/api.ts": "4c8a983d196250efc025250eceb6fc4c91510e951e33b474b4ca266142c80e1b",
+    "frontend/src/features/training-editor/training-editor.css": "dfff1d74c9ee0df845016886e49d32d15a9096a543c4ecd8cb184208a91fb076",
+    "frontend/src/features/training-editor/types.ts": "093842f6d289f51b0b551adfd92770cc9b5242c2ebf4cbb23596cf3f86c9db6e",
+    "frontend/src/features/training-editor/WorkoutEditor.test.tsx": "95c6a11e03e7a486a799379f93bed01865303fd62ba74b31fdfd2a7ba07ae4a1",
+    "frontend/src/features/training-editor/WorkoutEditor.tsx": "7f8e1ccb2a7f4ee48935f7c817a0952a63195aab6dc5e60d5dadb77bed1026f4",
+    "frontend/src/features/training-review/AIReview.test.tsx": "d0b8349dd557087d63e44482373ae31adc25b6bdf619cb7bd20ff996e1ef5608",
+    "frontend/src/features/training-review/api.ts": "e75ea247768cbfe726eddb333b802ee825cd4a2ae99e78cf9c5d81f87d79390b",
+    "frontend/src/features/training-review/training-review.css": "9e49c086a4259a84a367d0a2ad3fa9ee92e49f2ee5a60298d3290758a7c98f33",
+    "frontend/src/features/training-review/TrainingReview.test.tsx": "9dd61617245b540bef5dbac4106cd764f97109b971adea6ec733840fa0895630",
+    "frontend/src/features/training-review/TrainingReview.tsx": "57d4874c6d906fe53e53bb601ed229d38c07bae2dd0f0d9c3db14335fa3c26ee",
+    "frontend/src/lib/api/auth.ts": "eab79db396ecce2a602dffc8669d1f94efd0062aa78f8a6e22225062d77f8d05",
+    "frontend/src/lib/http.ts": "7af894b17e022c44f0dddc16cb0974d2890589815771d54ef833cecbadf5cd75",
+    "frontend/src/main.tsx": "e5ea7ba231ff7665c836f262725644ef85af1799ce865b308ba220339073d742",
+    "frontend/src/styles.css": "d7fe0de94327c6181f245d50b5b5601e0bf596020b0441c59c066b52002b5b55",
+    "frontend/tests/e2e/helpers.ts": "19e0b4543a6eb38c8bc156b4e60f66f1c07865da7c0f1d4da3819d417c64ef9d",
+    "frontend/tests/e2e/mvp.spec.ts": "86e79f7cddd1914bb88796b86fe4fb86fec5bbd1d3decf7ab874bc67b2128f1d",
+    "frontend/tests/e2e/playwright.config.ts": "d6684d504c3b1f5b387b75c615581697877ba62ebb225427f2ccfa31ac518105",
+    "frontend/vite.config.ts": "a19d51915463a1520df79a6d591c34058c07d0dbae3432b91f2e4c94a52504c6"
+  },
+  "aceite_mvp": false,
+  "testes_locais_aprovados": true,
+  "limites": [
+    "IA/embeddings/trecho são fixtures; Qdrant/PG/HTTP/navegador/SMTP reais.",
+    "HTTP serializado para savepoints; não mede concorrência/carga.",
+    "Não aprova qualidade/latência do LLM nem substitui AI-06.",
+    "Sem Docker, sem gravação em academia_dev ou literatura de uso."
+  ],
+  "migration": "0015",
+  "bootstrap_idempotente": true,
+  "casos": [
+    {
+      "id": "E2E-01",
+      "titulo": "E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 20534,
+      "passou": true
+    },
+    {
+      "id": "E2E-02",
+      "titulo": "E2E-02 sessão de dois clientes, CSRF e resposta maliciosa inerte",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 5991,
+      "passou": true
+    },
+    {
+      "id": "E2E-03",
+      "titulo": "E2E-03 triagem grave, NAO_SEI e onboarding ausente",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 13609,
+      "passou": true
+    },
+    {
+      "id": "E2E-04",
+      "titulo": "E2E-04 geração única, confirmação do onboarding e adaptação versionada",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 9122,
+      "passou": true
+    },
+    {
+      "id": "E2E-05",
+      "titulo": "E2E-05 retenção de 16 versões, rejeição e exportação",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 9441,
+      "passou": true
+    },
+    {
+      "id": "E2E-06",
+      "titulo": "E2E-06 equipamento muda durante a publicação e API recusa",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 4726,
+      "passou": true
+    },
+    {
+      "id": "E2E-07",
+      "titulo": "E2E-07 treino manual continua após indisponibilidade da IA",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 5229,
+      "passou": true
+    },
+    {
+      "id": "E2E-08",
+      "titulo": "E2E-08 recuperação e perfis de cliente/funcionário independentes",
+      "estado": "expected",
+      "tentativas": 1,
+      "navegador": "157.0.4341.46",
+      "duracao_ms": 4598,
+      "passou": true
+    }
+  ],
+  "codigo_navegador": 0,
+  "chamadas_llm_controlado": 9,
+  "chamadas_llm_externo": 0,
+  "persistencia": {
+    "versoes": 22,
+    "auditorias": 135,
+    "avisos": 45
+  },
+  "rollback_confirmado": true,
+  "estado": "LOCAL_APROVADO_ACEITE_REAL_PENDENTE"
+}
+````
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -14535,7 +15200,8 @@ Fonte versionada: [frontend/package.json](frontend/package.json).
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test --config tests/e2e/playwright.config.ts"
   },
   "dependencies": {
     "react": "^19.0.0",
@@ -14544,6 +15210,7 @@ Fonte versionada: [frontend/package.json](frontend/package.json).
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "1.65.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^24.0.0",
@@ -14638,7 +15305,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `4fb082afe3d289d43b8c5a1d5fe4e9757229ca0678abfb7bc20619c1991299da` |
-| `AGENTS.md` | `d78c10bbbddefac7e4526a0171b5bf327ece88cb56f3e8361b62dd1ee08ffa7e` |
+| `AGENTS.md` | `d8a038f260637e6b6909404b8ab08e644339c79a1ffc9163d226bdd69cf94ef2` |
 | `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
@@ -14681,11 +15348,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `6e4e7f57cbd14daef82a8c837a69db2efe1dfaa313d0a5f97cd9564ca2ba2215` |
+| `docs/especificacao/compilacao-spec.json` | `7ff1e1508a3ec9d4c2e362a3b51f6aa71331fb5757e56cebac0af5414874e221` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `dfcc5e51f2c4c5b4581e284fa9f09413dcfd5421f266de788358ee94d8b38357` |
+| `docs/especificacao/visao-geral.md` | `c406587acf813fb41ab2f2f155600318865781e5b3f05be5ec242178a22f85d4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `29ac4cc80992e086d45ace4cc2b69e1ca6ac92f3b7b5e84bea9ee962fb940b66` |
+| `docs/prompts/README.md` | `483dc596f40dd80ae41098c606bd98b502d47eff9c228fb3410a0eecbbc6e3e1` |
 | `docs/requisitos/configuracao-ia-rag.md` | `cab1daaef3ad20ea70cc309165fa38cd92fba0983ed7136806e61c84a2cbb913` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -14703,6 +15370,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
 | `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
+| `docs/testes/aceitacao-mvp.md` | `e9f7203405774c81ab6b6f637969175babd628d4459e06096f572f95bdb95fed` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
 | `docs/testes/ai06-casos-v2.json` | `c87cf3a59358b49fb12363cb224f271988d25e86fb0e02771caf6df9dd03b818` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
@@ -14712,13 +15380,15 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/ai06-resumo.json` | `e375b63a2fe05592686a53972236a1f5f59358497fb5acfa8589ca6be9c7f691` |
 | `docs/testes/avaliacao-ia.md` | `7fe5a6268a772562b8586508c286f65ba38aed16f52d028fb6f8fbb409c975de` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
-| `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
+| `docs/testes/estrategia.md` | `6ecf81e94a81ea6a08dbf720ac19705cc2b16c4e6ebabf73d45bc6d09fbcf355` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/preparacao-ai06.md` | `1f684289649696211e17732de19d005870331792eeae499c23c7d55ac024c7ef` |
 | `docs/testes/rag-ia-semantico.md` | `6a262d3ada37aedfb0e765b7db738e3248940232d96c0f03550856e7a776eb35` |
+| `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
+| `docs/testes/tst01-resultado.json` | `085a6f6ae0e8dbad3c5aa9f3097e2aff3a23929d59775d832d2aaee3adc8a65b` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
 | `frontend/README.md` | `4cf2b14dbc19a8b9c1c859d30a15e15110ddfd2bb69ecec893180516958b87f6` |
-| `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
+| `frontend/package.json` | `fb1b0c8f5bb6eddcda683e7b2186c496ee15e2481a49e9a4e173dc77b69b2537` |
 | `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
 | `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |
 | `materiais/rag/livro-de-apoio.json` | `c75428232258b24af8920ac712bac46cba7028c603b7e306ea6dcde59e50eb3f` |

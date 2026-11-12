@@ -138,8 +138,20 @@ duas consultas fixas e apresentação factual após validação; o LLM continua 
 e L13 com falha de quota. Dez respostas de chat, duas abstenções, uma ficha publicada
 e cinco bloqueios exercitados. A ficha L15 levou 5,339 s; não estima os demais perfis.
 Revisão parcial registra uma extrapolação de fonte em L04; não aprova o conjunto.
-Ensaios anteriores e interrupções preservados. AI-06 EM_EXECUCAO e TST-01 bloqueado
-até completar os nove casos L13,L14,L16,L17,L18,L19,L20,L23,L24 e consolidar a revisão.
+Ensaios anteriores e interrupções preservados. AI-06 EM_EXECUCAO; aceite final de TST-01
+depende de completar os nove casos L13,L14,L16,L17,L18,L19,L20,L23,L24 e consolidar a revisão.
+
+### Execução local parcial TST-01 — 2026-11-12
+
+Por solicitação do responsável, trabalho independente de quota foi executado
+sem retirar a dependência AI-06 do aceite final. [Guia E2E](../testes/aceitacao-mvp.md),
+[cenários](../testes/tst01-cenarios.json) e [relatório](../testes/tst01-resultado.json).
+Playwright/Edge percorre SPA e API reais com PostgreSQL, Qdrant e Mailpit locais;
+IA, embeddings e texto são fixtures controladas, sem chamada Groq. Oito jornadas
+locais aprovadas, incluindo largura 390 px, retenção/rejeição e sessão/CSRF.
+Bootstrap idempotente/migrations em banco vazio e rollback confirmados.
+Sem alteração funcional, migration ou MER. PG-01 segue ABERTO e TST-01
+EM_EXECUCAO, aguardando AI-06 e consolidação das evidências reais.
 
 ## Fundação
 
@@ -211,7 +223,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
 | [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | EM_EXECUCAO |
-| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | BLOQUEADO |
+| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | EM_EXECUCAO |
 
 ## Pós-MVP — matrícula e controle de acesso
 
@@ -283,7 +295,7 @@ FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contrat
 AI-06 está em execução: correção de livro/idioma e triagem v3 entregue,
 mas o novo ensaio está incompleto por quota diária TPD. Uma extrapolação de chat
 permanece na revisão parcial. Retomar os casos sem resposta e consolidar antes
-de liberar TST-01. Gates pós-MVP e marcos permanecem abertos até evidências reais.
+de concluir o aceite de TST-01. Sua execução local parcial foi autorizada e realizada. Gates pós-MVP e marcos permanecem abertos até evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.
