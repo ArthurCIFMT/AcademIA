@@ -11,8 +11,12 @@ Ajustes equivalentes indispensáveis ao cartão: app/main.py registra a API;
 training/generated.py implementa o contrato interno de publicação do seu próprio
 domínio; knowledge/retrieval/publication.py oferece a verificação SQL com locks
 das fontes do seu próprio módulo. MOD-06 não consulta tabelas internas desses
-módulos. A explicação do LLM pertence à versao_ficha, é lida no contrato de
-consulta existente e eliminada junto ao conteúdo expurgado.
+módulos. O campo de explicação pública pertence à versao_ficha, é lido no contrato
+de consulta existente e eliminado junto ao conteúdo expurgado.
+Desde a [ADR-007](decisoes/ADR-007-livro-e-fundamentacao.md), o LLM gera os itens
+e o backend, após validação, apresenta um resumo factual de dias/itens/cargas
+pendentes. A justificativa livre não é propagada ao conteúdo publicado.
+Referências efetivamente usadas e proveniência permanecem na execução.
 
 [Orquestrador AI-02](orquestracao-ia.md) e seus prompts são reutilizados. A geração
 usa até uma análise e uma geração, sem retry/fallback automático. Não há tela

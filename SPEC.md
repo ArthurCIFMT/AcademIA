@@ -8876,8 +8876,12 @@ Ajustes equivalentes indispensáveis ao cartão: app/main.py registra a API;
 training/generated.py implementa o contrato interno de publicação do seu próprio
 domínio; knowledge/retrieval/publication.py oferece a verificação SQL com locks
 das fontes do seu próprio módulo. MOD-06 não consulta tabelas internas desses
-módulos. A explicação do LLM pertence à versao_ficha, é lida no contrato de
-consulta existente e eliminada junto ao conteúdo expurgado.
+módulos. O campo de explicação pública pertence à versao_ficha, é lido no contrato
+de consulta existente e eliminado junto ao conteúdo expurgado.
+Desde a [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md), o LLM gera os itens
+e o backend, após validação, apresenta um resumo factual de dias/itens/cargas
+pendentes. A justificativa livre não é propagada ao conteúdo publicado.
+Referências efetivamente usadas e proveniência permanecem na execução.
 
 [Orquestrador AI-02](docs/arquitetura/orquestracao-ia.md) e seus prompts são reutilizados. A geração
 usa até uma análise e uma geração, sem retry/fallback automático. Não há tela
@@ -14661,7 +14665,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
-| `docs/arquitetura/geracao-persistente.md` | `12bd2e9cb9513606d35ddcd9f6062b029d444be32bdc37a1302a02a49bcee9c1` |
+| `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `00a51d77798ead39a9f4c09f0bffcb8852d94d6eb8972268fd0157c7ca61a8a8` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `e67719b92d533b59609ca38fc01fe93a2812baeb162fb4672607dec23a4c7bab` |
