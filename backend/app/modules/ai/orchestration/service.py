@@ -7,6 +7,12 @@ from uuid import UUID
 from pydantic import ValidationError
 
 from app.contracts.structured import digest
+from app.modules.ai.orchestration.presentation import present_plan
+from app.modules.ai.orchestration.queries import (
+    generation_evidence,
+    generation_query,
+    recovery_query,
+)
 from app.modules.ai.orchestration.settings import Config
 from app.modules.ai.orchestration.validation import validate_chat, validate_plan
 from app.modules.ai.policies.triage import Policy
@@ -335,14 +341,15 @@ class Orchestrator:
                 )
                 evidence = retrieve(
                     "GERACAO_GERAL",
-                    "Treinamento para "
-                    + summary.dados.objetivo_principal
-                    + "; experiência "
-                    + summary.dados.experiencia
-                    + "; "
-                    + health_query,
+                    generation_query(summary, health_query),
                     health=health,
                 )
+                recovery = retrieve(
+                    "GERACAO_GERAL",
+                    recovery_query(summary, health_query),
+                    health=health,
+                )
+                evidence = generation_evidence(evidence, recovery)
                 phase("GERACAO")
                 plan = call(
                     "GERACAO",
@@ -382,6 +389,7 @@ class Orchestrator:
                     for index, old in enumerate(context.base_plan.dias, 1):
                         if index != request.dia_alvo and old != plan.dias[index - 1]:
                             raise ValueError("ALTERACAO_FORA_DO_DIA_ALVO")
+                plan = present_plan(plan, adaptation=request.finalidade == "ADAPTACAO")
                 result = result.model_copy(
                     update={
                         "estado": "PRONTA_PARA_PUBLICACAO",

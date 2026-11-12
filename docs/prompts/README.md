@@ -125,20 +125,21 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 | AI-05 | CONCLUIDO | [Chat/adaptação](../arquitetura/chat-e-adaptacao.md), [schemas](../requisitos/schemas/chat-ia-v1.schema.json), migration 0015 e [evidências](../testes/comandos.md#chat-e-adaptação-ai-05). Conversa própria, RAG fixo sem anamnese em dúvida, confirmação de snapshot/base/dia na adaptação, diff e publicação PENDENTE por MOD-04. Cota atômica compartilhada, replay, retenção/redação de contexto e saída inerte. 10 BE/17 INT/6 FE novos; 257 BE, 159 DB/INT distintos e 85 FE distintos verificados, 9 API. Ruff/formato/mypy (199 arquivos), frontend tipos/lint/build e SPEC/DOC aprovados. Sem dependência nova; fixtures LLM controladas. AI-06 permanece avaliação real e TST-01 aceite E2E. |
 
-### Execução parcial AI-06 — 2026-11-12
+### Correção e execução parcial AI-06 — 2026-11-12
 
-[Runner e métricas](../testes/avaliacao-ia.md), [evidências](../testes/comandos.md#avaliação-automatizada-ai-06)
-e [consolidação](../testes/ai06-consolidacao.json). Configuração v2/GPT-OSS 120B
-autorizada na ADR-006; v1 histórica, sem fallback pago. Matriz SV-01–24/SC-01–06,
-107 testes selecionados de backend/API/integração e 20 FE aprovados; E5/Qdrant
-reais. [Preparação complementar](../testes/preparacao-ai06.md): perfis comuns,
-catálogo/inventário sintéticos e trechos TRIAGEM revisados.
-Ensaio vigente: 27/27 expectativas automáticas atendidas; 5 gerações e 3 adaptações
-publicadas no banco de teste. p95: chat 1,545 s; geração 5,298 s; adaptação 3,253 s.
-Revisão técnica reprovou fundamentação das cinco gerações e idioma em L16.
-Consolidação permanece PENDENTE_OU_REPROVADO; AI-06 EM_EXECUCAO e TST-01 bloqueado.
-Regressão BE: 272 testes distintos verificados; corpus/integração e relatórios
-também revalidados. Resultados anteriores preservados no histórico.
+[Runner](../testes/avaliacao-ia.md), [correção](../testes/ai06-correcao-fundamentacao.md),
+[relatórios](../testes/comandos.md#correção-com-livro-e-prompt-v3--2026-11-12) e
+[consolidação](../testes/ai06-consolidacao.json). Livro Nahas incorporado ao catálogo,
+fontTools para CFF e política de quatro páginas físicas válidas. Prompt academia-ia-v3,
+duas consultas fixas e apresentação factual após validação; o LLM continua gerando os itens.
+286 BE, 107 backend/API/integração selecionados e 20 FE passaram; Ruff/formato/mypy
+(214 fontes) aprovados. A nova amostra real está incompleta por quota diária TPD:
+19 casos executados, 18 resultados automáticos esperados, 8 pendentes de provedor
+e L13 com falha de quota. Dez respostas de chat, duas abstenções, uma ficha publicada
+e cinco bloqueios exercitados. A ficha L15 levou 5,339 s; não estima os demais perfis.
+Revisão parcial registra uma extrapolação de fonte em L04; não aprova o conjunto.
+Ensaios anteriores e interrupções preservados. AI-06 EM_EXECUCAO e TST-01 bloqueado
+até completar os nove casos L13,L14,L16,L17,L18,L19,L20,L23,L24 e consolidar a revisão.
 
 ## Fundação
 
@@ -279,10 +280,10 @@ contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e de
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
-AI-06 está em execução: triagem e geração real agora foram exercitadas,
-mas a revisão encontrou justificativas sem suporte e títulos em inglês.
-Corrigir fundamentação/idioma e repetir avaliação explícita antes de liberar TST-01. Gates pós-MVP e marcos
-de execução permanecem abertos até suas evidências reais.
+AI-06 está em execução: correção de livro/idioma e triagem v3 entregue,
+mas o novo ensaio está incompleto por quota diária TPD. Uma extrapolação de chat
+permanece na revisão parcial. Retomar os casos sem resposta e consolidar antes
+de liberar TST-01. Gates pós-MVP e marcos permanecem abertos até evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

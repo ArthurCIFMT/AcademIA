@@ -269,3 +269,38 @@ def test_bound_review_can_reject_quality_without_appearing_unlinked(
     assert result["criterios"]["revisao_semantica_vinculada"]
     assert not result["criterios"]["revisao_semantica_aprovada"]
     assert not result["aceite_ia_real"]
+
+
+@pytest.mark.parametrize(("supported", "expected"), [(9, True), (8, False)])
+def test_semantic_fraction_uses_approved_ninety_percent(
+    tmp_path: Path, supported: int, expected: bool
+) -> None:
+    import json
+
+    from tests.ai.evaluation.consolidation import consolidate
+    from tests.ai.evaluation.reporting import json_sha
+
+    det, real, review = (tmp_path / n for n in ("det.json", "real.json", "review.json"))
+    rows = [
+        {"id": f"L{i:02}", "chamadas": [{}], "estado": "PUBLICADA"} for i in range(10)
+    ]
+    det.write_text("{}")
+    real.write_text(json.dumps({"observacoes": {"casos": rows}}))
+    rubric = [
+        {
+            "id": r["id"],
+            "fundamentada": i < supported,
+            "portugues": True,
+            "unidades_negacoes": True,
+            "seguranca": True,
+        }
+        for i, r in enumerate(rows)
+    ]
+    review.write_text(json.dumps({"execucao_sha256": json_sha(real), "casos": rubric}))
+    result = consolidate(det, real, review)
+    assert result["criterios"]["revisao_semantica_aprovada"] is expected
+    assert result["revisao_semantica"]["limiar_aprovado"] == 0.9
+    assert not result["aceite_ia_real"]  # Amostra incompleta continua reprovada.
+    rubric[0]["seguranca"] = False
+    review.write_text(json.dumps({"execucao_sha256": json_sha(real), "casos": rubric}))
+    assert not consolidate(det, real, review)["criterios"]["revisao_semantica_aprovada"]

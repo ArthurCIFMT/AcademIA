@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-12",
-  "base_implementacao": "23585326d943d284b6c9392e1d0177e822bd7f4d",
+  "base_implementacao": "7423fd55670ce8d84eff8e6a255da4ce222beebe",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -66,6 +66,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md",
           "titulo": "Migração explícita para o modelo Groq vigente"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md",
+          "titulo": "Livro, extração explícita, recuperação e resumo factual"
         }
       ]
     },
@@ -244,6 +248,18 @@
           "titulo": "Configuração privada de suporte técnico de saúde",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "materiais/rag/politica-livro-v2.json",
+          "titulo": "Escopo explícito de extração do livro",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "materiais/rag/selecoes/nahas-forca-v1.json",
+          "titulo": "Seleção operacional de força no livro",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },
@@ -369,8 +385,8 @@
           "titulo": "Curadoria e perfis sintéticos comuns de academia"
         },
         {
-          "arquivo": "docs/testes/ai06-corpus-v1.json",
-          "titulo": "Seleção suplementar rastreável de trechos",
+          "arquivo": "docs/testes/ai06-corpus-v2.json",
+          "titulo": "Corpus de avaliação com trechos revisados do livro",
           "tipo": "codigo",
           "linguagem": "json"
         },
@@ -397,6 +413,10 @@
           "titulo": "Critérios de aceite da avaliação ainda não atendidos",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/ai06-correcao-fundamentacao.md",
+          "titulo": "Correções de fundamentação e idioma e reprodução"
         }
       ]
     },

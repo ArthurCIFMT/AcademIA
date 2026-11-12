@@ -1,7 +1,7 @@
 # Materiais para o RAG do AcademIA
 
 Coleta inicial em 3 de novembro e ampliação autorizada em 4 de novembro de 2026.
-Esta pasta reúne **18 PDFs originais, com 783 páginas PDF: 8 em português e 10 em
+Esta pasta reúne **19 PDFs originais, com 1137 páginas PDF: 8 em português e 10 em
 inglês**. A ampliação acrescentou 11 documentos e 457 páginas, sem alterar os sete
 originais. A coleta inicial reuniu candidatos. Na preparação técnica inicial, sete foram
 selecionados por delegação para ingestão; os demais continuam em reserva. Nenhum
@@ -62,7 +62,8 @@ transformação. A OMS usa licença IGO própria. O catálogo identifica esses c
 
 ## O que foi conferido nesta coleta
 
-- Dezoito arquivos com assinatura PDF válida e abertura pelo leitor de PDF.
+- Coleta original: dezoito PDFs; acervo vigente com o livro: dezenove PDFs.
+  Assinatura PDF válida e abertura pelo leitor conferidas.
 - Contagem de páginas, tamanho e SHA-256 de cada arquivo.
 - Títulos e capas renderizadas, além de amostras de texto/expediente/licenças.
 - Texto extraível: a ampliação conferiu todas as páginas quanto a extração vazia,
@@ -90,9 +91,9 @@ fundamentam o guia brasileiro e não são evidências totalmente independentes d
 Há cobertura bibliográfica inicial de atividade física, força/hipertrofia,
 organização do treino, lombalgia crônica primária, dor patelofemoral, manguito
 rotador, biomecânica do agachamento, triagem e diabetes tipo 2. Isso não constitui
-cobertura suficiente para toda patologia ou exercício. Ainda faltam o catálogo
-implementado de exercícios e ensaios reais; regras de triagem e casos esperados
-foram definidos documentalmente nesta preparação,
+cobertura suficiente para toda patologia ou exercício. Catálogo e ensaios possuem entregas próprias no manifesto; a coleta bibliográfica
+isolada não os substitui. Regras de triagem e casos esperados
+foram definidos documentalmente na preparação,
 além da revisão de atualizações, conflitos e adequação ao público. As diretrizes
 clínicas incluem temas de diagnóstico/medicação que não se confundem com orientação
 de treino de academia.
@@ -102,7 +103,7 @@ uma adaptação. Cada adaptação por saúde precisa de suporte pertinente efeti
 recuperado do corpus aprovado, conforme RF-15/RF-19 e MRF11. Revisões narrativas,
 comentários e diretrizes têm papéis distintos; fontes podem compartilhar estudos.
 
-O catálogo atual registra oito documentos selecionados tecnicamente para ingestão
+O catálogo atual registra nove documentos selecionados tecnicamente para ingestão
 e dez em reserva; conferir [manifesto inicial](corpus-inicial.json). A seleção
 não significa chunks/índice prontos nem qualidade de geração comprovada.
 
@@ -112,15 +113,15 @@ O acervo apoia dúvidas, triagem de onboarding resumido e geração com conhecim
 especializado; a abordagem atual é [RAG semântico](../../docs/arquitetura/rag-semantico.md).
 Não remover automaticamente referências de saúde ou exercícios: avaliar trechos
 pertinentes por finalidade e manter pendentes fora do índice ativo. Livro/material
-de exercícios segue a seleção registrada abaixo; os 18 PDFs não comprovam cobertura
+de exercícios segue a seleção registrada abaixo; os 19 PDFs não comprovam cobertura
 suficiente para todo treino/condição. Inventário/catálogo ficam em PostgreSQL.
-Os PDFs permanecem intactos. A seleção técnica posterior aprovou oito para
+Os PDFs permanecem intactos. A seleção técnica posterior aprovou nove para
 ingestão; nenhum foi reindexado nesta preparação.
 
 ## Corpus inicial definido
 
 A seleção vigente está em [corpus-inicial.json](corpus-inicial.json) e no catálogo:
-oito documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
+nove documentos aprovados tecnicamente para ingestão do protótipo, sem alterar
 PDFs. Outros dez seguem pendentes. Não confundir seleção com chunks/índice pronto
 ou qualidade de geração comprovada. O material especializado inicial é esse
 conjunto. A referência em livro foi escolhida posteriormente, conforme abaixo.
@@ -137,14 +138,21 @@ Estilo de Vida Ativo, 7ª edição (2017), em português. O autor o disponibiliz
 prioritários (4: força/mobilidade; 6: orientações de exercícios) e limitações.
 
 É apoio geral, complementado pelos artigos especializados. IDs e recursos vêm
-do catálogo, e adaptação por saúde exige evidência pertinente. O livro não foi
-adicionado automaticamente ao índice: a leitura encontrou avisos de fontes CFF
-no pypdf e precisa de tratamento técnico antes de ativação. Páginas 81 e 130
-físicas foram conferidas visualmente; a numeração impressa é distinta. O arquivo
-oficial possui 354 páginas físicas, embora a ficha catalográfica declare 362.
-O Git guarda referência/hash; a cópia local de leitura fica fora do repositório.
-Os oito selecionados e os dez documentos em reserva mantêm seus PDFs intactos.
+do catálogo, e adaptação por saúde exige evidência pertinente. Na preparação inicial, avisos de fontes CFF impediram a ativação.
+A correção usa fontTools e uma política explícita para as páginas físicas
+83, 85, 132 e 133, conferidas visualmente; a numeração impressa é distinta.
+O arquivo oficial possui 354 páginas físicas, embora a ficha catalográfica declare 362.
+O Git guarda agora o PDF original completo, referência, hash, política e seleção;
+a extração integral permanece pendente por ilegibilidade da página 8 (sumário).
+Os nove selecionados e os dez documentos em reserva mantêm seus PDFs intactos.
 
 A seleção técnica de 2026-11-12 acrescentou INT-HEALTH-001 apenas para TRIAGEM.
 Os recortes revisados e os limites estão na [preparação do AI-06](../../docs/testes/preparacao-ai06.md).
-Esta mudança não resolve os PDFs/livro cuja extração continua pendente.
+Essa preparação não resolveu as demais extrações pendentes; o escopo parcial
+do livro é explicitado a seguir.
+
+O livro Nahas agora integra o catálogo como BR-NAHAS-001: preservado integralmente,
+com extração/indexação apenas das páginas explicitamente revisadas, conforme
+[correção do AI-06](../../docs/testes/ai06-correcao-fundamentacao.md). A página 8
+continua pendente na extração integral. A seleção vigente tem nove documentos
+e dez em reserva; seleção não significa indexação integral ou validação clínica.

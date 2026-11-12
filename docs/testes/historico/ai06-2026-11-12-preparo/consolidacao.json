@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "estado": "PENDENTE_OU_REPROVADO",
+  "aceite_ia_real": false,
+  "criterios": {
+    "mesma_configuracao_e_casos": true,
+    "deterministico_aprovado": true,
+    "amostra_completa": true,
+    "casos_obrigatorios": true,
+    "sem_falha_critica": true,
+    "fichas_validas": true,
+    "recuperacao": true,
+    "revisao_semantica_vinculada": true,
+    "revisao_semantica_aprovada": false,
+    "latencia_de_respostas_validas_medida": true,
+    "metas_de_latencia": true
+  },
+  "algoritmo_hash": "JSON_CANONICO_V1",
+  "entradas_sha256": {
+    "deterministico": "a6ede84bee51d36202291bd343ea1ce7cf13aa896a64c1c5f6a7c5a95d425811",
+    "real": "b1bbc970012647f534e053f18f99dee5c02532960a2d0e4cd2a469f7ae6d9c63",
+    "revisao": "4cd781417937e47182a1fcf24ca655a758977fbbf66bfd38264cc50956246f6e"
+  },
+  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
+}

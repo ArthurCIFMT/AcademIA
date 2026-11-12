@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "nota": "Diagnósticos explícitos fora do aceite e do consumo das partes de teste. Não são respostas/fichas avaliadas. Certificados públicos do Windows usados com TLS habilitado; não há alteração do adaptador de produção.",
+  "registros": [
+    {
+      "tipo": "DIAGNOSTICO_EXPLICITO_FORA_DO_ACEITE",
+      "nova_execucao": true,
+      "status_http": 200,
+      "cabecalhos": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "999",
+        "x-ratelimit-remaining-tokens": "6155",
+        "x-ratelimit-reset-requests": "1m26.4s",
+        "x-ratelimit-reset-tokens": "13.837s"
+      },
+      "uso": {
+        "prompt_tokens": 1445,
+        "completion_tokens": 88,
+        "total_tokens": 1533
+      }
+    },
+    {
+      "tipo": "DIAGNOSTICO_EXPLICITO_FORA_DO_ACEITE",
+      "nova_execucao": true,
+      "resultado": "TRANSPORTE_INDISPONIVEL"
+    },
+    {
+      "tipo": "DIAGNOSTICO_EXPLICITO_FORA_DO_ACEITE",
+      "nova_execucao": true,
+      "status_http": 200,
+      "cabecalhos": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "987",
+        "x-ratelimit-remaining-tokens": "6081",
+        "x-ratelimit-reset-requests": "18m43.2s",
+        "x-ratelimit-reset-tokens": "14.392s"
+      },
+      "uso": {
+        "prompt_tokens": 1663,
+        "completion_tokens": 179,
+        "total_tokens": 1842
+      }
+    }
+  ]
+}

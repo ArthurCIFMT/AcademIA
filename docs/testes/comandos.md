@@ -933,7 +933,10 @@ implicitamente em pytest; sua ausência é skip identificado, não aceite da IA.
 Pastas de saída novas preservam recibos; não sobrescrever um ensaio já concluído.
 RAG/FE do runner resolvem Node 24 e entrypoints dos scripts npm existentes.
 
-## Preparação complementar e novo ensaio — 2026-11-12
+## Preparação complementar e ensaio anterior — 2026-11-12
+
+Registro histórico da preparação anterior à correção com livro/prompt v3 abaixo.
+Os [relatórios daquela versão](historico/ai06-2026-11-12-preparo/README.md) permanecem preservados.
 
 [Exemplos e curadoria](preparacao-ai06.md), [corpus de teste](ai06-corpus-v1.json),
 [catálogo de teste](ai06-catalogo-v1.json) e
@@ -997,3 +1000,60 @@ Nova avaliação LLM deve ser explícita; não há repetição automática ou fa
 Uma execução de preparo foi interrompida antes da amostra por inconsistência de
 rótulo de perfil; foi corrigida antes da rodada real-02. Somente a rodada completa
 vinculada nos relatórios publicados compõe esta avaliação.
+
+## Correção com livro e prompt v3 — 2026-11-12
+
+A [ADR-007](../arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) e o
+[guia da correção](ai06-correcao-fundamentacao.md) registram o escopo autorizado
+pelo responsável: ativar fundamentação em português e corrigir a geração.
+O LLM escolhe dias/itens/doses; o backend valida e apresenta um resumo factual,
+sem publicar a explicação livre. Livro original e metadados preservados; quatro
+páginas explicitamente extraídas/indexáveis, sem declarar leitura integral válida.
+Nova dependência: fontTools 4.68.0, necessária ao pypdf para fontes CFF/Type1.
+Sem mudança de MER, migration, equipamento de exemplo ou modelo aprovado.
+
+Verificações na proposta, com Python 3.12, PG academia_test e E5 CPU reais:
+- 286 testes BE aprovados, incluindo contratos; 165 marcados fora da suíte padrão.
+- Runner determinístico: 107 testes backend/API/integração e 20 FE aprovados.
+- Corpus/curadoria: 4 testes focais aprovados, com extração/hashes/offsets do
+  original, seleção operacional reproduzível, 4 consultas reais sem LLM e
+  importação idempotente/revogação. [Scores e páginas](ai06-corpus-verificacao.json).
+- Ruff, formatação e mypy: aprovados, 214 fontes de tipos.
+- SPEC recompilado de 88 fontes e referências documentais verificadas.
+A cópia do projeto é revalidada antes do commit; nenhuma chave, índice ou saída
+privada acompanha os arquivos de entrega.
+
+Ensaio v3: 19 casos executados, dos quais 18 com resultado automático esperado;
+8 PENDENTE_PROVEDOR e L13 interrompido por quota, sem ficha.
+L01–L10 responderam, L11–L12 abstiveram-se, L15 publicou ficha PENDENTE, e
+L21/L22/L25/L26/L27 foram bloqueados/insuficientes sem chamada LLM.
+Nenhuma falha crítica foi observada nessa parte; ataques reais L23/L24 permanecem
+pendentes e não são declarados aprovados pela evidência determinística.
+
+Somente resultados válidos: chat n=10, p50 1,063 s/p95 1,830 s; geração n=1,
+5,339 s; nenhuma adaptação v3 medida. Busca n=16, p95 0,080 s.
+Tempos do serviço excluem HTTP/UI, fixtures, inicialização E5 e pausas do lote.
+Uma ficha não estima a latência/qualidade de todos os perfis.
+
+O [ensaio unido](ai06-ensaio-real.json) conserva [cinco partes](ai06-partes/README.md),
+consumo e três chamadas de consumo desconhecido. Partes: 16 chamadas físicas,
+23.662 tokens conhecidos. Resultados selecionados: 13 chamadas/21.854 tokens,
+com uma chamada de consumo desconhecido; a diferença permanece nas tentativas
+interrompidas. [Diagnósticos externos ao aceite](ai06-diagnosticos-provedor.json)
+são separados. Nenhum valor monetário é inferido da contagem de tokens.
+O [provedor confirmou TPD](ai06-limites-provedor.json), com Retry-After de 638 s
+para aquela requisição; isso não garante saldo suficiente para o lote completo.
+Não há plano pago, troca oculta de provedor nem retry de etapa na aplicação.
+
+A [revisão parcial vinculada](ai06-revisao-tecnica.json) marca L04 sem fundamentação
+por acrescentar definições que não constavam do contexto; L13 não possui texto
+para avaliar. L15 preserva catálogo/recursos/faixas gerais e resumo factual.
+A [consolidação](ai06-consolidacao.json) retorna PENDENTE_OU_REPROVADO (código 1
+esperado). Não reduzir limiares ou substituir L04 por outra resposta.
+AI-06 segue EM_EXECUCAO; TST-01 continua BLOQUEADO.
+
+Após quota suficiente, retomar explicitamente somente
+L13,L14,L16,L17,L18,L19,L20,L23,L24 em pasta nova. Unir as cinco partes anteriores
+e a nova por --mode merge, revisar os novos artefatos e vincular a revisão ao
+JSON unido completo antes de consolidar novamente. Exemplos de comandos e
+guardas estão no guia; nenhuma parte isolada aprova o conjunto.

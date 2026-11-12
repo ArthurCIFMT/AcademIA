@@ -5,7 +5,7 @@
 Runner em backend/tests/ai/evaluation, matriz
 [SV/SC e 27 amostras](ai06-casos-v2.json) e
 [configuração vigente](../requisitos/schemas/configuracao-ia-v2.json).
-Modos separados: determinístico, real e consolidação sem novas chamadas.
+Modos separados: determinístico, real, união de partes e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
 Não modifica requisitos de saúde para fazer um caso passar e não aprova o MVP
 por mocks, JSON válido ou uma média de tempo obtida com abstenções.
@@ -45,7 +45,7 @@ ficha/adaptação, uma triagem e uma geração. O lote interrompe chamadas exter
 ao observar quota, credencial recusada ou indisponibilidade do provedor; casos
 restantes ficam PENDENTE_PROVEDOR. Outra execução exige ação explícita.
 ACADEMIA_AI_INTERVAL_SECONDS controla pausa de amostragem entre dúvidas
-(padrão 20 s); ficha/adaptação usa pausa de até 50 s quando houve chamada.
+(padrão 20 s); ficha/adaptação usa pausa de 60 s quando houve chamada.
 Essas pausas não entram na latência de cada solicitação.
 A [cota gratuita documentada](https://console.groq.com/docs/rate-limits) é por
 organização; não tratar limites publicados como garantia da conta.
@@ -113,9 +113,20 @@ instalação e aceite ponta a ponta do MVP.
 Os [comandos e resultados](comandos.md#avaliação-automatizada-ai-06) registram os
 ensaios efetivamente realizados. Execuções exploratórias interrompidas ou com
 modelo indisponível permanecem identificadas como tais; não compõem o aceite.
-A [preparação complementar](preparacao-ai06.md) documenta a seleção técnica
-de TRIAGEM e os perfis comuns. PDFs/livro com extração pendente mantêm esse estado.
+A [preparação complementar](preparacao-ai06.md) e a [correção](ai06-correcao-fundamentacao.md) documenta a seleção técnica
+de TRIAGEM e os perfis comuns. As fontes com extração pendente mantêm esse estado;
+o livro Nahas possui agora escopo explícito de quatro páginas válidas, conforme ADR-007.
 O [ensaio anterior](historico/ai06-2026-11-11/README.md) permanece preservado.
 
 [Resumo das métricas](ai06-resumo.json), [ensaio real](ai06-ensaio-real.json),
 [revisão técnica](ai06-revisao-tecnica.json) e [consolidação](ai06-consolidacao.json).
+
+Na correção com livro, a fundamentação da ficha é avaliada no artefato público
+após validação/apresentação do backend. Justificativa livre descartada não vira
+conteúdo aprovado. O chat permanece avaliado na resposta do LLM. O relatório
+registra limitações da saída bruta em separado e aplica a meta de 0,9 já aprovada,
+sem tolerância a falhas de idioma, unidades/negações ou segurança.
+
+Retomada explícita por --cases e união auditável por --mode merge estão no
+[guia da correção](ai06-correcao-fundamentacao.md). Nenhuma parte reduz o mínimo
+de casos; a consolidação exige todos os IDs e as mesmas versões/configuração.

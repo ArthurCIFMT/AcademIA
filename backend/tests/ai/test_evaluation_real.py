@@ -36,7 +36,8 @@ from tests.ai.evaluation.live_support import (
     attack_source,
     initial_literature,
 )
-from tests.ai.evaluation.reporting import load_dataset, timings, write_json
+from tests.ai.evaluation.reporting import load_dataset, write_json
+from tests.ai.evaluation.resume import observations, select_cases, technical_acceptance
 from tests.ai.test_chat_integration import adaptation
 from tests.ai.test_triage import CASES
 from tests.ai.test_triage_integration import seed
@@ -141,6 +142,7 @@ def test_real_semantic_llm_benchmark(
     actor = people["cliente"]
     item = catalog_fixture(sessions, people["admin"])
     dataset = load_dataset()
+    cases = select_cases(dataset, os.environ.get("ACADEMIA_AI_CASE_IDS"))
     encoder = E5Encoder()
     store = QdrantStore(VectorSettings(path=str(tmp_path / "qdrant")))
     adapter = GroqAdapter(Config.load(), GroqSettings())
@@ -154,7 +156,7 @@ def test_real_semantic_llm_benchmark(
             sessions, people["admin"], storage, encoder, store, tmp_path
         )
         terminal_provider = False
-        for case in dataset["real"]:
+        for case in cases:
             if terminal_provider:
                 rows.append(
                     {
@@ -164,7 +166,7 @@ def test_real_semantic_llm_benchmark(
                         "correto_automatico": False,
                     }
                 )
-                write_json(output / "observacoes.json", {"casos": rows})
+                write_json(output / "observacoes.json", observations(rows, cold_ms))
                 continue
             savepoint = migration[0].begin_nested()
             try:
@@ -318,34 +320,12 @@ def test_real_semantic_llm_benchmark(
                 print(f"AI06 {case['id']}: {result.estado}", flush=True)
             finally:
                 savepoint.rollback()
-            report = {
-                "schema_version": 1,
-                "casos": rows,
-                "inicializacao_e5_ms": cold_ms,
-                "rotas": {
-                    r: timings(
-                        [
-                            v["total_ms"]
-                            for v in rows
-                            if v["rota"] == r and "total_ms" in v
-                        ]
-                    )
-                    for r in ("DUVIDA", "GERACAO", "ADAPTACAO")
-                },
-                "busca": timings(
-                    [b["parede_ms"] for v in rows for b in v.get("buscas", [])]
-                ),
-                "limites": [
-                    "Serviço real; exclui fixture, aquecimento, HTTP/UI e pausas.",
-                    "Corpus: recortes RAG-05 e suplemento AI-06; cobertura limitada.",
-                    "Publicações/ataques ficam no banco e índice isolados.",
-                ],
-            }
+            report = observations(rows, cold_ms)
             write_json(output / "observacoes.json", report)
             interval = float(os.environ.get("ACADEMIA_AI_INTERVAL_SECONDS", "20"))
             if interval > 0 and not terminal_provider and llm.calls:
-                time.sleep(min(interval if case["rota"] == "DUVIDA" else 50, 50))
-        assert len(rows) >= 24 and all(r["correto_automatico"] for r in rows), (
+                time.sleep(min(interval if case["rota"] == "DUVIDA" else 60, 60))
+        assert technical_acceptance(rows, len(cases)), (
             "Ensaio falhou; consultar observacoes.json. Sem retry automático."
         )
     finally:

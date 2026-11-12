@@ -22,18 +22,37 @@ from tests.ai.evaluation.reporting import (
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--mode", choices=["deterministic", "real", "consolidate"], required=True
+        "--mode",
+        choices=["deterministic", "real", "consolidate", "merge"],
+        required=True,
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--node", default=shutil.which("node"))
     parser.add_argument("--deterministic-report", type=Path)
     parser.add_argument("--real-report", type=Path)
     parser.add_argument("--review", type=Path)
+    parser.add_argument(
+        "--cases", help="Retomada explícita: IDs separados por vírgula."
+    )
+    parser.add_argument("--part", type=Path, action="append")
     args = parser.parse_args()
+    if args.cases and args.mode != "real":
+        parser.error("--cases só se aplica a nova execução real.")
+
     output = args.output.resolve()
     if output.exists() and any(output.iterdir()):
         parser.error("Use uma pasta de saída nova para preservar evidências.")
     output.mkdir(parents=True, exist_ok=True)
+    if args.mode == "merge":
+        from tests.ai.evaluation.resume import merge_real
+
+        try:
+            merged = merge_real(args.part or [])
+        except (ValueError, OSError, KeyError) as error:
+            parser.error(str(error))
+        write_json(output / "relatorio.json", merged)
+        print(merged["estado"])
+        return 0 if merged["estado"] == "EXECUCOES_REAIS_COMPLETADAS" else 1
     if args.mode == "consolidate":
         if not args.deterministic_report or not args.real_report:
             parser.error("Informe os dois relatórios; consolidação não chama o modelo.")
@@ -44,11 +63,19 @@ def main() -> int:
         print(decision["estado"])
         return 0 if decision["aceite_ia_real"] else 1
     dataset = load_dataset()
+    from tests.ai.evaluation.resume import select_cases
+
+    try:
+        requested = select_cases(dataset, args.cases)
+    except ValueError as error:
+        parser.error(str(error))
     report = {
         "schema_version": 1,
         "modo": args.mode,
         **identity(),
         "aceite_ia_real": False,
+        "casos_solicitados": [r["id"] for r in requested],
+        "amostra_parcial": bool(args.cases),
     }
     env = dict(os.environ)
     env["ACADEMIA_AI_EVALUATION_OUTPUT"] = str(output)
@@ -60,6 +87,8 @@ def main() -> int:
             print("Ensaio real pendente: configure GROQ_API_KEY no ambiente local.")
             return 2
         env["ACADEMIA_AI_REAL"] = "1"
+        if args.cases:
+            env["ACADEMIA_AI_CASE_IDS"] = args.cases
         targets = ["tests/ai/test_evaluation_real.py"]
     else:
         targets = sorted({t for c in dataset["cenarios"] for t in c["testes"]})

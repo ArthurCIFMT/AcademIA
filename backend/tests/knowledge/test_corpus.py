@@ -326,13 +326,13 @@ def test_real_initial_catalog_import_is_idempotent_and_keeps_revocation(
             first.versoes_novas,
             first.aprovadas,
             first.pendentes,
-        ) == (18, 18, 8, 10)
+        ) == (19, 19, 9, 10)
         again = import_initial(
             session, admin, storage, uuid4(), ROOT / "materiais" / "rag"
         )
         assert again.versoes_novas == 0
         approved = approved_references(session)
-        assert len(approved) == 8
+        assert len(approved) == 9
         current = approved[0]
         decide(
             session,
@@ -348,8 +348,8 @@ def test_real_initial_catalog_import_is_idempotent_and_keeps_revocation(
             ).revogadas
             == 1
         )
-        assert len(approved_references(session)) == 7
-        assert session.scalar(select(func.count()).select_from(Document)) == 18
+        assert len(approved_references(session)) == 8
+        assert session.scalar(select(func.count()).select_from(Document)) == 19
 
 
 @pytest.mark.database

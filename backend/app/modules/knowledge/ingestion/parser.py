@@ -110,6 +110,8 @@ def parse_pdf(
                 return failed(Reason.PDF_PROTEGIDO)
             if not 1 <= len(reader.pages) <= policy.max_pages:
                 return failed(Reason.LIMITE_EXCEDIDO)
+            if policy.selected_pages and policy.selected_pages[-1] > len(reader.pages):
+                return failed(Reason.LIMITE_EXCEDIDO)
             bookmarks: dict[int, list[Section]] = {}
 
             def walk(items: Sequence[object]) -> None:
@@ -126,7 +128,10 @@ def parse_pdf(
             walk(reader.outline)
             pages, total = [], 0
             reasons: list[Reason] = []
+            selected = set(policy.selected_pages) if policy.selected_pages else None
             for number, source in enumerate(reader.pages, 1):
+                if selected is not None and number not in selected:
+                    continue
                 stream = source.get_contents()
                 if (
                     stream is not None
@@ -223,4 +228,6 @@ def parse(
         if not content.startswith(b"%PDF-"):
             return failed(Reason.TIPO_OU_TAMANHO_INVALIDO)
         return parse_pdf(content, declared, policy)
+    if policy.selected_pages is not None:
+        return failed(Reason.TIPO_OU_TAMANHO_INVALIDO)
     return parse_txt(content, declared, policy)

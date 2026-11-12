@@ -1,9 +1,9 @@
 {
-  "versao_catalogo": 3,
+  "versao_catalogo": 4,
   "coletado_em": "2026-11-03",
-  "finalidade": "Coleção preservada; oito documentos selecionados tecnicamente para ingestão. Seleção não equivale à extração completa nem à aprovação de qualidade do LLM.",
-  "quantidade_pdfs": 18,
-  "paginas_pdf_total": 783,
+  "finalidade": "Dezenove PDFs preservados; nove selecionados tecnicamente. Escopos de extração/ativação são explícitos e não equivalem a aprovação de qualidade do LLM.",
+  "quantidade_pdfs": 19,
+  "paginas_pdf_total": 1137,
   "documentos": [
     {
       "id": "BR-MS-001",
@@ -846,6 +846,43 @@
       "alteracoes_no_original": "nenhuma; cópia integral do PDF da fonte, apenas nome local descritivo",
       "situacao": "COLETADO_PENDENTE_REVISAO",
       "aprovado_para_rag": false
+    },
+    {
+      "id": "BR-NAHAS-001",
+      "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+      "autores": [
+        "Markus Vinicius Nahas"
+      ],
+      "ano": 2017,
+      "edicao": "7ª edição",
+      "tipo": "livro didático",
+      "fonte": "Autor / Sociedade Brasileira de Atividade Física e Saúde",
+      "licenca": "Copyright 2017 Markus Vinicius Nahas. Disponibilização digital gratuita pelo autor via SBAFS. Expediente restringe uso comercial sem autorização; não atribuir licença Creative Commons.",
+      "licenca_url": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+      "evidencia_licenca": "Expediente, página física 4, e disponibilização digital pelo autor via SBAFS.",
+      "idioma": "pt-BR",
+      "url": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+      "download": "https://www.sbafs.org.br/admin/files/papers/file_lIduWnhVZnP7.pdf",
+      "arquivo": "documentos/nahas-atividade-fisica-saude-2017.pdf",
+      "coletado_em": "2026-11-11",
+      "paginas_pdf": 354,
+      "tamanho_bytes": 6781926,
+      "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+      "alteracoes_no_original": "nenhuma; cópia integral da fonte",
+      "situacao": "SELECIONADO_TECNICAMENTE",
+      "aprovado_para_rag": true,
+      "temas": [
+        "treinamento de força",
+        "iniciantes",
+        "séries e repetições",
+        "progressão"
+      ],
+      "uso": "Conhecimento geral para geração assistida, com trechos dos capítulos 4 e 6.",
+      "limites": "Aprovação somente dos trechos revisados das páginas físicas 83, 85, 132 e 133; não é extração integral válida. Sumário da página 8 segue ilegível. Livro não é atlas completo ou protocolo clínico; não inferir carga individual de exemplos.",
+      "selecao_tecnica": {
+        "data": "2026-11-12",
+        "origem": "Solicitação expressa: usar livro em português para fundamentação e corrigir AI-06"
+      }
     }
   ],
   "atualizado_em": "2026-11-12"

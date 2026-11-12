@@ -85,8 +85,8 @@ A URL é apenas metadado: o servidor não busca o endereço informado no cadastr
 A importação lê materiais/rag/catalogo.json e corpus-inicial.json na raiz do
 projeto (opcional ACADEMIA_RAG_MATERIALS_DIR). Aceita somente os arquivos locais
 em documentos/, verifica os hashes de ambos os manifests e prepara todo o lote
-antes de registrar no banco. Mantém os 18 documentos: a seleção técnica existente
-de oito documentos é aprovada com o curador que acionou a importação; os outros
+antes de registrar no banco. Mantém os 19 documentos: a seleção técnica existente
+de nove documentos é aprovada com o curador que acionou a importação; os outros
 10 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
 Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
 e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.

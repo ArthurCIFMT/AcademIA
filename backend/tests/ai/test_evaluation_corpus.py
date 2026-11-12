@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from app.modules.ai.adapters.evidence import RagEvidence
 from app.modules.ai.ports.execution import Context
 from app.modules.knowledge.embeddings.encoder import E5Encoder
+from app.modules.knowledge.ingestion.chunking import Selection, Span
 from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 from app.modules.knowledge.ingestion.parser import parse
 from app.modules.knowledge.retrieval.service import Retriever
@@ -52,7 +53,7 @@ def test_profiles_preserve_unknowns_and_realistic_differences() -> None:
 
 def test_selection_matches_original_and_requires_completed_extraction() -> None:
     selection = json.loads(
-        (ROOT / "docs/testes/ai06-corpus-v1.json").read_text("utf-8")
+        (ROOT / "docs/testes/ai06-corpus-v2.json").read_text("utf-8")
     )
     catalog = json.loads((ROOT / "materiais/rag/catalogo.json").read_text("utf-8-sig"))
     approved = json.loads(
@@ -69,7 +70,24 @@ def test_selection_matches_original_and_requires_completed_extraction() -> None:
             == allowed["sha256"]
         )
         assert set(entry["finalidades"]) <= set(allowed["finalidades"])
-        result = parse(body, "PDF", None, ExtractionPolicy())
+        if entry["fonte_id"] == "BR-NAHAS-001":
+            operational = Selection.model_validate_json(
+                (ROOT / "materiais/rag/selecoes/nahas-forca-v1.json").read_bytes()
+            )
+            expected = [
+                Span(**{k: v for k, v in span.items() if k not in {"id", "texto_hash"}})
+                for span in entry["trechos"]
+            ]
+            assert operational.trechos == expected
+            assert operational.finalidade == entry["finalidades"][0]
+        policy = (
+            ExtractionPolicy.model_validate_json(
+                (ROOT / entry["politica_extracao"]).read_bytes()
+            )
+            if "politica_extracao" in entry
+            else ExtractionPolicy()
+        )
+        result = parse(body, "PDF", None, policy)
         assert result.estado == "CONCLUIDA"
         for span in entry["trechos"]:
             page = next(p for p in result.paginas if p.numero == span["pagina"])
@@ -110,12 +128,25 @@ def test_supplement_reaches_triage_and_generation_without_llm(
             ),
             (
                 "GERACAO_GERAL",
-                "Treinamento para FORCA; experiência INICIANTE; "
+                "Treinamento de força para adultos: prescrição de séries e repetições, "
+                "frequência semanal e intervalo de descanso entre séries. "
+                "Objetivo FORCA; experiência INICIANTE; 3 dias/semana; até 50 minutos. "
                 '{"condicoes":[],"limitacoes":[],"medicacoes":[],"observacoes":""}',
             ),
             (
                 "GERACAO_GERAL",
-                "Treinamento para HIPERTROFIA; experiência INTERMEDIARIO; "
+                "Treinamento de força para adultos: prescrição de séries e repetições, "
+                "frequência semanal e intervalo de descanso entre séries. "
+                "Objetivo HIPERTROFIA; experiência INTERMEDIARIO; "
+                "3 dias/semana; até 60 minutos. "
+                '{"condicoes":[],"limitacoes":[],"medicacoes":[],"observacoes":""}',
+            ),
+            (
+                "GERACAO_GERAL",
+                "Intervalo de descanso entre séries e exercícios "
+                "no treinamento resistido: "
+                "recuperação e tempo disponível; objetivo FORCA; "
+                "experiência INICIANTE. "
                 '{"condicoes":[],"limitacoes":[],"medicacoes":[],"observacoes":""}',
             ),
         ]
@@ -128,10 +159,19 @@ def test_supplement_reaches_triage_and_generation_without_llm(
                     "finalidade": purpose,
                     "estado": result.estado,
                     "scores": [e.score for e in result.evidencias],
+                    "referencias": [
+                        {"titulo": e.titulo, "pagina": e.pagina, "secao": e.secao}
+                        for e in result.evidencias
+                    ],
                 }
             )
             assert result.estado == "EVIDENCIAS_ENCONTRADAS", rows
             assert port.current(tuple(result.evidencias))
+            if purpose == "GERACAO_GERAL" and not query.startswith("Intervalo"):
+                assert any(
+                    "Nahas" in e.titulo or "Qualidade de Vida" in e.titulo
+                    for e in result.evidencias
+                )
         report = os.environ.get("ACADEMIA_AI_CORPUS_REPORT")
         if report:
             write_json(Path(report), {"sem_llm": True, "consultas": rows})

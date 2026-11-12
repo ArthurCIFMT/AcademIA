@@ -134,3 +134,14 @@ HTTPX MockTransport valida o contrato do adaptador sem enviar dados/credenciais
 separação de dados, permissões e campos rejeitados; não provam imunidade semântica.
 Qualidade de português, suporte dos textos gerados, resistência semântica,
 latência/cota gratuita real e corpus completo serão medidos em AI-06.
+
+Em AI-06, a [ADR-007](decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
+duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
+O prompt academia-ia-v3 exige idioma em todo texto novo e fundamentação explícita;
+o modelo recebe texto completo e referências mínimas, com proveniência integral
+preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
+
+A triagem explicita lacunas do esquema sem exigir exames fora do escopo.
+Depois de validar a proposta e o diff, a apresentação pública conta dias/itens e
+cargas pendentes a partir dos campos; a explicação livre não é publicada.
+Os itens continuam gerados pelo LLM e recebem validação do domínio.

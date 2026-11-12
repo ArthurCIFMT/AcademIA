@@ -2,6 +2,7 @@ import hashlib
 import json
 from datetime import datetime
 from enum import StrEnum
+from importlib.metadata import version as package_version
 from typing import Annotated, Literal, Self
 from uuid import UUID
 
@@ -16,17 +17,34 @@ class StrictModel(BaseModel):
 
 
 class ExtractionPolicy(StrictModel):
-    version: Literal[1] = 1
-    parser: str = "pypdf/" + __version__
+    version: Literal[1, 2] = 2
+    parser: str = "pypdf/" + __version__ + "/fonttools/" + package_version("fonttools")
+    selected_pages: list[Annotated[int, Field(strict=True, ge=1)]] | None = None
     max_pages: Annotated[int, Field(ge=1, le=10000)] = 1000
     max_page_chars: Annotated[int, Field(ge=1)] = 100000
     max_total_chars: Annotated[int, Field(ge=1)] = 8000000
     max_stream_bytes: Annotated[int, Field(ge=1)] = 16777216
     timeout_seconds: Annotated[float, Field(gt=0, le=300)] = 60
 
+    @model_validator(mode="after")
+    def explicit_scope(self) -> Self:
+        if self.selected_pages is not None and (
+            self.version != 2
+            or not self.selected_pages
+            or self.selected_pages != sorted(set(self.selected_pages))
+            or len(self.selected_pages) > self.max_pages
+        ):
+            raise ValueError(
+                "Seleção explícita exige páginas únicas/ordenadas e política v2."
+            )
+        return self
+
     @property
     def fingerprint(self) -> str:
-        return digest(self.model_dump(mode="json"))
+        data = self.model_dump(mode="json")
+        if self.version == 1:
+            data.pop("selected_pages")
+        return digest(data)
 
 
 def digest(value: object) -> str:

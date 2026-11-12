@@ -109,24 +109,45 @@ def scenario_results(
 
 
 def identity() -> dict[str, Any]:
+    from app.modules.ai.orchestration.queries import VERSION as QUERY_VERSION
     from app.modules.ai.orchestration.settings import Config
     from app.modules.ai.policies.triage import Policy
     from app.modules.ai.prompts.v1 import VERSION
+    from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 
     paths = [
         "docs/testes/ai06-casos-v2.json",
         "docs/testes/casos-triagem-v1.json",
         "docs/testes/rag05-consultas-v1.json",
         "materiais/rag/corpus-inicial.json",
-        "docs/testes/ai06-corpus-v1.json",
+        "docs/testes/ai06-corpus-v2.json",
         "docs/testes/ai06-catalogo-v1.json",
+        "materiais/rag/politica-livro-v2.json",
+        "materiais/rag/livro-de-apoio.json",
     ]
     return {
         "configuracao_sha256": Config.load().fingerprint,
         "politica_sha256": Policy().fingerprint,
         "prompts": VERSION,
         "modelo": Config.load().model,
-        "fontes_sha256": {p: sha(ROOT / p) for p in paths},
+        "consulta_geracao": QUERY_VERSION,
+        "extracao": ExtractionPolicy().fingerprint,
+        "algoritmo_hash_fontes": "JSON_CANONICO_V1",
+        "fontes_sha256": {p: json_sha(ROOT / p) for p in paths},
+        "codigo_sha256": {
+            p: hashlib.sha256(
+                (ROOT / p).read_text("utf-8").replace("\r\n", "\n").encode()
+            ).hexdigest()
+            for p in (
+                "backend/app/modules/ai/prompts/v1.py",
+                "backend/app/modules/ai/orchestration/queries.py",
+                "backend/app/modules/ai/orchestration/service.py",
+                "backend/app/modules/ai/orchestration/presentation.py",
+                "backend/app/modules/knowledge/ingestion/parser.py",
+                "backend/app/modules/knowledge/ingestion/contracts.py",
+                "backend/uv.lock",
+            )
+        },
         "ambiente": {
             "python": platform.python_version(),
             "sistema": platform.platform(),

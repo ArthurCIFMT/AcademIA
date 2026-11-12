@@ -13,6 +13,7 @@ from app.modules.identity.roles import effective_roles
 from app.modules.knowledge.embeddings.encoder import EmbeddingError
 from app.modules.knowledge.embeddings.runtime import close_encoder, get_encoder
 from app.modules.knowledge.ingestion.chunking import Selection
+from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 from app.modules.knowledge.ingestion.indexing import Indexer, IndexingError
 from app.modules.knowledge.ingestion.service import ExtractionError, Extractor
 from app.modules.knowledge.service import (
@@ -34,6 +35,7 @@ def main() -> int:
     parser.add_argument("--actor", required=True, type=UUID)
     parser.add_argument("--version", required=True, type=UUID)
     parser.add_argument("--selection", required=True, type=Path)
+    parser.add_argument("--policy", type=Path, help="Política explícita de extração.")
     args = parser.parse_args()
     engine: Engine | None = None
     try:
@@ -59,7 +61,14 @@ def main() -> int:
             with sessions.begin() as session:
                 return is_approved(session, id, revision)
 
-        extraction = Extractor(CorpusStorage()).extract(
+        policy = ExtractionPolicy()
+        if args.policy:
+            with args.policy.open("rb") as stream:
+                raw_policy = stream.read(65537)
+            if len(raw_policy) > 65536:
+                raise ValueError("Política excedida.")
+            policy = ExtractionPolicy.model_validate_json(raw_policy)
+        extraction = Extractor(CorpusStorage(), policy=policy).extract(
             references[0], approval_check=approved
         )
         encoder = get_encoder()

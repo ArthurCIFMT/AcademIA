@@ -1,65 +1,67 @@
 {
+  "schema_version": 1,
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
   "casos_planejados": 27,
-  "casos_executados": 27,
-  "casos_pendentes_provedor": 0,
+  "casos_executados": 19,
+  "casos_pendentes_provedor": 8,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 27,
+  "casos_corretos_automaticos": 18,
   "recall_amostra": {
     "numerador": 10,
     "denominador": 10
   },
   "fichas_elegiveis_validas": {
-    "numerador": 8,
-    "denominador": 8
+    "numerador": 1,
+    "denominador": 2
   },
   "respostas_fundamentadas": {
-    "numerador": 15,
-    "denominador": 20,
-    "estado": "REVISAO_TECNICA_INSUFICIENTE"
+    "numerador": null,
+    "denominador": null,
+    "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 28,
-  "consumo_desconhecido": 0,
-  "tokens_conhecidos": 80068,
-  "tokens_entrada_conhecidos": 68559,
-  "tokens_saida_conhecidos": 11509,
+  "chamadas_fisicas": 13,
+  "consumo_desconhecido": 1,
+  "tokens_conhecidos": 21854,
+  "tokens_entrada_conhecidos": 18324,
+  "tokens_saida_conhecidos": 3530,
   "rotas": {
     "DUVIDA": {
-      "n": 14,
-      "p50_ms": 1053.4709499988821,
-      "p95_ms": 1545.2529999965918
+      "n": 12,
+      "p50_ms": 1037.275700000464,
+      "p95_ms": 1829.9139000009745
     },
     "GERACAO": {
-      "n": 10,
-      "p50_ms": 2407.623050003167,
-      "p95_ms": 5298.472500006028
+      "n": 7,
+      "p50_ms": 89.73999999579974,
+      "p95_ms": 5338.749400005327
     },
     "ADAPTACAO": {
-      "n": 3,
-      "p50_ms": 3064.340299999458,
-      "p95_ms": 3253.326300000481
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
-      "n": 12,
-      "p50_ms": 1108.7421499978518,
-      "p95_ms": 1545.2529999965918
+      "n": 10,
+      "p50_ms": 1063.2234000004246,
+      "p95_ms": 1829.9139000009745
     },
     "GERACAO": {
-      "n": 5,
-      "p50_ms": 4845.5054000005475,
-      "p95_ms": 5298.472500006028
+      "n": 1,
+      "p50_ms": 5338.749400005327,
+      "p95_ms": 5338.749400005327
     },
     "ADAPTACAO": {
-      "n": 3,
-      "p50_ms": 3064.340299999458,
-      "p95_ms": 3253.326300000481
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
     }
   },
   "busca": {
-    "n": 30,
-    "p50_ms": 60.10700000115321,
-    "p95_ms": 123.3591999989585
+    "n": 16,
+    "p50_ms": 47.51915000088047,
+    "p95_ms": 80.45800001127645
   },
   "limiares": {
     "min_cases": 24,
@@ -72,11 +74,11 @@
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição.",
-  "limites_adicionais": [
-    "8/8 fichas válidas refere-se ao contrato técnico; cinco gerações não tiveram fundamentação aprovada.",
-    "Somente as três adaptações de fixture passaram na revisão funcional; não validam independentemente a dose da ficha-base manual.",
-    "Idioma misto detectado em títulos da ficha L16.",
-    "Recall de 10/10 refere-se somente às perguntas com alvo rotulado, não à adequação de todos os trechos para geração."
-  ]
+  "nota": "Amostra incompleta. Métricas de casos concluídos e consumo de todas as partes são distintos. Sem aceite de AI-06 ou MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 16,
+    "tokens_conhecidos": 23662,
+    "consumo_desconhecido": 3
+  },
+  "limites_provedor": "ai06-limites-provedor.json"
 }

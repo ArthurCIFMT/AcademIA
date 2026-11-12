@@ -462,3 +462,79 @@ def test_unknown_citation_or_forbidden_exercise_is_rejected() -> None:
         .estado
         == "SCHEMA_INVALIDO"
     )
+
+
+def test_prescription_queries_cover_book_and_recovery_without_extra_llm() -> None:
+    from app.modules.ai.orchestration.queries import generation_evidence
+
+    actor, contexts, sources, state = setup()
+    llm = Model([triage(), json.dumps(plan(contexts, sources))])
+    result = Orchestrator(contexts, sources, llm, state).execute(
+        actor, actor.user_id, request()
+    )
+    assert result.estado == "PRONTA_PARA_PUBLICACAO"
+    assert llm.calls == ["TRIAGEM", "GERACAO"]
+    assert len(sources.queries) == 3
+    assert all(q[0] == actor.user_id for q in sources.queries)
+    assert "séries e repetições" in sources.queries[1][2]
+    assert "Intervalo de descanso" in sources.queries[2][2]
+    primary = tuple(evidence() for _ in range(5))
+    recovery = (primary[0], evidence(), evidence())
+    merged = generation_evidence(primary, recovery)
+    assert len(merged) == 5 and len({e.fragmento_id for e in merged}) == 5
+    assert primary[0] in merged and recovery[1] in merged
+
+
+def test_model_receives_complete_evidence_text_without_storage_metadata() -> None:
+    from app.modules.ai.prompts.v1 import build
+
+    source = evidence().model_copy(
+        update={"texto": "Não aumentar: limite ≤ 10 kg; 90 segundos."}
+    )
+    original = source.model_dump(mode="json")
+    messages = build("CHAT", {"evidencias": [original]}, 24000)
+    sent = json.loads(messages[1]["content"])["dados_nao_confiaveis"]["evidencias"][0]
+    assert sent["texto"] == source.texto
+    assert sent["fragmento_id"] == str(source.fragmento_id)
+    assert sent["pagina"] == source.pagina and sent["titulo"] == source.titulo
+    assert "documento_versao_id" not in sent and "score" not in sent
+    assert original["documento_versao_id"] == str(source.documento_versao_id)
+
+
+def test_public_summary_never_repeats_model_claim_or_interprets_null_as_zero() -> None:
+    from decimal import Decimal
+
+    from app.modules.ai.orchestration.presentation import present_plan
+    from app.modules.ai.schemas.execution import PlanAnswer
+
+    actor, contexts, sources, state = setup()
+    raw = plan(contexts, sources)
+    raw["dias"][0]["titulo"] = "Lower Body"
+    raw["explicacao"] = "Quatro séries estão na faixa de duas a três sessões."
+    original = PlanAnswer.model_validate(raw)
+    rendered = present_plan(original, adaptation=False)
+    assert rendered.dias[0].titulo == "Dia 1"
+    assert rendered.dias[0].itens == original.dias[0].itens
+    assert "1 dia e 1 item" in rendered.explicacao
+    assert "Carga a definir em 1 item" in rendered.explicacao
+    assert "Quatro séries" not in rendered.explicacao
+    assert original.explicacao == raw["explicacao"]
+    zero = original.dias[0].itens[0].model_copy(update={"carga_kg": Decimal(0)})
+    explicit_zero = original.model_copy(
+        update={"dias": [original.dias[0].model_copy(update={"itens": [zero]})]}
+    )
+    assert "a definir" not in present_plan(explicit_zero, adaptation=True).explicacao
+    assert present_plan(original, adaptation=True).dias == original.dias
+
+
+def test_publication_plan_discards_untrusted_scientific_explanation() -> None:
+    actor, contexts, sources, state = setup()
+    raw = plan(contexts, sources)
+    raw["explicacao"] = "Quatro séries equivalem a duas sessões por semana."
+    llm = Model([triage(), json.dumps(raw)])
+    result = Orchestrator(contexts, sources, llm, state).execute(
+        actor, actor.user_id, request()
+    )
+    assert result.proposta and result.proposta.dias[0].itens[0].series == 3
+    assert "Quatro" not in result.proposta.explicacao
+    assert llm.calls == ["TRIAGEM", "GERACAO"]

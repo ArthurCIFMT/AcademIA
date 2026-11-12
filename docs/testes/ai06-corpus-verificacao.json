@@ -6,29 +6,133 @@
       "estado": "EVIDENCIAS_ENCONTRADAS",
       "scores": [
         0.831721593432849,
-        0.8284436555096517
+        0.8284436555096516
+      ],
+      "referencias": [
+        {
+          "titulo": "Relevance of the Get Active Questionnaire for Pre-Participation Exercise Screening in the General Population in a Tropical Environment",
+          "pagina": 3,
+          "secao": "Limitações: amostra idosa; não validação do formulário AcademIA"
+        },
+        {
+          "titulo": "Relevance of the Get Active Questionnaire for Pre-Participation Exercise Screening in the General Population in a Tropical Environment",
+          "pagina": 2,
+          "secao": "Interpretação contextual e atualização do questionário"
+        }
       ]
     },
     {
       "finalidade": "GERACAO_GERAL",
       "estado": "EVIDENCIAS_ENCONTRADAS",
       "scores": [
-        0.8606798195528726,
-        0.8601802733805168,
-        0.8526027646668157,
-        0.8482209289360996,
-        0.847043526661424
+        0.9013177354929597,
+        0.8968594848027103,
+        0.8943634002665403,
+        0.8902565658327473,
+        0.8808601049288617
+      ],
+      "referencias": [
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 83,
+          "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 133,
+          "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 132,
+          "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 85,
+          "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento"
+        },
+        {
+          "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+          "pagina": 6,
+          "secao": "Frequência"
+        }
       ]
     },
     {
       "finalidade": "GERACAO_GERAL",
       "estado": "EVIDENCIAS_ENCONTRADAS",
       "scores": [
-        0.866912276994397,
-        0.8637086648823478,
-        0.8630967321739963,
-        0.8606171404125489,
-        0.8592982510283975
+        0.9004629095689936,
+        0.8974810703307872,
+        0.8939198553007465,
+        0.8928465637762324,
+        0.8908917375623964
+      ],
+      "referencias": [
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 83,
+          "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 133,
+          "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 132,
+          "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 85,
+          "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento"
+        },
+        {
+          "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+          "pagina": 24,
+          "secao": "Aplicações práticas: volume e frequência; limites da revisão"
+        }
+      ]
+    },
+    {
+      "finalidade": "GERACAO_GERAL",
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "scores": [
+        0.8875076062622542,
+        0.8832099012034541,
+        0.8777355555004228,
+        0.8773322455841676,
+        0.8772262668458679
+      ],
+      "referencias": [
+        {
+          "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+          "pagina": 25,
+          "secao": "Intervalos e individualização; início da frase seguinte excluído"
+        },
+        {
+          "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+          "pagina": 13,
+          "secao": "Intervalo"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 132,
+          "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 133,
+          "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor"
+        },
+        {
+          "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+          "pagina": 85,
+          "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento"
+        }
       ]
     }
   ]

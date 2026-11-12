@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "finalidade": "GERACAO_GERAL",
+  "motivo_curadoria": "Capítulos 4 e 6; força geral em adultos. Somente páginas físicas 83,85,132,133 revisadas; não corresponde à extração integral do livro.",
+  "trechos": [
+    {
+      "pagina": 83,
+      "inicio": 1200,
+      "fim": 1827,
+      "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência"
+    },
+    {
+      "pagina": 85,
+      "inicio": 985,
+      "fim": 1786,
+      "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento"
+    },
+    {
+      "pagina": 132,
+      "inicio": 410,
+      "fim": 999,
+      "secao": "Cap. 6 — Força: grupos musculares e abrangência do programa"
+    },
+    {
+      "pagina": 132,
+      "inicio": 1001,
+      "fim": 2005,
+      "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível"
+    },
+    {
+      "pagina": 133,
+      "inicio": 268,
+      "fim": 1154,
+      "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor"
+    }
+  ]
+}

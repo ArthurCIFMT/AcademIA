@@ -81,3 +81,9 @@ O [resultado sem LLM](ai06-corpus-verificacao.json) e o [resumo real](ai06-resum
 registram as verificações; a [revisão](ai06-revisao-tecnica.json) reprovou a
 fundamentação das cinco gerações e idioma de L16. O preparo está entregue, mas
 AI-06 continua em execução. Não confundir sucesso técnico com aceite de qualidade.
+
+## Atualização posterior: livro e prompt
+Esta preparação registra o estado anterior à correção. A [correção vigente](ai06-correcao-fundamentacao.md)
+incorpora o original do livro e quatro páginas explicitamente extraídas/indexáveis,
+com prompt v3 e sem promover a extração integral. Resultados atuais e bloqueio
+TPD estão na [consolidação](ai06-consolidacao.json); a preparação isolada não aprova AI-06.

@@ -102,7 +102,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-05 e execução parcial de AI-06. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-05 e correção parcial de AI-06. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -112,7 +112,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](../../docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](../../docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](../../docs/arquitetura/catalogo-exercicios.md), [editor manual](../../docs/arquitetura/fichas-manuais.md), [publicação/parecer](../../docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](../../docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
-| MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
+| MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](../../docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](../../docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -121,28 +121,31 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-06 e TST-01. O próximo cartão na
-sequência é concluir AI-06. O [runner e a migração autorizada de modelo](../../docs/testes/avaliacao-ia.md)
-estão implementados. A [preparação complementar](../../docs/testes/preparacao-ai06.md)
-incluiu exemplos comuns e evidências de triagem. Os 27 casos atenderam às
-expectativas automáticas, com cinco gerações e três adaptações publicadas em teste.
-Latência foi medida, mas cinco gerações não passaram na revisão de fundamentação
-e L16 contém títulos em inglês. Não há aceite de qualidade da IA nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-06 e TST-01. O próximo cartão continua sendo concluir AI-06.
+O [runner](../../docs/testes/avaliacao-ia.md) e a [correção](../../docs/testes/ai06-correcao-fundamentacao.md)
+ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
+prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
+A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
+o [limite diário TPD da Groq](../../docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
+Uma ficha foi publicada em teste; isso não aprova os demais perfis ou AI-06.
+Não há liberação de TST-01. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
+registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
 ou avaliação de relevância da busca. RAG-05 acrescenta o ensaio real de 28
 consultas sobre sete trechos de uma publicação; seu tamanho e limites estão no
 [contrato da recuperação](../../docs/arquitetura/recuperacao-semantica.md). Não
-comprova cobertura ampla ou geração de fichas. O livro de apoio Nahas foi escolhido
-e registrado com hash, aguardando tratamento de extração. O aceite do MVP segue aberto.
+comprova cobertura ampla ou geração de fichas. O livro Nahas integra o catálogo com original/hash e escopo parcial válido;
+a página 8 mantém a extração integral pendente. O aceite do MVP segue aberto.
 AI-01 entrega [triagem e preparação autorizada](../../docs/arquitetura/triagem-academica.md):
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
 e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
-ADR-006. Geração/publicação e latência foram exercitadas; fundamentação e idioma
-das fichas ainda impedem concluir o aceite. As pendências do corpus e o aceite da IA permanecem explícitos.
+ADR-006. Geração/publicação foram exercitadas; a nova revisão permanece parcial por quota.
+Não se reutiliza o aceite técnico antigo para a versão corrigida. Pendências do corpus
+e do ensaio completo permanecem explícitas.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 

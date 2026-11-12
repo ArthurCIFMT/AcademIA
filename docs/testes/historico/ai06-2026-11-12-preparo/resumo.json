@@ -1,0 +1,82 @@
+{
+  "casos_planejados": 27,
+  "casos_executados": 27,
+  "casos_pendentes_provedor": 0,
+  "falhas_criticas": 0,
+  "casos_corretos_automaticos": 27,
+  "recall_amostra": {
+    "numerador": 10,
+    "denominador": 10
+  },
+  "fichas_elegiveis_validas": {
+    "numerador": 8,
+    "denominador": 8
+  },
+  "respostas_fundamentadas": {
+    "numerador": 15,
+    "denominador": 20,
+    "estado": "REVISAO_TECNICA_INSUFICIENTE"
+  },
+  "chamadas_fisicas": 28,
+  "consumo_desconhecido": 0,
+  "tokens_conhecidos": 80068,
+  "tokens_entrada_conhecidos": 68559,
+  "tokens_saida_conhecidos": 11509,
+  "rotas": {
+    "DUVIDA": {
+      "n": 14,
+      "p50_ms": 1053.4709499988821,
+      "p95_ms": 1545.2529999965918
+    },
+    "GERACAO": {
+      "n": 10,
+      "p50_ms": 2407.623050003167,
+      "p95_ms": 5298.472500006028
+    },
+    "ADAPTACAO": {
+      "n": 3,
+      "p50_ms": 3064.340299999458,
+      "p95_ms": 3253.326300000481
+    }
+  },
+  "latencia_somente_resposta_ou_ficha_valida": {
+    "DUVIDA": {
+      "n": 12,
+      "p50_ms": 1108.7421499978518,
+      "p95_ms": 1545.2529999965918
+    },
+    "GERACAO": {
+      "n": 5,
+      "p50_ms": 4845.5054000005475,
+      "p95_ms": 5298.472500006028
+    },
+    "ADAPTACAO": {
+      "n": 3,
+      "p50_ms": 3064.340299999458,
+      "p95_ms": 3253.326300000481
+    }
+  },
+  "busca": {
+    "n": 30,
+    "p50_ms": 60.10700000115321,
+    "p95_ms": 123.3591999989585
+  },
+  "limiares": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "aceite_ia_real": false,
+  "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição.",
+  "limites_adicionais": [
+    "8/8 fichas válidas refere-se ao contrato técnico; cinco gerações não tiveram fundamentação aprovada.",
+    "Somente as três adaptações de fixture passaram na revisão funcional; não validam independentemente a dose da ficha-base manual.",
+    "Idioma misto detectado em títulos da ficha L16.",
+    "Recall de 10/10 refere-se somente às perguntas com alvo rotulado, não à adequação de todos os trechos para geração."
+  ]
+}

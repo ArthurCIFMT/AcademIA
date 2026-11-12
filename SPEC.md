@@ -120,7 +120,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-05 e execução parcial de AI-06. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-05 e correção parcial de AI-06. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -130,7 +130,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
-| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente e livro de apoio escolhido aguardando extração válida |
+| MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
@@ -139,28 +139,31 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer AI-06 e TST-01. O próximo cartão na
-sequência é concluir AI-06. O [runner e a migração autorizada de modelo](docs/testes/avaliacao-ia.md)
-estão implementados. A [preparação complementar](docs/testes/preparacao-ai06.md)
-incluiu exemplos comuns e evidências de triagem. Os 27 casos atenderam às
-expectativas automáticas, com cinco gerações e três adaptações publicadas em teste.
-Latência foi medida, mas cinco gerações não passaram na revisão de fundamentação
-e L16 contém títulos em inglês. Não há aceite de qualidade da IA nem liberação de TST-01. As pendências de extração estão no contrato/relatório do módulo.
+O MVP ainda requer AI-06 e TST-01. O próximo cartão continua sendo concluir AI-06.
+O [runner](docs/testes/avaliacao-ia.md) e a [correção](docs/testes/ai06-correcao-fundamentacao.md)
+ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
+prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
+A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
+o [limite diário TPD da Groq](docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
+Uma ficha foi publicada em teste; isso não aprova os demais perfis ou AI-06.
+Não há liberação de TST-01. [Relatórios atuais](docs/testes/ai06-consolidacao.json)
+registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
 ou avaliação de relevância da busca. RAG-05 acrescenta o ensaio real de 28
 consultas sobre sete trechos de uma publicação; seu tamanho e limites estão no
 [contrato da recuperação](docs/arquitetura/recuperacao-semantica.md). Não
-comprova cobertura ampla ou geração de fichas. O livro de apoio Nahas foi escolhido
-e registrado com hash, aguardando tratamento de extração. O aceite do MVP segue aberto.
+comprova cobertura ampla ou geração de fichas. O livro Nahas integra o catálogo com original/hash e escopo parcial válido;
+a página 8 mantém a extração integral pendente. O aceite do MVP segue aberto.
 AI-01 entrega [triagem e preparação autorizada](docs/arquitetura/triagem-academica.md):
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
 e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
-ADR-006. Geração/publicação e latência foram exercitadas; fundamentação e idioma
-das fichas ainda impedem concluir o aceite. As pendências do corpus e o aceite da IA permanecem explícitos.
+ADR-006. Geração/publicação foram exercitadas; a nova revisão permanece parcial por quota.
+Não se reutiliza o aceite técnico antigo para a versão corrigida. Pendências do corpus
+e do ensaio completo permanecem explícitas.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
@@ -1236,6 +1239,113 @@ Configuração local do proxy não é serviço pago alternativo.
 
 A aprovação do modelo/configuração não aprova qualidade, latência ou segurança
 semântica. Esses critérios continuam sujeitos ao AI-06 e TST-01.
+### 7. Livro, extração explícita, recuperação e resumo factual
+
+Fonte versionada: [docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md).
+
+Status: ACEITA
+Data: 2026-11-12
+Origem: responsável solicitou corrigir idioma e fundamentação e concluir AI-06;
+seleção técnica e decisões de implementação já delegadas.
+
+O LLM continua criando fichas/adaptações, com catálogo e inventário do backend.
+A avaliação anterior não ativava o livro escolhido e recuperava definições
+insuficientes para justificar a dose proposta. Instruir português não basta para
+comprovar que o modelo respeitou idioma ou evidências; o ensaio real permanece obrigatório.
+
+#### Livro e extração
+Adicionar fontTools 4.68.0 (lockfile), dependência utilizada pelo pypdf para
+interpretar a codificação CFF/Type1. Não suprimir avisos nem substituir símbolos.
+O original integral do livro Nahas foi incorporado ao catálogo com seu hash e
+direitos originais. Não atribuir licença Creative Commons.
+
+A política v2 identifica parser e fontTools no fingerprint. selected_pages é
+opcional: ausente significa arquivo integral; presente exige números físicos
+únicos, ordenados, positivos e dentro dos limites. O livro usa [83,85,132,133],
+conferidas visualmente. CONCLUIDA vale somente para esse escopo explícito,
+registrado no envelope/fingerprint, nunca para todo o livro.
+A extração integral ainda exige revisão da página 8 (sumário ilegível).
+Selecionar essa página mantém a pendência; não há exclusão automática de páginas
+problemáticas ou autorização para omitir ressalvas de um trecho.
+Política v1 continua legível e não aceita seleção de páginas.
+Política distinta produz nova identidade de extração; não reutiliza sucesso anterior.
+Sem seleção, regras de páginas sem texto/avisos continuam as anteriores.
+
+CLI de indexação recebe --policy explícito para essa fonte; exige versão
+bibliográfica aprovada e revalida aprovação, hashes e trechos como antes.
+A [seleção operacional](materiais/rag/selecoes/nahas-forca-v1.json)
+e a [política](materiais/rag/politica-livro-v2.json) permitem reproduzir.
+Não alterar migrations ou o original do MER.
+
+#### Recuperação e idioma
+Geração realiza duas consultas semânticas predeterminadas: prescrição
+(séries/repetições/frequência/objetivo/disponibilidade) e intervalo/recuperação.
+Cada busca continua com top-K 5, mínimo 0,8 e filtros de aprovação/saúde.
+Contexto do modelo combina até três trechos da primeira e dois da segunda,
+deduplicando IDs; vagas podem ser preenchidas com os demais da primeira.
+Não é top-K global de uma consulta única nem pesquisa escolhida pelo modelo.
+Chat permanece com uma consulta; triagem mantém sua consulta própria.
+Adaptação clínica ainda exige escopo/evidências pertinentes; livro geral não as substitui.
+
+Prompt academia-ia-v3 pede português em todo texto novo, títulos simples Dia N,
+quantidades sustentadas pelos trechos e explicação consistente com os itens.
+Adaptação preserva partes manuais não relacionadas. Não inventar semanas de
+experiência, cargas a partir de exemplos, cobertura muscular completa ou uma
+recomendação onde a fonte apenas define um conceito.
+Catálogo reduzido/tempo devem ser declarados como limitações quando necessário.
+O livro traz orientações gerais; o LLM aplica ao contexto sem prometer adequação
+universal ou resultados que o trecho não apresenta.
+
+Modelo recebe ID, título, idioma, página/seção e texto completo de cada trecho.
+Proveniência completa, hashes, revisão e score permanecem no backend; não são
+reenviados desnecessariamente. Consumo e IDs efetivamente enviados são registrados.
+Preservar negações, unidades e ressalvas.
+
+#### Avaliação
+Nenhum limiar, rótulo esperado ou bloqueio foi relaxado.
+Permanecem até uma triagem e uma geração LLM, sem retry automático, reparo por
+segunda geração, plano pago ou aceite humano atribuído pelo modelo.
+Relatórios vinculam política, prompts, consulta, código e dependências; fontes JSON
+usam hash canônico para não depender de CRLF/LF. Consolidação exige revisão
+semântica vinculada e aprovada, além dos testes técnicos e metas de latência.
+Falha dos serviços de IA continua permitindo montagem manual.
+
+A consolidação aplica a fração supported_answers_fraction=0,9 já aprovada na
+configuração v2; o código anterior exigia 100% apesar dessa meta. Idioma,
+unidades/negações e segurança permanecem exigidos em todos os casos revisados.
+Amostra incompleta, revisão sem vínculo ou qualquer falha crítica continuam
+impedindo aceite, mesmo com fração suficiente. Não altera o limiar aprovado.
+
+#### Apresentação factual da ficha
+O ensaio com o livro mostrou que texto explicativo livre ainda podia confundir
+séries com sessões mesmo quando os campos do plano estavam corretos.
+Após validar o plano e a diferença de adaptação, o backend monta o resumo público
+a partir dos campos: dias, itens e cargas ainda não definidas. Os títulos das
+gerações novas são Dia N. Adaptação preserva títulos/itens não relacionados.
+O texto não atribui eficácia, cobertura completa, validação clínica ou recomendações
+numéricas à literatura. Não confundir carga null com carga explicitamente zero.
+O LLM continua escolhendo dias, exercícios, séries, repetições, pausas e observações
+com o resumo, catálogo e trechos. A explicação livre não é propagada à ficha/API
+pública; referências recuperadas/citadas e proveniência continuam registradas.
+Os testes auditam o artefato entregue pela aplicação e registram limitações da
+saída bruta separadamente. Isso não transforma uma saída bruta incorreta em
+resposta aprovada: ela fica fora do conteúdo publicado por contrato verificável.
+Chat de dúvidas continua sendo resposta LLM com avaliação de fundamentação.
+Não acrescenta chamada LLM, retry ou alteração de critério de saúde.
+
+A mesma correção aplica eligible_valid_plan_fraction=0,8, já aprovada, às
+gerações elegíveis. Bloqueios, isolamento, ataques e demais casos obrigatórios
+exigem todos os resultados esperados; uma recusa conservadora de caso elegível
+fica registrada como falha de capacidade e entra no denominador, sem repetir
+até obter resposta favorável. Não muda nem omite o rótulo esperado.
+
+#### Escopo da triagem
+O prompt v3 distingue lacunas do esquema e relato clínico ambíguo de exigências
+externas não previstas. Negativas explícitas são respostas válidas; limitações
+do estudo recuperado não tornam todo cliente incompleto. Não exigir exames,
+GAQ ou laudo. Texto contraditório com sintomas relevantes ainda deve sinalizar
+alerta e atualização. Ausente/NAO_SEI continuam insuficientes no backend.
+A mudança não remove decisão determinística nem transforma a triagem em diagnóstico.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
@@ -5468,6 +5578,15 @@ Fonte versionada: [materiais/rag/catalogo.json](materiais/rag/catalogo.json).
           "TRIAGEM"
         ],
         "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
+      },
+      {
+        "id": "BR-NAHAS-001",
+        "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+        "finalidades": [
+          "DUVIDAS",
+          "GERACAO_GERAL"
+        ],
+        "limites": "Aprovação somente dos trechos revisados das páginas físicas 83, 85, 132 e 133; não é extração integral válida. Sumário da página 8 segue ilegível. Livro não é atlas completo ou protocolo clínico; não inferir carga individual de exemplos."
       }
     ],
     "ativacao": "Aprovação técnica não é índice pronto. Ativar somente após extração válida, proveniência, escopo e testes de recuperação; demais 11 documentos permanecem reserva pendente.",
@@ -5866,6 +5985,43 @@ Fonte versionada: [materiais/rag/catalogo.json](materiais/rag/catalogo.json).
         ],
         "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
       }
+    },
+    {
+      "id": "BR-NAHAS-001",
+      "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
+      "autores": [
+        "Markus Vinicius Nahas"
+      ],
+      "ano": 2017,
+      "edicao": "7ª edição",
+      "tipo": "livro didático",
+      "fonte": "Autor / Sociedade Brasileira de Atividade Física e Saúde",
+      "licenca": "Copyright 2017 Markus Vinicius Nahas. Disponibilização digital gratuita pelo autor via SBAFS. Expediente restringe uso comercial sem autorização; não atribuir licença Creative Commons.",
+      "licenca_url": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+      "evidencia_licenca": "Expediente, página física 4, e disponibilização digital pelo autor via SBAFS.",
+      "idioma": "pt-BR",
+      "url": "https://markusnahas.blogspot.com/2017/11/esta-disponivel-setima-edicao-2017.html",
+      "download": "https://www.sbafs.org.br/admin/files/papers/file_lIduWnhVZnP7.pdf",
+      "arquivo": "documentos/nahas-atividade-fisica-saude-2017.pdf",
+      "coletado_em": "2026-11-11",
+      "paginas_pdf": 354,
+      "tamanho_bytes": 6781926,
+      "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+      "alteracoes_no_original": "nenhuma; cópia integral da fonte",
+      "situacao": "SELECIONADO_TECNICAMENTE",
+      "aprovado_para_rag": true,
+      "temas": [
+        "treinamento de força",
+        "iniciantes",
+        "séries e repetições",
+        "progressão"
+      ],
+      "uso": "Conhecimento geral para geração assistida, com trechos dos capítulos 4 e 6.",
+      "limites": "Aprovação somente dos trechos revisados das páginas físicas 83, 85, 132 e 133; não é extração integral válida. Sumário da página 8 segue ilegível. Livro não é atlas completo ou protocolo clínico; não inferir carga individual de exemplos.",
+      "selecao_tecnica": {
+        "data": "2026-11-12",
+        "origem": "Solicitação expressa: usar livro em português para fundamentação e corrigir AI-06"
+      }
     }
   ]
 }
@@ -6039,7 +6195,7 @@ permanecem históricos e não contornam a consulta fresca da aprovação.
 
 #### Parsing e preservação
 
-Dependência de execução: pypdf 7.0.1, travada no lockfile. PDF usa modo layout,
+Dependências de execução: pypdf 7.0.1 e fontTools 4.68.0, travadas no lockfile. PDF usa modo layout,
 incluindo texto girado. Preserva negações, >=, <=, ≥, ≤, %, unidades, acentos,
 linhas e espaçamentos extraídos. Não aplica remoção genérica de caracteres,
 tradução, reescrita por IA, junção silenciosa de colunas ou exclusão de rodapés.
@@ -6079,7 +6235,9 @@ ExtractionError explícito, sem fingir que um registro foi persistido.
 
 #### Limites e processo isolado
 
-A política inicial tem versão 1, identifica pypdf/7.0.1 e participa do fingerprint:
+A política inicial v1 foi sucedida pela v2 (ADR-007), que identifica pypdf e
+fontTools e permite selected_pages explícito. Ausente continua significando
+extração integral. A v1 permanece legível, sem seleção de páginas. Limites:
 25 MiB por arquivo (limite comum do corpus), 1000 páginas, 100 mil caracteres por
 página PDF, 8 milhões por documento e 16 MiB por stream. Decodificação acumulada
 é limitada a quatro vezes esse tamanho. A árvore do PDF tem tetos próprios para
@@ -6154,6 +6312,14 @@ cache, concorrência, hashes e aprovação/revogação reais em PostgreSQL.
 As fixtures PDF são declaradas binárias em .gitattributes; isso preserva os bytes
 e offsets no Git, inclusive nas amostras ASCII. A verificação de diff continua
 valendo para código e documentação, e hashes dos PDFs são conferidos na entrega.
+
+#### Escopo explícito do livro
+
+A [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) documenta a política v2.
+CONCLUIDA em extração parcial refere-se apenas às páginas declaradas na política,
+com número físico preservado. Não reclassifica pendência no restante do arquivo.
+A política muda o fingerprint/cache. Páginas inválidas selecionadas continuam
+bloqueantes; TXT não aceita selected_pages. A CLI de indexação aceita --policy.
 ### 8. Ensaio técnico dos sete documentos selecionados
 
 Fonte versionada: [docs/testes/extracao-corpus-rag03.json](docs/testes/extracao-corpus-rag03.json).
@@ -7051,7 +7217,7 @@ Fonte versionada: [materiais/rag/livro-de-apoio.json](materiais/rag/livro-de-apo
 ````json
 {
   "versao": 1,
-  "status": "ESCOLHIDO_EXTRACAO_PENDENTE",
+  "status": "TRECHOS_REVISADOS_EXTRACAO_PARCIAL_CONCLUIDA",
   "origem_decisao": "Delegação expressa do responsável: escolher livro de apoio, preferencialmente em português.",
   "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
   "autor": "Markus Vinicius Nahas",
@@ -7080,8 +7246,10 @@ Fonte versionada: [materiais/rag/livro-de-apoio.json](materiais/rag/livro-de-apo
     }
   ],
   "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
-  "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
-  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os documentos do corpus inicial não foram substituídos."
+  "tratamento": "fontTools 4.68.0 resolve fontes CFF. Política v2 declara páginas físicas 83,85,132,133; extração desse escopo CONCLUIDA, zero avisos. Extração integral permanece REVISAO_NECESSARIA na página 8 (sumário), sem promover o restante automaticamente.",
+  "armazenamento": "PDF integral preservado no Git; trechos explicitamente selecionados para indexação, sem substituir os demais documentos.",
+  "arquivo": "documentos/nahas-atividade-fisica-saude-2017.pdf",
+  "selecao": "../../docs/testes/ai06-corpus-v2.json"
 }
 ````
 ### 16. Máquina de estados fixa, portas de estado, consumo e adaptador LLM
@@ -7222,6 +7390,17 @@ HTTPX MockTransport valida o contrato do adaptador sem enviar dados/credenciais
 separação de dados, permissões e campos rejeitados; não provam imunidade semântica.
 Qualidade de português, suporte dos textos gerados, resistência semântica,
 latência/cota gratuita real e corpus completo serão medidos em AI-06.
+
+Em AI-06, a [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
+duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
+O prompt academia-ia-v3 exige idioma em todo texto novo e fundamentação explícita;
+o modelo recebe texto completo e referências mínimas, com proveniência integral
+preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
+
+A triagem explicita lacunas do esquema sem exigir exames fora do escopo.
+Depois de validar a proposta e o diff, a apresentação pública conta dias/itens e
+cargas pendentes a partir dos campos; a explicação livre não é publicada.
+Os itens continuam gerados pelo LLM e recebem validação do domínio.
 ### 17. Schemas JSON de entrada, respostas e resultado interno de execução
 
 Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requisitos/schemas/execucao-ia-v1.schema.json).
@@ -10240,6 +10419,64 @@ Fonte versionada: [docs/requisitos/schemas/suporte-saude-ia-v1.schema.json](docs
   "type": "object"
 }
 ````
+### 24. Escopo explícito de extração do livro
+
+Fonte versionada: [materiais/rag/politica-livro-v2.json](materiais/rag/politica-livro-v2.json).
+
+````json
+{
+  "version": 2,
+  "selected_pages": [
+    83,
+    85,
+    132,
+    133
+  ]
+}
+````
+### 25. Seleção operacional de força no livro
+
+Fonte versionada: [materiais/rag/selecoes/nahas-forca-v1.json](materiais/rag/selecoes/nahas-forca-v1.json).
+
+````json
+{
+  "schema_version": 1,
+  "finalidade": "GERACAO_GERAL",
+  "motivo_curadoria": "Capítulos 4 e 6; força geral em adultos. Somente páginas físicas 83,85,132,133 revisadas; não corresponde à extração integral do livro.",
+  "trechos": [
+    {
+      "pagina": 83,
+      "inicio": 1200,
+      "fim": 1827,
+      "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência"
+    },
+    {
+      "pagina": 85,
+      "inicio": 985,
+      "fim": 1786,
+      "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento"
+    },
+    {
+      "pagina": 132,
+      "inicio": 410,
+      "fim": 999,
+      "secao": "Cap. 6 — Força: grupos musculares e abrangência do programa"
+    },
+    {
+      "pagina": 132,
+      "inicio": 1001,
+      "fim": 2005,
+      "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível"
+    },
+    {
+      "pagina": 133,
+      "inicio": 268,
+      "fim": 1154,
+      "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor"
+    }
+  ]
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -11593,8 +11830,8 @@ A URL é apenas metadado: o servidor não busca o endereço informado no cadastr
 A importação lê materiais/rag/catalogo.json e corpus-inicial.json na raiz do
 projeto (opcional ACADEMIA_RAG_MATERIALS_DIR). Aceita somente os arquivos locais
 em documentos/, verifica os hashes de ambos os manifests e prepara todo o lote
-antes de registrar no banco. Mantém os 18 documentos: a seleção técnica existente
-de oito documentos é aprovada com o curador que acionou a importação; os outros
+antes de registrar no banco. Mantém os 19 documentos: a seleção técnica existente
+de nove documentos é aprovada com o curador que acionou a importação; os outros
 10 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
 Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
 e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.
@@ -12176,9 +12413,10 @@ credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
 
 O [runner e os relatórios](docs/testes/avaliacao-ia.md) registram execução determinística e
 LLM real. A [consolidação vigente](docs/testes/ai06-consolidacao.json) não aprova AI-06:
-a preparação complementar ativou trechos de TRIAGEM e o fluxo passou a publicar
-fichas no teste, porém a revisão reprovou fundamentação das gerações e idioma
-em L16. O ensaio anterior sem TRIAGEM permanece no histórico.
+a correção ativou recortes válidos do livro Nahas, prompt em português/triagem
+v3 e duas buscas fixas. O ensaio da nova versão ainda é parcial por cota diária
+TPD da Groq. Uma ficha publicada não substitui os demais casos e os ataques
+reais pendentes. Ensaios anteriores e falhas de fundamentação/idioma estão no histórico.
 O plano acima permanece critério de aceite; falhas não foram dispensadas.
 ### 3. Regras permanentes de trabalho
 
@@ -12374,8 +12612,15 @@ necessária para sua entrega.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
-- Livro/conhecimento inicial: oito documentos selecionados em materiais/rag/corpus-inicial.json;
+- Livro/conhecimento inicial: nove documentos selecionados em materiais/rag/corpus-inicial.json;
   ativação depende da extração/indexação válida, não de uma nova aprovação externa.
+  Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
+- Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
+  de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
+- Prompt academia-ia-v3 explicita lacunas do esquema sem exigir exames fora do escopo.
+  Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
+- Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
+  geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 #### Testes
@@ -12460,7 +12705,7 @@ Fonte versionada: [docs/testes/avaliacao-ia.md](docs/testes/avaliacao-ia.md).
 Runner em backend/tests/ai/evaluation, matriz
 [SV/SC e 27 amostras](docs/testes/ai06-casos-v2.json) e
 [configuração vigente](docs/requisitos/schemas/configuracao-ia-v2.json).
-Modos separados: determinístico, real e consolidação sem novas chamadas.
+Modos separados: determinístico, real, união de partes e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
 Não modifica requisitos de saúde para fazer um caso passar e não aprova o MVP
 por mocks, JSON válido ou uma média de tempo obtida com abstenções.
@@ -12500,7 +12745,7 @@ ficha/adaptação, uma triagem e uma geração. O lote interrompe chamadas exter
 ao observar quota, credencial recusada ou indisponibilidade do provedor; casos
 restantes ficam PENDENTE_PROVEDOR. Outra execução exige ação explícita.
 ACADEMIA_AI_INTERVAL_SECONDS controla pausa de amostragem entre dúvidas
-(padrão 20 s); ficha/adaptação usa pausa de até 50 s quando houve chamada.
+(padrão 20 s); ficha/adaptação usa pausa de 60 s quando houve chamada.
 Essas pausas não entram na latência de cada solicitação.
 A [cota gratuita documentada](https://console.groq.com/docs/rate-limits) é por
 organização; não tratar limites publicados como garantia da conta.
@@ -12568,12 +12813,23 @@ instalação e aceite ponta a ponta do MVP.
 Os [comandos e resultados](docs/testes/comandos.md#avaliação-automatizada-ai-06) registram os
 ensaios efetivamente realizados. Execuções exploratórias interrompidas ou com
 modelo indisponível permanecem identificadas como tais; não compõem o aceite.
-A [preparação complementar](docs/testes/preparacao-ai06.md) documenta a seleção técnica
-de TRIAGEM e os perfis comuns. PDFs/livro com extração pendente mantêm esse estado.
+A [preparação complementar](docs/testes/preparacao-ai06.md) e a [correção](docs/testes/ai06-correcao-fundamentacao.md) documenta a seleção técnica
+de TRIAGEM e os perfis comuns. As fontes com extração pendente mantêm esse estado;
+o livro Nahas possui agora escopo explícito de quatro páginas válidas, conforme ADR-007.
 O [ensaio anterior](docs/testes/historico/ai06-2026-11-11/README.md) permanece preservado.
 
 [Resumo das métricas](docs/testes/ai06-resumo.json), [ensaio real](docs/testes/ai06-ensaio-real.json),
 [revisão técnica](docs/testes/ai06-revisao-tecnica.json) e [consolidação](docs/testes/ai06-consolidacao.json).
+
+Na correção com livro, a fundamentação da ficha é avaliada no artefato público
+após validação/apresentação do backend. Justificativa livre descartada não vira
+conteúdo aprovado. O chat permanece avaliado na resposta do LLM. O relatório
+registra limitações da saída bruta em separado e aplica a meta de 0,9 já aprovada,
+sem tolerância a falhas de idioma, unidades/negações ou segurança.
+
+Retomada explícita por --cases e união auditável por --mode merge estão no
+[guia da correção](docs/testes/ai06-correcao-fundamentacao.md). Nenhuma parte reduz o mínimo
+de casos; a consolidação exige todos os IDs e as mesmas versões/configuração.
 ### 5. Curadoria e perfis sintéticos comuns de academia
 
 Fonte versionada: [docs/testes/preparacao-ai06.md](docs/testes/preparacao-ai06.md).
@@ -12659,15 +12915,21 @@ O [resultado sem LLM](docs/testes/ai06-corpus-verificacao.json) e o [resumo real
 registram as verificações; a [revisão](docs/testes/ai06-revisao-tecnica.json) reprovou a
 fundamentação das cinco gerações e idioma de L16. O preparo está entregue, mas
 AI-06 continua em execução. Não confundir sucesso técnico com aceite de qualidade.
-### 6. Seleção suplementar rastreável de trechos
 
-Fonte versionada: [docs/testes/ai06-corpus-v1.json](docs/testes/ai06-corpus-v1.json).
+#### Atualização posterior: livro e prompt
+Esta preparação registra o estado anterior à correção. A [correção vigente](docs/testes/ai06-correcao-fundamentacao.md)
+incorpora o original do livro e quatro páginas explicitamente extraídas/indexáveis,
+com prompt v3 e sem promover a extração integral. Resultados atuais e bloqueio
+TPD estão na [consolidação](docs/testes/ai06-consolidacao.json); a preparação isolada não aprova AI-06.
+### 6. Corpus de avaliação com trechos revisados do livro
+
+Fonte versionada: [docs/testes/ai06-corpus-v2.json](docs/testes/ai06-corpus-v2.json).
 
 ````json
 {
   "schema_version": 1,
   "origem": "Seleção técnica delegada em 2026-11-12; conferência visual das páginas 2 e 3 e comparação com extração original. PDF integral preservado.",
-  "limites": "Somente ensaio isolado; regras de triagem acadêmica permanecem independentes. Não copiar o GAQ nem inferir aptidão clínica de respostas negativas. Sem cobertura para adaptar por dor ou doença.",
+  "limites": "Ensaio isolado com trechos de força e triagem revisados. Seleção não valida todo o livro nem prescrição clínica por condição; fonte e população devem sustentar as afirmações.",
   "documentos": [
     {
       "fonte_id": "BR-RBCM-001",
@@ -12724,6 +12986,56 @@ Fonte versionada: [docs/testes/ai06-corpus-v1.json](docs/testes/ai06-corpus-v1.j
           "fim": 2517,
           "secao": "Limitações: amostra idosa; não validação do formulário AcademIA",
           "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1"
+        }
+      ]
+    },
+    {
+      "fonte_id": "BR-NAHAS-001",
+      "arquivo_sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ],
+      "politica_extracao": "materiais/rag/politica-livro-v2.json",
+      "trechos": [
+        {
+          "id": "nahas-dose",
+          "pagina": 83,
+          "inicio": 1200,
+          "fim": 1827,
+          "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência",
+          "texto_hash": "cb7d9e6dfc55b319f7d7b642ca92a881dea32da22a6ff56e915ecb439564644b"
+        },
+        {
+          "id": "nahas-sessoes",
+          "pagina": 85,
+          "inicio": 985,
+          "fim": 1786,
+          "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento",
+          "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e"
+        },
+        {
+          "id": "nahas-grupos",
+          "pagina": 132,
+          "inicio": 410,
+          "fim": 999,
+          "secao": "Cap. 6 — Força: grupos musculares e abrangência do programa",
+          "texto_hash": "decb6b9bad78479939a9866397ef96677181af2a2bedf8117a6d638c8731e9e5"
+        },
+        {
+          "id": "nahas-escolha",
+          "pagina": 132,
+          "inicio": 1001,
+          "fim": 2005,
+          "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível",
+          "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1"
+        },
+        {
+          "id": "nahas-progressao",
+          "pagina": 133,
+          "inicio": 268,
+          "fim": 1154,
+          "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor",
+          "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc"
         }
       ]
     }
@@ -12839,7 +13151,7 @@ Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.jso
     "docs/testes/rag-ia-semantico.md",
     "docs/testes/casos-triagem-v1.json",
     "docs/testes/rag05-consultas-v1.json",
-    "docs/testes/ai06-corpus-v1.json"
+    "docs/testes/ai06-corpus-v2.json"
   ],
   "cenarios": [
     {
@@ -13571,67 +13883,69 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
 
 ````json
 {
+  "schema_version": 1,
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
   "casos_planejados": 27,
-  "casos_executados": 27,
-  "casos_pendentes_provedor": 0,
+  "casos_executados": 19,
+  "casos_pendentes_provedor": 8,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 27,
+  "casos_corretos_automaticos": 18,
   "recall_amostra": {
     "numerador": 10,
     "denominador": 10
   },
   "fichas_elegiveis_validas": {
-    "numerador": 8,
-    "denominador": 8
+    "numerador": 1,
+    "denominador": 2
   },
   "respostas_fundamentadas": {
-    "numerador": 15,
-    "denominador": 20,
-    "estado": "REVISAO_TECNICA_INSUFICIENTE"
+    "numerador": null,
+    "denominador": null,
+    "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 28,
-  "consumo_desconhecido": 0,
-  "tokens_conhecidos": 80068,
-  "tokens_entrada_conhecidos": 68559,
-  "tokens_saida_conhecidos": 11509,
+  "chamadas_fisicas": 13,
+  "consumo_desconhecido": 1,
+  "tokens_conhecidos": 21854,
+  "tokens_entrada_conhecidos": 18324,
+  "tokens_saida_conhecidos": 3530,
   "rotas": {
     "DUVIDA": {
-      "n": 14,
-      "p50_ms": 1053.4709499988821,
-      "p95_ms": 1545.2529999965918
+      "n": 12,
+      "p50_ms": 1037.275700000464,
+      "p95_ms": 1829.9139000009745
     },
     "GERACAO": {
-      "n": 10,
-      "p50_ms": 2407.623050003167,
-      "p95_ms": 5298.472500006028
+      "n": 7,
+      "p50_ms": 89.73999999579974,
+      "p95_ms": 5338.749400005327
     },
     "ADAPTACAO": {
-      "n": 3,
-      "p50_ms": 3064.340299999458,
-      "p95_ms": 3253.326300000481
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
-      "n": 12,
-      "p50_ms": 1108.7421499978518,
-      "p95_ms": 1545.2529999965918
+      "n": 10,
+      "p50_ms": 1063.2234000004246,
+      "p95_ms": 1829.9139000009745
     },
     "GERACAO": {
-      "n": 5,
-      "p50_ms": 4845.5054000005475,
-      "p95_ms": 5298.472500006028
+      "n": 1,
+      "p50_ms": 5338.749400005327,
+      "p95_ms": 5338.749400005327
     },
     "ADAPTACAO": {
-      "n": 3,
-      "p50_ms": 3064.340299999458,
-      "p95_ms": 3253.326300000481
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
     }
   },
   "busca": {
-    "n": 30,
-    "p50_ms": 60.10700000115321,
-    "p95_ms": 123.3591999989585
+    "n": 16,
+    "p50_ms": 47.51915000088047,
+    "p95_ms": 80.45800001127645
   },
   "limiares": {
     "min_cases": 24,
@@ -13644,13 +13958,13 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição.",
-  "limites_adicionais": [
-    "8/8 fichas válidas refere-se ao contrato técnico; cinco gerações não tiveram fundamentação aprovada.",
-    "Somente as três adaptações de fixture passaram na revisão funcional; não validam independentemente a dose da ficha-base manual.",
-    "Idioma misto detectado em títulos da ficha L16.",
-    "Recall de 10/10 refere-se somente às perguntas com alvo rotulado, não à adequação de todos os trechos para geração."
-  ]
+  "nota": "Amostra incompleta. Métricas de casos concluídos e consumo de todas as partes são distintos. Sem aceite de AI-06 ou MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 16,
+    "tokens_conhecidos": 23662,
+    "consumo_desconhecido": 3
+  },
+  "limites_provedor": "ai06-limites-provedor.json"
 }
 ````
 ### 10. Critérios de aceite da avaliação ainda não atendidos
@@ -13665,25 +13979,127 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   "criterios": {
     "mesma_configuracao_e_casos": true,
     "deterministico_aprovado": true,
-    "amostra_completa": true,
-    "casos_obrigatorios": true,
+    "amostra_completa": false,
+    "casos_obrigatorios": false,
     "sem_falha_critica": true,
-    "fichas_validas": true,
+    "fichas_validas": false,
     "recuperacao": true,
     "revisao_semantica_vinculada": true,
     "revisao_semantica_aprovada": false,
-    "latencia_de_respostas_validas_medida": true,
-    "metas_de_latencia": true
+    "latencia_de_respostas_validas_medida": false,
+    "metas_de_latencia": false
+  },
+  "revisao_semantica": {
+    "fundamentadas": 10,
+    "total": 12,
+    "fracao": 0.8333333333333334,
+    "limiar_aprovado": 0.9,
+    "idioma_unidades_seguranca_sem_falhas": false
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "a6ede84bee51d36202291bd343ea1ce7cf13aa896a64c1c5f6a7c5a95d425811",
-    "real": "b1bbc970012647f534e053f18f99dee5c02532960a2d0e4cd2a469f7ae6d9c63",
-    "revisao": "4cd781417937e47182a1fcf24ca655a758977fbbf66bfd38264cc50956246f6e"
+    "deterministico": "9501ba9d4349c6b0bc8c358192ef00e3a0b2772ff4328d14e87c9a45699605cd",
+    "real": "3405c88d6586fefa6d60e97a49d73975caf5bbe766997ea691cc0d8699f997db",
+    "revisao": "b8f029c14b96e842a8f8067f8fb64830f7f3ff143da22e7ea90b0030e0c8e5ee"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
 ````
+### 11. Correções de fundamentação e idioma e reprodução
+
+Fonte versionada: [docs/testes/ai06-correcao-fundamentacao.md](docs/testes/ai06-correcao-fundamentacao.md).
+
+O LLM continua gerando a estrutura da ficha: dias, exercícios existentes,
+séries, repetições, carga quando conhecida, cadência, pausas e observações.
+O backend valida e publica; o instrutor mantém parecer posterior e alternativa manual.
+A correção não troca esse fluxo por uma ficha pronta ou por montagem manual.
+
+#### Problemas encontrados
+A preparação anterior não indexava o livro escolhido: recuperava definições,
+que não sustentavam várias justificativas quantitativas.
+O primeiro ensaio com o livro melhorou seleção/doses e idioma, mas o texto livre
+ainda apresentava remissões imprecisas e uma comparação inválida entre séries
+e sessões em L18. Esse ensaio ficou no [histórico](docs/testes/historico/ai06-2026-11-12-livro-v2/README.md)
+e não aprovou AI-06.
+
+#### Correções
+- Livro Nahas em português incorporado ao catálogo com original/hash/direitos.
+- fontTools permite ler suas fontes CFF; política v2 declara as páginas físicas
+  83,85,132,133, revisadas visualmente. Sumário da página 8 continua pendente na
+  extração integral, sem suprimir erro ou chamar essa extração de completa.
+- Duas buscas fixas cobrem prescrição e descanso; contexto final tem até cinco
+  trechos, sem agente pesquisador ou novas chamadas LLM.
+- Prompt academia-ia-v3 exige português, quantitativos pertinentes e não inventar
+  dados de carga/semanas. O texto completo dos trechos é preservado; metadados
+  desnecessários ao modelo ficam no backend.
+- Após validar plano/diferença de adaptação, o backend apresenta títulos Dia N
+  para gerações novas e resumo factual contado a partir dos campos validados.
+  Carga null permanece a definir; zero explícito continua zero.
+  Explicação livre do modelo não é propagada à ficha/API pública.
+- Fontes consultadas, hashes e IDs efetivamente enviados ao modelo permanecem
+  rastreáveis. Resumo público não afirma eficácia ou dose comprovada pela fonte.
+- Consolidação usa a meta de fundamentação de 0,9 já aprovada, em vez de adicionar
+  exigência de 100%. Idioma/unidades/segurança e falhas críticas continuam rígidos.
+  Amostra incompleta ou revisão sem vínculo nunca aprova.
+
+Ver [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md).
+Essas mudanças não dispensam a revisão do artefato publicado, nem aprovam a
+saída bruta incorreta do LLM. Chat continua sendo resposta do modelo,
+avaliada diretamente contra o contexto de evidências.
+
+#### Triagem sem exigências novas
+O prompt v3 explicita a política acadêmica já vigente: negativa explícita é
+resposta válida; não exige exames, GAQ ou certeza médica absoluta fora do esquema.
+Texto novo com sintoma relevante ou contradição continua exigindo atualização
+e bloqueio conforme as regras. Ausência ou NAO_SEI nunca vira saudável.
+A versão anterior recusou dois perfis completos; seu ensaio permanece no histórico,
+sem reaproveitar respostas como avaliação da nova versão.
+
+#### Reprodução da indexação do livro
+Após importar o catálogo com curador autorizado, obtenha os UUIDs do curador e
+da versão BR-NAHAS-001 aprovada. Em backend/, com ambiente/banco/E5 configurados:
+
+~~~powershell
+uv sync --locked
+uv run --locked --env-file ../.env python -m app.modules.knowledge.ingestion --actor "$curadorId" --version "$versaoLivroId" --selection ../materiais/rag/selecoes/nahas-forca-v1.json --policy ../materiais/rag/politica-livro-v2.json
+~~~
+
+A CLI revalida aprovação atual, hash do original, escopo da política e offsets.
+A [seleção operacional](materiais/rag/selecoes/nahas-forca-v1.json)
+coincide com os trechos do [ensaio](docs/testes/ai06-corpus-v2.json).
+Somente GERACAO_GERAL é indexada no ensaio; não amplia automaticamente chat/saúde.
+
+#### Verificações
+Testes cobrem seleção de páginas inválida/ordenada, preservação de número físico,
+página ilegível ainda bloqueada, novos fingerprints, consultas fixas, contexto
+limitado, ausência de chamadas LLM extras e descarte de justificativa livre.
+O ensaio real é uma nova execução explícita, sem replay apresentado como chamada real.
+Revisão de chat usa resposta do modelo e fontes; revisão de ficha usa os itens,
+resumo e fontes da ficha efetivamente publicada. Saídas brutas ficam em recibos
+privados de teste e suas limitações são registradas separadamente.
+Não exigir avaliação médica externa para o cenário acadêmico.
+Resultados e limitações estão em [comandos](docs/testes/comandos.md), [resumo](docs/testes/ai06-resumo.json),
+[revisão](docs/testes/ai06-revisao-tecnica.json) e [consolidação](docs/testes/ai06-consolidacao.json).
+
+#### Retomada quando o provedor interrompe o lote
+Cada nova rodada é explícita. --cases executa somente IDs solicitados e conhecidos,
+em pasta nova. Ela não aprova a amostra inteira por ter menos casos.
+--mode merge reúne partes da mesma configuração/código/ambiente e mantém a
+tentativa anterior de provedor. Recusa substituir resposta concluída/falha de
+qualidade, misturar versões, repetir IDs ou omitir os casos previstos.
+Não usa cache de resposta como se fosse chamada real e não faz retry automático.
+
+Exemplo, com o restante determinado pelo relatório interrompido:
+~~~powershell
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --cases L14,L15,L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27 --output ./data/avaliacao/retomada-N
+uv run --locked python -m tests.ai.evaluation --mode merge --part ./data/avaliacao/real-N/relatorio.json --part ./data/avaliacao/retomada-N/relatorio.json --output ./data/avaliacao/unido-N
+~~~
+
+O relatório unido permanece sem aceite até consolidar com teste determinístico e
+revisão vinculada. Registra consumo de todas as partes, inclusive tentativa
+interrompida/consumo desconhecido, separadamente das métricas dos casos concluídos.
+Pausas de amostragem não entram na latência do pedido; geração usa 60 s entre
+casos no lote para respeitar a janela gratuita, sem alterar o tempo da aplicação.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -14061,6 +14477,7 @@ dependencies = [
     "tokenizers>=0.22,<1",
     "huggingface-hub==2.4.0",
     "torch==2.15.0",
+    "fonttools>=4.58,<5",
 ]
 
 [dependency-groups]
@@ -14217,9 +14634,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `4fb082afe3d289d43b8c5a1d5fe4e9757229ca0678abfb7bc20619c1991299da` |
-| `AGENTS.md` | `a3b78c86a934b842f53cac38a95b30a8f6bc88645ac3ac85b3812bc7559a56e7` |
+| `AGENTS.md` | `d78c10bbbddefac7e4526a0171b5bf327ece88cb56f3e8361b62dd1ee08ffa7e` |
 | `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
-| `backend/pyproject.toml` | `817e53e6263c0bbd229282d5397ef8536a917fc834a4fd5431f03b5933f30d0e` |
+| `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
@@ -14229,16 +14646,17 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
-| `docs/arquitetura/corpus.md` | `a30d830985cc9ba7f5e7c211b86b4fc900a86dc986587de402b7ed883ea14900` |
+| `docs/arquitetura/corpus.md` | `298b4c960daaae918b4e8be889f063ce9f396f9f4bab664a83dcd3c48ef480d7` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
 | `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
 | `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `92df90d8c5ec4d3031612205e4f2d3c1c56864bdbc662dfad5961138093c2b0c` |
+| `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
-| `docs/arquitetura/extracao-documental.md` | `84c29f3d468fb044b258d55bb37ded383cb1a92a1095a8dd32a405bc951c58d6` |
+| `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
@@ -14252,18 +14670,18 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `e8fc8005e7f91a35951b0474101c9f5cdbef52f18095f0b4bc1dd8e04cb9a473` |
+| `docs/arquitetura/orquestracao-ia.md` | `aeb257db67f37117649e0f8d91b4e6582e6834287b5edada4436e89b0aa0dd69` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `3ef79fdebe62b1164779bf0bcd4180da790ce9a60dc9755f8485f56aea651c22` |
+| `docs/especificacao/compilacao-spec.json` | `6e4e7f57cbd14daef82a8c837a69db2efe1dfaa313d0a5f97cd9564ca2ba2215` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `ee9e5f58af1598d25c383fcfe8b8008fa4afdcc83ba0f6fbb229e433387a801c` |
+| `docs/especificacao/visao-geral.md` | `dfcc5e51f2c4c5b4581e284fa9f09413dcfd5421f266de788358ee94d8b38357` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `e8f1bc7c9e66b43727cf119f7b2e0a600b7190a99356d5c876d59a68ced7e5b8` |
+| `docs/prompts/README.md` | `29ac4cc80992e086d45ace4cc2b69e1ca6ac92f3b7b5e84bea9ee962fb940b66` |
 | `docs/requisitos/configuracao-ia-rag.md` | `cab1daaef3ad20ea70cc309165fa38cd92fba0983ed7136806e61c84a2cbb913` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -14282,23 +14700,26 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
-| `docs/testes/ai06-casos-v2.json` | `9ad458aea78af1d597b4e3e610edddd4b979e93ea11c89b38aebabbd5434d680` |
+| `docs/testes/ai06-casos-v2.json` | `c87cf3a59358b49fb12363cb224f271988d25e86fb0e02771caf6df9dd03b818` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
-| `docs/testes/ai06-consolidacao.json` | `ffca5cc95c6dd477fd4644c615921d7c0795819df40f9ef11b6ee779fb46e97a` |
-| `docs/testes/ai06-corpus-v1.json` | `6b2888157b3414c2a18a67b9bc7dd786b7e3d0f1d96635c0034cd1cb68162ff1` |
-| `docs/testes/ai06-resumo.json` | `dd55940d8776d89f575de36773fa3979b172f399fcb54b7724af70483dc3bf6f` |
-| `docs/testes/avaliacao-ia.md` | `785ad23a2d5190efaa252192735b1a83d43936c26128276371f9285cccac970d` |
+| `docs/testes/ai06-consolidacao.json` | `30dd5231d8293ed0ce382982d531f636667949a995d959d7587ca8560ffef3e5` |
+| `docs/testes/ai06-corpus-v2.json` | `51e471e5cdf112fd16f0282b5b3cbfa1029924679711b5286e2cbf9da30de349` |
+| `docs/testes/ai06-correcao-fundamentacao.md` | `035cab5e76b7fa1808689ffb13d0346bdc29765ec0e8ddd9d35b32d647f8d252` |
+| `docs/testes/ai06-resumo.json` | `e375b63a2fe05592686a53972236a1f5f59358497fb5acfa8589ca6be9c7f691` |
+| `docs/testes/avaliacao-ia.md` | `7fe5a6268a772562b8586508c286f65ba38aed16f52d028fb6f8fbb409c975de` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `97f25352a803078aec48fb0cd4d49c2cc95492eede27a341872e63e7732e47fa` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
-| `docs/testes/preparacao-ai06.md` | `9f3ff054802c370fdace3139c78be11d7c8fa5284f0d0c8f4e908bc21fd1ff1a` |
-| `docs/testes/rag-ia-semantico.md` | `65cd928bfae8e563e75d1837511de8070e4e08e6ab1648417a7687a282344f31` |
+| `docs/testes/preparacao-ai06.md` | `1f684289649696211e17732de19d005870331792eeae499c23c7d55ac024c7ef` |
+| `docs/testes/rag-ia-semantico.md` | `6a262d3ada37aedfb0e765b7db738e3248940232d96c0f03550856e7a776eb35` |
 | `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
 | `frontend/README.md` | `4cf2b14dbc19a8b9c1c859d30a15e15110ddfd2bb69ecec893180516958b87f6` |
 | `frontend/package.json` | `f976cc5ec5b3b37d06cff0f688ee716e6b80b4127dc63873cbe0ca45a5f2712e` |
-| `materiais/rag/catalogo.json` | `03d539654fe16b89683aab935f7943672714395f8e55496d6894ae0f3fc08e7b` |
-| `materiais/rag/corpus-inicial.json` | `6b15f0ab86b50d4d5623182ca46c45eb35eafe7e252255093cb3932615aea959` |
-| `materiais/rag/livro-de-apoio.json` | `5e38df6b8caa4297fdbac26a723fccfa4ea96d987f6522da73cd94dc27317ea5` |
+| `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
+| `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |
+| `materiais/rag/livro-de-apoio.json` | `c75428232258b24af8920ac712bac46cba7028c603b7e306ea6dcde59e50eb3f` |
+| `materiais/rag/politica-livro-v2.json` | `027233ba3619728bc1382659957a42ec29cfc62e133cfdc2d3dc8cdb8c17bd2f` |
+| `materiais/rag/selecoes/nahas-forca-v1.json` | `7339f82d70f5e03be80e831dd99915c5a175d7f480c454f924d943ea7ef5f06e` |
 | `scripts/gerar_spec.py` | `b4347fe17f55bd989bcfd731049a39dd9ed57481bd447dc73c925f61827b0124` |
 
 Manutenção no projeto: `python scripts/gerar_spec.py --write` atualiza

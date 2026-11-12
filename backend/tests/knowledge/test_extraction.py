@@ -269,3 +269,32 @@ def test_real_worker_preserves_fixture_text_and_process_boundary(
     assert result.resultado.estado == State.CONCLUIDA
     assert "≥ 10 kg" in result.resultado.paginas[0].texto
     assert result.documento_versao_id == ref.version_id
+
+
+def test_explicit_page_scope_preserves_physical_numbers_and_cache_identity() -> None:
+    from pydantic import ValidationError
+
+    body = (FIXTURES / "simbolos.pdf").read_bytes()
+    full = ExtractionPolicy()
+    selected = ExtractionPolicy(selected_pages=[2])
+    result = run_parser(body, "PDF", None, selected)
+    assert result.estado == State.CONCLUIDA
+    assert [p.numero for p in result.paginas] == [2]
+    assert full.fingerprint != selected.fingerprint
+    assert (
+        parse(body, "PDF", None, ExtractionPolicy(selected_pages=[3])).estado
+        == State.FALHA
+    )
+    assert parse(b"texto", "TXT", None, selected).estado == State.FALHA
+    for pages in ([], [2, 1], [1, 1], [0]):
+        with pytest.raises(ValidationError):
+            ExtractionPolicy(selected_pages=pages)
+    with pytest.raises(ValidationError):
+        ExtractionPolicy(version=1, selected_pages=[1])
+
+
+def test_book_scope_never_marks_invalid_selected_page_as_complete() -> None:
+    book = ROOT / "materiais/rag/documentos/nahas-atividade-fisica-saude-2017.pdf"
+    result = parse(book.read_bytes(), "PDF", None, ExtractionPolicy(selected_pages=[8]))
+    assert result.estado == State.REVISAO_NECESSARIA
+    assert result.motivos == [Reason.CARACTERES_ILEGIVEIS]

@@ -73,6 +73,15 @@
         "TRIAGEM"
       ],
       "limites": "Revisão contextual de triagem pré-participação. Não valida nosso formulário, não certifica ausência de doença e não fundamenta prescrição por condição. Limitações da revisão preservadas nos trechos selecionados."
+    },
+    {
+      "id": "BR-NAHAS-001",
+      "sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ],
+      "limites": "Aprovação somente dos trechos revisados das páginas físicas 83, 85, 132 e 133; não é extração integral válida. Sumário da página 8 segue ilegível. Livro não é atlas completo ou protocolo clínico; não inferir carga individual de exemplos."
     }
   ],
   "ativacao": "Aprovação técnica não é índice pronto. Ativar somente após extração válida, proveniência, escopo e testes de recuperação; demais 11 documentos permanecem reserva pendente.",

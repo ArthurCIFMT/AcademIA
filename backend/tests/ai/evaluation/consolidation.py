@@ -5,7 +5,12 @@ from pathlib import Path
 from typing import Any
 
 from app.modules.ai.orchestration.settings import Config
-from tests.ai.evaluation.reporting import json_sha, load_dataset, summarize_real
+from tests.ai.evaluation.reporting import (
+    identity,
+    json_sha,
+    load_dataset,
+    summarize_real,
+)
 
 
 def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[str, Any]:
@@ -15,9 +20,20 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
     evaluated = [r for r in rows if r.get("chamadas")]
     rubric = json.loads(review.read_text("utf-8")) if review else {}
     reviewed = {r["id"]: r for r in rubric.get("casos", [])}
-    same = det.get("configuracao_sha256") == live.get("configuracao_sha256")
-    same = same and det.get("fontes_sha256") == live.get("fontes_sha256")
-    same = same and live.get("configuracao_sha256") == Config.load().fingerprint
+    current = identity()
+    same = all(
+        det.get(key) == live.get(key) == current[key]
+        for key in (
+            "configuracao_sha256",
+            "politica_sha256",
+            "prompts",
+            "consulta_geracao",
+            "extracao",
+            "algoritmo_hash_fontes",
+            "fontes_sha256",
+            "codigo_sha256",
+        )
+    )
     bound = rubric.get("execucao_sha256") == json_sha(real)
     reviews_bound = (
         bound
@@ -26,18 +42,28 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
         and len(reviewed) == len(evaluated)
         and set(reviewed) == {r["id"] for r in evaluated}
     )
-    reviews_ok = reviews_bound and all(
-        all(
-            reviewed[r["id"]].get(field) is True
-            for field in ("fundamentada", "portugues", "unidades_negacoes", "seguranca")
-        )
+    goals = Config.load().quality
+    supported = sum(
+        reviewed[r["id"]].get("fundamentada") is True
         for r in evaluated
+        if r["id"] in reviewed
+    )
+    support_fraction = supported / len(evaluated) if evaluated else 0.0
+    reviews_ok = (
+        reviews_bound
+        and support_fraction >= float(str(goals["supported_answers_fraction"]))
+        and all(
+            all(
+                reviewed[r["id"]].get(field) is True
+                for field in ("portugues", "unidades_negacoes", "seguranca")
+            )
+            for r in evaluated
+        )
     )
     eligible = [r for r in rows if r.get("esperado") == "PUBLICADA"]
     valid = sum(r.get("estado") == "PUBLICADA" for r in eligible)
     positives = [r for r in rows if r.get("recuperou_esperado") is not None]
     recalled = sum(bool(r["recuperou_esperado"]) for r in positives)
-    goals = Config.load().quality
     obligations = [r for r in rows if r.get("esperado") not in {"PUBLICADA"}]
     expected_ids = {r["id"] for r in load_dataset()["real"]}
     observed_ids = [r.get("id") for r in rows]
@@ -84,6 +110,20 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
         "estado": "APROVADO" if all(requirements.values()) else "PENDENTE_OU_REPROVADO",
         "aceite_ia_real": all(requirements.values()),
         "criterios": requirements,
+        "revisao_semantica": {
+            "fundamentadas": supported,
+            "total": len(evaluated),
+            "fracao": support_fraction,
+            "limiar_aprovado": float(str(goals["supported_answers_fraction"])),
+            "idioma_unidades_seguranca_sem_falhas": reviews_bound
+            and all(
+                all(
+                    reviewed[r["id"]].get(f) is True
+                    for f in ("portugues", "unidades_negacoes", "seguranca")
+                )
+                for r in evaluated
+            ),
+        },
         "algoritmo_hash": "JSON_CANONICO_V1",
         "entradas_sha256": {
             "deterministico": json_sha(deterministic),

@@ -14,3 +14,5 @@ Chave pessoal e ensaios reais de IA/RAG pertencem às entregas correspondentes.
 GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão concluídos.
 
 - [ADR-006 — Modelo Groq vigente](ADR-006-modelo-groq-vigente.md): ACEITA; migração explícita para GPT-OSS 120B.
+
+- [ADR-007 — Livro e fundamentação](ADR-007-livro-e-fundamentacao.md): aceita; extração com escopo explícito, consultas fixas e instruções de idioma/evidências.

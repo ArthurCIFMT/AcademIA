@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "modo": "real",
+  "configuracao_sha256": "1fc666b12870486b0a1d1ac584c5dd1e913bab7b94264eb4f61c8102585c7dbc",
+  "politica_sha256": "17155ad9cca11c59c0711c76e4dc067dcded77ba3c8e2888dbcfd1bc8c629bee",
+  "prompts": "academia-ia-v3",
+  "modelo": "openai/gpt-oss-120b",
+  "consulta_geracao": "consulta-geracao-v2",
+  "extracao": "20d8b22744cdef09bbd4f3680827fd94bf9e2857a61706b1e09bba01f358a03b",
+  "algoritmo_hash_fontes": "JSON_CANONICO_V1",
+  "fontes_sha256": {
+    "docs/testes/ai06-casos-v2.json": "453225e332ee8372b3478ec1987c3f595b00e04c434d2e0021575488d0c6cd95",
+    "docs/testes/casos-triagem-v1.json": "c582e980b14156ff25326c7d295f60c627fee6d7c0ce43fec63eb3633848be8a",
+    "docs/testes/rag05-consultas-v1.json": "77b1a1101a38b33dc0480a92069af7d4d286d5c1b03a5055301614c2b1b4a27c",
+    "materiais/rag/corpus-inicial.json": "c61ab5b40361f1ac9e03bb40ee9a48ad1e7957481fe8fee2c792930fc9b4d8c6",
+    "docs/testes/ai06-corpus-v2.json": "4c270d8395758d57da30bf94a859251aec8cf2084fc931e5f7cbbaac8e0a3854",
+    "docs/testes/ai06-catalogo-v1.json": "b88eb50e7b50b1bc7197069cee0c6b2adb64ab0eec4fb64f545c97a5970d53bb",
+    "materiais/rag/politica-livro-v2.json": "0c9567844b001c26ea593bea475d9cd00fdb54580c5ed734cdf7260844ae18ba",
+    "materiais/rag/livro-de-apoio.json": "3e6abe89f2cfc5dde6d4379b17ab7137d16d1bb1d346198a9c312aed20400129"
+  },
+  "codigo_sha256": {
+    "backend/app/modules/ai/prompts/v1.py": "7c20890c63b2247c694eb946a8ec033ed988da21e4597c7743eede6e2fe541f2",
+    "backend/app/modules/ai/orchestration/queries.py": "9880e019caebb560566c17093a70f7de09d6a8245098362c441910938ffdc4b0",
+    "backend/app/modules/ai/orchestration/service.py": "7d289f016ae50f45f17e8dd82f18754986261ace0b01ea8a73430277359ee9aa",
+    "backend/app/modules/ai/orchestration/presentation.py": "0426c7e6ed5b45ec01b9a36dc134fe8455782ee7ad9d7c3edb17ad5ecdef80ff",
+    "backend/app/modules/knowledge/ingestion/parser.py": "2048ffa67987347a470bc9aa11b2aa05a4fc46502f11cbd7720c3f78f3aa323b",
+    "backend/app/modules/knowledge/ingestion/contracts.py": "a7c60e4ca895a6e74af3563c4460dd22ab4d4d9c66842fb36032e8c9b33cff9f",
+    "backend/uv.lock": "98a436b4197a64984fd80a06184d22393bb3dc1e00c1dfc7cebaba1238fcbb85"
+  },
+  "ambiente": {
+    "python": "3.12.14",
+    "sistema": "Windows-10-10.0.19045-SP0",
+    "cpu": "Intel64 Family 6 Model 158 Stepping 9, GenuineIntel"
+  },
+  "custos": {
+    "plano_previsto": "gratuito",
+    "valor_monetario": null,
+    "nota": "API informa tokens, não fatura. Sem contratação/fallback pago."
+  },
+  "aceite_ia_real": false,
+  "casos_solicitados": [
+    "L15"
+  ],
+  "amostra_parcial": true,
+  "estado": "EXECUTADO",
+  "observacoes": {
+    "schema_version": 1,
+    "casos": [
+      {
+        "id": "L15",
+        "rota": "GERACAO",
+        "estado": "PUBLICADA",
+        "motivo": "PROPOSTA_VALIDADA",
+        "total_ms": 5338.749400005327,
+        "esperado": "PUBLICADA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "TRIAGEM",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "9eb7cc5b-013e-5ae0-83a9-9a2a8e7dcbdc",
+              "b22ed29b-f41d-5a6f-b26a-451702e6db86"
+            ],
+            "uso": {
+              "prompt_tokens": 1663,
+              "completion_tokens": 179,
+              "total_tokens": 1842
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 952.165499998955
+          },
+          {
+            "etapa": "GERACAO",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "d8fde416-7ff0-5a9d-877e-c4d927013ed8",
+              "e047b227-190c-503b-851c-a354d0a09ce2",
+              "4b2116d5-0307-53a0-8219-4daa9371f2ae",
+              "8185dcda-9643-5678-a23f-90877b938719",
+              "19a21592-7afe-50d3-9852-a928331c4d61"
+            ],
+            "uso": {
+              "prompt_tokens": 3083,
+              "completion_tokens": 1478,
+              "total_tokens": 4561
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 3604.2997000040486
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "GERACAO",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 4096,
+            "prompt_bytes": 12218,
+            "prompt_sha256": "8ec889545e77a319424a46dbdec12d1160ff356ae81d0e3b7de09dabf8e5683e",
+            "uso": {
+              "prompt_tokens": 3083,
+              "completion_tokens": 1478,
+              "total_tokens": 4561
+            },
+            "consumo_desconhecido": false
+          },
+          {
+            "etapa": "TRIAGEM",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 400,
+            "prompt_bytes": 7735,
+            "prompt_sha256": "421f9f579a396381d99e2d02b8b5154bff67886c59934dcb9446f52fc7ee3c27",
+            "uso": {
+              "prompt_tokens": 1663,
+              "completion_tokens": 179,
+              "total_tokens": 1842
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "TRIAGEM",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.5788000057218596,
+            "total_ms": 47.35549999168143,
+            "parede_ms": 47.43649999727495
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.8767999940318987,
+            "total_ms": 80.30089999374468,
+            "parede_ms": 80.45800001127645
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.723399990121834,
+            "total_ms": 73.75680000404827,
+            "parede_ms": 73.9086999965366
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "9eb7cc5b-013e-5ae0-83a9-9a2a8e7dcbdc",
+            "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1",
+            "documento_versao_id": "628a79a9-90ca-40db-9bbe-7ea12719af98",
+            "idioma": "en",
+            "score": 0.831721593432849
+          },
+          {
+            "fragmento_id": "b22ed29b-f41d-5a6f-b26a-451702e6db86",
+            "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667",
+            "documento_versao_id": "628a79a9-90ca-40db-9bbe-7ea12719af98",
+            "idioma": "en",
+            "score": 0.8284436555096516
+          },
+          {
+            "fragmento_id": "d8fde416-7ff0-5a9d-877e-c4d927013ed8",
+            "texto_hash": "cb7d9e6dfc55b319f7d7b642ca92a881dea32da22a6ff56e915ecb439564644b",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.9030225057646782
+          },
+          {
+            "fragmento_id": "e047b227-190c-503b-851c-a354d0a09ce2",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8960833766324191
+          },
+          {
+            "fragmento_id": "4b2116d5-0307-53a0-8219-4daa9371f2ae",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8946703018432028
+          },
+          {
+            "fragmento_id": "a93d8d2c-5820-50f7-92c4-461cd9851e91",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8922726773465189
+          },
+          {
+            "fragmento_id": "cde37dfe-0b0b-5a7e-983a-d14bc86c6ec8",
+            "texto_hash": "ea5d4971105de1caa7de8c62330ad56a49d3cb369e87dc95153ae184d4da65d7",
+            "documento_versao_id": "c9d8e8d0-6e6c-4931-80d4-64d8d0d4af0d",
+            "idioma": "pt-BR",
+            "score": 0.8828321795094645
+          },
+          {
+            "fragmento_id": "8185dcda-9643-5678-a23f-90877b938719",
+            "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5",
+            "documento_versao_id": "c9d8e8d0-6e6c-4931-80d4-64d8d0d4af0d",
+            "idioma": "pt-BR",
+            "score": 0.8875076062622542
+          },
+          {
+            "fragmento_id": "19a21592-7afe-50d3-9852-a928331c4d61",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "c9d8e8d0-6e6c-4931-80d4-64d8d0d4af0d",
+            "idioma": "pt-BR",
+            "score": 0.8832099012034541
+          },
+          {
+            "fragmento_id": "4b2116d5-0307-53a0-8219-4daa9371f2ae",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8777355555004228
+          },
+          {
+            "fragmento_id": "e047b227-190c-503b-851c-a354d0a09ce2",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8773322455841676
+          },
+          {
+            "fragmento_id": "a93d8d2c-5820-50f7-92c4-461cd9851e91",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "b64214dc-97ad-4294-a486-dff5b3fdaf01",
+            "idioma": "pt-BR",
+            "score": 0.8772262668458679
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      }
+    ],
+    "inicializacao_e5_ms": 15851.913499995135,
+    "rotas": {
+      "DUVIDA": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5338.749400005327,
+        "p95_ms": 5338.749400005327
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 3,
+      "p50_ms": 73.9086999965366,
+      "p95_ms": 80.45800001127645
+    },
+    "limites": [
+      "Serviço real; exclui fixture, aquecimento, HTTP/UI e pausas.",
+      "Corpus delimitado; não comprova cobertura clínica ampla.",
+      "Publicações/ataques ficam no banco e índice isolados."
+    ]
+  },
+  "metricas": {
+    "casos_planejados": 27,
+    "casos_executados": 1,
+    "casos_pendentes_provedor": 0,
+    "falhas_criticas": 0,
+    "casos_corretos_automaticos": 1,
+    "recall_amostra": {
+      "numerador": 0,
+      "denominador": 0
+    },
+    "fichas_elegiveis_validas": {
+      "numerador": 1,
+      "denominador": 1
+    },
+    "respostas_fundamentadas": {
+      "numerador": null,
+      "denominador": null,
+      "estado": "REVISAO_SEMANTICA_PENDENTE"
+    },
+    "chamadas_fisicas": 2,
+    "consumo_desconhecido": 0,
+    "tokens_conhecidos": 6403,
+    "tokens_entrada_conhecidos": 4746,
+    "tokens_saida_conhecidos": 1657,
+    "rotas": {
+      "DUVIDA": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5338.749400005327,
+        "p95_ms": 5338.749400005327
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "latencia_somente_resposta_ou_ficha_valida": {
+      "DUVIDA": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 5338.749400005327,
+        "p95_ms": 5338.749400005327
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 3,
+      "p50_ms": 73.9086999965366,
+      "p95_ms": 80.45800001127645
+    },
+    "limiares": {
+      "min_cases": 24,
+      "retrieval_recall_at_5": 0.8,
+      "supported_answers_fraction": 0.9,
+      "eligible_valid_plan_fraction": 0.8,
+      "critical_failures": 0,
+      "vector_p95_seconds": 2,
+      "target_chat_p95_seconds": 15,
+      "target_generation_p95_seconds": 60
+    },
+    "aceite_ia_real": false,
+    "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição."
+  },
+  "testes": [
+    {
+      "teste": "tests/ai/test_evaluation_real.py::test_real_semantic_llm_benchmark",
+      "estado": "APROVADO",
+      "segundos": 89.496
+    }
+  ],
+  "nota": "Revisão semântica é separada; não inferir suporte pelo schema."
+}

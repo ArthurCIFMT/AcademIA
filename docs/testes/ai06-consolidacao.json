@@ -5,21 +5,28 @@
   "criterios": {
     "mesma_configuracao_e_casos": true,
     "deterministico_aprovado": true,
-    "amostra_completa": true,
-    "casos_obrigatorios": true,
+    "amostra_completa": false,
+    "casos_obrigatorios": false,
     "sem_falha_critica": true,
-    "fichas_validas": true,
+    "fichas_validas": false,
     "recuperacao": true,
     "revisao_semantica_vinculada": true,
     "revisao_semantica_aprovada": false,
-    "latencia_de_respostas_validas_medida": true,
-    "metas_de_latencia": true
+    "latencia_de_respostas_validas_medida": false,
+    "metas_de_latencia": false
+  },
+  "revisao_semantica": {
+    "fundamentadas": 10,
+    "total": 12,
+    "fracao": 0.8333333333333334,
+    "limiar_aprovado": 0.9,
+    "idioma_unidades_seguranca_sem_falhas": false
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "a6ede84bee51d36202291bd343ea1ce7cf13aa896a64c1c5f6a7c5a95d425811",
-    "real": "b1bbc970012647f534e053f18f99dee5c02532960a2d0e4cd2a469f7ae6d9c63",
-    "revisao": "4cd781417937e47182a1fcf24ca655a758977fbbf66bfd38264cc50956246f6e"
+    "deterministico": "9501ba9d4349c6b0bc8c358192ef00e3a0b2772ff4328d14e87c9a45699605cd",
+    "real": "3405c88d6586fefa6d60e97a49d73975caf5bbe766997ea691cc0d8699f997db",
+    "revisao": "b8f029c14b96e842a8f8067f8fb64830f7f3ff143da22e7ea90b0030e0c8e5ee"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "origem": "Seleção técnica delegada em 2026-11-12; conferência visual das páginas 2 e 3 e comparação com extração original. PDF integral preservado.",
+  "limites": "Ensaio isolado com trechos de força e triagem revisados. Seleção não valida todo o livro nem prescrição clínica por condição; fonte e população devem sustentar as afirmações.",
+  "documentos": [
+    {
+      "fonte_id": "BR-RBCM-001",
+      "arquivo_sha256": "cbed0ec7227152c6a3b7d58c37140ed0cb2ef136ac0414735c2ff73474241798",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ],
+      "trechos": [
+        {
+          "id": "aplicacao-volume",
+          "pagina": 24,
+          "inicio": 1102,
+          "fim": 2278,
+          "secao": "Aplicações práticas: volume e frequência; limites da revisão",
+          "texto_hash": "ea5d4971105de1caa7de8c62330ad56a49d3cb369e87dc95153ae184d4da65d7"
+        },
+        {
+          "id": "aplicacao-intervalo",
+          "pagina": 25,
+          "inicio": 2266,
+          "fim": 2827,
+          "secao": "Intervalos e individualização; início da frase seguinte excluído",
+          "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5"
+        },
+        {
+          "id": "limites-prescricao",
+          "pagina": 26,
+          "inicio": 0,
+          "fim": 1411,
+          "secao": "Limitações da revisão e generalização",
+          "texto_hash": "97aa7b36a3d2b31c314d2e8cc6b61161d8918d4e1d2acc7b153b5184062cf899"
+        }
+      ]
+    },
+    {
+      "fonte_id": "INT-HEALTH-001",
+      "arquivo_sha256": "19f883012740de4e13986b97210d7c33010025e0083d15389e3c88f356e08499",
+      "finalidades": [
+        "TRIAGEM"
+      ],
+      "trechos": [
+        {
+          "id": "triagem-negativas",
+          "pagina": 2,
+          "inicio": 1362,
+          "fim": 2883,
+          "secao": "Interpretação contextual e atualização do questionário",
+          "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667"
+        },
+        {
+          "id": "triagem-limites",
+          "pagina": 3,
+          "inicio": 926,
+          "fim": 2517,
+          "secao": "Limitações: amostra idosa; não validação do formulário AcademIA",
+          "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1"
+        }
+      ]
+    },
+    {
+      "fonte_id": "BR-NAHAS-001",
+      "arquivo_sha256": "9e18dd6d609569fc732d2bdfeb71558a88790d94fa6d9c5f7b577deb3bc861f7",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ],
+      "politica_extracao": "materiais/rag/politica-livro-v2.json",
+      "trechos": [
+        {
+          "id": "nahas-dose",
+          "pagina": 83,
+          "inicio": 1200,
+          "fim": 1827,
+          "secao": "Cap. 4 — Força para adultos saudáveis: séries, repetições e frequência",
+          "texto_hash": "cb7d9e6dfc55b319f7d7b642ca92a881dea32da22a6ff56e915ecb439564644b"
+        },
+        {
+          "id": "nahas-sessoes",
+          "pagina": 85,
+          "inicio": 985,
+          "fim": 1786,
+          "secao": "Cap. 4 — Força: séries, sessões, recuperação e aquecimento",
+          "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e"
+        },
+        {
+          "id": "nahas-grupos",
+          "pagina": 132,
+          "inicio": 410,
+          "fim": 999,
+          "secao": "Cap. 6 — Força: grupos musculares e abrangência do programa",
+          "texto_hash": "decb6b9bad78479939a9866397ef96677181af2a2bedf8117a6d638c8731e9e5"
+        },
+        {
+          "id": "nahas-escolha",
+          "pagina": 132,
+          "inicio": 1001,
+          "fim": 2005,
+          "secao": "Cap. 6 — Força: objetivos, tempo, técnica e equipamento disponível",
+          "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1"
+        },
+        {
+          "id": "nahas-progressao",
+          "pagina": 133,
+          "inicio": 268,
+          "fim": 1154,
+          "secao": "Cap. 6 — Treino de força: séries, progressão, execução e dor",
+          "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc"
+        }
+      ]
+    }
+  ]
+}

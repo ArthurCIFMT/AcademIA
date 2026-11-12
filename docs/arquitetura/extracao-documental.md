@@ -31,7 +31,7 @@ permanecem históricos e não contornam a consulta fresca da aprovação.
 
 ## Parsing e preservação
 
-Dependência de execução: pypdf 7.0.1, travada no lockfile. PDF usa modo layout,
+Dependências de execução: pypdf 7.0.1 e fontTools 4.68.0, travadas no lockfile. PDF usa modo layout,
 incluindo texto girado. Preserva negações, >=, <=, ≥, ≤, %, unidades, acentos,
 linhas e espaçamentos extraídos. Não aplica remoção genérica de caracteres,
 tradução, reescrita por IA, junção silenciosa de colunas ou exclusão de rodapés.
@@ -71,7 +71,9 @@ ExtractionError explícito, sem fingir que um registro foi persistido.
 
 ## Limites e processo isolado
 
-A política inicial tem versão 1, identifica pypdf/7.0.1 e participa do fingerprint:
+A política inicial v1 foi sucedida pela v2 (ADR-007), que identifica pypdf e
+fontTools e permite selected_pages explícito. Ausente continua significando
+extração integral. A v1 permanece legível, sem seleção de páginas. Limites:
 25 MiB por arquivo (limite comum do corpus), 1000 páginas, 100 mil caracteres por
 página PDF, 8 milhões por documento e 16 MiB por stream. Decodificação acumulada
 é limitada a quatro vezes esse tamanho. A árvore do PDF tem tetos próprios para
@@ -146,3 +148,11 @@ cache, concorrência, hashes e aprovação/revogação reais em PostgreSQL.
 As fixtures PDF são declaradas binárias em .gitattributes; isso preserva os bytes
 e offsets no Git, inclusive nas amostras ASCII. A verificação de diff continua
 valendo para código e documentação, e hashes dos PDFs são conferidos na entrega.
+
+## Escopo explícito do livro
+
+A [ADR-007](decisoes/ADR-007-livro-e-fundamentacao.md) documenta a política v2.
+CONCLUIDA em extração parcial refere-se apenas às páginas declaradas na política,
+com número físico preservado. Não reclassifica pendência no restante do arquivo.
+A política muda o fingerprint/cache. Páginas inválidas selecionadas continuam
+bloqueantes; TXT não aceita selected_pages. A CLI de indexação aceita --policy.

@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "status": "ESCOLHIDO_EXTRACAO_PENDENTE",
+  "status": "TRECHOS_REVISADOS_EXTRACAO_PARCIAL_CONCLUIDA",
   "origem_decisao": "Delegação expressa do responsável: escolher livro de apoio, preferencialmente em português.",
   "titulo": "Atividade Física, Saúde e Qualidade de Vida: Conceitos e Sugestões para um Estilo de Vida Ativo",
   "autor": "Markus Vinicius Nahas",
@@ -29,6 +29,8 @@
     }
   ],
   "papel": "Apoiar conceitos e planejamento geral com trechos pertinentes. IDs e equipamentos vêm do catálogo; não é atlas completo de musculação nem fonte única para condições de saúde.",
-  "tratamento": "O download foi conferido; pypdf emitiu avisos sobre fontes CFF/Type1 e dependência opcional fontTools. Livro ainda não foi ativado no corpus. Conferir extração e selecionar trechos completos antes de indexar. Preservar original.",
-  "armazenamento": "Referência e hash no Git. Cópia local de leitura fora do repositório. Os documentos do corpus inicial não foram substituídos."
+  "tratamento": "fontTools 4.68.0 resolve fontes CFF. Política v2 declara páginas físicas 83,85,132,133; extração desse escopo CONCLUIDA, zero avisos. Extração integral permanece REVISAO_NECESSARIA na página 8 (sumário), sem promover o restante automaticamente.",
+  "armazenamento": "PDF integral preservado no Git; trechos explicitamente selecionados para indexação, sem substituir os demais documentos.",
+  "arquivo": "documentos/nahas-atividade-fisica-saude-2017.pdf",
+  "selecao": "../../docs/testes/ai06-corpus-v2.json"
 }

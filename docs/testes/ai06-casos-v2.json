@@ -5,7 +5,7 @@
     "docs/testes/rag-ia-semantico.md",
     "docs/testes/casos-triagem-v1.json",
     "docs/testes/rag05-consultas-v1.json",
-    "docs/testes/ai06-corpus-v1.json"
+    "docs/testes/ai06-corpus-v2.json"
   ],
   "cenarios": [
     {

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "observacao": "Cabeçalhos reais sanitizados; não representam garantia de disponibilidade futura. TPD = tokens por dia. Sem contratação ou fallback pago.",
+  "status": 429,
+  "tempo_utc": 1794489354.7119925,
+  "limites": {
+    "retry-after": "638",
+    "x-ratelimit-limit-requests": "1000",
+    "x-ratelimit-limit-tokens": "8000",
+    "x-ratelimit-remaining-requests": "987",
+    "x-ratelimit-remaining-tokens": "8000",
+    "x-ratelimit-reset-requests": "18m43.2s",
+    "x-ratelimit-reset-tokens": "1ms"
+  },
+  "categoria": "TPD",
+  "aguardar": "10m37.632s"
+}

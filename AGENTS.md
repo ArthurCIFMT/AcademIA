@@ -190,8 +190,15 @@ necessária para sua entrega.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.
-- Livro/conhecimento inicial: oito documentos selecionados em materiais/rag/corpus-inicial.json;
+- Livro/conhecimento inicial: nove documentos selecionados em materiais/rag/corpus-inicial.json;
   ativação depende da extração/indexação válida, não de uma nova aprovação externa.
+  Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
+- Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
+  de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
+- Prompt academia-ia-v3 explicita lacunas do esquema sem exigir exames fora do escopo.
+  Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
+- Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
+  geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 ## Testes

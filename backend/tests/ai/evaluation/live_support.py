@@ -15,6 +15,7 @@ from app.modules.ai.ports.execution import Context
 from app.modules.ai.schemas.execution import Completion, Stage
 from app.modules.knowledge.embeddings.encoder import E5Encoder
 from app.modules.knowledge.ingestion.chunking import Selection, Span
+from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 from app.modules.knowledge.ingestion.indexing import Indexer
 from app.modules.knowledge.ingestion.parser import parse
 from app.modules.knowledge.ingestion.service import Extractor
@@ -70,6 +71,10 @@ class MeasuredLLM:
 
         start = time.perf_counter()
         row: dict[str, Any] = {"etapa": stage, "despachada": False}
+        payload = json.loads(messages[1]["content"])["dados_nao_confiaveis"]
+        row["evidencias_enviadas_ids"] = [
+            e["fragmento_id"] for e in payload.get("evidencias", [])
+        ]
         self.calls.append(row)
 
         def dispatch() -> None:
@@ -126,6 +131,7 @@ def index_source(
     purposes: list[Purpose],
     environment: str = "LITERATURA",
     synthetic_attack: bool = False,
+    policy: ExtractionPolicy | None = None,
 ) -> None:
     import hashlib
 
@@ -162,7 +168,7 @@ def index_source(
         )
         ref = next(r for r in approved_references(session) if r.version_id == row.id)
     extraction = Extractor(
-        storage, root=directory / "extraction", parser=parse
+        storage, root=directory / "extraction", parser=parse, policy=policy
     ).extract(ref, approval_check=lambda *_: True)
     for purpose in purposes:
         result = Indexer(sessions, store, encoder, lock_root=directory / "locks").run(
@@ -244,7 +250,7 @@ def initial_literature(
         purposes=purposes,
     )
     supplement = json.loads(
-        (ROOT / "docs/testes/ai06-corpus-v1.json").read_text("utf-8")
+        (ROOT / "docs/testes/ai06-corpus-v2.json").read_text("utf-8")
     )
     for selection in supplement["documentos"]:
         entry = next(
@@ -285,6 +291,13 @@ def initial_literature(
                 for s in selection["trechos"]
             ],
             purposes=selection["finalidades"],
+            policy=(
+                ExtractionPolicy.model_validate_json(
+                    (ROOT / selection["politica_extracao"]).read_bytes()
+                )
+                if "politica_extracao" in selection
+                else None
+            ),
         )
     return {s["id"]: s["texto_hash"] for s in dataset["trechos"]}
 
