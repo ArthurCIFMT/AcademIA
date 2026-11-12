@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
@@ -12,7 +13,7 @@ from app.modules.ai.schemas.execution import Stage
 class Config(StrictModel):
     versao: Literal[2]
     provider: Literal["groq"]
-    model: Literal["openai/gpt-oss-120b"]
+    model: Literal["openai/gpt-oss-120b", "openai/gpt-oss-20b"]
     reasoning_effort: Literal["low"]
     include_reasoning: Literal[False]
     base_url: str
@@ -27,9 +28,17 @@ class Config(StrictModel):
 
     @classmethod
     def load(cls) -> "Config":
+        profiles = {
+            "principal": "configuracao-ia-v2.json",
+            "reserva-groq20b": "configuracao-ia-reserva-groq20b-v2.json",
+        }
+        profile = os.environ.get("ACADEMIA_LLM_PROFILE", "principal")
+        if profile not in profiles:
+            raise ValueError("Perfil LLM desconhecido; não há fallback automático.")
         path = (
             Path(__file__).resolve().parents[5]
-            / "docs/requisitos/schemas/configuracao-ia-v2.json"
+            / "docs/requisitos/schemas"
+            / profiles[profile]
         )
         return cls.model_validate_json(path.read_bytes())
 

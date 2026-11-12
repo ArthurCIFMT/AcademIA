@@ -16,3 +16,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-006 — Modelo Groq vigente](ADR-006-modelo-groq-vigente.md): ACEITA; migração explícita para GPT-OSS 120B.
 
 - [ADR-007 — Livro e fundamentação](ADR-007-livro-e-fundamentacao.md): aceita; extração com escopo explícito, consultas fixas e instruções de idioma/evidências.
+
+- [ADR-008 — Reserva LLM explícita](ADR-008-reserva-llm-explicita.md): mecanismo aceito; GPT-OSS 20B candidato sujeito a ensaio separado, sem fallback automático.

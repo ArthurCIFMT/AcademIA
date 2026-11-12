@@ -51,7 +51,7 @@ def test_http_contract_no_tools_no_retry_and_actual_usage() -> None:
         assert request.method == "POST"
         assert str(request.url) == Config.load().base_url + "/chat/completions"
         assert body["response_format"] == {"type": "json_object"}
-        assert body["model"] == "openai/gpt-oss-120b"
+        assert body["model"] == Config.load().model
         assert body["reasoning_effort"] == "low" and body["include_reasoning"] is False
         assert body["max_completion_tokens"] == 600 and body["n"] == 1
         assert not body["stream"] and "tools" not in body and "max_tokens" not in body

@@ -145,3 +145,12 @@ A triagem explicita lacunas do esquema sem exigir exames fora do escopo.
 Depois de validar a proposta e o diff, a apresentação pública conta dias/itens e
 cargas pendentes a partir dos campos; a explicação livre não é publicada.
 Os itens continuam gerados pelo LLM e recebem validação do domínio.
+
+## Reserva explicitamente selecionada
+
+A [ADR-008](decisoes/ADR-008-reserva-llm-explicita.md) permite o perfil candidato
+reserva-groq20b com a mesma porta/adaptador, endpoint validado e limites. Principal
+continua sendo GPT-OSS 120B. A escolha é de ambiente confiável antes da execução;
+HTTP 429 nunca muda o perfil ou repete uma etapa. Configuração/modelo ficam no
+fingerprint e na evidência; ensaios de modelos diferentes não podem ser unidos.
+Estado da qualificação em [avaliação de reserva](../testes/ai06-reserva.md).

@@ -77,7 +77,7 @@
         {
           "teste": "tests/ai/test_chat.py::test_chat_without_onboarding_isolated_and_replay",
           "estado": "APROVADO",
-          "segundos": 0.815
+          "segundos": 0.968
         },
         {
           "teste": "tests/ai/test_execution.py::test_chat_without_onboarding_never_builds_plan",
@@ -141,7 +141,7 @@
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
           "estado": "APROVADO",
-          "segundos": 0.001
+          "segundos": 0.009
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -191,7 +191,7 @@
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
           "estado": "APROVADO",
-          "segundos": 0.001
+          "segundos": 0.007
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -216,7 +216,7 @@
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
           "estado": "APROVADO",
-          "segundos": 0.003
+          "segundos": 0.001
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -231,7 +231,7 @@
         {
           "teste": "tests/ai/test_triage.py::test_missing_analyzer_never_invents_eligibility",
           "estado": "APROVADO",
-          "segundos": 0.001
+          "segundos": 0.002
         }
       ],
       "faltantes": [],
@@ -244,12 +244,12 @@
         {
           "teste": "tests/ai/test_generation.py::test_persistent_service_blocks_grave_or_unknown_before_network",
           "estado": "APROVADO",
-          "segundos": 1.049
+          "segundos": 1.072
         },
         {
           "teste": "tests/ai/test_generation.py::test_persistent_service_blocks_grave_or_unknown_before_network",
           "estado": "APROVADO",
-          "segundos": 1.177
+          "segundos": 1.276
         }
       ],
       "faltantes": [],
@@ -313,7 +313,7 @@
         {
           "teste": "tests/ai/test_generation.py::test_real_database_publication_pending_replay_and_no_duplicate_content",
           "estado": "APROVADO",
-          "segundos": 1.652
+          "segundos": 2.215
         }
       ],
       "faltantes": [],
@@ -326,12 +326,12 @@
         {
           "teste": "tests/ai/test_execution.py::test_unknown_citation_or_forbidden_exercise_is_rejected",
           "estado": "APROVADO",
-          "segundos": 0.011
+          "segundos": 0.012
         },
         {
           "teste": "tests/ai/test_generation.py::test_equipment_change_before_delivery_prevents_publication",
           "estado": "APROVADO",
-          "segundos": 1.401
+          "segundos": 1.877
         },
         {
           "teste": "tests/training/test_catalog.py::test_available_combinations_requires_a_full_group_or_exemption",
@@ -341,7 +341,7 @@
         {
           "teste": "tests/training/test_catalog.py::test_roles_catalog_history_and_inventory_changes",
           "estado": "APROVADO",
-          "segundos": 1.923
+          "segundos": 2.214
         }
       ],
       "faltantes": [],
@@ -354,12 +354,12 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_health_adaptation_requires_curated_profile_and_evidence",
           "estado": "APROVADO",
-          "segundos": 2.537
+          "segundos": 3.444
         },
         {
           "teste": "tests/knowledge/test_retrieval.py::test_high_score_does_not_establish_health_support_and_conflict_is_explicit",
           "estado": "APROVADO",
-          "segundos": 0.906
+          "segundos": 0.926
         }
       ],
       "faltantes": [],
@@ -372,12 +372,12 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_adaptation_publishes_new_pending_and_preserves_other_days",
           "estado": "APROVADO",
-          "segundos": 2.365
+          "segundos": 2.596
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_chat_citations_isolation_inert_output_and_replay",
           "estado": "APROVADO",
-          "segundos": 1.335
+          "segundos": 1.421
         }
       ],
       "faltantes": [],
@@ -390,17 +390,17 @@
         {
           "teste": "tests/ai/test_generation.py::test_equipment_change_before_delivery_prevents_publication",
           "estado": "APROVADO",
-          "segundos": 1.401
+          "segundos": 1.877
         },
         {
           "teste": "tests/ai/test_generation.py::test_final_sql_guard_refuses_changed_source_or_snapshot",
           "estado": "APROVADO",
-          "segundos": 1.464
+          "segundos": 1.761
         },
         {
           "teste": "tests/ai/test_generation.py::test_final_sql_guard_refuses_changed_source_or_snapshot",
           "estado": "APROVADO",
-          "segundos": 1.518
+          "segundos": 1.983
         }
       ],
       "faltantes": [],
@@ -413,17 +413,17 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.115
+          "segundos": 1.459
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.282
+          "segundos": 1.254
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.157
+          "segundos": 1.092
         },
         {
           "teste": "tests/ai/test_execution.py::test_strict_json_does_not_repair",
@@ -456,7 +456,7 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_chat_http_session_csrf_bola_and_input_limits",
           "estado": "APROVADO",
-          "segundos": 1.994
+          "segundos": 2.199
         },
         {
           "teste": "tests/ai/test_execution.py::test_injection_remains_untrusted_data_and_cannot_assign_acceptance",
@@ -494,7 +494,7 @@
         {
           "teste": "tests/ai/test_generation.py::test_cancel_during_network_keeps_reservation_and_never_publishes",
           "estado": "APROVADO",
-          "segundos": 1.165
+          "segundos": 1.134
         }
       ],
       "faltantes": [],
@@ -507,22 +507,22 @@
         {
           "teste": "tests/training/test_catalog.py::test_client_reads_and_exports_without_waiting_for_review",
           "estado": "APROVADO",
-          "segundos": 1.827
+          "segundos": 1.983
         },
         {
           "teste": "tests/training/test_catalog.py::test_client_reads_and_exports_without_waiting_for_review",
           "estado": "APROVADO",
-          "segundos": 1.813
+          "segundos": 1.805
         },
         {
           "teste": "tests/training/test_catalog.py::test_client_reads_and_exports_without_waiting_for_review",
           "estado": "APROVADO",
-          "segundos": 2.183
+          "segundos": 2.148
         },
         {
           "teste": "tests/training/test_catalog.py::test_publication_pending_review_and_rejection_replacement",
           "estado": "APROVADO",
-          "segundos": 1.03
+          "segundos": 1.14
         }
       ],
       "faltantes": [],
@@ -535,32 +535,32 @@
         {
           "teste": "tests/ai/test_evaluation_guards.py::test_sixteenth_version_cannot_be_recovered_from_chat",
           "estado": "APROVADO",
-          "segundos": 10.061
+          "segundos": 9.632
         },
         {
           "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection",
           "estado": "APROVADO",
-          "segundos": 1.745
+          "segundos": 2.392
         },
         {
           "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection",
           "estado": "APROVADO",
-          "segundos": 1.505
+          "segundos": 1.583
         },
         {
           "teste": "tests/training/test_catalog.py::test_concurrent_publication_and_rejection",
           "estado": "APROVADO",
-          "segundos": 1.87
+          "segundos": 1.724
         },
         {
           "teste": "tests/training/test_catalog.py::test_publication_retains_15_and_preserves_metadata",
           "estado": "APROVADO",
-          "segundos": 1.487
+          "segundos": 1.972
         },
         {
           "teste": "tests/training/test_catalog.py::test_publication_retains_15_and_preserves_metadata",
           "estado": "APROVADO",
-          "segundos": 1.48
+          "segundos": 1.559
         }
       ],
       "faltantes": [],
@@ -573,7 +573,7 @@
         {
           "teste": "tests/ai/test_evaluation_guards.py::test_manual_workout_does_not_depend_on_any_ai_service",
           "estado": "APROVADO",
-          "segundos": 0.79
+          "segundos": 1.12
         }
       ],
       "faltantes": [],
@@ -586,7 +586,7 @@
         {
           "teste": "tests/knowledge/test_retrieval_evaluation.py::test_real_e5_labeled_retrieval_and_latency",
           "estado": "APROVADO",
-          "segundos": 24.359
+          "segundos": 26.809
         }
       ],
       "faltantes": [],
@@ -606,7 +606,17 @@
         {
           "teste": "tests/ai/test_generation.py::test_real_database_publication_pending_replay_and_no_duplicate_content",
           "estado": "APROVADO",
-          "segundos": 1.652
+          "segundos": 2.215
+        },
+        {
+          "teste": "tests/ai/test_triage.py::test_approved_decision_table",
+          "estado": "APROVADO",
+          "segundos": 0.001
+        },
+        {
+          "teste": "tests/ai/test_triage.py::test_approved_decision_table",
+          "estado": "APROVADO",
+          "segundos": 0.009
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -656,7 +666,7 @@
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
           "estado": "APROVADO",
-          "segundos": 0.001
+          "segundos": 0.007
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -682,16 +692,6 @@
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
           "estado": "APROVADO",
           "segundos": 0.001
-        },
-        {
-          "teste": "tests/ai/test_triage.py::test_approved_decision_table",
-          "estado": "APROVADO",
-          "segundos": 0.001
-        },
-        {
-          "teste": "tests/ai/test_triage.py::test_approved_decision_table",
-          "estado": "APROVADO",
-          "segundos": 0.003
         },
         {
           "teste": "tests/ai/test_triage.py::test_approved_decision_table",
@@ -714,27 +714,27 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_failed_adaptation_never_changes_current",
           "estado": "APROVADO",
-          "segundos": 2.263
+          "segundos": 2.933
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_failed_adaptation_never_changes_current",
           "estado": "APROVADO",
-          "segundos": 1.956
+          "segundos": 2.215
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_failed_adaptation_never_changes_current",
           "estado": "APROVADO",
-          "segundos": 1.846
+          "segundos": 2.479
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_failed_adaptation_never_changes_current",
           "estado": "APROVADO",
-          "segundos": 1.508
+          "segundos": 1.687
         },
         {
           "teste": "tests/ai/test_triage_integration.py::test_snapshot_change_during_analysis_requires_new_execution",
           "estado": "APROVADO",
-          "segundos": 0.738
+          "segundos": 1.004
         }
       ],
       "faltantes": [],
@@ -747,7 +747,7 @@
         {
           "teste": "tests/ai/test_followup.py::test_followup_sources_pending_notice_failure_and_idempotent_resend",
           "estado": "APROVADO",
-          "segundos": 1.908
+          "segundos": 1.709
         }
       ],
       "faltantes": [],
@@ -760,32 +760,22 @@
         {
           "teste": "tests/ai/test_generation.py::test_restart_or_deadline_never_resumes_physical_calls",
           "estado": "APROVADO",
-          "segundos": 0.937
+          "segundos": 1.666
         },
         {
           "teste": "tests/ai/test_groq.py::test_missing_key_and_untrusted_endpoint_do_not_send",
           "estado": "APROVADO",
+          "segundos": 0.005
+        },
+        {
+          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
+          "estado": "APROVADO",
           "segundos": 0.004
         },
         {
           "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
           "estado": "APROVADO",
-          "segundos": 0.003
-        },
-        {
-          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
-          "estado": "APROVADO",
-          "segundos": 0.003
-        },
-        {
-          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
-          "estado": "APROVADO",
-          "segundos": 0.003
-        },
-        {
-          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
-          "estado": "APROVADO",
-          "segundos": 0.002
+          "segundos": 0.004
         },
         {
           "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
@@ -810,17 +800,27 @@
         {
           "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
           "estado": "APROVADO",
-          "segundos": 0.003
+          "segundos": 0.005
         },
         {
           "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
           "estado": "APROVADO",
-          "segundos": 0.004
+          "segundos": 0.005
         },
         {
           "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
           "estado": "APROVADO",
-          "segundos": 0.003
+          "segundos": 0.005
+        },
+        {
+          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
+          "estado": "APROVADO",
+          "segundos": 0.006
+        },
+        {
+          "teste": "tests/ai/test_groq.py::test_provider_failures_one_physical_request_and_safe_error",
+          "estado": "APROVADO",
+          "segundos": 0.006
         }
       ],
       "faltantes": [],
@@ -838,12 +838,12 @@
         {
           "teste": "tests/ai/test_generation.py::test_persistent_service_blocks_grave_or_unknown_before_network",
           "estado": "APROVADO",
-          "segundos": 1.049
+          "segundos": 1.072
         },
         {
           "teste": "tests/ai/test_generation.py::test_persistent_service_blocks_grave_or_unknown_before_network",
           "estado": "APROVADO",
-          "segundos": 1.177
+          "segundos": 1.276
         }
       ],
       "faltantes": [],
@@ -856,12 +856,12 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_chat_citations_isolation_inert_output_and_replay",
           "estado": "APROVADO",
-          "segundos": 1.335
+          "segundos": 1.421
         },
         {
           "teste": "tests/knowledge/test_retrieval.py::test_sc05_instruction_is_only_data_and_no_llm_is_configured",
           "estado": "APROVADO",
-          "segundos": 0.823
+          "segundos": 1.121
         }
       ],
       "faltantes": [],
@@ -874,12 +874,12 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_chat_citations_isolation_inert_output_and_replay",
           "estado": "APROVADO",
-          "segundos": 1.335
+          "segundos": 1.421
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_chat_http_session_csrf_bola_and_input_limits",
           "estado": "APROVADO",
-          "segundos": 1.994
+          "segundos": 2.199
         }
       ],
       "faltantes": [],
@@ -892,17 +892,17 @@
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.115
+          "segundos": 1.459
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.282
+          "segundos": 1.254
         },
         {
           "teste": "tests/ai/test_chat_integration.py::test_invalid_output_never_retries_or_modifies_workout",
           "estado": "APROVADO",
-          "segundos": 1.157
+          "segundos": 1.092
         }
       ],
       "faltantes": [],
@@ -915,17 +915,17 @@
         {
           "teste": "tests/knowledge/test_corpus.py::test_private_api_versioning_decisions_and_cache_revocation",
           "estado": "APROVADO",
-          "segundos": 1.854
+          "segundos": 2.751
         },
         {
           "teste": "tests/knowledge/test_retrieval.py::test_partial_ingestion_never_enters_search",
           "estado": "APROVADO",
-          "segundos": 1.137
+          "segundos": 0.876
         },
         {
           "teste": "tests/knowledge/test_retrieval.py::test_real_qdrant_postgres_citations_cache_and_revocation",
           "estado": "APROVADO",
-          "segundos": 0.889
+          "segundos": 1.115
         }
       ],
       "faltantes": [],
@@ -938,12 +938,12 @@
         {
           "teste": "tests/ai/test_chat_concurrency.py::test_chat_concurrent_reservations_replay_and_shared_quota",
           "estado": "APROVADO",
-          "segundos": 1.612
+          "segundos": 1.622
         },
         {
           "teste": "tests/ai/test_evaluation_guards.py::test_quota_recovers_after_window_without_retry",
           "estado": "APROVADO",
-          "segundos": 1.972
+          "segundos": 2.456
         }
       ],
       "faltantes": [],

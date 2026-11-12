@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-12",
-  "base_implementacao": "78f4cd53e25f9ba45e11e40d93e31cb0bb15440f",
+  "base_implementacao": "3c6b82fd5592e857d9e1f0f340198b196c4882e0",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -70,6 +70,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md",
           "titulo": "Livro, extração explícita, recuperação e resumo factual"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md",
+          "titulo": "Seleção explícita de reserva LLM e qualificação separada"
         }
       ]
     },
@@ -260,6 +264,12 @@
           "titulo": "Seleção operacional de força no livro",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/schemas/configuracao-ia-reserva-groq20b-v2.json",
+          "titulo": "Configuração candidata de reserva GPT-OSS 20B",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },
@@ -433,6 +443,10 @@
           "titulo": "Resultado do navegador e aceite real pendente",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/ai06-reserva.md",
+          "titulo": "Retomada AI-06 e avaliação separada do candidato de reserva"
         }
       ]
     },

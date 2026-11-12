@@ -130,3 +130,10 @@ sem tolerância a falhas de idioma, unidades/negações ou segurança.
 Retomada explícita por --cases e união auditável por --mode merge estão no
 [guia da correção](ai06-correcao-fundamentacao.md). Nenhuma parte reduz o mínimo
 de casos; a consolidação exige todos os IDs e as mesmas versões/configuração.
+
+## Retomada e reserva explícita
+
+A [avaliação de reserva](ai06-reserva.md) registra L13 concluído pelo principal,
+nova recusa TPD e ensaio separado do GPT-OSS 20B. O candidato não foi qualificado;
+principal continua 120B. Seleção por ACADEMIA_LLM_PROFILE não repete chamadas
+em caso de falha nem permite unir resultados de modelos diferentes.

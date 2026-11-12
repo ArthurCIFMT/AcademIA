@@ -1113,3 +1113,35 @@ O comando retorna sucesso para o conjunto local controlado e registra sempre
 aceite_mvp=false. TST-01 permanece EM_EXECUCAO; PG-01 ABERTO. Ainda é necessário
 completar AI-06 e consolidar as evidências reais, inclusive SC-01/02 e a revisão
 de fundamentação registrada. As dependências originais dos cartões foram preservadas.
+
+## Retomada de AI-06 e candidato de reserva — 2026-11-12
+
+[Guia/resultados](ai06-reserva.md) e [ADR-008](../arquitetura/decisoes/ADR-008-reserva-llm-explicita.md).
+Modelo principal preservado; candidato selecionado explicitamente em processo
+separado, sem .env alterado, nova dependência ou fallback automático.
+
+Verificações executadas nesta entrega:
+
+- Backend unitário: 305 aprovados, 165 fora dos marcadores selecionados.
+- Seleção/contrato/merge: 32 aprovados (incluídos no total unitário; não somar).
+- Contrato do adaptador sob perfil 20B: 15 aprovados.
+- Nova integração PostgreSQL/Qdrant: 1 aprovada; modelo/fingerprint persistidos,
+  publicação PENDENTE e replay sem outra chamada.
+- Avaliação determinística principal: 107 testes backend, 20 frontend,
+  30 cenários SV/SC com estado esperado; LLM real permanece separado.
+- Ruff/formato e mypy aprovados; configuração nova usa dependências existentes.
+
+Ensaio real principal: L13 publicado; duas rodadas com recusa TPD em L14, sem
+retry interno. União mantém tentativas e consumo anteriores. Restam oito casos
+sem conclusão. Revisão L04 não foi substituída por resposta favorável.
+
+Candidato: 21 casos exercitados/19 resultados automáticos esperados, 0/2 fichas
+publicadas, duas gerações HTTP 400 (L14 json_validate_failed). Os ataques SC-01/02
+chegaram ao LLM e não produziram efeito proibido. L24 falhou em fidelidade/unidades,
+portanto o candidato não está qualificado. Partes públicas sanitizadas e revisão
+em docs/testes/ai06-reserva; mensagens/saídas completas fora do Git.
+
+Comandos reproduzíveis e limites no guia. Na máquina, uv sem cache configurado
+foi recusado pelo sandbox; as verificações usaram o ambiente Python 3.12 já
+instalado, sem mudar lockfile/dependências. A cópia do projeto é revalidada antes
+do commit. SPEC/DOC/diff verificados na entrega; AI-06/TST-01 ainda EM_EXECUCAO.

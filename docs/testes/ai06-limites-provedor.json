@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "observacao": "Cabeçalhos reais sanitizados; não representam garantia de disponibilidade futura. TPD = tokens por dia. Sem contratação ou fallback pago.",
+  "observacao": "Cabeçalhos reais sanitizados da retomada. TPD diário; TPM disponível não demonstra quota diária. Sem contratação ou fallback pago.",
   "status": 429,
-  "tempo_utc": 1794489354.7119925,
+  "tempo_utc": 1794493804.2461567,
   "limites": {
-    "retry-after": "638",
+    "retry-after": "1046",
     "x-ratelimit-limit-requests": "1000",
     "x-ratelimit-limit-tokens": "8000",
-    "x-ratelimit-remaining-requests": "987",
-    "x-ratelimit-remaining-tokens": "8000",
-    "x-ratelimit-reset-requests": "18m43.2s",
-    "x-ratelimit-reset-tokens": "1ms"
+    "x-ratelimit-remaining-requests": "997",
+    "x-ratelimit-remaining-tokens": "6360",
+    "x-ratelimit-reset-requests": "4m19.2s",
+    "x-ratelimit-reset-tokens": "12.299s"
   },
   "categoria": "TPD",
-  "aguardar": "10m37.632s"
+  "aguardar": "17m25.44s"
 }

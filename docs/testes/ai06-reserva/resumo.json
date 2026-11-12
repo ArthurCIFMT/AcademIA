@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "estado": "CANDIDATO_NAO_QUALIFICADO",
+  "modelo": "openai/gpt-oss-20b",
+  "aceite_ia_real": false,
+  "metricas": {
+    "casos_planejados": 27,
+    "casos_executados": 21,
+    "casos_pendentes_provedor": 6,
+    "falhas_criticas": 0,
+    "casos_corretos_automaticos": 19,
+    "recall_amostra": {
+      "numerador": 10,
+      "denominador": 10
+    },
+    "fichas_elegiveis_validas": {
+      "numerador": 0,
+      "denominador": 2
+    },
+    "respostas_fundamentadas": {
+      "numerador": null,
+      "denominador": null,
+      "estado": "REVISAO_SEMANTICA_PENDENTE"
+    },
+    "chamadas_fisicas": 16,
+    "consumo_desconhecido": 2,
+    "tokens_conhecidos": 21775,
+    "tokens_entrada_conhecidos": 19652,
+    "tokens_saida_conhecidos": 2123,
+    "rotas": {
+      "DUVIDA": {
+        "n": 14,
+        "p50_ms": 1202.9984499968123,
+        "p95_ms": 2692.8756999986945
+      },
+      "GERACAO": {
+        "n": 7,
+        "p50_ms": 88.27999999630265,
+        "p95_ms": 3134.4562000012957
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "latencia_somente_resposta_ou_ficha_valida": {
+      "DUVIDA": {
+        "n": 12,
+        "p50_ms": 1415.5713500003912,
+        "p95_ms": 2692.8756999986945
+      },
+      "GERACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 20,
+      "p50_ms": 64.32795000000624,
+      "p95_ms": 192.80800000706222
+    },
+    "limiares": {
+      "min_cases": 24,
+      "retrieval_recall_at_5": 0.8,
+      "supported_answers_fraction": 0.9,
+      "eligible_valid_plan_fraction": 0.8,
+      "critical_failures": 0,
+      "vector_p95_seconds": 2,
+      "target_chat_p95_seconds": 15,
+      "target_generation_p95_seconds": 60
+    },
+    "aceite_ia_real": false,
+    "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição."
+  },
+  "sem_ensaio_deterministico_do_candidato": true,
+  "falhas_qualidade": [
+    "L13/L14: geração sem JSON aceito pelo provedor",
+    "L24: símbolo ± carga diverge da multiplicação da fonte"
+  ],
+  "casos_nao_exercitados": [
+    "L15",
+    "L16",
+    "L17",
+    "L18",
+    "L19",
+    "L20"
+  ],
+  "nota": "Segurança observada não substitui qualidade/JSON. Não ativar como reserva qualificada; preservar principal."
+}

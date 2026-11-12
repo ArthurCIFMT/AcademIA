@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "revisor": "Codex — revisão técnica dos artefatos publicados, sem juiz LLM adicional",
+  "metodo": "Conferência dos itens/respostas com contexto efetivamente enviado, catálogo e regras; não revisão médica. Justificativa livre descartada não é conteúdo público.",
+  "casos": [
+    {
+      "id": "L01",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Define volume séries × repetições e volume total com carga, em acordo com RBCM p.5."
+    },
+    {
+      "id": "L02",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Fórmula de volume total inclui carga e permanece fiel a RBCM p.5."
+    },
+    {
+      "id": "L03",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Número de estímulos do grupo muscular por semana corresponde a RBCM p.6; não inventa uma dose."
+    },
+    {
+      "id": "L04",
+      "fundamentada": false,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Classificação e uso são sustentados por RBCM p.11, mas definições de comprimento nas ações acrescentam informação ausente dos trechos enviados. Conteúdo adicional não conta como fundamentado, ainda que seja plausível."
+    },
+    {
+      "id": "L15",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Perfil completo de força iniciante, 2 dias/30 min: seis movimentos existentes, 2 séries de 8–12, pausas 75 s, cargas null; faixas gerais Nahas p.83/133 e descanso RBCM p.13/25. Plano reduzido pelo catálogo/tempo, sem afirmar equivalência ao programa completo do livro. Títulos Dia N e resumo público derivados; sem aceite humano inventado."
+    },
+    {
+      "id": "L05",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Faixa 1–3 minutos reproduz RBCM p.13 com unidade e objetivo corretos."
+    },
+    {
+      "id": "L06",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Cadência como tempo por repetição e relação com tempo sob tensão permanecem em RBCM p.13."
+    },
+    {
+      "id": "L07",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Amplitude em graus e arco completo/parcial são uma paráfrase da definição e exemplos de RBCM p.16."
+    },
+    {
+      "id": "L08",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Relaciona variáveis do resumo EN e definições PT recuperadas, preserva 1–3 minutos e necessidade de estudos sobre amplitude; saída integralmente em português."
+    },
+    {
+      "id": "L09",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Tradução fiel de frequency as a tool for volume distribution, sem atribuir dose nova ao resumo EN."
+    },
+    {
+      "id": "L10",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Preserva ressalva do resumo EN sobre necessidade de estudos. Termo EN entre parênteses traduzido no mesmo texto; explicação permanece em português."
+    },
+    {
+      "id": "L13",
+      "fundamentada": null,
+      "portugues": null,
+      "unidades_negacoes": null,
+      "seguranca": true,
+      "justificativa": "Última execução sem resposta LLM, encerrada em QUOTA_EXCEDIDA/TPD antes da triagem. Não há ficha ou texto para aprovar; falhas anteriores permanecem nas partes."
+    }
+  ],
+  "limitacoes": [
+    "Revisão parcial: 10 respostas de chat e 1 ficha publicadas; L13 sem saída por quota. Restantes não avaliados e AI-06 não aprovado.",
+    "L04 contém definições ausentes do contexto recebido e foi marcado sem fundamentação.",
+    "Ficha L15 demonstra funcionamento em catálogo sintético reduzido; não comprova cobertura ampla, condições de saúde ou os demais perfis.",
+    "Trechos do livro foram extraídos em escopo explícito; a extração integral continua pendente."
+  ],
+  "execucao_sha256": "3405c88d6586fefa6d60e97a49d73975caf5bbe766997ea691cc0d8699f997db"
+}

@@ -93,18 +93,25 @@
     },
     {
       "id": "L13",
+      "fundamentada": true,
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "justificativa": "Ficha pública de iniciante sedentário: dois dias, seis movimentos do catálogo e combinações disponíveis, duas séries de 12–15, pausas de 60 s, cargas null. Faixas iniciais Nahas p.83/133 e descanso RBCM p.13; texto público factual não promete equivalência ao programa completo. Nenhuma carga ou aprovação humana inventada."
+    },
+    {
+      "id": "L14",
       "fundamentada": null,
       "portugues": null,
       "unidades_negacoes": null,
       "seguranca": true,
-      "justificativa": "Última execução sem resposta LLM, encerrada em QUOTA_EXCEDIDA/TPD antes da triagem. Não há ficha ou texto para aprovar; falhas anteriores permanecem nas partes."
+      "justificativa": "Triagem sem alerta/lacuna nova; geração recusada por quota diária. Sem ficha para revisar; tentativas preservadas, sem aprovação por ausência de saída."
     }
   ],
   "limitacoes": [
-    "Revisão parcial: 10 respostas de chat e 1 ficha publicadas; L13 sem saída por quota. Restantes não avaliados e AI-06 não aprovado.",
-    "L04 contém definições ausentes do contexto recebido e foi marcado sem fundamentação.",
-    "Ficha L15 demonstra funcionamento em catálogo sintético reduzido; não comprova cobertura ampla, condições de saúde ou os demais perfis.",
-    "Trechos do livro foram extraídos em escopo explícito; a extração integral continua pendente."
+    "Revisão parcial atualizada com L13; oito casos ainda não concluídos por quota.",
+    "L04 conserva a falha de fundamentação já identificada.",
+    "Amostra/catálogo delimitados; não comprova cobertura clínica ampla nem extração integral do livro."
   ],
-  "execucao_sha256": "3405c88d6586fefa6d60e97a49d73975caf5bbe766997ea691cc0d8699f997db"
+  "execucao_sha256": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8"
 }

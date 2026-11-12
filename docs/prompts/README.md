@@ -141,6 +141,18 @@ Revisão parcial registra uma extrapolação de fonte em L04; não aprova o conj
 Ensaios anteriores e interrupções preservados. AI-06 EM_EXECUCAO; aceite final de TST-01
 depende de completar os nove casos L13,L14,L16,L17,L18,L19,L20,L23,L24 e consolidar a revisão.
 
+### Nova retomada AI-06 e reserva explícita — 2026-11-12
+
+[Resultado e reprodução](../testes/ai06-reserva.md): L13 concluído pelo 120B
+em 5,020 s; L14 voltou a falhar por quota diária TPD. Agora são duas fichas
+publicadas, 20 casos exercitados e 19 resultados automáticos esperados.
+Restam L14,L16,L17,L18,L19,L20,L23,L24; falha de fundamentação L04 preservada.
+Perfil candidato GPT-OSS 20B preparado por ADR-008, sem troca automática/.env.
+Ensaio separado: 21/27 exercitados, 19 resultados automáticos esperados, zero
+falhas críticas observadas; duas gerações HTTP 400 e erro de fidelidade/unidades
+em L24 impedem qualificá-lo. Não misturar resultados para aprovar AI-06.
+AI-06/TST-01 continuam EM_EXECUCAO e PG-01 ABERTO.
+
 ### Execução local parcial TST-01 — 2026-11-12
 
 Por solicitação do responsável, trabalho independente de quota foi executado
@@ -294,7 +306,7 @@ fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
 AI-06 está em execução: correção de livro/idioma e triagem v3 entregue,
 mas o novo ensaio está incompleto por quota diária TPD. Uma extrapolação de chat
-permanece na revisão parcial. Retomar os casos sem resposta e consolidar antes
+permanece na revisão parcial. Uma nova retomada concluiu L13; ver a seção de reserva explícita. Retomar os oito casos restantes e consolidar antes
 de concluir o aceite de TST-01. Sua execução local parcial foi autorizada e realizada. Gates pós-MVP e marcos permanecem abertos até evidências reais.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados

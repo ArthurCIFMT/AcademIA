@@ -130,7 +130,11 @@ ativam trechos do livro em português, duas consultas fixas de prescrição/desc
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
 A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
 o [limite diário TPD da Groq](../../docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
-Uma ficha foi publicada em teste; isso não aprova os demais perfis ou AI-06.
+Duas fichas foram publicadas em teste (L13/L15); oito casos seguem sem conclusão
+por quota. Isso não aprova os demais perfis ou AI-06. A [reserva explícita](../testes/ai06-reserva.md)
+prepara GPT-OSS 20B com a mesma chave, mas seu ensaio encontrou JSON recusado na
+geração e falha de fidelidade/unidades no chat; candidato não qualificado, sem
+troca automática ou alteração do principal (ADR-008).
 TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
 registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,

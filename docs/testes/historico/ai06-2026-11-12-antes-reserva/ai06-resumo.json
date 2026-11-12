@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
+  "casos_planejados": 27,
+  "casos_executados": 19,
+  "casos_pendentes_provedor": 8,
+  "falhas_criticas": 0,
+  "casos_corretos_automaticos": 18,
+  "recall_amostra": {
+    "numerador": 10,
+    "denominador": 10
+  },
+  "fichas_elegiveis_validas": {
+    "numerador": 1,
+    "denominador": 2
+  },
+  "respostas_fundamentadas": {
+    "numerador": null,
+    "denominador": null,
+    "estado": "REVISAO_SEMANTICA_PENDENTE"
+  },
+  "chamadas_fisicas": 13,
+  "consumo_desconhecido": 1,
+  "tokens_conhecidos": 21854,
+  "tokens_entrada_conhecidos": 18324,
+  "tokens_saida_conhecidos": 3530,
+  "rotas": {
+    "DUVIDA": {
+      "n": 12,
+      "p50_ms": 1037.275700000464,
+      "p95_ms": 1829.9139000009745
+    },
+    "GERACAO": {
+      "n": 7,
+      "p50_ms": 89.73999999579974,
+      "p95_ms": 5338.749400005327
+    },
+    "ADAPTACAO": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
+    }
+  },
+  "latencia_somente_resposta_ou_ficha_valida": {
+    "DUVIDA": {
+      "n": 10,
+      "p50_ms": 1063.2234000004246,
+      "p95_ms": 1829.9139000009745
+    },
+    "GERACAO": {
+      "n": 1,
+      "p50_ms": 5338.749400005327,
+      "p95_ms": 5338.749400005327
+    },
+    "ADAPTACAO": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
+    }
+  },
+  "busca": {
+    "n": 16,
+    "p50_ms": 47.51915000088047,
+    "p95_ms": 80.45800001127645
+  },
+  "limiares": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "aceite_ia_real": false,
+  "nota": "Amostra incompleta. Métricas de casos concluídos e consumo de todas as partes são distintos. Sem aceite de AI-06 ou MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 16,
+    "tokens_conhecidos": 23662,
+    "consumo_desconhecido": 3
+  },
+  "limites_provedor": "ai06-limites-provedor.json"
+}

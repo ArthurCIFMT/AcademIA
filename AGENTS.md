@@ -187,6 +187,9 @@ necessária para sua entrega.
 - LLM vigente Groq / openai/gpt-oss-120b (ADR-006), plano gratuito, chave em ambiente;
   json_object com validação backend. Não contratar plano pago ou fazer fallback
   oculto. Qualidade/tempo só são aprovados no ensaio real de AI-06.
+- Perfil padrão principal mantém GPT-OSS 120B; reserva-groq20b seleciona
+  explicitamente o candidato GPT-OSS 20B (ADR-008), com a mesma chave. Não há
+  troca automática: qualificação exige AI-06 separado, sem misturar modelos.
 - Campos e regras: docs/requisitos/onboarding-e-triagem.md e schemas versionados;
   parâmetros em docs/requisitos/configuracao-ia-rag.md. Não pedir novamente escolhas
   técnicas já delegadas/registradas. Seguir modelos e contratos aceitos.

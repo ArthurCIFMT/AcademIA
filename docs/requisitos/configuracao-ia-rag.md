@@ -62,3 +62,12 @@ Por autorização expressa em 2026-11-11, a
 modelo inicial descontinuado por openai/gpt-oss-120b na configuração v2,
 com reasoning_effort=low/include_reasoning=false. A v1 permanece histórica.
 Demais limites/metas não foram afrouxados; ausência de evidência continua abstenção.
+
+## Perfil de reserva em avaliação
+
+Por solicitação do responsável em 2026-11-12, a [ADR-008](../arquitetura/decisoes/ADR-008-reserva-llm-explicita.md)
+prepara a [configuração candidata GPT-OSS 20B](schemas/configuracao-ia-reserva-groq20b-v2.json).
+ACADEMIA_LLM_PROFILE=principal é o padrão; reserva-groq20b é seleção explícita,
+sem fallback/retry automático. Todos os demais parâmetros e limiares permanecem
+iguais. Não altera a configuração principal nem aprova qualidade por herança.
+Conferir [estado do ensaio](../testes/ai06-reserva.md) antes de usar a reserva.

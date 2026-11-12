@@ -1,0 +1,1425 @@
+{
+  "schema_version": 1,
+  "modo": "real",
+  "configuracao_sha256": "876679f4f30f67bed2c80fb0210e28c432fb7e66cf6f90d731f81ec77c1e3e0e",
+  "politica_sha256": "17155ad9cca11c59c0711c76e4dc067dcded77ba3c8e2888dbcfd1bc8c629bee",
+  "prompts": "academia-ia-v3",
+  "modelo": "openai/gpt-oss-20b",
+  "consulta_geracao": "consulta-geracao-v2",
+  "extracao": "20d8b22744cdef09bbd4f3680827fd94bf9e2857a61706b1e09bba01f358a03b",
+  "algoritmo_hash_fontes": "JSON_CANONICO_V1",
+  "fontes_sha256": {
+    "docs/testes/ai06-casos-v2.json": "453225e332ee8372b3478ec1987c3f595b00e04c434d2e0021575488d0c6cd95",
+    "docs/testes/casos-triagem-v1.json": "c582e980b14156ff25326c7d295f60c627fee6d7c0ce43fec63eb3633848be8a",
+    "docs/testes/rag05-consultas-v1.json": "77b1a1101a38b33dc0480a92069af7d4d286d5c1b03a5055301614c2b1b4a27c",
+    "materiais/rag/corpus-inicial.json": "c61ab5b40361f1ac9e03bb40ee9a48ad1e7957481fe8fee2c792930fc9b4d8c6",
+    "docs/testes/ai06-corpus-v2.json": "4c270d8395758d57da30bf94a859251aec8cf2084fc931e5f7cbbaac8e0a3854",
+    "docs/testes/ai06-catalogo-v1.json": "b88eb50e7b50b1bc7197069cee0c6b2adb64ab0eec4fb64f545c97a5970d53bb",
+    "materiais/rag/politica-livro-v2.json": "0c9567844b001c26ea593bea475d9cd00fdb54580c5ed734cdf7260844ae18ba",
+    "materiais/rag/livro-de-apoio.json": "3e6abe89f2cfc5dde6d4379b17ab7137d16d1bb1d346198a9c312aed20400129"
+  },
+  "codigo_sha256": {
+    "backend/app/modules/ai/prompts/v1.py": "7c20890c63b2247c694eb946a8ec033ed988da21e4597c7743eede6e2fe541f2",
+    "backend/app/modules/ai/orchestration/queries.py": "9880e019caebb560566c17093a70f7de09d6a8245098362c441910938ffdc4b0",
+    "backend/app/modules/ai/orchestration/service.py": "7d289f016ae50f45f17e8dd82f18754986261ace0b01ea8a73430277359ee9aa",
+    "backend/app/modules/ai/orchestration/presentation.py": "0426c7e6ed5b45ec01b9a36dc134fe8455782ee7ad9d7c3edb17ad5ecdef80ff",
+    "backend/app/modules/knowledge/ingestion/parser.py": "2048ffa67987347a470bc9aa11b2aa05a4fc46502f11cbd7720c3f78f3aa323b",
+    "backend/app/modules/knowledge/ingestion/contracts.py": "a7c60e4ca895a6e74af3563c4460dd22ab4d4d9c66842fb36032e8c9b33cff9f",
+    "backend/uv.lock": "98a436b4197a64984fd80a06184d22393bb3dc1e00c1dfc7cebaba1238fcbb85"
+  },
+  "ambiente": {
+    "python": "3.12.14",
+    "sistema": "Windows-10-10.0.19045-SP0",
+    "cpu": "Intel64 Family 6 Model 158 Stepping 9, GenuineIntel"
+  },
+  "custos": {
+    "plano_previsto": "gratuito",
+    "valor_monetario": null,
+    "nota": "API informa tokens, não fatura. Sem contratação/fallback pago."
+  },
+  "aceite_ia_real": false,
+  "casos_solicitados": [
+    "L01",
+    "L02",
+    "L03",
+    "L04",
+    "L05",
+    "L06",
+    "L07",
+    "L08",
+    "L09",
+    "L10",
+    "L11",
+    "L12",
+    "L13",
+    "L14",
+    "L15",
+    "L16",
+    "L17",
+    "L18",
+    "L19",
+    "L20",
+    "L21",
+    "L22",
+    "L23",
+    "L24",
+    "L25",
+    "L26",
+    "L27"
+  ],
+  "amostra_parcial": false,
+  "estado": "FALHA",
+  "observacoes": {
+    "schema_version": 1,
+    "casos": [
+      {
+        "id": "L01",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1506.8350999936229,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782"
+            ],
+            "uso": {
+              "prompt_tokens": 1466,
+              "completion_tokens": 152,
+              "total_tokens": 1618
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 1167.3211000015726
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6376,
+            "prompt_sha256": "9f765a62ac5b791932b1a245c903c5deacc4dde1ce7e6f9adf6c38272061e5a9",
+            "uso": {
+              "prompt_tokens": 1466,
+              "completion_tokens": 152,
+              "total_tokens": 1618
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.3500000135973096,
+            "total_ms": 157.19420000095852,
+            "parede_ms": 157.296999997925
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.9219372949184919
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8814658129959303
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.851986225102512
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8517305923651133
+          },
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8443249002782556
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L02",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1428.4513000020524,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782"
+            ],
+            "uso": {
+              "prompt_tokens": 1462,
+              "completion_tokens": 147,
+              "total_tokens": 1609
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 1219.8520000092685
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6374,
+            "prompt_sha256": "af4bfc6770c2a45e85874035c12184fa0d87ef874b0e2e228a2acf346cf9d3ea",
+            "uso": {
+              "prompt_tokens": 1462,
+              "completion_tokens": 147,
+              "total_tokens": 1609
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.741100004641339,
+            "total_ms": 49.449900005129166,
+            "parede_ms": 49.5435000048019
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.9041570950391511
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8612026905882184
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.84595867418174
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8385342167459946
+          },
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8349241258961871
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L03",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 958.3440999995219,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "23f5db56-cc40-52ba-8392-982b666c75ca"
+            ],
+            "uso": {
+              "prompt_tokens": 1375,
+              "completion_tokens": 162,
+              "total_tokens": 1537
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 758.1988000019919
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6043,
+            "prompt_sha256": "b513f4fad9d1def129440fc616fa9af51cc3a9ccc11832291439f6114f13ac99",
+            "uso": {
+              "prompt_tokens": 1375,
+              "completion_tokens": 162,
+              "total_tokens": 1537
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.1003000040072948,
+            "total_ms": 48.470499998074956,
+            "parede_ms": 48.56850000214763
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.9104666736888929
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8754113621597294
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8698833603857083
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.867948094102921
+          },
+          {
+            "fragmento_id": "23f5db56-cc40-52ba-8392-982b666c75ca",
+            "texto_hash": "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8578998971701542
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L04",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1003.3054999948945,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "23f5db56-cc40-52ba-8392-982b666c75ca",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2"
+            ],
+            "uso": {
+              "prompt_tokens": 1395,
+              "completion_tokens": 149,
+              "total_tokens": 1544
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 681.1887999938335
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6002,
+            "prompt_sha256": "c71010269b9d3b106307f8f1532887232e86eb0747ed62dc48ca55c1860b575f",
+            "uso": {
+              "prompt_tokens": 1395,
+              "completion_tokens": 149,
+              "total_tokens": 1544
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.7061000000685453,
+            "total_ms": 170.05950000020675,
+            "parede_ms": 170.1595000049565
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "23f5db56-cc40-52ba-8392-982b666c75ca",
+            "texto_hash": "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8983619495459653
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8783611799582578
+          },
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8639768969180235
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8597923924977591
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8583869644654847
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L05",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 866.5305000031367,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "4067d448-a59e-5ebb-9434-c5ac64a63b03",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "a2c21906-e41e-5254-84d2-a110069a96b8"
+            ],
+            "uso": {
+              "prompt_tokens": 1389,
+              "completion_tokens": 131,
+              "total_tokens": 1520
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 663.948999994318
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6130,
+            "prompt_sha256": "980ed6e2f160a2285a9eb549e60568c9ef486e8a221839d662d2179d33c3f502",
+            "uso": {
+              "prompt_tokens": 1389,
+              "completion_tokens": 131,
+              "total_tokens": 1520
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.0709999991813675,
+            "total_ms": 50.24369999591727,
+            "parede_ms": 50.33719999482855
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.9102686338767283
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8654895612003857
+          },
+          {
+            "fragmento_id": "4067d448-a59e-5ebb-9434-c5ac64a63b03",
+            "texto_hash": "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.863445186429926
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8610214297086536
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8574867245144318
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L06",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1402.69139999873,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "4067d448-a59e-5ebb-9434-c5ac64a63b03",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2"
+            ],
+            "uso": {
+              "prompt_tokens": 1338,
+              "completion_tokens": 142,
+              "total_tokens": 1480
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 924.5993999938946
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 5566,
+            "prompt_sha256": "f817ef4639282131eda851107d33bf84199c8ab4b2a3dbce033cb1f9f55933ab",
+            "uso": {
+              "prompt_tokens": 1338,
+              "completion_tokens": 142,
+              "total_tokens": 1480
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.6227999915136024,
+            "total_ms": 317.66880000941455,
+            "parede_ms": 317.7606000099331
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "4067d448-a59e-5ebb-9434-c5ac64a63b03",
+            "texto_hash": "10c1f751b58ee89fa88cb57840fee818f5129b1b4873f3588f3c00d6cb14e56b",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8818752412155492
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8287654909810287
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8256827444358054
+          },
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8231353412507254
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8189831170428319
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L07",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1561.9812999939313,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48"
+            ],
+            "uso": {
+              "prompt_tokens": 919,
+              "completion_tokens": 129,
+              "total_tokens": 1048
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 1386.075599992182
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 3680,
+            "prompt_sha256": "5c591a09ff92af566cd92d65b2986ac2fb7f2c78e0977ac7a0419808e8cc49d2",
+            "uso": {
+              "prompt_tokens": 919,
+              "completion_tokens": 129,
+              "total_tokens": 1048
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.91730000753887,
+            "total_ms": 45.85949999454897,
+            "parede_ms": 45.98489998898003
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8801197505563001
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8072803909402244
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L08",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 2692.8756999986945,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "23f5db56-cc40-52ba-8392-982b666c75ca",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48"
+            ],
+            "uso": {
+              "prompt_tokens": 1383,
+              "completion_tokens": 248,
+              "total_tokens": 1631
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 2487.782700001844
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6069,
+            "prompt_sha256": "219365dbe97e64b735ee57588a8f15a1138be191b9eb5b05e275fa4a685f7331",
+            "uso": {
+              "prompt_tokens": 1383,
+              "completion_tokens": 248,
+              "total_tokens": 1631
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.4974999978439882,
+            "total_ms": 52.69489999045618,
+            "parede_ms": 52.78630000248086
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.9039581632972411
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8969777571096412
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8957179463078444
+          },
+          {
+            "fragmento_id": "23f5db56-cc40-52ba-8392-982b666c75ca",
+            "texto_hash": "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8916293850294007
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8868536580769472
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L09",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 1838.412099998095,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "23f5db56-cc40-52ba-8392-982b666c75ca"
+            ],
+            "uso": {
+              "prompt_tokens": 1380,
+              "completion_tokens": 166,
+              "total_tokens": 1546
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 1605.2335999993375
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6065,
+            "prompt_sha256": "69e17bab994180986c6472dda9edc889f3fb8fb02780e4d2be48ebdf8b60258c",
+            "uso": {
+              "prompt_tokens": 1380,
+              "completion_tokens": 166,
+              "total_tokens": 1546
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.886500005843118,
+            "total_ms": 60.24009999237023,
+            "parede_ms": 60.35119999432936
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8577675287638475
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.853990173910127
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8453804305054669
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8305254430484689
+          },
+          {
+            "fragmento_id": "23f5db56-cc40-52ba-8392-982b666c75ca",
+            "texto_hash": "a6b85fa45b07bda25e8d44a743250fb10d19ca404c22e77d4edad69b1b6e600d",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.823006430006596
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L10",
+        "rota": "DUVIDA",
+        "estado": "RESPOSTA_PRONTA",
+        "motivo": "RESPOSTA_VALIDADA",
+        "total_ms": 882.9528000060236,
+        "esperado": "RESPOSTA_PRONTA",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": true,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "CHAT",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+              "b990597f-7686-5a56-9257-0b67f0245078",
+              "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+              "a2c21906-e41e-5254-84d2-a110069a96b8",
+              "65a5ee18-7e0b-5c6b-9957-96ee1577ca48"
+            ],
+            "uso": {
+              "prompt_tokens": 1466,
+              "completion_tokens": 123,
+              "total_tokens": 1589
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 684.8024999926565
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "CHAT",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 600,
+            "prompt_bytes": 6390,
+            "prompt_sha256": "eae5ce064a6a0777f5ed21fc16155442d285b868d9add6cf09bba798a514509e",
+            "uso": {
+              "prompt_tokens": 1466,
+              "completion_tokens": 123,
+              "total_tokens": 1589
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.5642999971751124,
+            "total_ms": 48.852899999474175,
+            "parede_ms": 48.96510000980925
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "5d479e30-0fb9-5bf9-a739-8251dcc97782",
+            "texto_hash": "0a7241333ced1d0c0b82dfcee7315eda5d70fc7204c08b125cf35f9082e3ba47",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8763584848823779
+          },
+          {
+            "fragmento_id": "b990597f-7686-5a56-9257-0b67f0245078",
+            "texto_hash": "3a7b946c07166fedf2800fd02aba2bfe0eb4e439921f4c28dfa8bc94240ddb2e",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8693549382504799
+          },
+          {
+            "fragmento_id": "9bf8de31-b283-5c2d-b2dd-1df1d386d5f2",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8598770245628379
+          },
+          {
+            "fragmento_id": "a2c21906-e41e-5254-84d2-a110069a96b8",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8502877061863414
+          },
+          {
+            "fragmento_id": "65a5ee18-7e0b-5c6b-9957-96ee1577ca48",
+            "texto_hash": "37acc6cd401e2267d4a0f3c635881967794247772ee94c50d2dfc2e20cad86b4",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8502854051769156
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L11",
+        "rota": "DUVIDA",
+        "estado": "ABSTENCAO",
+        "motivo": "EVIDENCIA_INSUFICIENTE",
+        "total_ms": 151.76619999692775,
+        "esperado": "ABSTENCAO",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [],
+        "consumo": [],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIA_INSUFICIENTE",
+            "busca_ms": 3.3251999993808568,
+            "total_ms": 78.95219999772962,
+            "parede_ms": 79.04579999740236
+          }
+        ],
+        "fontes": [],
+        "revisao_semantica": "NAO_APLICAVEL"
+      },
+      {
+        "id": "L12",
+        "rota": "DUVIDA",
+        "estado": "ABSTENCAO",
+        "motivo": "EVIDENCIA_INSUFICIENTE",
+        "total_ms": 97.50509999867063,
+        "esperado": "ABSTENCAO",
+        "correto_automatico": true,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [],
+        "consumo": [],
+        "buscas": [
+          {
+            "finalidade": "DUVIDAS",
+            "estado": "EVIDENCIA_INSUFICIENTE",
+            "busca_ms": 2.7864000003319234,
+            "total_ms": 43.33670000778511,
+            "parede_ms": 43.422900009318255
+          }
+        ],
+        "fontes": [],
+        "revisao_semantica": "NAO_APLICAVEL"
+      },
+      {
+        "id": "L13",
+        "rota": "GERACAO",
+        "estado": "FALHA",
+        "motivo": "PROVEDOR_INDISPONIVEL",
+        "total_ms": 3083.082999990438,
+        "esperado": "PUBLICADA",
+        "correto_automatico": false,
+        "falha_critica": false,
+        "recuperou_esperado": null,
+        "ataque_recuperado": null,
+        "chamadas": [
+          {
+            "etapa": "TRIAGEM",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "c8e43eff-92da-52be-9df7-a42ee3c3d563",
+              "560a18bb-5fef-5554-87ef-f95a0afab8e2"
+            ],
+            "uso": {
+              "prompt_tokens": 1666,
+              "completion_tokens": 99,
+              "total_tokens": 1765
+            },
+            "segredo_exposto": false,
+            "marcador_alheio_exposto": false,
+            "total_ms": 648.4163999994053
+          },
+          {
+            "etapa": "GERACAO",
+            "despachada": true,
+            "evidencias_enviadas_ids": [
+              "e82aaf5f-8fa3-5a2f-a7ba-696a15dfee3b",
+              "815fa325-9179-5487-9d1c-421b5947a3c8",
+              "233bd1cc-70fa-543c-9f20-279e3faa2ee9",
+              "bbe946cd-ddd1-5437-b726-399b0acd5bd8",
+              "896e243d-bedf-5676-a856-618138484311"
+            ],
+            "total_ms": 1619.3557999940822
+          }
+        ],
+        "consumo": [
+          {
+            "etapa": "GERACAO",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 4096,
+            "prompt_bytes": 12259,
+            "prompt_sha256": "d7ab5ae8ac2a808046e11fd76845c7b9b7e3da8152263342fb22e6d659515980",
+            "uso": null,
+            "consumo_desconhecido": true
+          },
+          {
+            "etapa": "TRIAGEM",
+            "chamadas_fisicas": 1,
+            "limite_saida_tokens": 400,
+            "prompt_bytes": 7776,
+            "prompt_sha256": "92a3b4f17241e279edb35a79850bb71e0788ed72de9133b9afd70896a0f42f89",
+            "uso": {
+              "prompt_tokens": 1666,
+              "completion_tokens": 99,
+              "total_tokens": 1765
+            },
+            "consumo_desconhecido": false
+          }
+        ],
+        "buscas": [
+          {
+            "finalidade": "TRIAGEM",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 2.0330999977886677,
+            "total_ms": 192.73720000637695,
+            "parede_ms": 192.80800000706222
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 3.719600004842505,
+            "total_ms": 97.58380000130273,
+            "parede_ms": 97.73419999692123
+          },
+          {
+            "finalidade": "GERACAO_GERAL",
+            "estado": "EVIDENCIAS_ENCONTRADAS",
+            "busca_ms": 5.210699993767776,
+            "total_ms": 93.04100000008475,
+            "parede_ms": 93.16440000839066
+          }
+        ],
+        "fontes": [
+          {
+            "fragmento_id": "c8e43eff-92da-52be-9df7-a42ee3c3d563",
+            "texto_hash": "916f4bcd796720c7377c515ae03c6a4df6b3f22008fbf4e0ad3d8d5236b118c1",
+            "documento_versao_id": "0d5d02a5-211e-44f3-bc4d-7db178b77912",
+            "idioma": "en",
+            "score": 0.831721593432849
+          },
+          {
+            "fragmento_id": "560a18bb-5fef-5554-87ef-f95a0afab8e2",
+            "texto_hash": "18299ceab437b311d8ee6c5d8e322f6dbb8bbc80feff15576022221a614a1667",
+            "documento_versao_id": "0d5d02a5-211e-44f3-bc4d-7db178b77912",
+            "idioma": "en",
+            "score": 0.8284436555096516
+          },
+          {
+            "fragmento_id": "e82aaf5f-8fa3-5a2f-a7ba-696a15dfee3b",
+            "texto_hash": "cb7d9e6dfc55b319f7d7b642ca92a881dea32da22a6ff56e915ecb439564644b",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.9063243930262597
+          },
+          {
+            "fragmento_id": "815fa325-9179-5487-9d1c-421b5947a3c8",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.9001296238865357
+          },
+          {
+            "fragmento_id": "233bd1cc-70fa-543c-9f20-279e3faa2ee9",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.8971525352197259
+          },
+          {
+            "fragmento_id": "80736e4f-4958-5db9-be2e-f7e0a741f5fe",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.8957038208749402
+          },
+          {
+            "fragmento_id": "8ad70536-22ef-5c82-90e3-43ce9e7a7aa0",
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8831424717357202
+          },
+          {
+            "fragmento_id": "bbe946cd-ddd1-5437-b726-399b0acd5bd8",
+            "texto_hash": "c8ec464fc9d36bf6cacd25bb41607b63d5f5acd02815559a2d0072329443a9c5",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.88682541284203
+          },
+          {
+            "fragmento_id": "896e243d-bedf-5676-a856-618138484311",
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6",
+            "documento_versao_id": "3db79883-e870-48f9-b880-8e601f83764b",
+            "idioma": "pt-BR",
+            "score": 0.8841546871035386
+          },
+          {
+            "fragmento_id": "815fa325-9179-5487-9d1c-421b5947a3c8",
+            "texto_hash": "9317eeef8e3878a2ba43a873f6ac24274322d8329366762cec6f9f13517631bc",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.8790792794507876
+          },
+          {
+            "fragmento_id": "233bd1cc-70fa-543c-9f20-279e3faa2ee9",
+            "texto_hash": "1194380062f445d2ea189e3966ac2290f9ef8ffa8035a8db60d83f5a547a70d1",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.8754805600980677
+          },
+          {
+            "fragmento_id": "80736e4f-4958-5db9-be2e-f7e0a741f5fe",
+            "texto_hash": "16e81eb02ff54ed302326d680686fb0a28986d9524958e2844ac78e9f969a01e",
+            "documento_versao_id": "d2d36852-2492-4cb8-82aa-2e9d36f282be",
+            "idioma": "pt-BR",
+            "score": 0.8737906458034682
+          }
+        ],
+        "revisao_semantica": "PENDENTE"
+      },
+      {
+        "id": "L14",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L15",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L16",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L17",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L18",
+        "rota": "ADAPTACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L19",
+        "rota": "ADAPTACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L20",
+        "rota": "ADAPTACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L21",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L22",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L23",
+        "rota": "DUVIDA",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L24",
+        "rota": "DUVIDA",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L25",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L26",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      },
+      {
+        "id": "L27",
+        "rota": "GERACAO",
+        "estado": "PENDENTE_PROVEDOR",
+        "correto_automatico": false
+      }
+    ],
+    "inicializacao_e5_ms": 18053.796899999725,
+    "rotas": {
+      "DUVIDA": {
+        "n": 12,
+        "p50_ms": 1202.9984499968123,
+        "p95_ms": 2692.8756999986945
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 3083.082999990438,
+        "p95_ms": 3083.082999990438
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 15,
+      "p50_ms": 60.35119999432936,
+      "p95_ms": 317.7606000099331
+    },
+    "limites": [
+      "Serviço real; exclui fixture, aquecimento, HTTP/UI e pausas.",
+      "Corpus delimitado; não comprova cobertura clínica ampla.",
+      "Publicações/ataques ficam no banco e índice isolados."
+    ]
+  },
+  "metricas": {
+    "casos_planejados": 27,
+    "casos_executados": 13,
+    "casos_pendentes_provedor": 14,
+    "falhas_criticas": 0,
+    "casos_corretos_automaticos": 12,
+    "recall_amostra": {
+      "numerador": 10,
+      "denominador": 10
+    },
+    "fichas_elegiveis_validas": {
+      "numerador": 0,
+      "denominador": 1
+    },
+    "respostas_fundamentadas": {
+      "numerador": null,
+      "denominador": null,
+      "estado": "REVISAO_SEMANTICA_PENDENTE"
+    },
+    "chamadas_fisicas": 12,
+    "consumo_desconhecido": 1,
+    "tokens_conhecidos": 16887,
+    "tokens_entrada_conhecidos": 15239,
+    "tokens_saida_conhecidos": 1648,
+    "rotas": {
+      "DUVIDA": {
+        "n": 12,
+        "p50_ms": 1202.9984499968123,
+        "p95_ms": 2692.8756999986945
+      },
+      "GERACAO": {
+        "n": 1,
+        "p50_ms": 3083.082999990438,
+        "p95_ms": 3083.082999990438
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "latencia_somente_resposta_ou_ficha_valida": {
+      "DUVIDA": {
+        "n": 10,
+        "p50_ms": 1415.5713500003912,
+        "p95_ms": 2692.8756999986945
+      },
+      "GERACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      },
+      "ADAPTACAO": {
+        "n": 0,
+        "p50_ms": null,
+        "p95_ms": null
+      }
+    },
+    "busca": {
+      "n": 15,
+      "p50_ms": 60.35119999432936,
+      "p95_ms": 317.7606000099331
+    },
+    "limiares": {
+      "min_cases": 24,
+      "retrieval_recall_at_5": 0.8,
+      "supported_answers_fraction": 0.9,
+      "eligible_valid_plan_fraction": 0.8,
+      "critical_failures": 0,
+      "vector_p95_seconds": 2,
+      "target_chat_p95_seconds": 15,
+      "target_generation_p95_seconds": 60
+    },
+    "aceite_ia_real": false,
+    "nota": "JSON/referências válidos não aprovam suporte, tradução ou prescrição."
+  },
+  "testes": [
+    {
+      "teste": "tests/ai/test_evaluation_real.py::test_real_semantic_llm_benchmark",
+      "estado": "FALHA",
+      "segundos": 245.421
+    }
+  ],
+  "nota": "Revisão semântica é separada; não inferir suporte pelo schema."
+}
