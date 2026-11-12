@@ -1,32 +1,32 @@
 {
   "schema_version": 1,
-  "estado": "PENDENTE_OU_REPROVADO",
-  "aceite_ia_real": false,
+  "estado": "APROVADO",
+  "aceite_ia_real": true,
   "criterios": {
     "mesma_configuracao_e_casos": true,
     "deterministico_aprovado": true,
-    "amostra_completa": false,
-    "casos_obrigatorios": false,
+    "amostra_completa": true,
+    "casos_obrigatorios": true,
     "sem_falha_critica": true,
-    "fichas_validas": false,
+    "fichas_validas": true,
     "recuperacao": true,
     "revisao_semantica_vinculada": true,
-    "revisao_semantica_aprovada": false,
-    "latencia_de_respostas_validas_medida": false,
-    "metas_de_latencia": false
+    "revisao_semantica_aprovada": true,
+    "latencia_de_respostas_validas_medida": true,
+    "metas_de_latencia": true
   },
   "revisao_semantica": {
-    "fundamentadas": 2,
-    "total": 3,
-    "fracao": 0.6666666666666666,
+    "fundamentadas": 5,
+    "total": 5,
+    "fracao": 1.0,
     "limiar_aprovado": 0.9,
-    "idioma_unidades_seguranca_sem_falhas": false
+    "idioma_unidades_seguranca_sem_falhas": true
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
     "deterministico": "c8f882e82059241caab1be56052b08fd1eb290c0efe4e4ec23c361e137178d82",
-    "real": "0797ca7e61357c98adfd3e46465ac56dcbf477a7f8efbd23eefe1a8939fc02bd",
-    "revisao": "257b44ed4f793a951ab57c80d539a00ba00b66519bb0e7f5ea518b1906dfd2bc"
+    "real": "749f2dfd8c6af8290a95cd941e4c80c90ff8012f31e7e9e20ab1b051c9674129",
+    "revisao": "cc302e62507c42b089a8f73c1a929f06e5f20008ccd1fecf28d2cdd7fda9490f"
   },
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }

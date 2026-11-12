@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "observacao": "Observação de cabeçalhos na própria tentativa, sem chamada extra, retry ou alteração do adaptador/configuração. Sem corpo livre, payload, segredo ou identificador de organização.",
+  "respostas": [
+    {
+      "status": 200,
+      "tempo_utc": 1794526528.7743707,
+      "limites": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "999",
+        "x-ratelimit-remaining-tokens": "5913",
+        "x-ratelimit-reset-requests": "1m26.4s",
+        "x-ratelimit-reset-tokens": "15.652s"
+      }
+    },
+    {
+      "status": 200,
+      "tempo_utc": 1794526530.8721974,
+      "limites": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "998",
+        "x-ratelimit-remaining-tokens": "2787",
+        "x-ratelimit-reset-requests": "2m52.8s",
+        "x-ratelimit-reset-tokens": "39.097s"
+      }
+    },
+    {
+      "status": 200,
+      "tempo_utc": 1794526592.0429072,
+      "limites": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "997",
+        "x-ratelimit-remaining-tokens": "6022",
+        "x-ratelimit-reset-requests": "4m19.2s",
+        "x-ratelimit-reset-tokens": "14.835s"
+      }
+    },
+    {
+      "status": 200,
+      "tempo_utc": 1794526613.2332904,
+      "limites": {
+        "x-ratelimit-limit-requests": "1000",
+        "x-ratelimit-limit-tokens": "8000",
+        "x-ratelimit-remaining-requests": "996",
+        "x-ratelimit-remaining-tokens": "6172",
+        "x-ratelimit-reset-requests": "5m45.6s",
+        "x-ratelimit-reset-tokens": "13.71s"
+      }
+    }
+  ]
+}

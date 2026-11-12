@@ -165,3 +165,14 @@ A [ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md) registra a
 redução e os limites de uma futura troca automática de provedor. A seleção
 implementada ainda é explícita, sem fallback no ensaio. A redução não corrige
 as extrapolações L03/L04 preservadas no histórico.
+
+## Aceite vigente de AI-06
+
+Em 2026-11-12 a [amostra acadêmica v4](ai06-enxuto.md) foi aprovada pela
+[consolidação](ai06-consolidacao.json) e revisão vinculada: cinco saídas corretas
+e fundamentadas, duas fichas válidas, zero falhas críticas observadas. Os 30
+cenários locais e 117 backend/20 frontend já vinculados continuam evidência
+determinística. As três partes/duas recusas anteriores estão preservadas; L09/L13
+não foram refeitos. Não se alterou código/modelo/parâmetros para fechar a rodada.
+AI-06 CONCLUIDO; TST-01 permanece em execução até sua consolidação final.
+Percentis são descritivos; aprovação não qualifica reservas ou corrige falhas v3.

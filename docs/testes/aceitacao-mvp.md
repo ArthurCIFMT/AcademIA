@@ -103,10 +103,13 @@ constam no [registro de testes](comandos.md#aceitação-local-do-mvp-tst-01).
 
 ## Aceite ainda necessário
 
-Concluir a adaptação L18 e os dois ataques L23/L24 da
-[amostra AI-06 v4](ai06-enxuto.md), sem refazer L09/L13. A retomada mais recente
-foi recusada por quota na geração de L18. Regras locais e duas saídas reais não
-aprovam os três casos pendentes. Conferir qualidade/latência e SC-01/02 reais;
-SC-03/04 no navegador e SC-05/06 nos testes críticos complementam essa avaliação.
-Verificar identidade do código/evidências E2E e consolidar a matriz de aceite
-antes de marcar TST-01 CONCLUIDO ou fechar PG-01. Não remover o gate por quota.
+AI-06 está CONCLUIDO na [amostra v4](ai06-enxuto.md), com
+[consolidação APROVADO](ai06-consolidacao.json), revisão de cinco saídas e os
+dois ataques reais concluídos. Essa dependência deixa de ser pendente.
+
+O próximo passo de TST-01 é verificar/publicar a evidência local compatível com
+o código atual e consolidar a matriz de aceite com o hash aprovado de AI-06.
+SC-03/04 no navegador e SC-05/06 nos testes críticos complementam o modelo real;
+manter a distinção entre execução local controlada e qualidade LLM. TST-01
+permanece EM_EXECUCAO e PG-01 ABERTO até esse fechamento. Não repetir ensaio
+real aprovado ou apresentar aprovação de AI-06 como MVP já aceito.

@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA",
+  "estado": "APROVADO_NA_AMOSTRA_ACADEMICA_V4",
   "amostra_versao": 4,
   "casos_planejados": 5,
-  "casos_executados": 3,
-  "casos_pendentes_provedor": 2,
+  "casos_executados": 5,
+  "casos_pendentes_provedor": 0,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 2,
+  "casos_corretos_automaticos": 5,
   "recall_amostra": {
     "numerador": 1,
     "denominador": 1
   },
   "fichas_elegiveis_validas": {
-    "numerador": 1,
+    "numerador": 2,
     "denominador": 2
   },
   "respostas_fundamentadas": {
-    "numerador": null,
-    "denominador": null,
-    "estado": "REVISAO_SEMANTICA_PENDENTE"
+    "numerador": 5,
+    "denominador": 5,
+    "estado": "REVISAO_SEMANTICA_VINCULADA_APROVADA"
   },
-  "chamadas_fisicas": 5,
-  "consumo_desconhecido": 1,
-  "tokens_conhecidos": 10232,
-  "tokens_entrada_conhecidos": 7997,
-  "tokens_saida_conhecidos": 2235,
+  "chamadas_fisicas": 7,
+  "consumo_desconhecido": 0,
+  "tokens_conhecidos": 17142,
+  "tokens_entrada_conhecidos": 14024,
+  "tokens_saida_conhecidos": 3118,
   "rotas": {
     "DUVIDA": {
-      "n": 1,
-      "p50_ms": 1667.2562000021571,
+      "n": 3,
+      "p50_ms": 999.6373999892967,
       "p95_ms": 1667.2562000021571
     },
     "GERACAO": {
@@ -38,14 +38,14 @@
     },
     "ADAPTACAO": {
       "n": 1,
-      "p50_ms": 1506.6516999941086,
-      "p95_ms": 1506.6516999941086
+      "p50_ms": 3459.3412000103854,
+      "p95_ms": 3459.3412000103854
     }
   },
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
-      "n": 1,
-      "p50_ms": 1667.2562000021571,
+      "n": 3,
+      "p50_ms": 999.6373999892967,
       "p95_ms": 1667.2562000021571
     },
     "GERACAO": {
@@ -54,15 +54,15 @@
       "p95_ms": 5813.001200003782
     },
     "ADAPTACAO": {
-      "n": 0,
-      "p50_ms": null,
-      "p95_ms": null
+      "n": 1,
+      "p50_ms": 3459.3412000103854,
+      "p95_ms": 3459.3412000103854
     }
   },
   "busca": {
-    "n": 7,
-    "p50_ms": 74.90240001061466,
-    "p95_ms": 99.45840000000317
+    "n": 9,
+    "p50_ms": 74.06220000120811,
+    "p95_ms": 113.86840000341181
   },
   "limiares": {
     "min_cases": 5,
@@ -74,11 +74,11 @@
     "target_chat_p95_seconds": 15,
     "target_generation_p95_seconds": 60
   },
-  "aceite_ia_real": false,
-  "nota": "L09/L13 preservados. Retomada de L18 recusada por quota na geração; L23/L24 não executados. Consumo total inclui ambas as partes. Sem aceite AI-06/MVP.",
+  "aceite_ia_real": true,
+  "nota": "Aceite da amostra acadêmica v4 por consolidação/revisão vinculadas. Cinco saídas, sete chamadas selecionadas; dez incluindo tentativas antigas. MVP depende do fechamento TST-01; não qualifica reservas nem corrige falhas históricas v3.",
   "consumo_incluindo_partes": {
-    "chamadas_fisicas": 6,
-    "tokens_conhecidos": 10232,
+    "chamadas_fisicas": 10,
+    "tokens_conhecidos": 18937,
     "consumo_desconhecido": 2
   }
 }

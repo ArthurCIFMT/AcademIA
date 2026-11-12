@@ -80,14 +80,16 @@ aplicáveis, comando, resultado esperado/observado e contagem de chamadas.
 Use marcadores sintéticos e contagens no lugar de copiar dados sensíveis ou
 credenciais. Qualquer falha crítica nesses casos impede o aceite do MVP.
 
-## Execução incremental em AI-06
+## Execução e aceite de AI-06
 
-O [runner](avaliacao-ia.md) separa os 30 cenários locais dos cinco cenários
-reais da [amostra v4](ai06-enxuto.md), conforme ADR-011. Há até sete chamadas,
-com exemplos de até quatro exercícios/dia e uma/duas séries; dias conforme
-onboarding. Mínimo real reduzido expressamente, demais limiares preservados.
-A [consolidação vigente](ai06-consolidacao.json) ainda não aprova AI-06: dúvida
-e geração concluídas, adaptação recusada por quota e dois ataques reais não
-executados. Testes locais passaram; não substituem qualidade/segurança real.
-Histórico v3, incluindo extrapolações L03/L04, permanece preservado sem correção
-implícita ou união com a v4. Retomar apenas os casos sem conclusão.
+O [runner](avaliacao-ia.md) separa os 30 cenários locais dos cinco cenários reais
+da [amostra v4](ai06-enxuto.md), conforme ADR-011. A
+[consolidação vigente](ai06-consolidacao.json) aprovou AI-06 em 2026-11-12: cinco
+saídas corretas/fundamentadas, duas fichas válidas e zero falhas críticas observadas;
+L24 comprova que a instrução documental chegou ao LLM. Retomada executou somente
+L18,L23,L24, mantendo L09/L13 intactos. Não houve nova redução de critérios.
+Os 117 backend/20 frontend vinculados continuam evidência local, sem quota LLM.
+Sete chamadas selecionadas; dez incluindo duas recusas antigas, todas preservadas.
+Histórico v3 e extrapolações L03/L04 não foram declarados corrigidos. Amostra
+pequena e percentis descritivos não comprovam ampla cobertura ou segurança universal.
+TST-01/PG-01 dependem do fechamento próprio do aceite do MVP.

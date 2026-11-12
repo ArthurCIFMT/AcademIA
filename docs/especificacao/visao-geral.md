@@ -102,7 +102,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-05 e correção parcial de AI-06. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após AI-06 aprovado na amostra acadêmica v4. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -121,7 +121,7 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-O MVP ainda requer concluir AI-06 e o aceite final de TST-01. Por autorização
+AI-06 foi concluído na amostra acadêmica v4; o MVP ainda requer o aceite final de TST-01. Por autorização
 do responsável, o [E2E local de TST-01](../../docs/testes/aceitacao-mvp.md) foi adiantado
 e exercitou oito jornadas reais de navegador/API/banco com IA controlada.
 O [relatório](../../docs/testes/tst01-resultado.json) não aprova o modelo real ou PG-01.
@@ -137,15 +137,19 @@ exercícios por dia (preferir quatro viáveis), uma/duas séries e carga/cadênc
 a definir. Os dias vêm do onboarding; não se impõem quatro dias.
 
 O [guia vigente](../testes/ai06-enxuto.md) e a
-[consolidação](../testes/ai06-consolidacao.json) registram o resultado real e
-o estágio. A redução não corrige as falhas de chat L03/L04, preservadas nos
-[relatórios v3](../testes/historico/ai06-2026-11-12-amostra-v3/README.md).
-Não unir versões/modelos ou repetir resposta concluída para escolher melhor.
-Com amostra pequena, percentis são apenas descritivos. A última
-retomada de L18/L23/L24 preservou L09/L13; triagem de L18 passou, mas a geração
-foi recusada por quota. Os dois ataques continuam não executados. União e
-consumo de ambas as partes estão no guia, sem aceite de AI-06/TST-01 ou PG-01. Treino manual, saúde
-ausente, bloqueios, recursos e isolamento continuam obrigatórios.
+[consolidação APROVADO](../testes/ai06-consolidacao.json) registram cinco saídas
+corretas e fundamentadas, duas fichas válidas e zero falhas críticas observadas.
+A retomada publicou L18 e concluiu os dois ataques L23/L24 sem refazer L09/L13.
+Sete chamadas selecionadas; dez incluindo duas recusas antigas preservadas.
+Não foi necessário mudar código, modelo, parâmetros ou critérios para fechar.
+
+Amostra pequena, percentis descritivos e suporte geral do livro não comprovam
+cobertura clínica ampla ou segurança universal. Extrapolações L03/L04 da
+[amostra v3](../testes/historico/ai06-2026-11-12-amostra-v3/README.md) permanecem
+históricas, sem declaração de correção. Não unir versões/modelos nem repetir
+resposta concluída para escolher melhor. Treino manual, saúde ausente, bloqueios,
+recursos e isolamento continuam obrigatórios. TST-01/PG-01 aguardam fechamento
+próprio das evidências locais; aprovação de AI-06 não aprova outros provedores.
 
 A [reserva 20B](../testes/ai06-reserva.md) e a
 [integração Gemini](../testes/ai06-gemini.md) permanecem candidatas explícitas
@@ -164,9 +168,9 @@ sem análise assistida configurada, estado de saúde permanece null e a prepara�
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
 e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
-ADR-006. Geração/publicação foram exercitadas; a nova revisão permanece parcial por quota.
-Não se reutiliza o aceite técnico antigo para a versão corrigida. Pendências do corpus
-e do ensaio completo permanecem explícitas.
+ADR-006. A revisão vinculada da amostra v4 aprovou as cinco saídas. Não se reutilizou aceite
+antigo para a versão corrigida. Pendências do corpus e limites da demonstração
+permanecem explícitos; a aprovação é da configuração/modelo avaliados.
 
 ## 6. Fluxos e invariantes que coordenam as capacidades
 

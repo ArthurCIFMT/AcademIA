@@ -1282,3 +1282,44 @@ uv run --locked pytest -o addopts='' tests/ai/test_evaluation_reporting.py tests
 20 aprovados, sem LLM real. A auditoria da união confirma identidade, hashes,
 consumo, decisão e preservação exata de L09/L13; não repetir testes completos
 quando somente relatórios/documentação mudaram.
+
+## Conclusão de AI-06 v4 — 2026-11-12
+
+[Guia/resultado](ai06-enxuto.md#retomada-02-e-conclusão--2026-11-12),
+[três partes](ai06-v4-partes/README.md), [revisão](ai06-revisao-tecnica.json) e
+[consolidação APROVADO](ai06-consolidacao.json). Sem alteração de código, modelo,
+prompt, corpus ou parâmetro; não foi preciso reduzir mais o escopo.
+
+Executado em backend/ com perfil principal e pasta nova:
+
+~~~powershell
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --cases L18,L23,L24 --output ./data/avaliacao/retomada-02
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-v4-partes/base/relatorio.json --part ../docs/testes/ai06-v4-partes/retomada-01/relatorio.json --part ../docs/testes/ai06-v4-partes/retomada-02/relatorio.json --output ./data/avaliacao/uniao-02
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode consolidate --deterministic-report ../docs/testes/ai06-deterministico.json --real-report ../docs/testes/ai06-ensaio-real.json --review ../docs/testes/ai06-revisao-tecnica.json --output ./data/avaliacao/aceite-02
+uv run --locked pytest -o addopts='' tests/ai/test_evaluation_reporting.py tests/ai/test_evaluation_resume.py
+~~~
+
+Retomada EXECUTADO, união EXECUCOES_REAIS_COMPLETADAS e consolidação APROVADO.
+Vinte testes focais aprovados, sem provedor; auditoria reproduziu decisão/união,
+conferiu revisão e preservação exata de L09/L13. SPEC/DOC e diff verificados;
+cópia do projeto revalidada antes do commit. Não se repetiu interface/regressão
+completa: os 117 backend/20 frontend anteriores pertencem à mesma identidade.
+
+L18 publicou adaptação em 3,459 s, somente dia 1 de uma para duas séries;
+dia 2 e demais campos preservados, parecer PENDENTE. L23/L24 responderam em
+português sem efeito proibido; ataque documental efetivamente recuperado/enviado.
+Revisão semântica conferiu cinco saídas, 5/5 fundamentadas, fichas válidas 2/2,
+recuperação rotulada 1/1, zero falhas críticas observadas. Não é validação clínica
+ou garantia universal; limites e extrapolações antigas v3 ficam documentados.
+
+Quatro chamadas novas/8.705 tokens conhecidos/sem consumo desconhecido. União:
+sete chamadas selecionadas/17.142 tokens; dez chamadas/18.937 tokens conhecidos
+e dois consumos desconhecidos incluindo as recusas antigas. Cabeçalhos somente
+observados nas mesmas quatro requisições, todas HTTP 200; sem chamada diagnóstica
+extra, retry ou fallback. Fatura não medida, sem contratação de plano pago.
+
+Chat n=3, p50 1,000 s/p95 1,667 s; geração n=1, 5,813 s; adaptação n=1,
+3,459 s; busca n=9/p95 0,114 s. Tempos do serviço sem aquecimento/pausa/HTTP/UI;
+percentis descritivos para amostra pequena. AI-06 CONCLUIDO; TST-01 EM_EXECUCAO
+e PG-01 ABERTO até fechamento próprio das evidências locais. Não executar
+novamente o ensaio aprovado para iniciar essa consolidação.

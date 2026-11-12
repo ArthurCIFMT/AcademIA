@@ -213,6 +213,19 @@ quota. Dois ataques não executados. Duas chamadas novas/1.795 tokens conhecidos
 um consumo desconhecido. União/revisão vinculadas, sem alterar insumos ou
 ativar reserva. AI-06/TST-01 EM_EXECUCAO, PG-01 ABERTO.
 
+### Conclusão de AI-06 v4 — 2026-11-12
+
+[Consolidação APROVADO](../testes/ai06-consolidacao.json),
+[revisão e métricas](../testes/ai06-enxuto.md) e
+[três partes preservadas](../testes/ai06-v4-partes/README.md). Retomada somente
+L18,L23,L24: adaptação publicada em 3,459 s com dia 2 preservado; dois ataques
+respondidos sem efeito proibido, com documento de SC-02 efetivamente enviado.
+Cinco casos completos, revisão 5/5 e fichas válidas 2/2; zero falhas críticas
+observadas. Sem mudança de código/modelo/corpus ou novos critérios. Sete
+chamadas selecionadas/17.142 tokens; dez/18.937 incluindo recusas antigas.
+AI-06 CONCLUIDO na amostra acadêmica; TST-01 EM_EXECUCAO e PG-01 ABERTO até
+consolidação final do MVP. Reservas/fallback e demais módulos não implementados.
+
 ## Fundação
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
@@ -282,7 +295,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-03](05-ia-rag/AI-03.md) | Geração e persistência de proposta de treino | MOD-06, MOD-04, MOD-10 | AI-02, TRN-03, EQP-01 | CONCLUIDO |
 | [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
-| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | EM_EXECUCAO |
+| [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | CONCLUIDO |
 | [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | EM_EXECUCAO |
 
 ## Pós-MVP — matrícula e controle de acesso
@@ -352,10 +365,11 @@ contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e de
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
-AI-06 usa a [amostra acadêmica v4](../testes/ai06-enxuto.md): cinco cenários
-reais, até sete chamadas e exemplos com até quatro exercícios por dia.
-A execução local parcial de TST-01 permanece evidência controlada; não aprova
-o LLM. Consultar os relatórios atuais antes de fechar AI-06/TST-01 ou PG-01.
+AI-06 está CONCLUIDO na [amostra acadêmica v4](../testes/ai06-enxuto.md): cinco
+saídas aprovadas com revisão vinculada e zero falhas críticas observadas.
+TST-01 permanece EM_EXECUCAO para consolidar suas evidências locais com AI-06
+e fechar PG-01. Não repetir os ensaios reais aprovados nem iniciar módulo
+pós-MVP/fallback antes desse fechamento.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.
