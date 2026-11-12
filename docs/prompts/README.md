@@ -129,7 +129,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 
 [Runner](../testes/avaliacao-ia.md), [correção](../testes/ai06-correcao-fundamentacao.md),
 [relatórios](../testes/comandos.md#correção-com-livro-e-prompt-v3--2026-11-12) e
-[consolidação](../testes/ai06-consolidacao.json). Livro Nahas incorporado ao catálogo,
+[consolidação](../testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json). Livro Nahas incorporado ao catálogo,
 fontTools para CFF e política de quatro páginas físicas válidas. Prompt academia-ia-v3,
 duas consultas fixas e apresentação factual após validação; o LLM continua gerando os itens.
 286 BE, 107 backend/API/integração selecionados e 20 FE passaram; Ruff/formato/mypy
@@ -177,6 +177,19 @@ locais aprovadas, incluindo largura 390 px, retenção/rejeição e sessão/CSRF
 Bootstrap idempotente/migrations em banco vazio e rollback confirmados.
 Sem alteração funcional, migration ou MER. PG-01 segue ABERTO e TST-01
 EM_EXECUCAO, aguardando AI-06 e consolidação das evidências reais.
+
+### Demonstração acadêmica reduzida AI-06 — 2026-11-12
+
+[ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md),
+[escopo aprovado](../requisitos/escopo-ia-academico.md) e
+[guia/resultados/retomada](../testes/ai06-academico.md). Amostra v3 conserva os
+27 casos/30 cenários e simplifica somente os pedidos positivos: dois exercícios
+por dia, uma/duas séries e opcionais null, sem reduzir critérios de segurança.
+116 testes backend e 20 frontend no runner determinístico aprovados. No ensaio
+real, L13–L15 publicaram fichas curtas em 4,508–4,654 s; L16 falhou por quota,
+L17–L27 não executados. L03/L04 conservam falha de fundamentação. Nova identidade
+e revisão parcial vinculadas; não unir resultados v2/v3. Sem mudança funcional,
+MER ou dependências. AI-06/TST-01 EM_EXECUCAO e PG-01 ABERTO.
 
 ## Fundação
 
@@ -317,11 +330,12 @@ contexto/contrato e o cartão escolhido. São 15 MRFs/67 critérios; fontes e de
 funcionais já autorizadas não precisam ser reaprovadas. GATE-01–GATE-06 estão
 fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
-AI-06 está em execução: correção de livro/idioma e triagem v3 entregue,
-mas o novo ensaio está incompleto por quota diária TPD. Uma extrapolação de chat
-permanece na revisão parcial. Uma nova retomada concluiu L13; ver a seção de reserva explícita. Retomar os oito casos restantes e consolidar antes
-de concluir o aceite de TST-01. Após ADR-009, respeitar a nova identidade e o
-conjunto completo da implementação atual descrito na seção Gemini. Sua execução local parcial foi autorizada e realizada. Gates pós-MVP e marcos permanecem abertos até evidências reais.
+AI-06 está em execução: [demonstração acadêmica v3](../testes/ai06-academico.md)
+com três fichas curtas publicadas, quota interrompendo L16 e onze casos não
+executados. Duas respostas de chat não têm fundamentação completa. A retomada
+usa somente L16–L27 e preserva respostas concluídas; não une amostras/modelos
+diferentes. TST-01 tem execução local parcial aprovada, com consolidação final
+dependente de AI-06. Gates pós-MVP e PG-01 continuam abertos.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

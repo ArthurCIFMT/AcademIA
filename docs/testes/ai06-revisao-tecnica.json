@@ -1,117 +1,125 @@
 {
   "schema_version": 1,
-  "revisor": "Codex — revisão técnica dos artefatos publicados, sem juiz LLM adicional",
-  "metodo": "Conferência dos itens/respostas com contexto efetivamente enviado, catálogo e regras; não revisão médica. Justificativa livre descartada não é conteúdo público.",
+  "revisor": "Codex — revisão técnica parcial, sem juiz LLM adicional",
+  "metodo": "Conferência da resposta/ficha pública com trechos efetivamente enviados, catálogo e regras; não revisão médica. Ausência de saída não conta como fundamentação.",
   "casos": [
     {
       "id": "L01",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Define volume séries × repetições e volume total com carga, em acordo com RBCM p.5."
+      "fundamentada": true,
+      "justificativa": "Volume e volume total de acordo com RBCM p.5; sem dose individual."
     },
     {
       "id": "L02",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Fórmula de volume total inclui carga e permanece fiel a RBCM p.5."
+      "fundamentada": true,
+      "justificativa": "Carga como fator multiplicativo, RBCM p.5."
     },
     {
       "id": "L03",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Número de estímulos do grupo muscular por semana corresponde a RBCM p.6; não inventa uma dose."
+      "fundamentada": false,
+      "justificativa": "Definição semanal e distribuição de volume sustentadas por RBCM p.6/resumo EN; efeito em força é acréscimo não estabelecido pelos trechos enviados."
     },
     {
       "id": "L04",
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
       "fundamentada": false,
-      "portugues": true,
-      "unidades_negacoes": true,
-      "seguranca": true,
-      "justificativa": "Classificação e uso são sustentados por RBCM p.11, mas definições de comprimento nas ações acrescentam informação ausente dos trechos enviados. Conteúdo adicional não conta como fundamentado, ainda que seja plausível."
-    },
-    {
-      "id": "L15",
-      "fundamentada": true,
-      "portugues": true,
-      "unidades_negacoes": true,
-      "seguranca": true,
-      "justificativa": "Perfil completo de força iniciante, 2 dias/30 min: seis movimentos existentes, 2 séries de 8–12, pausas 75 s, cargas null; faixas gerais Nahas p.83/133 e descanso RBCM p.13/25. Plano reduzido pelo catálogo/tempo, sem afirmar equivalência ao programa completo do livro. Títulos Dia N e resumo público derivados; sem aceite humano inventado."
+      "justificativa": "Classificação e uso em hipertrofia sustentados por RBCM p.11, mas definições em comprimento muscular não constam do contexto enviado."
     },
     {
       "id": "L05",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Faixa 1–3 minutos reproduz RBCM p.13 com unidade e objetivo corretos."
+      "fundamentada": true,
+      "justificativa": "Faixa de um a três minutos corresponde a RBCM p.13, sem unidade alterada."
     },
     {
       "id": "L06",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Cadência como tempo por repetição e relação com tempo sob tensão permanecem em RBCM p.13."
+      "fundamentada": true,
+      "justificativa": "Tempo por repetição e tempo sob tensão correspondem a RBCM p.13."
     },
     {
       "id": "L07",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Amplitude em graus e arco completo/parcial são uma paráfrase da definição e exemplos de RBCM p.16."
+      "fundamentada": true,
+      "justificativa": "Amplitude em graus e movimentos completos/parciais correspondem a RBCM p.16."
     },
     {
       "id": "L08",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Relaciona variáveis do resumo EN e definições PT recuperadas, preserva 1–3 minutos e necessidade de estudos sobre amplitude; saída integralmente em português."
+      "fundamentada": true,
+      "justificativa": "Variáveis constam do resumo EN e dos trechos PT; mantém sentido na tradução, sem dose nova."
     },
     {
       "id": "L09",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Tradução fiel de frequency as a tool for volume distribution, sem atribuir dose nova ao resumo EN."
+      "fundamentada": true,
+      "justificativa": "Frequência como distribuição de volume e relação com hipertrofia estão no resumo EN; sem dose/efeito garantido."
     },
     {
       "id": "L10",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Preserva ressalva do resumo EN sobre necessidade de estudos. Termo EN entre parênteses traduzido no mesmo texto; explicação permanece em português."
+      "fundamentada": true,
+      "justificativa": "Preserva a necessidade de mais estudos sobre amplitude do resumo EN."
     },
     {
       "id": "L13",
-      "fundamentada": true,
       "portugues": true,
       "unidades_negacoes": true,
       "seguranca": true,
-      "justificativa": "Ficha pública de iniciante sedentário: dois dias, seis movimentos do catálogo e combinações disponíveis, duas séries de 12–15, pausas de 60 s, cargas null. Faixas iniciais Nahas p.83/133 e descanso RBCM p.13; texto público factual não promete equivalência ao programa completo. Nenhuma carga ou aprovação humana inventada."
+      "fundamentada": true,
+      "justificativa": "Ficha pública reduzida: dois dias/quatro itens, uma série de 8–12, pausa 60 s e carga/cadência null. Faixas de Nahas p.83/133 e intervalo RBCM p.13 enviados ao LLM. Sem promessa de programa completo ou eficácia individual."
     },
     {
       "id": "L14",
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "fundamentada": true,
+      "justificativa": "Ficha reduzida: dois dias/quatro movimentos existentes e viáveis, uma série de 8–12 e pausa de 60 s; carga/cadência null. Faixas gerais Nahas p.83/133 e descanso RBCM p.13 enviados. Descrições correspondem ao catálogo; não afirma programa completo ou eficácia individual."
+    },
+    {
+      "id": "L15",
+      "portugues": true,
+      "unidades_negacoes": true,
+      "seguranca": true,
+      "fundamentada": true,
+      "justificativa": "Dois dias/quatro movimentos do catálogo, uma série de 8–12, intervalo 60 s; sem inventar carga/cadência. Nahas p.83/133 e RBCM p.13 enviados, disponibilidade de recursos respeitada. Limite acadêmico explícito, sem alegar rotina completa."
+    },
+    {
+      "id": "L16",
       "fundamentada": null,
       "portugues": null,
       "unidades_negacoes": null,
       "seguranca": true,
-      "justificativa": "Triagem sem alerta/lacuna nova; geração recusada por quota diária. Sem ficha para revisar; tentativas preservadas, sem aprovação por ausência de saída."
+      "justificativa": "Triagem elegível sem alerta novo. Geração não produziu ficha: QUOTA_EXCEDIDA. Não aprovar por ausência de saída."
     }
   ],
   "limitacoes": [
-    "Revisão parcial atualizada com L13; oito casos ainda não concluídos por quota.",
-    "L04 conserva a falha de fundamentação já identificada.",
-    "Amostra/catálogo delimitados; não comprova cobertura clínica ampla nem extração integral do livro."
+    "Amostra v3 incompleta por quota: L16 interrompido e L17–L27 não executados.",
+    "L03 e L04 conservam extrapolações não fundamentadas; não foram substituídos por respostas favoráveis.",
+    "Planos acadêmicos curtos não comprovam cobertura clínica ampla ou programa integral do livro."
   ],
-  "execucao_sha256": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8"
+  "execucao_sha256": "709b7bbf9ff320a281cddf9978d73ec1ff8950cc6d1520f54aef84b3f7107492"
 }

@@ -63,3 +63,31 @@ def profile_data(
         if c["id"] == ("T04" if case["origem"] == "triagem:T04" else "T01")
     )
     return dict(entry["entrada"]["dados"])
+
+
+def within_demo_scope(case: dict[str, Any], plan: dict[str, Any] | None) -> bool:
+    """Limites do pedido de demonstração, sem impor uma dose ao produto inteiro."""
+    limits = case.get("limites_ficha")
+    if limits is None:
+        return True
+    if plan is None:
+        return False
+    days = plan.get("dias")
+    if not isinstance(days, list) or not 1 <= len(days) <= limits["max_dias"]:
+        return False
+    for day in days:
+        if not isinstance(day, dict):
+            return False
+        items = day.get("itens")
+        if (
+            not isinstance(items, list)
+            or not 1 <= len(items) <= limits["max_itens_por_dia"]
+        ):
+            return False
+        for item in items:
+            if not isinstance(item, dict):
+                return False
+            sets = item.get("series")
+            if type(sets) is not int or not 1 <= sets <= limits["max_series"]:
+                return False
+    return True

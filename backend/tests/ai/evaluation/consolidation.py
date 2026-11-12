@@ -10,6 +10,7 @@ from tests.ai.evaluation.reporting import (
     json_sha,
     load_dataset,
     summarize_real,
+    valid_plan,
 )
 
 
@@ -61,7 +62,7 @@ def consolidate(deterministic: Path, real: Path, review: Path | None) -> dict[st
         )
     )
     eligible = [r for r in rows if r.get("esperado") == "PUBLICADA"]
-    valid = sum(r.get("estado") == "PUBLICADA" for r in eligible)
+    valid = sum(valid_plan(r) for r in eligible)
     positives = [r for r in rows if r.get("recuperou_esperado") is not None]
     recalled = sum(bool(r["recuperou_esperado"]) for r in positives)
     obligations = [r for r in rows if r.get("esperado") not in {"PUBLICADA"}]

@@ -1,5 +1,7 @@
 # AI-06 — Retomada e candidato gratuito de reserva
 
+Registro da amostra v2; [demonstração acadêmica v3 vigente](ai06-academico.md).
+
 ## Resultado
 
 O principal continua Groq/openai/gpt-oss-120b. A retomada concluiu L13: ficha
@@ -16,7 +18,7 @@ A consolidação principal tem 20 casos exercitados, 19 resultados automáticos
 esperados, duas fichas publicadas e zero falhas críticas observadas. Restam oito
 casos sem conclusão: L14,L16,L17,L18,L19,L20,L23,L24. Sete estão marcados pendentes
 e L14 é falha de quota. L04 mantém sua falha de fundamentação. O
-[resumo](ai06-resumo.json) e a [consolidação](ai06-consolidacao.json) continuam sem aceite.
+[resumo](historico/ai06-2026-11-12-pre-academico/ai06-resumo.json) e a [consolidação](historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json) continuam sem aceite.
 
 ## Candidato avaliado
 

@@ -97,3 +97,26 @@ def test_manual_workout_does_not_depend_on_any_ai_service(
     monkeypatch.setattr("app.modules.ai.generation.get_encoder", fail)
     monkeypatch.setattr("app.modules.ai.generation.get_vector_store", fail)
     assert manual_base(sessions, people, snapshot, item)
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize("sets", [1, 2])
+def test_academic_base_uses_declared_sets(
+    sessions: sessionmaker[Session], sets: int
+) -> None:
+    from app.modules.training.publication import published_workout
+    from tests.ai.test_evaluation_real import manual_base, prepare_onboarding
+    from tests.ai.test_triage import BASE
+    from tests.ai.test_triage_integration import seed
+
+    people = seed(sessions)
+    item = exercise(sessions, people["admin"])
+    snapshot = prepare_onboarding(sessions, people["cliente"], BASE)
+    id = manual_base(sessions, people, snapshot, item, series=sets)
+    with sessions.begin() as session:
+        result = published_workout(
+            session, people["cliente"], people["cliente"].user_id, id
+        )
+        assert result
+        assert len(result.ficha.dias) == 2
+        assert all(i.series == sets for d in result.ficha.dias for i in d.itens)

@@ -128,20 +128,27 @@ O [relatório](../../docs/testes/tst01-resultado.json) não aprova o modelo real
 O [runner](../../docs/testes/avaliacao-ia.md) e a [correção](../../docs/testes/ai06-correcao-fundamentacao.md)
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
-A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
-o [limite diário TPD da Groq](../../docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
-Duas fichas foram publicadas em teste (L13/L15); oito casos seguem sem conclusão
-por quota. Isso não aprova os demais perfis ou AI-06. A [reserva explícita](../testes/ai06-reserva.md)
-prepara GPT-OSS 20B com a mesma chave, mas seu ensaio encontrou JSON recusado na
-geração e falha de fidelidade/unidades no chat; candidato não qualificado, sem
-troca automática ou alteração do principal (ADR-008).
-A [integração Gemini](../testes/ai06-gemini.md) acrescentou perfil explícito e
-adaptador nativo sem trocar o principal. Acesso/JSON e regressões passaram; o
-ensaio real foi interrompido por HTTP 503 e não qualifica o candidato. A nova
-identidade inclui configuração/adaptadores/fábrica/composição; evidências
-anteriores não aprovam a nova implementação nem se unem a ela.
-TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](../../docs/testes/ai06-consolidacao.json)
-registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
+As versões anteriores e suas falhas foram preservadas. A
+[ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md) e o
+[escopo acadêmico](../requisitos/escopo-ia-academico.md) registram a redução
+explícita dos pedidos sintéticos, sem reduzir segurança ou preencher saúde
+ausente. A [amostra v3](../testes/ai06-casos-v3.json) conserva os 27 casos e
+30 cenários; o avaliador valida o tamanho/séries da ficha publicada.
+
+O [ensaio atual](../testes/ai06-academico.md) publicou três fichas curtas (L13–L15)
+em 4,508–4,654 s. L16 foi interrompido por quota, L17–L27 não executados;
+adaptações e ataques reais ainda não foram avaliados nesta versão. L03/L04
+conservam extrapolações de fundamentação. Os 116 testes backend e 20 frontend
+do runner determinístico passaram, mas não substituem a avaliação real.
+A [consolidação vigente](../testes/ai06-consolidacao.json) mantém AI-06 e TST-01
+em execução e PG-01 aberto. Há roteiro de retomada somente dos casos sem
+conclusão, sem repetir respostas concluídas ou unir versões/modelos.
+
+A [reserva 20B](../testes/ai06-reserva.md) e a
+[integração Gemini](../testes/ai06-gemini.md) permanecem candidatas explícitas
+não qualificadas pelos ensaios anteriores. Não existe fallback automático ou
+pago. [Resultados anteriores](../testes/historico/ai06-2026-11-12-pre-academico/README.md)
+continuam disponíveis; não aprovam a nova identidade de código/amostra.
 A [indexação](../../docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus

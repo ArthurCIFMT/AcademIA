@@ -96,7 +96,11 @@ def main() -> int:
         targets = ["tests/ai/test_evaluation_real.py"]
     else:
         targets = sorted({t for c in dataset["cenarios"] for t in c["testes"]})
-        targets += ["tests/contracts"]
+        targets += [
+            "tests/contracts",
+            "tests/ai/test_academic_scope.py",
+            "tests/ai/test_evaluation_guards.py::test_academic_base_uses_declared_sets",
+        ]
         from app.modules.ai.orchestration.settings import Config
 
         if Config.load().provider == "gemini":

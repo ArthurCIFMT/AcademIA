@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-12",
-  "base_implementacao": "d48edc7b96620d1d7348d37f5a0fba3ebf27858c",
+  "base_implementacao": "6c8672262240fe2008513a65f66f43e35921effd",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -78,6 +78,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-009-gemini-api.md",
           "titulo": "Gemini nativo, credencial separada e avaliação por provedor"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md",
+          "titulo": "Avaliação acadêmica reduzida e insumos estáveis"
         }
       ]
     },
@@ -280,6 +284,10 @@
           "titulo": "Configuração candidata Gemini 3.5 Flash-Lite",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/requisitos/escopo-ia-academico.md",
+          "titulo": "Demonstrações reduzidas, opcionais e limites mantidos"
         }
       ]
     },
@@ -417,7 +425,7 @@
           "linguagem": "json"
         },
         {
-          "arquivo": "docs/testes/ai06-casos-v2.json",
+          "arquivo": "docs/testes/ai06-casos-v3.json",
           "titulo": "Rastreabilidade SV/SC e 27 casos realistas rotulados",
           "tipo": "codigo",
           "linguagem": "json"
@@ -461,6 +469,10 @@
         {
           "arquivo": "docs/testes/ai06-gemini.md",
           "titulo": "Ensaio separado Gemini e critérios de qualificação"
+        },
+        {
+          "arquivo": "docs/testes/ai06-academico.md",
+          "titulo": "Avaliação com amostra acadêmica v3"
         }
       ]
     },

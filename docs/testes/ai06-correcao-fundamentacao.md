@@ -1,5 +1,7 @@
 # Correção de idioma e fundamentação — AI-06
 
+Registro da amostra v2; [demonstração acadêmica v3 vigente](ai06-academico.md).
+
 O LLM continua gerando a estrutura da ficha: dias, exercícios existentes,
 séries, repetições, carga quando conhecida, cadência, pausas e observações.
 O backend valida e publica; o instrutor mantém parecer posterior e alternativa manual.
@@ -69,8 +71,8 @@ Revisão de chat usa resposta do modelo e fontes; revisão de ficha usa os itens
 resumo e fontes da ficha efetivamente publicada. Saídas brutas ficam em recibos
 privados de teste e suas limitações são registradas separadamente.
 Não exigir avaliação médica externa para o cenário acadêmico.
-Resultados e limitações estão em [comandos](comandos.md), [resumo](ai06-resumo.json),
-[revisão](ai06-revisao-tecnica.json) e [consolidação](ai06-consolidacao.json).
+Resultados e limitações estão em [comandos](comandos.md), [resumo](historico/ai06-2026-11-12-pre-academico/ai06-resumo.json),
+[revisão](historico/ai06-2026-11-12-pre-academico/ai06-revisao-tecnica.json) e [consolidação](historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json).
 
 ## Retomada quando o provedor interrompe o lote
 Cada nova rodada é explícita. --cases executa somente IDs solicitados e conhecidos,

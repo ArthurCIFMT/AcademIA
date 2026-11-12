@@ -24,7 +24,7 @@ def json_sha(path: Path) -> str:
 
 def load_dataset() -> dict[str, Any]:
     data: dict[str, Any] = json.loads(
-        (ROOT / "docs/testes/ai06-casos-v2.json").read_text("utf-8")
+        (ROOT / "docs/testes/ai06-casos-v3.json").read_text("utf-8")
     )
     ids = [c["id"] for c in data["cenarios"]]
     expected = {f"SV-{n:02}" for n in range(1, 25)} | {
@@ -116,7 +116,7 @@ def identity() -> dict[str, Any]:
     from app.modules.knowledge.ingestion.contracts import ExtractionPolicy
 
     paths = [
-        "docs/testes/ai06-casos-v2.json",
+        "docs/testes/ai06-casos-v3.json",
         "docs/testes/casos-triagem-v1.json",
         "docs/testes/rag05-consultas-v1.json",
         "materiais/rag/corpus-inicial.json",
@@ -150,6 +150,12 @@ def identity() -> dict[str, Any]:
                 "backend/app/modules/ai/orchestration/presentation.py",
                 "backend/app/modules/knowledge/ingestion/parser.py",
                 "backend/app/modules/knowledge/ingestion/contracts.py",
+                "backend/tests/ai/evaluation/__main__.py",
+                "backend/tests/ai/evaluation/fixtures.py",
+                "backend/tests/ai/test_evaluation_real.py",
+                "backend/tests/ai/evaluation/reporting.py",
+                "backend/tests/ai/evaluation/consolidation.py",
+                "backend/tests/ai/evaluation/resume.py",
                 "backend/uv.lock",
             )
         },
@@ -186,6 +192,10 @@ def write_json(path: Path, data: object) -> None:
     temporary.replace(path)
 
 
+def valid_plan(row: dict[str, Any]) -> bool:
+    return row.get("estado") == "PUBLICADA" and row.get("correto_automatico") is True
+
+
 def summarize_real(data: dict[str, Any]) -> dict[str, Any]:
     from app.modules.ai.orchestration.settings import Config
 
@@ -209,7 +219,7 @@ def summarize_real(data: dict[str, Any]) -> dict[str, Any]:
             "denominador": len(positives),
         },
         "fichas_elegiveis_validas": {
-            "numerador": sum(r.get("estado") == "PUBLICADA" for r in eligible),
+            "numerador": sum(valid_plan(r) for r in eligible),
             "denominador": len(eligible),
         },
         "respostas_fundamentadas": {
@@ -230,6 +240,7 @@ def summarize_real(data: dict[str, Any]) -> dict[str, Any]:
                     for r in cases
                     if r.get("rota") == route
                     and r.get("estado") in {"RESPOSTA_PRONTA", "PUBLICADA"}
+                    and r.get("correto_automatico") is True
                     and r.get("chamadas")
                     and "total_ms" in r
                 ]

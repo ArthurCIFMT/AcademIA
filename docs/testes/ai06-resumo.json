@@ -1,39 +1,40 @@
 {
   "schema_version": 1,
-  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA",
+  "amostra_versao": 3,
   "casos_planejados": 27,
-  "casos_executados": 20,
-  "casos_pendentes_provedor": 7,
+  "casos_executados": 16,
+  "casos_pendentes_provedor": 11,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 19,
+  "casos_corretos_automaticos": 15,
   "recall_amostra": {
     "numerador": 10,
     "denominador": 10
   },
   "fichas_elegiveis_validas": {
-    "numerador": 2,
-    "denominador": 3
+    "numerador": 3,
+    "denominador": 4
   },
   "respostas_fundamentadas": {
     "numerador": null,
     "denominador": null,
     "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 16,
+  "chamadas_fisicas": 18,
   "consumo_desconhecido": 1,
-  "tokens_conhecidos": 29814,
-  "tokens_entrada_conhecidos": 24725,
-  "tokens_saida_conhecidos": 5089,
+  "tokens_conhecidos": 35621,
+  "tokens_entrada_conhecidos": 29986,
+  "tokens_saida_conhecidos": 5635,
   "rotas": {
     "DUVIDA": {
       "n": 12,
-      "p50_ms": 1037.275700000464,
-      "p95_ms": 1829.9139000009745
+      "p50_ms": 1043.187700000999,
+      "p95_ms": 1462.220100002014
     },
     "GERACAO": {
-      "n": 8,
-      "p50_ms": 92.16675000061514,
-      "p95_ms": 5338.749400005327
+      "n": 4,
+      "p50_ms": 4526.129099998798,
+      "p95_ms": 4653.840500002843
     },
     "ADAPTACAO": {
       "n": 0,
@@ -44,13 +45,13 @@
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
       "n": 10,
-      "p50_ms": 1063.2234000004246,
-      "p95_ms": 1829.9139000009745
+      "p50_ms": 1100.221300002886,
+      "p95_ms": 1462.220100002014
     },
     "GERACAO": {
-      "n": 2,
-      "p50_ms": 5179.402500005381,
-      "p95_ms": 5338.749400005327
+      "n": 3,
+      "p50_ms": 4544.366199988872,
+      "p95_ms": 4653.840500002843
     },
     "ADAPTACAO": {
       "n": 0,
@@ -59,9 +60,9 @@
     }
   },
   "busca": {
-    "n": 21,
-    "p50_ms": 51.090699998894706,
-    "p95_ms": 106.63969999586698
+    "n": 24,
+    "p50_ms": 54.20299999968847,
+    "p95_ms": 216.198499998427
   },
   "limiares": {
     "min_cases": 24,
@@ -74,10 +75,5 @@
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "Oito casos sem resultado concluído; modelos distintos não se misturam. Sem aceite do AI-06/MVP.",
-  "consumo_incluindo_partes": {
-    "chamadas_fisicas": 22,
-    "tokens_conhecidos": 33414,
-    "consumo_desconhecido": 5
-  }
+  "nota": "Três fichas curtas publicadas. L16 interrompido; L17–L27 pendentes. L03/L04 não fundamentadas; sem aceite AI-06/MVP."
 }

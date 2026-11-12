@@ -3,7 +3,7 @@
 ## Escopo entregue
 
 Runner em backend/tests/ai/evaluation, matriz
-[SV/SC e 27 amostras](ai06-casos-v2.json) e
+[SV/SC e 27 amostras](ai06-casos-v3.json) e
 [configuração vigente](../requisitos/schemas/configuracao-ia-v2.json).
 Modos separados: determinístico, real, união de partes e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
@@ -146,3 +146,15 @@ registram a integração nativa. O candidato ainda não foi qualificado: três l
 encerraram por HTTP 503. Configuração/fábrica/adaptadores/composição agora fazem
 parte da identidade; relatórios anteriores da Groq não aprovam o código novo e
 não podem ser unidos às novas partes. Principal permanece 120B, sem fallback.
+
+## Escopo reduzido da amostra vigente
+
+A [amostra v3 e reprodução](ai06-academico.md), por autorização do responsável,
+usa fichas de demonstração menores e progressão 1→2 séries. Não reduz a matriz
+crítica, os limiares ou campos obrigatórios. Insumos e avaliador são fixados antes
+do ensaio; partes v2 não se unem à v3. Dados opcionais null não são falhas, nem
+ausências de saúde presumidas como negativas.
+
+A execução vigente e a retomada dos doze casos sem conclusão estão no
+[guia da amostra acadêmica v3](ai06-academico.md). Resultados das preparações
+anteriores são históricos; não se unem à nova amostra/código para obter aceite.

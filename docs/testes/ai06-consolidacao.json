@@ -3,7 +3,7 @@
   "estado": "PENDENTE_OU_REPROVADO",
   "aceite_ia_real": false,
   "criterios": {
-    "mesma_configuracao_e_casos": false,
+    "mesma_configuracao_e_casos": true,
     "deterministico_aprovado": true,
     "amostra_completa": false,
     "casos_obrigatorios": false,
@@ -17,16 +17,16 @@
   },
   "revisao_semantica": {
     "fundamentadas": 11,
-    "total": 13,
-    "fracao": 0.8461538461538461,
+    "total": 14,
+    "fracao": 0.7857142857142857,
     "limiar_aprovado": 0.9,
     "idioma_unidades_seguranca_sem_falhas": false
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "011a603b4dc402193bc25496f20fc8105714d5099831c9b95b19878bbee9079f",
-    "real": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8",
-    "revisao": "b43bf1bf5b0d9d01244b0e9629f3411c92511e6477ce3f7571c93475da92da94"
+    "deterministico": "b8ce62b982cd7579563a330279b1e4e6d8a6fd1003fed1e9c6832112d0394f58",
+    "real": "709b7bbf9ff320a281cddf9978d73ec1ff8950cc6d1520f54aef84b3f7107492",
+    "revisao": "f273fdbe870c45c8518bc588f46ae59ad38f7293b79b9e95a8563b9e303c3964"
   },
-  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01. Composição/adaptadores agora possuem fingerprint ampliado. Relatórios anteriores continuam históricos e não se unem à nova implementação."
+  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }

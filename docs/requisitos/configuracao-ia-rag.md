@@ -82,3 +82,12 @@ de pensamentos são somados à saída; includeThoughts=false não equivale a
 consumo zero. A seleção é explícita antes da execução, sem fallback automático.
 [Estado de qualificação](../testes/ai06-gemini.md); respostas de modelos distintos
 não são intercambiáveis como evidência de aceite.
+
+## Demonstração acadêmica reduzida
+
+O [escopo aprovado](escopo-ia-academico.md) e a [ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md)
+reduzem os pedidos da amostra v3 para até dois exercícios/dia e uma/duas séries.
+São limites dos exemplos, não uma dose universal ou nova restrição do produto.
+Carga/cadência null e observações opcionais vazias já são aceitos; campos de
+saúde ausentes continuam explícitos e bloqueios/evidências permanecem.
+Modelo, corpus, prompts de produção, schemas, orçamento e metas não mudam.

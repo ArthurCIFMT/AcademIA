@@ -11,6 +11,7 @@ from tests.ai.evaluation.reporting import (
     load_dataset,
     summarize_real,
     timings,
+    valid_plan,
 )
 
 IDENTITY_KEYS = (
@@ -64,8 +65,7 @@ def technical_acceptance(rows: list[dict[str, Any]], expected_count: int) -> boo
     threshold = float(str(Config.load().quality["eligible_valid_plan_fraction"]))
     return all(r.get("correto_automatico") for r in required) and (
         not eligible
-        or sum(r.get("estado") == "PUBLICADA" for r in eligible) / len(eligible)
-        >= threshold
+        or sum(valid_plan(r) for r in eligible) / len(eligible) >= threshold
     )
 
 

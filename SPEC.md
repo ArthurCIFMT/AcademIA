@@ -146,20 +146,27 @@ O [relatório](docs/testes/tst01-resultado.json) não aprova o modelo real ou PG
 O [runner](docs/testes/avaliacao-ia.md) e a [correção](docs/testes/ai06-correcao-fundamentacao.md)
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
-A versão anterior e suas falhas foram preservadas. A nova amostra está parcial:
-o [limite diário TPD da Groq](docs/testes/ai06-limites-provedor.json) interrompeu as chamadas.
-Duas fichas foram publicadas em teste (L13/L15); oito casos seguem sem conclusão
-por quota. Isso não aprova os demais perfis ou AI-06. A [reserva explícita](docs/testes/ai06-reserva.md)
-prepara GPT-OSS 20B com a mesma chave, mas seu ensaio encontrou JSON recusado na
-geração e falha de fidelidade/unidades no chat; candidato não qualificado, sem
-troca automática ou alteração do principal (ADR-008).
-A [integração Gemini](docs/testes/ai06-gemini.md) acrescentou perfil explícito e
-adaptador nativo sem trocar o principal. Acesso/JSON e regressões passaram; o
-ensaio real foi interrompido por HTTP 503 e não qualifica o candidato. A nova
-identidade inclui configuração/adaptadores/fábrica/composição; evidências
-anteriores não aprovam a nova implementação nem se unem a ela.
-TST-01 permanece em execução parcial, com aceite final dependente de AI-06. [Relatórios atuais](docs/testes/ai06-consolidacao.json)
-registram as etapas ausentes e a revisão parcial, sem relaxar critérios.
+As versões anteriores e suas falhas foram preservadas. A
+[ADR-010](docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md) e o
+[escopo acadêmico](docs/requisitos/escopo-ia-academico.md) registram a redução
+explícita dos pedidos sintéticos, sem reduzir segurança ou preencher saúde
+ausente. A [amostra v3](docs/testes/ai06-casos-v3.json) conserva os 27 casos e
+30 cenários; o avaliador valida o tamanho/séries da ficha publicada.
+
+O [ensaio atual](docs/testes/ai06-academico.md) publicou três fichas curtas (L13–L15)
+em 4,508–4,654 s. L16 foi interrompido por quota, L17–L27 não executados;
+adaptações e ataques reais ainda não foram avaliados nesta versão. L03/L04
+conservam extrapolações de fundamentação. Os 116 testes backend e 20 frontend
+do runner determinístico passaram, mas não substituem a avaliação real.
+A [consolidação vigente](docs/testes/ai06-consolidacao.json) mantém AI-06 e TST-01
+em execução e PG-01 aberto. Há roteiro de retomada somente dos casos sem
+conclusão, sem repetir respostas concluídas ou unir versões/modelos.
+
+A [reserva 20B](docs/testes/ai06-reserva.md) e a
+[integração Gemini](docs/testes/ai06-gemini.md) permanecem candidatas explícitas
+não qualificadas pelos ensaios anteriores. Não existe fallback automático ou
+pago. [Resultados anteriores](docs/testes/historico/ai06-2026-11-12-pre-academico/README.md)
+continuam disponíveis; não aprovam a nova identidade de código/amostra.
 A [indexação](docs/arquitetura/indexacao-documental.md) fixa a revisão E5,
 a seleção técnica, os limites e a migration 0013. Os pesos ficam fora do Git.
 O ensaio PG/Qdrant/E5 usou texto sintético; não representa carga integral do corpus
@@ -1458,6 +1465,37 @@ Serviço nativo e parâmetros: [generateContent](https://ai.google.dev/api/gener
 [pensamento](https://ai.google.dev/gemini-api/docs/thinking) e
 [limites](https://ai.google.dev/gemini-api/docs/rate-limits). A API não comprova fatura
 ou plano financeiro da conta; registrar tokens, sem alegar custo monetário medido.
+### 10. Avaliação acadêmica reduzida e insumos estáveis
+
+Fonte versionada: [docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md](docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md).
+
+Status: ACEITA por autorização expressa do responsável em 2026-11-12.
+
+O responsável autorizou demonstrações menos complexas, com menos séries, campos
+opcionais a definir e menos retrabalho. Aplicar o [escopo didático](docs/requisitos/escopo-ia-academico.md)
+a uma nova amostra v3, mantendo todos os casos críticos e critérios de qualidade.
+V2 e seus resultados não são apagados nem reaproveitados como aceite da amostra nova.
+
+Não alterar API, banco, equipamento, campos de saúde ou prompts de produção.
+O pedido sintético fornece limites de até dois exercícios/dia e duas séries;
+o avaliador confere o resultado publicado. Séries, repetições, IDs e recursos
+continuam obrigatórios. Carga/cadência null são explícitos, sem dado inventado.
+Mudar a ficha-base de adaptação do teste para uma/duas séries e substituir a
+progressão 3→4 por 1→2, preservando a demonstração de incremento/decremento.
+Não converter ausência de saúde em elegibilidade, nem dispensar evidências.
+
+A amostra é preparada antes do ensaio e fixa os mesmos 27 IDs/30 cenários.
+O avaliador também entra na identidade das partes; não editar arquivos que
+afetam seu hash enquanto o ensaio está em execução. Atualizar apenas resultados
+e documentação depois, sem mudar código/casos para reinterpretar a saída.
+Lotes/retomadas preservam a versão e recusam selecionar melhores respostas.
+Lotes não aumentam quota diária; apenas evitam repetir casos concluídos.
+
+Não exigir ampla periodização, cargas individuais, rotina avançada ou cobertura
+clínica de todas as doenças como condição da demonstração reduzida. Esses limites
+são declarados; não significam aprovação universal do modelo ou do treino.
+Continuam qualidade/latência reais, JSON, isolamento, segurança e equipamentos.
+Sem disponibilidade do provedor, registrar pendência de AI-06, não um sucesso.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
@@ -5549,6 +5587,15 @@ de pensamentos são somados à saída; includeThoughts=false não equivale a
 consumo zero. A seleção é explícita antes da execução, sem fallback automático.
 [Estado de qualificação](docs/testes/ai06-gemini.md); respostas de modelos distintos
 não são intercambiáveis como evidência de aceite.
+
+#### Demonstração acadêmica reduzida
+
+O [escopo aprovado](docs/requisitos/escopo-ia-academico.md) e a [ADR-010](docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md)
+reduzem os pedidos da amostra v3 para até dois exercícios/dia e uma/duas séries.
+São limites dos exemplos, não uma dose universal ou nova restrição do produto.
+Carga/cadência null e observações opcionais vazias já são aceitos; campos de
+saúde ausentes continuam explícitos e bloqueios/evidências permanecem.
+Modelo, corpus, prompts de produção, schemas, orçamento e metas não mudam.
 ### 4. Configuração canônica
 
 Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisitos/schemas/configuracao-ia-v2.json).
@@ -10790,6 +10837,63 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.jso
   "include_reasoning": false
 }
 ````
+### 28. Demonstrações reduzidas, opcionais e limites mantidos
+
+Fonte versionada: [docs/requisitos/escopo-ia-academico.md](docs/requisitos/escopo-ia-academico.md).
+
+Aprovado pelo responsável em 2026-11-12: exemplos mais simples, menos séries,
+campos não essenciais a definir e menos retrabalho na avaliação.
+
+#### O que simplificar
+
+A amostra de demonstração usa fichas curtas, com até dois exercícios por dia e
+uma ou duas séries por exercício nos casos positivos de geração. Os dias não
+excedem a disponibilidade declarada. É um recorte de teste, não uma dose clínica
+universal, nem uma mudança dos limites do produto ou das fichas manuais.
+O catálogo sintético continua reduzido; não afirmar que a ficha reproduz o
+programa completo do livro ou garante hipertrofia/força/desempenho individual.
+
+Carga individual e cadência podem ficar explicitamente null/a definir. Não
+inventar esses dados para preencher o formulário. Observações opcionais podem
+ficar vazias. Isso já é permitido pelo contrato JSON vigente; não remover campos
+obrigatórios do schema, IDs de exercício, recursos, séries, repetições ou pausas.
+
+As adaptações demonstram apenas aumentar de uma para duas séries, reduzir de
+duas para uma e ajustar descanso de 60 para 90 segundos, preservando os demais
+campos/dias. A faixa inicial de uma/duas séries é compatível com os trechos
+selecionados do livro Nahas; conferir também a população e finalidade reais da
+fonte na revisão. Não exigir progressão para quatro séries de um iniciante
+sem suporte específico. Alteração por doença/lesão continua exigindo evidência
+pertinente; sem suporte, abster-se em vez de inventar adaptação clínica.
+
+#### O que continua obrigatório
+
+Autenticação, autorização, isolamento entre clientes, bloqueio de casos graves,
+tratamento de ausências/incerteza de saúde, português e evidências verdadeiras.
+Ausência não significa saudável, zero ou média. Permanecem a validação de
+catálogo/equipamentos, versionamento/retenção, parecer posterior, fluxo manual,
+limites de chamadas, resistência a instruções indevidas e testes de contratos.
+Não exigir laudo ou aprovação médica externa para a demonstração.
+
+#### Avaliação e retrabalho
+
+A [amostra v3](docs/testes/ai06-casos-v3.json) conserva 27 casos e os 30 cenários
+SV/SC. Reduz o tamanho das fichas e corrige a progressão de L18; não elimina
+segurança nem converte falha antiga em aprovação. V2 e relatórios anteriores
+continuam históricos. Metas de qualidade/latência e tolerância zero de segurança
+não foram reduzidas. Ficha publicada fora do pedido reduzido não conta como válida.
+
+Usar primeiro o perfil principal GPT-OSS 120B, já escolhido; não adicionar outro
+provedor nesta entrega. Finalizar testes locais e fixar código/configuração/casos
+antes da chamada real. Relatórios guardam hashes dos insumos e do avaliador.
+Retomar somente falhas de provedor/itens não exercitados na mesma versão, sem
+repetir resposta concluída para escolher outra melhor e sem retry automático.
+Não executar novamente interface/instalação ou mudar prompts de produção quando
+somente a amostra de avaliação mudou. Reexecutar o necessário se surgir defeito.
+
+A simplificação não garante quota/disponibilidade, nem aprova automaticamente
+AI-06. Referências: [AI-06](docs/prompts/05-ia-rag/AI-06.md),
+[configuração](docs/requisitos/configuracao-ia-rag.md) e [avaliação didática](docs/testes/ai06-academico.md).
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -12949,6 +13053,9 @@ necessária para sua entrega.
   Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
+- Demonstração acadêmica reduzida segue ADR-010 e docs/requisitos/escopo-ia-academico.md:
+  amostra v3 com fichas pequenas e carga/cadência a definir, preservando dados de
+  saúde, segurança e recursos. Não editar insumos do ensaio enquanto ele roda.
 - Falha de LLM, embeddings ou banco vetorial não impede treino manual.
 
 #### Testes
@@ -13035,7 +13142,7 @@ Fonte versionada: [docs/testes/avaliacao-ia.md](docs/testes/avaliacao-ia.md).
 #### Escopo entregue
 
 Runner em backend/tests/ai/evaluation, matriz
-[SV/SC e 27 amostras](docs/testes/ai06-casos-v2.json) e
+[SV/SC e 27 amostras](docs/testes/ai06-casos-v3.json) e
 [configuração vigente](docs/requisitos/schemas/configuracao-ia-v2.json).
 Modos separados: determinístico, real, união de partes e consolidação sem novas chamadas.
 A avaliação usa fixtures/índices/banco de teste; nunca dados pessoais reais.
@@ -13178,6 +13285,18 @@ registram a integração nativa. O candidato ainda não foi qualificado: três l
 encerraram por HTTP 503. Configuração/fábrica/adaptadores/composição agora fazem
 parte da identidade; relatórios anteriores da Groq não aprovam o código novo e
 não podem ser unidos às novas partes. Principal permanece 120B, sem fallback.
+
+#### Escopo reduzido da amostra vigente
+
+A [amostra v3 e reprodução](docs/testes/ai06-academico.md), por autorização do responsável,
+usa fichas de demonstração menores e progressão 1→2 séries. Não reduz a matriz
+crítica, os limiares ou campos obrigatórios. Insumos e avaliador são fixados antes
+do ensaio; partes v2 não se unem à v3. Dados opcionais null não são falhas, nem
+ausências de saúde presumidas como negativas.
+
+A execução vigente e a retomada dos doze casos sem conclusão estão no
+[guia da amostra acadêmica v3](docs/testes/ai06-academico.md). Resultados das preparações
+anteriores são históricos; não se unem à nova amostra/código para obter aceite.
 ### 5. Curadoria e perfis sintéticos comuns de academia
 
 Fonte versionada: [docs/testes/preparacao-ai06.md](docs/testes/preparacao-ai06.md).
@@ -13189,7 +13308,9 @@ Os perfis são sintéticos, não são registros reais nem avaliações médicas.
 A curadoria é técnica e delegada; não exige laudo ou aprovação externa.
 
 #### Exemplos e resultados esperados
-A matriz vigente está em [ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
+A matriz deste preparo anterior é [ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
+A demonstração vigente reduzida usa [v3](docs/testes/ai06-casos-v3.json), conforme
+[escopo aprovado](docs/requisitos/escopo-ia-academico.md).
 Mantém os 30 vínculos SV/SC; amplia a amostra real de 24 para 27 casos.
 Os cinco perfis elegíveis têm negativas de saúde explicitamente declaradas:
 iniciante sedentário (2 × 40 min), retorno após inatividade (2 × 45 min),
@@ -13268,7 +13389,7 @@ AI-06 continua em execução. Não confundir sucesso técnico com aceite de qual
 Esta preparação registra o estado anterior à correção. A [correção vigente](docs/testes/ai06-correcao-fundamentacao.md)
 incorpora o original do livro e quatro páginas explicitamente extraídas/indexáveis,
 com prompt v3 e sem promover a extração integral. Resultados atuais e bloqueio
-TPD estão na [consolidação](docs/testes/ai06-consolidacao.json); a preparação isolada não aprova AI-06.
+TPD estão na [consolidação](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json); a preparação isolada não aprova AI-06.
 ### 6. Corpus de avaliação com trechos revisados do livro
 
 Fonte versionada: [docs/testes/ai06-corpus-v2.json](docs/testes/ai06-corpus-v2.json).
@@ -13489,17 +13610,18 @@ Fonte versionada: [docs/testes/ai06-catalogo-v1.json](docs/testes/ai06-catalogo-
 ````
 ### 8. Rastreabilidade SV/SC e 27 casos realistas rotulados
 
-Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
+Fonte versionada: [docs/testes/ai06-casos-v3.json](docs/testes/ai06-casos-v3.json).
 
 ````json
 {
   "schema_version": 1,
-  "origem": "Perfis sintéticos plausíveis de academia; rótulos fixados antes do ensaio. Não são prontuários reais nem resultados clínicos.",
+  "origem": "Simplificação acadêmica autorizada pelo responsável em 2026-11-12, antes do novo ensaio; v2 preservada. Mesmos 27 casos e 30 cenários críticos, com fichas de demonstração reduzidas.",
   "fontes": [
     "docs/testes/rag-ia-semantico.md",
     "docs/testes/casos-triagem-v1.json",
     "docs/testes/rag05-consultas-v1.json",
-    "docs/testes/ai06-corpus-v2.json"
+    "docs/testes/ai06-corpus-v2.json",
+    "docs/requisitos/escopo-ia-academico.md"
   ],
   "cenarios": [
     {
@@ -13911,64 +14033,91 @@ Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.jso
       "id": "L13",
       "rota": "GERACAO",
       "origem": "perfil:iniciante-sedentario",
-      "consulta": "Quero começar a treinar duas vezes por semana, por até 40 minutos. Monte uma ficha inicial compatível com meu onboarding e os equipamentos disponíveis.",
+      "consulta": "Quero começar a treinar duas vezes por semana, por até 40 minutos. Monte uma ficha inicial compatível com meu onboarding e os equipamentos disponíveis. Para esta demonstração acadêmica, use até dois exercícios por dia, uma ou duas séries por exercício, e no máximo os dias disponíveis no onboarding. Carga e cadência podem ficar null/a definir; não invente carga, experiência ou resultado garantido. A ficha reduzida não pretende reproduzir um programa completo do livro.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "iniciante-sedentario"
+      "perfil": "iniciante-sedentario",
+      "limites_ficha": {
+        "max_itens_por_dia": 2,
+        "max_series": 2,
+        "max_dias": 2
+      }
     },
     {
       "id": "L14",
       "rota": "GERACAO",
       "origem": "perfil:retorno",
-      "consulta": "Estou voltando à academia depois de meses sem treinar. Quero uma rotina inicial de dois dias, respeitando meus dados confirmados.",
+      "consulta": "Estou voltando à academia depois de meses sem treinar. Quero uma rotina inicial de dois dias, respeitando meus dados confirmados. Para esta demonstração acadêmica, use até dois exercícios por dia, uma ou duas séries por exercício, e no máximo os dias disponíveis no onboarding. Carga e cadência podem ficar null/a definir; não invente carga, experiência ou resultado garantido. A ficha reduzida não pretende reproduzir um programa completo do livro.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "retorno"
+      "perfil": "retorno",
+      "limites_ficha": {
+        "max_itens_por_dia": 2,
+        "max_series": 2,
+        "max_dias": 2
+      }
     },
     {
       "id": "L15",
       "rota": "GERACAO",
       "origem": "perfil:rotina-curta",
-      "consulta": "Só consigo treinar dois dias por semana, 30 minutos por sessão. Monte uma rotina curta de força usando o catálogo disponível.",
+      "consulta": "Só consigo treinar dois dias por semana, 30 minutos por sessão. Monte uma rotina curta de força usando o catálogo disponível. Para esta demonstração acadêmica, use até dois exercícios por dia, uma ou duas séries por exercício, e no máximo os dias disponíveis no onboarding. Carga e cadência podem ficar null/a definir; não invente carga, experiência ou resultado garantido. A ficha reduzida não pretende reproduzir um programa completo do livro.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "rotina-curta"
+      "perfil": "rotina-curta",
+      "limites_ficha": {
+        "max_itens_por_dia": 2,
+        "max_series": 2,
+        "max_dias": 2
+      }
     },
     {
       "id": "L16",
       "rota": "GERACAO",
       "origem": "perfil:hipertrofia",
-      "consulta": "Quero uma rotina de hipertrofia em três dias, com os exercícios e equipamentos cadastrados. Use as evidências disponíveis.",
+      "consulta": "Quero uma rotina de hipertrofia em três dias, com os exercícios e equipamentos cadastrados. Use as evidências disponíveis. Para esta demonstração acadêmica, use até dois exercícios por dia, uma ou duas séries por exercício, e no máximo os dias disponíveis no onboarding. Carga e cadência podem ficar null/a definir; não invente carga, experiência ou resultado garantido. A ficha reduzida não pretende reproduzir um programa completo do livro.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "hipertrofia"
+      "perfil": "hipertrofia",
+      "limites_ficha": {
+        "max_itens_por_dia": 2,
+        "max_series": 2,
+        "max_dias": 3
+      }
     },
     {
       "id": "L17",
       "rota": "GERACAO",
       "origem": "perfil:forca",
-      "consulta": "Quero desenvolver força geral como iniciante. Monte até três dias de treino compatíveis com as evidências e o catálogo.",
+      "consulta": "Quero desenvolver força geral como iniciante. Monte até três dias de treino compatíveis com as evidências e o catálogo. Para esta demonstração acadêmica, use até dois exercícios por dia, uma ou duas séries por exercício, e no máximo os dias disponíveis no onboarding. Carga e cadência podem ficar null/a definir; não invente carga, experiência ou resultado garantido. A ficha reduzida não pretende reproduzir um programa completo do livro.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "forca"
+      "perfil": "forca",
+      "limites_ficha": {
+        "max_itens_por_dia": 2,
+        "max_series": 2,
+        "max_dias": 3
+      }
     },
     {
       "id": "L18",
       "rota": "ADAPTACAO",
       "origem": "perfil:forca",
-      "consulta": "Quero aumentar somente o dia 1 de 3 para 4 séries, mantendo os demais dias e exercícios. Use meu onboarding já confirmado e as evidências.",
+      "consulta": "Na ficha de demonstração, aumente somente o dia 1 de uma para duas séries por exercício, mantendo todos os outros campos, exercícios e dias. Use meu onboarding já confirmado e as evidências disponíveis, sem prometer um programa completo.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "forca"
+      "perfil": "forca",
+      "series_base": 1
     },
     {
       "id": "L19",
       "rota": "ADAPTACAO",
       "origem": "perfil:retorno",
-      "consulta": "Quero diminuir somente o dia 1 de 3 para 2 séries para retomar gradualmente, preservando os outros dias e exercícios. Não há nova informação de saúde.",
+      "consulta": "Na ficha de demonstração, diminua somente o dia 1 de duas para uma série por exercício para reduzir o volume, preservando todos os outros campos, exercícios e dias. Não há nova informação de saúde.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "retorno"
+      "perfil": "retorno",
+      "series_base": 2
     },
     {
       "id": "L20",
@@ -13977,7 +14126,8 @@ Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.jso
       "consulta": "Quero aumentar apenas o intervalo entre séries do dia 1 de 60 para 90 segundos, mantendo os demais campos e dias. Não há relato novo de saúde.",
       "esperado": "PUBLICADA",
       "esperados": [],
-      "perfil": "rotina-curta"
+      "perfil": "rotina-curta",
+      "series_base": 2
     },
     {
       "id": "L21",
@@ -14222,7 +14372,8 @@ Fonte versionada: [docs/testes/ai06-casos-v2.json](docs/testes/ai06-casos-v2.jso
       },
       "nascimento_fixture": "1995-01-01"
     }
-  }
+  },
+  "versao_amostra": 3
 }
 ````
 ### 9. Métricas reais e limitações observadas no AI-06
@@ -14232,40 +14383,41 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
 ````json
 {
   "schema_version": 1,
-  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA",
+  "amostra_versao": 3,
   "casos_planejados": 27,
-  "casos_executados": 20,
-  "casos_pendentes_provedor": 7,
+  "casos_executados": 16,
+  "casos_pendentes_provedor": 11,
   "falhas_criticas": 0,
-  "casos_corretos_automaticos": 19,
+  "casos_corretos_automaticos": 15,
   "recall_amostra": {
     "numerador": 10,
     "denominador": 10
   },
   "fichas_elegiveis_validas": {
-    "numerador": 2,
-    "denominador": 3
+    "numerador": 3,
+    "denominador": 4
   },
   "respostas_fundamentadas": {
     "numerador": null,
     "denominador": null,
     "estado": "REVISAO_SEMANTICA_PENDENTE"
   },
-  "chamadas_fisicas": 16,
+  "chamadas_fisicas": 18,
   "consumo_desconhecido": 1,
-  "tokens_conhecidos": 29814,
-  "tokens_entrada_conhecidos": 24725,
-  "tokens_saida_conhecidos": 5089,
+  "tokens_conhecidos": 35621,
+  "tokens_entrada_conhecidos": 29986,
+  "tokens_saida_conhecidos": 5635,
   "rotas": {
     "DUVIDA": {
       "n": 12,
-      "p50_ms": 1037.275700000464,
-      "p95_ms": 1829.9139000009745
+      "p50_ms": 1043.187700000999,
+      "p95_ms": 1462.220100002014
     },
     "GERACAO": {
-      "n": 8,
-      "p50_ms": 92.16675000061514,
-      "p95_ms": 5338.749400005327
+      "n": 4,
+      "p50_ms": 4526.129099998798,
+      "p95_ms": 4653.840500002843
     },
     "ADAPTACAO": {
       "n": 0,
@@ -14276,13 +14428,13 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
   "latencia_somente_resposta_ou_ficha_valida": {
     "DUVIDA": {
       "n": 10,
-      "p50_ms": 1063.2234000004246,
-      "p95_ms": 1829.9139000009745
+      "p50_ms": 1100.221300002886,
+      "p95_ms": 1462.220100002014
     },
     "GERACAO": {
-      "n": 2,
-      "p50_ms": 5179.402500005381,
-      "p95_ms": 5338.749400005327
+      "n": 3,
+      "p50_ms": 4544.366199988872,
+      "p95_ms": 4653.840500002843
     },
     "ADAPTACAO": {
       "n": 0,
@@ -14291,9 +14443,9 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     }
   },
   "busca": {
-    "n": 21,
-    "p50_ms": 51.090699998894706,
-    "p95_ms": 106.63969999586698
+    "n": 24,
+    "p50_ms": 54.20299999968847,
+    "p95_ms": 216.198499998427
   },
   "limiares": {
     "min_cases": 24,
@@ -14306,12 +14458,7 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
     "target_generation_p95_seconds": 60
   },
   "aceite_ia_real": false,
-  "nota": "Oito casos sem resultado concluído; modelos distintos não se misturam. Sem aceite do AI-06/MVP.",
-  "consumo_incluindo_partes": {
-    "chamadas_fisicas": 22,
-    "tokens_conhecidos": 33414,
-    "consumo_desconhecido": 5
-  }
+  "nota": "Três fichas curtas publicadas. L16 interrompido; L17–L27 pendentes. L03/L04 não fundamentadas; sem aceite AI-06/MVP."
 }
 ````
 ### 10. Critérios de aceite da avaliação ainda não atendidos
@@ -14324,7 +14471,7 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   "estado": "PENDENTE_OU_REPROVADO",
   "aceite_ia_real": false,
   "criterios": {
-    "mesma_configuracao_e_casos": false,
+    "mesma_configuracao_e_casos": true,
     "deterministico_aprovado": true,
     "amostra_completa": false,
     "casos_obrigatorios": false,
@@ -14338,23 +14485,25 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   },
   "revisao_semantica": {
     "fundamentadas": 11,
-    "total": 13,
-    "fracao": 0.8461538461538461,
+    "total": 14,
+    "fracao": 0.7857142857142857,
     "limiar_aprovado": 0.9,
     "idioma_unidades_seguranca_sem_falhas": false
   },
   "algoritmo_hash": "JSON_CANONICO_V1",
   "entradas_sha256": {
-    "deterministico": "011a603b4dc402193bc25496f20fc8105714d5099831c9b95b19878bbee9079f",
-    "real": "eb7c9e88119d5f9d3fc3a19557847da7bbdb3cb9434cc94a25673782c96936c8",
-    "revisao": "b43bf1bf5b0d9d01244b0e9629f3411c92511e6477ce3f7571c93475da92da94"
+    "deterministico": "b8ce62b982cd7579563a330279b1e4e6d8a6fd1003fed1e9c6832112d0394f58",
+    "real": "709b7bbf9ff320a281cddf9978d73ec1ff8950cc6d1520f54aef84b3f7107492",
+    "revisao": "f273fdbe870c45c8518bc588f46ae59ad38f7293b79b9e95a8563b9e303c3964"
   },
-  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01. Composição/adaptadores agora possuem fingerprint ampliado. Relatórios anteriores continuam históricos e não se unem à nova implementação."
+  "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
 ````
 ### 11. Correções de fundamentação e idioma e reprodução
 
 Fonte versionada: [docs/testes/ai06-correcao-fundamentacao.md](docs/testes/ai06-correcao-fundamentacao.md).
+
+Registro da amostra v2; [demonstração acadêmica v3 vigente](docs/testes/ai06-academico.md).
 
 O LLM continua gerando a estrutura da ficha: dias, exercícios existentes,
 séries, repetições, carga quando conhecida, cadência, pausas e observações.
@@ -14425,8 +14574,8 @@ Revisão de chat usa resposta do modelo e fontes; revisão de ficha usa os itens
 resumo e fontes da ficha efetivamente publicada. Saídas brutas ficam em recibos
 privados de teste e suas limitações são registradas separadamente.
 Não exigir avaliação médica externa para o cenário acadêmico.
-Resultados e limitações estão em [comandos](docs/testes/comandos.md), [resumo](docs/testes/ai06-resumo.json),
-[revisão](docs/testes/ai06-revisao-tecnica.json) e [consolidação](docs/testes/ai06-consolidacao.json).
+Resultados e limitações estão em [comandos](docs/testes/comandos.md), [resumo](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-resumo.json),
+[revisão](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-revisao-tecnica.json) e [consolidação](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json).
 
 #### Retomada quando o provedor interrompe o lote
 Cada nova rodada é explícita. --cases executa somente IDs solicitados e conhecidos,
@@ -15101,6 +15250,8 @@ Fonte versionada: [docs/testes/tst01-resultado.json](docs/testes/tst01-resultado
 
 Fonte versionada: [docs/testes/ai06-reserva.md](docs/testes/ai06-reserva.md).
 
+Registro da amostra v2; [demonstração acadêmica v3 vigente](docs/testes/ai06-academico.md).
+
 #### Resultado
 
 O principal continua Groq/openai/gpt-oss-120b. A retomada concluiu L13: ficha
@@ -15117,7 +15268,7 @@ A consolidação principal tem 20 casos exercitados, 19 resultados automáticos
 esperados, duas fichas publicadas e zero falhas críticas observadas. Restam oito
 casos sem conclusão: L14,L16,L17,L18,L19,L20,L23,L24. Sete estão marcados pendentes
 e L14 é falha de quota. L04 mantém sua falha de fundamentação. O
-[resumo](docs/testes/ai06-resumo.json) e a [consolidação](docs/testes/ai06-consolidacao.json) continuam sem aceite.
+[resumo](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-resumo.json) e a [consolidação](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json) continuam sem aceite.
 
 #### Candidato avaliado
 
@@ -15290,6 +15441,117 @@ geração. A consolidação principal anterior agora identifica incompatibilidad
 os hashes atuais, mantendo evidências antigas sem aprovar código novo. Para
 concluir AI-06 na implementação atual, executar um conjunto completo consistente
 do perfil escolhido, sem juntar os três chats Gemini às fichas antigas da Groq.
+### 17. Avaliação com amostra acadêmica v3
+
+Fonte versionada: [docs/testes/ai06-academico.md](docs/testes/ai06-academico.md).
+
+[Escopo aprovado](docs/requisitos/escopo-ia-academico.md) e
+[ADR-010](docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md).
+Amostra vigente: [v3](docs/testes/ai06-casos-v3.json); v2 continua histórica.
+
+#### Mudanças
+
+Permanecem os 27 casos, 30 cenários SV/SC, modelos/corpus/prompts de produção e
+limiares. Os cinco pedidos positivos de geração passam a limitar a saída a dois
+exercícios/dia, uma ou duas séries e no máximo os dias disponíveis. A redução
+é explícita no pedido sintético, não imposta ao produto inteiro. Nenhuma carga,
+cadência ou semanas de experiência é inventada para completar a ficha.
+
+L18 usa ficha-base com uma série e solicita duas; L19 usa duas e solicita uma.
+L20 mantém duas e ajusta apenas descanso 60→90 s. A base de dois dias continua
+permitindo verificar que partes não solicitadas não sejam alteradas. Fichas
+manuais de clientes reais não são modificadas pelo preparo de teste.
+
+Carga/cadência null e observações vazias opcionais são permitidas pelo schema
+vigente. Ausência de dado de saúde não vira negativa/saudável. Campos obrigatórios,
+recursos disponíveis, publicação PENDENTE e revisão posterior continuam validados.
+Amostra pequena não comprova ampla periodização, rotina avançada ou adaptação a
+todas as doenças. Esses limites acadêmicos não exigem aprovação médica externa.
+
+#### Verificação e estabilidade
+
+O avaliador verifica o tamanho/séries da ficha efetivamente publicada. Publicação
+fora do pedido não conta como ficha válida ou latência de resposta válida.
+Revisão semântica e todos os casos de segurança permanecem obrigatórios.
+Insumos e código do avaliador entram nos hashes. Finalizar essas escolhas antes
+do ensaio e não editar arquivos que alterem os hashes enquanto ele roda.
+Atualizar resultados/documentação depois; não mudar rótulo para aprovar saída.
+
+Usar perfil principal primeiro. Uma tentativa por etapa, sem retry/fallback pago.
+Retomada explícita só reaproveita partes da mesma versão e não substitui resposta
+concluída/falha de qualidade. Lotes não aumentam a quota; evitam repetição.
+Não adicionar outro provedor nem reexecutar interface sem mudança/defeito que
+justifique. Não houve alteração de código do aplicativo, schema ou migrations.
+
+#### Reprodução
+
+Em backend/, com academia_test dedicado, E5 local e .env com chave:
+
+~~~powershell
+$env:ACADEMIA_LLM_PROFILE = 'principal'
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/academico-det-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --output ./data/avaliacao/academico-real-N
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_academic_scope.py tests/ai/test_evaluation_guards.py::test_academic_base_uses_declared_sets
+~~~
+
+Usar pastas novas e manter recibos privados fora do Git. Não unir v2 e v3.
+AI-06 só conclui após amostra completa, qualidade e segurança aprovadas e revisão
+vinculada; falha de provedor ou preparo local não significa aceite do MVP.
+
+#### Resultados de 2026-11-12
+
+[Determinístico](docs/testes/ai06-deterministico.json), [ensaio real](docs/testes/ai06-ensaio-real.json),
+[resumo](docs/testes/ai06-resumo.json), [revisão parcial](docs/testes/ai06-revisao-tecnica.json) e
+[consolidação](docs/testes/ai06-consolidacao.json). Os [relatórios anteriores](docs/testes/historico/ai06-2026-11-12-pre-academico/README.md)
+foram preservados antes de substituir os caminhos vigentes. Não misturar amostras v2/v3.
+
+- Determinístico: 116 testes backend/API/integração e 20 frontend aprovados;
+  os 30 cenários SV/SC mantêm suas expectativas. Adicionalmente, 28 testes de
+  escopo/relatórios/retomada/perfis e duas integrações PostgreSQL das bases
+  de uma/duas séries passaram. São seleções sobrepostas, não somar como total.
+- Ruff/formato aprovados (228 arquivos), mypy em 225 fontes, SPEC/DOC verificados.
+- Ensaio real Groq GPT-OSS 120B: 16 casos exercitados/15 resultados automáticos
+  esperados, incluindo dez respostas, duas abstenções e três fichas publicadas
+  (L13–L15). L16 teve triagem, mas a geração recebeu QUOTA_EXCEDIDA.
+  Os onze casos L17–L27 não foram executados; os casos sem conclusão são doze.
+- As três fichas respeitaram o pedido reduzido: dois dias, dois exercícios/dia,
+  uma série de 8–12 repetições, descanso de 60 s, carga/cadência null. São
+  exemplos acadêmicos curtos, não comprovação de um programa completo.
+- Tempo de serviço válido: chat n=10, p50 1,100 s/p95 1,462 s; geração n=3,
+  p50 4,544 s/p95 4,654 s; adaptação ainda sem medição. Busca n=24, p95 0,216 s.
+  Aquecimento E5 (17,138 s), pausas, fixtures, HTTP/UI ficam fora desses tempos.
+- Foram 18 chamadas físicas, 35.621 tokens conhecidos (29.986 entrada/5.635
+  saída); consumo desconhecido em uma falha. Sem fatura medida ou plano pago.
+- A revisão parcial preserva duas extrapolações de fundamentação em L03/L04;
+  elas não são refeitas para escolher resposta melhor. As três fichas publicadas
+  foram conferidas com catálogo e evidências efetivamente enviadas. L16 não
+  possui ficha para revisar; seus campos sem saída ficam null, não aprovados.
+
+A consolidação retorna PENDENTE_OU_REPROVADO, com identidade e revisão vinculadas.
+Não há falha crítica observada na parte executada, mas os ataques reais L23/L24
+continuam pendentes. Não declarar aprovação por testes controlados. AI-06 e TST-01
+seguem EM_EXECUCAO, PG-01 ABERTO. A simplificação está entregue; a avaliação real
+completa depende de quota e dos critérios existentes.
+
+#### Retomada sem refazer casos concluídos
+
+Quando houver orçamento suficiente, executar somente L16–L27 em uma pasta nova;
+L16 repete a triagem em nova execução explícita, sem retry automático. Guardar
+os recibos privados atuais para rever os novos artefatos. Exemplo em backend/:
+
+~~~powershell
+$env:ACADEMIA_LLM_PROFILE = 'principal'
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode real --cases L16,L17,L18,L19,L20,L21,L22,L23,L24,L25,L26,L27 --output ./data/avaliacao/academico-real-retomada-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode merge --part ../docs/testes/ai06-ensaio-real.json --part ./data/avaliacao/academico-real-retomada-N/relatorio.json --output ./data/avaliacao/academico-unido-N
+uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode consolidate --deterministic-report ../docs/testes/ai06-deterministico.json --real-report ./data/avaliacao/academico-unido-N/relatorio.json --review ./data/avaliacao/revisao-unida-N.json --output ./data/avaliacao/academico-aceite-N
+~~~
+
+Antes do último comando, conferir os novos resultados e gerar revisão de todos os
+casos com chamadas, vinculada ao hash do relatório unido. Preservar L03/L04. Não
+usar a revisão parcial acima para aprovar a união. O merge rejeita substituição
+de resposta concluída/falha de qualidade, mudança de código/configuração/casos e
+mistura de modelos. A falha de quota e seu consumo permanecem nas tentativas.
+Não repetir o lote inteiro, trocar provedor ou executar E2E de novo sem motivo.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -15831,7 +16093,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `c337599b3e095ae7462404805c11fc45407142e0b674b6c7358854c352fb31c0` |
-| `AGENTS.md` | `d2e44ebe0c267d987f6d0b50dcdb48e5d9dba660c8c61a45a24a21bcc5ce27f7` |
+| `AGENTS.md` | `d6ab0c9ad989978ae212e4e5952d859ac04625ca6e8bcca9d3e6f4002d784989` |
 | `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
@@ -15853,6 +16115,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
 | `docs/arquitetura/decisoes/ADR-009-gemini-api.md` | `1f7bdddf0ef704f2b992ebb6cad302518bc12b41878a3abb2c7f868c6eccb3cc` |
+| `docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md` | `5c60b6aba05d006a85de73e4bd2ab25404bdf80927d084687c9afdf395b5a9cf` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
@@ -15876,12 +16139,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `6fc22b3c36552daabb557cd03e00500a22579fa4032d75b195a6a260412f7d58` |
+| `docs/especificacao/compilacao-spec.json` | `714a247739e0bbb3113cf10a4c967b933c844881d6ee1906322a431e14c71184` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `01f913899e90de2358e55a75c2bfc2317bc1240876d3ae8ddce650cd5bd62483` |
+| `docs/especificacao/visao-geral.md` | `e14f5c8d8cd12c867a2331f3f063076b0cab2b2e45e8942da3e21ace84db155d` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `f6ab0be18e22d6400da227abd7371fedd46839167480e41e329cd391423a3aee` |
-| `docs/requisitos/configuracao-ia-rag.md` | `09a3597d793427016f041e7b500bdec241b99a5cf244743ee86589e629ce047e` |
+| `docs/prompts/README.md` | `04eb2269fa6485c33a71ec3847e0964553e9e2b0580e45e0d404afb04ad70f60` |
+| `docs/requisitos/configuracao-ia-rag.md` | `140295eb72a5d23b535bd1067a85b2a195c250d20e6a532f83e217a47f747d7a` |
+| `docs/requisitos/escopo-ia-academico.md` | `8726c2aca05bdb06bc2e10c03dacdb79be03588412f9f0f539fbe4546eed7f2b` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
@@ -15902,19 +16166,20 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
 | `docs/testes/aceitacao-mvp.md` | `e9f7203405774c81ab6b6f637969175babd628d4459e06096f572f95bdb95fed` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
-| `docs/testes/ai06-casos-v2.json` | `c87cf3a59358b49fb12363cb224f271988d25e86fb0e02771caf6df9dd03b818` |
+| `docs/testes/ai06-academico.md` | `9c7e1255ec4693add8a2ad6835e7d22c24cda9fd96f958d981707322a2a139df` |
+| `docs/testes/ai06-casos-v3.json` | `1262111b47407d44dcd60adf6911b370e380d71464744e1697bc91d8864ac3e2` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
-| `docs/testes/ai06-consolidacao.json` | `68e1add452af4f63ec56d5961bdf69aa17a2d3cd371037ced41b67013851acfc` |
+| `docs/testes/ai06-consolidacao.json` | `f97f33c0d4c330cb68d3758d7c4e5d1137172a930bc279c9ab977fe8ddd3a596` |
 | `docs/testes/ai06-corpus-v2.json` | `51e471e5cdf112fd16f0282b5b3cbfa1029924679711b5286e2cbf9da30de349` |
-| `docs/testes/ai06-correcao-fundamentacao.md` | `035cab5e76b7fa1808689ffb13d0346bdc29765ec0e8ddd9d35b32d647f8d252` |
+| `docs/testes/ai06-correcao-fundamentacao.md` | `a76d000d2b0d49c9476ab41d2149d0e16ee4d86954409158f9cfc774a11d4782` |
 | `docs/testes/ai06-gemini.md` | `024b1afa3ba2ce637ac345b73476cc4b928424029f1734ec00395ee57f5b386b` |
-| `docs/testes/ai06-reserva.md` | `b96334b0c13137c355df720052d0a8a2cf408b03e46a800eeb42a97888b30dee` |
-| `docs/testes/ai06-resumo.json` | `a5eb25faa5928ab862a3c6dec7b8866ae07deccd5c7712b20929116de529df06` |
-| `docs/testes/avaliacao-ia.md` | `592a1669c7b45ee7574d58e70f0195ec38dd85f0c18067be8d45029323d51bc9` |
+| `docs/testes/ai06-reserva.md` | `9afa40f6d45caf5ee444a9784d82e370f5aab027ee31bb9aab9f96babca9c7fd` |
+| `docs/testes/ai06-resumo.json` | `73a88b973b6e340362864122d836e105f47e2ce0248d82356176cc14032801c9` |
+| `docs/testes/avaliacao-ia.md` | `4c000aaa325b4c7e3f8a7275735e6fc9d7ed4765c8478a7d1041fdb4d56e2a05` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `6ecf81e94a81ea6a08dbf720ac19705cc2b16c4e6ebabf73d45bc6d09fbcf355` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
-| `docs/testes/preparacao-ai06.md` | `1f684289649696211e17732de19d005870331792eeae499c23c7d55ac024c7ef` |
+| `docs/testes/preparacao-ai06.md` | `9b6fc57c33c3f4da19517aaeabd0f047eda3c383a54c6542aea7d75c7806f671` |
 | `docs/testes/rag-ia-semantico.md` | `6a262d3ada37aedfb0e765b7db738e3248940232d96c0f03550856e7a776eb35` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-resultado.json` | `085a6f6ae0e8dbad3c5aa9f3097e2aff3a23929d59775d832d2aaee3adc8a65b` |

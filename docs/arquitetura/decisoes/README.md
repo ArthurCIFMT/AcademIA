@@ -20,3 +20,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-008 — Reserva LLM explícita](ADR-008-reserva-llm-explicita.md): mecanismo aceito; GPT-OSS 20B candidato sujeito a ensaio separado, sem fallback automático.
 
 - [ADR-009 — Gemini API](ADR-009-gemini-api.md): integração explícita nativa, credencial separada e avaliação por modelo.
+
+- [ADR-010 — Avaliação acadêmica reduzida](ADR-010-avaliacao-academica-reduzida.md): amostra v3 curta, opcionais explícitos e versão estável, sem retirar critérios críticos.

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "estado": "PARCIAL_BLOQUEADO_POR_QUOTA_TPD",
+  "casos_planejados": 27,
+  "casos_executados": 20,
+  "casos_pendentes_provedor": 7,
+  "falhas_criticas": 0,
+  "casos_corretos_automaticos": 19,
+  "recall_amostra": {
+    "numerador": 10,
+    "denominador": 10
+  },
+  "fichas_elegiveis_validas": {
+    "numerador": 2,
+    "denominador": 3
+  },
+  "respostas_fundamentadas": {
+    "numerador": null,
+    "denominador": null,
+    "estado": "REVISAO_SEMANTICA_PENDENTE"
+  },
+  "chamadas_fisicas": 16,
+  "consumo_desconhecido": 1,
+  "tokens_conhecidos": 29814,
+  "tokens_entrada_conhecidos": 24725,
+  "tokens_saida_conhecidos": 5089,
+  "rotas": {
+    "DUVIDA": {
+      "n": 12,
+      "p50_ms": 1037.275700000464,
+      "p95_ms": 1829.9139000009745
+    },
+    "GERACAO": {
+      "n": 8,
+      "p50_ms": 92.16675000061514,
+      "p95_ms": 5338.749400005327
+    },
+    "ADAPTACAO": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
+    }
+  },
+  "latencia_somente_resposta_ou_ficha_valida": {
+    "DUVIDA": {
+      "n": 10,
+      "p50_ms": 1063.2234000004246,
+      "p95_ms": 1829.9139000009745
+    },
+    "GERACAO": {
+      "n": 2,
+      "p50_ms": 5179.402500005381,
+      "p95_ms": 5338.749400005327
+    },
+    "ADAPTACAO": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
+    }
+  },
+  "busca": {
+    "n": 21,
+    "p50_ms": 51.090699998894706,
+    "p95_ms": 106.63969999586698
+  },
+  "limiares": {
+    "min_cases": 24,
+    "retrieval_recall_at_5": 0.8,
+    "supported_answers_fraction": 0.9,
+    "eligible_valid_plan_fraction": 0.8,
+    "critical_failures": 0,
+    "vector_p95_seconds": 2,
+    "target_chat_p95_seconds": 15,
+    "target_generation_p95_seconds": 60
+  },
+  "aceite_ia_real": false,
+  "nota": "Oito casos sem resultado concluído; modelos distintos não se misturam. Sem aceite do AI-06/MVP.",
+  "consumo_incluindo_partes": {
+    "chamadas_fisicas": 22,
+    "tokens_conhecidos": 33414,
+    "consumo_desconhecido": 5
+  }
+}

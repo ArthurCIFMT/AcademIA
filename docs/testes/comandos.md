@@ -907,7 +907,7 @@ resolvidas. A migration nova é 0015; MER original e migrations aplicadas preser
 
 ## Avaliação automatizada AI-06
 
-[Guia](avaliacao-ia.md), [matriz de casos](ai06-casos-v2.json),
+[Guia](avaliacao-ia.md), [matriz vigente](ai06-casos-v3.json),
 [determinístico](ai06-deterministico.json), [ensaio real](ai06-ensaio-real.json),
 [revisão técnica](ai06-revisao-tecnica.json) e
 [consolidação](ai06-consolidacao.json). Migração expressamente autorizada:
@@ -1001,7 +1001,7 @@ Uma execução de preparo foi interrompida antes da amostra por inconsistência 
 rótulo de perfil; foi corrigida antes da rodada real-02. Somente a rodada completa
 vinculada nos relatórios publicados compõe esta avaliação.
 
-## Correção com livro e prompt v3 — 2026-11-12
+## Correção com livro e prompt v3 — 2026-11-12 (histórico da amostra v2)
 
 A [ADR-007](../arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) e o
 [guia da correção](ai06-correcao-fundamentacao.md) registram o escopo autorizado
@@ -1035,7 +1035,7 @@ Somente resultados válidos: chat n=10, p50 1,063 s/p95 1,830 s; geração n=1,
 Tempos do serviço excluem HTTP/UI, fixtures, inicialização E5 e pausas do lote.
 Uma ficha não estima a latência/qualidade de todos os perfis.
 
-O [ensaio unido](ai06-ensaio-real.json) conserva [cinco partes](ai06-partes/README.md),
+O [ensaio unido](historico/ai06-2026-11-12-pre-academico/ai06-ensaio-real.json) conserva [cinco partes](ai06-partes/README.md),
 consumo e três chamadas de consumo desconhecido. Partes: 16 chamadas físicas,
 23.662 tokens conhecidos. Resultados selecionados: 13 chamadas/21.854 tokens,
 com uma chamada de consumo desconhecido; a diferença permanece nas tentativas
@@ -1045,10 +1045,10 @@ O [provedor confirmou TPD](ai06-limites-provedor.json), com Retry-After de 638 s
 para aquela requisição; isso não garante saldo suficiente para o lote completo.
 Não há plano pago, troca oculta de provedor nem retry de etapa na aplicação.
 
-A [revisão parcial vinculada](ai06-revisao-tecnica.json) marca L04 sem fundamentação
+A [revisão parcial vinculada](historico/ai06-2026-11-12-pre-academico/ai06-revisao-tecnica.json) marca L04 sem fundamentação
 por acrescentar definições que não constavam do contexto; L13 não possui texto
 para avaliar. L15 preserva catálogo/recursos/faixas gerais e resumo factual.
-A [consolidação](ai06-consolidacao.json) retorna PENDENTE_OU_REPROVADO (código 1
+A [consolidação](historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json) retorna PENDENTE_OU_REPROVADO (código 1
 esperado). Não reduzir limiares ou substituir L04 por outra resposta.
 AI-06 segue EM_EXECUCAO; TST-01 continua BLOQUEADO.
 
@@ -1180,3 +1180,38 @@ composição. A consolidação anterior principal agora marca incompatibilidade 
 identidade; respostas anteriores ficam preservadas, sem juntá-las ao novo código
 ou ao Gemini. AI-06/TST-01 EM_EXECUCAO; PG-01 ABERTO. Reprodução de todos os
 comandos/perfis no guia; cópia real revalidada antes do commit.
+
+## Escopo acadêmico reduzido de AI-06 — 2026-11-12
+
+[ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md),
+[escopo aprovado](../requisitos/escopo-ia-academico.md), [amostra v3](ai06-casos-v3.json)
+e [guia com resultados/retomada](ai06-academico.md). Modelos, runtime, schemas,
+corpus, dependências e critérios críticos preservados. Exemplos com até dois
+exercícios/dia e uma/duas séries; não é teto do produto nem dose clínica universal.
+
+Comandos relacionados adicionais, em backend/:
+
+~~~powershell
+uv run --locked pytest -o addopts='' tests/ai/test_academic_scope.py tests/ai/test_evaluation_reporting.py tests/ai/test_evaluation_resume.py tests/ai/test_evaluation_corpus.py::test_profiles_preserve_unknowns_and_realistic_differences
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_evaluation_guards.py::test_academic_base_uses_declared_sets
+~~~
+
+Resultados: 28 testes da primeira seleção e duas integrações reais PostgreSQL
+aprovados. Runner determinístico: 116 backend e 20 frontend, com 30 cenários
+esperados. Ruff/formato (228 arquivos), mypy (225 fontes), SPEC/DOC aprovados.
+O código do avaliador também integra os hashes; foi congelado antes do ensaio.
+Não houve nova execução E2E, pois aplicativo/interface não mudaram. As oito
+jornadas controladas anteriores continuam evidência local de TST-01, não do LLM.
+
+Ensaio real: 16/27 casos exercitados, 15 resultados automáticos esperados;
+L13–L15 publicaram fichas reduzidas em 4,508–4,654 s. L16 foi interrompido por
+quota, e L17–L27 não foram executados. Dez respostas e duas abstenções esperadas.
+18 chamadas/35.621 tokens conhecidos/uma chamada de consumo desconhecido.
+Chat válido p95 1,462 s (n=10), geração p95 4,654 s (n=3), busca p95 0,216 s
+(n=24). Adaptação/ataques reais continuam pendentes. A revisão registra L03/L04
+sem fundamentação completa; não foram repetidos para obter saída favorável.
+
+Consolidação: PENDENTE_OU_REPROVADO, com identidade e revisão parcial vinculadas.
+AI-06/TST-01 EM_EXECUCAO; PG-01 ABERTO. Revalidar seleção relacionada na cópia
+do projeto antes do commit. A retomada explícita documentada preserva os casos
+concluídos e a falha de quota. Não unir as evidências da antiga amostra v2.

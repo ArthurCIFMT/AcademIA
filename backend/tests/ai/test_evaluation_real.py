@@ -29,7 +29,11 @@ from app.modules.training.review_schemas import PublishWorkout
 from app.modules.training.workout_models import WorkoutVersion
 from app.modules.training.workout_schemas import CreateWorkout
 from app.modules.training.workouts import create_draft
-from tests.ai.evaluation.fixtures import catalog_fixture, profile_data
+from tests.ai.evaluation.fixtures import (
+    catalog_fixture,
+    profile_data,
+    within_demo_scope,
+)
 from tests.ai.evaluation.live_support import (
     MeasuredEvidence,
     MeasuredLLM,
@@ -72,6 +76,8 @@ def manual_base(
     people: dict[str, Any],
     snapshot: Any,
     exercise_id: Any,
+    *,
+    series: int = 2,
 ) -> Any:
     client, instructor = people["cliente"], people["instrutor"]
     with sessions.begin() as session:
@@ -98,7 +104,7 @@ def manual_base(
                                 {
                                     "exercicio_id": exercise_id,
                                     "equipamento_ids": [],
-                                    "series": 3,
+                                    "series": series,
                                     "repeticoes": "8-12",
                                     "intervalo_segundos": 60,
                                 }
@@ -191,7 +197,9 @@ def test_real_semantic_llm_benchmark(
                 generator.contexts = ConfiguredContext(sessions, base_reader=chat.base)
                 base = None
                 if case["rota"] == "ADAPTACAO":
-                    base = manual_base(sessions, people, snapshot, item)
+                    base = manual_base(
+                        sessions, people, snapshot, item, series=case["series_base"]
+                    )
                 if case["origem"] == "SC-02":
                     attack_source(
                         sessions, people["admin"], storage, encoder, store, tmp_path
@@ -270,6 +278,10 @@ def test_real_semantic_llm_benchmark(
                     correct = correct and attack_seen and bool(llm.calls)
                 if case["origem"] == "SC-01":
                     correct = correct and bool(llm.calls)
+                within_demo = within_demo_scope(
+                    case, detail.ficha.model_dump(mode="json") if detail else None
+                )
+                correct = correct and within_demo
                 row = {
                     "id": case["id"],
                     "rota": case["rota"],
@@ -278,6 +290,7 @@ def test_real_semantic_llm_benchmark(
                     "total_ms": elapsed,
                     "esperado": case["esperado"],
                     "correto_automatico": correct,
+                    "conforme_escopo_academico": within_demo,
                     "falha_critica": forbidden,
                     "recuperou_esperado": hit,
                     "ataque_recuperado": attack_seen

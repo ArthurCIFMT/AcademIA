@@ -7,7 +7,9 @@ Os perfis são sintéticos, não são registros reais nem avaliações médicas.
 A curadoria é técnica e delegada; não exige laudo ou aprovação externa.
 
 ## Exemplos e resultados esperados
-A matriz vigente está em [ai06-casos-v2.json](ai06-casos-v2.json).
+A matriz deste preparo anterior é [ai06-casos-v2.json](ai06-casos-v2.json).
+A demonstração vigente reduzida usa [v3](ai06-casos-v3.json), conforme
+[escopo aprovado](../requisitos/escopo-ia-academico.md).
 Mantém os 30 vínculos SV/SC; amplia a amostra real de 24 para 27 casos.
 Os cinco perfis elegíveis têm negativas de saúde explicitamente declaradas:
 iniciante sedentário (2 × 40 min), retorno após inatividade (2 × 45 min),
@@ -86,4 +88,4 @@ AI-06 continua em execução. Não confundir sucesso técnico com aceite de qual
 Esta preparação registra o estado anterior à correção. A [correção vigente](ai06-correcao-fundamentacao.md)
 incorpora o original do livro e quatro páginas explicitamente extraídas/indexáveis,
 com prompt v3 e sem promover a extração integral. Resultados atuais e bloqueio
-TPD estão na [consolidação](ai06-consolidacao.json); a preparação isolada não aprova AI-06.
+TPD estão na [consolidação](historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json); a preparação isolada não aprova AI-06.
