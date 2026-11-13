@@ -2,9 +2,11 @@
 
 ## Escopo e estado
 
-O responsável autorizou avançar no TST-01 enquanto a quota de AI-06 está indisponível.
-Isso libera preparar e exercitar o trabalho independente, conforme o contrato comum;
-não remove a dependência de aceite. TST-01 fica EM_EXECUCAO e PG-01 permanece ABERTO.
+TST-01 CONCLUIDO e PG-01 FECHADO em 2026-11-12, conforme a
+[consolidação reproduzível](tst01-consolidacao.json). O aceite combina oito
+jornadas E2E compatíveis com o código atual, 14 testes críticos reexecutados e
+AI-06 real aprovado. É o MVP acadêmico delimitado, com revisão manual do
+responsável como próximo passo; não encerra módulos pós-MVP.
 
 O [runner](../../backend/tests/acceptance/__main__.py) inicia FastAPI/Uvicorn real,
 SPA/Vite real e Playwright/Edge. PostgreSQL e Qdrant são reais; SMTP usa Mailpit local.
@@ -21,8 +23,10 @@ usam a API autenticada real; o preenchimento e a consulta são feitos no navegad
 
 [Resultado sanitizado](tst01-resultado.json). A qualidade, PT/EN e ataques semânticos
 do modelo real dependem da [consolidação AI-06](ai06-consolidacao.json).
-O runner local sempre conserva aceite_mvp=false; concluir os testes locais não
-fecha PG-01 nem dispensa a revisão das evidências reais.
+O runner local conserva seu snapshot original aceite_mvp=false, com AI-06
+ainda pendente naquela execução. Esse recibo não foi reescrito para fingir uma
+nova navegação. O novo consolidador combina-o ao aceite real atualizado e
+registra aceite_mvp=true em arquivo próprio, com hashes dos insumos.
 
 ## Instalação e execução
 
@@ -101,15 +105,54 @@ navegador: concorrência, expurgo de chat/cache, alterações de restrição dur
 revisão, tokens inválidos/expirados e isolamento do corpus. As evidências e comandos
 constam no [registro de testes](comandos.md#aceitação-local-do-mvp-tst-01).
 
-## Aceite ainda necessário
+## Fechamento reproduzível
 
-AI-06 está CONCLUIDO na [amostra v4](ai06-enxuto.md), com
-[consolidação APROVADO](ai06-consolidacao.json), revisão de cinco saídas e os
-dois ataques reais concluídos. Essa dependência deixa de ser pendente.
+O [consolidador](../../backend/tests/acceptance/consolidation/__init__.py) verifica:
 
-O próximo passo de TST-01 é verificar/publicar a evidência local compatível com
-o código atual e consolidar a matriz de aceite com o hash aprovado de AI-06.
-SC-03/04 no navegador e SC-05/06 nos testes críticos complementam o modelo real;
-manter a distinção entre execução local controlada e qualidade LLM. TST-01
-permanece EM_EXECUCAO e PG-01 ABERTO até esse fechamento. Não repetir ensaio
-real aprovado ou apresentar aprovação de AI-06 como MVP já aceito.
+- mesmo código de aplicação, interface, harness e lockfiles do E2E (237 arquivos);
+- oito jornadas distintas aprovadas em uma tentativa, navegador/API reais;
+- bootstrap, persistência e rollback confirmados, migration atual 0015;
+- 14 testes críticos completos/aprovados, mesmo código e fontes dos testes;
+- AI-06 real aprovado e integralmente reproduzido a partir de execução/revisão;
+- hashes dos três relatórios e do próprio verificador, separados do runtime.
+
+Em backend/, com perfil principal, sem chamada externa ou necessidade de banco
+para a consolidação:
+
+~~~powershell
+uv run --locked python -m tests.acceptance.consolidation --output ./data/e2e/aceite-N.json
+uv run --locked pytest tests/acceptance
+~~~
+
+A saída deve ser nova; evidência anterior não é sobrescrita. A decisão só retorna
+APROVADO/aceite_mvp=true quando todos os critérios passam. Mudança de código,
+revisão, schema, relatório ou ausência de caso mantém o aceite pendente. Uma
+nova implementação precisa reexecutar as evidências correspondentes.
+
+## Evidências e resultado de 2026-11-12
+
+O relatório de oito jornadas da execução Gemini já existente corresponde ao
+código atual, com 237 hashes iguais e zero diferença. Ele substitui a publicação
+anterior (235 arquivos), preservada no [histórico](historico/tst01-antes-fechamento/README.md).
+Nesta entrega não se repetiu navegador ou chamada LLM. A imagem móvel existente
+e os cenários continuam referentes à mesma interface.
+
+[Críticos atuais](tst01-criticos.json): 14 testes aprovados em PostgreSQL/Qdrant
+reais, incluindo concorrência, retenção, inventário, snapshot, isolamento e
+recuperação vetorial com E5 local. As chaves Groq/Gemini foram removidas do processo.
+Um aviso de reescrita do plugin anyio ocorreu por importação no helper de snapshot;
+não houve falha/skip dos 14 casos. A [regressão geral anterior](tst01-regressao.json)
+é histórica; os 458 BE/85 FE não são declarados reexecutados agora.
+
+Os 21 testes de guardas do aceite passaram: casos ausentes, duplicados, ignorados,
+tentativa repetida, código/fontes antigos, rollback/migration incompatíveis,
+AI-06 pendente/revisão alterada e tentativa de sobrescrever saída não fecham MVP.
+Ruff/formato e mypy (228 fontes) verificados; SPEC/DOC e diff conferidos.
+Novos arquivos são de teste/consolidação, sem alteração de código da aplicação,
+frontend, migrations, dependências, corpus ou parâmetros do LLM.
+
+[Consolidação final](tst01-consolidacao.json): APROVADO, nove critérios verdadeiros,
+TST-01 CONCLUIDO e PG-01 FECHADO. AI-06 mantém seus limites de cinco exemplos e
+percentis descritivos; reservas não qualificadas, fontes pendentes e módulos de
+matrícula/CompreFace/catraca, agenda, indicadores, financeiro e Docker permanecem
+fora do aceite deste MVP. Não iniciar essas funcionalidades nesta entrega.

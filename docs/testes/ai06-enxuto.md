@@ -2,7 +2,7 @@
 
 Estado vigente: **APROVADO** na amostra acadêmica v4, em 2026-11-12.
 Cinco casos completos, revisão vinculada e critérios da consolidação atendidos.
-TST-01/PG-01 continuam dependentes do fechamento próprio do aceite do MVP.
+TST-01/PG-01 foram fechados na [consolidação própria do MVP](tst01-consolidacao.json).
 
 [ADR-011](../arquitetura/decisoes/ADR-011-amostra-real-minima.md),
 [escopo aprovado](../requisitos/escopo-ia-academico.md) e [amostra v4](ai06-casos-v4.json).
@@ -177,8 +177,7 @@ unidades/negações e segurança aprovados; fichas válidas 2/2, recuperação r
 critérios verdadeiros. O runner de execução mantém aceite_ia_real=false por
 desenho; o aceite final está na consolidação/revisão e no resumo atualizado.
 
-AI-06 CONCLUIDO; o próximo trabalho é consolidar TST-01, mantendo PG-01 aberto
-até esse fechamento. Não repetir ensaio real aprovado nem iniciar fallback ou
+AI-06 CONCLUIDO; TST-01 e PG-01 foram fechados na consolidação própria do MVP. Não repetir ensaio real aprovado nem iniciar fallback ou
 outros módulos nesta entrega. Limitações acadêmicas e falhas antigas v3 permanecem
 explícitas. Testes locais continuam sendo os 117 backend/20 frontend já vinculados
 a esta identidade; somente os testes focais de relatórios/retomada são reexecutados.

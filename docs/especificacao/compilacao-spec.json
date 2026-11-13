@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "revisado_em": "2026-11-12",
-  "base_implementacao": "26411568c86d5a4c29aef5dba0793ad23b412e8e",
+  "base_implementacao": "602c807cf436f60420b3f992047b28d6654b1a17",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
     {
@@ -481,6 +481,18 @@
         {
           "arquivo": "docs/testes/ai06-enxuto.md",
           "titulo": "Demonstração mínima, resultados e limites"
+        },
+        {
+          "arquivo": "docs/testes/tst01-criticos.json",
+          "titulo": "Reexecução focal de 14 testes críticos para o aceite",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/tst01-consolidacao.json",
+          "titulo": "Aceite reproduzível do MVP PG-01 com evidências vinculadas",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },

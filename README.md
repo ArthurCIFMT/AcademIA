@@ -20,6 +20,11 @@ O [prompt mestre](docs/prompts/00-prompt-mestre.md) orienta planejamento e os
 
 ## Estado e navegação
 
+**MVP acadêmico concluído**, com TST-01 aprovado e PG-01 fechado.
+[Evidências e limites do aceite](docs/testes/aceitacao-mvp.md).
+A revisão manual do aplicativo local é o próximo passo; funcionalidades
+pós-MVP permanecem no roteiro.
+
 O [manifesto](docs/prompts/README.md) registra capacidades entregues, pendentes,
 dependências e evidências. O resumo por módulo está no
 [SPEC](SPEC.md#5-capacidades-e-estágio-da-implementação). Funcionalidade descrita

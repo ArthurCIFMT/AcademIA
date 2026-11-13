@@ -1323,3 +1323,51 @@ Chat n=3, p50 1,000 s/p95 1,667 s; geração n=1, 5,813 s; adaptação n=1,
 percentis descritivos para amostra pequena. AI-06 CONCLUIDO; TST-01 EM_EXECUCAO
 e PG-01 ABERTO até fechamento próprio das evidências locais. Não executar
 novamente o ensaio aprovado para iniciar essa consolidação.
+
+## Fechamento TST-01 e PG-01 — 2026-11-12
+
+[Guia](aceitacao-mvp.md#fechamento-reproduzível),
+[E2E compatível](tst01-resultado.json), [14 críticos atuais](tst01-criticos.json)
+e [consolidação APROVADO](tst01-consolidacao.json). Oito jornadas existentes
+confirmadas contra os 237 hashes atuais; nenhuma alteração funcional da aplicação.
+Relatório anteriormente publicado preservado no histórico. Não houve reexecução
+de navegador, frontend completo, LLM ou regressão geral de 458 testes.
+
+A reexecução focal usa os 14 seletores em criticos_complementares do registro
+histórico tst01-regressao.json, incluindo seus parâmetros distintos. Executar
+pytest -o addopts='' com esses seletores e --junitxml em pasta nova, PostgreSQL
+academia_test e E5 local habilitado. Remover GROQ_API_KEY/GEMINI_API_KEY do
+processo e manter ACADEMIA_AI_REAL=0. O recibo crítico registra os 14 resultados,
+hash do JUnit, hashes das fontes e runtime; comparar os snapshots antes/depois
+do teste. Caso ignorado, duplicado ou fonte alterada não constitui aprovação.
+
+Em backend/:
+
+~~~powershell
+uv run --locked pytest tests/acceptance
+uv run --locked python -m tests.acceptance.consolidation --output ./data/e2e/aceite-N.json
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+~~~
+
+Resultados desta entrega: 14 críticos PostgreSQL/Qdrant/E5 aprovados, 21 guardas
+de relatório/aceite aprovadas, Ruff/formato e mypy (228 fontes) verificados.
+O helper de snapshot importou anyio antes do pytest, gerando um aviso de
+reescrita; nenhuma falha/skip dos 14 testes. Não soma esses números a 458 BE
+ou 85 FE históricos como se fossem uma nova regressão completa.
+
+Consolidação APROVADO/aceite_mvp=true, nove critérios verdadeiros: runtime igual,
+oito jornadas em uma tentativa, navegador/API reais, bootstrap/persistência/
+rollback, migration 0015, IA controlada separada, fontes dos críticos atuais,
+14 críticos completos e AI-06 aprovado reproduzido. O snapshot bruto do E2E
+continua com aceite_mvp=false/AI-06 pendente naquela execução; o aceite final
+é o novo arquivo vinculado, sem fingir nova navegação.
+
+Verificador em subpacote próprio de tests/acceptance; seu hash é registrado
+separadamente dos arquivos do runtime/harness exercitados no E2E. Guardas
+rejeitam casos ausentes/duplicados/ignorados, tentativas repetidas, código/fontes
+obsoletos, rollback/migration inválidos, AI-06 pendente/alterado e sobrescrita de
+saída. Não houve dependência, migration, interface, dado real ou módulo pós-MVP.
+SPEC/DOC/diff verificados; cópia do projeto revalidada antes do commit.
+TST-01 CONCLUIDO e PG-01 FECHADO; revisão manual local é o próximo passo.

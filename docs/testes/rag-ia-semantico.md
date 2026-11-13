@@ -92,4 +92,5 @@ Os 117 backend/20 frontend vinculados continuam evidência local, sem quota LLM.
 Sete chamadas selecionadas; dez incluindo duas recusas antigas, todas preservadas.
 Histórico v3 e extrapolações L03/L04 não foram declarados corrigidos. Amostra
 pequena e percentis descritivos não comprovam ampla cobertura ou segurança universal.
-TST-01/PG-01 dependem do fechamento próprio do aceite do MVP.
+TST-01/PG-01 foram fechados pela [consolidação própria do MVP](tst01-consolidacao.json),
+sem nova chamada ao modelo ou mudança dos resultados de AI-06.

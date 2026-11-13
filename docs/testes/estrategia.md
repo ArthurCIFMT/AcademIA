@@ -136,3 +136,13 @@ navegador, API e persistência reais com IA controlada. Relatório separa esse
 resultado do aceite do provedor real e de PG-01. Não substituir AI-06 pendente
 pela navegação ou por uma fixture aprovada. Concorrência permanece nos testes
 PostgreSQL próprios; o harness E2E serializa requisições para savepoints.
+
+## Fechamento do MVP
+
+A [consolidação TST-01](tst01-consolidacao.json) fechou PG-01 em 2026-11-12,
+com oito jornadas E2E compatíveis, 14 críticos atuais e AI-06 real aprovado.
+O [guia](aceitacao-mvp.md) define verificação de código, fontes, casos completos,
+rollback, migration e hashes dos relatórios/verificador. A execução local mantém
+seu snapshot original; a decisão final está no arquivo próprio de consolidação.
+Não repetir chamadas LLM ao consolidar nem apresentar testes históricos como
+novamente executados. Mudanças futuras invalidam evidências incompatíveis.

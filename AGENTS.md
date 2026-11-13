@@ -30,7 +30,9 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 
 ## Estágio atual
 
-O projeto está em implementação incremental do MVP. O manifesto em
+O MVP acadêmico está concluído, com TST-01 aprovado e PG-01 fechado.
+A evolução permanece incremental; o próximo passo é a revisão manual do responsável.
+O manifesto em
 `docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
 alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos
 e fontes do escopo afetado. Não invente
@@ -250,6 +252,10 @@ Backend, a partir de `backend/` com uv e Python 3.12:
 - RAG: com pesos locais e `ACADEMIA_TEST_EMBEDDINGS_REAL=1`, executar
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
+
+Consolidação do MVP, em backend/, sem chamadas externas:
+`uv run --locked python -m tests.acceptance.consolidation --output ./data/e2e/aceite-N.json`.
+A saída deve ser nova; consulte docs/testes/aceitacao-mvp.md.
 
 Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
 `npm run lint`, `npm run typecheck` e `npm run build`. Ver

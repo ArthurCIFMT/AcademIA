@@ -4,7 +4,7 @@
   "node": "v24.22.1",
   "ai06": {
     "arquivo": "docs/testes/ai06-consolidacao.json",
-    "sha256": "556764e9ed4a87b5d37218242d3458fb6b7947252d4dbdb4dcbcab3f87a68c05",
+    "sha256": "d95a290b19b9ed38ab2818fe126617c0f7c4a0869c7eaea8025ff7963a253cec",
     "aprovado": false,
     "estado": "PENDENTE_OU_REPROVADO"
   },
@@ -30,7 +30,9 @@
     "backend/app/modules/ai/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/app/modules/ai/adapters/context.py": "e34d4df683b9b071b94f2300005c123cc705813705e6e33cad3b3e734254594a",
     "backend/app/modules/ai/adapters/evidence.py": "58fc407acc6abfe181960113cda1f3b3d83450a408c62df923a699be299052c3",
-    "backend/app/modules/ai/adapters/groq.py": "ffe0a70d23c581c02d71befec2070dc4b48233b1484b0705ea92bc692f0954b7",
+    "backend/app/modules/ai/adapters/factory.py": "82af15a572f318bc654d4a9f8b091d240e05f2e361531c06b5892c13d670ef0e",
+    "backend/app/modules/ai/adapters/gemini.py": "2ec5efacd7a6aa4d4049c10149aecb31e40a5bbf52b7c72b5d7444408ef3af68",
+    "backend/app/modules/ai/adapters/groq.py": "f02043d709674bf9de75a08457b7cbbd098984ae73fc0f91b61f70ee59f38f84",
     "backend/app/modules/ai/adapters/health_config.py": "c24e907243e534d778af5c2978b2ec3408270a36aa560bda4fe91f51a6c3117d",
     "backend/app/modules/ai/chat/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/app/modules/ai/chat/http.py": "2cc24b3a099beba9f06d33d4b6100beba5c43f47302873ba7634c32a3c486cd6",
@@ -39,13 +41,13 @@
     "backend/app/modules/ai/chat/service.py": "ed0bdc21bc06cf0d3d2675d715a9a4eb4ed37028421b916dbce162fae451111b",
     "backend/app/modules/ai/chat/views.py": "367a8177188accbc1e345e4034d422b51e9858b074dc035e84d3b0a54901168c",
     "backend/app/modules/ai/followup.py": "08d7c81fb72308347a6471df122db445a62a23e31d5331b9e67f6aa784b5ed9f",
-    "backend/app/modules/ai/generation.py": "eb230c21f2761a2f5291dac010629ac827e7e79858b62be38572ddf7519517d8",
+    "backend/app/modules/ai/generation.py": "519450fe97b966c570d99a54ed0a85551393a2d209caca02555fb677698e5b6f",
     "backend/app/modules/ai/http.py": "ceb461ebb080f3487aaeb14116f5c59738e474439372448be7a8f127378a8391",
     "backend/app/modules/ai/orchestration/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/app/modules/ai/orchestration/presentation.py": "0426c7e6ed5b45ec01b9a36dc134fe8455782ee7ad9d7c3edb17ad5ecdef80ff",
     "backend/app/modules/ai/orchestration/queries.py": "9880e019caebb560566c17093a70f7de09d6a8245098362c441910938ffdc4b0",
     "backend/app/modules/ai/orchestration/service.py": "7d289f016ae50f45f17e8dd82f18754986261ace0b01ea8a73430277359ee9aa",
-    "backend/app/modules/ai/orchestration/settings.py": "ff33fa98b03ab7aafb1666107cbe7cc86a4630a328e1b1593263138b476f0d59",
+    "backend/app/modules/ai/orchestration/settings.py": "ba499156f48ced50bf849262c1bbd8468c234b894f14767e920b11712c08dcb2",
     "backend/app/modules/ai/orchestration/validation.py": "2289e6600a3912959498173621570922f2cefc18cf79bf60066a7d832ea3f965",
     "backend/app/modules/ai/persistence/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "backend/app/modules/ai/persistence/maintenance.py": "984538c226893a0469aed54f676ea69648e88a2e5d67630f3518ad71c14699b2",
@@ -162,7 +164,7 @@
     "backend/app/policies/access.py": "2aa59f8cda9a68d6d250c927127a9ae002f8ed1fff5489080feeb2f4d0ce7ecc",
     "backend/app/policies/http.py": "4b21eb2e18e8cf9decfc9aefd727ebb33fbffb38a25a803be2d80eaadf1ceeb1",
     "backend/tests/acceptance/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "backend/tests/acceptance/__main__.py": "9515d319ec1c917b20a313f3bf09c8c34c1204391a371223970b279888a838b0",
+    "backend/tests/acceptance/__main__.py": "2b1348e0d185adec7e8fb120c134bae16b391821029630a5998c3ddf13937869",
     "backend/tests/acceptance/fixtures.py": "8290cfef2b47757052a181be587070f6704335c272e35c9c65d61713acf4c653",
     "backend/tests/acceptance/test_reporting.py": "b761a8e346ececa1e4b1f6be2d6908d369d624d1d2853d4e27eed6f911e2f3b1",
     "backend/uv.lock": "98a436b4197a64984fd80a06184d22393bb3dc1e00c1dfc7cebaba1238fcbb85",
@@ -262,7 +264,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 20534,
+      "duracao_ms": 16751,
       "passou": true
     },
     {
@@ -271,7 +273,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 5991,
+      "duracao_ms": 4611,
       "passou": true
     },
     {
@@ -280,7 +282,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 13609,
+      "duracao_ms": 7972,
       "passou": true
     },
     {
@@ -289,7 +291,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 9122,
+      "duracao_ms": 7224,
       "passou": true
     },
     {
@@ -298,7 +300,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 9441,
+      "duracao_ms": 6660,
       "passou": true
     },
     {
@@ -307,7 +309,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 4726,
+      "duracao_ms": 3650,
       "passou": true
     },
     {
@@ -316,7 +318,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 5229,
+      "duracao_ms": 5534,
       "passou": true
     },
     {
@@ -325,7 +327,7 @@
       "estado": "expected",
       "tentativas": 1,
       "navegador": "157.0.4341.46",
-      "duracao_ms": 4598,
+      "duracao_ms": 5001,
       "passou": true
     }
   ],

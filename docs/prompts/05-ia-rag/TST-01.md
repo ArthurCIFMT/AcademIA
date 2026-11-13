@@ -3,6 +3,7 @@
 ## Metadados
 
 - Fase: MVP.
+- Estado atual: CONCLUIDO em 2026-11-12; [aceite reproduzível do MVP](../../testes/tst01-consolidacao.json).
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06.
 - Requisitos: RF-01–RF-19, RF-32, RF-33, RF-34, RF-35, RF-38; RN-37, RN-38, RN-39; RNF-07, RNF-10, RNF-14, RNF-18; MRF03–MRF06, MRF08–MRF14.

@@ -102,7 +102,7 @@ Execução local e containerização tardia seguem
 
 ## 5. Capacidades e estágio da implementação
 
-Retrato desta revisão, após AI-06 aprovado na amostra acadêmica v4. Consulte o manifesto para estados por cartão,
+Retrato desta revisão, após TST-01 concluído e PG-01 fechado. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
@@ -121,10 +121,13 @@ dependências, gates e evidências; atualize este resumo quando a entrega evolui
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
-AI-06 foi concluído na amostra acadêmica v4; o MVP ainda requer o aceite final de TST-01. Por autorização
+O MVP acadêmico foi concluído: AI-06 aprovado na amostra v4, TST-01 concluído e PG-01 fechado. Por autorização
 do responsável, o [E2E local de TST-01](../../docs/testes/aceitacao-mvp.md) foi adiantado
 e exercitou oito jornadas reais de navegador/API/banco com IA controlada.
-O [relatório](../../docs/testes/tst01-resultado.json) não aprova o modelo real ou PG-01.
+O [relatório local](../../docs/testes/tst01-resultado.json) conserva seu snapshot
+original; o [aceite final](../testes/tst01-consolidacao.json) combina oito jornadas
+compatíveis (237 arquivos), 14 críticos atuais e AI-06 real reproduzido.
+O consolidador tem código/hashes próprios e não chama provedores.
 O [runner](../../docs/testes/avaliacao-ia.md) e a [correção](../../docs/testes/ai06-correcao-fundamentacao.md)
 ativam trechos do livro em português, duas consultas fixas de prescrição/descanso,
 prompt v3 de idioma/triagem e apresentação factual dos campos gerados pelo LLM.
@@ -148,8 +151,9 @@ cobertura clínica ampla ou segurança universal. Extrapolações L03/L04 da
 [amostra v3](../testes/historico/ai06-2026-11-12-amostra-v3/README.md) permanecem
 históricas, sem declaração de correção. Não unir versões/modelos nem repetir
 resposta concluída para escolher melhor. Treino manual, saúde ausente, bloqueios,
-recursos e isolamento continuam obrigatórios. TST-01/PG-01 aguardam fechamento
-próprio das evidências locais; aprovação de AI-06 não aprova outros provedores.
+recursos e isolamento continuam obrigatórios. TST-01/PG-01 foram fechados pela
+[consolidação própria](../testes/tst01-consolidacao.json); aprovação de AI-06
+não aprova outros provedores. A revisão manual do aplicativo é o próximo passo.
 
 A [reserva 20B](../testes/ai06-reserva.md) e a
 [integração Gemini](../testes/ai06-gemini.md) permanecem candidatas explícitas
@@ -162,7 +166,7 @@ ou avaliação de relevância da busca. RAG-05 acrescenta o ensaio real de 28
 consultas sobre sete trechos de uma publicação; seu tamanho e limites estão no
 [contrato da recuperação](../../docs/arquitetura/recuperacao-semantica.md). Não
 comprova cobertura ampla ou geração de fichas. O livro Nahas integra o catálogo com original/hash e escopo parcial válido;
-a página 8 mantém a extração integral pendente. O aceite do MVP segue aberto.
+a página 8 mantém a extração integral pendente. O aceite do MVP está registrado na consolidação de TST-01, sem aprovar a extração integral.
 AI-01 entrega [triagem e preparação autorizada](../../docs/arquitetura/triagem-academica.md):
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e

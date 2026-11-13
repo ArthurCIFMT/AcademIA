@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "estado": "APROVADO",
+  "aceite_mvp": true,
+  "marco": "PG-01",
+  "criterios": {
+    "e2e_mesmo_codigo": true,
+    "oito_jornadas_uma_tentativa": true,
+    "navegador_e_api_reais": true,
+    "bootstrap_persistencia_rollback": true,
+    "migration_atual": true,
+    "e2e_controlado_separado_do_modelo": true,
+    "criticos_mesmo_codigo_e_fontes": true,
+    "criticos_completos_aprovados": true,
+    "ai06_real_aprovado_reproduzido": true
+  },
+  "codigo_atual_sha256": "0e283bf991061889d2e1e36ed6d8f46e59d2285cd1972b9a691456daed5bb218",
+  "arquivos_runtime_verificados": 237,
+  "jornadas": 8,
+  "criticos": 14,
+  "nota": "Aceite do MVP acadêmico. IA real é a amostra v4; não aprova módulos pós-MVP.",
+  "algoritmo_hash": "JSON_CANONICO_V1",
+  "entradas_sha256": {
+    "e2e": "9870f5975acb1ef79c8cda9943990a0ae5aa2a5d7f3d40665262dc6ddbc995d7",
+    "criticos": "c61c7b99f7ca8242e3775557b60589e126d91686397143aa79d3b448b61eea27",
+    "ai06": "0ff329b01788fbb9f10e389a2fdb68f99c6f544330ca6361e0d575d737c7db19"
+  },
+  "verificador_sha256": {
+    "backend/tests/acceptance/consolidation/__init__.py": "38354eb0e82eff7663bee2d0a5cdc97eee9126fede37a8ffd8ae003b22938658",
+    "backend/tests/acceptance/consolidation/__main__.py": "7dd134c49c1b3b86d4f536c112875be0021d4c656d1c188ea08d4f3fc2528bd9",
+    "backend/tests/acceptance/consolidation/test_gate.py": "8ffb428f88331532e07221fa48a32d653b3a6942e86d73ddbfd23f093d5ba4e2"
+  }
+}

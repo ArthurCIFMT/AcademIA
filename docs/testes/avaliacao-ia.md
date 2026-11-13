@@ -174,5 +174,6 @@ e fundamentadas, duas fichas válidas, zero falhas críticas observadas. Os 30
 cenários locais e 117 backend/20 frontend já vinculados continuam evidência
 determinística. As três partes/duas recusas anteriores estão preservadas; L09/L13
 não foram refeitos. Não se alterou código/modelo/parâmetros para fechar a rodada.
-AI-06 CONCLUIDO; TST-01 permanece em execução até sua consolidação final.
+AI-06 CONCLUIDO; TST-01 foi concluído na [consolidação própria](tst01-consolidacao.json),
+sem repetir o ensaio real aprovado.
 Percentis são descritivos; aprovação não qualifica reservas ou corrige falhas v3.

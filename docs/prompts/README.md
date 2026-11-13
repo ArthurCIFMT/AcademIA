@@ -55,7 +55,7 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
-| PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | ABERTO |
+| PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
 | PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; exclui VAL-01–VAL-03 | Manifesto, decisões e matriz de aceite com escopo explícito | ABERTO |
 
@@ -226,6 +226,18 @@ chamadas selecionadas/17.142 tokens; dez/18.937 incluindo recusas antigas.
 AI-06 CONCLUIDO na amostra acadêmica; TST-01 EM_EXECUCAO e PG-01 ABERTO até
 consolidação final do MVP. Reservas/fallback e demais módulos não implementados.
 
+### Fechamento TST-01 e PG-01 — 2026-11-12
+
+[Consolidação APROVADO](../testes/tst01-consolidacao.json),
+[evidência E2E compatível](../testes/tst01-resultado.json),
+[14 críticos atuais](../testes/tst01-criticos.json) e
+[guia](../testes/aceitacao-mvp.md). Oito jornadas existentes têm os mesmos
+237 hashes do runtime; publicação anterior preservada. Reexecução focal
+14/14 aprovada, 21 guardas do aceite aprovadas; Ruff/formato/mypy (228 fontes),
+SPEC/DOC verificados. AI-06 aprovado reproduzido sem chamada LLM.
+TST-01 CONCLUIDO; PG-01 FECHADO. Revisão manual do MVP liberada. PG-02/PG-03
+e módulos posteriores mantêm seus próprios gates; Docker continua tardio.
+
 ## Fundação
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
@@ -296,7 +308,7 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-04](05-ia-rag/AI-04.md) | Solicitação, acompanhamento e comunicação com instrutor | MOD-06, MOD-04, MOD-12 | AI-03, TRN-03, NTF-01 | CONCLUIDO |
 | [AI-05](05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
 | [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | CONCLUIDO |
-| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | EM_EXECUCAO |
+| [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | CONCLUIDO |
 
 ## Pós-MVP — matrícula e controle de acesso
 
@@ -367,9 +379,9 @@ fechados documentalmente. A preparação FND-01–FND-03, a estrutura do backend
 FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contratos REST. FND-07 concluiu a base do frontend. FND-08 concluiu auditoria e eventos. A fundação, IAM-01 a IAM-05, NTF-01, PES-01 a PES-03, ONB-01 a ONB-04, EQP-01, TRN-01 a TRN-04 e RAG-01 a RAG-05 estão concluídos. AI-01 a AI-05 também estão concluídos.
 AI-06 está CONCLUIDO na [amostra acadêmica v4](../testes/ai06-enxuto.md): cinco
 saídas aprovadas com revisão vinculada e zero falhas críticas observadas.
-TST-01 permanece EM_EXECUCAO para consolidar suas evidências locais com AI-06
-e fechar PG-01. Não repetir os ensaios reais aprovados nem iniciar módulo
-pós-MVP/fallback antes desse fechamento.
+TST-01 está CONCLUIDO e PG-01 FECHADO pela [consolidação do MVP](../testes/tst01-consolidacao.json).
+Próximo passo: revisão manual do responsável no aplicativo local. Não repetir
+ensaios reais aprovados; fases posteriores exigem seus cartões e gates próprios.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.
