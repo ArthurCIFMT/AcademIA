@@ -1,6 +1,8 @@
 # Correção de idioma e fundamentação — AI-06
 
-Registro da amostra v2; [demonstração acadêmica v3 vigente](ai06-academico.md).
+Registro histórico da amostra v2. A [avaliação vigente v4](ai06-enxuto.md)
+e o [aceite do MVP](tst01-consolidacao.json) estão aprovados; os resultados
+e falhas desta etapa anterior permanecem preservados.
 
 O LLM continua gerando a estrutura da ficha: dias, exercícios existentes,
 séries, repetições, carga quando conhecida, cadência, pausas e observações.

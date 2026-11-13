@@ -13421,9 +13421,11 @@ A curadoria é técnica e delegada; não exige laudo ou aprovação externa.
 
 #### Exemplos e resultados esperados
 A matriz deste preparo anterior é [ai06-casos-v2.json](docs/testes/ai06-casos-v2.json).
-A demonstração vigente reduzida usa [v3](docs/testes/ai06-casos-v3.json), conforme
+A demonstração vigente usa a [amostra v4](docs/testes/ai06-casos-v4.json), com
+[aceite e limites](docs/testes/ai06-enxuto.md), conforme o
 [escopo aprovado](docs/requisitos/escopo-ia-academico.md).
-Mantém os 30 vínculos SV/SC; amplia a amostra real de 24 para 27 casos.
+Este preparo histórico ampliou a amostra de 24 para 27 casos, mantendo os
+30 vínculos SV/SC; essa quantidade foi substituída na avaliação vigente.
 Os cinco perfis elegíveis têm negativas de saúde explicitamente declaradas:
 iniciante sedentário (2 × 40 min), retorno após inatividade (2 × 45 min),
 agenda curta (2 × 30 min), hipertrofia intermediária (3 × 60 min) e
@@ -14383,7 +14385,9 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
 
 Fonte versionada: [docs/testes/ai06-correcao-fundamentacao.md](docs/testes/ai06-correcao-fundamentacao.md).
 
-Registro da amostra v2; [demonstração acadêmica v3 vigente](docs/testes/ai06-academico.md).
+Registro histórico da amostra v2. A [avaliação vigente v4](docs/testes/ai06-enxuto.md)
+e o [aceite do MVP](docs/testes/tst01-consolidacao.json) estão aprovados; os resultados
+e falhas desta etapa anterior permanecem preservados.
 
 O LLM continua gerando a estrutura da ficha: dias, exercícios existentes,
 séries, repetições, carga quando conhecida, cadência, pausas e observações.
@@ -15180,7 +15184,9 @@ Fonte versionada: [docs/testes/tst01-resultado.json](docs/testes/tst01-resultado
 
 Fonte versionada: [docs/testes/ai06-reserva.md](docs/testes/ai06-reserva.md).
 
-Registro da amostra v2; [demonstração acadêmica v3 vigente](docs/testes/ai06-academico.md).
+Registro histórico da amostra v2. A [avaliação vigente v4](docs/testes/ai06-enxuto.md)
+e o [aceite do MVP](docs/testes/tst01-consolidacao.json) estão aprovados; os resultados
+e falhas desta etapa anterior permanecem preservados.
 
 #### Resultado
 
@@ -15277,7 +15283,11 @@ anterior. O aceite atual exige conjunto completo consistente da nova composiçã
 
 Fonte versionada: [docs/testes/ai06-gemini.md](docs/testes/ai06-gemini.md).
 
-#### Estado atual
+Registro do candidato Gemini e de seu ensaio anterior. O modelo principal foi
+aprovado na [amostra v4](docs/testes/ai06-enxuto.md), e o
+[MVP foi aceito](docs/testes/tst01-consolidacao.json); isso não qualifica a reserva Gemini.
+
+#### Estado da integração candidata
 
 **Integração entregue; modelo ainda não qualificado.** Principal continua Groq/
 GPT-OSS 120B. A chave fornecida pelo responsável foi aceita pela API oficial e
@@ -15320,7 +15330,7 @@ recusas anteriores e não troca resposta concluída/falha de qualidade. A revis�
 não inventa avaliação de saída inexistente. Modelos/configurações diferentes
 não se unem; partes pré-Gemini da Groq permanecem históricas.
 
-**AI-06/TST-01 permanecem EM_EXECUCAO; PG-01 ABERTO.** Teste mínimo, JSON válido,
+**Situação à época deste ensaio:** AI-06/TST-01 em execução e PG-01 aberto. Teste mínimo, JSON válido,
 boa latência de três dúvidas ou mocks não aprovam o LLM real. Não foi afrouxado
 nenhum limiar, bloqueio de saúde, restrição de recursos ou permissão.
 
@@ -15380,7 +15390,8 @@ Não executar a retomada v3 como aceite da versão vigente.
 
 [Escopo aprovado](docs/requisitos/escopo-ia-academico.md) e
 [ADR-010](docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md).
-Amostra vigente: [v3](docs/testes/ai06-casos-v3.json); v2 continua histórica.
+Amostra deste registro histórico: [v3](docs/testes/ai06-casos-v3.json).
+A avaliação vigente é a [v4](docs/testes/ai06-enxuto.md).
 
 #### Mudanças
 
@@ -16193,7 +16204,9 @@ suas rotas manuais não dependem de abrir o índice. A [extração offline](docs
 já oferece serviço interno com proveniência e registro privado de estados.
 RAG-04 entrega [chunking e indexação com E5 CPU](docs/arquitetura/indexacao-documental.md).
 RAG-05 entrega [recuperação semântica/citações](docs/arquitetura/recuperacao-semantica.md),
-sem LLM; geração/triagem/chat serão integrados pelos cartões AI.
+sem LLM. Geração, triagem e chat foram integrados pelos cartões AI-01–AI-05;
+[AI-06](docs/testes/ai06-enxuto.md) e
+[TST-01](docs/testes/aceitacao-mvp.md) registram os aceites concluídos do MVP.
 
 #### Embeddings e indexação offline
 
@@ -16227,8 +16240,8 @@ uv run --locked --env-file ../.env python -m app.modules.knowledge.retrieval --r
 ~~~
 
 Entrada segue o [schema](docs/requisitos/schemas/recuperacao-v1.schema.json).
-contexto_id é um UUID do contexto autorizado; em futura rota pública o backend
-deve resolvê-lo pela sessão. A CLI é ferramenta do operador local e não substitui
+contexto_id é um UUID do contexto autorizado. Nas rotas públicas de IA/chat,
+o backend resolve o titular pela sessão. A CLI é ferramenta do operador local e não substitui
 a autorização REST. Coleção vazia resulta em SEM_EVIDENCIAS. Não há chamada LLM.
 O guia detalha aprovação/revogação, saúde, cache e inicialização fria do modelo.
 
@@ -16238,7 +16251,7 @@ AI-01 entrega GET /api/v1/ia/triagem/preparacao para cliente autenticado, usando
 o snapshot próprio mais recente, sem body ou seleção de outro titular. O
 [contrato](docs/arquitetura/triagem-academica.md) descreve estados, códigos,
 limites e revalidação. A resposta não inclui anamnese ou resumo completo.
-Sem adaptador LLM (AI-02), caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
+Sem adaptador LLM configurado, caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
 permitida. O serviço interno já recebe porta assistida tipada para composição;
 não habilitar doubles por variável de ambiente ou entrada do cliente.
 
@@ -16249,7 +16262,8 @@ versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
 A composição exige StatePort explícito, implementado com PostgreSQL no AI-03.
 Não há armazenamento volátil de produção; a API de execução está descrita abaixo.
 GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
-pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
+pessoal/rede Groq. Qualidade e latência reais foram avaliadas na
+[amostra acadêmica de AI-06](docs/testes/ai06-enxuto.md).
 HTTPX passou de dependência de teste a runtime, sem alterar sua versão.
 
 #### Geração persistente AI-03
@@ -16260,8 +16274,9 @@ a migration 0014 conforme database/README.md. POST autenticado em
 GET/DELETE da própria solicitação consultam/cancelam sem repetir LLM.
 Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
 Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
-sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
-não representam aceite de qualidade/latência da Groq, que permanece em AI-06.
+sem evidência pertinente, abster-se. A interface foi entregue em AI-04.
+O aceite de qualidade/latência está na amostra aprovada de AI-06; os testes
+controlados deste módulo são evidência separada.
 
 #### Acompanhamento AI-04
 
@@ -16576,7 +16591,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 |---|---|
 | `.env.example` | `c337599b3e095ae7462404805c11fc45407142e0b674b6c7358854c352fb31c0` |
 | `AGENTS.md` | `41041ddab90fa4399dcbbf2d2a804a66c81da66e3678df02d7f13b644d50d9aa` |
-| `backend/README.md` | `7ce921d7ceea3bb511352658f9b8691f3f63b8feaf94ea44a85b368fe50c026d` |
+| `backend/README.md` | `809a8c99835a3064d18752f02ea5af2fbcb20a6e3ab526485946775812f53b2c` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
@@ -16649,21 +16664,21 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
 | `docs/testes/aceitacao-mvp.md` | `b9625ce93cebfc2592339ede1b5ef6634a6122c6710caaa69e9e41359a63addd` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
-| `docs/testes/ai06-academico.md` | `15a7e9d39ef00165e474b8be93ca43ed11668eed1eeb3a12c0d0acdfbfcf2089` |
+| `docs/testes/ai06-academico.md` | `9a4dcb52bae138263fed9ae8ee31d6c1a9f2e64ce3e5549a854a2f21744c783c` |
 | `docs/testes/ai06-casos-v4.json` | `45e5a13ada33fd46681c592cbb4dda0294172c152dcc822e6ec065a0554d7666` |
 | `docs/testes/ai06-catalogo-v1.json` | `a54bed6a338b70d3cf03a807b903ebe2cd8d80349cc72805565d3f0361a67ab3` |
 | `docs/testes/ai06-consolidacao.json` | `1d07851ae3f64a03ad07c40f85ba1270ea3201c4da56b606256f8f18cc322fe2` |
 | `docs/testes/ai06-corpus-v2.json` | `51e471e5cdf112fd16f0282b5b3cbfa1029924679711b5286e2cbf9da30de349` |
-| `docs/testes/ai06-correcao-fundamentacao.md` | `a76d000d2b0d49c9476ab41d2149d0e16ee4d86954409158f9cfc774a11d4782` |
+| `docs/testes/ai06-correcao-fundamentacao.md` | `0d25e8d05a7e353d324ffb53fda3834bb5b165273a3724bb605e07031a9ca5f2` |
 | `docs/testes/ai06-enxuto.md` | `49cb9df8a282b0b41d11bac97d5d8f91c2e9b477707762427dbdd487f80d75a5` |
-| `docs/testes/ai06-gemini.md` | `024b1afa3ba2ce637ac345b73476cc4b928424029f1734ec00395ee57f5b386b` |
-| `docs/testes/ai06-reserva.md` | `9afa40f6d45caf5ee444a9784d82e370f5aab027ee31bb9aab9f96babca9c7fd` |
+| `docs/testes/ai06-gemini.md` | `e201bb387e1165a12b22199613576d3aabd05396247bd8731128804365700c82` |
+| `docs/testes/ai06-reserva.md` | `7afc1476cd2970fc5f086976661d0fc3e7c07f557c40285cc874929734bbb4e0` |
 | `docs/testes/ai06-resumo.json` | `db11e31c9651991709836cfdbe9afd2a839fb7f20cd10d4d9d57c0b2a6e01b14` |
 | `docs/testes/avaliacao-ia.md` | `aadadadd52a6ec11595b6468b0549299901d274f384dcb3aed460c5d94bbfa4f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `db5c5976eaf0a6aa800ff8f10b3b4035c3921a868bbd37ab37367cd739bfae8b` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
-| `docs/testes/preparacao-ai06.md` | `9b6fc57c33c3f4da19517aaeabd0f047eda3c383a54c6542aea7d75c7806f671` |
+| `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-ia-semantico.md` | `c255846226e125dbbc86bd1531c678fc7ddbcdd109d96508103f7b91407fbab3` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |

@@ -1,6 +1,8 @@
 # AI-06 — Retomada e candidato gratuito de reserva
 
-Registro da amostra v2; [demonstração acadêmica v3 vigente](ai06-academico.md).
+Registro histórico da amostra v2. A [avaliação vigente v4](ai06-enxuto.md)
+e o [aceite do MVP](tst01-consolidacao.json) estão aprovados; os resultados
+e falhas desta etapa anterior permanecem preservados.
 
 ## Resultado
 

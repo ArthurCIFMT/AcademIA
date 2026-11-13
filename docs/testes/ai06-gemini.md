@@ -1,6 +1,10 @@
 # AI-06 — Integração e ensaio separado da Gemini API
 
-## Estado atual
+Registro do candidato Gemini e de seu ensaio anterior. O modelo principal foi
+aprovado na [amostra v4](ai06-enxuto.md), e o
+[MVP foi aceito](tst01-consolidacao.json); isso não qualifica a reserva Gemini.
+
+## Estado da integração candidata
 
 **Integração entregue; modelo ainda não qualificado.** Principal continua Groq/
 GPT-OSS 120B. A chave fornecida pelo responsável foi aceita pela API oficial e
@@ -43,7 +47,7 @@ recusas anteriores e não troca resposta concluída/falha de qualidade. A revis�
 não inventa avaliação de saída inexistente. Modelos/configurações diferentes
 não se unem; partes pré-Gemini da Groq permanecem históricas.
 
-**AI-06/TST-01 permanecem EM_EXECUCAO; PG-01 ABERTO.** Teste mínimo, JSON válido,
+**Situação à época deste ensaio:** AI-06/TST-01 em execução e PG-01 aberto. Teste mínimo, JSON válido,
 boa latência de três dúvidas ou mocks não aprovam o LLM real. Não foi afrouxado
 nenhum limiar, bloqueio de saúde, restrição de recursos ou permissão.
 

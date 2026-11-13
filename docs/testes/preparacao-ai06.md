@@ -8,9 +8,11 @@ A curadoria é técnica e delegada; não exige laudo ou aprovação externa.
 
 ## Exemplos e resultados esperados
 A matriz deste preparo anterior é [ai06-casos-v2.json](ai06-casos-v2.json).
-A demonstração vigente reduzida usa [v3](ai06-casos-v3.json), conforme
+A demonstração vigente usa a [amostra v4](ai06-casos-v4.json), com
+[aceite e limites](ai06-enxuto.md), conforme o
 [escopo aprovado](../requisitos/escopo-ia-academico.md).
-Mantém os 30 vínculos SV/SC; amplia a amostra real de 24 para 27 casos.
+Este preparo histórico ampliou a amostra de 24 para 27 casos, mantendo os
+30 vínculos SV/SC; essa quantidade foi substituída na avaliação vigente.
 Os cinco perfis elegíveis têm negativas de saúde explicitamente declaradas:
 iniciante sedentário (2 × 40 min), retorno após inatividade (2 × 45 min),
 agenda curta (2 × 30 min), hipertrofia intermediária (3 × 60 min) e

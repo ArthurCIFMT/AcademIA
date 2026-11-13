@@ -5,7 +5,8 @@ Não executar a retomada v3 como aceite da versão vigente.
 
 [Escopo aprovado](../requisitos/escopo-ia-academico.md) e
 [ADR-010](../arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md).
-Amostra vigente: [v3](ai06-casos-v3.json); v2 continua histórica.
+Amostra deste registro histórico: [v3](ai06-casos-v3.json).
+A avaliação vigente é a [v4](ai06-enxuto.md).
 
 ## Mudanças
 

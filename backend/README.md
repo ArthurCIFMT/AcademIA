@@ -58,7 +58,9 @@ suas rotas manuais não dependem de abrir o índice. A [extração offline](../d
 já oferece serviço interno com proveniência e registro privado de estados.
 RAG-04 entrega [chunking e indexação com E5 CPU](../docs/arquitetura/indexacao-documental.md).
 RAG-05 entrega [recuperação semântica/citações](../docs/arquitetura/recuperacao-semantica.md),
-sem LLM; geração/triagem/chat serão integrados pelos cartões AI.
+sem LLM. Geração, triagem e chat foram integrados pelos cartões AI-01–AI-05;
+[AI-06](../docs/testes/ai06-enxuto.md) e
+[TST-01](../docs/testes/aceitacao-mvp.md) registram os aceites concluídos do MVP.
 
 ## Embeddings e indexação offline
 
@@ -92,8 +94,8 @@ uv run --locked --env-file ../.env python -m app.modules.knowledge.retrieval --r
 ~~~
 
 Entrada segue o [schema](../docs/requisitos/schemas/recuperacao-v1.schema.json).
-contexto_id é um UUID do contexto autorizado; em futura rota pública o backend
-deve resolvê-lo pela sessão. A CLI é ferramenta do operador local e não substitui
+contexto_id é um UUID do contexto autorizado. Nas rotas públicas de IA/chat,
+o backend resolve o titular pela sessão. A CLI é ferramenta do operador local e não substitui
 a autorização REST. Coleção vazia resulta em SEM_EVIDENCIAS. Não há chamada LLM.
 O guia detalha aprovação/revogação, saúde, cache e inicialização fria do modelo.
 
@@ -103,7 +105,7 @@ AI-01 entrega GET /api/v1/ia/triagem/preparacao para cliente autenticado, usando
 o snapshot próprio mais recente, sem body ou seleção de outro titular. O
 [contrato](../docs/arquitetura/triagem-academica.md) descreve estados, códigos,
 limites e revalidação. A resposta não inclui anamnese ou resumo completo.
-Sem adaptador LLM (AI-02), caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
+Sem adaptador LLM configurado, caso não bloqueado fica AGUARDANDO_ANALISE, sem geração
 permitida. O serviço interno já recebe porta assistida tipada para composição;
 não habilitar doubles por variável de ambiente ou entrada do cliente.
 
@@ -114,7 +116,8 @@ versionados, adaptador HTTP Groq e pontes de contexto/RAG estão implementados.
 A composição exige StatePort explícito, implementado com PostgreSQL no AI-03.
 Não há armazenamento volátil de produção; a API de execução está descrita abaixo.
 GET de preparação continua sem LLM. Testes AI-02 usam MockTransport, sem chave
-pessoal/rede Groq; qualidade e latência reais serão avaliadas em AI-06.
+pessoal/rede Groq. Qualidade e latência reais foram avaliadas na
+[amostra acadêmica de AI-06](../docs/testes/ai06-enxuto.md).
 HTTPX passou de dependência de teste a runtime, sem alterar sua versão.
 
 ## Geração persistente AI-03
@@ -125,8 +128,9 @@ a migration 0014 conforme database/README.md. POST autenticado em
 GET/DELETE da própria solicitação consultam/cancelam sem repetir LLM.
 Publicação cria origem IA/parecer PENDENTE e aplica retenção pelo MOD-04.
 Requer configuração local do corpus/embeddings e GROQ_API_KEY para uso real;
-sem evidência pertinente, abster-se. Sem tela nova até AI-04. Testes controlados
-não representam aceite de qualidade/latência da Groq, que permanece em AI-06.
+sem evidência pertinente, abster-se. A interface foi entregue em AI-04.
+O aceite de qualidade/latência está na amostra aprovada de AI-06; os testes
+controlados deste módulo são evidência separada.
 
 ## Acompanhamento AI-04
 

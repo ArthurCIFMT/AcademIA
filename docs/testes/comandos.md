@@ -1,7 +1,8 @@
 # Registro de comandos de verificação
 
 BE, DB e INT cobrem a base do backend e do banco. DOC verifica os artefatos
-do repositório. As demais suites serão configuradas nos prompts indicados.
+do repositório. Os comandos vigentes estão na tabela; infraestrutura final
+continua vinculada aos prompts e gates próprios.
 As siglas são referências para os prompts e não devem ser executadas no terminal.
 Suíte significa conjunto organizado de testes. IA inclui dúvidas, resumo/triagem e geração LLM;
 RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
@@ -13,7 +14,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | INT | `uv run --locked --env-file ../.env pytest -m integration` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | API | `uv run --locked pytest tests/contracts` em `backend/` | Disponível no FND-06 |
 | FE | `npm test` em `frontend/` | Disponível no FND-07 |
-| E2E | `ACADEMIA_E2E=1` + `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N` em backend/ | TST-01 local com IA controlada; aceite real pendente |
+| E2E | `ACADEMIA_E2E=1` + `uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/rodada-N` em backend/ | TST-01 concluído; [aceite consolidado do MVP](tst01-consolidacao.json) |
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py` em backend/; exige flag E5 real e pesos locais | Disponível no RAG-05; configuração abaixo |
 | IA | `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N`; modo real/revisão no guia | AI-06: [runner e pré-condições](avaliacao-ia.md) |
