@@ -17,7 +17,7 @@ class Config(StrictModel):
     reasoning_effort: Literal["low", "minimal"]
     include_reasoning: Literal[False]
     base_url: str
-    response_format: Literal["json_object"]
+    response_format: Literal["json_object", "json_schema"]
     temperature: float
     concurrency: Literal[1]
     embedding: dict[str, object]

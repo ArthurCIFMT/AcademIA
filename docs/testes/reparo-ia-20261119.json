@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "data": "2026-11-19",
+  "escopo": "Reparo focal após revisão manual de IA/RAG; não é nova consolidação AI-06/TST-01 completa.",
+  "decisao": "ADR-012",
+  "prompts": "academia-ia-v4",
+  "modelo": "openai/gpt-oss-120b",
+  "limites": {
+    "candidatos_alvo": 12,
+    "base_adaptacao_preservada": true,
+    "alternativa_adaptacao": true,
+    "geracao_saida_tokens": 2048,
+    "tentativas_llm_por_etapa": 1,
+    "fallback_automatico": false
+  },
+  "reais": {
+    "geracao_integrada": {
+      "rota": "generation",
+      "estado": "PUBLICADA",
+      "motivo": "PROPOSTA_VALIDADA",
+      "modelo": "openai/gpt-oss-120b",
+      "prompts": "academia-ia-v4",
+      "configuracao_sha256": "785e4f6ac5551e3da597094b943b62738332c68d53165038066e956ce3d109eb",
+      "consumo": [
+        {
+          "etapa": "GERACAO",
+          "chamadas_fisicas": 1,
+          "limite_saida_tokens": 2048,
+          "prompt_bytes": 13626,
+          "prompt_sha256": "6e73d6b171c8f8b3b7a911e5d7243f772d8630a2b3667cd857386f734e0da42b",
+          "uso": {
+            "prompt_tokens": 4103,
+            "completion_tokens": 1450,
+            "total_tokens": 5553
+          },
+          "consumo_desconhecido": false
+        },
+        {
+          "etapa": "TRIAGEM",
+          "chamadas_fisicas": 1,
+          "limite_saida_tokens": 400,
+          "prompt_bytes": 7611,
+          "prompt_sha256": "84344da406c6fa2af9e5f464d3d91cb25e00a9b05c4678da780adedbaf2f51be",
+          "uso": {
+            "prompt_tokens": 1624,
+            "completion_tokens": 179,
+            "total_tokens": 1803
+          },
+          "consumo_desconhecido": false
+        }
+      ],
+      "resposta": null
+    },
+    "duvida_esteira": {
+      "rota": "chat",
+      "estado": "RESPOSTA_PRONTA",
+      "motivo": "RESPOSTA_VALIDADA",
+      "modelo": "openai/gpt-oss-120b",
+      "prompts": "academia-ia-v4",
+      "configuracao_sha256": "785e4f6ac5551e3da597094b943b62738332c68d53165038066e956ce3d109eb",
+      "consumo": [
+        {
+          "etapa": "CHAT",
+          "chamadas_fisicas": 1,
+          "limite_saida_tokens": 600,
+          "prompt_bytes": 6018,
+          "prompt_sha256": "a5d3e43d791db026acf6d867a14de0a06bf5b594c37fc52085c21768e5f9a857",
+          "uso": {
+            "prompt_tokens": 1534,
+            "completion_tokens": 318,
+            "total_tokens": 1852
+          },
+          "consumo_desconhecido": false
+        }
+      ],
+      "resposta": "Para obter os benefícios recomendados de atividade física, a orientação geral para adultos é:\n- Se a intensidade for moderada (ex.: caminhada rápida, corrida leve), praticar ao menos 150 minutos por semana.\n- Se a intensidade for vigorosa (ex.: corrida rápida, intervalos de alta intensidade), praticar ao menos 75 minutos por semana.\nDividindo esses valores ao longo dos dias, pode‑se, por exemplo, fazer 30 minutos de atividade moderada em 5 dias da semana, ou 15 minutos de atividade vigorosa em 5 dias. Essas metas são flexíveis: você pode distribuir o tempo em blocos menores ou fazer sessões mais longas, conforme sua disponibilidade e preferência."
+    }
+  },
+  "falhas_observadas": [
+    {
+      "fase": "Diagnóstico do modo anterior",
+      "estado": "HTTP_400",
+      "saida_bruta_persistida": false
+    },
+    {
+      "fase": "Primeira integração do contrato novo",
+      "estado": "FALHA",
+      "motivo": "REQUISICAO_PROVEDOR_RECUSADA",
+      "causa_especifica": "Não capturada. Nova execução integrada passou; não foi retry automático."
+    }
+  ],
+  "runtime": {
+    "data": "2026-11-19",
+    "backup_criado": true,
+    "dominios_preservados": true,
+    "servicos_web_desligados": true,
+    "replay_sem_duplicatas": true,
+    "ingestoes_ativas": 6,
+    "fragmentos_ativos": 28,
+    "vetores_fisicos": 33,
+    "recall_rotulado": 1.0,
+    "consultas": [
+      {
+        "id": "volume-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "volume-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "volume-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "frequencia-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "frequencia-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "frequencia-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "acoes-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "acoes-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "acoes-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "intervalo-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "intervalo-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "intervalo-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "cadencia-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "cadencia-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "cadencia-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "amplitude-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "amplitude-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "amplitude-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-1",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-2",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-3",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-4",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-5",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "abstract-6",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS"
+      },
+      {
+        "id": "fora-1",
+        "correto": true,
+        "estado": "EVIDENCIA_INSUFICIENTE"
+      },
+      {
+        "id": "fora-2",
+        "correto": true,
+        "estado": "EVIDENCIA_INSUFICIENTE"
+      },
+      {
+        "id": "fora-3",
+        "correto": true,
+        "estado": "EVIDENCIA_INSUFICIENTE"
+      },
+      {
+        "id": "fora-4",
+        "correto": true,
+        "estado": "EVIDENCIA_INSUFICIENTE"
+      },
+      {
+        "id": "aerobico-1",
+        "consulta": "Quanto tempo é recomendavel de exercicio na esteira por dia?",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS",
+        "fontes": [
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8612071385390276,
+            "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+          },
+          {
+            "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+            "pagina": 13,
+            "score": 0.8587456141143753,
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 24,
+            "score": 0.8574127199745201,
+            "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8530988186564641,
+            "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8441979673138647,
+            "texto_hash": "816530e57360db7718ecc10dbea793a66cc69509eb7bc20642f4abb808f815f2"
+          }
+        ]
+      },
+      {
+        "id": "aerobico-2",
+        "consulta": "Quantos minutos de caminhada moderada por semana para adultos?",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS",
+        "fontes": [
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 24,
+            "score": 0.8937978175988022,
+            "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8868669428394482,
+            "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8833694701368912,
+            "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8546359327490207,
+            "texto_hash": "816530e57360db7718ecc10dbea793a66cc69509eb7bc20642f4abb808f815f2"
+          },
+          {
+            "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+            "pagina": 13,
+            "score": 0.8179063179033915,
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+          }
+        ]
+      },
+      {
+        "id": "aerobico-3",
+        "consulta": "Quanto tempo de corrida vigorosa por semana?",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS",
+        "fontes": [
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8820462129848429,
+            "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8599970946717237,
+            "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 24,
+            "score": 0.8448525061000237,
+            "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+          },
+          {
+            "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+            "pagina": 13,
+            "score": 0.8432496016601154,
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+          },
+          {
+            "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+            "pagina": 6,
+            "score": 0.8322117458910595,
+            "texto_hash": "d066b8701e23bcc27b9de9d2e085939e3edcf04c96af6d19bc990110f97d0f11"
+          }
+        ]
+      },
+      {
+        "id": "aerobico-4",
+        "consulta": "Posso dividir os exercícios em blocos durante o dia?",
+        "correto": true,
+        "estado": "EVIDENCIAS_ENCONTRADAS",
+        "fontes": [
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8841123510647853,
+            "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8502703199524355,
+            "texto_hash": "816530e57360db7718ecc10dbea793a66cc69509eb7bc20642f4abb808f815f2"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 25,
+            "score": 0.8401715387923769,
+            "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+          },
+          {
+            "titulo": "Guia de Atividade Física para a População Brasileira",
+            "pagina": 24,
+            "score": 0.8334024364975041,
+            "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+          },
+          {
+            "titulo": "Variáveis da prescrição de treinamento resistido aplicadas a hipertrofia muscular: uma revisão narrativa",
+            "pagina": 13,
+            "score": 0.8332641416353183,
+            "texto_hash": "3a6843708f1c0073d24f431ea7c122b8ee79448f47db6172d63d168329a409a6"
+          }
+        ]
+      }
+    ],
+    "chamadas_llm": 0
+  },
+  "testes": {
+    "unitarios_e_contratos": {
+      "aprovados": 260,
+      "deselecionados_integracao": 102
+    },
+    "integracao": {
+      "primeira_rodada_aprovados": 90,
+      "primeira_rodada_falhas": 1,
+      "falha": "Expectativa final de contagem de vetores no teste de preparo ainda usava 29; corrigida para 33, incluindo os quatro recortes novos.",
+      "reexecucao_preparo_aprovados": 3,
+      "casos_distintos_aprovados": 91,
+      "ignorados_opt_in": 9,
+      "novos_opt_in_executados_separadamente": 3
+    },
+    "frontend": {
+      "aprovados": 93,
+      "arquivos": 20
+    },
+    "revisao_final_catalogo_adaptacao": {
+      "aprovados": 50
+    },
+    "mypy": {
+      "fontes": 235,
+      "resultado": "APROVADO"
+    },
+    "ruff": "APROVADO",
+    "formato_python": "APROVADO",
+    "frontend_lint": "APROVADO",
+    "frontend_build_e_tipos": "APROVADO"
+  },
+  "limites_evidencia": [
+    "Recusa HTTP 400 adicional observada e registrada. Não há garantia de disponibilidade do provedor gratuito.",
+    "Amostras reais são sintéticas e focais; não cobrem todos os perfis nem substituem nova qualificação integral.",
+    "Fichas extensas podem exceder 2048 tokens; saída interrompida não publica.",
+    "Fontes aeróbicas sustentam orientação geral para adultos, não dose individual nem protocolo específico de aparelho.",
+    "Edição do próprio perfil não implementada neste escopo."
+  ],
+  "identidade_fontes": {
+    "backend/app/modules/ai/prompts/v1.py": "ca82c87fdd8817246056ff8a5b80bd8fe1c3951698fd5f894e437c4580691946",
+    "backend/app/modules/ai/adapters/structured.py": "817605df9f14a82ae918c563e1e10c7ac9eb2266d16a809f8a37eded1c285a1f",
+    "backend/app/modules/ai/orchestration/catalog_budget.py": "8ddf487bc4b0dda2f4440cdda99f7f37bb5a37dbb5b6d044d86002128b6eb405",
+    "docs/requisitos/schemas/configuracao-ia-v2.json": "494cb1696d58a8a3465b6cd56a60630cacd7df46721be23dc588825a2618d304",
+    "docs/testes/rag-adultos-v1.json": "d878de52b3e9350de2939b4efcb87dbb3b1f68b6a82b302fc84dbff8223d500c",
+    "materiais/rag/preparacao-local-v1.json": "9e1de5d9afecaf5b429bb60fca97ddf5c469a7806aeb9e02b5b0278a8c841e08"
+  }
+}

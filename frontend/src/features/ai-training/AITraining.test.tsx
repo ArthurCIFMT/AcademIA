@@ -11,6 +11,12 @@ function receipt(estado = "PUBLICADA"): Receipt {
 }
 afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 
+test("quota esgotada explica a falha sem repetir a chamada", async () => {
+  const fetcher = mount(async () => Response.json({ execucao: { ...receipt("FALHA"), motivo: "QUOTA_EXCEDIDA" }, geracao: null }), "?solicitacao=" + id);
+  expect(await screen.findByRole("alert")).toHaveProperty("textContent", expect.stringContaining("limite de uso da IA gratuita"));
+  expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
+});
+
 function mount(handler: (url: string, init: RequestInit) => Promise<Response>, query = "") {
   const fetcher = vi.fn(handler);
   vi.stubGlobal("fetch", fetcher);

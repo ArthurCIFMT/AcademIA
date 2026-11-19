@@ -24,3 +24,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-010 — Avaliação acadêmica reduzida](ADR-010-avaliacao-academica-reduzida.md): amostra v3 curta, opcionais explícitos e versão estável, sem retirar critérios críticos.
 
 - [ADR-011 — Amostra real mínima e quatro exercícios por dia](ADR-011-amostra-real-minima.md).
+
+- [ADR-012 — Contrato estruturado, contexto compacto e cobertura aeróbica](ADR-012-estabilidade-ia-e-cobertura-aerobica.md).

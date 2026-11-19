@@ -56,8 +56,9 @@ anamnese fora do resumo ou chats de terceiros. Não registrar corpo, chave ou
 raciocínio interno nos logs. Hashes, versões e consumo são metadados de execução;
 conteúdo interno deve ficar sob autorização/retenção de AI-03, não log técnico.
 
-Cada chamada recebe JSON Schema específico. JSON Object Mode do provedor não
-garante schema: backend rejeita JSON malformado, chaves repetidas, NaN/Infinity,
+Cada chamada recebe JSON Schema específico. No principal, a ADR-012 usa schema
+estrito no transporte; nos perfis de reserva permanece JSON Object Mode.
+Em todos os casos o backend rejeita JSON malformado, chaves repetidas, NaN/Infinity,
 campos extras, idioma declarado diferente de pt-BR, tipos e faixas inválidas.
 Não há remoção de cercas de Markdown, reparo ou segunda chamada para corrigir.
 Ficha tem 1–6 dias, até seis itens/dia, ordem sequencial, IDs reais, combinação
@@ -75,9 +76,10 @@ DADOS_INSUFICIENTES, BLOQUEADA, ABSTENCAO e CONFLITO são resultados distintos.
 ## Orçamentos e contrato de StatePort
 
 Valores vêm da configuração vigente (v2, ADR-006): prompt até 24000 bytes UTF-8, resumo até 2400
-caracteres, até 40 candidatos e cinco trechos por pacote; pergunta até 1000
+caracteres, projeção principal de até 12 candidatos (base de adaptação preservada,
+teto 40) e cinco trechos por pacote; pergunta até 1000
 caracteres, seis mensagens de histórico/3000 caracteres. Excesso termina sem
-truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 4096;
+truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 2048 no principal (reservas 4096);
 respectivamente 20/25/60 segundos, execução até 100 segundos. Bytes não são tokens.
 Reservas de saída não comprovam consumo real: registrar usage do provedor quando
 disponível; em falha/consumo desconhecido, manter reserva e indicação explícita.
@@ -108,7 +110,7 @@ reinício. A API foi ativada pelo adaptador durável de AI-03. Retenção de
 
 GroqAdapter usa HTTPX síncrono, um slot global por processo, redirects/proxy de
 ambiente desativados, timeout e tamanho máximo de resposta. Usa o endpoint aprovado,
-modelo vigente openai/gpt-oss-120b (ADR-006), json_object, n=1 e
+modelo vigente openai/gpt-oss-120b (ADR-006), json_schema estrito no principal (ADR-012), n=1 e
 max_completion_tokens. Uma
 tentativa por etapa, sem retry/fallback oculto. HTTP 429 encerra; nova ação explícita
 pode abrir outra execução. O tempo em fila consome o orçamento da etapa.
@@ -121,7 +123,7 @@ sem novo SDK, para executar o contrato HTTP. Não há nova versão de dependênc
 
 Referências oficiais consultadas:
 [API de chat](https://console.groq.com/docs/api-reference),
-[JSON Object Mode](https://console.groq.com/docs/structured-outputs),
+[Saídas estruturadas](https://console.groq.com/docs/structured-outputs),
 [erros](https://console.groq.com/docs/errors) e
 [limites](https://console.groq.com/docs/rate-limits).
 
@@ -137,7 +139,7 @@ latência/cota gratuita real e corpus completo serão medidos em AI-06.
 
 Em AI-06, a [ADR-007](decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
 duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
-O prompt academia-ia-v3 exige idioma em todo texto novo e fundamentação explícita;
+O prompt academia-ia-v4 exige idioma em todo texto novo e fundamentação explícita;
 o modelo recebe texto completo e referências mínimas, com proveniência integral
 preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
 
@@ -162,3 +164,9 @@ gemini-3.5-flash-lite pela mesma porta LLM, com API REST nativa, JSON e validaç
 backend. A fábrica usa somente a credencial do provedor selecionado. Não há
 troca automática, ferramenta ou retry. Pensamentos mínimos contam no consumo
 mas não são devolvidos/armazenados como conteúdo. [Ensaio](../testes/ai06-gemini.md).
+
+Reparo manual: [ADR-012](decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md).
+A projeção do catálogo não altera o hash do inventário nem remove alertas do
+resumo. Validação usa candidatos efetivamente enviados e publicação revalida o
+catálogo atual. Motivos específicos identificam ordem, citação, exercício ou
+recurso inválido; resposta bruta do provedor não vira log/mensagem pública.

@@ -5,6 +5,12 @@ from app.modules.ai.schemas.execution import ChatAnswer, PlanAnswer
 from app.modules.knowledge.retrieval.contracts import Evidence
 
 
+class PlanValidationError(ValueError):
+    def __init__(self, code: str) -> None:
+        self.code = code
+        super().__init__(code)
+
+
 def citations(
     ids: list[UUID], evidence: tuple[Evidence, ...], *, required: bool
 ) -> bool:
@@ -31,21 +37,21 @@ def validate_plan(
         or not prep.resumo
         or len(plan.dias) > prep.resumo.conteudo.dados.dias_semana
     ):
-        raise ValueError("DIAS_INCOMPATIVEIS")
+        raise PlanValidationError("DIAS_INCOMPATIVEIS")
     if not citations(plan.evidencias_ids, evidence, required=True):
-        raise ValueError("CITACAO_INVALIDA")
+        raise PlanValidationError("CITACAO_INVALIDA")
     candidates = {c.id: c for c in context.candidates}
     for day in plan.dias:
         if [item.ordem for item in day.itens] != list(range(1, len(day.itens) + 1)):
-            raise ValueError("ORDEM_INVALIDA")
+            raise PlanValidationError("ORDEM_INVALIDA")
         for item in day.itens:
             candidate = candidates.get(item.exercicio_id)
             if candidate is None or item.exercicio_id in context.forbidden_ids:
-                raise ValueError("EXERCICIO_PROIBIDO_OU_INEXISTENTE")
+                raise PlanValidationError("EXERCICIO_PROIBIDO_OU_INEXISTENTE")
             if not any(
                 set(item.equipamento_ids) == set(group)
                 for group in candidate.combinacoes_disponiveis
             ):
-                raise ValueError("RECURSO_INDISPONIVEL")
+                raise PlanValidationError("RECURSO_INDISPONIVEL")
             if candidate.dispensa_equipamento and item.equipamento_ids:
-                raise ValueError("RECURSO_INCOMPATIVEL")
+                raise PlanValidationError("RECURSO_INCOMPATIVEL")

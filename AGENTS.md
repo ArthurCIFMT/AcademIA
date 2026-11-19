@@ -192,7 +192,7 @@ necessária para sua entrega.
   SQL livre nem atribui aceite humano. Registrar estados, fontes e consumo sem
   raciocínio interno ou dados sensíveis desnecessários em logs.
 - LLM vigente Groq / openai/gpt-oss-120b (ADR-006), plano gratuito, chave em ambiente;
-  json_object com validação backend. Não contratar plano pago ou fazer fallback
+  json_schema estrito no perfil principal, com validação backend (ADR-012). Não contratar plano pago ou fazer fallback
   oculto. Qualidade/tempo só são aprovados no ensaio real de AI-06.
 - Perfil padrão principal mantém GPT-OSS 120B; reserva-groq20b seleciona
   explicitamente o candidato GPT-OSS 20B (ADR-008), com a mesma chave. Não há
@@ -208,7 +208,7 @@ necessária para sua entrega.
   Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
 - Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
   de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
-- Prompt academia-ia-v3 explicita lacunas do esquema sem exigir exames fora do escopo.
+- Prompt academia-ia-v4 explicita lacunas do esquema sem exigir exames fora do escopo.
   Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
@@ -300,3 +300,11 @@ Responda preferencialmente em até oito linhas, informando:
 
 O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
 segurança, decisões arquiteturais ou testes não executados.
+
+## Regressão da revisão manual de IA
+
+A ADR-012 registra o contrato estruturado e a projeção de catálogo do perfil
+principal; consultar docs/testes/reparo-ia-20261119.md. O preparo local incorpora
+somente as páginas 24/25 do guia brasileiro para dúvidas aeróbicas. Não confundir
+seleção validada com extração integral ou extrapolar para adaptação clínica.
+Relatórios antigos de AI-06/TST-01 conservam a identidade da versão exercitada.

@@ -1,12 +1,17 @@
 import json
 import time
 from collections.abc import Callable
+from dataclasses import replace
 from typing import TypeVar
 from uuid import UUID
 
 from pydantic import ValidationError
 
 from app.contracts.structured import digest
+from app.modules.ai.orchestration.catalog_budget import (
+    candidate_payload,
+    generation_candidates,
+)
 from app.modules.ai.orchestration.presentation import present_plan
 from app.modules.ai.orchestration.queries import (
     generation_evidence,
@@ -14,7 +19,11 @@ from app.modules.ai.orchestration.queries import (
     recovery_query,
 )
 from app.modules.ai.orchestration.settings import Config
-from app.modules.ai.orchestration.validation import validate_chat, validate_plan
+from app.modules.ai.orchestration.validation import (
+    PlanValidationError,
+    validate_chat,
+    validate_plan,
+)
 from app.modules.ai.policies.triage import Policy
 from app.modules.ai.ports.execution import (
     ContextPort,
@@ -351,15 +360,16 @@ class Orchestrator:
                 )
                 evidence = generation_evidence(evidence, recovery)
                 phase("GERACAO")
+                sent_candidates = generation_candidates(
+                    context, int(str(self.config.limits["candidates"]))
+                )
                 plan = call(
                     "GERACAO",
                     {
                         "resumo": summary.model_dump(mode="json"),
                         "solicitacao": request.mensagem,
                         "dia_alvo": request.dia_alvo,
-                        "candidatos": [
-                            c.model_dump(mode="json") for c in context.candidates
-                        ],
+                        "candidatos": [candidate_payload(c) for c in sent_candidates],
                         "exercicios_proibidos": [
                             str(x) for x in sorted(context.forbidden_ids)
                         ],
@@ -372,7 +382,9 @@ class Orchestrator:
                 )
                 assert isinstance(plan, PlanAnswer)
                 phase("VALIDACAO")
-                validate_plan(plan, context, evidence)
+                validate_plan(
+                    plan, replace(context, candidates=sent_candidates), evidence
+                )
                 if request.finalidade == "ADAPTACAO":
                     if (
                         not context.base_plan
@@ -413,6 +425,15 @@ class Orchestrator:
             result = result.model_copy(
                 update={
                     "estado": "TIMEOUT" if error.code == "TIMEOUT" else "FALHA",
+                    "motivo": error.code,
+                    "proposta": None,
+                    "resposta": None,
+                }
+            )
+        except PlanValidationError as error:
+            result = result.model_copy(
+                update={
+                    "estado": "SCHEMA_INVALIDO",
                     "motivo": error.code,
                     "proposta": None,
                     "resposta": None,

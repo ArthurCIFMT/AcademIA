@@ -13,7 +13,7 @@ from app.modules.ai.ports.execution import ProviderError
 from tests.ai.evaluation.reporting import identity
 from tests.ai.evaluation.resume import merge_real
 from tests.ai.test_evaluation_resume import parts
-from tests.ai.test_groq import envelope
+from tests.ai.test_groq import envelope, messages
 
 
 def test_default_stays_primary_and_candidate_has_distinct_identity(
@@ -31,6 +31,12 @@ def test_default_stays_primary_and_candidate_has_distinct_identity(
     primary_data, reserve_data = primary.model_dump(), reserve.model_dump()
     primary_data.pop("model")
     reserve_data.pop("model")
+    assert primary_data.pop("response_format") == "json_schema"
+    assert reserve_data.pop("response_format") == "json_object"
+    assert primary_data["limits"].pop("candidates") == 12
+    assert reserve_data["limits"].pop("candidates") == 40
+    assert primary_data["limits"]["generation"].pop("output_tokens") == 2048
+    assert reserve_data["limits"]["generation"].pop("output_tokens") == 4096
     assert primary_data == reserve_data
 
 
@@ -66,9 +72,9 @@ def test_selected_model_is_sent_once_without_fallback(
     try:
         if status == 429:
             with pytest.raises(ProviderError, match="QUOTA_EXCEDIDA"):
-                client.complete([], "CHAT", 600, 20, lambda: None)
+                client.complete(messages(), "CHAT", 600, 20, lambda: None)
         else:
-            assert client.complete([], "CHAT", 600, 20, lambda: None).usage
+            assert client.complete(messages(), "CHAT", 600, 20, lambda: None).usage
         assert calls == [selected.model]
         assert Config.load().model == selected.model
     finally:

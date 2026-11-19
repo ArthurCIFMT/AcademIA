@@ -132,7 +132,7 @@ def test_plan_fixed_steps_and_idempotent_replay() -> None:
         "FINALIZADA",
     ]
     assert sum(c.chamadas_fisicas for c in result.consumo) == 2
-    assert [c.limite_saida_tokens for c in result.consumo] == [400, 4096]
+    assert [c.limite_saida_tokens for c in result.consumo] == [400, 2048]
     assert all(c.consumo_desconhecido for c in result.consumo)
     assert service.execute(actor, actor.user_id, req) == result
     with pytest.raises(ExecutionConflict):

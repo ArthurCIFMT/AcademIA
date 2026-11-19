@@ -87,7 +87,7 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | Arquitetura | Monólito modular, vigente em AGENTS.md | Formalizar coerência documental por ADR |
 | Identidade | Autenticação integrada, sessão opaca/Argon2id | GATE-02 |
 | IA | Orquestrador, RAG semântico e banco vetorial especializado | Dúvidas, triagem resumida e geração; provedor gratuito/livro/parâmetros em GATE-04 |
-| Serviços de IA | Portas para LLM e embeddings | Groq/Llama 3.3 70B + E5-small local; ADR-004 |
+| Serviços de IA | Portas para LLM e embeddings | Groq/GPT-OSS 120B + E5-small local; ADRs 004/006/012 |
 | E-mail | SMTP ou API por adapter | Execução local antes do Docker |
 | Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
@@ -97,7 +97,7 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 
 FastAPI/Pydantic/SQLAlchemy/Alembic e Qdrant local foram aceitos; autenticação
 integrada substitui a recomendação de Keycloak. Uma academia, sem multitenancy.
-LLM inicial Groq/Llama e embeddings E5-small definidos no ADR-004. Não reabrir
+LLM vigente Groq/GPT-OSS 120B (ADRs 006/012) e embeddings E5-small (ADR-004). Não reabrir
 essas escolhas por haver recomendações históricas em documentos anteriores.
 Não escolha versões, provedores pagos ou ferramentas sem justificar e registrar
 a decisão no momento correspondente.

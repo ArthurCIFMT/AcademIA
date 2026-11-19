@@ -399,3 +399,8 @@ A pendência de ambiente acima foi resolvida com fontes/recortes revisados,
 extração, indexação E5/Qdrant e recuperação real no desenvolvimento. RAG-01,
 RAG-04, RAG-05 e o trecho pertinente do mestre foram atualizados para reconstrução.
 Não há mudança de escopo de cadastros, onboarding, treinos, pagamentos ou biometria.
+
+2026-11-19, correção das falhas de IA relatadas no teste manual:
+[regressão e limites atuais](../testes/reparo-ia-20261119.md), ADR-012.
+Reparo restrito a IA/RAG e mensagem da tela de geração; edição do próprio perfil
+não foi incluída. Resultados históricos não são usados como ensaio da versão nova.

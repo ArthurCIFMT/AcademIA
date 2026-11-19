@@ -9,6 +9,11 @@ from pydantic import SecretStr
 from app.modules.ai.adapters.groq import GroqAdapter
 from app.modules.ai.orchestration.settings import Config, GroqSettings
 from app.modules.ai.ports.execution import ProviderError
+from app.modules.ai.prompts.v1 import build
+
+
+def messages() -> list[dict[str, str]]:
+    return build("CHAT", {"pergunta": "Pergunta sintética", "evidencias": []}, 24000)
 
 
 @pytest.fixture(autouse=True)
@@ -56,7 +61,9 @@ def test_http_contract_no_tools_no_retry_and_actual_usage() -> None:
         body = json.loads(request.content)
         assert request.method == "POST"
         assert str(request.url) == Config.load().base_url + "/chat/completions"
-        assert body["response_format"] == {"type": "json_object"}
+        assert body["response_format"]["type"] == Config.load().response_format
+        if Config.load().response_format == "json_schema":
+            assert body["response_format"]["json_schema"]["strict"] is True
         assert body["model"] == Config.load().model
         assert body["reasoning_effort"] == "low" and body["include_reasoning"] is False
         assert body["max_completion_tokens"] == 600 and body["n"] == 1
@@ -67,7 +74,7 @@ def test_http_contract_no_tools_no_retry_and_actual_usage() -> None:
     dispatches = []
     try:
         completion = client.complete(
-            [{"role": "system", "content": "Responda JSON"}],
+            messages(),
             "CHAT",
             600,
             20,
@@ -83,6 +90,7 @@ def test_http_contract_no_tools_no_retry_and_actual_usage() -> None:
     "kind,code",
     [
         ("quota", "QUOTA_EXCEDIDA"),
+        ("bad_request", "REQUISICAO_PROVEDOR_RECUSADA"),
         ("unauthorized", "CREDENCIAL_RECUSADA"),
         ("server", "PROVEDOR_INDISPONIVEL"),
         ("timeout", "TIMEOUT"),
@@ -107,11 +115,15 @@ def test_provider_failures_one_physical_request_and_safe_error(
             raise httpx.ReadTimeout(secret)
         if kind == "network":
             raise httpx.ConnectError(secret)
-        if kind in {"quota", "unauthorized", "server", "redirect"}:
+        if kind in {"quota", "bad_request", "unauthorized", "server", "redirect"}:
             return httpx.Response(
-                {"quota": 429, "unauthorized": 401, "server": 503, "redirect": 302}[
-                    kind
-                ],
+                {
+                    "quota": 429,
+                    "bad_request": 400,
+                    "unauthorized": 401,
+                    "server": 503,
+                    "redirect": 302,
+                }[kind],
                 text=secret,
                 headers={"Location": "https://example.test"},
             )
@@ -132,7 +144,7 @@ def test_provider_failures_one_physical_request_and_safe_error(
     dispatches = []
     try:
         with pytest.raises(ProviderError) as error:
-            client.complete([], "CHAT", 600, 20, lambda: dispatches.append(1))
+            client.complete(messages(), "CHAT", 600, 20, lambda: dispatches.append(1))
         assert error.value.code == code and secret not in str(error.value)
         assert len(calls) == len(dispatches) == 1
     finally:
@@ -183,7 +195,7 @@ def test_timeout_detects_late_success() -> None:
     client = adapter(handle, clock=lambda: now[0])
     try:
         with pytest.raises(ProviderError, match="TIMEOUT"):
-            client.complete([], "CHAT", 600, 20, lambda: None)
+            client.complete(messages(), "CHAT", 600, 20, lambda: None)
     finally:
         client.close()
 

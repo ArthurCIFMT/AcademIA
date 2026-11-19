@@ -124,7 +124,7 @@ pequeno e não representa cobertura de todo o corpus nem desempenho do LLM.
 ## Configuração inicial aceita
 
 Qdrant local persistente (um processo), E5-small/384/cosseno, chunks 300 tokens
-com sobreposição 48 e top-K 5. LLM Groq/Llama 3.3 70B com json_object validado.
+com sobreposição 48 e top-K 5. LLM vigente Groq/GPT-OSS 120B, schema estrito e validação backend (ADRs 006/012).
 Ver [configuração canônica](../requisitos/configuracao-ia-rag.md) e
 [corpus selecionado](../../materiais/rag/corpus-inicial.json). Modo local é engine
 especializada persistente para protótipo; modo servidor só na fase apropriada.

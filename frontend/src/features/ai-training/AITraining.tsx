@@ -95,6 +95,11 @@ export function AITrainingPage({ csrf }: { csrf: string }) {
   }
   const current = id && data?.id === id ? data.value : null;
   const result = current?.execucao ?? (receipt?.id === id ? receipt.value : null);
+  const reason = result?.motivo === "QUOTA_EXCEDIDA"
+    ? "O limite de uso da IA gratuita foi atingido. Aguarde antes de preparar outra solicitação; atualizar a página não renova a quota."
+    : result?.motivo === "REQUISICAO_PROVEDOR_RECUSADA"
+      ? "O provedor recusou esta solicitação. O erro foi registrado para análise."
+      : null;
   const generation = current?.geracao;
   const training = generation?.contexto.treino;
   const expired = training?.ficha.estado_publicacao === "CONTEUDO_EXPIRADO";
@@ -107,6 +112,7 @@ export function AITrainingPage({ csrf }: { csrf: string }) {
     {id && valid && <>
       <p>Solicitação · {id}</p>
       <p role="status">{result ? labels[result.estado] ?? "Consulte o estado da solicitação" : busy ? "Solicitando geração…" : "Consultando solicitação…"}</p>
+      {reason && <p role="alert">{reason}</p>}
       <button type="button" onClick={() => setRevision((v) => v + 1)}>Consultar estado salvo</button>
       {((busy && !result) || result?.estado === "EM_EXECUCAO") && <button type="button" onClick={() => void stop()}>Cancelar solicitação</button>}
       {!busy && result && result.estado !== "EM_EXECUCAO" && <button type="button" onClick={() => { setParams({}); setData(null); setReceipt(null); setError(""); }}>Preparar nova solicitação</button>}

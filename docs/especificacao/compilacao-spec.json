@@ -86,6 +86,10 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-011-amostra-real-minima.md",
           "titulo": "Cinco cenários reais, quatro exercícios por dia e limites do ensaio"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md",
+          "titulo": "Reparo do contrato de IA e cobertura aeróbica"
         }
       ]
     },
@@ -292,6 +296,28 @@
         {
           "arquivo": "docs/requisitos/escopo-ia-academico.md",
           "titulo": "Demonstrações reduzidas, opcionais e limites mantidos"
+        },
+        {
+          "arquivo": "docs/instalacao/preparar-rag-local.md",
+          "titulo": "Preparação reproduzível do RAG local"
+        },
+        {
+          "arquivo": "materiais/rag/preparacao-local-v1.json",
+          "titulo": "Plano de seleções ativas",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "materiais/rag/politica-adultos-v2.json",
+          "titulo": "Escopo físico do guia brasileiro",
+          "tipo": "codigo",
+          "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/rag-adultos-v1.json",
+          "titulo": "Recortes aeróbicos revisados",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     },

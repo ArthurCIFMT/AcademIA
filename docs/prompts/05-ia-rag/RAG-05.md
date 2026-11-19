@@ -82,3 +82,11 @@ Informe a informação que falta; não improvise dados para obter aceite.
 Siga GATE-05 e autorização vigente; registre evidência em
 [manifesto](../README.md). Informe arquivos, comandos reais, resultados, pendências
 e próximo ID liberado. Texto criado não significa código implementado.
+
+## Regressão da revisão manual
+
+Cobrir a pergunta “Quanto tempo é recomendavel de exercicio na esteira por dia?”
+e variantes de duração/intensidade/distribuição aeróbica com fontes aprovadas.
+Selecionar recortes com páginas e hashes em docs/testes/rag-adultos-v1.json,
+sem declarar concluída a extração integral. Manter os casos fora do assunto e
+a ausência de suporte para adaptação clínica; não reduzir limiar só para responder.

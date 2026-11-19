@@ -1291,6 +1291,10 @@ Configuração local do proxy não é serviço pago alternativo.
 
 A aprovação do modelo/configuração não aprova qualidade, latência ou segurança
 semântica. Esses critérios continuam sujeitos ao AI-06 e TST-01.
+
+Em 2026-11-19, a [ADR-012](docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md)
+substituiu JSON Object Mode e os orçamentos do perfil principal. O modelo desta
+decisão continua vigente; limites anteriores permanecem como histórico.
 ### 7. Livro, extração explícita, recuperação e resumo factual
 
 Fonte versionada: [docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md).
@@ -1577,6 +1581,64 @@ Sem reserva disponível, retornar erro controlado e preservar treino manual.
 Limites oficiais consultados: [Groq](https://console.groq.com/docs/rate-limits)
 e [Gemini](https://ai.google.dev/gemini-api/docs/rate-limits). Quotas/nível gratuito
 dependem da conta/projeto; não contratar faturamento nem presumir disponibilidade.
+### 12. Reparo do contrato de IA e cobertura aeróbica
+
+Fonte versionada: [docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md](docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md).
+
+Status: ACEITA no escopo de reparo solicitado pelo responsável em 2026-11-19.
+Substitui o modo de saída e os orçamentos do perfil principal definidos na ADR-006;
+modelo, gratuidade, fronteiras, regras de saúde e quantidade de chamadas permanecem.
+
+#### Problema observado
+
+O desenvolvimento registrou uma ficha rejeitada por contrato e uma segunda
+execução limitada pela quota. O código anterior escondia a causa de validação
+em um motivo genérico. A saída rejeitada não foi armazenada: não é possível
+atribuir retroativamente a falha a um campo específico. O catálogo cresceu para
+31 exercícios; o prompt de geração ocupava cerca de 20 mil bytes. A resposta
+à pergunta sobre esteira não tinha cobertura aeróbica suficiente no corpus ativo.
+
+#### Decisão
+
+- Groq/GPT-OSS 120B usa response_format=json_schema, strict=true, conforme a
+  [documentação oficial](https://console.groq.com/docs/structured-outputs).
+  Objetos fechados, propriedades obrigatórias, opcionais anuláveis e enums com
+  os IDs enviados restringem a forma. Validações de domínio continuam obrigatórias:
+  formato correto não prova pertinência clínica, qualidade ou recursos válidos.
+- O schema vai no campo próprio do transporte, sem duplicá-lo no texto do system.
+  As instruções e a separação entre dados e instruções são preservadas.
+- Perfil principal projeta até 12 candidatos viáveis, distribuídos por grupos
+  musculares de forma determinística. Exclui proibidos e preserva os exercícios
+  viáveis da ficha-base em adaptação, mesmo quando excedem esse alvo; mantém
+  o teto de 40 e de bytes. Não escolhe a prescrição: itens continuam do LLM.
+  Descrição longa sai dessa projeção; nomes, grupos, IDs e combinações ficam.
+  A impressão digital e a revalidação final consideram o inventário completo.
+- Saída de geração principal: até 2048 tokens; triagem 400 e chat 600 permanecem.
+  Essa reserva favorece a demonstração curta. Fichas maiores podem esgotá-la:
+  saída interrompida não publica, não é completada artificialmente e não abre
+  retry. O instrutor mantém o fluxo manual. Não há promessa de geração ilimitada
+  com quota gratuita; concorrência e limites do fornecedor continuam externos.
+- Prompt academia-ia-v4 explicita cópia de recursos por candidato, ordem por dia,
+  repetições numéricas, exemplo curto e resposta parcial sustentada por evidência.
+  Meta semanal não é transformada em prescrição diária individual.
+- Validações da ficha registram códigos seguros específicos; HTTP 400 é recusa
+  do provedor, HTTP 429 é quota. A tela explica quota e recusa sem expor conteúdo
+  clínico, resposta bruta, chave ou raciocínio interno.
+- Acrescentar à preparação local quatro recortes do guia brasileiro do Ministério
+  da Saúde, apenas páginas físicas 24/25, política explícita v2, finalidade DUVIDAS.
+  Há orientação geral para adultos sobre duração/intensidade e divisão do tempo,
+  não um protocolo individual de esteira. Extração integral pendente permanece
+  pendente: o sucesso dessa seleção não aprova outras páginas ou fontes.
+
+Os perfis de reserva conservam seus modos/orçamentos e exigem seleção e avaliação
+próprias. Não adicionar fallback, pesquisa iterativa, retries ou plano pago.
+Não alterar onboarding, aprovação do instrutor, cadastros ou acesso de clientes.
+
+#### Verificação
+
+[Regressão da revisão manual](docs/testes/reparo-ia-20261119.md) separa testes
+controlados, recuperação real e chamadas reais. Relatórios AI-06/TST-01 anteriores
+são históricos: não herdam novos hashes nem comprovam a versão alterada.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
@@ -5515,7 +5577,7 @@ pequeno e não representa cobertura de todo o corpus nem desempenho do LLM.
 #### Configuração inicial aceita
 
 Qdrant local persistente (um processo), E5-small/384/cosseno, chunks 300 tokens
-com sobreposição 48 e top-K 5. LLM Groq/Llama 3.3 70B com json_object validado.
+com sobreposição 48 e top-K 5. LLM vigente Groq/GPT-OSS 120B, schema estrito e validação backend (ADRs 006/012).
 Ver [configuração canônica](docs/requisitos/configuracao-ia-rag.md) e
 [corpus selecionado](materiais/rag/corpus-inicial.json). Modo local é engine
 especializada persistente para protótipo; modo servidor só na fase apropriada.
@@ -5592,7 +5654,7 @@ Valores canônicos: [configuração v2](docs/requisitos/schemas/configuracao-ia-
 
 A configuração fixa modelos, limite por rota, chunking/busca, retenção e metas.
 GROQ_API_KEY é credencial pessoal de ambiente, não criada/versionada por esta entrega.
-JSON Object Mode não garante aderência ao schema; validar no backend e encerrar
+O perfil principal usa JSON Schema estrito (ADR-012); validar também no backend e encerrar
 erro sem segunda geração automática. No máximo uma análise + uma geração em ficha.
 Não enviar 24000 bytes só porque o teto permite: são limite máximo, não alvo.
 Bytes/caracteres não são tokens; registrar tokens reais do provedor por etapa.
@@ -5607,7 +5669,9 @@ essas faixas não prescrevem dose nem substituem o suporte da literatura/políti
 repeticoes é string inteira ou intervalo A-B, com 1<=A<=B<=100 e sem texto livre;
 backend valida o intervalo. carga_kg é decimal não-negativo ou null.
 Sem inventar carga individual: pode ser null para determinação pelo instrutor.
-Prompt usa IDs/descrições compactas de até 40 candidatos viáveis; validação final
+Prompt principal projeta até 12 candidatos diversos, preservando a base viável
+de adaptação mesmo acima desse alvo, dentro do teto de 40/bytes (ADR-012).
+Nomes/grupos/IDs/combinações permanecem; descrições longas são omitidas. Validação final
 verifica IDs e inventário atual. Sem conjunto suficiente, não gerar seleção falsa.
 Schema de saída materializado em [AI-02](docs/arquitetura/orquestracao-ia.md) e
 [contratos JSON](docs/requisitos/schemas/execucao-ia-v1.schema.json), a partir destes campos.
@@ -5684,6 +5748,17 @@ não mudam. Somente quality.min_cases passa de 24 para cinco nos três perfis.
 O [guia vigente](docs/testes/ai06-enxuto.md) separa a amostra real dos testes locais.
 Troca automática é possível como evolução descrita na ADR-011, mas não está
 implementada/ativada; hoje os perfis de reserva continuam explícitos.
+
+#### Reparo após teste manual — 2026-11-19
+
+[ADR-012](docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md):
+principal usa json_schema/strict, alvo de 12 candidatos e geração de até 2048 tokens.
+Mantém 400 na triagem, 600 no chat, uma tentativa por etapa e resumo de saúde
+completo dentro do contrato. Reservas preservam json_object/40/4096; não há
+troca automática nem equivalência de qualificação. Os parâmetros anteriores
+descritos nas seções históricas não substituem a configuração canônica vigente.
+Saída longa pode ser interrompida sem publicação; reduzir reserva não garante
+que qualquer ficha permitida pelo schema caiba no plano gratuito.
 ### 4. Configuração canônica
 
 Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisitos/schemas/configuracao-ia-v2.json).
@@ -5694,7 +5769,7 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisi
   "provider": "groq",
   "model": "openai/gpt-oss-120b",
   "base_url": "https://api.groq.com/openai/v1",
-  "response_format": "json_object",
+  "response_format": "json_schema",
   "temperature": 0.2,
   "concurrency": 1,
   "embedding": {
@@ -5721,7 +5796,7 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisi
     "history_messages": 6,
     "history_total_chars": 3000,
     "resumo_chars": 2400,
-    "candidates": 40,
+    "candidates": 12,
     "prompt_utf8_bytes": 24000,
     "chat": {
       "output_tokens": 600,
@@ -5734,7 +5809,7 @@ Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisi
       "timeout_seconds": 25
     },
     "generation": {
-      "output_tokens": 4096,
+      "output_tokens": 2048,
       "timeout_seconds": 60
     },
     "execution_timeout_seconds": 100,
@@ -7583,8 +7658,9 @@ anamnese fora do resumo ou chats de terceiros. Não registrar corpo, chave ou
 raciocínio interno nos logs. Hashes, versões e consumo são metadados de execução;
 conteúdo interno deve ficar sob autorização/retenção de AI-03, não log técnico.
 
-Cada chamada recebe JSON Schema específico. JSON Object Mode do provedor não
-garante schema: backend rejeita JSON malformado, chaves repetidas, NaN/Infinity,
+Cada chamada recebe JSON Schema específico. No principal, a ADR-012 usa schema
+estrito no transporte; nos perfis de reserva permanece JSON Object Mode.
+Em todos os casos o backend rejeita JSON malformado, chaves repetidas, NaN/Infinity,
 campos extras, idioma declarado diferente de pt-BR, tipos e faixas inválidas.
 Não há remoção de cercas de Markdown, reparo ou segunda chamada para corrigir.
 Ficha tem 1–6 dias, até seis itens/dia, ordem sequencial, IDs reais, combinação
@@ -7602,9 +7678,10 @@ DADOS_INSUFICIENTES, BLOQUEADA, ABSTENCAO e CONFLITO são resultados distintos.
 #### Orçamentos e contrato de StatePort
 
 Valores vêm da configuração vigente (v2, ADR-006): prompt até 24000 bytes UTF-8, resumo até 2400
-caracteres, até 40 candidatos e cinco trechos por pacote; pergunta até 1000
+caracteres, projeção principal de até 12 candidatos (base de adaptação preservada,
+teto 40) e cinco trechos por pacote; pergunta até 1000
 caracteres, seis mensagens de histórico/3000 caracteres. Excesso termina sem
-truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 4096;
+truncamento silencioso. Tokens de saída: CHAT 600, TRIAGEM 400 e GERACAO 2048 no principal (reservas 4096);
 respectivamente 20/25/60 segundos, execução até 100 segundos. Bytes não são tokens.
 Reservas de saída não comprovam consumo real: registrar usage do provedor quando
 disponível; em falha/consumo desconhecido, manter reserva e indicação explícita.
@@ -7635,7 +7712,7 @@ reinício. A API foi ativada pelo adaptador durável de AI-03. Retenção de
 
 GroqAdapter usa HTTPX síncrono, um slot global por processo, redirects/proxy de
 ambiente desativados, timeout e tamanho máximo de resposta. Usa o endpoint aprovado,
-modelo vigente openai/gpt-oss-120b (ADR-006), json_object, n=1 e
+modelo vigente openai/gpt-oss-120b (ADR-006), json_schema estrito no principal (ADR-012), n=1 e
 max_completion_tokens. Uma
 tentativa por etapa, sem retry/fallback oculto. HTTP 429 encerra; nova ação explícita
 pode abrir outra execução. O tempo em fila consome o orçamento da etapa.
@@ -7648,7 +7725,7 @@ sem novo SDK, para executar o contrato HTTP. Não há nova versão de dependênc
 
 Referências oficiais consultadas:
 [API de chat](https://console.groq.com/docs/api-reference),
-[JSON Object Mode](https://console.groq.com/docs/structured-outputs),
+[Saídas estruturadas](https://console.groq.com/docs/structured-outputs),
 [erros](https://console.groq.com/docs/errors) e
 [limites](https://console.groq.com/docs/rate-limits).
 
@@ -7664,7 +7741,7 @@ latência/cota gratuita real e corpus completo serão medidos em AI-06.
 
 Em AI-06, a [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
 duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
-O prompt academia-ia-v3 exige idioma em todo texto novo e fundamentação explícita;
+O prompt academia-ia-v4 exige idioma em todo texto novo e fundamentação explícita;
 o modelo recebe texto completo e referências mínimas, com proveniência integral
 preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
 
@@ -7689,6 +7766,12 @@ gemini-3.5-flash-lite pela mesma porta LLM, com API REST nativa, JSON e validaç
 backend. A fábrica usa somente a credencial do provedor selecionado. Não há
 troca automática, ferramenta ou retry. Pensamentos mínimos contam no consumo
 mas não são devolvidos/armazenados como conteúdo. [Ensaio](docs/testes/ai06-gemini.md).
+
+Reparo manual: [ADR-012](docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md).
+A projeção do catálogo não altera o hash do inventário nem remove alertas do
+resumo. Validação usa candidatos efetivamente enviados e publicação revalida o
+catálogo atual. Motivos específicos identificam ordem, citação, exercício ou
+recurso inválido; resposta bruta do provedor não vira log/mensagem pública.
 ### 17. Schemas JSON de entrada, respostas e resultado interno de execução
 
 Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requisitos/schemas/execucao-ia-v1.schema.json).
@@ -10991,6 +11074,197 @@ somente a amostra de avaliação mudou. Reexecutar o necessário se surgir defei
 A simplificação não garante quota/disponibilidade, nem aprova automaticamente
 AI-06. Referências: [AI-06](docs/prompts/05-ia-rag/AI-06.md),
 [configuração](docs/requisitos/configuracao-ia-rag.md) e [avaliação vigente](docs/testes/ai06-enxuto.md).
+### 29. Preparação reproduzível do RAG local
+
+Fonte versionada: [docs/instalacao/preparar-rag-local.md](docs/instalacao/preparar-rag-local.md).
+
+Esta é uma operação do responsável técnico pelo sistema. O administrador da
+academia recebe a base preparada e não precisa gerenciar PDFs ou indexação.
+Requer PostgreSQL/migrations, identidade administrativa ativa para autoria,
+arquivos de materiais/rag e pesos E5 locais verificados. Nenhum LLM é chamado.
+
+#### Execução reproduzível
+
+Pare a API antes de abrir o mesmo diretório Qdrant. Preserve um backup local
+do PostgreSQL e do armazenamento privado antes de manutenção de um ambiente
+já usado. Não apague bancos, uploads ou índices para repetir a preparação.
+
+Em backend/, usando o UUID do administrador técnico:
+
+```powershell
+uv run --locked --env-file ../.env python -m scripts.prepare_knowledge --actor UUID_DO_RESPONSAVEL
+```
+
+O comando:
+
+1. Valida o [plano local versionado](materiais/rag/preparacao-local-v1.json)
+   e os hashes/finalidades da seleção técnica já aprovada.
+2. Importa os 19 PDFs locais: nove selecionados aprovados e dez em quarentena.
+   Não baixa materiais nem reaprova versões revogadas.
+3. Extrai somente fontes escolhidas no plano. Nahas usa a política v2 das páginas
+   físicas 83, 85, 132 e 133. O guia brasileiro usa apenas 24/25. Nenhuma dessas
+   seleções declara válida a extração integral.
+4. Compara os recortes com hashes, páginas e offsets revisados antes de indexar.
+5. Indexa por E5 local/Qdrant, com checkpoints e validação de completude.
+6. Repete sem duplicar versões/ingestões/vetores. Seleção antiga gerenciada por
+   este preparo e retirada do plano fica REVOGADA, com auditoria e vetores
+   históricos preservados. Ingestões externas ao preparo não são alteradas.
+
+O plano usa os JSONs de seleção revisados de RAG-05/AI-06 como dados de curadoria,
+sem importar código, pessoas, documentos artificiais ou ataques dos testes.
+O texto dos PDFs e a origem bibliográfica permanecem inalterados.
+
+#### Conteúdo ativo e limites
+
+| Fonte | Finalidades indexadas | Recortes por finalidade |
+|---|---|---|
+| BR-RBCM-001 | Dúvidas; geração geral | Sete conceitos em cada finalidade; três recortes adicionais na geração |
+| BR-NAHAS-001 | Geração geral | Cinco recortes do livro |
+| INT-HEALTH-001 | Triagem | Dois recortes contextuais |
+| BR-MS-001 | Dúvidas | Quatro recortes para adultos: duração/intensidade, distribuição e exemplos |
+
+São seis ingestões, 28 fragmentos ativos por finalidade e 21 recortes únicos.
+Documentos aprovados sem seleção/indexação completa continuam fora da busca.
+As extrações integrais pendentes do RAG-03 permanecem pendentes; somente a
+seleção física 24/25 do guia brasileiro passou por extração e revisão específicas.
+O livro apoia a geração; o catálogo relacional fornece exercícios/equipamentos.
+Este preparo não adiciona cobertura para adaptação clínica por condição.
+Ausência de evidência pertinente continua exigindo abstenção.
+
+Depois do término bem-sucedido, reinicie a API com um worker e o frontend pelos
+guias existentes. A primeira consulta pode levar mais tempo para carregar E5
+em CPU; os pesos não são baixados durante uma pergunta.
+
+#### Área técnica opcional
+
+Na execução comum, mantenha `ACADEMIA_CORPUS_HTTP_ENABLED=false` no backend e
+`VITE_CORPUS_MAINTENANCE_ENABLED=false` no frontend. Não há menu RAG na rotina
+administrativa; a API de curadoria responde 404 e não aparece no OpenAPI.
+Essas opções não desabilitam recuperação, chat ou geração.
+
+Somente para manutenção, o desenvolvedor pode ativar ambas e reiniciar os
+processos. A tela fica em /tecnico/corpus; ainda exige administrador ativo,
+origem e CSRF. O endereço administrativo antigo redireciona para a área técnica.
+Não é criado um novo cargo nem concedida curadoria automática a instrutores.
+Importar pela tela continua sendo distinto de extrair e indexar offline.
+
+#### Roteiro de teste manual
+
+1. Abra a conta do cliente pelo convite do Mailpit e entre com sua senha.
+2. No assistente, pergunte sobre volume, frequência, intervalo, cadência ou
+   duração de caminhada/corrida/esteira como atividade aeróbica geral para adultos.
+   Confira a explicação em português e as fontes/páginas oferecidas.
+3. Complete o onboarding e confira que dados ausentes/desconhecidos não viram
+   respostas saudáveis automaticamente. Caso grave continua bloqueado.
+4. Solicite uma ficha uma única vez; confira equipamentos, persistência e parecer
+   pendente. A consulta não depende de aceite prévio do instrutor.
+5. Em caso de quota/erro, observe a mensagem e evite reenvios repetidos.
+   A criação manual pelo instrutor permanece disponível.
+
+O [registro do preparo local](docs/testes/preparacao-rag-local-20261119.md)
+separa busca real, testes controlados e eventual chamada ao provedor.
+### 30. Plano de seleções ativas
+
+Fonte versionada: [materiais/rag/preparacao-local-v1.json](materiais/rag/preparacao-local-v1.json).
+
+````json
+{
+  "schema_version": 1,
+  "limites": "Seleções técnicas revisadas com hashes e escopo físico explícito. Não promover páginas fora da seleção ou fontes com extração pendente. Não cobre adaptações clínicas específicas.",
+  "fontes": [
+    {
+      "fonte_id": "BR-RBCM-001",
+      "selecao": "docs/testes/rag05-consultas-v1.json",
+      "finalidades": [
+        "DUVIDAS",
+        "GERACAO_GERAL"
+      ]
+    },
+    {
+      "fonte_id": "BR-RBCM-001",
+      "selecao": "docs/testes/ai06-corpus-v2.json",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ]
+    },
+    {
+      "fonte_id": "BR-NAHAS-001",
+      "selecao": "docs/testes/ai06-corpus-v2.json",
+      "finalidades": [
+        "GERACAO_GERAL"
+      ]
+    },
+    {
+      "fonte_id": "INT-HEALTH-001",
+      "selecao": "docs/testes/ai06-corpus-v2.json",
+      "finalidades": [
+        "TRIAGEM"
+      ]
+    },
+    {
+      "fonte_id": "BR-MS-001",
+      "selecao": "docs/testes/rag-adultos-v1.json",
+      "finalidades": [
+        "DUVIDAS"
+      ]
+    }
+  ]
+}
+````
+### 31. Escopo físico do guia brasileiro
+
+Fonte versionada: [materiais/rag/politica-adultos-v2.json](materiais/rag/politica-adultos-v2.json).
+
+````json
+{
+  "version": 2,
+  "selected_pages": [
+    24,
+    25
+  ]
+}
+````
+### 32. Recortes aeróbicos revisados
+
+Fonte versionada: [docs/testes/rag-adultos-v1.json](docs/testes/rag-adultos-v1.json).
+
+````json
+{
+  "fonte_id": "BR-MS-001",
+  "arquivo_sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+  "politica_extracao": "materiais/rag/politica-adultos-v2.json",
+  "trechos": [
+    {
+      "pagina": 24,
+      "inicio": 1649,
+      "fim": 2074,
+      "secao": "Atividade física para adultos: duração e intensidade moderada",
+      "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+    },
+    {
+      "pagina": 25,
+      "inicio": 0,
+      "fim": 445,
+      "secao": "Atividade física para adultos: duração e intensidade vigorosa",
+      "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+    },
+    {
+      "pagina": 25,
+      "inicio": 447,
+      "fim": 977,
+      "secao": "Atividade física para adultos: fortalecimento e distribuição do tempo",
+      "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+    },
+    {
+      "pagina": 25,
+      "inicio": 1020,
+      "fim": 1392,
+      "secao": "Atividade física para adultos: exemplos de atividades",
+      "texto_hash": "816530e57360db7718ecc10dbea793a66cc69509eb7bc20642f4abb808f815f2"
+    }
+  ]
+}
+````
 
 ## 20. Contratos e fluxos detalhados dos módulos
 
@@ -13196,7 +13470,7 @@ necessária para sua entrega.
   SQL livre nem atribui aceite humano. Registrar estados, fontes e consumo sem
   raciocínio interno ou dados sensíveis desnecessários em logs.
 - LLM vigente Groq / openai/gpt-oss-120b (ADR-006), plano gratuito, chave em ambiente;
-  json_object com validação backend. Não contratar plano pago ou fazer fallback
+  json_schema estrito no perfil principal, com validação backend (ADR-012). Não contratar plano pago ou fazer fallback
   oculto. Qualidade/tempo só são aprovados no ensaio real de AI-06.
 - Perfil padrão principal mantém GPT-OSS 120B; reserva-groq20b seleciona
   explicitamente o candidato GPT-OSS 20B (ADR-008), com a mesma chave. Não há
@@ -13212,7 +13486,7 @@ necessária para sua entrega.
   Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
 - Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
   de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
-- Prompt academia-ia-v3 explicita lacunas do esquema sem exigir exames fora do escopo.
+- Prompt academia-ia-v4 explicita lacunas do esquema sem exigir exames fora do escopo.
   Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
@@ -13304,6 +13578,14 @@ Responda preferencialmente em até oito linhas, informando:
 
 O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
 segurança, decisões arquiteturais ou testes não executados.
+
+#### Regressão da revisão manual de IA
+
+A ADR-012 registra o contrato estruturado e a projeção de catálogo do perfil
+principal; consultar docs/testes/reparo-ia-20261119.md. O preparo local incorpora
+somente as páginas 24/25 do guia brasileiro para dúvidas aeróbicas. Não confundir
+seleção validada com extração integral ou extrapolar para adaptação clínica.
+Relatórios antigos de AI-06/TST-01 conservam a identidade da versão exercitada.
 ### 4. Runner, métricas, revisão e limites da avaliação IA
 
 Fonte versionada: [docs/testes/avaliacao-ia.md](docs/testes/avaliacao-ia.md).
@@ -16692,7 +16974,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
-| `AGENTS.md` | `0f04f88643652402fda073e6d6574ca95b9d1239ad5d15fc7ca2254637eb4c4a` |
+| `AGENTS.md` | `3c76972ba0ef873308fb2f8653de67e7e5dd47d57896db31e105ef2794915226` |
 | `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
@@ -16710,12 +16992,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
 | `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
 | `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
-| `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `92df90d8c5ec4d3031612205e4f2d3c1c56864bdbc662dfad5961138093c2b0c` |
+| `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `8fed154fd5b1522a5f41b8b8919ef2dc44e210ad26ff946b6861af38f63632d7` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
 | `docs/arquitetura/decisoes/ADR-009-gemini-api.md` | `1f7bdddf0ef704f2b992ebb6cad302518bc12b41878a3abb2c7f868c6eccb3cc` |
 | `docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md` | `a44a743cedd86f0eca7e722915c068a78ec6526888024d0ec3f0f347d9f609ca` |
 | `docs/arquitetura/decisoes/ADR-011-amostra-real-minima.md` | `31758187da83231312208077b3ca892f86a6dbcf4466fccf68d934e5cad2eab5` |
+| `docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md` | `b459a09f63eeb1e6cf3790cab2dc685c864da923117d4db94eedeec43d7fe1c9` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
@@ -16732,19 +17015,20 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `224a7c05c52a580adb9c775f4da9f03e13f9ad623bf04eed5a58e16fd51f00cc` |
+| `docs/arquitetura/orquestracao-ia.md` | `b2d1eb8c2fa95c70ca4295de1752603deb8efc94f17a08cc895482cbb6735926` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
-| `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
+| `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `888992ff338f635eb69d784ada3685297d6d95944015e6fd0df3382f7cdf02fd` |
+| `docs/especificacao/compilacao-spec.json` | `f5930956a7a3e4e9dd865ea415c0877c19785b5c7eb45ca1db3f1a60a550d30b` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
 | `docs/especificacao/visao-geral.md` | `a68d1232529765fd2a35c6f26f8a94f212c692b40a8353174c63d1f8cf03755e` |
+| `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `b61aab8ae1c616d4700da6abe82be560a86c4857997db0f19f509c867b391183` |
-| `docs/requisitos/configuracao-ia-rag.md` | `e964dffc3bfbe58d17c0183f71554103c97319cb78b9a0e3d81516eb8357b46f` |
+| `docs/prompts/README.md` | `6db355862d6a6088280000d3808636c44dd0aa213afc8523162183a10c80a342` |
+| `docs/requisitos/configuracao-ia-rag.md` | `83f4e22e3aae1f36c47aaa51627cfd196f88ab192a02c732bdac69b45b9aa7d4` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `9dcc16553c1aef82d0375a1cd7634249436fcc7d516f74a28e27f91d36549344` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
@@ -16755,7 +17039,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json` | `94aadd81685f9edeab19351388e1fb1968af11a18dc44e2ef027f8c51aab2115` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-groq20b-v2.json` | `cf01e0b8e26b5d278daf8a1d4ea29be727f3bea65c47801d76e47cfd9e7ff904` |
-| `docs/requisitos/schemas/configuracao-ia-v2.json` | `5f8dea17ad200277f17e2f7092afb546ec2393509e1eb157eafce6ab18ac4f83` |
+| `docs/requisitos/schemas/configuracao-ia-v2.json` | `494cb1696d58a8a3465b6cd56a60630cacd7df46721be23dc588825a2618d304` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
 | `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `701f010c395b67e68ec7408c6ccf8b6dd2070937f3793c44de4e0ed52209938b` |
@@ -16781,6 +17065,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/estrategia.md` | `db5c5976eaf0a6aa800ff8f10b3b4035c3921a868bbd37ab37367cd739bfae8b` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
+| `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `c255846226e125dbbc86bd1531c678fc7ddbcdd109d96508103f7b91407fbab3` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
@@ -16792,7 +17077,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
 | `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |
 | `materiais/rag/livro-de-apoio.json` | `c75428232258b24af8920ac712bac46cba7028c603b7e306ea6dcde59e50eb3f` |
+| `materiais/rag/politica-adultos-v2.json` | `75b381b50a23b8a8d199209d3bc0b6e02aed2b675cea0bf89f65b9d9cae1c9e0` |
 | `materiais/rag/politica-livro-v2.json` | `027233ba3619728bc1382659957a42ec29cfc62e133cfdc2d3dc8cdb8c17bd2f` |
+| `materiais/rag/preparacao-local-v1.json` | `7930308308ad5a288eac6185f1a6087325a044e650c75047d47725edc0532eb0` |
 | `materiais/rag/selecoes/nahas-forca-v1.json` | `7339f82d70f5e03be80e831dd99915c5a175d7f480c454f924d943ea7ef5f06e` |
 | `scripts/gerar_spec.py` | `b4347fe17f55bd989bcfd731049a39dd9ed57481bd447dc73c925f61827b0124` |
 

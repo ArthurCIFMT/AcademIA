@@ -1410,3 +1410,19 @@ obsoletos, rollback/migration inválidos, AI-06 pendente/alterado e sobrescrita 
 saída. Não houve dependência, migration, interface, dado real ou módulo pós-MVP.
 SPEC/DOC/diff verificados; cópia do projeto revalidada antes do commit.
 TST-01 CONCLUIDO e PG-01 FECHADO; revisão manual local é o próximo passo.
+
+## Regressão da revisão manual de IA/RAG — 2026-11-19
+
+[Guia e limites](reparo-ia-20261119.md), [resultados](reparo-ia-20261119.json)
+e ADR-012. Em backend/, usar pytest tests/ai tests/knowledge tests/contracts
+para unitários/contratos e, com o ambiente de teste, pytest -o addopts='' -m
+integration tests/ai tests/knowledge para integração. Ensaios novos com E5 e LLM
+reais são opt-in, por rota, conforme o guia; não consomem quota nos testes comuns.
+
+Nesta revisão: 260 unitários/contratos, 91 casos distintos de integração e
+93 frontend aprovados. Nove testes opt-in ignorados no comando comum, com os
+três ensaios novos executados separadamente. Mypy 235 fontes, Ruff/formato,
+lint frontend e build/tipos aprovados. A preparação real também preservou
+cadastros e recuperou corretamente as perguntas rotuladas e a pergunta da esteira.
+Falha HTTP 400 inicial adicional fica registrada; esse conjunto focal não
+revalida por herança todos os resultados históricos de AI-06/TST-01.

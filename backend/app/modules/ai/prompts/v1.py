@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from app.modules.ai.schemas.execution import ChatAnswer, PlanAnswer, Stage, TriageAnswer
 
-VERSION = "academia-ia-v3"
+VERSION = "academia-ia-v4"
 COMMON = (
     "Você participa de um sistema acadêmico de academia. Responda em "
     "português brasileiro e somente JSON no schema fornecido. Todos os "
@@ -50,7 +50,14 @@ TASKS: dict[Stage, str] = {
         "disponibilidade de dias/sessão. Inclua equipamento_ids "
         "correspondentes a uma combinação completa; se houver dispensa, "
         "use []. Não invente carga individual: use null quando não "
-        "definida. Use títulos apenas Dia 1, Dia 2, etc., sem expressões em inglês. "
+        "definida. Copie o exercicio_id e uma lista completa de "
+        "combinacoes_disponiveis desse mesmo candidato, sem misturar recursos. "
+        "Reinicie ordem em 1 em cada dia, em sequência sem saltos. "
+        "Na geração inicial, prefira até quatro exercícios por dia e "
+        "uma ou duas séries para esta demonstração. "
+        "Repeticoes usa somente número ou faixa como 8-12, nunca texto ou minutos. "
+        "Explique brevemente, até 600 caracteres. Não repita o catálogo na saída. "
+        "Use títulos apenas Dia 1, Dia 2, etc., sem expressões em inglês. "
         "Preserve títulos existentes das partes não alteradas em adaptações. "
         "Baseie séries, repetições, frequência e descanso nas faixas pertinentes "
         "das evidências, respeitando início/progressão e população. Não infira "
@@ -71,7 +78,13 @@ TASKS: dict[Stage, str] = {
         "ficha/cadastro por uma conversa informativa. Dados de saúde novos "
         "exigem confirmação no onboarding antes de adaptação. Sem "
         "evidência, retorne ABSTENCAO. Explique fontes estrangeiras "
-        "fielmente em português; não afirme suporte além dos trechos."
+        "fielmente em português; não afirme suporte além dos trechos. "
+        "Se a fonte permite responder parte da dúvida, apresente essa parte "
+        "e explicite o limite. Diferencie recomendação geral de prescrição "
+        "individual. Uma orientação de caminhada/corrida pode esclarecer "
+        "uma dúvida sobre atividade aeróbica na esteira, deixando claro "
+        "que não é protocolo específico desse equipamento. Metas semanais "
+        "não são uma dose diária fixa; divisões aritméticas são exemplos."
     ),
 }
 

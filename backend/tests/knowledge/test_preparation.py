@@ -45,11 +45,12 @@ def test_plan_rejects_traversal_and_unauthorized_purpose(
     tmp_path: Path,
 ) -> None:
     selections = load_preparation(ROOT)
-    assert len(selections) == 5
+    assert len(selections) == 6
     assert {s.source.fonte_id for s in selections} == {
         "BR-RBCM-001",
         "BR-NAHAS-001",
         "INT-HEALTH-001",
+        "BR-MS-001",
     }
     plan = json.loads((ROOT / PLAN).read_text("utf-8"))
     plan["fontes"][0]["selecao"] = "../fora-do-repositorio.json"
@@ -133,7 +134,7 @@ def test_prepare_real_sources_replays_and_does_not_revive_revoked_source(
         assert first.importacao.documentos == 19
         assert first.importacao.aprovadas == 9
         assert all(item.indexacao.estado == "CONCLUIDA" for item in first.ingestoes)
-        assert len(first.ingestoes) == 5 and store.check().points == 24
+        assert len(first.ingestoes) == 6 and store.check().points == 28
         # Simula seleção antiga do mesmo preparo, retirada do manifesto atual.
         book = next(
             item
@@ -161,7 +162,7 @@ def test_prepare_real_sources_replays_and_does_not_revive_revoked_source(
             extraction,
             book.selection.model_copy(update={"finalidade": "DUVIDAS"}),
         )
-        assert store.check().points == 29
+        assert store.check().points == 33
         calls = len(encoder.calls)
         second = prepare_corpus(
             sessions,
@@ -175,7 +176,7 @@ def test_prepare_real_sources_replays_and_does_not_revive_revoked_source(
         assert second.importacao.versoes_novas == 0
         assert second.ingestoes == first.ingestoes and len(encoder.calls) == calls
         with sessions.begin() as session:
-            assert session.scalar(select(func.count()).select_from(Ingestion)) == 6
+            assert session.scalar(select(func.count()).select_from(Ingestion)) == 7
             retired = session.get(Ingestion, obsolete.id)
             assert retired is not None and retired.estado == "REVOGADA"
             assert obsolete.id not in available_ingestions(
@@ -204,7 +205,7 @@ def test_prepare_real_sources_replays_and_does_not_revive_revoked_source(
                 root=ROOT,
                 artifacts=tmp_path / "artefatos",
             )
-        assert store.check().points == 29
+        assert store.check().points == 33
     finally:
         store.close()
 

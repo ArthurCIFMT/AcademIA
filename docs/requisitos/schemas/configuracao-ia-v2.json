@@ -3,7 +3,7 @@
   "provider": "groq",
   "model": "openai/gpt-oss-120b",
   "base_url": "https://api.groq.com/openai/v1",
-  "response_format": "json_object",
+  "response_format": "json_schema",
   "temperature": 0.2,
   "concurrency": 1,
   "embedding": {
@@ -30,7 +30,7 @@
     "history_messages": 6,
     "history_total_chars": 3000,
     "resumo_chars": 2400,
-    "candidates": 40,
+    "candidates": 12,
     "prompt_utf8_bytes": 24000,
     "chat": {
       "output_tokens": 600,
@@ -43,7 +43,7 @@
       "timeout_seconds": 25
     },
     "generation": {
-      "output_tokens": 4096,
+      "output_tokens": 2048,
       "timeout_seconds": 60
     },
     "execution_timeout_seconds": 100,

@@ -24,7 +24,8 @@ O comando:
 2. Importa os 19 PDFs locais: nove selecionados aprovados e dez em quarentena.
    Não baixa materiais nem reaprova versões revogadas.
 3. Extrai somente fontes escolhidas no plano. Nahas usa a política v2 das páginas
-   físicas 83, 85, 132 e 133, sem declarar válida a extração integral.
+   físicas 83, 85, 132 e 133. O guia brasileiro usa apenas 24/25. Nenhuma dessas
+   seleções declara válida a extração integral.
 4. Compara os recortes com hashes, páginas e offsets revisados antes de indexar.
 5. Indexa por E5 local/Qdrant, com checkpoints e validação de completude.
 6. Repete sem duplicar versões/ingestões/vetores. Seleção antiga gerenciada por
@@ -42,10 +43,12 @@ O texto dos PDFs e a origem bibliográfica permanecem inalterados.
 | BR-RBCM-001 | Dúvidas; geração geral | Sete conceitos em cada finalidade; três recortes adicionais na geração |
 | BR-NAHAS-001 | Geração geral | Cinco recortes do livro |
 | INT-HEALTH-001 | Triagem | Dois recortes contextuais |
+| BR-MS-001 | Dúvidas | Quatro recortes para adultos: duração/intensidade, distribuição e exemplos |
 
-São cinco ingestões, 24 fragmentos ativos por finalidade e 17 recortes únicos.
+São seis ingestões, 28 fragmentos ativos por finalidade e 21 recortes únicos.
 Documentos aprovados sem seleção/indexação completa continuam fora da busca.
-As quatro fontes com extração pendente do RAG-03 não são promovidas.
+As extrações integrais pendentes do RAG-03 permanecem pendentes; somente a
+seleção física 24/25 do guia brasileiro passou por extração e revisão específicas.
 O livro apoia a geração; o catálogo relacional fornece exercícios/equipamentos.
 Este preparo não adiciona cobertura para adaptação clínica por condição.
 Ausência de evidência pertinente continua exigindo abstenção.
@@ -70,7 +73,8 @@ Importar pela tela continua sendo distinto de extrair e indexar offline.
 ## Roteiro de teste manual
 
 1. Abra a conta do cliente pelo convite do Mailpit e entre com sua senha.
-2. No assistente, pergunte sobre volume, frequência, intervalo ou cadência.
+2. No assistente, pergunte sobre volume, frequência, intervalo, cadência ou
+   duração de caminhada/corrida/esteira como atividade aeróbica geral para adultos.
    Confira a explicação em português e as fontes/páginas oferecidas.
 3. Complete o onboarding e confira que dados ausentes/desconhecidos não viram
    respostas saudáveis automaticamente. Caso grave continua bloqueado.

@@ -30,3 +30,7 @@ Configuração local do proxy não é serviço pago alternativo.
 
 A aprovação do modelo/configuração não aprova qualidade, latência ou segurança
 semântica. Esses critérios continuam sujeitos ao AI-06 e TST-01.
+
+Em 2026-11-19, a [ADR-012](ADR-012-estabilidade-ia-e-cobertura-aerobica.md)
+substituiu JSON Object Mode e os orçamentos do perfil principal. O modelo desta
+decisão continua vigente; limites anteriores permanecem como histórico.

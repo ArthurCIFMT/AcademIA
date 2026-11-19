@@ -1,0 +1,35 @@
+{
+  "fonte_id": "BR-MS-001",
+  "arquivo_sha256": "944f5ece2d1a82857f430c5e846ed0cc1798ce18b20218206b9068fa12e1c90e",
+  "politica_extracao": "materiais/rag/politica-adultos-v2.json",
+  "trechos": [
+    {
+      "pagina": 24,
+      "inicio": 1649,
+      "fim": 2074,
+      "secao": "Atividade física para adultos: duração e intensidade moderada",
+      "texto_hash": "33c94c6a5c4e532ba3573ee6ae3449d6ac51103f14a9413d4db05c5db71953a1"
+    },
+    {
+      "pagina": 25,
+      "inicio": 0,
+      "fim": 445,
+      "secao": "Atividade física para adultos: duração e intensidade vigorosa",
+      "texto_hash": "2cf4172aa3bb3ddce854d276f00aed6454b810ff51fc56a6f245bc4a31369094"
+    },
+    {
+      "pagina": 25,
+      "inicio": 447,
+      "fim": 977,
+      "secao": "Atividade física para adultos: fortalecimento e distribuição do tempo",
+      "texto_hash": "4ab214f76d9c41b43f17b5a6816d66472dbbbf7f0e083c6302d2bb7f9d762bc9"
+    },
+    {
+      "pagina": 25,
+      "inicio": 1020,
+      "fim": 1392,
+      "secao": "Atividade física para adultos: exemplos de atividades",
+      "texto_hash": "816530e57360db7718ecc10dbea793a66cc69509eb7bc20642f4abb808f815f2"
+    }
+  ]
+}

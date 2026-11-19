@@ -6,7 +6,7 @@ Valores canônicos: [configuração v2](schemas/configuracao-ia-v2.json).
 
 A configuração fixa modelos, limite por rota, chunking/busca, retenção e metas.
 GROQ_API_KEY é credencial pessoal de ambiente, não criada/versionada por esta entrega.
-JSON Object Mode não garante aderência ao schema; validar no backend e encerrar
+O perfil principal usa JSON Schema estrito (ADR-012); validar também no backend e encerrar
 erro sem segunda geração automática. No máximo uma análise + uma geração em ficha.
 Não enviar 24000 bytes só porque o teto permite: são limite máximo, não alvo.
 Bytes/caracteres não são tokens; registrar tokens reais do provedor por etapa.
@@ -21,7 +21,9 @@ essas faixas não prescrevem dose nem substituem o suporte da literatura/políti
 repeticoes é string inteira ou intervalo A-B, com 1<=A<=B<=100 e sem texto livre;
 backend valida o intervalo. carga_kg é decimal não-negativo ou null.
 Sem inventar carga individual: pode ser null para determinação pelo instrutor.
-Prompt usa IDs/descrições compactas de até 40 candidatos viáveis; validação final
+Prompt principal projeta até 12 candidatos diversos, preservando a base viável
+de adaptação mesmo acima desse alvo, dentro do teto de 40/bytes (ADR-012).
+Nomes/grupos/IDs/combinações permanecem; descrições longas são omitidas. Validação final
 verifica IDs e inventário atual. Sem conjunto suficiente, não gerar seleção falsa.
 Schema de saída materializado em [AI-02](../arquitetura/orquestracao-ia.md) e
 [contratos JSON](schemas/execucao-ia-v1.schema.json), a partir destes campos.
@@ -98,3 +100,14 @@ não mudam. Somente quality.min_cases passa de 24 para cinco nos três perfis.
 O [guia vigente](../testes/ai06-enxuto.md) separa a amostra real dos testes locais.
 Troca automática é possível como evolução descrita na ADR-011, mas não está
 implementada/ativada; hoje os perfis de reserva continuam explícitos.
+
+## Reparo após teste manual — 2026-11-19
+
+[ADR-012](../arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md):
+principal usa json_schema/strict, alvo de 12 candidatos e geração de até 2048 tokens.
+Mantém 400 na triagem, 600 no chat, uma tentativa por etapa e resumo de saúde
+completo dentro do contrato. Reservas preservam json_object/40/4096; não há
+troca automática nem equivalência de qualificação. Os parâmetros anteriores
+descritos nas seções históricas não substituem a configuração canônica vigente.
+Saída longa pode ser interrompida sem publicação; reduzir reserva não garante
+que qualquer ficha permitida pelo schema caiba no plano gratuito.

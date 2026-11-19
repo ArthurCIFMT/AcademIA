@@ -5,6 +5,7 @@ from threading import BoundedSemaphore
 import httpx
 from pydantic import ValidationError
 
+from app.modules.ai.adapters.structured import structured_format
 from app.modules.ai.orchestration.settings import Config, GroqSettings
 from app.modules.ai.ports.execution import ProviderError
 from app.modules.ai.schemas.execution import Completion, Stage, Usage
@@ -60,6 +61,12 @@ class GroqAdapter:
         except ValueError:
             raise ProviderError("CONFIGURACAO_INVALIDA") from None
         started = self.clock()
+        response_format: dict[str, object] = {"type": "json_object"}
+        if self.config.response_format == "json_schema":
+            try:
+                response_format, messages = structured_format(stage, messages)
+            except (ValueError, KeyError, TypeError):
+                raise ProviderError("CONFIGURACAO_SCHEMA_INVALIDA") from None
         if not _SLOT.acquire(timeout=timeout):
             raise ProviderError("TIMEOUT")
         try:
@@ -72,7 +79,7 @@ class GroqAdapter:
                 "temperature": self.config.temperature,
                 "reasoning_effort": self.config.reasoning_effort,
                 "include_reasoning": self.config.include_reasoning,
-                "response_format": {"type": "json_object"},
+                "response_format": response_format,
                 "max_completion_tokens": output_tokens,
                 "stream": False,
                 "n": 1,
@@ -92,6 +99,8 @@ class GroqAdapter:
                     raise ProviderError("QUOTA_EXCEDIDA")
                 if response.status_code in {401, 403}:
                     raise ProviderError("CREDENCIAL_RECUSADA")
+                if response.status_code == 400:
+                    raise ProviderError("REQUISICAO_PROVEDOR_RECUSADA")
                 if response.status_code != 200:
                     raise ProviderError("PROVEDOR_INDISPONIVEL")
                 content = bytearray()
