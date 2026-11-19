@@ -26,6 +26,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 | RNF-16 | Timestamps devem ser armazenados em UTC e expostos em ISO 8601, com conversão de apresentação configurável. |
 | RNF-17 | Integrações e eventos repetíveis devem possuir estratégia de idempotência. |
 | RNF-18 | Orquestrador usa busca semântica fixa e contexto limitado; chat tem até uma geração, ficha tem até uma análise de triagem e uma geração, sem loops de pesquisa/reparo e sem retry automático das etapas LLM. Nova tentativa LLM é explícita em nova execução; ingestão/busca mantêm tentativas limitadas. Medir p50/p95 total por rota, chamadas/tokens e busca separada. Metas, limites e provedor estão definidos em configuracao-ia-rag.md/ADR-004 e exigem ensaio real; RAG não garante acelerar uma API lenta. |
+| RNF-19 | Interfaces devem seguir uma referência visual única, com hierarquia legível, componentes consistentes, navegação por papel e linguagem em português. A reformulação do MVP ocorre por UX-01–UX-09; telas de módulos futuros adotam o mesmo padrão. |
+| RNF-20 | Fluxos entregues devem atender aos critérios selecionados de acessibilidade e usabilidade definidos em experiencia-e-interface.md: contraste, teclado/foco, alvos de toque, ampliação, responsividade, estados e erros compreensíveis. O aceite requer evidência no navegador com dados sintéticos, além dos testes funcionais; não equivale a certificação integral WCAG. |
 
 
 ## Firewall
@@ -39,3 +41,10 @@ final e deve cobrir, no mínimo:
 - administração de identidade restrita;
 - limites de origem, tamanho de requisição e taxa quando aplicáveis;
 - documentação das regras para o ambiente acadêmico.
+
+## Experiência e apresentação
+
+RNF-19/RNF-20 foram acrescentados por solicitação do responsável em 2026-11-19.
+A [especificação de experiência](experiencia-e-interface.md) define o escopo e
+os critérios mensuráveis; a [validação visual](../testes/reformulacao-visual.md)
+explica os ensaios futuros. A criação dos prompts não implementa nem aprova telas.

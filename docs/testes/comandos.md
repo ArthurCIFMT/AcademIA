@@ -1426,3 +1426,12 @@ lint frontend e build/tipos aprovados. A preparação real também preservou
 cadastros e recuperou corretamente as perguntas rotuladas e a pergunta da esteira.
 Falha HTTP 400 inicial adicional fica registrada; esse conjunto focal não
 revalida por herança todos os resultados históricos de AI-06/TST-01.
+
+## Planejamento da reformulação visual — UX-01 a UX-09
+
+[Critérios](../requisitos/experiencia-e-interface.md) e
+[matriz de validação](reformulacao-visual.md). Estado: PLANEJADO.
+Os cartões definem testes FE, lint/tipos/build e navegador por etapa, reaproveitando
+os comandos existentes. Não declarar novas capturas, seletores ou cenários como
+executados nesta manutenção documental. A próxima etapa visual é UX-01; testes
+da aplicação serão executados quando uma entrega alterar interface/interação.

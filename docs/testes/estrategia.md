@@ -146,3 +146,12 @@ rollback, migration e hashes dos relatórios/verificador. A execução local man
 seu snapshot original; a decisão final está no arquivo próprio de consolidação.
 Não repetir chamadas LLM ao consolidar nem apresentar testes históricos como
 novamente executados. Mudanças futuras invalidam evidências incompatíveis.
+
+## Experiência e qualidade visual
+
+RNF-19/RNF-20 e [critérios de interface](../requisitos/experiencia-e-interface.md)
+orientam UX-01–UX-09. A [matriz visual](reformulacao-visual.md) complementa FE/E2E
+com inspeção no navegador, contraste, teclado, ampliação, viewports e capturas
+sintéticas antes/depois. Testes verdes não bastam para declarar boa aparência;
+mockups e inspeção visual também não substituem os testes de autorização/fluxo.
+Critérios e evidências de cada capacidade nova devem acompanhar sua implementação.

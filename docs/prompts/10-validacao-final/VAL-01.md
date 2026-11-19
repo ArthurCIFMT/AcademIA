@@ -5,7 +5,7 @@
 - Fase: Entrega final.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: PG-02.
-- Requisitos: RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-18; MRF01–MRF15 e critérios vigentes.
+- Requisitos: RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-20; MRF01–MRF15 e critérios vigentes.
 - Módulos: MOD-00–MOD-12.
 
 ## Objetivo e contexto
@@ -59,3 +59,10 @@ Informe a informação que falta; não improvise dados para obter aceite.
 Siga GATE-05 e autorização vigente; registre evidência em
 [manifesto](../README.md). Informe arquivos, comandos reais, resultados, pendências
 e próximo ID liberado. Texto criado não significa código implementado.
+
+## Qualidade visual no escopo final
+
+Considerar RNF-19/RNF-20 e a trilha UX-01–UX-09 na rastreabilidade. UX-09 compõe
+PG-02; módulos entregues depois da reformulação também devem registrar adoção do
+padrão e testes das suas telas. Não usar aceite funcional antigo como comprovação
+da aparência nova nem declarar concluída uma reformulação apenas planejada.

@@ -64,6 +64,23 @@ Metadados canônicos após a preparação delegada e a auditoria de 2026-11-06.
 | [INF-02](../prompts/09-infraestrutura/INF-02.md) | MOD-00 | RNF-05, RNF-09, RNF-11, RNF-12 |
 | [INF-03](../prompts/09-infraestrutura/INF-03.md) | MOD-00 | RNF-08, RNF-11, RNF-12, RNF-15 |
 | [INF-04](../prompts/09-infraestrutura/INF-04.md) | MOD-00 | RNF-07, RNF-10, RNF-11, RNF-12 |
-| [VAL-01](../prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-18; MRF01–MRF15 e critérios vigentes |
-| [VAL-02](../prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07 e critérios dos módulos selecionados |
+| [VAL-01](../prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-20; MRF01–MRF15 e critérios vigentes |
+| [VAL-02](../prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07, RNF-14, RNF-19, RNF-20 e critérios dos módulos selecionados |
 | [VAL-03](../prompts/10-validacao-final/VAL-03.md) | MOD-00 | RNF-10, RNF-11; contexto acadêmico |
+
+## Evolução visual solicitada após a revisão manual
+
+Metadados adicionados em 2026-11-19; os estados estão no manifesto e não
+representam execução de telas.
+
+| Prompt | Módulos | Requisitos |
+|---|---|---|
+| [UX-01](../prompts/11-experiencia-interface/UX-01.md) | MOD-00 | RNF-01, RNF-14, RNF-19, RNF-20; RN-04, RN-05 |
+| [UX-02](../prompts/11-experiencia-interface/UX-02.md) | MOD-00 | RNF-01, RNF-07, RNF-14, RNF-19, RNF-20 |
+| [UX-03](../prompts/11-experiencia-interface/UX-03.md) | MOD-00, MOD-01, MOD-12 | RF-04, RF-05, RF-06; RN-02, RN-04, RN-05; RNF-14, RNF-19, RNF-20 |
+| [UX-04](../prompts/11-experiencia-interface/UX-04.md) | MOD-03 | RF-09, RF-10, RF-11, RF-12, RF-13, RF-14; RN-05, RN-11, RN-23; RNF-14, RNF-15, RNF-19, RNF-20 |
+| [UX-05](../prompts/11-experiencia-interface/UX-05.md) | MOD-04, MOD-06, MOD-12 | RF-15, RF-18, RF-19; RN-15, RN-16, RN-29, RN-30; RNF-14, RNF-18, RNF-19, RNF-20; MRF04, MRF07, MRF09, MRF11, MRF12, MRF13, MRF14 |
+| [UX-06](../prompts/11-experiencia-interface/UX-06.md) | MOD-04 | RF-16, RF-17, RF-35; RN-05, RN-18, RN-20; RNF-14, RNF-19, RNF-20 |
+| [UX-07](../prompts/11-experiencia-interface/UX-07.md) | MOD-02, MOD-03, MOD-04 | RF-34, RF-35, RF-38; RN-11, RN-14, RN-16, RN-18, RN-31; RNF-14, RNF-19, RNF-20 |
+| [UX-08](../prompts/11-experiencia-interface/UX-08.md) | MOD-01, MOD-02, MOD-04, MOD-10 | RF-01, RF-02, RF-03, RF-07, RF-08, RF-32, RF-33, RF-34, RF-38; RN-04, RN-11, RN-33, RN-37; RNF-14, RNF-19, RNF-20 |
+| [UX-09](../prompts/11-experiencia-interface/UX-09.md) | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | RF-05, RF-10, RF-14, RF-15, RF-16, RF-18, RF-19, RF-35; RN-04, RN-05, RN-11, RN-29; RNF-07, RNF-14, RNF-19, RNF-20; MRF12, MRF14 |

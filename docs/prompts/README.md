@@ -17,7 +17,7 @@
 - [Revisão dos módulos](../arquitetura/revisao-modulos.md) e
   [análise do MER preservado](../arquitetura/revisao-mer.md).
 
-Foram redigidos 61 prompts operacionais. P00 representa a preparação Git já
+Foram redigidos 70 prompts operacionais: 61 anteriores e nove de reformulação visual. P00 representa a preparação Git já
 concluída. Os cartões escritos são documentos revisáveis; nenhum módulo funcional
 foi implementado pela criação desses arquivos.
 
@@ -57,7 +57,7 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
-| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; exclui VAL-01–VAL-03 | Manifesto, decisões e matriz de aceite com escopo explícito | ABERTO |
+| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](../arquitetura/preparacao-implementacao.md).
 Isso registra decisões e não instalação/ensaio. Gates de fases posteriores não impedem o trabalho
@@ -116,7 +116,7 @@ módulos antes de INF-01, conforme orientação do professor.
 Consolidação documental em 2026-11-11: [SPEC completo e portátil](../../SPEC.md),
 conteúdo das fontes oficiais incorporado, evolução do MER e roteiro para
 reconstrução por outra IA. Leitura pelos agentes/prompts e referências de estágio
-atualizadas. A entrega não altera os 61 cartões nem o estado das capacidades
+atualizadas. Aquela entrega não alterou os 61 cartões existentes à época nem o estado das capacidades
 funcionais. Verificação: `python scripts/gerar_spec.py --check`,
 `python scripts/verificar_documentacao.py` e `git diff --check`.
 
@@ -310,6 +310,32 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-06](05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | CONCLUIDO |
 | [TST-01](05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | CONCLUIDO |
 
+## Evolução visual pós-MVP — prioridade após a revisão manual
+
+Solicitada em 2026-11-19. Fonte: [experiência e interface](../requisitos/experiencia-e-interface.md),
+RNF-19/RNF-20 e [plano de testes](../testes/reformulacao-visual.md).
+Executar um cartão por vez, na ordem UX-01 → UX-02 → UX-03 → UX-04 → UX-05 →
+UX-06 → UX-07 → UX-08 → UX-09. UX-01 está PRONTO para planejamento/protótipos;
+os demais aguardam as dependências. Nenhuma dessas telas foi implementada agora.
+
+Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
+A pasta 11-experiencia-interface organiza o material e não impõe execução depois
+da pasta 10. Aceites funcionais anteriores permanecem históricos; o acabamento
+visual exige seu próprio aceite em UX-09. Módulos novos depois dele reutilizam
+o padrão e passam por suas próprias verificações visuais na entrega.
+
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [UX-01](11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | PRONTO |
+| [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | BLOQUEADO |
+| [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | BLOQUEADO |
+| [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
+| [UX-05](11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
+| [UX-06](11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | BLOQUEADO |
+| [UX-07](11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |
+| [UX-08](11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | BLOQUEADO |
+| [UX-09](11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
+
 ## Pós-MVP — matrícula e controle de acesso
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
@@ -404,3 +430,8 @@ Não há mudança de escopo de cadastros, onboarding, treinos, pagamentos ou bio
 [regressão e limites atuais](../testes/reparo-ia-20261119.md), ADR-012.
 Reparo restrito a IA/RAG e mensagem da tela de geração; edição do próprio perfil
 não foi incluída. Resultados históricos não são usados como ensaio da versão nova.
+
+2026-11-19: nove cartões UX acrescentam uma evolução visual explícita e incremental.
+Apenas documentos/prompt mestre/rastreabilidade/SPEC foram atualizados; frontend,
+backend e dados não mudaram. Próximo recomendado desta trilha: UX-01. A entrega
+final considera UX-09 em PG-02; isso não reabre o PG-01 funcional histórico.

@@ -204,6 +204,21 @@ ADR-006. A revisão vinculada da amostra v4 aprovou as cinco saídas. Não se re
 antigo para a versão corrigida. Pendências do corpus e limites da demonstração
 permanecem explícitos; a aprovação é da configuração/modelo avaliados.
 
+### 5.1. Evolução visual após a revisão manual
+
+O responsável solicitou em 2026-11-19 uma reformulação explícita da aparência e
+da usabilidade. RNF-19/RNF-20 e a
+[especificação de experiência](docs/requisitos/experiencia-e-interface.md) são
+fontes normativas. UX-01–UX-09 estão planejados, sem implementação visual nesta
+revisão. Começar por UX-01 e executar uma etapa por vez, podendo anteceder outros
+módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09; PG-01 permanece histórico.
+
+A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
+fichas do cliente, instrutor, cadastros e
+[validação visual](docs/testes/reformulacao-visual.md). Papéis, dados, contratos e
+regras de IA permanecem; módulos posteriores adotam o mesmo padrão. Frontend
+funcional e testes antigos não comprovam que essas melhorias já foram feitas.
+
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
 Os detalhes e critérios completos estão nas fontes da seção 2.
@@ -1000,6 +1015,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 | RNF-16 | Timestamps devem ser armazenados em UTC e expostos em ISO 8601, com conversão de apresentação configurável. |
 | RNF-17 | Integrações e eventos repetíveis devem possuir estratégia de idempotência. |
 | RNF-18 | Orquestrador usa busca semântica fixa e contexto limitado; chat tem até uma geração, ficha tem até uma análise de triagem e uma geração, sem loops de pesquisa/reparo e sem retry automático das etapas LLM. Nova tentativa LLM é explícita em nova execução; ingestão/busca mantêm tentativas limitadas. Medir p50/p95 total por rota, chamadas/tokens e busca separada. Metas, limites e provedor estão definidos em configuracao-ia-rag.md/ADR-004 e exigem ensaio real; RAG não garante acelerar uma API lenta. |
+| RNF-19 | Interfaces devem seguir uma referência visual única, com hierarquia legível, componentes consistentes, navegação por papel e linguagem em português. A reformulação do MVP ocorre por UX-01–UX-09; telas de módulos futuros adotam o mesmo padrão. |
+| RNF-20 | Fluxos entregues devem atender aos critérios selecionados de acessibilidade e usabilidade definidos em experiencia-e-interface.md: contraste, teclado/foco, alvos de toque, ampliação, responsividade, estados e erros compreensíveis. O aceite requer evidência no navegador com dados sintéticos, além dos testes funcionais; não equivale a certificação integral WCAG. |
 
 
 #### Firewall
@@ -1013,6 +1030,129 @@ final e deve cobrir, no mínimo:
 - administração de identidade restrita;
 - limites de origem, tamanho de requisição e taxa quando aplicáveis;
 - documentação das regras para o ambiente acadêmico.
+
+#### Experiência e apresentação
+
+RNF-19/RNF-20 foram acrescentados por solicitação do responsável em 2026-11-19.
+A [especificação de experiência](docs/requisitos/experiencia-e-interface.md) define o escopo e
+os critérios mensuráveis; a [validação visual](docs/testes/reformulacao-visual.md)
+explica os ensaios futuros. A criação dos prompts não implementa nem aprova telas.
+### 2. Experiência, navegação e critérios de apresentação
+
+Fonte versionada: [docs/requisitos/experiencia-e-interface.md](docs/requisitos/experiencia-e-interface.md).
+
+Status: ESPECIFICADO, implementação PENDENTE. Solicitação do responsável em
+2026-11-19, após a revisão manual do MVP. Complementa RNF-14, RNF-19 e RNF-20.
+Não declara que o aplicativo atual já satisfaz estes critérios.
+
+#### Objetivo e limites
+
+Entregar um site de academia com aparência consistente, legível e organizada,
+adequado a clientes no celular e às operações de instrutores e funcionários.
+O fluxo deve explicar o próximo passo e preservar os controles de segurança.
+O caráter acadêmico não dispensa qualidade de apresentação ou clareza de uso.
+
+A reformulação é incremental, com React/TypeScript/Vite e contratos existentes.
+Não muda schema, backend, permissões, triagem, prompts internos da IA, modelos,
+corpus, publicação, parecer posterior, retenção ou quantidade de chamadas.
+Editar o próprio perfil é capacidade funcional separada, ainda não especificada
+por este trabalho; não criar botão sem função, API imaginária ou formulário falso.
+Matrícula, biometria, agenda, dashboard e financeiro só ganham navegação quando
+suas funcionalidades existirem. Dados demonstrativos vêm de fixtures sintéticas,
+com origem identificável; não mostrar estatísticas, fotos ou progresso fictícios.
+
+#### Direção visual e arquitetura de informação
+
+Adotar inicialmente tema claro, superfícies neutras, textos escuros e acentos
+em azul-petróleo/verde. UX-01 define cores concretas com contraste medido,
+tipografia, escala de espaçamento, bordas, estados e componentes. Preferir fontes
+do sistema e CSS existente; novos pacotes ou recursos externos exigem justificativa.
+Não carregar rastreadores, fontes remotas ou conteúdo de terceiros no onboarding.
+A direção pode ser refinada pela revisão, mantendo uma única referência visual.
+
+No desktop, usar estrutura com navegação lateral, cabeçalho discreto e conteúdo
+principal; no celular, navegação compacta acessível sem cobrir conteúdo/ações.
+A navegação informa seção ativa, rótulos em português e caminho de retorno.
+Papéis acumuláveis mantêm suas permissões reais: alternar a área de trabalho não
+altera papéis. Links de acesso direto continuam funcionando. Não tratar menu
+oculto como autorização. A curadoria técnica RAG permanece oculta por padrão.
+
+| Área | Organização proposta, somente para capacidades existentes |
+|---|---|
+| Cliente | Meus treinos; Assistente; Meus dados de treino (onboarding); conta/sair. |
+| Instrutor | Meus clientes; fichas e editor manual; revisões pendentes; avaliações; catálogo autorizado. |
+| Atendente | Clientes e convites; outras operações apenas quando seus módulos forem entregues. |
+| Administrador | Clientes; funcionários; designações; equipamentos; exercícios. Indicadores somente com DSH-01 entregue. |
+
+Os rótulos podem ficar mais naturais, sem prometer alteração de dados inexistente.
+O formulário de convite já pode abrir em página dedicada fora dos menus da conta,
+na mesma aplicação. Não migrar dados de saúde para Google Forms ou outro provedor.
+
+#### Fluxos prioritários
+
+Onboarding: etapas identificáveis de objetivos/rotina, dados físicos, saúde e
+revisão; salvar/retomar e navegar sem descartar campos. Preservar a distinção
+entre ausente, null, negativa explícita e desconhecido, os campos condicionais e
+a confirmação de atualização. Um passo visual não equivale à conclusão no servidor.
+Não salvar dados clínicos em localStorage, URL, analytics ou capturas com dados reais.
+
+Assistente: uma entrada de navegação com ações identificáveis para tirar dúvidas,
+gerar treino e solicitar adaptação. A apresentação pode reunir as telas, mas chat
+informativo, geração e adaptação continuam usando seus contratos separados.
+Chat usa RAG e resposta limitada às evidências; a ficha vem do LLM com validação
+do backend. Conversar não dispara treino. Geração/adaptação exigem ação explícita,
+onboarding pertinente e confirmação já prevista no fluxo. Não acrescentar chamadas
+de LLM por navegação, abertura de tela, atualização, render ou efeito React.
+
+Mostrar mensagem do cliente/resposta, fontes legíveis com título/página, estado
+salvo e distinção entre insuficiência, bloqueio, falta de evidência, quota e falha.
+Usar somente estados reais: sem progresso percentual ou etapas inventadas.
+Consultar estado não é reenviar pedido. Nova tentativa é explícita, com nova chave;
+mesma solicitação preserva o resultado anterior. Arquivos, hashes e termos de
+infraestrutura ficam fora do fluxo comum, salvo detalhe necessário ao usuário.
+
+Treinos: organização por dia, exercício, recurso, séries, repetições e descanso;
+histórico e parecer legíveis no celular. Ficha PENDENTE ou REJEITADA permanece
+consultável conforme o domínio; expurgo, recursos indisponíveis e fontes revogadas
+não são escondidos nem restaurados visualmente. Instrutor conserva criação manual,
+revisão posterior, autoria, confirmação de publicação e tratamento de conflitos.
+
+#### Critérios verificáveis de qualidade
+
+| Critério | Aceite esperado |
+|---|---|
+| Consistência | Mesmos tokens e componentes para botões, campos, avisos, cards e navegação; sem estilos locais contraditórios ou links repetidos substituindo estrutura. |
+| Hierarquia | Título e finalidade claros, ação principal identificável e ações destrutivas diferenciadas; rótulos descrevem o efeito da ação. |
+| Responsividade | Conferir larguras 320, 390, 768 e 1440 CSS px; sem perda de conteúdo/ações ou rolagem horizontal da página. Tabela genuinamente bidimensional pode usar região própria com acesso por teclado. |
+| Ampliação | Texto ampliado a 200% permanece utilizável; verificar também redistribuição a 320 CSS px. Não alegar que zoom 200% sozinho comprova reflow. |
+| Contraste | Texto comum pelo menos 4,5:1; texto grande pelo menos 3:1. Estados não dependem só de cor e são identificáveis por texto/ícone acessível. |
+| Toque | Ações principais com alvo de pelo menos 44×44 CSS px, meta do projeto; outros controles respeitam 24×24 ou as exceções/espaçamentos da WCAG. Não confundir os dois critérios. |
+| Teclado | Ordem coerente, foco visível, rótulos associados, link para conteúdo; menus e diálogos fecham adequadamente e devolvem foco, sem aprisionamento indevido. |
+| Formulários | Obrigatoriedade e erros ligados ao campo; resumo de erro quando necessário; erro de rede preserva edição e não comunica gravação sem confirmação. |
+| Estados | Carregamento, vazio, sucesso, falha, falta de permissão e conflito são distinguíveis; ações duplicadas não surgem por interação repetida. |
+| Privacidade | Detalhes de saúde restritos ao fluxo autorizado; nomes de exemplo nas capturas. Logout/inativação não deixam conteúdo protegido exposto por navegação. |
+| Conteúdo | Português consistente, sem IDs técnicos como título principal e sem indicadores ou funcionalidades simulados apresentados como reais. |
+| Evidência visual | Capturas reais antes/depois, viewport, rota, perfil e cenário documentados; verificação em navegador com fixtures. Testes de DOM e imagens geradas não substituem inspeção do aplicativo. |
+
+Critérios selecionados com referência à WCAG 2.2; não constituem declaração de
+conformidade integral, certificação ou exigência jurídica externa para o projeto.
+Fontes: [contraste](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html),
+[reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html) e
+[alvos](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html).
+
+#### Execução e manutenção
+
+UX-01 a UX-09 estão no [manifesto](docs/prompts/README.md). Executar um cartão por
+vez, começando por UX-01. Esta evolução pode preceder os demais módulos pós-MVP;
+não depende de Docker, biometria, pagamentos ou contratação de ferramenta visual.
+Cada novo módulo posteriormente entregue aplica os mesmos componentes e critérios.
+UX-09 verifica o conjunto atual; módulos posteriores ainda exigem seus próprios
+testes e revisão visual. A validação final do projeto considera esse acabamento.
+
+[Plano de testes](docs/testes/reformulacao-visual.md). Preferências, protótipos e
+evidências de UX-01 ainda serão produzidos na execução; este documento não inventa
+arquivos, capturas ou resultados já concluídos. Atualizações entram nesta fonte,
+nos cartões afetados e no SPEC gerado, preservando RF/RN/MRF e o MER.
 
 ## 15. Macrorequisitos de IA e RAG completos
 
@@ -12791,6 +12931,22 @@ Use dados sintéticos para testar instalação, cadastro, designação, onboardi
 prescrição manual, publicação PENDENTE, consulta/exportação, parecer/expurgo,
 recursos indisponíveis e isolamento. Para o MVP completo, executar também os
 cenários de RAG/IA e TST-01 antes de declarar sua conclusão.
+
+#### Reformulação visual incremental
+
+Após reproduzir o MVP funcional, executar UX-01–UX-09 conforme o manifesto e os
+cartões incorporados. Não tratar CSS/acabamento como consequência automática de
+outros prompts. A especificação de experiência traz RNF-19/RNF-20, jornadas,
+limites e critérios mensuráveis; UX-01 materializa a referência visual antes da
+migração das telas. Ao continuar o repositório, esta trilha é a prioridade visual
+recomendada após a revisão manual, sem depender dos módulos ainda não entregues.
+
+Cada entrega mantém componentes comuns, contratos, autorizações e estados reais.
+UX-09 comprova as telas existentes em navegador; telas de módulos posteriores
+devem aplicar o mesmo padrão com evidência própria antes da validação final.
+Não confundir representação gráfica, implementação e aprovação: reportar quais
+foram feitas, com fixtures sintéticas, resultados e limitações. Nenhuma mudança
+de MER, banco, políticas clínicas ou fornecedor de IA é exigida pelo redesenho.
 ### 2. Gates documentados
 
 Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
@@ -12810,7 +12966,7 @@ Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
-| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; exclui VAL-01–VAL-03 | Manifesto, decisões e matriz de aceite com escopo explícito | ABERTO |
+| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](docs/arquitetura/preparacao-implementacao.md).
 Isso registra decisões e não instalação/ensaio. Gates de fases posteriores não impedem o trabalho
@@ -12892,6 +13048,32 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 | [AI-05](docs/prompts/05-ia-rag/AI-05.md) | Chat e adaptação versionada do treino | MOD-06 | AI-04, TRN-04, ONB-03 | CONCLUIDO |
 | [AI-06](docs/prompts/05-ia-rag/AI-06.md) | Avaliação automatizada da IA | MOD-05, MOD-06, MOD-04, MOD-10 | AI-01, AI-02, AI-03, AI-04, AI-05 | CONCLUIDO |
 | [TST-01](docs/prompts/05-ia-rag/TST-01.md) | Aceitação ponta a ponta do MVP | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-05, MOD-06, MOD-10, MOD-12 | IAM-05, PES-03, ONB-03, ONB-04, EQP-01, TRN-04, AI-06 | CONCLUIDO |
+
+#### Evolução visual pós-MVP — prioridade após a revisão manual
+
+Solicitada em 2026-11-19. Fonte: [experiência e interface](docs/requisitos/experiencia-e-interface.md),
+RNF-19/RNF-20 e [plano de testes](docs/testes/reformulacao-visual.md).
+Executar um cartão por vez, na ordem UX-01 → UX-02 → UX-03 → UX-04 → UX-05 →
+UX-06 → UX-07 → UX-08 → UX-09. UX-01 está PRONTO para planejamento/protótipos;
+os demais aguardam as dependências. Nenhuma dessas telas foi implementada agora.
+
+Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
+A pasta 11-experiencia-interface organiza o material e não impõe execução depois
+da pasta 10. Aceites funcionais anteriores permanecem históricos; o acabamento
+visual exige seu próprio aceite em UX-09. Módulos novos depois dele reutilizam
+o padrão e passam por suas próprias verificações visuais na entrega.
+
+| ID / texto | Entrega | Módulos | Depende de | Estado |
+|---|---|---|---|---|
+| [UX-01](docs/prompts/11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | PRONTO |
+| [UX-02](docs/prompts/11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | BLOQUEADO |
+| [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | BLOQUEADO |
+| [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
+| [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
+| [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | BLOQUEADO |
+| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |
+| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | BLOQUEADO |
+| [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
 
 #### Pós-MVP — matrícula e controle de acesso
 
@@ -13020,9 +13202,686 @@ Metadados canônicos após a preparação delegada e a auditoria de 2026-11-06.
 | [INF-02](docs/prompts/09-infraestrutura/INF-02.md) | MOD-00 | RNF-05, RNF-09, RNF-11, RNF-12 |
 | [INF-03](docs/prompts/09-infraestrutura/INF-03.md) | MOD-00 | RNF-08, RNF-11, RNF-12, RNF-15 |
 | [INF-04](docs/prompts/09-infraestrutura/INF-04.md) | MOD-00 | RNF-07, RNF-10, RNF-11, RNF-12 |
-| [VAL-01](docs/prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-18; MRF01–MRF15 e critérios vigentes |
-| [VAL-02](docs/prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07 e critérios dos módulos selecionados |
+| [VAL-01](docs/prompts/10-validacao-final/VAL-01.md) | MOD-00–MOD-12 | RF-01–RF-38; RN-01–RN-39; RNF-01–RNF-20; MRF01–MRF15 e critérios vigentes |
+| [VAL-02](docs/prompts/10-validacao-final/VAL-02.md) | MOD-00–MOD-12 conforme escopo | RNF-07, RNF-14, RNF-19, RNF-20 e critérios dos módulos selecionados |
 | [VAL-03](docs/prompts/10-validacao-final/VAL-03.md) | MOD-00 | RNF-10, RNF-11; contexto acadêmico |
+
+#### Evolução visual solicitada após a revisão manual
+
+Metadados adicionados em 2026-11-19; os estados estão no manifesto e não
+representam execução de telas.
+
+| Prompt | Módulos | Requisitos |
+|---|---|---|
+| [UX-01](docs/prompts/11-experiencia-interface/UX-01.md) | MOD-00 | RNF-01, RNF-14, RNF-19, RNF-20; RN-04, RN-05 |
+| [UX-02](docs/prompts/11-experiencia-interface/UX-02.md) | MOD-00 | RNF-01, RNF-07, RNF-14, RNF-19, RNF-20 |
+| [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | MOD-00, MOD-01, MOD-12 | RF-04, RF-05, RF-06; RN-02, RN-04, RN-05; RNF-14, RNF-19, RNF-20 |
+| [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | MOD-03 | RF-09, RF-10, RF-11, RF-12, RF-13, RF-14; RN-05, RN-11, RN-23; RNF-14, RNF-15, RNF-19, RNF-20 |
+| [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | MOD-04, MOD-06, MOD-12 | RF-15, RF-18, RF-19; RN-15, RN-16, RN-29, RN-30; RNF-14, RNF-18, RNF-19, RNF-20; MRF04, MRF07, MRF09, MRF11, MRF12, MRF13, MRF14 |
+| [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | MOD-04 | RF-16, RF-17, RF-35; RN-05, RN-18, RN-20; RNF-14, RNF-19, RNF-20 |
+| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | MOD-02, MOD-03, MOD-04 | RF-34, RF-35, RF-38; RN-11, RN-14, RN-16, RN-18, RN-31; RNF-14, RNF-19, RNF-20 |
+| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | MOD-01, MOD-02, MOD-04, MOD-10 | RF-01, RF-02, RF-03, RF-07, RF-08, RF-32, RF-33, RF-34, RF-38; RN-04, RN-11, RN-33, RN-37; RNF-14, RNF-19, RNF-20 |
+| [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | RF-05, RF-10, RF-14, RF-15, RF-16, RF-18, RF-19, RF-35; RN-04, RN-05, RN-11, RN-29; RNF-07, RNF-14, RNF-19, RNF-20; MRF12, MRF14 |
+### 5. UX-01 — Plano visual, mapa de navegação e protótipos
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-01.md](docs/prompts/11-experiencia-interface/UX-01.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: PRONTO.
+- Dependências: TST-01.
+- Requisitos: RNF-01, RNF-14, RNF-19, RNF-20; RN-04, RN-05.
+- Módulos: MOD-00.
+- Próximo prompt desbloqueado: UX-02.
+
+#### Tarefa e contexto
+
+Definir uma referência concreta de aparência e navegação para reformular as telas existentes, antes de alterar o frontend.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Consultar as [rotas reais](frontend/src/app/AppRoutes.tsx) e os fluxos já entregues. As capturas usam apenas fixtures sintéticas; página sem serviço correspondente não entra como funcionalidade real.
+
+#### Escopo permitido
+
+- `docs/interface/**`
+- `docs/testes/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Inventariar telas, perfis, ações, estados e problemas observáveis do MVP; registrar linha de base sem dados reais.
+2. Produzir em docs/interface/ plano visual, mapa de navegação, tokens propostos e protótipos locais navegáveis com HTML/CSS ou recurso equivalente já disponível, identificados como protótipos.
+3. Representar desktop/celular e estados de cliente, instrutor e administração; cobrir login, onboarding, assistente e ficha, incluindo falta de evidência/quota.
+4. Adotar a direção inicial da especificação e registrar escolhas justificadas. Não instalar biblioteca ou aguardar aprovação repetida de escolhas técnicas delegadas.
+
+#### Critérios de aceite
+
+- Existe inventário ligado às rotas/capacidades reais e uma referência visual reproduzível com tipografia, cores e hierarquia.
+- Protótipos representam as tarefas prioritárias a 390 e 1440 px e explicam a adaptação a 320/768 px, sem placeholders apresentados como produto pronto.
+- A navegação preserva papéis acumuláveis e distingue dúvida, geração, adaptação e revisão do instrutor.
+- Capturas do estado atual e dos protótipos estão identificadas separadamente; nenhuma mudança de produto ou dado real foi necessária.
+
+#### Testes esperados
+
+DOC e inspeção dos protótipos no navegador, com teclado e contraste das cores propostas. Não executar regressão de backend/frontend por documentação ou protótipo isolado. Registrar como protótipo, sem alegar teste da aplicação redesenhada.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Modificar frontend, backend, dados, contratos, prompts internos da IA, corpus ou dependências. Implementação de telas começa em UX-02/UX-03.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 6. UX-02 — Tokens visuais e componentes comuns acessíveis
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-02.md](docs/prompts/11-experiencia-interface/UX-02.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-01, FND-07.
+- Requisitos: RNF-01, RNF-07, RNF-14, RNF-19, RNF-20.
+- Módulos: MOD-00.
+- Próximo prompt desbloqueado: UX-03.
+
+#### Tarefa e contexto
+
+Implementar a base visual reutilizável definida em UX-01, sem migrar todas as telas de uma vez.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Reutilizar React/TypeScript/CSS existentes. Registrar equivalência de diretório antes de editar se componentes compartilhados já tiverem outro local. Não impor biblioteca de UI ou CDN.
+
+#### Escopo permitido
+
+- `frontend/src/styles.css`
+- `frontend/src/components/**`
+- `frontend/src/ui/**`
+- `frontend/src/styles/**`
+- `frontend/src/App.test.tsx`
+- `docs/interface/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Materializar tokens de cor, texto, espaçamento, raio, bordas, foco e larguras, com estilos de base controlados.
+2. Criar/reusar botões, campos, mensagens, cards, tabelas responsivas e componentes de navegação/diálogo somente quando necessários aos próximos fluxos.
+3. Definir estados de carregamento, vazio, erro, conflito e desabilitado, com rótulos/foco e sem depender só de cor.
+4. Acrescentar exemplos de uso e testes relevantes de componentes interativos; evitar regra global que quebre campos e tabelas ainda não migrados.
+
+#### Critérios de aceite
+
+- Tokens e componentes têm uso documentado e contraste medido conforme RNF-20; nenhuma família visual paralela é criada por tela.
+- Controles de teclado/foco e diálogos necessários funcionam com leitores/atributos semânticos adequados; ações principais respeitam os alvos definidos.
+- Telas existentes conservam conteúdo e ações a 320/390/768/1440 px, sem alteração de API ou de regra de negócio.
+- Não há dependência, fonte remota, rastreador ou recurso externo acrescentado sem justificativa.
+
+#### Testes esperados
+
+FE dos componentes interativos afetados e testes existentes atingidos por estilos globais; lint, typecheck e build. Inspecionar amostra de formulários e tabelas no navegador; testes de DOM não comprovam contraste/reflow sozinhos.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Reescrever páginas dos módulos, mudar rotas, adicionar serviço ou transformar componente visual em acesso direto ao backend.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 7. UX-03 — Navegação por perfil e telas de acesso
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-03.md](docs/prompts/11-experiencia-interface/UX-03.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-02, IAM-04, IAM-05, NTF-01.
+- Requisitos: RF-04, RF-05, RF-06; RN-02, RN-04, RN-05; RNF-14, RNF-19, RNF-20.
+- Módulos: MOD-00, MOD-01, MOD-12.
+- Próximo prompt desbloqueado: UX-04.
+
+#### Tarefa e contexto
+
+Substituir a navegação improvisada por uma estrutura clara de áreas e refinar login, primeiro acesso e recuperação.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Preservar URLs atuais e os contratos de [autenticação](docs/arquitetura/autenticacao.md) e [autorização](docs/arquitetura/autorizacao.md). Reusar componentes de UX-02; manter orientação de e-mail local no ambiente didático e curadoria técnica oculta por padrão.
+
+#### Escopo permitido
+
+- `frontend/src/app/**`
+- `frontend/src/features/auth/**`
+- `frontend/src/features/notifications/**`
+- `frontend/src/App.tsx`
+- `frontend/src/App.test.tsx`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Implementar estrutura de navegação desktop e móvel com seção ativa, títulos e retorno previsível, eliminando blocos de links repetidos.
+2. Organizar cliente, instrutor, atendente e administrador conforme permissões recebidas; papéis acumuláveis permitem alternar área sem mudar a autorização.
+3. Aplicar padrão a login, convite/primeiro acesso, recuperação e avisos pertinentes sem exibir informações sensíveis.
+4. Preservar links diretos, expiração de sessão, logout e redirecionamentos. Exibir somente capacidades implementadas, sem dashboard falso ou menu de perfil sem funcionalidade.
+
+#### Critérios de aceite
+
+- Quatro perfis e uma conta com papéis acumulados encontram suas tarefas e retornam à seção ativa em desktop/celular.
+- Menu móvel abre/fecha por teclado e toque, não cobre o foco e mantém acesso às ações.
+- Login/recuperação não revelam existência de conta; logout remove conteúdo protegido e links diretos mantêm a autorização real.
+- Nenhum endpoint novo, troca de papéis ou supressão de controle backend foi usado para simplificar a navegação.
+
+#### Testes esperados
+
+FE de navegação/autenticação/notificações e fluxos afetados; lint, typecheck e build. Navegador com sessões de perfis sintéticos, link direto e logout. E2E pelo harness existente quando afetado; não expor a base de desenvolvimento.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Criar edição de perfil, indicadores administrativos, matrícula, pagamentos ou alterar sessão/API. Não redesenhar os formulários de domínio ainda cobertos pelos próximos cartões.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 8. UX-04 — Onboarding por etapas com privacidade preservada
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-04.md](docs/prompts/11-experiencia-interface/UX-04.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-03, ONB-03, ONB-04.
+- Requisitos: RF-09, RF-10, RF-11, RF-12, RF-13, RF-14; RN-05, RN-11, RN-23; RNF-14, RNF-15, RNF-19, RNF-20.
+- Módulos: MOD-03.
+- Próximo prompt desbloqueado: UX-05.
+
+#### Tarefa e contexto
+
+Reformular o preenchimento e a consulta do onboarding em etapas claras, mantendo a coleta no próprio sistema.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Ler [onboarding](docs/arquitetura/onboarding.md), [schema v1](docs/requisitos/schemas/onboarding-v1.schema.json) e [onboarding/triagem](docs/requisitos/onboarding-e-triagem.md). Convite restrito e cliente autenticado reutilizam o mesmo esquema e suas autorizações.
+
+#### Escopo permitido
+
+- `frontend/src/features/onboarding/**`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Organizar objetivos/rotina, dados físicos, saúde e revisão, com progresso de preenchimento claramente distinto da conclusão salva.
+2. Preservar campos condicionais, unidades, valores ausentes/null/NAO/NAO_SEI e estado editado ao avançar/voltar ou ocorrer erro de rede.
+3. Oferecer salvar/retomar e confirmar conclusão/atualização pelo contrato existente; indicar revisão/versão sem transformar dado ausente em resposta saudável.
+4. Aplicar página dedicada ao convite, sem menus administrativos; manter token removido da URL, sessão restrita, conflitos e recuperação de edição autorizada.
+
+#### Critérios de aceite
+
+- Os dois modos permitem preencher, salvar, reabrir e concluir sem perda silenciosa em desktop/celular; erro obrigatório leva ao campo/etapa correspondente.
+- Uma etapa visual não publica versão nem libera geração; confirmação final continua explícita e validada no servidor.
+- Atualização de snapshot preserva o fluxo atual e versões; trocar a conta/convite não exibe dados de outro cliente.
+- Saúde não vai a storage persistente do navegador, URL, ferramentas externas ou capturas com dados reais.
+
+#### Testes esperados
+
+FE de onboarding com campos condicionais, etapas, rascunho, falha e confirmação; testes de convite e isolamento existentes. Navegador com convite e conta a 390 px, teclado e erro de rede; lint, typecheck e build.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Google Forms/outro fornecedor, novo formulário clínico, mudança de triagem ou campos/API/schema. Alterações funcionais necessárias devem virar tarefa própria.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 9. UX-05 — Experiência unificada do assistente e da geração de treino
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-05.md](docs/prompts/11-experiencia-interface/UX-05.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-04, AI-04, AI-05.
+- Requisitos: RF-15, RF-18, RF-19; RN-15, RN-16, RN-29, RN-30; RNF-14, RNF-18, RNF-19, RNF-20; MRF04, MRF07, MRF09, MRF11, MRF12, MRF13, MRF14.
+- Módulos: MOD-04, MOD-06, MOD-12.
+- Próximo prompt desbloqueado: UX-06.
+
+#### Tarefa e contexto
+
+Tornar o uso da IA claro e agradável, reunindo a navegação e distinguindo as ações de dúvida, geração e adaptação.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Ler [chat/adaptação](docs/arquitetura/chat-e-adaptacao.md), [acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md), [DTO do chat](docs/requisitos/schemas/chat-ia-v1.schema.json), [DTO de acompanhamento](docs/requisitos/schemas/acompanhamento-ia-v1.schema.json) e [ADR-012](docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md). RAG de dúvidas e LLM gerador têm funções distintas; reunir a experiência não troca seus contratos nem amplia o contexto.
+
+#### Escopo permitido
+
+- `frontend/src/features/training-chat/**`
+- `frontend/src/features/ai-training/**`
+- `frontend/src/app/**`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Criar entrada Assistente com ações identificáveis para conversar, gerar e adaptar; manter URLs antigas válidas e origem da conversa protegida.
+2. Refinar mensagens, campo de envio, histórico, fontes com título/página e leitura no celular; não publicar explicação livre retirada pelo backend.
+3. Exibir os estados reais de contexto, geração, publicação/parecer, quota, indisponibilidade e abstenção, com próximo passo possível e linguagem comum.
+4. Manter geração/adaptação explicitamente solicitadas, confirmação do onboarding e dia/versão-base. Consulta/polling permitido usa GET e não reenfileira chamadas; nova tentativa tem nova execução explícita.
+
+#### Critérios de aceite
+
+- O usuário distingue tirar dúvida de criar/adaptar uma ficha; conversa informativa nunca altera treino e abrir a área não chama LLM.
+- Consultar/atualizar a mesma solicitação não faz POST extra; cliques repetidos, desmontagem e sessão expirada preservam os controles.
+- Fontes são verificáveis e acessíveis, texto é português e falhas de quota/fonte/saúde não são confundidas com sucesso ou atraso fictício.
+- Ficha publicada permanece consultável antes do parecer; adaptação identifica sua base e preserva a confirmação existente.
+
+#### Testes esperados
+
+FE de training-chat/ai-training, contagem de POSTs e erros/isolamento; lint, typecheck e build. Navegador com IA controlada para dúvida, geração, quota e adaptação; não consumir quota real nem usar mocks como prova de qualidade do LLM.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Alterar prompts internos academia-ia-v4, modelo, RAG, corpus, dados, publicação ou limites. Proibido retry/fallback automático e geração em efeitos React.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 10. UX-06 — Fichas e histórico do cliente no celular
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-06.md](docs/prompts/11-experiencia-interface/UX-06.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-05, TRN-04.
+- Requisitos: RF-16, RF-17, RF-35; RN-05, RN-18, RN-20; RNF-14, RNF-19, RNF-20.
+- Módulos: MOD-04.
+- Próximo prompt desbloqueado: UX-07.
+
+#### Tarefa e contexto
+
+Melhorar a leitura e a navegação da ficha vigente e do histórico, especialmente durante o treino no celular.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Ler [ficha do cliente](docs/arquitetura/ficha-do-cliente.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e os DTOs já usados. Não confundir ficha publicada com parecer ACEITO ou conteúdo histórico removido.
+
+#### Escopo permitido
+
+- `frontend/src/features/my-training/**`
+- `frontend/src/features/ai-training/GenerationDetails.tsx`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Organizar dias/sessões, itens e recursos em hierarquia legível, com séries, repetições, carga, cadência e descanso apresentados conforme os dados reais.
+2. Criar navegação entre dias e versões sem perder a identificação da vigente; destacar parecer e observações sem obstruir o treino.
+3. Preservar exportação existente, falta de ficha, fonte alterada, recurso indisponível e conteúdo expirado, sem restaurar informação eliminada.
+4. Diferenciar claramente dado não informado de zero e estado pendente/rejeitado de impedimento de consulta.
+
+#### Critérios de aceite
+
+- Ficha pode ser lida a 320/390 px sem tabela cortada, perda de observação, equipamento ou ação.
+- Troca de dia/versão mantém os valores retornados, identifica a vigente e permite retorno previsível.
+- PENDENTE e REJEITADO seguem consultáveis; conteúdo expurgado não reaparece em tela, cache ou exportação.
+- Nenhum relógio, registro de execução, progresso ou valor prescrito é inventado para preencher o layout.
+
+#### Testes esperados
+
+FE da ficha/histórico/exportação e estados pertinentes; lint, typecheck e build. Navegador com ficha sintética por dia e versões pendente/rejeitada/expirada; teclado e zoom.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Novos registros de treino executado, timers, prescrição, retenção, treino offline ou mudança do contrato de exportação.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 11. UX-07 — Área de trabalho do instrutor
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-07.md](docs/prompts/11-experiencia-interface/UX-07.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-06, PES-03, ONB-04, TRN-02, TRN-03.
+- Requisitos: RF-34, RF-35, RF-38; RN-11, RN-14, RN-16, RN-18, RN-31; RNF-14, RNF-19, RNF-20.
+- Módulos: MOD-02, MOD-03, MOD-04.
+- Próximo prompt desbloqueado: UX-08.
+
+#### Tarefa e contexto
+
+Organizar o trabalho de consultar clientes designados, avaliar, criar ficha manual e emitir parecer posterior.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Reusar a navegação e componentes existentes; ler [designações](docs/arquitetura/designacoes.md), [editor manual](docs/arquitetura/fichas-manuais.md) e [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md). Acesso clínico continua dependente da designação vigente.
+
+#### Escopo permitido
+
+- `frontend/src/features/assignments/**`
+- `frontend/src/features/assessments/**`
+- `frontend/src/features/training-editor/**`
+- `frontend/src/features/training-review/**`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Refinar lista de clientes, contexto da avaliação e fila de revisão, com identificação inequívoca do cliente e da versão.
+2. Melhorar o editor manual por dia/exercício e a consulta dos recursos disponíveis, preservando validação, rascunho e conflito de revisão.
+3. Dar clareza a salvar, publicar, aceitar, rejeitar e modificar, mostrando autoria e consequência da ação pelo contrato real.
+4. Separar dados sensíveis necessários da operação comum, preservar retomada após falha e reusar padrões sem duplicar componentes.
+
+#### Critérios de aceite
+
+- Instrutor conclui a jornada cliente designado → avaliação/ficha → publicação/parecer sem depender da IA.
+- Ações de editar/publicar/parecer distinguem intenção e resultado, com erro/conflito apresentado sem perda silenciosa.
+- Troca de designação impede consulta/edição indevida; cliente vê ficha válida antes do aceite.
+- A interface identifica cliente, versão e responsável em revisões e não apresenta aprovação médica ou aceite inventado.
+
+#### Testes esperados
+
+FE de assignments/assessments/training-editor/training-review; lint, typecheck e build. Navegador com fluxo manual, parecer, conflito e designação alterada, usando fixtures e API de teste.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Novo processo de avaliação, regras clínicas, API de permissão, editor com recursos não implementados ou fluxo obrigatório de aceite antes da publicação.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 12. UX-08 — Cadastros, catálogos e operação administrativa
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-08.md](docs/prompts/11-experiencia-interface/UX-08.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-07, PES-01, PES-02, EQP-01, TRN-01.
+- Requisitos: RF-01, RF-02, RF-03, RF-07, RF-08, RF-32, RF-33, RF-34, RF-38; RN-04, RN-11, RN-33, RN-37; RNF-14, RNF-19, RNF-20.
+- Módulos: MOD-01, MOD-02, MOD-04, MOD-10.
+- Próximo prompt desbloqueado: UX-09.
+
+#### Tarefa e contexto
+
+Uniformizar os cadastros e catálogos já existentes, reduzindo a aparência improvisada e o esforço das operações.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Preservar a separação de administrador/atendente/instrutor e o cargo derivado dos papéis. Consultar [funcionários](docs/arquitetura/funcionarios.md), [clientes](docs/arquitetura/clientes.md), [designações](docs/arquitetura/designacoes.md), [equipamentos](docs/arquitetura/equipamentos.md) e [exercícios](docs/arquitetura/catalogo-exercicios.md).
+
+#### Escopo permitido
+
+- `frontend/src/features/staff/**`
+- `frontend/src/features/clients/**`
+- `frontend/src/features/assignments/**`
+- `frontend/src/features/equipment/**`
+- `frontend/src/features/exercises/**`
+- `frontend/tests/e2e/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Aplicar componentes comuns a listagens, filtros/pesquisa e paginação já suportados, com ações claras e formulários agrupados por finalidade.
+2. Refinar seleção dos papéis, envio/estado de convites, validação, edição e inativação sem duplicar campos ou esconder conflitos.
+3. Organizar equipamento, imagem e disponibilidade e o vínculo explícito de recursos do exercício, sem alterar regras de elegibilidade.
+4. Preservar catálogo público e acesso autorizado; não mostrar saúde em listas administrativas nem adicionar curadoria RAG à rotina da academia.
+
+#### Critérios de aceite
+
+- Operador consegue localizar/cadastrar/editar/inativar dentro da sua permissão, com carregamento/vazio/erro e retorno claros.
+- Não reaparece cargo livre duplicado; falha de convite não é apresentada como envio concluído.
+- Equipamento inativo/indisponível e combinação de recursos ficam claros e mantêm os valores reais; imagem ausente tem alternativa apropriada.
+- Layout funciona nos tamanhos definidos, sem resultados financeiros, lotação, cadastros ou links a módulos inexistentes.
+
+#### Testes esperados
+
+FE das features tocadas e fluxos de papéis/disponibilidade; lint, typecheck e build. Navegador com pesquisa, paginação existente, validação, convite falho e inativação, sem dados reais.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Criar dashboard/relatórios, agenda, biometria, financeiro, edição do próprio perfil ou novos filtros/API não existentes.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
+### 13. UX-09 — Aceitação visual, acessibilidade e regressão integrada
+
+Fonte versionada: [docs/prompts/11-experiencia-interface/UX-09.md](docs/prompts/11-experiencia-interface/UX-09.md).
+
+#### Metadados
+
+- Fase: Evolução visual pós-MVP, antes da entrega final.
+- Estado de execução inicial: BLOQUEADO.
+- Dependências: UX-08, TST-01.
+- Requisitos: RF-05, RF-10, RF-14, RF-15, RF-16, RF-18, RF-19, RF-35; RN-04, RN-05, RN-11, RN-29; RNF-07, RNF-14, RNF-19, RNF-20; MRF12, MRF14.
+- Módulos: MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12.
+- Próximo prompt desbloqueado: nenhum; revisão manual e módulos pós-MVP conforme manifesto.
+
+#### Tarefa e contexto
+
+Comprovar que o conjunto redesenhado melhora a apresentação e conserva os fluxos, antes de declarar concluída a reformulação.
+
+Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
+[contexto de execução](docs/prompts/00-contexto-de-execucao.md),
+[contrato comum](docs/prompts/00-contrato-operacional.md),
+[especificação visual](docs/requisitos/experiencia-e-interface.md) e
+[plano de testes](docs/testes/reformulacao-visual.md). Esses documentos integram
+o cartão. Confirme no manifesto que suas dependências foram concluídas.
+
+Ler a [matriz visual](docs/testes/reformulacao-visual.md) e o [harness atual de aceitação](docs/testes/aceitacao-mvp.md). Corrigir somente defeitos visuais/de interação introduzidos por UX-02 a UX-08; requisito/API ausente vira pendência funcional própria.
+
+#### Escopo permitido
+
+- `frontend/src/**`
+- `frontend/tests/**`
+- `backend/tests/acceptance/**`
+- `docs/interface/**`
+- `docs/testes/**`
+
+Documentação e rastreabilidade diretamente afetadas seguem o contrato comum.
+Não alterar arquivos preexistentes alheios; registrar equivalência de caminho
+quando necessária. Falha fora do escopo é relatada, sem ampliar a tarefa.
+
+#### Implementação e entregáveis
+
+1. Executar a matriz por telas, papéis, viewport, teclado, contraste e ampliação, com capturas sintéticas comparáveis ao baseline de UX-01.
+2. Reexecutar jornadas de acesso, onboarding, treino manual, geração/chat controlados, parecer, cadastros e isolamento pelos comandos existentes.
+3. Corrigir regressões de apresentação no escopo, mantendo asserções de autorização, integridade e chamadas; atualizar seletores por semântica sem enfraquecer cenários.
+4. Produzir relatório de resultados, defeitos, limitações e material para revisão manual; manter aprovações históricas vinculadas às versões efetivamente testadas.
+
+#### Critérios de aceite
+
+- Todos os critérios obrigatórios da especificação visual têm evidência de verificação, defeito resolvido ou pendência que impeça afirmar conclusão.
+- Capturas vêm do aplicativo real com fixtures e cobrem cliente, instrutor e operação administrativa; mockups ou npm test sozinhos não aprovam a aparência.
+- Jornadas integradas e navegação por papel passam, sem dados misturados, conteúdo clínico indevido, POSTs extras de IA ou acesso bloqueado apenas pelo menu.
+- Relatório distingue IA controlada de avaliação real, registra feedback disponível sem presumir aprovação do responsável e não sobrescreve evidência antiga.
+
+#### Testes esperados
+
+Frontend completo npm test -- --maxWorkers=1, lint, typecheck, build e E2E pelo runner de aceitação com banco de teste. Inspeção visual/manual com a matriz documentada; não repetir AI-06 real por mudanças de apresentação.
+Resolver comandos em [comandos reais](docs/testes/comandos.md). DOC:
+python scripts/verificar_documentacao.py; SPEC: python scripts/gerar_spec.py
+--check, após --write quando fontes mudarem; git diff --check. Corrigir falhas
+somente no escopo e registrar o que não pôde ser executado.
+
+#### Fora do escopo e interrupção
+
+Reabrir regras de domínio, migrar dados, relaxar testes críticos, certificar conformidade integral WCAG ou executar novos módulos/LLM real para aprovação visual.
+Não instalar dependências por conveniência ou iniciar Docker. Dependência ausente,
+conflito material de contrato ou alteração alheia exige registrar o impedimento
+da parte afetada, mantendo verificações independentes possíveis.
+
+#### Git e formato da resposta
+
+Seguir ADR-003 e autorização vigente; commit coeso com o ID da etapa. Atualizar
+manifesto, fonte especializada e SPEC gerado no mesmo commit quando afetados.
+Responder preferencialmente em até oito linhas: arquivos alterados, testes e
+resultados, evidência visual, pendências objetivas e próximo prompt desbloqueado.
+Não marcar a tarefa concluída somente por possuir capturas, CSS ou testes verdes.
 
 ## 22. Critérios globais de teste e trabalho dos agentes
 
@@ -13176,6 +14035,15 @@ rollback, migration e hashes dos relatórios/verificador. A execução local man
 seu snapshot original; a decisão final está no arquivo próprio de consolidação.
 Não repetir chamadas LLM ao consolidar nem apresentar testes históricos como
 novamente executados. Mudanças futuras invalidam evidências incompatíveis.
+
+#### Experiência e qualidade visual
+
+RNF-19/RNF-20 e [critérios de interface](docs/requisitos/experiencia-e-interface.md)
+orientam UX-01–UX-09. A [matriz visual](docs/testes/reformulacao-visual.md) complementa FE/E2E
+com inspeção no navegador, contraste, teclado, ampliação, viewports e capturas
+sintéticas antes/depois. Testes verdes não bastam para declarar boa aparência;
+mockups e inspeção visual também não substituem os testes de autorização/fluxo.
+Critérios e evidências de cada capacidade nova devem acompanhar sua implementação.
 ### 2. Avaliação e segurança de IA/RAG
 
 Fonte versionada: [docs/testes/rag-ia-semantico.md](docs/testes/rag-ia-semantico.md).
@@ -13309,7 +14177,9 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 #### Estágio atual
 
 O MVP acadêmico está concluído, com TST-01 aprovado e PG-01 fechado.
-A evolução permanece incremental; o próximo passo é a revisão manual do responsável.
+A evolução permanece incremental; a revisão manual continua e a reformulação
+visual UX-01–UX-09 está planejada. O primeiro cartão dessa trilha é UX-01; não
+executar todos juntos nem considerar a reformulação já implementada.
 O manifesto em
 `docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
 alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos
@@ -16403,6 +17273,76 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
   }
 }
 ````
+### 21. Plano de validação visual e usabilidade
+
+Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
+
+Status: PLANEJADA. Nenhuma tela foi redesenhada ou aprovada pela criação destes
+prompts. Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
+
+#### Ambiente e dados
+
+Usar React/Vite e o backend existentes, PostgreSQL academia_test e fixtures
+sintéticas, com Mailpit quando o fluxo exigir. Não apagar ou usar o banco de
+desenvolvimento para a preparação automatizada. Preservar chaves, fotos e dados
+reais fora de capturas/commits. IA controlada serve para verificar interação e
+contagem de chamadas; não aprova qualidade do modelo nem substitui AI-06 real.
+Não reexecutar o LLM real para conferir cores, navegação ou espaçamentos.
+
+#### Verificação por cartão
+
+| Etapa | Evidência mínima esperada na execução |
+|---|---|
+| UX-01 | Inventário de telas e rotas atuais; plano e protótipos locais de cliente, instrutor e administração, incluindo onboarding/assistente; linha de base sintética no navegador. |
+| UX-02 | Exemplos dos componentes e estados, contraste medido e testes de interação/foco dos componentes interativos novos. |
+| UX-03 | Navegação desktop/móvel para quatro papéis e papéis acumulados; links diretos, logout e recusa de API preservados. |
+| UX-04 | Formulário por etapas em convite e conta, campos condicionais, rascunho/retomada, confirmação de nova versão e falha de rede. |
+| UX-05 | Dúvida, fontes, geração e adaptação pelos contratos corretos; quota/abstenção/bloqueio; zero geração causada por abrir tela ou consultar estado. |
+| UX-06 | Ficha atual por dia, histórico, parecer, exportação e conteúdo expirado, inclusive a 390 px. |
+| UX-07 | Designação vigente, avaliação, edição manual, conflito, publicação e parecer posterior; dados de outro cliente inacessíveis. |
+| UX-08 | Cadastros/listagens, pesquisa/paginação existentes, validação e disponibilidade de equipamentos; nada de falso dashboard ou menu financeiro sem implementação. |
+| UX-09 | Jornadas integradas, teclado, ampliação, viewports, capturas comparáveis e relatório com defeitos e limitações. |
+
+Medir larguras 320/390/768/1440 e texto a 200%; inspecionar contraste/foco e
+descrever o método. Registrar navegador/versão e tamanho da janela. Capturas de
+protótipo são identificadas como protótipo; só capturas do aplicativo exercitado
+comprovam o resultado da implementação. Comparar pelo menos entrada/navegação,
+onboarding, assistente, ficha, editor/revisão e cadastro administrativo.
+Não criar teste que confira somente valores de CSS repetindo a implementação.
+Imagens de referência sintéticas não são comprovação de segurança/usabilidade.
+
+#### Comandos existentes
+
+Em frontend/, selecionar arquivos pertinentes com npm test -- <caminhos> e
+executar npm run lint, npm run typecheck e npm run build. Em UX-09 executar a
+regressão completa npm test -- --maxWorkers=1. Não escrever uma nova suíte
+equivalente quando um teste existente já cobre o comportamento relevante.
+
+E2E existente: ler [aceitação do MVP](docs/testes/aceitacao-mvp.md) e
+[comandos reais](docs/testes/comandos.md). Iniciar Mailpit e academia_test conforme o guia,
+definir ACADEMIA_E2E=1 e, em backend/, executar:
+
+```powershell
+uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/ux-rodada-N
+```
+
+A pasta deve ser nova; não sobrescrever relatórios anteriores. O executor controla
+API/navegador/fixtures. npm run test:e2e isolado exige variáveis fornecidas por
+ele; não anunciar comando inventado para uma suíte visual ainda inexistente.
+Se um cartão acrescentar cenários ao harness, registrar os seletores e comandos
+quando existirem. Usar timeout e tentativas explícitos, sem mascarar falhas.
+
+#### Registro e aceite
+
+Cada implementação registra arquivos, comandos/resultados, capturas sintéticas
+antes/depois, cenários/estados observados e limitações. Em UX-09 montar relatório
+de cobertura por tela/perfil/critério, incluindo feedback manual quando disponível.
+Revisão do responsável é recomendada, mas ausência de feedback não vira aprovação
+presumida nem impede verificações independentes já autorizadas. Não declarar
+UX-09 concluído com falha obrigatória ou somente com mockups/testes unitários.
+Relatórios AI-06/TST-01 históricos conservam seus hashes; não são alterados para
+parecer que exercitaram uma interface nova. Falhas de API ou requisito novo
+descobertos são registrados para uma entrega funcional própria.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -16974,7 +17914,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
-| `AGENTS.md` | `3c76972ba0ef873308fb2f8653de67e7e5dd47d57896db31e105ef2794915226` |
+| `AGENTS.md` | `7ad6b40b7a543af3fef9281dd1f70a9b9eec8f27165d46b022ded3645e6c42d1` |
 | `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
@@ -17018,23 +17958,33 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/orquestracao-ia.md` | `b2d1eb8c2fa95c70ca4295de1752603deb8efc94f17a08cc895482cbb6735926` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
-| `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
+| `docs/arquitetura/rastreabilidade-prompts.md` | `eedca2de2fc1cf8d20173bc8b0766a33589299cdd5cdb202ece4b14a7ef3ddca` |
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f5930956a7a3e4e9dd865ea415c0877c19785b5c7eb45ca1db3f1a60a550d30b` |
-| `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `a68d1232529765fd2a35c6f26f8a94f212c692b40a8353174c63d1f8cf03755e` |
+| `docs/especificacao/compilacao-spec.json` | `f1d5e1385ec3f38dcc9c899b7660928861b226dcd71fc8bf88452c45ac6000a9` |
+| `docs/especificacao/roteiro-reconstrucao.md` | `3785defed29388fc4569b58bbc21a06e999d3beb77a7d8f688a27ecfcc9a013e` |
+| `docs/especificacao/visao-geral.md` | `cec484bdaa5e3654bbe0ec1a764ff53ab76bf5ea94fa6dc0673c25bf7b9d4ad7` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `6db355862d6a6088280000d3808636c44dd0aa213afc8523162183a10c80a342` |
+| `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
+| `docs/prompts/11-experiencia-interface/UX-02.md` | `493c0bd7a1ab7b62004d1363ae652c089b8a7e9cec4eceda574039f12155eb29` |
+| `docs/prompts/11-experiencia-interface/UX-03.md` | `c3cdb4f3c5a9a8b28c79e5692b642a0f8e1c66c862956af23f7fbc3ae662ffa3` |
+| `docs/prompts/11-experiencia-interface/UX-04.md` | `7c8d965567fab3c896c658278ce172f55b990f8bcd350ea7b4d59cb47b7fa138` |
+| `docs/prompts/11-experiencia-interface/UX-05.md` | `df9d0e858e018d10ac6905fc4a391a00a849429ed263916bbcd706dff2d5662e` |
+| `docs/prompts/11-experiencia-interface/UX-06.md` | `5f0a1895a69c1250774f37bea72ed648b073a5c5655eef82bd9cf879158dc7dc` |
+| `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
+| `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
+| `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
+| `docs/prompts/README.md` | `d9fb0ad4b829b997289b248effe18ce36be8ffe3a186ec04792f696fc705c743` |
 | `docs/requisitos/configuracao-ia-rag.md` | `83f4e22e3aae1f36c47aaa51627cfd196f88ab192a02c732bdac69b45b9aa7d4` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
+| `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `9dcc16553c1aef82d0375a1cd7634249436fcc7d516f74a28e27f91d36549344` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
 | `docs/requisitos/requisitos-funcionais.md` | `258468801558c4a1660b241a8347fbabceb094a314d1febae9b46ccf5a8b504e` |
-| `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
+| `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json` | `94aadd81685f9edeab19351388e1fb1968af11a18dc44e2ef027f8c51aab2115` |
@@ -17062,11 +18012,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/ai06-resumo.json` | `db11e31c9651991709836cfdbe9afd2a839fb7f20cd10d4d9d57c0b2a6e01b14` |
 | `docs/testes/avaliacao-ia.md` | `aadadadd52a6ec11595b6468b0549299901d274f384dcb3aed460c5d94bbfa4f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
-| `docs/testes/estrategia.md` | `db5c5976eaf0a6aa800ff8f10b3b4035c3921a868bbd37ab37367cd739bfae8b` |
+| `docs/testes/estrategia.md` | `15269ecb21cf8b2fb3c6e8f56434e4095a85e0fbe6b9fda4b5ba927278956c6c` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `c255846226e125dbbc86bd1531c678fc7ddbcdd109d96508103f7b91407fbab3` |
+| `docs/testes/reformulacao-visual.md` | `34b6e7ab7acf72e60f7e74052eab5db832e3b4a2369c93b5bf4e79e0289a1252` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |

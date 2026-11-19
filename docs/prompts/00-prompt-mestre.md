@@ -41,7 +41,7 @@ Leia, nesta ordem:
    e [registro de comandos](../testes/comandos.md).
 
 Inspecione arquivos, estado Git e evidências para distinguir textos escritos de
-tarefas executadas. Existem 61 cartões operacionais redigidos; isso, por si só,
+tarefas executadas. Existem 70 cartões operacionais redigidos; isso, por si só,
 não demonstra módulos, migrations, testes ou integração funcionando.
 
 Priorize a solicitação atual do responsável e AGENTS.md. Requisitos e ADRs aceitos
@@ -346,9 +346,29 @@ e treino manual; matrícula pelo atendente e acesso acadêmico não dependem do
 financeiro, inclusive de confirmação manual de pagamento.
 A entrega final ainda exige rastreabilidade, regressão e roteiro acadêmico.
 
+## 11.1. Reformulação visual aprovada após o MVP
+
+Planejar UX-01–UX-09 na ordem do [manifesto](README.md), um cartão por vez,
+antes da expansão opcional de outros módulos. Usar a
+[especificação de experiência](../requisitos/experiencia-e-interface.md),
+RNF-19/RNF-20 e o [plano visual de testes](../testes/reformulacao-visual.md).
+UX-01 define referência e protótipos; as etapas seguintes entregam base visual,
+navegação, onboarding, assistente, fichas, instrutor, cadastros e aceite próprio.
+
+Tratar apresentação e usabilidade como entregas explícitas. Contrastes, teclado,
+toque, viewports, estados e evidências de navegador complementam testes funcionais.
+Mocks e protótipos não provam a aparência final do aplicativo. PG-02 inclui
+UX-09; PG-01 conserva seu histórico funcional. Telas de módulos posteriores
+reutilizam esse padrão e recebem verificações visuais nas suas entregas.
+
+Não misturar as responsabilidades de chat RAG, geração e adaptação por reunir
+a navegação. Não mudar backend, dados, contratos ou prompts internos da IA para
+facilitar o layout. Edição do próprio perfil e módulos ausentes exigem escopo
+funcional próprio; não desenhar ações falsas ou antecipar pagamento/biometria.
+
 ## 12. Fragmentação dos prompts operacionais
 
-Reutilize IDs estáveis e dependências do manifesto. Não refaça os 61 cartões nem
+Reutilize IDs estáveis e dependências do manifesto. Não refaça os cartões existentes nem
 renumere etapas sem necessidade. Identifique os afetados por esta revisão e
 proponha alterações ou um cartão adicional somente quando houver entrega ausente.
 

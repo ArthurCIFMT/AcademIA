@@ -28,6 +28,10 @@
         {
           "arquivo": "docs/requisitos/requisitos-nao-funcionais.md",
           "titulo": "Requisitos não funcionais"
+        },
+        {
+          "arquivo": "docs/requisitos/experiencia-e-interface.md",
+          "titulo": "Experiência, navegação e critérios de apresentação"
         }
       ]
     },
@@ -416,6 +420,42 @@
         {
           "arquivo": "docs/arquitetura/rastreabilidade-prompts.md",
           "titulo": "Requisitos por etapa"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-01.md",
+          "titulo": "UX-01 — Plano visual, mapa de navegação e protótipos"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-02.md",
+          "titulo": "UX-02 — Tokens visuais e componentes comuns acessíveis"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-03.md",
+          "titulo": "UX-03 — Navegação por perfil e telas de acesso"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-04.md",
+          "titulo": "UX-04 — Onboarding por etapas com privacidade preservada"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-05.md",
+          "titulo": "UX-05 — Experiência unificada do assistente e da geração de treino"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-06.md",
+          "titulo": "UX-06 — Fichas e histórico do cliente no celular"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-07.md",
+          "titulo": "UX-07 — Área de trabalho do instrutor"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-08.md",
+          "titulo": "UX-08 — Cadastros, catálogos e operação administrativa"
+        },
+        {
+          "arquivo": "docs/prompts/11-experiencia-interface/UX-09.md",
+          "titulo": "UX-09 — Aceitação visual, acessibilidade e regressão integrada"
         }
       ]
     },
@@ -519,6 +559,10 @@
           "titulo": "Aceite reproduzível do MVP PG-01 com evidências vinculadas",
           "tipo": "codigo",
           "linguagem": "json"
+        },
+        {
+          "arquivo": "docs/testes/reformulacao-visual.md",
+          "titulo": "Plano de validação visual e usabilidade"
         }
       ]
     },

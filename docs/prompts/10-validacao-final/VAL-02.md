@@ -5,7 +5,7 @@
 - Fase: Entrega final.
 - Estado de execução inicial: BLOQUEADO até concluir dependências.
 - Dependências: VAL-01.
-- Requisitos: RNF-07 e critérios dos módulos selecionados.
+- Requisitos: RNF-07, RNF-14, RNF-19, RNF-20 e critérios dos módulos selecionados.
 - Módulos: MOD-00–MOD-12 conforme escopo.
 
 ## Objetivo e contexto
@@ -55,3 +55,11 @@ Informe a informação que falta; não improvise dados para obter aceite.
 Siga GATE-05 e autorização vigente; registre evidência em
 [manifesto](../README.md). Informe arquivos, comandos reais, resultados, pendências
 e próximo ID liberado. Texto criado não significa código implementado.
+
+## Verificação de apresentação e uso
+
+Conferir [especificação de experiência](../../requisitos/experiencia-e-interface.md)
+e [matriz visual](../../testes/reformulacao-visual.md), incluindo módulos entregues
+depois de UX-09. Exigir inspeção em navegador, responsividade, teclado e capturas
+sintéticas, além dos testes funcionais. Corrigir só defeitos de teste/registro no
+escopo; mudanças de produto necessárias pertencem ao cartão responsável.

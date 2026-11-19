@@ -92,3 +92,19 @@ Use dados sintéticos para testar instalação, cadastro, designação, onboardi
 prescrição manual, publicação PENDENTE, consulta/exportação, parecer/expurgo,
 recursos indisponíveis e isolamento. Para o MVP completo, executar também os
 cenários de RAG/IA e TST-01 antes de declarar sua conclusão.
+
+## Reformulação visual incremental
+
+Após reproduzir o MVP funcional, executar UX-01–UX-09 conforme o manifesto e os
+cartões incorporados. Não tratar CSS/acabamento como consequência automática de
+outros prompts. A especificação de experiência traz RNF-19/RNF-20, jornadas,
+limites e critérios mensuráveis; UX-01 materializa a referência visual antes da
+migração das telas. Ao continuar o repositório, esta trilha é a prioridade visual
+recomendada após a revisão manual, sem depender dos módulos ainda não entregues.
+
+Cada entrega mantém componentes comuns, contratos, autorizações e estados reais.
+UX-09 comprova as telas existentes em navegador; telas de módulos posteriores
+devem aplicar o mesmo padrão com evidência própria antes da validação final.
+Não confundir representação gráfica, implementação e aprovação: reportar quais
+foram feitas, com fixtures sintéticas, resultados e limitações. Nenhuma mudança
+de MER, banco, políticas clínicas ou fornecedor de IA é exigida pelo redesenho.

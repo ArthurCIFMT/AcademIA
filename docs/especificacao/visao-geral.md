@@ -186,6 +186,21 @@ ADR-006. A revisão vinculada da amostra v4 aprovou as cinco saídas. Não se re
 antigo para a versão corrigida. Pendências do corpus e limites da demonstração
 permanecem explícitos; a aprovação é da configuração/modelo avaliados.
 
+### 5.1. Evolução visual após a revisão manual
+
+O responsável solicitou em 2026-11-19 uma reformulação explícita da aparência e
+da usabilidade. RNF-19/RNF-20 e a
+[especificação de experiência](../requisitos/experiencia-e-interface.md) são
+fontes normativas. UX-01–UX-09 estão planejados, sem implementação visual nesta
+revisão. Começar por UX-01 e executar uma etapa por vez, podendo anteceder outros
+módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09; PG-01 permanece histórico.
+
+A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
+fichas do cliente, instrutor, cadastros e
+[validação visual](../testes/reformulacao-visual.md). Papéis, dados, contratos e
+regras de IA permanecem; módulos posteriores adotam o mesmo padrão. Frontend
+funcional e testes antigos não comprovam que essas melhorias já foram feitas.
+
 ## 6. Fluxos e invariantes que coordenam as capacidades
 
 Os detalhes e critérios completos estão nas fontes da seção 2.

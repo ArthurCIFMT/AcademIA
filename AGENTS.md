@@ -31,7 +31,9 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 ## Estágio atual
 
 O MVP acadêmico está concluído, com TST-01 aprovado e PG-01 fechado.
-A evolução permanece incremental; o próximo passo é a revisão manual do responsável.
+A evolução permanece incremental; a revisão manual continua e a reformulação
+visual UX-01–UX-09 está planejada. O primeiro cartão dessa trilha é UX-01; não
+executar todos juntos nem considerar a reformulação já implementada.
 O manifesto em
 `docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
 alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos

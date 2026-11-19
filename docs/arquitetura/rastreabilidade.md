@@ -57,3 +57,13 @@ MRF01–MRF15 e 67 critérios governam MOD-05/06. [Cenários](../testes/rag-ia-s
 cobrem dúvidas, resumo sem perda de alertas, triagem, geração, limites e fontes.
 RF-38/TRN-01 formalizam catálogo; RNF-18/AI-02/AI-06 cobrem orçamento/tempo.
 Atribuição de prompt não comprova implementação ou ensaio real.
+
+## Qualidade visual e experiência
+
+RNF-19/RNF-20 complementam RNF-14 por solicitação em 2026-11-19.
+[UX-01–UX-09](../prompts/README.md#evolução-visual-pós-mvp--prioridade-após-a-revisão-manual)
+ligam definição visual, base comum, navegação e fluxos às evidências de UX-09.
+[Critérios](../requisitos/experiencia-e-interface.md) e
+[testes](../testes/reformulacao-visual.md) são fontes especializadas. VAL-01 e
+VAL-02 devem considerar os requisitos novos e a adoção do padrão pelos módulos
+posteriores. Planejamento documental não significa interface redesenhada.
