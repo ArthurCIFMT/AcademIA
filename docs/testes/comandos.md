@@ -1,5 +1,22 @@
 # Registro de comandos de verificação
 
+## Corpus local e área técnica — 2026-11-19
+
+[Guia de operação](../instalacao/preparar-rag-local.md) e
+[resultados](preparacao-rag-local-20261119.md).
+
+Em backend/, com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_preparation.py tests/knowledge/test_corpus.py tests/knowledge/test_indexing.py tests/knowledge/test_retrieval.py tests/contracts -q
+uv run --locked mypy app/modules/knowledge/preparation.py app/modules/knowledge/http.py scripts/prepare_knowledge.py tests/knowledge/test_preparation.py
+```
+
+Resultado: 62 aprovados e dois testes opcionais de E5 real skipped nessa suite.
+As 30 consultas do ambiente preparado usam E5 real, sem LLM.
+Em frontend/: `npm test -- src/features/corpus/CorpusPage.test.tsx` (sete aprovados),
+`npm run lint`, `npm run typecheck` e `npm run build`.
+
 ## Revisão manual de 2026-11-19
 
 Correções e resultados no [registro da revisão](revisao-manual-20261119.md).

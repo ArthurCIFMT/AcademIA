@@ -41,7 +41,8 @@ function SessionBoundary() {
   const isInstructorExercises = useMatch(instructorExercisePath) !== null;
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
   const isTrainingReview = useMatch("/area/instrutor/clientes/:clientId/treinos/:versionId/revisao") !== null;
-  const isCorpus = useMatch("/area/administracao/corpus") !== null;
+  const isTechnicalCorpus = useMatch("/tecnico/corpus") !== null;
+  const isCorpus = useMatch("/area/administracao/corpus") !== null || isTechnicalCorpus;
   const isAIGeneration = useMatch("/area/cliente/treino-ia") !== null;
   const isChat = useMatch("/area/cliente/assistente") !== null;
   const session = useSession(isChat || isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
@@ -130,8 +131,13 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: "t
         </nav>
       )}
       {isAdmin && <p><Link to="/area/administracao/funcionarios">Gerenciar funcionários</Link></p>}
-      {isAdmin && feature !== "corpus" && <p><Link to="/area/administracao/corpus">Gerenciar corpus RAG</Link></p>}
-      {isAdmin && feature === "corpus" && <CorpusPage key={state.session.user_id} csrf={state.session.csrf_token} />}
+      {isAdmin && import.meta.env.VITE_CORPUS_MAINTENANCE_ENABLED === "true" && feature !== "corpus" &&
+        <p><Link to="/tecnico/corpus">Curadoria técnica do RAG</Link></p>}
+      {isAdmin && feature === "corpus" && (
+        import.meta.env.VITE_CORPUS_MAINTENANCE_ENABLED === "true"
+          ? <CorpusPage key={state.session.user_id} csrf={state.session.csrf_token} />
+          : <AccessDenied />
+      )}
       {isAdmin && feature !== "equipment" && <p><Link to={equipmentAdminPath}>Gerenciar equipamentos</Link></p>}
       {isClient && <p><Link to="/equipamentos">Equipamentos disponíveis</Link></p>}
       {isClient && feature !== "training-chat" && <p><Link to="/area/cliente/assistente">Assistente de treino</Link></p>}
@@ -192,7 +198,8 @@ export function AppRoutes() {
           <Route path="/area" element={<AreaPage />} />
           <Route path={adminExercisePath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="exercises" />} />
           <Route path={instructorExercisePath} element={<AreaPage requiredRole="INSTRUTOR" feature="exercises" />} />
-          <Route path="/area/administracao/corpus" element={<AreaPage requiredRole="ADMINISTRADOR" feature="corpus" />} />
+          <Route path="/area/administracao/corpus" element={<Navigate to="/tecnico/corpus" replace />} />
+          <Route path="/tecnico/corpus" element={<AreaPage requiredRole="ADMINISTRADOR" feature="corpus" />} />
           <Route path={equipmentAdminPath} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
           <Route path="/area/administracao/funcionarios" element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
           <Route path="/area/administracao/clientes" element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />

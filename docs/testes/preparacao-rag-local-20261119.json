@@ -1,0 +1,228 @@
+{
+  "data": "2026-11-19",
+  "escopo": "Preparo local do RAG e curadoria tecnica opcional",
+  "ambiente": "academia_dev",
+  "documentos_registrados": 19,
+  "documentos_aprovados": 9,
+  "documentos_pendentes": 10,
+  "fontes_ativas": 3,
+  "ingestoes_ativas": 5,
+  "fragmentos_ativos": 24,
+  "recortes_unicos": 17,
+  "ingestoes_historicas_revogadas": 1,
+  "vetores_fisicos": 29,
+  "consultas": [
+    {
+      "id": "volume-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "volume-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "volume-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "frequencia-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "frequencia-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "frequencia-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "acoes-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "acoes-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "acoes-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "intervalo-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "intervalo-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "intervalo-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "cadencia-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "cadencia-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "cadencia-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "amplitude-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 2
+    },
+    {
+      "id": "amplitude-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "amplitude-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-1",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-2",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-3",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-4",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-5",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "abstract-6",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "fora-1",
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "fontes": 0
+    },
+    {
+      "id": "fora-2",
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "fontes": 0
+    },
+    {
+      "id": "fora-3",
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "fontes": 0
+    },
+    {
+      "id": "fora-4",
+      "correto": true,
+      "estado": "EVIDENCIA_INSUFICIENTE",
+      "fontes": 0
+    },
+    {
+      "id": "GERACAO_GERAL",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 5
+    },
+    {
+      "id": "TRIAGEM",
+      "correto": true,
+      "estado": "EVIDENCIAS_ENCONTRADAS",
+      "fontes": 2
+    }
+  ],
+  "recall_positivo": 1.0,
+  "fora_escopo_corretos": 4,
+  "replay_sem_duplicatas": true,
+  "dominios_fora_rag_preservados": true,
+  "llm_real": {
+    "chamadas_llm": 1,
+    "estado": "APROVADO",
+    "dados": "pergunta sintetica e trechos publicos; sem dados de clientes",
+    "modelo": "openai/gpt-oss-120b",
+    "idioma": "pt-BR",
+    "citacoes_validas": 1,
+    "total_ms": 835,
+    "uso": {
+      "prompt_tokens": 1468,
+      "completion_tokens": 163,
+      "total_tokens": 1631
+    }
+  },
+  "backend": {
+    "skipped": 2,
+    "aprovados": 62,
+    "motivo_skipped": "Ensaios opcionais por flag; E5 real exercitado separadamente na carga e nas 30 consultas"
+  },
+  "frontend_corpus": {
+    "aprovados": 7
+  },
+  "cobertura": "Recortes revisados e amostra delimitada; sem cobertura clinica universal e sem novo aceite amplo de AI-06",
+  "frontend_completo": {
+    "aprovados": 92,
+    "observacao": "Falha isolada na primeira rodada paralela; caso e suite sequencial passaram, sem alterar autenticacao",
+    "workers": 1
+  }
+}

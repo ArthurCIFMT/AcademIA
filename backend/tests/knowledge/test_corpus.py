@@ -176,6 +176,7 @@ def test_storage_is_integral_and_does_not_accept_paths(tmp_path: Path) -> None:
 
 
 def test_schema_and_routes(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ACADEMIA_CORPUS_HTTP_ENABLED", "true")
     monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
     api = create_app().openapi()
     assert URL + "/{version_id}/decisao" in api["paths"]
@@ -194,6 +195,7 @@ async def test_private_api_versioning_decisions_and_cache_revocation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     actors = people(sessions)
+    monkeypatch.setenv("ACADEMIA_CORPUS_HTTP_ENABLED", "true")
     monkeypatch.setenv("ACADEMIA_CORPUS_DIR", str(tmp_path))
     app = create_app(
         identity_sessions=sessions, auth_settings=AuthSettings(origin=ORIGIN)

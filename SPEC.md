@@ -128,6 +128,10 @@ ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálo
 Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
 exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
 O catálogo de demonstração não prepara nem substitui o corpus do RAG.
+O [preparo local do RAG](docs/instalacao/preparar-rag-local.md), concluído
+em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
+documentos. A gestão do corpus é técnica, desativada na rotina administrativa;
+perfis, dados de clientes e demais módulos permanecem preservados.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|
@@ -1025,7 +1029,10 @@ MRF01–MRF15 são vigentes, com critérios reescritos nesta revisão. MRF16–M
 (planejamento/ferramentas/pesquisa iterativa/suficiência agentiva) foram retirados;
 não devem ser implementados. Histórico e mapa no [registro de mudança](docs/analises/2026-11-04-revisao-ia-semantica.md).
 
-Curador é função de administrador/instrutor autorizado. No trabalho acadêmico,
+Curadoria é uma operação técnica do responsável pelo sistema, separada da rotina
+do administrador da academia. A identidade administrativa ativa identifica o
+operador nos comandos; a tela/API só é habilitada explicitamente em manutenção.
+Não há novo cargo nem curadoria automática para instrutores. No trabalho acadêmico,
 o responsável do projeto seleciona corpus e documenta regras/casos da demonstração,
 sem aprovação médica ou jurídica externa. Parecer do instrutor é uma funcionalidade
 posterior, distinta. Campos, regras, corpus e provedores iniciais foram definidos
@@ -1052,6 +1059,11 @@ Seleção não comprova indexação nem qualidade real.
 | MRF15 | Provedores, operação e retenção | MOD-00; MOD-05; MOD-06; MOD-12 | Equipe técnica; provedores LLM/embeddings | Usar adaptadores substituíveis e configuração compatível com modelo gratuito escolhido. | **CA-MRF15.1:** LLM e embeddings têm portas/configuração; opção gratuita é prioridade, mas modelo, limites de uso, contexto e execução local/API exigem ADR e ensaio.<br>**CA-MRF15.2:** Segredos vêm de ambiente; logs não copiam anamnese/biometria nem raciocínio interno.<br>**CA-MRF15.3:** Timeout/quota/indisponibilidade têm estados claros e orçamento de tentativas; nenhuma falha da IA impede ficha manual.<br>**CA-MRF15.4:** Retenção de mensagens/execuções/evidências é definida separadamente das 15 fichas; execução local antecede Docker. |
 
 #### Contratos e execução
+
+MRF01/CA-MRF01.4 e MRF15/CA-MRF15.4 incluem preparação offline reproduzível no
+ambiente usado pela SPA. Ensaios em banco isolado não populam desenvolvimento.
+O preparo ativa somente recortes aprovados e completos; o administrador da academia
+não precisa operar curadoria para usar cadastros, fichas ou o assistente.
 
 MOD-03 fornece snapshot; MOD-06 monta resumo, coordena rotas e chama LLM;
 MOD-05 recupera evidências; MOD-04 valida/publica versões; MOD-10 fornece recursos.
@@ -6829,11 +6841,13 @@ indexação técnica, não pertinência ou latência de recuperação/chat.
 
 O [relatório RAG-03](docs/testes/extracao-corpus-rag03.json) mantém quatro fontes
 REVISAO_NECESSARIA: BR-MS-001, INT-BJSM-001, INT-SPMED-001 e BR-SBC-001.
-Não foram promovidas por esta entrega. As três extrações concluídas ainda exigem
-seleção de trechos úteis; não houve carga automática integral do acervo no banco
-de desenvolvimento. O aceite RAG-04 não incluiu avaliação semântica;
-RAG-05 acrescentou [ensaio delimitado](docs/arquitetura/recuperacao-semantica.md). O ensaio LLM
-permanece em AI-06.
+Não foram promovidas por RAG-04 nem pelo preparo local posterior. No marco RAG-04
+ainda faltavam seleções e carga no ambiente de desenvolvimento; o aceite
+original não incluiu avaliação semântica. RAG-05 acrescentou o
+[ensaio delimitado](docs/arquitetura/recuperacao-semantica.md), e AI-06 avaliou o LLM.
+O [preparo local de 2026-11-19](docs/instalacao/preparar-rag-local.md) ativa somente
+recortes já revisados de três fontes, com política explícita do livro.
+Não significa indexação integral dos 19 PDFs.
 ### 10. Revisão de pesos, SHA-256 e configuração E5
 
 Fonte versionada: [docs/requisitos/schemas/embedding-e5-v1.json](docs/requisitos/schemas/embedding-e5-v1.json).
@@ -7104,15 +7118,17 @@ A medição usa perf_counter de alta resolução, importante no Windows. Testes
 sintéticos verificam segurança/estados, não são literatura validada.
 Comandos reproduzíveis e resultados estão no [registro](docs/testes/comandos.md#recuperação-semântica-e-avaliação-rag).
 
-#### Livro de apoio e pendências
+#### Livro de apoio e preparação local
 
 Por delegação do responsável, a referência inicial em português é o livro de
 Markus V. Nahas, Atividade Física, Saúde e Qualidade de Vida, 7ª ed. (2017).
-[Referência/hash e pendências](materiais/rag/livro-de-apoio.json) registram
+[Referência e hash](materiais/rag/livro-de-apoio.json) registram
 capítulos 4 e 6, fonte oficial gratuita e limites. O livro apoia conceitos e
 planejamento geral, sem substituir catálogo/equipamentos ou literatura pertinente
-à saúde. Avisos de fontes na extração impedem ativá-lo automaticamente. Sua escolha
-não altera os sete documentos selecionados ou a evidência do ensaio.
+à saúde. A política v2 valida explicitamente quatro páginas físicas; não
+autoriza extração integral. O [preparo offline](docs/instalacao/preparar-rag-local.md)
+ativa cinco trechos revisados para geração geral, preservando os ensaios originais.
+No chat são usados os sete recortes de conceitos avaliados em RAG-05.
 Os quatro PDFs pendentes do RAG-03 seguem fora da recuperação ativa; o responsável
 aceitou tratar essas revisões após o MVP, condicionado à cobertura do aceite.
 ### 13. Schemas JSON de recuperação
@@ -11155,6 +11171,7 @@ inativo retira apenas as permissões daquele perfil.
 | Administrar contas, papéis, funcionários e designações | Administrador ativo |
 | Manter inventário e disponibilidade de equipamentos | Administrador ativo |
 | Manter catálogo de exercícios | Administrador ou instrutor ativo |
+| Manter literatura e curadoria RAG | Responsável técnico com identidade administrativa ativa; HTTP/tela só em manutenção explicitamente habilitada |
 | Manter cadastro básico de clientes | Administrador ou atendente ativo |
 | Ler onboarding, saúde ou ficha | Cliente titular ou instrutor com vínculo vigente |
 | Editar o próprio onboarding e usar contexto privado da IA | Cliente titular |
@@ -12283,11 +12300,15 @@ pertencem a RAG-02–RAG-05. Requisitos: MRF01, MRF11 e MRF15; RN-23 e RN-28.
 
 #### Responsável e acesso
 
-O papel ADMINISTRADOR é o curador autorizado inicial, pela política
-MANAGE_CORPUS. Instrutor, atendente e cliente não recebem essa permissão
-implicitamente. É uma seleção técnica do trabalho acadêmico, sem aprovação
-médica ou jurídica externa. A tela fica em **Administração → Gerenciar corpus RAG**.
-Todas as rotas exigem sessão; escritas exigem CSRF e origem válida. Arquivos
+Curadoria é operação técnica do responsável pelo sistema, separada da rotina da
+academia. Para autoria, o operador usa uma identidade administrativa ativa e
+MANAGE_CORPUS. Não há novo cargo; instrutor, atendente e cliente não recebem essa
+permissão implicitamente. É seleção técnica acadêmica, sem aprovação externa.
+A API fica desativada por padrão por ACADEMIA_CORPUS_HTTP_ENABLED=false, retorna
+404 e não é listada no OpenAPI. A interface não oferece menu na execução comum.
+Com manutenção explicitamente ativada também por VITE_CORPUS_MAINTENANCE_ENABLED,
+a tela é /tecnico/corpus e ainda exige administrador ativo.
+Todas as rotas habilitadas exigem sessão; escritas exigem CSRF e origem. Arquivos
 baixados mantêm essas permissões; respostas privadas usam no-store.
 
 #### Registro e versionamento
@@ -12367,6 +12388,11 @@ de nove documentos é aprovada com o curador que acionou a importação; os outr
 10 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
 Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
 e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.
+
+O [preparo offline reproduzível](docs/instalacao/preparar-rag-local.md) cadastra,
+extrai e indexa somente seleções revisadas no ambiente de desenvolvimento.
+Cadastro bibliográfico aprovado não é suficiente para declarar o site pronto
+para testar a IA: a busca deve comprovar ingestões completas nesse ambiente.
 
 #### Integração e invalidação
 
@@ -13130,6 +13156,11 @@ necessária para sua entrega.
 - Auditoria não pode ser apagada livremente pelo autor da ação registrada.
 
 #### IA e RAG
+
+- Curadoria é operação técnica, fora do menu administrativo comum. HTTP/tela
+  ficam desativados por padrão e só abrem em manutenção explicitamente habilitada.
+  Para preparar o ambiente manual, siga docs/instalacao/preparar-rag-local.md;
+  testes isolados não populam o corpus do desenvolvimento.
 
 - Fluxo vigente: agente orquestrador com RAG vetorial semântico de etapas fixas,
   triagem de onboarding resumido, geração de fichas pelo LLM e chat de dúvidas.
@@ -16239,6 +16270,13 @@ enquanto Ruff e mypy verificam estilo e tipos.
 
 #### Banco vetorial local
 
+Para preparar o ambiente de revisão manual, use o
+[guia de preparação do RAG](docs/instalacao/preparar-rag-local.md).
+Com API parada, em backend/, execute
+`uv run --locked --env-file ../.env python -m scripts.prepare_knowledge --actor UUID_DO_RESPONSAVEL`.
+Curadoria HTTP é opcional e fica desativada por padrão; o chat e a geração
+continuam usando normalmente o corpus preparado offline.
+
 A conexão Qdrant usa um único processo e diretório persistente separado do
 PostgreSQL. Após uv sync --locked, com a API parada, execute a partir de backend/:
 
@@ -16391,6 +16429,11 @@ npm run build
 ```
 
 #### Geração e acompanhamento AI-04
+
+A curadoria RAG pertence à operação técnica, não ao menu administrativo comum.
+VITE_CORPUS_MAINTENANCE_ENABLED=false é o padrão. A ativação temporária da
+tela /tecnico/corpus exige também o backend habilitado e sessão administrativa.
+Veja o [preparo local](docs/instalacao/preparar-rag-local.md).
 
 Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
 URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
@@ -16591,6 +16634,8 @@ ACADEMIA_EQUIPMENT_IMAGES_DIR=uploads/equipamentos
 
 # Corpus privado. Diretório relativo ao processo do backend.
 ACADEMIA_CORPUS_DIR=data/corpus
+# Ativar somente durante manutenção técnica; não é função rotineira da academia.
+ACADEMIA_CORPUS_HTTP_ENABLED=false
 # ACADEMIA_RAG_MATERIALS_DIR: opcional; padrão é materiais/rag do repositório.
 
 # Qdrant local persistente: um worker, diretório exclusivo; sem servidor/Docker.
@@ -16634,6 +16679,7 @@ Fonte versionada: [frontend/.env.example](frontend/.env.example).
 VITE_API_BASE_URL=/api
 ACADEMIA_API_PROXY_TARGET=http://127.0.0.1:8000
 VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025
+VITE_CORPUS_MAINTENANCE_ENABLED=false
 ````
 
 ## Fontes e integridade
@@ -16645,20 +16691,20 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `c337599b3e095ae7462404805c11fc45407142e0b674b6c7358854c352fb31c0` |
-| `AGENTS.md` | `41041ddab90fa4399dcbbf2d2a804a66c81da66e3678df02d7f13b644d50d9aa` |
-| `backend/README.md` | `809a8c99835a3064d18752f02ea5af2fbcb20a6e3ab526485946775812f53b2c` |
+| `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
+| `AGENTS.md` | `0f04f88643652402fda073e6d6574ca95b9d1239ad5d15fc7ca2254637eb4c4a` |
+| `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
-| `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
+| `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
-| `docs/arquitetura/corpus.md` | `298b4c960daaae918b4e8be889f063ce9f396f9f4bab664a83dcd3c48ef480d7` |
+| `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
@@ -16678,7 +16724,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
-| `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
+| `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `00a51d77798ead39a9f4c09f0bffcb8852d94d6eb8972268fd0157c7ca61a8a8` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `e67719b92d533b59609ca38fc01fe93a2812baeb162fb4672607dec23a4c7bab` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
@@ -16690,17 +16736,17 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `f9724c1924e365a4310baa68207fd51e0d8d1f89c898da0317ce0dce8d6f5b2b` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `57b319750b42952e02949bf7e3e5b654f6769fbbaef0547d97861d91d4d2471c` |
-| `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
+| `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `888992ff338f635eb69d784ada3685297d6d95944015e6fd0df3382f7cdf02fd` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `8ba839b896923c4814cf883db674234619d9bd9e8f8e2796b79c9c8c5fb76f92` |
+| `docs/especificacao/visao-geral.md` | `a68d1232529765fd2a35c6f26f8a94f212c692b40a8353174c63d1f8cf03755e` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `cfcb5e983ad4513ca5a9048613fd8a37817125c8f52139e15c77139a145e0484` |
+| `docs/prompts/README.md` | `b61aab8ae1c616d4700da6abe82be560a86c4857997db0f19f509c867b391183` |
 | `docs/requisitos/configuracao-ia-rag.md` | `e964dffc3bfbe58d17c0183f71554103c97319cb78b9a0e3d81516eb8357b46f` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
-| `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
+| `docs/requisitos/macrorequisitos-ia-rag.md` | `9dcc16553c1aef82d0375a1cd7634249436fcc7d516f74a28e27f91d36549344` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
 | `docs/requisitos/requisitos-funcionais.md` | `258468801558c4a1660b241a8347fbabceb094a314d1febae9b46ccf5a8b504e` |
@@ -16740,8 +16786,8 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |
 | `docs/testes/tst01-resultado.json` | `19a54af3f8b87b4635bd7833c34c72825258b0ebfa314231d129d5ec56f7e0cd` |
-| `frontend/.env.example` | `5fc931301ceb50cd2ab374f8a7daef3237b66a6326e91b6034d9818f617b30da` |
-| `frontend/README.md` | `581d5adebd01782e2b267181659759b60ca1fae4e637b40bf1a31a1ccfb98667` |
+| `frontend/.env.example` | `1695913ea062a97cbf0f01d4cb67b74b7ca4cc5c2b59f5388d9ba10af5085f91` |
+| `frontend/README.md` | `fa87008cf5f0ce26f039fb5467ffa55e6b1d18919215af4153ef38af221fcb56` |
 | `frontend/package.json` | `fb1b0c8f5bb6eddcda683e7b2186c496ee15e2481a49e9a4e173dc77b69b2537` |
 | `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
 | `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |

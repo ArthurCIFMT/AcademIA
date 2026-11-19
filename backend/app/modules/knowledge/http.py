@@ -5,6 +5,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.routing import APIRoute
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.orm import Session, sessionmaker
 from starlette.types import Message
 
@@ -28,6 +29,11 @@ from app.modules.knowledge.service import (
 )
 from app.modules.knowledge.storage import CorpusStorage, InvalidFile, decode_file
 from app.policies.http import AuthenticatedActor
+
+
+class CorpusHttpSettings(BaseSettings):
+    model_config = SettingsConfigDict(env_prefix="ACADEMIA_CORPUS_HTTP_")
+    enabled: bool = False
 
 
 class LimitedRoute(APIRoute):
@@ -64,10 +70,17 @@ def curator(actor: AuthenticatedActor, response: Response) -> None:
 
 
 def corpus_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRouter:
+    maintenance = CorpusHttpSettings()
+
+    def require_maintenance() -> None:
+        if not maintenance.enabled:
+            raise HTTPException(404)
+
     router = APIRouter(
         prefix="/api/v1/corpus",
         tags=["Curadoria do corpus"],
-        dependencies=[Depends(curator)],
+        dependencies=[Depends(require_maintenance), Depends(curator)],
+        include_in_schema=maintenance.enabled,
         route_class=LimitedRoute,
     )
     storage = CorpusStorage()

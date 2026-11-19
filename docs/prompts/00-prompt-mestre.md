@@ -277,13 +277,17 @@ pertencer ao provedor; com autenticação local precisam do fluxo correspondente
 
 Seguir [fluxo e contratos](../arquitetura/rag-semantico.md) e MRF01–MRF15.
 - Ingestão offline: documento aprovado, origem, hash, licença, versão, idioma e página/seção.
+- Curadoria é operação técnica fora da rotina administrativa; tela/API ficam
+  desativadas por padrão e só abrem em manutenção autenticada.
+- Antes da revisão manual, preparar e verificar corpus/ingestões no banco da SPA;
+  testes isolados não disponibilizam automaticamente chunks no aplicativo.
 - Extração preserva símbolos/unidades/negações; OCR pendente não ativa corpus.
 - Chunking e embeddings respeitam modelo/dimensão; processamento idempotente e limitado.
 - Busca top-K/cosseno e filtros backend; português na interface com fontes PT/EN avaliadas.
 - Resumo em código por projeção estruturada, versionada e verificável, sem chamada
   adicional só para resumir; excesso de alerta relevante é estado controlado.
 - Orquestrador executa rotas fixas: chat; triagem resumida; geração/adaptação.
-- LLM inicial via adaptador: Groq/Llama 3.3 70B gratuito; ensaiar capacidade,
+- LLM vigente via adaptador: Groq/openai/gpt-oss-120b gratuito (ADR-006); ensaiar capacidade,
   qualidade e tempo. Recuperar trechos não garante acelerar um provedor lento.
 - Cada etapa LLM tem uma tentativa, sem retry automático; repetição idempotente
   reusa execução e nova tentativa é ação explícita com novo ID. Ingestão/busca

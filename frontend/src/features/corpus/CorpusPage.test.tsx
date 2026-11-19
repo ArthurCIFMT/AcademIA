@@ -1,10 +1,10 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { App } from "../../App";
 import { fileBase64, type Version } from "./api";
 
-const route="/area/administracao/corpus";
+const route="/tecnico/corpus";
 const row: Version={ id:"versao",documento_id:"documento",catalogo_id:"LIVRO-001",ambiente:"LITERATURA",
   numero:1,sha256:"a".repeat(64),formato:"PDF",tamanho_bytes:30,estado:"PENDENTE",revisao:1,
   metadados:{titulo:"Literatura sintética",origem_url:"https://example.test/fonte",licenca:"Fixture",
@@ -21,7 +21,25 @@ function mount(...responses:Array<Response|Error>){
   return request;
 }
 const click=(name:string)=>fireEvent.click(screen.getByRole("button",{name}));
-afterEach(()=>{cleanup();vi.unstubAllGlobals();});
+beforeEach(()=>vi.stubEnv("VITE_CORPUS_MAINTENANCE_ENABLED","true"));
+afterEach(()=>{cleanup();vi.unstubAllGlobals();vi.unstubAllEnvs();});
+
+test("administrador comum não abre a curadoria nem consulta sua API",async()=>{
+  vi.stubEnv("VITE_CORPUS_MAINTENANCE_ENABLED","false");
+  const request=mount(session());
+  await screen.findByRole("heading",{name:"Acesso não permitido"});
+  expect(screen.queryByRole("link",{name:/Curadoria técnica do RAG/})).toBeNull();
+  expect(screen.queryByRole("button",{name:"Importar acervo inicial versionado"})).toBeNull();
+  expect(request).toHaveBeenCalledTimes(1);
+});
+
+test("menu administrativo comum não oferece manutenção de RAG",async()=>{
+  vi.stubEnv("VITE_CORPUS_MAINTENANCE_ENABLED","false");
+  vi.stubGlobal("fetch",vi.fn().mockResolvedValue(session()));
+  render(<MemoryRouter initialEntries={["/area/administracao"]}><App/></MemoryRouter>);
+  await screen.findByRole("link",{name:"Gerenciar funcionários"});
+  expect(screen.queryByRole("link",{name:/RAG/})).toBeNull();
+});
 test("aprova e revoga a versão com revisão e motivo",async()=>{
   const approved:Version={...row,estado:"APROVADO",revisao:2,aprovado_por:"admin",aprovado_em:"2026-11-11T10:00:00Z"};
   const revoked:Version={...approved,estado:"REVOGADO",revisao:3,revogado_por:"admin",revogado_em:"2026-11-11T11:00:00Z",motivo_revogacao:"Fonte substituída"};

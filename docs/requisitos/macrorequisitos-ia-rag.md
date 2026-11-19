@@ -9,7 +9,10 @@ MRF01–MRF15 são vigentes, com critérios reescritos nesta revisão. MRF16–M
 (planejamento/ferramentas/pesquisa iterativa/suficiência agentiva) foram retirados;
 não devem ser implementados. Histórico e mapa no [registro de mudança](../analises/2026-11-04-revisao-ia-semantica.md).
 
-Curador é função de administrador/instrutor autorizado. No trabalho acadêmico,
+Curadoria é uma operação técnica do responsável pelo sistema, separada da rotina
+do administrador da academia. A identidade administrativa ativa identifica o
+operador nos comandos; a tela/API só é habilitada explicitamente em manutenção.
+Não há novo cargo nem curadoria automática para instrutores. No trabalho acadêmico,
 o responsável do projeto seleciona corpus e documenta regras/casos da demonstração,
 sem aprovação médica ou jurídica externa. Parecer do instrutor é uma funcionalidade
 posterior, distinta. Campos, regras, corpus e provedores iniciais foram definidos
@@ -36,6 +39,11 @@ Seleção não comprova indexação nem qualidade real.
 | MRF15 | Provedores, operação e retenção | MOD-00; MOD-05; MOD-06; MOD-12 | Equipe técnica; provedores LLM/embeddings | Usar adaptadores substituíveis e configuração compatível com modelo gratuito escolhido. | **CA-MRF15.1:** LLM e embeddings têm portas/configuração; opção gratuita é prioridade, mas modelo, limites de uso, contexto e execução local/API exigem ADR e ensaio.<br>**CA-MRF15.2:** Segredos vêm de ambiente; logs não copiam anamnese/biometria nem raciocínio interno.<br>**CA-MRF15.3:** Timeout/quota/indisponibilidade têm estados claros e orçamento de tentativas; nenhuma falha da IA impede ficha manual.<br>**CA-MRF15.4:** Retenção de mensagens/execuções/evidências é definida separadamente das 15 fichas; execução local antecede Docker. |
 
 ## Contratos e execução
+
+MRF01/CA-MRF01.4 e MRF15/CA-MRF15.4 incluem preparação offline reproduzível no
+ambiente usado pela SPA. Ensaios em banco isolado não populam desenvolvimento.
+O preparo ativa somente recortes aprovados e completos; o administrador da academia
+não precisa operar curadoria para usar cadastros, fichas ou o assistente.
 
 MOD-03 fornece snapshot; MOD-06 monta resumo, coordena rotas e chama LLM;
 MOD-05 recupera evidências; MOD-04 valida/publica versões; MOD-10 fornece recursos.

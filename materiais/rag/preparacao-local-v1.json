@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "limites": "Seleções técnicas já revisadas. Não indexar documentos inteiros nem promover fontes com extração pendente. Não cobre adaptações clínicas específicas.",
+  "fontes": [
+    {"fonte_id": "BR-RBCM-001", "selecao": "docs/testes/rag05-consultas-v1.json", "finalidades": ["DUVIDAS", "GERACAO_GERAL"]},
+    {"fonte_id": "BR-RBCM-001", "selecao": "docs/testes/ai06-corpus-v2.json", "finalidades": ["GERACAO_GERAL"]},
+    {"fonte_id": "BR-NAHAS-001", "selecao": "docs/testes/ai06-corpus-v2.json", "finalidades": ["GERACAO_GERAL"]},
+    {"fonte_id": "INT-HEALTH-001", "selecao": "docs/testes/ai06-corpus-v2.json", "finalidades": ["TRIAGEM"]}
+  ]
+}

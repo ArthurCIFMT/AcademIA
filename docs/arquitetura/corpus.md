@@ -6,11 +6,15 @@ pertencem a RAG-02–RAG-05. Requisitos: MRF01, MRF11 e MRF15; RN-23 e RN-28.
 
 ## Responsável e acesso
 
-O papel ADMINISTRADOR é o curador autorizado inicial, pela política
-MANAGE_CORPUS. Instrutor, atendente e cliente não recebem essa permissão
-implicitamente. É uma seleção técnica do trabalho acadêmico, sem aprovação
-médica ou jurídica externa. A tela fica em **Administração → Gerenciar corpus RAG**.
-Todas as rotas exigem sessão; escritas exigem CSRF e origem válida. Arquivos
+Curadoria é operação técnica do responsável pelo sistema, separada da rotina da
+academia. Para autoria, o operador usa uma identidade administrativa ativa e
+MANAGE_CORPUS. Não há novo cargo; instrutor, atendente e cliente não recebem essa
+permissão implicitamente. É seleção técnica acadêmica, sem aprovação externa.
+A API fica desativada por padrão por ACADEMIA_CORPUS_HTTP_ENABLED=false, retorna
+404 e não é listada no OpenAPI. A interface não oferece menu na execução comum.
+Com manutenção explicitamente ativada também por VITE_CORPUS_MAINTENANCE_ENABLED,
+a tela é /tecnico/corpus e ainda exige administrador ativo.
+Todas as rotas habilitadas exigem sessão; escritas exigem CSRF e origem. Arquivos
 baixados mantêm essas permissões; respostas privadas usam no-store.
 
 ## Registro e versionamento
@@ -90,6 +94,11 @@ de nove documentos é aprovada com o curador que acionou a importação; os outr
 10 permanecem em quarentena. Falta/alteração de arquivo aborta o lote relacional.
 Não baixa PDFs, inventa fontes ou acrescenta nova seleção. Replay é idempotente
 e não reaprova versões revogadas. O cadastro não extrai nem indexa esses PDFs.
+
+O [preparo offline reproduzível](../instalacao/preparar-rag-local.md) cadastra,
+extrai e indexa somente seleções revisadas no ambiente de desenvolvimento.
+Cadastro bibliográfico aprovado não é suficiente para declarar o site pronto
+para testar a IA: a busca deve comprovar ingestões completas nesse ambiente.
 
 ## Integração e invalidação
 

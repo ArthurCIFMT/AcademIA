@@ -110,6 +110,10 @@ ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálo
 Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
 exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
 O catálogo de demonstração não prepara nem substitui o corpus do RAG.
+O [preparo local do RAG](../../docs/instalacao/preparar-rag-local.md), concluído
+em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
+documentos. A gestão do corpus é técnica, desativada na rotina administrativa;
+perfis, dados de clientes e demais módulos permanecem preservados.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|

@@ -44,6 +44,13 @@ enquanto Ruff e mypy verificam estilo e tipos.
 
 ## Banco vetorial local
 
+Para preparar o ambiente de revisão manual, use o
+[guia de preparação do RAG](../docs/instalacao/preparar-rag-local.md).
+Com API parada, em backend/, execute
+`uv run --locked --env-file ../.env python -m scripts.prepare_knowledge --actor UUID_DO_RESPONSAVEL`.
+Curadoria HTTP é opcional e fica desativada por padrão; o chat e a geração
+continuam usando normalmente o corpus preparado offline.
+
 A conexão Qdrant usa um único processo e diretório persistente separado do
 PostgreSQL. Após uv sync --locked, com a API parada, execute a partir de backend/:
 

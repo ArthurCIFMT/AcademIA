@@ -35,6 +35,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Implementar top-K por cosseno com filtros de versão/estado e query minimizada.
 2. Retornar fonte, página/seção e score; tratar baixa evidência por abstenção.
 3. Criar conjunto rotulado de consultas, medir relevância e p95 documentando ambiente e tamanho.
+4. Após preparar o ambiente manual, verificar recuperação por finalidade com
+   E5/Qdrant reais e registrar a abrangência efetivamente ativada; manter os
+   ensaios anteriores como histórico, sem alterar perguntas para obter aceite.
 
 ## Finalidades e limites
 

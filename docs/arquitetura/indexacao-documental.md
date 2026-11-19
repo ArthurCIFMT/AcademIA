@@ -129,8 +129,10 @@ indexação técnica, não pertinência ou latência de recuperação/chat.
 
 O [relatório RAG-03](../testes/extracao-corpus-rag03.json) mantém quatro fontes
 REVISAO_NECESSARIA: BR-MS-001, INT-BJSM-001, INT-SPMED-001 e BR-SBC-001.
-Não foram promovidas por esta entrega. As três extrações concluídas ainda exigem
-seleção de trechos úteis; não houve carga automática integral do acervo no banco
-de desenvolvimento. O aceite RAG-04 não incluiu avaliação semântica;
-RAG-05 acrescentou [ensaio delimitado](recuperacao-semantica.md). O ensaio LLM
-permanece em AI-06.
+Não foram promovidas por RAG-04 nem pelo preparo local posterior. No marco RAG-04
+ainda faltavam seleções e carga no ambiente de desenvolvimento; o aceite
+original não incluiu avaliação semântica. RAG-05 acrescentou o
+[ensaio delimitado](recuperacao-semantica.md), e AI-06 avaliou o LLM.
+O [preparo local de 2026-11-19](../instalacao/preparar-rag-local.md) ativa somente
+recortes já revisados de três fontes, com política explícita do livro.
+Não significa indexação integral dos 19 PDFs.

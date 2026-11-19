@@ -153,6 +153,11 @@ necessária para sua entrega.
 
 ## IA e RAG
 
+- Curadoria é operação técnica, fora do menu administrativo comum. HTTP/tela
+  ficam desativados por padrão e só abrem em manutenção explicitamente habilitada.
+  Para preparar o ambiente manual, siga docs/instalacao/preparar-rag-local.md;
+  testes isolados não populam o corpus do desenvolvimento.
+
 - Fluxo vigente: agente orquestrador com RAG vetorial semântico de etapas fixas,
   triagem de onboarding resumido, geração de fichas pelo LLM e chat de dúvidas.
 - MRF01–MRF15 e docs/arquitetura/rag-semantico.md são a fonte vigente. A abordagem

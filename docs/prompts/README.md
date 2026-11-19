@@ -393,3 +393,9 @@ Escopo solicitado pelo responsável após abrir o aplicativo: convites explicado
 seleção única de cargos e dados sintéticos para testar. Os cartões operacionais
 e a lógica de IA/RAG permanecem preservados. Preparar o corpus em desenvolvimento
 é uma pendência de ambiente distinta dos aceites anteriores em banco de teste.
+
+2026-11-19, continuação: [preparo do corpus e separação da curadoria técnica](../testes/preparacao-rag-local-20261119.md).
+A pendência de ambiente acima foi resolvida com fontes/recortes revisados,
+extração, indexação E5/Qdrant e recuperação real no desenvolvimento. RAG-01,
+RAG-04, RAG-05 e o trecho pertinente do mestre foram atualizados para reconstrução.
+Não há mudança de escopo de cadastros, onboarding, treinos, pagamentos ou biometria.

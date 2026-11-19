@@ -34,7 +34,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Registrar documento, fonte, hash, versão, estado, origem e responsável pela aprovação.
-2. Criar fluxo de quarentena/publicação e tela de manutenção autorizada.
+2. Criar fluxo de quarentena/publicação e tela técnica opcional, desativada por
+   padrão no frontend e backend. A rotina administrativa da academia não oferece
+   gestão de RAG; ativação por ambiente é do responsável técnico e continua
+   exigindo identidade administrativa ativa, origem e CSRF.
 3. Separar documentos de teste e corpus aprovado; guardar páginas/seções para citação.
 
 ## Finalidades e limites
@@ -50,6 +53,8 @@ indexados como literatura compartilhada. Não enviar documento inteiro por pedid
 - Documento novo não participa da busca antes de aprovado.
 - Arquivo repetido é reconhecido por hash; nova edição cria versão rastreável.
 - Revogar versão impede novas recuperações sem apagar referências históricas.
+- Administrador comum não acessa curadoria pela URL/API na execução padrão;
+  habilitar a área técnica não concede acesso a instrutor, atendente ou cliente.
 
 ## Testes obrigatórios
 

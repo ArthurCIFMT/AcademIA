@@ -125,14 +125,16 @@ A medição usa perf_counter de alta resolução, importante no Windows. Testes
 sintéticos verificam segurança/estados, não são literatura validada.
 Comandos reproduzíveis e resultados estão no [registro](../testes/comandos.md#recuperação-semântica-e-avaliação-rag).
 
-## Livro de apoio e pendências
+## Livro de apoio e preparação local
 
 Por delegação do responsável, a referência inicial em português é o livro de
 Markus V. Nahas, Atividade Física, Saúde e Qualidade de Vida, 7ª ed. (2017).
-[Referência/hash e pendências](../../materiais/rag/livro-de-apoio.json) registram
+[Referência e hash](../../materiais/rag/livro-de-apoio.json) registram
 capítulos 4 e 6, fonte oficial gratuita e limites. O livro apoia conceitos e
 planejamento geral, sem substituir catálogo/equipamentos ou literatura pertinente
-à saúde. Avisos de fontes na extração impedem ativá-lo automaticamente. Sua escolha
-não altera os sete documentos selecionados ou a evidência do ensaio.
+à saúde. A política v2 valida explicitamente quatro páginas físicas; não
+autoriza extração integral. O [preparo offline](../instalacao/preparar-rag-local.md)
+ativa cinco trechos revisados para geração geral, preservando os ensaios originais.
+No chat são usados os sete recortes de conceitos avaliados em RAG-05.
 Os quatro PDFs pendentes do RAG-03 seguem fora da recuperação ativa; o responsável
 aceitou tratar essas revisões após o MVP, condicionado à cobertura do aceite.

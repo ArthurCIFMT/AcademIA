@@ -26,6 +26,11 @@ npm run build
 
 ## Geração e acompanhamento AI-04
 
+A curadoria RAG pertence à operação técnica, não ao menu administrativo comum.
+VITE_CORPUS_MAINTENANCE_ENABLED=false é o padrão. A ativação temporária da
+tela /tecnico/corpus exige também o backend habilitado e sessão administrativa.
+Veja o [preparo local](../docs/instalacao/preparar-rag-local.md).
+
 Cliente autenticado: /area/cliente/treino-ia. O identificador do pedido fica na
 URL para consulta após recarregar, sem repetir geração. A tela mostra resultado,
 fontes e parecer; o instrutor usa a revisão existente.

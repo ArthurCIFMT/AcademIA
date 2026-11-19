@@ -26,6 +26,9 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 
 - `backend/app/modules/knowledge/ingestion/**`
 - `backend/app/modules/knowledge/embeddings/**`
+- `backend/app/modules/knowledge/preparation.py`
+- `backend/scripts/prepare_knowledge.py`
+- `materiais/rag/preparacao-local-v1.json`
 - `backend/tests/knowledge/**`
 - `database/**`
 
@@ -36,6 +39,10 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 1. Fragmentar respeitando limites do modelo e contexto sem perder metadados de fonte.
 2. Gerar embeddings em lotes com timeout, retry limitado e tratamento de rate limit.
 3. Indexar por IDs estáveis/versionados; controlar processamento parcial e ativação da versão completa.
+4. Entregar comando offline opt-in para preparar as seleções revisadas no banco
+   utilizado pela SPA, com hashes, autoria, repetição sem duplicatas e retirada
+   auditada de seleções antigas do próprio preparo. Não executar essa carga
+   no startup nem copiar literatura artificial ou ataques dos testes.
 
 ## Finalidades e limites
 
@@ -50,6 +57,8 @@ indexados como literatura compartilhada. Não enviar documento inteiro por pedid
 - Reprocessar não duplica chunks e vetores.
 - Falha no meio do lote não marca versão completa; retomada conclui somente os faltantes.
 - Mudança de modelo/dimensão exige coleção/versão compatível; cada vetor aponta ao texto correto.
+- Para liberar revisão manual da IA, comprovar fontes/ingestões ativas em
+  desenvolvimento; o teste isolado não substitui essa preparação.
 
 ## Testes obrigatórios
 
