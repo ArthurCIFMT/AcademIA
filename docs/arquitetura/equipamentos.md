@@ -51,3 +51,7 @@ registros ordena essa validação com edições administrativas concorrentes.
 MOD-04 resolve combinações de recursos e a dispensa explícita do exercício.
 A disponibilidade descreve o estado do inventário. Ela independe da
 ocupação momentânea do equipamento.
+
+Para revisão manual, a [carga acadêmica de catálogo](../../database/seeds/README.md)
+acrescenta recursos de demonstração e exercícios relacionados. É opcional,
+aditiva e preserva estados/edições dos equipamentos já cadastrados.

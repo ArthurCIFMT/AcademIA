@@ -65,7 +65,7 @@ test("admin cadastra, reenvia após falha, consulta e inativa pelo formulário",
   mount(staffPath);
   fireEvent.click(await screen.findByRole("button", { name: "Cadastrar funcionário" }));
   fireEvent.change(screen.getByLabelText("Nome"), { target: { value: person.nome } });
-  fireEvent.change(screen.getByLabelText("Cargo"), { target: { value: person.cargo } });
+  expect(screen.queryByRole("textbox", { name: /^Cargo$/ })).toBeNull();
   fireEvent.change(screen.getByLabelText("Data de admissão"), { target: { value: person.data_admissao } });
   fireEvent.change(screen.getByLabelText("E-mail"), { target: { value: person.email } });
   fireEvent.click(screen.getByLabelText("Instrutor"));
@@ -77,7 +77,7 @@ test("admin cadastra, reenvia após falha, consulta e inativa pelo formulário",
     method: "POST",
     headers: expect.objectContaining({ "X-CSRF-Token": "csrf-sintetico" }),
     body: JSON.stringify({
-      nome: person.nome, cargo: person.cargo, data_admissao: person.data_admissao,
+      nome: person.nome, data_admissao: person.data_admissao,
       papeis: person.papeis, email: person.email, vincular_existente: false,
     }),
   }));
@@ -93,7 +93,7 @@ test("admin cadastra, reenvia após falha, consulta e inativa pelo formulário",
   expect(request).toHaveBeenCalledWith(endpoint + "/" + person.id, expect.objectContaining({
     method: "PUT",
     body: JSON.stringify({
-      nome: person.nome, cargo: person.cargo, data_admissao: person.data_admissao,
+      nome: person.nome, data_admissao: person.data_admissao,
       papeis: person.papeis, ativo: false, revisao: 2,
     }),
   }));

@@ -1,5 +1,26 @@
 # Registro de comandos de verificação
 
+## Revisão manual de 2026-11-19
+
+Correções e resultados no [registro da revisão](revisao-manual-20261119.md).
+Em backend/, com PostgreSQL e Mailpit locais configurados:
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+uv run --locked --env-file ../.env pytest -o addopts='' tests/people tests/notifications tests/training/test_demo_catalog.py tests/equipment tests/contracts -q
+uv run --locked mypy scripts/seed_catalog.py app/modules/people/staff.py tests/training/test_demo_catalog.py
+```
+
+Se a pasta temporária padrão do Windows estiver inacessível, acrescente
+`--basetemp=CAMINHO_LOCAL_NOVO`; não apague pastas temporárias de outras tarefas.
+Resultado: 41 testes aprovados. A carga de desenvolvimento é opt-in e está no
+[guia dos seeds](../../database/seeds/README.md).
+
+Em frontend/: `npm test -- src/features/staff/StaffDirectory.test.tsx src/features/clients/ClientDirectory.test.tsx src/features/auth/RecoveryPages.test.tsx src/features/notifications/LocalEmailNotice.test.tsx`.
+Resultado: 14 testes aprovados; lint, typecheck e build também aprovados.
+O runner documentado de TST-01 foi repetido em diretório novo: oito E2E aprovados
+com IA controlada, sem chamadas ao provedor e sem nova qualificação de AI-06.
+
 BE, DB e INT cobrem a base do backend e do banco. DOC verifica os artefatos
 do repositório. Os comandos vigentes estão na tabela; infraestrutura final
 continua vinculada aos prompts e gates próprios.

@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { activateFirstAccess, ApiError, confirmRecovery, requestRecovery } from "../../lib/api/auth";
+import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
 
 const genericReply = "Se o e-mail estiver elegível para recuperação, você receberá um link.";
 const invalidLink = "O link de recuperação é inválido ou expirou.";
@@ -24,6 +25,7 @@ export function RequestRecoveryPage() {
   return (
     <>
       <h2>Recuperar acesso</h2>
+      <LocalEmailNotice />
       {status === "sent" ? <p role="status">{genericReply}</p> : (
         <form className="login-form" onSubmit={handleSubmit}>
           <label htmlFor="recovery-email">E-mail</label>

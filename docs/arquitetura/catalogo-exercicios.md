@@ -40,5 +40,8 @@ da ficha. Ela bloqueia o exercício e os equipamentos escolhidos para ordenar
 a revalidação com alterações concorrentes.
 
 A migration 0009 mantém o UUID na inativação e protege a unicidade dos nomes
-e dos vínculos de cada grupo. O seed identificado como sintético fica restrito
-ao banco `academia_test`.
+e dos vínculos de cada grupo. O SQL sintético original continua restrito a
+`academia_test`. A [carga de demonstração](../../database/seeds/README.md)
+é uma operação explícita para `academia_dev`, acrescentando equipamentos e
+exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
+não cria fichas e não substitui evidências bibliográficas do RAG.

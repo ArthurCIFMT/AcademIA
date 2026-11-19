@@ -4,11 +4,11 @@ export const staffRoles = ["ADMINISTRADOR", "ATENDENTE", "INSTRUTOR"] as const s
 export type StaffRole = (typeof staffRoles)[number];
 export type StaffFields = {
   nome: string;
-  cargo: string;
   data_admissao: string;
   papeis: StaffRole[];
 };
 export type StaffSummary = StaffFields & {
+  cargo: string;
   id: string;
   email: string;
   ativo: boolean;

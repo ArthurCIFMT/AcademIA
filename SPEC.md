@@ -1,7 +1,7 @@
 <!-- Gerado por python scripts/gerar_spec.py --write. Edite as fontes versionadas; use --check para detectar divergência. -->
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-12.
+Versão documental: 1.0. Revisão: 2026-11-19.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -122,6 +122,12 @@ Execução local e containerização tardia seguem
 
 Retrato desta revisão, após TST-01 concluído e PG-01 fechado. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
+
+A [revisão manual de novembro](docs/testes/revisao-manual-20261119.md)
+ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálogo.
+Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
+exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
+O catálogo de demonstração não prepara nem substitui o corpus do RAG.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|
@@ -462,6 +468,9 @@ Permitir cadastro básico de funcionário.
 - CA-07.1: administrador cria funcionário com dados obrigatórios.
 - CA-07.2: funcionário recebe identificador único.
 - CA-07.3: duplicidade incompatível de conta ou e-mail é recusada.
+- CA-07.4: cadastro seleciona os cargos permitidos (administrador, atendente e
+  instrutor), acumuláveis conforme ADR-002, sem exigir um cargo em texto livre.
+  O backend deriva a descrição do cargo dos papéis selecionados.
 
 ##### RF-08 — Consultar, atualizar e desativar funcionário
 
@@ -472,6 +481,8 @@ Manter dados e estado de funcionários.
 - CA-08.3: perfil funcionário desativado perde capacidades operacionais conforme
   ADR-002, preservando histórico e eventual perfil cliente ativo; conta global
   inativa bloqueia ambos. Papel de cliente não concede capacidade administrativa.
+- CA-08.4: alterar os cargos selecionados atualiza as permissões e a descrição
+  derivada na mesma operação; um texto livre legado não concede outro cargo.
 
 #### Onboarding e avaliações
 
@@ -11350,13 +11361,18 @@ diretórios de implementação do cartão.
 | GET /api/v1/funcionarios | Lista com `pagina` e `limite`. Página inicial 1 e tamanho padrão 20, com máximo 100. |
 | GET /api/v1/funcionarios/{user_id} | Consulta dados, papéis, estado do perfil e estado do último convite. |
 | POST /api/v1/funcionarios | Cria identidade e perfil na mesma transação, ou vincula uma identidade existente quando indicado expressamente. |
-| PUT /api/v1/funcionarios/{user_id} | Atualiza nome, cargo, data de admissão, papéis e estado do perfil. Exige a `revisao` da consulta. |
+| PUT /api/v1/funcionarios/{user_id} | Atualiza nome, data de admissão, cargos/papéis e estado do perfil. Exige a `revisao` da consulta. |
 | POST /api/v1/funcionarios/{user_id}/convite | Emite novo convite para funcionário ativo com conta convidada. Exige a `revisao` da consulta. |
 
 O backend verifica o papel de administrador em todas as rotas. Mutações usam
 origem da SPA e CSRF da sessão. Os papéis administrativos disponíveis são
-administrador, atendente e instrutor. Nome, cargo, admissão e pelo menos um
-papel operacional são obrigatórios. O vínculo explícito usa o e-mail da conta
+administrador, atendente e instrutor. Nome, admissão e pelo menos um
+papel operacional são obrigatórios. A interface apresenta uma única seleção
+de cargos, acumuláveis conforme ADR-002. O backend deriva `cargo` dos papéis
+selecionados; o campo legado de entrada é opcional/depreciado e não controla
+permissões nem substitui essa derivação. O campo de saída e a coluna física são
+mantidos para compatibilidade. Registros preexistentes não são reescritos em lote.
+O vínculo explícito usa o e-mail da conta
 de cliente existente. Conta ativa mantém as credenciais. Conta convidada
 recebe um convite de primeiro acesso. Duplicidade incompatível, revisão antiga
 ou tentativa de remover o último administrador ativo recebem 409.
@@ -11377,6 +11393,8 @@ O botão **Reenviar convite** emite novo link e invalida o anterior. São
 permitidas até três emissões em 24 horas por conta convidada. A mesma revisão
 usada novamente recebe 409, evitando reenvio duplicado. O envio de teste usa
 o [Mailpit local](docs/arquitetura/notificacoes.md#ensaio-local-com-mailpit).
+O formulário informa explicitamente que Gmail/Outlook não recebem mensagens
+neste ambiente e oferece a caixa local quando configurada no frontend.
 
 O link abre `/primeiro-acesso` no frontend com o token no fragmento. A SPA
 remove o fragmento e envia o token e a senha no JSON ao endpoint já existente
@@ -11645,6 +11663,10 @@ registros ordena essa validação com edições administrativas concorrentes.
 MOD-04 resolve combinações de recursos e a dispensa explícita do exercício.
 A disponibilidade descreve o estado do inventário. Ela independe da
 ocupação momentânea do equipamento.
+
+Para revisão manual, a [carga acadêmica de catálogo](database/seeds/README.md)
+acrescenta recursos de demonstração e exercícios relacionados. É opcional,
+aditiva e preserva estados/edições dos equipamentos já cadastrados.
 ### 10. Exercícios e recursos
 
 Fonte versionada: [docs/arquitetura/catalogo-exercicios.md](docs/arquitetura/catalogo-exercicios.md).
@@ -11689,8 +11711,11 @@ da ficha. Ela bloqueia o exercício e os equipamentos escolhidos para ordenar
 a revalidação com alterações concorrentes.
 
 A migration 0009 mantém o UUID na inativação e protege a unicidade dos nomes
-e dos vínculos de cada grupo. O seed identificado como sintético fica restrito
-ao banco `academia_test`.
+e dos vínculos de cada grupo. O SQL sintético original continua restrito a
+`academia_test`. A [carga de demonstração](database/seeds/README.md)
+é uma operação explícita para `academia_dev`, acrescentando equipamentos e
+exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
+não cria fichas e não substitui evidências bibliográficas do RAG.
 ### 11. Editor manual
 
 Fonte versionada: [docs/arquitetura/fichas-manuais.md](docs/arquitetura/fichas-manuais.md).
@@ -12030,6 +12055,13 @@ qualquer nova emissão. O módulo não repete automaticamente uma entrega ambíg
 
 #### Ensaio local com Mailpit
 
+O Mailpit captura as mensagens localmente, inclusive quando o destinatário
+informado usa Gmail/Outlook. Não existe relay para a internet neste MVP.
+`ENVIADO` significa aceito pelo servidor local; a interface de funcionários,
+clientes e recuperação deve informar essa distinção. A URL da caixa é
+`VITE_TEST_MAILBOX_URL` no frontend e só aceita HTTP em loopback.
+Não expor o Mailpit na rede: ele contém links privados de primeiro acesso.
+
 Use o [binário nativo do Mailpit](https://mailpit.axllent.org/docs/install/).
 O ensaio foi executado com a versão 1.32.0. Mantenha o sink em loopback, com
 endereços sintéticos e sem relay, forwarding ou webhook de saída. Em PowerShell:
@@ -12050,6 +12082,19 @@ uv run --locked pytest -m integration tests/notifications/test_smtp.py
 O teste envia a mensagem por SMTP e consulta a API do Mailpit para conferir uma
 única captura. Os testes de integração com PostgreSQL verificam separadamente os
 estados de falha, o reenvio e a autorização da API.
+
+Sem `--database`, mensagens da sessão podem desaparecer ao fechar o processo.
+Para conservar a caixa entre reinícios, na raiz do projeto:
+
+```powershell
+New-Item -ItemType Directory -Path ./backend/data -Force | Out-Null
+mailpit --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025 --disable-version-check --ignore-duplicate-ids --database ./backend/data/mailpit.db
+```
+
+Use esse comando no lugar do processo temporário; não inicie dois servidores nas
+mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
+**Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
+anterior; não redefina senhas diretamente no banco.
 ### 16. Integrações de treino e acesso
 
 Fonte versionada: [docs/arquitetura/fluxos-atualizados.md](docs/arquitetura/fluxos-atualizados.md).
@@ -16110,6 +16155,10 @@ ao ensaio. O PostgreSQL recusa remover o schema se ainda houver objetos nele.
 
 #### Transações e testes
 
+Para preencher o ambiente de revisão manual com dados sintéticos, consulte a
+[carga explícita de equipamentos e exercícios](database/seeds/README.md).
+Ela preserva o que já foi cadastrado em desenvolvimento.
+
 Crie o engine uma vez por processo. A fábrica de sessões usa
 `with sessions.begin() as session` para confirmar a unidade de trabalho ao
 sair normalmente ou desfazê-la se houver exceção. As conexões usam UTC.
@@ -16327,6 +16376,12 @@ A SPA fica em <http://127.0.0.1:5173>.
 O proxy encaminha `/api/health` para `/health` e mantém o caminho das rotas
 versionadas. A tela inicial informa carregamento, sucesso ou falha e oferece
 nova tentativa. O cliente HTTP fica em `src/lib/` e os fluxos em `src/features/`.
+
+Os convites e a recuperação de senha usam Mailpit local; não chegam ao Gmail
+ou Outlook. Configure `VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025` em
+`.env.local` para mostrar o botão de abertura da caixa nos formulários.
+Reinicie o Vite depois de mudar variáveis. Links e persistência da caixa estão
+no [guia de notificações](docs/arquitetura/notificacoes.md).
 
 ```text
 npm test
@@ -16578,6 +16633,7 @@ Fonte versionada: [frontend/.env.example](frontend/.env.example).
 ````dotenv
 VITE_API_BASE_URL=/api
 ACADEMIA_API_PROXY_TARGET=http://127.0.0.1:8000
+VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025
 ````
 
 ## Fontes e integridade
@@ -16593,12 +16649,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `AGENTS.md` | `41041ddab90fa4399dcbbf2d2a804a66c81da66e3678df02d7f13b644d50d9aa` |
 | `backend/README.md` | `809a8c99835a3064d18752f02ea5af2fbcb20a6e3ab526485946775812f53b2c` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
-| `database/README.md` | `6fd5f3611b18c0790b7da6cfd9ae5f0c39705051375200397466da6c099f8815` |
+| `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `eef43526aa424615c28447fe41ceeacc0eaa262049ae6626e253aaf0fbbaf99c` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
-| `docs/arquitetura/catalogo-exercicios.md` | `5067e210d7d166d35158011957c1d1a8ff0333a803fa3f74cf3085eae85e7f6e` |
+| `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
@@ -16615,12 +16671,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md` | `a44a743cedd86f0eca7e722915c068a78ec6526888024d0ec3f0f347d9f609ca` |
 | `docs/arquitetura/decisoes/ADR-011-amostra-real-minima.md` | `31758187da83231312208077b3ca892f86a6dbcf4466fccf68d934e5cad2eab5` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
-| `docs/arquitetura/equipamentos.md` | `ed24c8657466c44b4ddddab331d39685d52395926eb3f22509e732863f4668d4` |
+| `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
 | `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
-| `docs/arquitetura/funcionarios.md` | `b3c2795ee6af2b911518749d5f5ec12578c52d33769df8db2643fccf5d916ff1` |
+| `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `c96eab2976c1bb509871334c7d2af3194c35b273ad04f95e17596ca22728023d` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `00a51d77798ead39a9f4c09f0bffcb8852d94d6eb8972268fd0157c7ca61a8a8` |
@@ -16628,7 +16684,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `66a73587ce0b53d1de35adf9573cd65637ed50302eb9d0b406b04764ffddc8bd` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
-| `docs/arquitetura/notificacoes.md` | `5490c96e92a7e541729698c31a20da850ed49e3f9a2eb014e87ecde2a7657a79` |
+| `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
 | `docs/arquitetura/orquestracao-ia.md` | `224a7c05c52a580adb9c775f4da9f03e13f9ad623bf04eed5a58e16fd51f00cc` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
@@ -16637,17 +16693,17 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `9bc61b562dd8c400b6d23d298dae0f58a4df7670da5806df4f3a4672bdf378d1` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `4ce555892b31a3647ab8566d37af7bb5c93477dbfcce2cdce1afb07ac23fb5aa` |
+| `docs/especificacao/compilacao-spec.json` | `888992ff338f635eb69d784ada3685297d6d95944015e6fd0df3382f7cdf02fd` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `deb0ebe1425932c30d0133c71119feb0171fd852e361a8a3eed75dc0c832c194` |
-| `docs/especificacao/visao-geral.md` | `37ae00fd29be8e7ea7c3eede4bad140e7c552f2035fec84a3da397c753de0b03` |
+| `docs/especificacao/visao-geral.md` | `8ba839b896923c4814cf883db674234619d9bd9e8f8e2796b79c9c8c5fb76f92` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
-| `docs/prompts/README.md` | `fec6d8f81f5c78a6b40579b239a68c3290bbea379c40f95687f0db11a41a8704` |
+| `docs/prompts/README.md` | `cfcb5e983ad4513ca5a9048613fd8a37817125c8f52139e15c77139a145e0484` |
 | `docs/requisitos/configuracao-ia-rag.md` | `e964dffc3bfbe58d17c0183f71554103c97319cb78b9a0e3d81516eb8357b46f` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `f2b77662334ffb38cb69aa300779b9dbb2a21e8b7a57b4354e4e10a5f12205e2` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `762e87b86d1c5031a487b20501f9b12651adf098c390e6130a76d28cabcbab0b` |
+| `docs/requisitos/requisitos-funcionais.md` | `258468801558c4a1660b241a8347fbabceb094a314d1febae9b46ccf5a8b504e` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `8ddd1afc7d782bd3e46bca4aad09d41a2a2308c0d8eab51edc475f98dfd96584` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
@@ -16684,8 +16740,8 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |
 | `docs/testes/tst01-resultado.json` | `19a54af3f8b87b4635bd7833c34c72825258b0ebfa314231d129d5ec56f7e0cd` |
-| `frontend/.env.example` | `f8eb6f17e070a7a2747c8e78b93386d8db5465124ffc51c18bf7ff6b05e15f08` |
-| `frontend/README.md` | `4cf2b14dbc19a8b9c1c859d30a15e15110ddfd2bb69ecec893180516958b87f6` |
+| `frontend/.env.example` | `5fc931301ceb50cd2ab374f8a7daef3237b66a6326e91b6034d9818f617b30da` |
+| `frontend/README.md` | `581d5adebd01782e2b267181659759b60ca1fae4e637b40bf1a31a1ccfb98667` |
 | `frontend/package.json` | `fb1b0c8f5bb6eddcda683e7b2186c496ee15e2481a49e9a4e173dc77b69b2537` |
 | `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
 | `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |

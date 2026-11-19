@@ -11,6 +11,12 @@ O proxy encaminha `/api/health` para `/health` e mantém o caminho das rotas
 versionadas. A tela inicial informa carregamento, sucesso ou falha e oferece
 nova tentativa. O cliente HTTP fica em `src/lib/` e os fluxos em `src/features/`.
 
+Os convites e a recuperação de senha usam Mailpit local; não chegam ao Gmail
+ou Outlook. Configure `VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025` em
+`.env.local` para mostrar o botão de abertura da caixa nos formulários.
+Reinicie o Vite depois de mudar variáveis. Links e persistência da caixa estão
+no [guia de notificações](../docs/arquitetura/notificacoes.md).
+
 ```text
 npm test
 npm run lint

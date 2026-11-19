@@ -89,6 +89,9 @@ Permitir cadastro básico de funcionário.
 - CA-07.1: administrador cria funcionário com dados obrigatórios.
 - CA-07.2: funcionário recebe identificador único.
 - CA-07.3: duplicidade incompatível de conta ou e-mail é recusada.
+- CA-07.4: cadastro seleciona os cargos permitidos (administrador, atendente e
+  instrutor), acumuláveis conforme ADR-002, sem exigir um cargo em texto livre.
+  O backend deriva a descrição do cargo dos papéis selecionados.
 
 ### RF-08 — Consultar, atualizar e desativar funcionário
 
@@ -99,6 +102,8 @@ Manter dados e estado de funcionários.
 - CA-08.3: perfil funcionário desativado perde capacidades operacionais conforme
   ADR-002, preservando histórico e eventual perfil cliente ativo; conta global
   inativa bloqueia ambos. Papel de cliente não concede capacidade administrativa.
+- CA-08.4: alterar os cargos selecionados atualiza as permissões e a descrição
+  derivada na mesma operação; um texto livre legado não concede outro cargo.
 
 ## Onboarding e avaliações
 

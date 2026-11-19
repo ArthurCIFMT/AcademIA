@@ -16,13 +16,18 @@ diretórios de implementação do cartão.
 | GET /api/v1/funcionarios | Lista com `pagina` e `limite`. Página inicial 1 e tamanho padrão 20, com máximo 100. |
 | GET /api/v1/funcionarios/{user_id} | Consulta dados, papéis, estado do perfil e estado do último convite. |
 | POST /api/v1/funcionarios | Cria identidade e perfil na mesma transação, ou vincula uma identidade existente quando indicado expressamente. |
-| PUT /api/v1/funcionarios/{user_id} | Atualiza nome, cargo, data de admissão, papéis e estado do perfil. Exige a `revisao` da consulta. |
+| PUT /api/v1/funcionarios/{user_id} | Atualiza nome, data de admissão, cargos/papéis e estado do perfil. Exige a `revisao` da consulta. |
 | POST /api/v1/funcionarios/{user_id}/convite | Emite novo convite para funcionário ativo com conta convidada. Exige a `revisao` da consulta. |
 
 O backend verifica o papel de administrador em todas as rotas. Mutações usam
 origem da SPA e CSRF da sessão. Os papéis administrativos disponíveis são
-administrador, atendente e instrutor. Nome, cargo, admissão e pelo menos um
-papel operacional são obrigatórios. O vínculo explícito usa o e-mail da conta
+administrador, atendente e instrutor. Nome, admissão e pelo menos um
+papel operacional são obrigatórios. A interface apresenta uma única seleção
+de cargos, acumuláveis conforme ADR-002. O backend deriva `cargo` dos papéis
+selecionados; o campo legado de entrada é opcional/depreciado e não controla
+permissões nem substitui essa derivação. O campo de saída e a coluna física são
+mantidos para compatibilidade. Registros preexistentes não são reescritos em lote.
+O vínculo explícito usa o e-mail da conta
 de cliente existente. Conta ativa mantém as credenciais. Conta convidada
 recebe um convite de primeiro acesso. Duplicidade incompatível, revisão antiga
 ou tentativa de remover o último administrador ativo recebem 409.
@@ -43,6 +48,8 @@ O botão **Reenviar convite** emite novo link e invalida o anterior. São
 permitidas até três emissões em 24 horas por conta convidada. A mesma revisão
 usada novamente recebe 409, evitando reenvio duplicado. O envio de teste usa
 o [Mailpit local](notificacoes.md#ensaio-local-com-mailpit).
+O formulário informa explicitamente que Gmail/Outlook não recebem mensagens
+neste ambiente e oferece a caixa local quando configurada no frontend.
 
 O link abre `/primeiro-acesso` no frontend com o token no fragmento. A SPA
 remove o fragmento e envia o token e a senha no JSON ao endpoint já existente

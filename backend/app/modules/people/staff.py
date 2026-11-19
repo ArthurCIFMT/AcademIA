@@ -34,6 +34,15 @@ from app.policies.access import Actor
 
 StaffRole = Literal[Role.ADMINISTRADOR, Role.ATENDENTE, Role.INSTRUTOR]
 STAFF_ROLES = (Role.ADMINISTRADOR, Role.ATENDENTE, Role.INSTRUTOR)
+STAFF_TITLES = {
+    Role.ADMINISTRADOR: "Administrador",
+    Role.ATENDENTE: "Atendente",
+    Role.INSTRUTOR: "Instrutor",
+}
+
+
+def staff_title(roles: set[StaffRole]) -> str:
+    return " / ".join(STAFF_TITLES[role] for role in STAFF_ROLES if role in roles)
 
 
 class StaffError(Exception):
@@ -47,9 +56,12 @@ class StaffFields(BaseModel):
     nome: Annotated[
         str, StringConstraints(strip_whitespace=True, min_length=1, max_length=120)
     ]
-    cargo: Annotated[
-        str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)
-    ]
+    cargo: (
+        Annotated[
+            str, StringConstraints(strip_whitespace=True, min_length=1, max_length=80)
+        ]
+        | None
+    ) = Field(default=None, deprecated=True)
     data_admissao: date
     papeis: Annotated[set[StaffRole], Field(min_length=1)]
 
@@ -246,7 +258,7 @@ def create_staff(
         EmployeeProfile(
             usuario_id=user_id,
             nome=data.nome,
-            cargo=data.cargo,
+            cargo=staff_title(data.papeis),
             data_admissao=data.data_admissao,
             ativo=True,
         )
@@ -287,7 +299,7 @@ def update_staff(
     critical = roles != data.papeis or profile.ativo != data.ativo
     details_changed = (profile.nome, profile.cargo, profile.data_admissao) != (
         data.nome,
-        data.cargo,
+        staff_title(data.papeis),
         data.data_admissao,
     )
     if critical or details_changed:
@@ -309,7 +321,7 @@ def update_staff(
         action = "staff.updated"
         if profile.ativo != data.ativo:
             action = "staff.reactivated" if data.ativo else "staff.deactivated"
-        profile.nome, profile.cargo = data.nome, data.cargo
+        profile.nome, profile.cargo = data.nome, staff_title(data.papeis)
         profile.data_admissao, profile.ativo = data.data_admissao, data.ativo
         user.revision += 1
         reason = _role_change(roles, data.papeis) if roles != data.papeis else None

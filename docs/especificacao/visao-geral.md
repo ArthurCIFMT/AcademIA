@@ -1,6 +1,6 @@
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-12.
+Versão documental: 1.0. Revisão: 2026-11-19.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -104,6 +104,12 @@ Execução local e containerização tardia seguem
 
 Retrato desta revisão, após TST-01 concluído e PG-01 fechado. Consulte o manifesto para estados por cartão,
 dependências, gates e evidências; atualize este resumo quando a entrega evoluir.
+
+A [revisão manual de novembro](../../docs/testes/revisao-manual-20261119.md)
+ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálogo.
+Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
+exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
+O catálogo de demonstração não prepara nem substitui o corpus do RAG.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|

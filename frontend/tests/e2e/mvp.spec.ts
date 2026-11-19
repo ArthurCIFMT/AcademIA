@@ -19,7 +19,7 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await page.goto("/area/administracao/funcionarios");
   await page.getByRole("button", { name: "Cadastrar funcionário", exact: true }).click();
   await page.getByLabel("Nome", { exact: true }).fill("Instrutor Jornada");
-  await page.getByLabel("Cargo", { exact: true }).fill("Instrutor");
+  await expect(page.getByRole("textbox", { name: "Cargo", exact: true })).toHaveCount(0);
   await page.getByLabel("Data de admissão").fill("2026-01-01");
   await page.getByLabel("E-mail", { exact: true }).fill(staffEmail);
   await page.getByRole("checkbox", { name: "Instrutor", exact: true }).check();

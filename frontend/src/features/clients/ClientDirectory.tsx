@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiError, type Session } from "../../lib/api/auth";
+import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
 import { changeClient, getClient, listClients, type ClientDetail, type ClientPage } from "./api";
 import "./clients.css";
 
@@ -13,7 +14,7 @@ const accountLabels = {
 };
 const inviteLabels = {
   ENVIANDO: "Envio em andamento",
-  ENVIADO: "Convite enviado",
+  ENVIADO: "Convite enviado à caixa de teste (Mailpit)",
   FALHOU: "Falha no envio do convite",
   INCERTO: "Envio incerto",
   SEM_CONFIRMACAO: "Envio sem confirmação",
@@ -104,6 +105,7 @@ export function ClientDirectory({
   return (
     <section className="clients-panel" aria-labelledby="clients-title">
       <h3 id="clients-title">Clientes</h3>
+      <LocalEmailNotice />
       {notice && <p role="status">{notice}</p>}
       {error && <p role="alert">{error}</p>}
       {form === undefined ? (

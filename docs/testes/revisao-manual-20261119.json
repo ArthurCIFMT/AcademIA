@@ -1,0 +1,41 @@
+{
+  "data": "2026-11-19",
+  "escopo": ["cargos selecionaveis sem texto livre", "orientacao de e-mail local", "catalogo de demonstracao"],
+  "backend": {"aprovados": 41, "falhas_finais": 0, "postgresql": "academia_test", "smtp": "Mailpit local"},
+  "frontend": {"aprovados": 14, "falhas_finais": 0},
+  "e2e": {
+    "navegador": "Edge",
+    "casos": ["E2E-01", "E2E-02", "E2E-03", "E2E-04", "E2E-05", "E2E-06", "E2E-07", "E2E-08"],
+    "aprovados": 8,
+    "falhas": 0,
+    "skips": 0,
+    "retries": 0,
+    "ia": "controlada",
+    "chamadas_llm_externo": 0,
+    "testes_locais_aprovados": true,
+    "novo_aceite_llm_real": false
+  },
+  "verificacoes": {
+    "ruff": true, "formato_python": true, "mypy": true,
+    "eslint": true, "typescript": true, "build": true,
+    "documentacao": true, "spec_sincronizado": true
+  },
+  "desenvolvimento": {
+    "equipamentos_adicionados": 16,
+    "exercicios_adicionados": 30,
+    "equipamentos_total": 17,
+    "exercicios_total": 31,
+    "registros_novos_na_repeticao": 0,
+    "cadastros_anteriores_preservados": true,
+    "convites_reemitidos_somente_localmente": 2,
+    "convites_limitados_preservados": 1,
+    "instrutor_sintetico_adicionado": true,
+    "senhas_redefinidas_pelo_operador": 0,
+    "backup_local_previo": true,
+    "api_http": 200,
+    "frontend_http": 200,
+    "proxy_http": 200
+  },
+  "pendencias": ["Preparar documentos aprovados e indexacao do corpus RAG em academia_dev para revisao manual da IA."],
+  "artefatos_privados": "Logs, fixtures E2E, mensagens, tokens e backup permanecem locais e fora do Git."
+}

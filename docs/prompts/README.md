@@ -385,3 +385,11 @@ ensaios reais aprovados; fases posteriores exigem seus cartões e gates próprio
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.
+
+## Manutenção após revisão manual
+
+2026-11-19: [correções de cargos, caixa local e carga de catálogo](../testes/revisao-manual-20261119.md).
+Escopo solicitado pelo responsável após abrir o aplicativo: convites explicados,
+seleção única de cargos e dados sintéticos para testar. Os cartões operacionais
+e a lógica de IA/RAG permanecem preservados. Preparar o corpus em desenvolvimento
+é uma pendência de ambiente distinta dos aceites anteriores em banco de teste.

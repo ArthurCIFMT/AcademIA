@@ -58,6 +58,10 @@ ao ensaio. O PostgreSQL recusa remover o schema se ainda houver objetos nele.
 
 ## Transações e testes
 
+Para preencher o ambiente de revisão manual com dados sintéticos, consulte a
+[carga explícita de equipamentos e exercícios](seeds/README.md).
+Ela preserva o que já foi cadastrado em desenvolvimento.
+
 Crie o engine uma vez por processo. A fábrica de sessões usa
 `with sessions.begin() as session` para confirmar a unidade de trabalho ao
 sair normalmente ou desfazê-la se houver exceção. As conexões usam UTC.

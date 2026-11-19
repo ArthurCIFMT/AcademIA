@@ -166,6 +166,54 @@ def test_staff_input_rejects_client_role_and_trims_names() -> None:
 
 @pytest.mark.integration
 @pytest.mark.anyio
+async def test_staff_titles_follow_selected_roles_without_free_text(
+    admin: UUID, api: httpx.AsyncClient
+) -> None:
+    headers = {"X-CSRF-Token": await _sign_in(api, _ADMIN)}
+    fields = _form("cargos@example.test")
+    fields.pop("cargo")
+    fields["papeis"] = ["ATENDENTE", "INSTRUTOR"]
+    response = await api.post(_URL, json=fields, headers=headers)
+    assert response.status_code == 201
+    created = response.json()
+    assert created["cargo"] == "Atendente / Instrutor"
+    updated = await api.put(
+        f"{_URL}/{created['id']}",
+        json=_update(created, cargo="Cargo livre antigo", papeis=["INSTRUTOR"]),
+        headers=headers,
+    )
+    assert updated.status_code == 200
+    assert updated.json()["cargo"] == "Instrutor"
+    assert updated.json()["papeis"] == ["INSTRUTOR"]
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_gmail_address_receives_first_access_in_local_mailbox(
+    admin: UUID, api: httpx.AsyncClient
+) -> None:
+    if environ.get("ACADEMIA_TEST_MAILPIT") != "1":
+        pytest.skip("Inicie o Mailpit e habilite ACADEMIA_TEST_MAILPIT=1.")
+    email = f"academia-sintetico-{uuid4()}@gmail.com"
+    headers = {"X-CSRF-Token": await _sign_in(api, _ADMIN)}
+    fields = _form(email)
+    fields.pop("cargo")
+    response = await api.post(_URL, json=fields, headers=headers)
+    assert response.status_code == 201
+    assert response.json()["convite"]["estado"] == "ENVIADO"
+    token = _mailpit_token(email)
+    assert (
+        await api.post(
+            "/api/v1/auth/first-access", json={"token": token, "senha": _PASSWORD}
+        )
+    ).status_code == 204
+    api.cookies.clear()
+    await _sign_in(api, email)
+    assert (await api.get("/api/v1/auth/session")).json()["roles"] == ["INSTRUTOR"]
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
 async def test_staff_creation_mailpit_first_access_and_direct_api_authorization(
     sessions: sessionmaker[Session], admin: UUID, api: httpx.AsyncClient
 ) -> None:

@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 
 import { ApiError, type Session } from "../../lib/api/auth";
+import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
 import {
   createStaff,
   getStaff,
@@ -21,7 +22,7 @@ const roleLabels = {
 };
 const deliveryLabels = {
   ENVIANDO: "Envio em andamento",
-  ENVIADO: "Enviado à caixa de e-mail",
+  ENVIADO: "Enviado à caixa de teste (Mailpit)",
   FALHOU: "Falha no envio",
   INCERTO: "Envio incerto",
   SEM_CONFIRMACAO: "Envio sem confirmação",
@@ -102,7 +103,6 @@ export function StaffDirectory({
     }
     const data = {
       nome: String(fields.get("nome") ?? ""),
-      cargo: String(fields.get("cargo") ?? ""),
       data_admissao: String(fields.get("data_admissao") ?? ""),
       papeis,
     };
@@ -140,6 +140,7 @@ export function StaffDirectory({
   return (
     <section className="staff-panel" aria-labelledby="staff-title">
       <h3 id="staff-title">Funcionários</h3>
+      <LocalEmailNotice />
       {notice && <p role="status">{notice}</p>}
       {error && <p role="alert">{error}</p>}
 
@@ -154,7 +155,7 @@ export function StaffDirectory({
               <ul className="staff-list">
                 {directory.itens.map(item => (
                   <li key={item.id}>
-                    <span>{item.nome} · {item.cargo} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
+                    <span>{item.nome} · {item.papeis.map(role => roleLabels[role]).join(" / ")} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
                     <button type="button" disabled={busy} onClick={() => open(item.id)}>
                       Consultar {item.nome}
                     </button>
@@ -183,7 +184,6 @@ export function StaffDirectory({
           <form key={form ? form.id + "/" + form.revisao : "new"} className="staff-form" onSubmit={save}>
             <fieldset disabled={busy}>
               <label>Nome<input name="nome" defaultValue={form?.nome} maxLength={120} required /></label>
-              <label>Cargo<input name="cargo" defaultValue={form?.cargo} maxLength={80} required /></label>
               <label>Data de admissão<input name="data_admissao" type="date" defaultValue={form?.data_admissao} required /></label>
               {form ? (
                 <label><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de funcionário ativo</label>
@@ -194,7 +194,7 @@ export function StaffDirectory({
                 </>
               )}
               <fieldset>
-                <legend>Papéis de funcionário</legend>
+                <legend>Cargos do funcionário</legend>
                 {staffRoles.map(role => (
                   <label key={role}>
                     <input name="papel" type="checkbox" value={role} defaultChecked={form?.papeis.includes(role)} />

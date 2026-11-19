@@ -50,6 +50,13 @@ qualquer nova emissão. O módulo não repete automaticamente uma entrega ambíg
 
 ## Ensaio local com Mailpit
 
+O Mailpit captura as mensagens localmente, inclusive quando o destinatário
+informado usa Gmail/Outlook. Não existe relay para a internet neste MVP.
+`ENVIADO` significa aceito pelo servidor local; a interface de funcionários,
+clientes e recuperação deve informar essa distinção. A URL da caixa é
+`VITE_TEST_MAILBOX_URL` no frontend e só aceita HTTP em loopback.
+Não expor o Mailpit na rede: ele contém links privados de primeiro acesso.
+
 Use o [binário nativo do Mailpit](https://mailpit.axllent.org/docs/install/).
 O ensaio foi executado com a versão 1.32.0. Mantenha o sink em loopback, com
 endereços sintéticos e sem relay, forwarding ou webhook de saída. Em PowerShell:
@@ -70,3 +77,16 @@ uv run --locked pytest -m integration tests/notifications/test_smtp.py
 O teste envia a mensagem por SMTP e consulta a API do Mailpit para conferir uma
 única captura. Os testes de integração com PostgreSQL verificam separadamente os
 estados de falha, o reenvio e a autorização da API.
+
+Sem `--database`, mensagens da sessão podem desaparecer ao fechar o processo.
+Para conservar a caixa entre reinícios, na raiz do projeto:
+
+```powershell
+New-Item -ItemType Directory -Path ./backend/data -Force | Out-Null
+mailpit --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025 --disable-version-check --ignore-duplicate-ids --database ./backend/data/mailpit.db
+```
+
+Use esse comando no lugar do processo temporário; não inicie dois servidores nas
+mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
+**Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
+anterior; não redefina senhas diretamente no banco.
