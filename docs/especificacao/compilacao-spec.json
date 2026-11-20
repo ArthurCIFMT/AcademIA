@@ -1,6 +1,6 @@
 {
   "versao": 1,
-  "revisado_em": "2026-11-19",
+  "revisado_em": "2026-11-20",
   "base_implementacao": "602c807cf436f60420b3f992047b28d6654b1a17",
   "visao_geral": "docs/especificacao/visao-geral.md",
   "secoes": [
@@ -583,6 +583,10 @@
         {
           "arquivo": "docs/testes/otimizacao-modelagem-20261119.md",
           "titulo": "Backup, migração com dados legados e regressão da normalização 0016"
+        },
+        {
+          "arquivo": "docs/testes/iniciador-local-20261120.md",
+          "titulo": "Verificação do iniciador Windows e seus limites"
         }
       ]
     },
@@ -628,6 +632,16 @@
           "titulo": "Exemplo de ambiente do frontend",
           "tipo": "codigo",
           "linguagem": "dotenv"
+        },
+        {
+          "arquivo": "docs/instalacao/iniciar-com-dois-cliques.md",
+          "titulo": "Iniciador Windows com painel, serviços próprios e encerramento"
+        },
+        {
+          "arquivo": "iniciador.local.example.json",
+          "titulo": "Exemplo de caminhos locais do iniciador",
+          "tipo": "codigo",
+          "linguagem": "json"
         }
       ]
     }

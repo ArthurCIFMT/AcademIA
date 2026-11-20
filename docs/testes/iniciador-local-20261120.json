@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "data": "2026-11-20",
+  "escopo": "Operação local Windows; sem mudança de módulos funcionais, schema ou dados de negócio",
+  "unitarios": {
+    "aprovados": 14,
+    "falhas": 0,
+    "ignorados": 0,
+    "junit_sha256": "298e3df041923ef59cbed7ea6923b2fe2602ef0e07450ea4225a675997e9d745"
+  },
+  "estatico": {
+    "ruff": true,
+    "mypy_fontes": 2
+  },
+  "integracao_servicos": {
+    "antes": {
+      "5432": false,
+      "1025": false,
+      "8025": false,
+      "8000": false,
+      "5173": false
+    },
+    "llm_chamado": false,
+    "ambiente": "desenvolvimento, somente healthchecks/leitura de revisão",
+    "iniciou": true,
+    "abertura_repetida_sem_duplicar": true,
+    "servicos": [
+      "mailpit",
+      "backend",
+      "frontend"
+    ],
+    "depois": {
+      "5432": false,
+      "1025": false,
+      "8025": false,
+      "8000": false,
+      "5173": false
+    }
+  },
+  "integracao_painel": {
+    "painel_abriu": true,
+    "iniciou_servicos_reais": true,
+    "encerramento_pelo_mesmo_comando_do_atalho": true,
+    "janela_e_servicos_encerrados": true,
+    "codigo_saida": 0,
+    "browser_nao_reaberto_neste_ensaio": true,
+    "inspecao_visual_dos_botoes": "bloqueada pela identificação de janela do provedor; sem alegar QA visual completo"
+  },
+  "fontes_sha256": {
+    "scripts/academia_local.py": "84691a3314a6ee15986f3c0ae7aa5b9dd84d44edb61ee9cb680a0a54103b2d3f",
+    "tests/test_iniciador_local.py": "b46e43c81696f779dbee2b8f3ba49fdd55e1504370d9fdd91cd18ea1b09bc13d",
+    "Iniciar AcademIA.cmd": "47be02c3a2af545e017da791b8b5cbc0f0b1f8ffc6f65bba7cdff1ee76adabdf",
+    "Encerrar AcademIA.cmd": "e4c9254ff15387ec7467cf34dc95cccaffc754fce2b03655ec569d9f9c60c1d7"
+  },
+  "llm_chamadas_externas": 0,
+  "teste_visual_botoes": "Não concluído: provedor não vinculou a janela Tkinter apesar de identificá-la; nenhum clique ou captura foi inventado.",
+  "comandos_cmd_instalados": {
+    "iniciar_cmd_real": true,
+    "api_e_proxy_verificados": true,
+    "encerrar_cmd_real": true,
+    "portas_proprias_encerradas": true
+  },
+  "documentacao": {
+    "spec_fontes": 128,
+    "links_requisitos_sem_inconsistencias": true
+  }
+}

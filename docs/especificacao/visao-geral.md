@@ -1,6 +1,6 @@
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-19.
+Versão documental: 1.0. Revisão: 2026-11-20.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -106,6 +106,10 @@ adaptador do LLM gratuito configurado. São decisões aprovadas; os ensaios reai
 de qualidade/latência pertencem às entregas de RAG/IA.
 Execução local e containerização tardia seguem
 [ADR-005](../../docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md).
+
+O [iniciador Windows](../../docs/instalacao/iniciar-com-dois-cliques.md) permite
+abrir/encerrar o ambiente local preparado com dois cliques, preservando os
+comandos de configuração inicial e sem alterar dados, contratos ou modelos.
 
 ## 5. Capacidades e estágio da implementação
 

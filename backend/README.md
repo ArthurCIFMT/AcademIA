@@ -174,3 +174,10 @@ determinístico/real e consolidação independente. Em backend/:
 uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N
 Usar outra pasta nova no modo real. Saídas/logs privados não entram no Git.
 Falha ou abstenção permanece no relatório; o runner não repara resultados.
+
+## Inicialização com dois cliques no Windows
+
+Abra **Iniciar AcademIA.cmd** na raiz do projeto. O painel liga os serviços e
+abre o site; para terminar use **Encerrar sistema**, o X do painel ou
+**Encerrar AcademIA.cmd**. Nesta máquina os caminhos já estão configurados.
+Veja o [guia de uso e configuração](../docs/instalacao/iniciar-com-dois-cliques.md).

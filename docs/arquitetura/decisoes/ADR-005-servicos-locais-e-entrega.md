@@ -29,3 +29,12 @@ continuam tardios (GATE-09). Não antecipar Docker da aplicação.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).
+
+## Conveniência para revisão manual — 2026-11-20
+
+O [iniciador Windows](../../instalacao/iniciar-com-dois-cliques.md) reúne os
+comandos existentes num painel de dois cliques, com configuração local privada.
+Não antecipa Docker, muda a arquitetura ou aplica migrations/seeds. Inicia
+serviços de forma controlada, espera healthchecks e encerra apenas o que criou;
+PostgreSQL já ligado é preservado. Chaves ficam no backend e o Mailpit não herda
+relay externo. As verificações atuais estão no [relatório](../../testes/iniciador-local-20261120.md).

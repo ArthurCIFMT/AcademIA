@@ -1,7 +1,7 @@
 <!-- Gerado por python scripts/gerar_spec.py --write. Edite as fontes versionadas; use --check para detectar divergência. -->
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-19.
+Versão documental: 1.0. Revisão: 2026-11-20.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -124,6 +124,10 @@ adaptador do LLM gratuito configurado. São decisões aprovadas; os ensaios reai
 de qualidade/latência pertencem às entregas de RAG/IA.
 Execução local e containerização tardia seguem
 [ADR-005](docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md).
+
+O [iniciador Windows](docs/instalacao/iniciar-com-dois-cliques.md) permite
+abrir/encerrar o ambiente local preparado com dois cliques, preservando os
+comandos de configuração inicial e sem alterar dados, contratos ou modelos.
 
 ## 5. Capacidades e estágio da implementação
 
@@ -1421,6 +1425,15 @@ continuam tardios (GATE-09). Não antecipar Docker da aplicação.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).
+
+#### Conveniência para revisão manual — 2026-11-20
+
+O [iniciador Windows](docs/instalacao/iniciar-com-dois-cliques.md) reúne os
+comandos existentes num painel de dois cliques, com configuração local privada.
+Não antecipa Docker, muda a arquitetura ou aplica migrations/seeds. Inicia
+serviços de forma controlada, espera healthchecks e encerra apenas o que criou;
+PostgreSQL já ligado é preservado. Chaves ficam no backend e o Mailpit não herda
+relay externo. As verificações atuais estão no [relatório](docs/testes/iniciador-local-20261120.md).
 ### 6. Migração explícita para o modelo Groq vigente
 
 Fonte versionada: [docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md](docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md).
@@ -17967,6 +17980,87 @@ Na raiz verificar documentação/SPEC com os comandos de AGENTS.md.
 [Recibo estruturado](docs/testes/otimizacao-modelagem-20261119.json): contagens, hashes dos
 relatórios/fontes, limites e backup sem conteúdo privado. Artefatos brutos,
 dumps, pesos, chaves, logs e scripts temporários continuam fora do Git.
+### 24. Verificação do iniciador Windows e seus limites
+
+Fonte versionada: [docs/testes/iniciador-local-20261120.md](docs/testes/iniciador-local-20261120.md).
+
+#### Entrega
+
+[Guia de dois cliques](docs/instalacao/iniciar-com-dois-cliques.md), arquivos
+Iniciar AcademIA.cmd/Encerrar AcademIA.cmd e scripts/academia_local.py. Painel
+Tkinter e serviços existentes, sem dependências novas, instalador, Docker,
+modificações de regras, schema, prompts de IA ou dados de negócio. Configuração
+local privada dos caminhos já preparada nesta máquina e ignorada no Git.
+
+Abrir inicia serviços, espera healthchecks e abre o navegador padrão; encerrar
+usa os handles próprios e um pedido local de shutdown. API recebe encerramento
+normal; PostgreSQL que já estava ligado não é desligado. Portas ocupadas não
+provocam busca/encerramento indiscriminado de processos. Mailpit mantém a caixa
+persistente e não herda relay do ambiente. Chaves não vão para o frontend,
+Mailpit ou linha de comando. A configuração de ambiente e os serviços continuam
+sendo os da ADR-005; scripts não atualizam schema, corpus ou catálogo.
+
+#### Verificações desta versão
+
+- 14 unitários aprovados: loopback, isolamento de credenciais, portas ocupadas,
+  preservação de serviço preexistente, falha de startup/limpeza dos próprios,
+  shutdown da API, PID de cluster alterado e comando de encerramento/lock.
+- Ruff/formato e mypy dos dois fontes novos aprovados. O mypy usa MYPYPATH
+  apontando a backend/ para resolver os imports do projeto, sem ignorar erros.
+- Ciclo real com PostgreSQL, Mailpit, API e Vite: site e proxy responderam,
+  início repetido não duplicou serviços, término restaurou as cinco portas ao
+  estado desligado. Apenas healthchecks/leitura de revisão, sem negócio/LLM.
+- Painel real Pythonw/Tk abriu, iniciou os serviços e recebeu o mesmo pedido
+  de Encerrar do arquivo .cmd. A janela saiu com código0 e as portas próprias
+  ficaram livres. O teste final de encerramento não reabriu o navegador.
+- Após copiar os fontes para o projeto original, os dois arquivos .cmd reais
+  foram executados: Iniciar disponibilizou API, site/proxy e e-mails; Encerrar
+  fechou os serviços próprios e restaurou as cinco portas ao estado desligado.
+- A abertura automática anterior do site no navegador foi observada pelo
+  título da janela do navegador e pelas respostas HTTP do frontend/proxy.
+
+Limitação: a inspeção visual dos botões pelo provedor de controle do Windows
+falhou na associação da janela Tkinter a seu aplicativo, apesar de ela constar
+no inventário. Não há captura nem aprovação de QA visual por herança. O ciclo
+funcional do painel foi confirmado pelo comando local de controle e pelos
+processos/serviços, não por cliques inventados. O usuário pode conferir os
+botões durante a revisão manual normal.
+
+Falhas intermediárias: primeira rodada unitária teve seis erros de setup por
+pasta temporária ausente; depois houve uma falha do double de subprocess.run
+que interferia no import de SQLAlchemy. O mock passou a interceptar somente
+Node --version. Nenhum bloqueio do código de negócio foi removido. Lint e
+resolução do caminho do mypy foram corrigidos antes do resultado final.
+Dois ensaios iniciais de GUI foram encerrados por PID/árvore próprios após a
+falha do provedor visual; o ensaio final fechou normalmente pelo controle do
+painel, com código0. Sem alterar a política de encerramento de programas externos.
+
+Não houve reexecução da regressão completa do MVP ou nova qualificação de IA:
+backend de domínio, contratos e frontend funcional não foram alterados. Os
+relatórios anteriores conservam sua identidade. O [registro JSON](docs/testes/iniciador-local-20261120.json)
+contém contagens/hashes e os recibos dos ciclos; logs brutos ficam privados.
+
+#### Reprodução dos testes focais
+
+Na raiz do projeto, com o ambiente Python do backend já preparado:
+
+```powershell
+& ./backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml tests/test_iniciador_local.py -o addopts=''
+& ./backend/.venv/Scripts/python.exe -m ruff check --config backend/pyproject.toml scripts/academia_local.py tests/test_iniciador_local.py
+& ./backend/.venv/Scripts/python.exe -m ruff format --check scripts/academia_local.py tests/test_iniciador_local.py
+$env:MYPYPATH = (Resolve-Path ./backend).Path
+& ./backend/.venv/Scripts/python.exe -m mypy --config-file backend/pyproject.toml scripts/academia_local.py tests/test_iniciador_local.py
+```
+
+O ensaio real requer esta máquina já preparada, portas livres e nenhum processo
+real de manutenção/ingestão. Abrir Iniciar AcademIA.cmd, esperar site/API e depois
+usar Encerrar AcademIA.cmd. Conferir que a janela fecha e o site deixa de responder;
+se PostgreSQL já estava ligado antes do ensaio, ele precisa permanecer ligado.
+Não instalar recursos ou aplicar migrations automaticamente para passar no teste.
+
+Referências técnicas: [subprocess e ambiente do processo](https://docs.python.org/3.12/library/subprocess.html),
+[opções do Mailpit](https://mailpit.axllent.org/docs/configuration/runtime-options/) e
+[identificação de aplicação no Windows](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-setcurrentprocessexplicitappusermodelid).
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -18294,6 +18388,13 @@ determinístico/real e consolidação independente. Em backend/:
 uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N
 Usar outra pasta nova no modo real. Saídas/logs privados não entram no Git.
 Falha ou abstenção permanece no relatório; o runner não repara resultados.
+
+#### Inicialização com dois cliques no Windows
+
+Abra **Iniciar AcademIA.cmd** na raiz do projeto. O painel liga os serviços e
+abre o site; para terminar use **Encerrar sistema**, o X do painel ou
+**Encerrar AcademIA.cmd**. Nesta máquina os caminhos já estão configurados.
+Veja o [guia de uso e configuração](docs/instalacao/iniciar-com-dois-cliques.md).
 ### 3. Frontend
 
 Fonte versionada: [frontend/README.md](frontend/README.md).
@@ -18344,6 +18445,13 @@ Texto não executa HTML; fonte aceita somente http/https.
 Os testes de training-chat cobrem envio, retomada, falha, autorização,
 confirmação de adaptação e 429 sem repetição automática.
 [Contrato](docs/arquitetura/chat-e-adaptacao.md).
+
+#### Inicialização com dois cliques no Windows
+
+Abra **Iniciar AcademIA.cmd** na raiz do projeto. O painel liga os serviços e
+abre o site; para terminar use **Encerrar sistema**, o X do painel ou
+**Encerrar AcademIA.cmd**. Nesta máquina os caminhos já estão configurados.
+Veja o [guia de uso e configuração](docs/instalacao/iniciar-com-dois-cliques.md).
 ### 4. Bootstrap
 
 Fonte versionada: [docs/instalacao/primeiro-administrador.md](docs/instalacao/primeiro-administrador.md).
@@ -18575,6 +18683,105 @@ ACADEMIA_API_PROXY_TARGET=http://127.0.0.1:8000
 VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025
 VITE_CORPUS_MAINTENANCE_ENABLED=false
 ````
+### 9. Iniciador Windows com painel, serviços próprios e encerramento
+
+Fonte versionada: [docs/instalacao/iniciar-com-dois-cliques.md](docs/instalacao/iniciar-com-dois-cliques.md).
+
+Na pasta do projeto, dê dois cliques em **Iniciar AcademIA.cmd**. Não é preciso
+digitar comandos nem abrir os PowerShells dos serviços. O pequeno painel inicia
+PostgreSQL, Mailpit, API e frontend e abre o site no navegador padrão quando o
+proxy e a API respondem corretamente. A primeira inicialização pode demorar.
+
+#### Uso diário
+
+1. Abra Iniciar AcademIA.cmd e aguarde “Sistema pronto”.
+2. Use o navegador normalmente. O botão **Abrir site** volta à página inicial.
+3. Para convites e recuperação, use **Abrir e-mails de teste**. As mensagens ficam
+   no Mailpit local, mesmo quando o endereço cadastrado é Gmail ou Outlook.
+4. Ao terminar, use **Encerrar sistema**, feche o painel pelo X ou dê dois cliques
+   em **Encerrar AcademIA.cmd**. O segundo arquivo também funciona com o painel
+   minimizado. Nenhum dado de cadastro, treino, corpus ou e-mail é apagado.
+5. **Abrir registros** mostra a pasta privada dos logs quando houver falha.
+
+Os dois arquivos ficam na raiz, junto de README.md. Se o Windows ocultar
+extensões, aparecem como “Iniciar AcademIA” e “Encerrar AcademIA”. Para usar pela
+Área de Trabalho, crie um atalho para o arquivo original; não mova o arquivo
+para fora da pasta do projeto. Não use o Gerenciador de Tarefas para fechar o
+painel durante a inicialização: o encerramento normal usa as ações acima.
+
+Antes de implementar mudanças, aplicar migrations ou preparar o RAG offline,
+encerre o painel. Depois da manutenção, abra novamente o iniciador.
+
+#### O que o painel faz
+
+- Usa o Python do backend e as instalações locais já preparadas; não instala
+  pacotes, baixa modelos, aplica migrations, semeia dados ou recria o banco.
+- Lê .env do backend e a configuração do frontend. Chaves e senhas não aparecem
+  na linha de comando e não são repassadas ao frontend/Mailpit pelo iniciador.
+- Exige endereços HTTP de loopback, portas distintas e academia_dev local.
+  Não abre a aplicação na rede pública nem altera firewall/configuração do Windows.
+- Verifica a revisão do banco antes de iniciar a API. Uma migration pendente
+  exige manutenção técnica explícita, não uma alteração automática de dados.
+- Mantém um único painel por projeto. Portas ocupadas provocam uma mensagem;
+  o iniciador não tenta matar processos encontrados pelo número da porta.
+- Se o PostgreSQL já estava ligado, o reutiliza após conferir a conexão e não
+  o desliga no encerramento. Os serviços que ele próprio criou são encerrados
+  pelos handles guardados; o PID do cluster é conferido antes de pará-lo.
+- A API recebe pedido de shutdown e tem tempo de encerramento antes de um
+  eventual encerramento forçado apenas de sua árvore. O Qdrant continua local,
+  aberto somente pelo único processo da API; não existe servidor Qdrant extra.
+- Usa a caixa persistente backend/data/mailpit.db, sem relay para e-mails externos.
+  As configurações MP_* de relay do ambiente não são herdadas pelo Mailpit.
+
+O painel é uma conveniência para desenvolvimento/teste local. Não é um instalador
+universal nem substitui a containerização futura. A disponibilidade das IAs ainda
+depende de corpus/pesos preparados, chaves do perfil e quota do provedor.
+Nenhuma chamada ao LLM é feita para abrir ou encerrar o ambiente.
+
+#### Preparação técnica em outra máquina
+
+Nesta máquina, os caminhos já estão configurados em iniciador.local.json.
+Esse arquivo é privado/ignorado pelo Git, pois os diretórios variam entre PCs.
+
+Em uma instalação nova, preparar primeiro os [serviços](database/README.md),
+o [backend](backend/README.md), o [frontend](frontend/README.md) e o
+[RAG local](docs/instalacao/preparar-rag-local.md), conforme os guias existentes. Copiar
+iniciador.local.example.json para iniciador.local.json e ajustar os quatro
+caminhos absolutos de ferramentas/cluster. O Python é encontrado automaticamente
+em backend/.venv/Scripts; precisa incluir Tkinter (verificado nesta instalação).
+Não colocar credenciais nesse JSON; elas continuam somente no .env local.
+
+O script versionado é scripts/academia_local.py. Os .cmd usam caminhos relativos
+à própria pasta, com aspas para espaços e acentos; o site abre no navegador
+padrão. Os caminhos de URLs/portas vêm dos ambientes já documentados.
+
+#### Se não abrir
+
+| Mensagem/situação | Orientação |
+|---|---|
+| Painel já aberto | Use a janela existente; não há um segundo conjunto de serviços. |
+| Porta em uso | Encerre a execução anterior pelo painel/comando apropriado. O iniciador preserva processos externos. |
+| Falta configuração/caminho | Conferir iniciador.local.json e instalação inicial; não é preciso decorar os comandos diários. |
+| Migrations pendentes | Pedir ao responsável técnico a atualização seguindo o guia do banco. |
+| IA retorna erro/quota | O ambiente pode estar ligado normalmente; conferir a resposta e o provedor. Não há retry ou fallback automático novo. |
+| Links de e-mail expirados | Reenviar convite pela aplicação; não redefinir senha diretamente no banco. |
+
+Logs ficam em backend/data/iniciador e a caixa de e-mail em backend/data; tudo
+fora do Git. Compartilhar logs somente após conferir se contêm dados privados.
+As [evidências de verificação](docs/testes/iniciador-local-20261120.md) distinguem
+testes funcionais do iniciador e a limitação da inspeção visual automática.
+### 10. Exemplo de caminhos locais do iniciador
+
+Fonte versionada: [iniciador.local.example.json](iniciador.local.example.json).
+
+````json
+{
+  "postgres_bin": "C:/Program Files/PostgreSQL/17/bin",
+  "postgres_data": "C:/caminho/do/cluster-local",
+  "mailpit_exe": "C:/ferramentas/mailpit.exe",
+  "node_exe": "C:/Program Files/nodejs/node.exe"
+}
+````
 
 ## Fontes e integridade
 
@@ -18587,7 +18794,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 |---|---|
 | `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
 | `AGENTS.md` | `7ad6b40b7a543af3fef9281dd1f70a9b9eec8f27165d46b022ded3645e6c42d1` |
-| `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
+| `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
@@ -18604,7 +18811,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
 | `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
-| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `a4102604b95513484683880528fc87607eded39897708d44c85fde9dd772c434` |
+| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `3216530553832fee65d5e85050073e95d05a7bd98b532626e98ab7248ca0adda` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `8fed154fd5b1522a5f41b8b8919ef2dc44e210ad26ff946b6861af38f63632d7` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
@@ -18637,9 +18844,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `4e6b842f759e284251f1a4712d92818675a16b40b98ad439ab8d40892f06a060` |
+| `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `3785defed29388fc4569b58bbc21a06e999d3beb77a7d8f688a27ecfcc9a013e` |
-| `docs/especificacao/visao-geral.md` | `6b2e40bbcc239ec21e645172e80c9c749e205e247d369da75902bbbd4239cec0` |
+| `docs/especificacao/visao-geral.md` | `0003aa9fdeba5099089dc42e0fd7c42175dd8067c5b0e4eb18e13ccd7e5a3154` |
+| `docs/instalacao/iniciar-com-dois-cliques.md` | `015cea210739d8d19b7be3aa436a98d5b57d2b0bc2bc6d929deaadeb0b6645e2` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -18651,7 +18859,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `63c2d4042cc6383823ef480ea9901a39f585fac320f722a6e2f13d37fef2d41f` |
+| `docs/prompts/README.md` | `18e89e311f01544a28c82996629fff4106d17b0e235447ac031dfe9e5e5b4402` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
@@ -18690,6 +18898,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/estrategia.md` | `15269ecb21cf8b2fb3c6e8f56434e4095a85e0fbe6b9fda4b5ba927278956c6c` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/historico-chat-mvp-20261119.md` | `efa4a40fe2e6dce5254a3abd5d09f7e72fefe1ec416088088c1a587e3d4566b0` |
+| `docs/testes/iniciador-local-20261120.md` | `6fed6a3e6ea1cfbc30b2da181e118b326699ce915dc4d6e0cc75b632199fec61` |
 | `docs/testes/otimizacao-modelagem-20261119.md` | `1f74745b6165c4c27f671b71ac895539b2d2256e7b5ea7dae9630e766d21b44e` |
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
@@ -18700,8 +18909,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |
 | `docs/testes/tst01-resultado.json` | `19a54af3f8b87b4635bd7833c34c72825258b0ebfa314231d129d5ec56f7e0cd` |
 | `frontend/.env.example` | `1695913ea062a97cbf0f01d4cb67b74b7ca4cc5c2b59f5388d9ba10af5085f91` |
-| `frontend/README.md` | `fa87008cf5f0ce26f039fb5467ffa55e6b1d18919215af4153ef38af221fcb56` |
+| `frontend/README.md` | `8087005537ccbba2929d2fb1c38341efd58fa7619ca2e04a6167f02e6e203f4c` |
 | `frontend/package.json` | `fb1b0c8f5bb6eddcda683e7b2186c496ee15e2481a49e9a4e173dc77b69b2537` |
+| `iniciador.local.example.json` | `54be04e22c79846de440d5018fa8ddad7dc8c07dd4b152dcddf5f0b3104c1fad` |
 | `materiais/rag/catalogo.json` | `8de543888642c3520c5ca989ea1531561a0a39b8782507e7bd4d59f2be0e4dcd` |
 | `materiais/rag/corpus-inicial.json` | `020a594b22e382f81026488d91356e25d9a8804642ccb8de0230d534ce332dc3` |
 | `materiais/rag/livro-de-apoio.json` | `c75428232258b24af8920ac712bac46cba7028c603b7e306ea6dcde59e50eb3f` |

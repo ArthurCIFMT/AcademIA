@@ -73,3 +73,10 @@ Após alterar uma fonte, execute `python scripts/gerar_spec.py --write` e
 versione fonte/cópia juntas. A verificação detecta cópia desatualizada e a
 auditoria confere a estrutura documental. Os testes da aplicação e os
 ensaios de integrações/IA têm comandos e evidências próprios.
+
+## Inicialização com dois cliques no Windows
+
+Abra **Iniciar AcademIA.cmd** na raiz do projeto. O painel liga os serviços e
+abre o site; para terminar use **Encerrar sistema**, o X do painel ou
+**Encerrar AcademIA.cmd**. Nesta máquina os caminhos já estão configurados.
+Veja o [guia de uso e configuração](docs/instalacao/iniciar-com-dois-cliques.md).

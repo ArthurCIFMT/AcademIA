@@ -1465,3 +1465,12 @@ mypy238, lint/tipos/build frontend aprovados. Sem nova qualificação AI-06/TST-
 Backup de fontes/Git/PG/corpus/Qdrant verificado; restore real e ensaio de migration
 com rollback; aplicação definitiva preservou dados canônicos em todas as tabelas.
 Comandos completos/focais e falhas intermediárias ficam no guia, sem somar reexecuções.
+
+## Iniciador Windows de dois cliques — 2026-11-20
+
+[Uso](../instalacao/iniciar-com-dois-cliques.md) e [testes focais](iniciador-local-20261120.md).
+14 unitários, Ruff/formato e mypy dos dois fontes novos aprovados. Ciclo real
+PostgreSQL/Mailpit/API/Vite e comando de encerramento do painel aprovados,
+sem chamadas LLM nem alterações de schema/dados. Limitação da inspeção visual
+automática e falhas intermediárias registradas no relatório, sem alegar novos
+aceites globais do MVP. Configuração de ferramentas privada fora do Git.

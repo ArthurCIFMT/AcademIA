@@ -46,3 +46,10 @@ Texto não executa HTML; fonte aceita somente http/https.
 Os testes de training-chat cobrem envio, retomada, falha, autorização,
 confirmação de adaptação e 429 sem repetição automática.
 [Contrato](../docs/arquitetura/chat-e-adaptacao.md).
+
+## Inicialização com dois cliques no Windows
+
+Abra **Iniciar AcademIA.cmd** na raiz do projeto. O painel liga os serviços e
+abre o site; para terminar use **Encerrar sistema**, o X do painel ou
+**Encerrar AcademIA.cmd**. Nesta máquina os caminhos já estão configurados.
+Veja o [guia de uso e configuração](../docs/instalacao/iniciar-com-dois-cliques.md).

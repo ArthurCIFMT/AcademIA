@@ -452,3 +452,10 @@ futuras. AI-03/AI-05 passam a referenciar fontes únicas de triagem, consumo e
 pergunta. Não executar outro cartão, alterar regras funcionais ou considerar
 essa manutenção uma nova qualificação AI-06/TST-01. Resultados atuais ficam no
 relatório específico; marcos anteriores conservam suas evidências históricas.
+
+### Iniciador local para revisão manual — 2026-11-20
+
+[Uso em dois cliques](../instalacao/iniciar-com-dois-cliques.md) e
+[evidências](../testes/iniciador-local-20261120.md). Ferramenta de operação local,
+sem executar UX-01, módulos futuros, migrations automáticas ou Docker. O painel
+abre o MVP já preparado; a próxima etapa visual continua UX-01.

@@ -1,0 +1,6 @@
+{
+  "postgres_bin": "C:/Program Files/PostgreSQL/17/bin",
+  "postgres_data": "C:/caminho/do/cluster-local",
+  "mailpit_exe": "C:/ferramentas/mailpit.exe",
+  "node_exe": "C:/Program Files/nodejs/node.exe"
+}

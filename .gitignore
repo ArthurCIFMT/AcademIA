@@ -64,3 +64,6 @@ backend/data/
 /data/qdrant/
 /data/extracoes/
 /data/indexacao/
+
+# Caminhos privados do iniciador Windows
+/iniciador.local.json
