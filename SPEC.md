@@ -128,6 +128,10 @@ Execução local e containerização tardia seguem
 O [iniciador Windows](docs/instalacao/iniciar-com-dois-cliques.md) permite
 abrir/encerrar o ambiente local preparado com dois cliques, preservando os
 comandos de configuração inicial e sem alterar dados, contratos ou modelos.
+Por autorização permanente, cada implementação avalia e mantém sua
+compatibilidade na própria entrega, sem novo pedido de reparo. AGENTS.md,
+o contrato comum dos cartões e o guia do iniciador definem esse escopo
+transversal, os testes e a preservação de configuração/processos existentes.
 
 ## 5. Capacidades e estágio da implementação
 
@@ -332,7 +336,10 @@ Ao receber uma mudança aprovada:
    e distinga proposta de decisão aceita. ADR novo/substituto é usado quando pertinente.
 3. Ajuste modelo, contratos e plano/cartões afetados; migration nova acompanha
    mudança física de schema e migrations já aplicadas permanecem preservadas.
-4. Implemente e teste no escopo autorizado. Caso código e especificação divirjam,
+4. Implemente e teste no escopo autorizado, incluindo manutenção necessária
+   do iniciador quando a mudança afetar a operação local. Registrar a
+   avaliação sem exigir alteração artificial em etapas sem impacto.
+   Caso código e especificação divirjam,
    corrija a divergência ou registre a pendência, sem declarar conclusão artificial.
 5. Atualize este mapa/resumo quando mudar seu conteúdo, a rastreabilidade,
    as evidências e o manifesto. Registre a revisão no Git.
@@ -1434,6 +1441,15 @@ Não antecipa Docker, muda a arquitetura ou aplica migrations/seeds. Inicia
 serviços de forma controlada, espera healthchecks e encerra apenas o que criou;
 PostgreSQL já ligado é preservado. Chaves ficam no backend e o Mailpit não herda
 relay externo. As verificações atuais estão no [relatório](docs/testes/iniciador-local-20261120.md).
+
+#### Manutenção incremental autorizada — 2026-11-20
+
+O responsável autorizou manter o iniciador compatível em cada implementação
+que altere a operação local, sem precisar solicitar um reparo separado. Esse
+ajuste integra a entrega operacional segundo AGENTS.md/contrato comum e o
+[procedimento permanente](docs/instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+Isso mantém o ciclo de dois cliques, sem antecipar Docker/serviços futuros,
+substituir configurações privadas ou executar preparação de dados implicitamente.
 ### 6. Migração explícita para o modelo Groq vigente
 
 Fonte versionada: [docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md](docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md).
@@ -13330,6 +13346,21 @@ devem aplicar o mesmo padrão com evidência própria antes da validação final
 Não confundir representação gráfica, implementação e aprovação: reportar quais
 foram feitas, com fixtures sintéticas, resultados e limitações. Nenhuma mudança
 de MER, banco, políticas clínicas ou fornecedor de IA é exigida pelo redesenho.
+
+#### Operação local reproduzível durante a evolução
+
+Reproduzir também o início/encerramento local com dois cliques descrito no
+[guia do iniciador](docs/instalacao/iniciar-com-dois-cliques.md). No Windows,
+Iniciar AcademIA.cmd e Encerrar AcademIA.cmd são as entradas públicas; caminhos
+privados ficam fora do Git e o setup inicial continua explícito.
+
+Manter a compatibilidade desse caminho em cada implementação que afetar a
+execução. AGENTS.md e o contrato comum autorizam os ajustes estritamente
+necessários ao iniciador, configurações de exemplo, testes e documentação,
+sem exigir novo pedido do responsável. Não antecipar serviços de cartões
+futuros nem colocar reset/migration/seed silencioso no ato de abrir o sistema.
+Alteração do ciclo exige sua verificação; documentação ou etapa sem impacto
+registra essa situação sem reexecutar serviços/LLM desnecessariamente.
 ### 2. Gates documentados
 
 Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
@@ -14427,6 +14458,22 @@ com inspeção no navegador, contraste, teclado, ampliação, viewports e captur
 sintéticas antes/depois. Testes verdes não bastam para declarar boa aparência;
 mockups e inspeção visual também não substituem os testes de autorização/fluxo.
 Critérios e evidências de cada capacidade nova devem acompanhar sua implementação.
+
+#### Compatibilidade contínua do iniciador local
+
+Em toda implementação, avaliar o efeito no [iniciador Windows](docs/instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+Quando afetado, ajustar e testar na mesma entrega, conforme a autorização
+transversal de AGENTS.md/contrato comum. Mudanças de código/configuração do
+iniciador usam os testes focais em tests/test_iniciador_local.py e lint/tipos;
+mudanças no ciclo de operação exigem ensaio real proporcional de abrir, esperar
+prontidão das capacidades afetadas e encerrar preservando serviços anteriores.
+
+Não confundir processo iniciado/healthcheck com teste de regra de negócio ou
+qualificação do provedor de IA. Não consumir quota apenas para validar o painel.
+Registrar resultado e limitações atuais; código/documentação não afetados não
+exigem repetição integral da regressão ou alteração artificial no iniciador.
+Na revisão documental desta política, executar DOC/SPEC e diff; os 14 testes e
+ensaios anteriores continuam históricos, sem nova execução alegada.
 ### 2. Avaliação e segurança de IA/RAG
 
 Fonte versionada: [docs/testes/rag-ia-semantico.md](docs/testes/rag-ia-semantico.md).
@@ -14658,7 +14705,8 @@ necessária para sua entrega.
 - Leia a visão geral/invariantes de `SPEC.md`, os capítulos/fontes afetados
   e o prompt operacional completo antes de
   alterar arquivos. Em manutenção documental, siga o escopo solicitado.
-- Não altere arquivos fora do escopo do prompt.
+- Não altere arquivos fora do escopo do prompt, exceto a manutenção
+  transversal do iniciador expressamente autorizada na seção abaixo.
 - Preserve mudanças preexistentes que não pertençam à tarefa.
 - Prefira mudanças pequenas, testáveis e reversíveis.
 - Não adicione dependências sem justificar a necessidade.
@@ -14672,6 +14720,34 @@ necessária para sua entrega.
   Recompile `SPEC.md` por `python scripts/gerar_spec.py --write` e verifique por
   `python scripts/gerar_spec.py --check`; fontes e cópia acompanham o mesmo commit.
   Não edite manualmente o arquivo gerado nem mantenha cópias independentes.
+
+#### Manutenção permanente do iniciador local
+
+- Por autorização expressa do responsável em 2026-11-20, manter o início e o
+  encerramento com dois cliques faz parte das implementações futuras. Avalie
+  o impacto de cada entrega e ajuste o iniciador quando necessário, sem pedir
+  novamente autorização funcional apenas para essa compatibilidade.
+- A manutenção estritamente necessária de `Iniciar AcademIA.cmd`,
+  `Encerrar AcademIA.cmd`, `scripts/academia_local.py`, seu exemplo de configuração,
+  testes e documentação integra o escopo transversal dos cartões de implementação,
+  mesmo se a lista de caminhos de um cartão antigo não os mencionar. Isso não
+  autoriza antecipar módulos, mudar arquitetura ou contrariar restrição expressa
+  da solicitação vigente.
+- Siga o [contrato de manutenção do iniciador](docs/instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+  Mudanças de serviços, dependências, comandos, pastas, ambiente, portas, proxy,
+  healthchecks ou encerramento precisam manter a operação local compatível.
+- Preserve os dois arquivos públicos, dados existentes, configuração privada e
+  processos preexistentes. Não substitua o ambiente do usuário nem coloque
+  segredos no Git/linha de comando. Novos serviços seguem seus gates e ADRs;
+  abrir o sistema não instala recursos nem aplica migrations/seeds implicitamente.
+- Quando a entrega incluir manutenção do ambiente local já autorizada, execute-a
+  separadamente e deixe o iniciador utilizável. Não transfira ao usuário ajustes
+  técnicos já compreendidos na tarefa. Registre bloqueio concreto e testes não
+  executados se não for possível concluir essa parte; permissões do ambiente
+  continuam aplicáveis.
+- Execute testes proporcionais ao impacto e registre no relatório se o iniciador
+  foi atualizado, permaneceu compatível sem alteração ou não foi afetado.
+  Revisão exclusivamente documental não exige ligar o sistema nem repetir LLM.
 
 #### Banco de dados
 
@@ -14798,6 +14874,12 @@ Backend, a partir de `backend/` com uv e Python 3.12:
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
 
+Iniciador Windows, a partir da raiz com o ambiente do backend já instalado:
+`backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml tests/test_iniciador_local.py -o addopts=''`.
+Lint/formato, tipos e ensaio real do ciclo seguem os comandos e limites de
+`docs/testes/iniciador-local-20261120.md`. Executar quando a manutenção afetar
+seu código/configuração/ciclo; não repetir por revisão somente documental.
+
 Consolidação do MVP, em backend/, sem chamadas externas:
 `uv run --locked python -m tests.acceptance.consolidation --output ./data/e2e/aceite-N.json`.
 A saída deve ser nova; consulte docs/testes/aceitacao-mvp.md.
@@ -14826,6 +14908,8 @@ Uma tarefa só está concluída quando:
 - testes relacionados foram executados e passaram;
 - o diff permanece compatível com o escopo;
 - contratos e documentação afetados foram atualizados;
+- a compatibilidade do iniciador foi avaliada e, quando afetada, ajustada
+  e verificada conforme o contrato de manutenção;
 - erros conhecidos, riscos e testes não executados foram informados.
 
 #### Relatório final do agente
@@ -14836,7 +14920,8 @@ Responda preferencialmente em até oito linhas, informando:
 - arquivos alterados;
 - testes executados e resultados;
 - pendências ou riscos;
-- próximo passo desbloqueado.
+- próximo passo desbloqueado;
+- situação do iniciador quando a implementação afetar a execução local.
 
 O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
 segurança, decisões arquiteturais ou testes não executados.
@@ -18770,6 +18855,55 @@ Logs ficam em backend/data/iniciador e a caixa de e-mail em backend/data; tudo
 fora do Git. Compartilhar logs somente após conferir se contêm dados privados.
 As [evidências de verificação](docs/testes/iniciador-local-20261120.md) distinguem
 testes funcionais do iniciador e a limitação da inspeção visual automática.
+
+#### Manutenção permanente entre implementações
+
+Por solicitação expressa do responsável em 2026-11-20, a operação com dois cliques
+é uma capacidade mantida durante a evolução do projeto. O agente responsável
+pela implementação deve avaliar e corrigir o iniciador quando a sua entrega o
+afetar, sem esperar outro pedido ou novo aceite funcional para esse ajuste.
+Não se trata de autoalteração do código durante a abertura do painel: a manutenção
+é executada e versionada pelo agente na própria entrega.
+
+1. Antes de editar, verificar se a etapa muda serviços necessários, dependências,
+   executáveis, comandos, pastas, variáveis, URLs/portas locais, proxy, healthchecks,
+   exclusividade do Qdrant ou a ordem de inicialização/encerramento. Considerar
+   somente capacidades aprovadas e efetivamente implementadas.
+2. Se houver impacto, ajustar minimamente os dois .cmd, scripts/academia_local.py
+   e suportes indispensáveis ao iniciador, iniciador.local.example.json,
+   tests/test_iniciador_local.py e os guias/fontes afetados. O contrato comum e
+   AGENTS.md autorizam esse escopo transversal mesmo nos cartões antigos que
+   não enumeram esses caminhos. Manter os dois nomes de entrada existentes.
+3. Preservar iniciador.local.json e .env do usuário. Quando uma chave nova for
+   necessária, adicionar somente o que falta, conservando valores já configurados
+   e seu backup apropriado. Nunca substituir configurações privadas pelo exemplo,
+   imprimir credenciais ou versionar dados locais. Alterações técnicas já delegadas
+   não exigem perguntar novamente escolhas já registradas.
+4. Para nova dependência/serviço, respeitar instalação, contrato, gate, escopo e
+   autorização da etapa. Quando a preparação do ambiente local estiver abrangida
+   pela tarefa, realizá-la separadamente com os cuidados pertinentes e deixar o
+   iniciador pronto. Migrations aprovadas continuam explícitas e reproduzíveis;
+   não introduzir instalação, reset, seed ou upgrade silencioso ao abrir o painel.
+   CompreFace/serviços externos e Docker só entram quando seus cartões permitirem.
+5. Preservar autenticação, loopback/isolamento, credenciais só no backend,
+   Mailpit sem relay e encerramento apenas de processos próprios. Abertura
+   repetida não duplica serviços; falha deve ser informada sem encerrar terceiros
+   ou apagar bancos, mensagens, corpus e uploads para aparentar funcionamento.
+6. Se alterar código/configuração/ciclo de execução do iniciador, rodar seus
+   testes focais e lint/tipos pertinentes. Quando mudar como o sistema sobe ou
+   é encerrado, verificar o ciclo real de abrir → prontidão das capacidades
+   afetadas → encerrar, preservando serviços que já estavam ligados. Não consumir
+   quota de LLM somente para testar o iniciador nem confundir healthcheck com
+   aceite funcional de um módulo novo. Resultados anteriores não são reexecução.
+7. Atualizar fontes, evidências e SPEC no mesmo commit da entrega; relatar
+   “iniciador atualizado”, “compatível sem alteração” ou “não afetado”, explicando
+   testes/limitações. Uma incompatibilidade conhecida não pode ficar oculta em
+   uma entrega declarada pronta. Bloqueios reais são registrados com o motivo.
+
+Mudanças apenas documentais ou sem efeito na execução local não precisam alterar
+o código do iniciador nem repetir o ciclo completo. O agente registra essa
+avaliação e faz as verificações correspondentes ao escopo. Autorizações funcionais
+não dispensam as permissões técnicas exigidas pelo ambiente de trabalho.
 ### 10. Exemplo de caminhos locais do iniciador
 
 Fonte versionada: [iniciador.local.example.json](iniciador.local.example.json).
@@ -18793,7 +18927,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
-| `AGENTS.md` | `7ad6b40b7a543af3fef9281dd1f70a9b9eec8f27165d46b022ded3645e6c42d1` |
+| `AGENTS.md` | `1932a601aae90fb4542150ddf0da25268341e4d393131fed28a726d9cb29867b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
@@ -18811,7 +18945,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
 | `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
-| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `3216530553832fee65d5e85050073e95d05a7bd98b532626e98ab7248ca0adda` |
+| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `4b774bc0b2629ff82a1f101660368900f3a0e8f5b7d2dbad31b188e8b8e581ef` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `8fed154fd5b1522a5f41b8b8919ef2dc44e210ad26ff946b6861af38f63632d7` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
@@ -18845,9 +18979,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
-| `docs/especificacao/roteiro-reconstrucao.md` | `3785defed29388fc4569b58bbc21a06e999d3beb77a7d8f688a27ecfcc9a013e` |
-| `docs/especificacao/visao-geral.md` | `0003aa9fdeba5099089dc42e0fd7c42175dd8067c5b0e4eb18e13ccd7e5a3154` |
-| `docs/instalacao/iniciar-com-dois-cliques.md` | `015cea210739d8d19b7be3aa436a98d5b57d2b0bc2bc6d929deaadeb0b6645e2` |
+| `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
+| `docs/especificacao/visao-geral.md` | `839424fc5cc2f4fe9f8f8e9088eae8b7552716731f80aab65375faa5f21b68a5` |
+| `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -18859,7 +18993,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `18e89e311f01544a28c82996629fff4106d17b0e235447ac031dfe9e5e5b4402` |
+| `docs/prompts/README.md` | `eb5ce9ae464532853cc61f1a915cc8dd7b2ba8f7476e60f3148d093516a9cc5f` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
@@ -18895,7 +19029,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/ai06-resumo.json` | `db11e31c9651991709836cfdbe9afd2a839fb7f20cd10d4d9d57c0b2a6e01b14` |
 | `docs/testes/avaliacao-ia.md` | `aadadadd52a6ec11595b6468b0549299901d274f384dcb3aed460c5d94bbfa4f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
-| `docs/testes/estrategia.md` | `15269ecb21cf8b2fb3c6e8f56434e4095a85e0fbe6b9fda4b5ba927278956c6c` |
+| `docs/testes/estrategia.md` | `7fb7b138c7b729e30fa0b9a2e0f8b117958160cbd7ec1abddab9ac1ff84c5f18` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/historico-chat-mvp-20261119.md` | `efa4a40fe2e6dce5254a3abd5d09f7e72fefe1ec416088088c1a587e3d4566b0` |
 | `docs/testes/iniciador-local-20261120.md` | `6fed6a3e6ea1cfbc30b2da181e118b326699ce915dc4d6e0cc75b632199fec61` |

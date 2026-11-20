@@ -459,3 +459,15 @@ relatório específico; marcos anteriores conservam suas evidências históricas
 [evidências](../testes/iniciador-local-20261120.md). Ferramenta de operação local,
 sem executar UX-01, módulos futuros, migrations automáticas ou Docker. O painel
 abre o MVP já preparado; a próxima etapa visual continua UX-01.
+
+### Compatibilidade permanente do iniciador — 2026-11-20
+
+Manter os iniciadores de dois cliques compatíveis passou a fazer parte de toda
+implementação que afete a execução local, por autorização expressa do responsável.
+AGENTS.md e o [contrato comum](00-contrato-operacional.md#escopo-transversal-compatibilidade-do-iniciador)
+incluem os ajustes estritamente necessários mesmo nos cartões antigos sem esses
+caminhos. O mestre/contexto e o SPEC incorporam a regra e o
+[procedimento](../instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+Não foi criado um cartão de reparo obrigatório nem alterada a ordem dos 70 cartões.
+Etapas sem impacto registram isso; manutenção documental não altera os executáveis
+ou repete testes da aplicação. O próximo cartão visual continua UX-01.

@@ -39,6 +39,8 @@ Leia, nesta ordem:
    matrícula, API facial real e catraca fictícia.
 10. [Manifesto](README.md), [estratégia de testes](../testes/estrategia.md)
    e [registro de comandos](../testes/comandos.md).
+11. [Iniciador e contrato de manutenção](../instalacao/iniciar-com-dois-cliques.md),
+    parte da especificação de operação local durante toda a evolução.
 
 Inspecione arquivos, estado Git e evidências para distinguir textos escritos de
 tarefas executadas. Existem 70 cartões operacionais redigidos; isso, por si só,
@@ -89,7 +91,7 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | IA | Orquestrador, RAG semântico e banco vetorial especializado | Dúvidas, triagem resumida e geração; provedor gratuito/livro/parâmetros em GATE-04 |
 | Serviços de IA | Portas para LLM e embeddings | Groq/GPT-OSS 120B + E5-small local; ADRs 004/006/012 |
 | E-mail | SMTP ou API por adapter | Execução local antes do Docker |
-| Execução local | Aplicação e dependências disponíveis sem Compose inicial | GATE-06 |
+| Execução local | Aplicação/dependências sem Compose inicial; início e encerramento com dois cliques mantidos por etapa | GATE-06; contrato do iniciador |
 | Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
 | Matrícula/financeiro | Atendente matricula sem pagamento obrigatório; financeiro tardio e independente | GATE-08/GATE-09 |
 | Biometria | CompreFace confirmado; versão, hospedagem, contrato e ensaio ainda pendentes | GATE-08 |
@@ -366,6 +368,25 @@ a navegação. Não mudar backend, dados, contratos ou prompts internos da IA pa
 facilitar o layout. Edição do próprio perfil e módulos ausentes exigem escopo
 funcional próprio; não desenhar ações falsas ou antecipar pagamento/biometria.
 
+## 11.2. Iniciador mantido durante a evolução
+
+O plano deve preservar Iniciar AcademIA.cmd, Encerrar AcademIA.cmd e o painel
+local como caminho diário de teste. Em cada etapa, avaliar impacto de serviços,
+dependências, comandos, pastas, configuração, portas/proxy e prontidão. Prever
+ajustes necessários no iniciador/testes/guias na própria entrega, sem criar um
+pedido obrigatório de reparo separado para o responsável.
+
+AGENTS.md e o contrato comum autorizam esse escopo transversal para os cartões
+de implementação, inclusive os que ainda não listam esses arquivos. Respeitar o
+[contrato de manutenção](../instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações),
+configuração privada, processos preexistentes e os gates dos novos serviços.
+Mudança de schema/preparo não se transforma em upgrade ou reset silencioso na
+abertura. Propor evidência proporcional do ciclo local quando ele for afetado.
+
+Este prompt continua somente de planejamento: não executar serviços ou alterar
+o iniciador ao apenas produzir/revisar o plano. Revisões puramente documentais
+ou etapas sem impacto registram isso sem alterar código desnecessariamente.
+
 ## 12. Fragmentação dos prompts operacionais
 
 Reutilize IDs estáveis e dependências do manifesto. Não refaça os cartões existentes nem
@@ -396,6 +417,7 @@ Planeje testes durante cada entrega, não apenas no encerramento:
 | RAG | Extração, chunking, filtros, fontes, relevância e latência |
 | IA | Triagem, restrições, abstenção, JSON, contexto e falhas |
 | E2E | Instalação/primeiro acesso, treino e chat antes do parecer, avaliação posterior e adaptações |
+| Operação local | Compatibilidade do iniciador por etapa; ciclo real ao mudar abertura/encerramento |
 | Infraestrutura | Build, rede, persistência e healthchecks na fase final |
 
 Inclua usuários distintos, instrutor não designado, duplicidade, concorrência,
@@ -437,7 +459,8 @@ Entregue um plano completo, com o detalhamento necessário para revisão:
 4. Arquitetura geral, dados e contratos de integração, com decisões classificadas.
 5. MVP demonstrável e fases posteriores, com roteiro do fluxo principal.
 6. Sequência/DAG de prompts e gates, reutilizando IDs existentes.
-7. Critérios de aceite, testes e evidências por etapa; detalhe mudanças aos cartões.
+7. Critérios de aceite, testes e evidências por etapa; detalhe mudanças aos
+   cartões e o impacto/manutenção do iniciador local quando pertinente.
 8. Análise do MER: evidência atual, mudança recomendada, prioridade, requisito
    atendido e decisão pendente, sem alterar o diagrama.
 9. Riscos, dependências externas e decisões que bloqueiam etapas específicas.

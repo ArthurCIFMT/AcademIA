@@ -83,3 +83,52 @@ Logs ficam em backend/data/iniciador e a caixa de e-mail em backend/data; tudo
 fora do Git. Compartilhar logs somente após conferir se contêm dados privados.
 As [evidências de verificação](../testes/iniciador-local-20261120.md) distinguem
 testes funcionais do iniciador e a limitação da inspeção visual automática.
+
+## Manutenção permanente entre implementações
+
+Por solicitação expressa do responsável em 2026-11-20, a operação com dois cliques
+é uma capacidade mantida durante a evolução do projeto. O agente responsável
+pela implementação deve avaliar e corrigir o iniciador quando a sua entrega o
+afetar, sem esperar outro pedido ou novo aceite funcional para esse ajuste.
+Não se trata de autoalteração do código durante a abertura do painel: a manutenção
+é executada e versionada pelo agente na própria entrega.
+
+1. Antes de editar, verificar se a etapa muda serviços necessários, dependências,
+   executáveis, comandos, pastas, variáveis, URLs/portas locais, proxy, healthchecks,
+   exclusividade do Qdrant ou a ordem de inicialização/encerramento. Considerar
+   somente capacidades aprovadas e efetivamente implementadas.
+2. Se houver impacto, ajustar minimamente os dois .cmd, scripts/academia_local.py
+   e suportes indispensáveis ao iniciador, iniciador.local.example.json,
+   tests/test_iniciador_local.py e os guias/fontes afetados. O contrato comum e
+   AGENTS.md autorizam esse escopo transversal mesmo nos cartões antigos que
+   não enumeram esses caminhos. Manter os dois nomes de entrada existentes.
+3. Preservar iniciador.local.json e .env do usuário. Quando uma chave nova for
+   necessária, adicionar somente o que falta, conservando valores já configurados
+   e seu backup apropriado. Nunca substituir configurações privadas pelo exemplo,
+   imprimir credenciais ou versionar dados locais. Alterações técnicas já delegadas
+   não exigem perguntar novamente escolhas já registradas.
+4. Para nova dependência/serviço, respeitar instalação, contrato, gate, escopo e
+   autorização da etapa. Quando a preparação do ambiente local estiver abrangida
+   pela tarefa, realizá-la separadamente com os cuidados pertinentes e deixar o
+   iniciador pronto. Migrations aprovadas continuam explícitas e reproduzíveis;
+   não introduzir instalação, reset, seed ou upgrade silencioso ao abrir o painel.
+   CompreFace/serviços externos e Docker só entram quando seus cartões permitirem.
+5. Preservar autenticação, loopback/isolamento, credenciais só no backend,
+   Mailpit sem relay e encerramento apenas de processos próprios. Abertura
+   repetida não duplica serviços; falha deve ser informada sem encerrar terceiros
+   ou apagar bancos, mensagens, corpus e uploads para aparentar funcionamento.
+6. Se alterar código/configuração/ciclo de execução do iniciador, rodar seus
+   testes focais e lint/tipos pertinentes. Quando mudar como o sistema sobe ou
+   é encerrado, verificar o ciclo real de abrir → prontidão das capacidades
+   afetadas → encerrar, preservando serviços que já estavam ligados. Não consumir
+   quota de LLM somente para testar o iniciador nem confundir healthcheck com
+   aceite funcional de um módulo novo. Resultados anteriores não são reexecução.
+7. Atualizar fontes, evidências e SPEC no mesmo commit da entrega; relatar
+   “iniciador atualizado”, “compatível sem alteração” ou “não afetado”, explicando
+   testes/limitações. Uma incompatibilidade conhecida não pode ficar oculta em
+   uma entrega declarada pronta. Bloqueios reais são registrados com o motivo.
+
+Mudanças apenas documentais ou sem efeito na execução local não precisam alterar
+o código do iniciador nem repetir o ciclo completo. O agente registra essa
+avaliação e faz as verificações correspondentes ao escopo. Autorizações funcionais
+não dispensam as permissões técnicas exigidas pelo ambiente de trabalho.

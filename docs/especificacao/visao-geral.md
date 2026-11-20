@@ -110,6 +110,10 @@ Execução local e containerização tardia seguem
 O [iniciador Windows](../../docs/instalacao/iniciar-com-dois-cliques.md) permite
 abrir/encerrar o ambiente local preparado com dois cliques, preservando os
 comandos de configuração inicial e sem alterar dados, contratos ou modelos.
+Por autorização permanente, cada implementação avalia e mantém sua
+compatibilidade na própria entrega, sem novo pedido de reparo. AGENTS.md,
+o contrato comum dos cartões e o guia do iniciador definem esse escopo
+transversal, os testes e a preservação de configuração/processos existentes.
 
 ## 5. Capacidades e estágio da implementação
 
@@ -314,7 +318,10 @@ Ao receber uma mudança aprovada:
    e distinga proposta de decisão aceita. ADR novo/substituto é usado quando pertinente.
 3. Ajuste modelo, contratos e plano/cartões afetados; migration nova acompanha
    mudança física de schema e migrations já aplicadas permanecem preservadas.
-4. Implemente e teste no escopo autorizado. Caso código e especificação divirjam,
+4. Implemente e teste no escopo autorizado, incluindo manutenção necessária
+   do iniciador quando a mudança afetar a operação local. Registrar a
+   avaliação sem exigir alteração artificial em etapas sem impacto.
+   Caso código e especificação divirjam,
    corrija a divergência ou registre a pendência, sem declarar conclusão artificial.
 5. Atualize este mapa/resumo quando mudar seu conteúdo, a rastreabilidade,
    as evidências e o manifesto. Registre a revisão no Git.

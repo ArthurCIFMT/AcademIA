@@ -108,3 +108,18 @@ devem aplicar o mesmo padrão com evidência própria antes da validação final
 Não confundir representação gráfica, implementação e aprovação: reportar quais
 foram feitas, com fixtures sintéticas, resultados e limitações. Nenhuma mudança
 de MER, banco, políticas clínicas ou fornecedor de IA é exigida pelo redesenho.
+
+## Operação local reproduzível durante a evolução
+
+Reproduzir também o início/encerramento local com dois cliques descrito no
+[guia do iniciador](../instalacao/iniciar-com-dois-cliques.md). No Windows,
+Iniciar AcademIA.cmd e Encerrar AcademIA.cmd são as entradas públicas; caminhos
+privados ficam fora do Git e o setup inicial continua explícito.
+
+Manter a compatibilidade desse caminho em cada implementação que afetar a
+execução. AGENTS.md e o contrato comum autorizam os ajustes estritamente
+necessários ao iniciador, configurações de exemplo, testes e documentação,
+sem exigir novo pedido do responsável. Não antecipar serviços de cartões
+futuros nem colocar reset/migration/seed silencioso no ato de abrir o sistema.
+Alteração do ciclo exige sua verificação; documentação ou etapa sem impacto
+registra essa situação sem reexecutar serviços/LLM desnecessariamente.

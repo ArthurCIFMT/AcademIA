@@ -120,7 +120,8 @@ necessária para sua entrega.
 - Leia a visão geral/invariantes de `SPEC.md`, os capítulos/fontes afetados
   e o prompt operacional completo antes de
   alterar arquivos. Em manutenção documental, siga o escopo solicitado.
-- Não altere arquivos fora do escopo do prompt.
+- Não altere arquivos fora do escopo do prompt, exceto a manutenção
+  transversal do iniciador expressamente autorizada na seção abaixo.
 - Preserve mudanças preexistentes que não pertençam à tarefa.
 - Prefira mudanças pequenas, testáveis e reversíveis.
 - Não adicione dependências sem justificar a necessidade.
@@ -134,6 +135,34 @@ necessária para sua entrega.
   Recompile `SPEC.md` por `python scripts/gerar_spec.py --write` e verifique por
   `python scripts/gerar_spec.py --check`; fontes e cópia acompanham o mesmo commit.
   Não edite manualmente o arquivo gerado nem mantenha cópias independentes.
+
+## Manutenção permanente do iniciador local
+
+- Por autorização expressa do responsável em 2026-11-20, manter o início e o
+  encerramento com dois cliques faz parte das implementações futuras. Avalie
+  o impacto de cada entrega e ajuste o iniciador quando necessário, sem pedir
+  novamente autorização funcional apenas para essa compatibilidade.
+- A manutenção estritamente necessária de `Iniciar AcademIA.cmd`,
+  `Encerrar AcademIA.cmd`, `scripts/academia_local.py`, seu exemplo de configuração,
+  testes e documentação integra o escopo transversal dos cartões de implementação,
+  mesmo se a lista de caminhos de um cartão antigo não os mencionar. Isso não
+  autoriza antecipar módulos, mudar arquitetura ou contrariar restrição expressa
+  da solicitação vigente.
+- Siga o [contrato de manutenção do iniciador](docs/instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+  Mudanças de serviços, dependências, comandos, pastas, ambiente, portas, proxy,
+  healthchecks ou encerramento precisam manter a operação local compatível.
+- Preserve os dois arquivos públicos, dados existentes, configuração privada e
+  processos preexistentes. Não substitua o ambiente do usuário nem coloque
+  segredos no Git/linha de comando. Novos serviços seguem seus gates e ADRs;
+  abrir o sistema não instala recursos nem aplica migrations/seeds implicitamente.
+- Quando a entrega incluir manutenção do ambiente local já autorizada, execute-a
+  separadamente e deixe o iniciador utilizável. Não transfira ao usuário ajustes
+  técnicos já compreendidos na tarefa. Registre bloqueio concreto e testes não
+  executados se não for possível concluir essa parte; permissões do ambiente
+  continuam aplicáveis.
+- Execute testes proporcionais ao impacto e registre no relatório se o iniciador
+  foi atualizado, permaneceu compatível sem alteração ou não foi afetado.
+  Revisão exclusivamente documental não exige ligar o sistema nem repetir LLM.
 
 ## Banco de dados
 
@@ -260,6 +289,12 @@ Backend, a partir de `backend/` com uv e Python 3.12:
   `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py`.
   Sem a flag, o ensaio real é skipped; ver `docs/testes/comandos.md`.
 
+Iniciador Windows, a partir da raiz com o ambiente do backend já instalado:
+`backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml tests/test_iniciador_local.py -o addopts=''`.
+Lint/formato, tipos e ensaio real do ciclo seguem os comandos e limites de
+`docs/testes/iniciador-local-20261120.md`. Executar quando a manutenção afetar
+seu código/configuração/ciclo; não repetir por revisão somente documental.
+
 Consolidação do MVP, em backend/, sem chamadas externas:
 `uv run --locked python -m tests.acceptance.consolidation --output ./data/e2e/aceite-N.json`.
 A saída deve ser nova; consulte docs/testes/aceitacao-mvp.md.
@@ -288,6 +323,8 @@ Uma tarefa só está concluída quando:
 - testes relacionados foram executados e passaram;
 - o diff permanece compatível com o escopo;
 - contratos e documentação afetados foram atualizados;
+- a compatibilidade do iniciador foi avaliada e, quando afetada, ajustada
+  e verificada conforme o contrato de manutenção;
 - erros conhecidos, riscos e testes não executados foram informados.
 
 ## Relatório final do agente
@@ -298,7 +335,8 @@ Responda preferencialmente em até oito linhas, informando:
 - arquivos alterados;
 - testes executados e resultados;
 - pendências ou riscos;
-- próximo passo desbloqueado.
+- próximo passo desbloqueado;
+- situação do iniciador quando a implementação afetar a execução local.
 
 O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
 segurança, decisões arquiteturais ou testes não executados.

@@ -103,7 +103,9 @@ permanecem; parecer do instrutor é funcionalidade posterior, sem bloquear consu
 1. Confirme objetivo, dependências, arquivos permitidos e itens fora de escopo.
 2. Faça inspeções somente leitura antes de editar.
 3. Implemente a menor mudança que satisfaça todos os critérios.
-4. Adicione ou ajuste testes proporcionais ao risco.
+4. Avalie a compatibilidade do iniciador local e faça os ajustes transversais
+   necessários conforme AGENTS.md/contrato comum, sem aguardar novo pedido.
+   Adicione ou ajuste testes proporcionais ao risco.
 5. Execute os comandos do prompt; não declare testes que não executou.
 6. Revise o diff e a rastreabilidade.
 7. Faça somente a operação Git explicitamente autorizada.
@@ -115,7 +117,9 @@ A entrega só está pronta quando:
 
 - todos os critérios do prompt foram observados;
 - os testes obrigatórios passaram;
-- o diff está dentro do escopo;
+- o diff está dentro do escopo, incluindo manutenção necessária do iniciador;
+- a operação local afetada foi ajustada e verificada, ou seu impedimento
+  concreto foi registrado sem declarar essa parte concluída;
 - contratos, migrations e documentação afetados estão coerentes;
 - nenhuma decisão aberta foi disfarçada como implementação;
 - arquivos locais e repositório remoto estão sincronizados quando autorizado.

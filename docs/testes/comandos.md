@@ -1474,3 +1474,13 @@ PostgreSQL/Mailpit/API/Vite e comando de encerramento do painel aprovados,
 sem chamadas LLM nem alterações de schema/dados. Limitação da inspeção visual
 automática e falhas intermediárias registradas no relatório, sem alegar novos
 aceites globais do MVP. Configuração de ferramentas privada fora do Git.
+
+## Política permanente do iniciador — 2026-11-20
+
+Atualização documental de AGENTS.md, mestre, contexto/contrato comum, guia e
+fontes do SPEC: manutenção necessária do iniciador integra as implementações
+que afetarem a operação local. DOC/SPEC e git diff --check são as verificações
+desta revisão. Não houve alteração dos .cmd, script, testes ou configuração
+privada; os 14 unitários e ciclos reais anteriores não foram reexecutados.
+Novas execuções seguem os [comandos focais](iniciador-local-20261120.md#reprodução-dos-testes-focais)
+quando o iniciador/ciclo for efetivamente afetado.

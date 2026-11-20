@@ -155,3 +155,19 @@ com inspeção no navegador, contraste, teclado, ampliação, viewports e captur
 sintéticas antes/depois. Testes verdes não bastam para declarar boa aparência;
 mockups e inspeção visual também não substituem os testes de autorização/fluxo.
 Critérios e evidências de cada capacidade nova devem acompanhar sua implementação.
+
+## Compatibilidade contínua do iniciador local
+
+Em toda implementação, avaliar o efeito no [iniciador Windows](../instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+Quando afetado, ajustar e testar na mesma entrega, conforme a autorização
+transversal de AGENTS.md/contrato comum. Mudanças de código/configuração do
+iniciador usam os testes focais em tests/test_iniciador_local.py e lint/tipos;
+mudanças no ciclo de operação exigem ensaio real proporcional de abrir, esperar
+prontidão das capacidades afetadas e encerrar preservando serviços anteriores.
+
+Não confundir processo iniciado/healthcheck com teste de regra de negócio ou
+qualificação do provedor de IA. Não consumir quota apenas para validar o painel.
+Registrar resultado e limitações atuais; código/documentação não afetados não
+exigem repetição integral da regressão ou alteração artificial no iniciador.
+Na revisão documental desta política, executar DOC/SPEC e diff; os 14 testes e
+ensaios anteriores continuam históricos, sem nova execução alegada.

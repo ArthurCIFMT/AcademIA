@@ -14,7 +14,8 @@ executada. Estado inicial dos cartões futuros: BLOQUEADO até suas dependência
 
 ## Escopo e entregáveis
 
-Altere apenas os caminhos indicados pelo cartão. Em cada capacidade de domínio,
+Altere os caminhos indicados pelo cartão e, quando necessário, os do escopo
+transversal do iniciador autorizado abaixo. Em cada capacidade de domínio,
 entregue migration pertinente, contratos REST/JSON, serviço de aplicação, testes e
 documentação. Inclua a tela quando indicada; API pronta não comprova tela pronta.
 Use as convenções e caminhos definidos no scaffold/ADRs; registre ajuste equivalente
@@ -25,6 +26,19 @@ docs/testes/ e no manifesto. Lockfiles, configuração e dependências podem mud
 somente se essenciais à entrega e com justificativa. Não antecipe outro módulo.
 Quando o cartão configurar ou ampliar comandos de teste, é permitida a atualização
 restrita da seção Comandos de AGENTS.md; isso não autoriza mudar outras regras.
+
+## Escopo transversal: compatibilidade do iniciador
+
+Toda implementação avalia a compatibilidade de Iniciar AcademIA.cmd e
+Encerrar AcademIA.cmd com a entrega. Quando afetados, sua manutenção, script,
+configuração de exemplo, testes e fontes diretamente relacionadas estão incluídos
+na tarefa por autorização permanente em AGENTS.md, mesmo sem listagem no cartão.
+Não aguardar outro pedido para corrigir um comando ou serviço que a etapa tornou
+incompatível. Aplicar o [contrato completo](../instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+
+A exceção é restrita à operação local necessária: não amplia o escopo de domínio,
+instala serviços futuros, substitui configuração privada ou altera gates/ADRs.
+Cartões exclusivamente documentais não exigem mudar código ou iniciar serviços.
 
 ## Critérios e testes
 
@@ -75,4 +89,6 @@ genérica para merge, force-push ou apagar trabalho alheio. Use commit coeso por
 entrega e confirme a sincronização local/remota quando autorizada.
 Registre ID, arquivos, comandos reais, resultados, pendências e commit/evidência
 no manifesto. Não marque CONCLUIDO quando um critério obrigatório não foi testado.
-O relatório final segue AGENTS.md.
+O relatório final segue AGENTS.md e registra a avaliação do iniciador quando
+a implementação impactar a execução local. Testes do ciclo de abertura e
+encerramento acompanham mudanças desse ciclo; falhas não são omitidas.

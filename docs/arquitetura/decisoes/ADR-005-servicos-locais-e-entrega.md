@@ -38,3 +38,12 @@ Não antecipa Docker, muda a arquitetura ou aplica migrations/seeds. Inicia
 serviços de forma controlada, espera healthchecks e encerra apenas o que criou;
 PostgreSQL já ligado é preservado. Chaves ficam no backend e o Mailpit não herda
 relay externo. As verificações atuais estão no [relatório](../../testes/iniciador-local-20261120.md).
+
+## Manutenção incremental autorizada — 2026-11-20
+
+O responsável autorizou manter o iniciador compatível em cada implementação
+que altere a operação local, sem precisar solicitar um reparo separado. Esse
+ajuste integra a entrega operacional segundo AGENTS.md/contrato comum e o
+[procedimento permanente](../../instalacao/iniciar-com-dois-cliques.md#manutenção-permanente-entre-implementações).
+Isso mantém o ciclo de dois cliques, sem antecipar Docker/serviços futuros,
+substituir configurações privadas ou executar preparação de dados implicitamente.
