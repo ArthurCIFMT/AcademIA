@@ -260,6 +260,24 @@
           }
         ],
         "title": "Versao Publicada Id"
+      },
+      "versao_contexto_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Contexto Id"
+      },
+      "contexto_anterior": {
+        "default": false,
+        "title": "Contexto Anterior",
+        "type": "boolean"
       }
     },
     "required": [

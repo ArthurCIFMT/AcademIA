@@ -84,6 +84,7 @@ export function TrainingChatPage({csrf}:{csrf:string}) {
   <button type="button" onClick={()=>{setError("");setSendError("");setRefresh(v=>v+1);}}>Consultar estado e histórico</button>
   {(sendError||error)&&<p role="alert">{sendError||error}</p>}
   <ol aria-label="Histórico do assistente">{shown.map(turn=><li key={turn.solicitacao_id}>
+   {turn.contexto_anterior&&<p>Conversa anterior à ficha atual. Ela permanece no histórico e não é reenviada automaticamente à IA.</p>}
    <p><strong>Você:</strong> {turn.pergunta}</p><p role="status">{states[turn.estado]??"Consulte o estado salvo"}</p>
    {turn.resposta&&<p className="chat-text">{turn.resposta.texto}</p>}
    <ul>{turn.fontes.map(source=><li key={source.fragmento_id}>{safeLink(source.origem_url)?<a href={safeLink(source.origem_url)} target="_blank" rel="noopener noreferrer">{source.titulo}</a>:source.titulo}<span>{source.pagina!==null?" · Página "+source.pagina:source.linha_inicio!==null?" · Linhas "+source.linha_inicio+"–"+source.linha_fim:""}</span></li>)}</ul>

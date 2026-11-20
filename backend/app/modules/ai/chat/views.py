@@ -25,18 +25,24 @@ class ChatView(StrictModel):
     resposta: ChatAnswer | None
     fontes: list[Source]
     versao_publicada_id: UUID | None
+    versao_contexto_id: UUID | None = None
+    contexto_anterior: bool = False
 
 
 def present(
-    session: Session, message: Message, receipt: RunResult | None, current: UUID | None
+    session: Session,
+    message: Message,
+    receipt: RunResult | None,
+    current: UUID | None,
+    *,
+    retained: bool,
 ) -> ChatView:
     if message.criada_em < utc_now() - timedelta(days=90):
         raise ExecutionConflict()
     answer = receipt.resposta if receipt else None
-    stale = (
-        message.pedido["finalidade"] == "DUVIDA"
-        and message.versao_contexto_id != current
-    )
+    # Trocar a ficha não apaga uma conversa. Expurgo e revogação continuam
+    # impedindo reapresentar respostas cujo suporte deixou de estar disponível.
+    stale = not retained
     sources = []
     if answer:
         for record in session.scalars(
@@ -80,4 +86,6 @@ def present(
         resposta=answer,
         fontes=sources,
         versao_publicada_id=receipt.versao_publicada_id if receipt else None,
+        versao_contexto_id=message.versao_contexto_id,
+        contexto_anterior=message.versao_contexto_id != current,
     )

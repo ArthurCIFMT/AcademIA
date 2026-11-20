@@ -309,12 +309,18 @@ def test_retention_old_chat_not_reintroduced_and_failure_budget(
     service.ask(actor, req)
     assert service.history(actor, 1)
     generator.generate(actor, actor.user_id, request())
-    assert service.history(actor, 1) == []
+    previous = service.history(actor, 1)
+    assert len(previous) == 1 and previous[0].resposta
+    assert previous[0].contexto_anterior and previous[0].versao_contexto_id is None
+    before_reads = len(model.calls)
+    assert service.turn(actor, req.solicitacao_id).resposta
+    assert len(model.calls) == before_reads
     with pytest.raises(ExecutionConflict):
         service.ask(actor, req)
     model.error = ProviderError("QUOTA_EXCEDIDA")
     failed = request("DUVIDA")
     assert service.ask(actor, failed).estado == "FALHA"
+    assert model.calls[-1][1]["historico"] == []
     before = len(model.calls)
     replay = service.ask(actor, failed)
     assert replay.estado == "FALHA" and len(model.calls) == before

@@ -114,6 +114,10 @@
         {
           "arquivo": "docs/arquitetura/modelo-de-dados/invariantes-e-estados.md",
           "titulo": "Constraints, transações e estados"
+        },
+        {
+          "arquivo": "docs/analises/2026-11-19-tamanho-modelagem.md",
+          "titulo": "Avaliação do tamanho conceitual, lógico e físico após o MVP"
         }
       ]
     },
@@ -563,6 +567,10 @@
         {
           "arquivo": "docs/testes/reformulacao-visual.md",
           "titulo": "Plano de validação visual e usabilidade"
+        },
+        {
+          "arquivo": "docs/testes/historico-chat-mvp-20261119.md",
+          "titulo": "Correção do histórico e regressão completa de unitários/integração do MVP"
         }
       ]
     },

@@ -1,7 +1,7 @@
 from datetime import timedelta
 from uuid import UUID
 
-from sqlalchemy import delete, or_, select, text
+from sqlalchemy import delete, select, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.ai.adapters.health_config import ConfiguredContext
@@ -206,27 +206,22 @@ class ChatService:
         receipt = PostgresState(self.sessions).lookup(actor, actor.user_id, request)
         with self.sessions.begin() as session:
             current = current_generation_base(session, actor, actor.user_id)
-            return present(session, message, receipt, current)
+            retained = True
+            if message.versao_contexto_id is not None:
+                original = published_workout(
+                    session, actor, actor.user_id, message.versao_contexto_id
+                )
+                retained = bool(original and not original.ficha.conteudo_excluido_em)
+            return present(session, message, receipt, current, retained=retained)
 
     def history(self, actor: Actor, page: int) -> list[ChatView]:
         self.generator.authorize(actor, actor.user_id)
         with self.sessions.begin() as session:
-            current = current_generation_base(session, actor, actor.user_id)
             rows = list(
                 session.scalars(
                     select(Message.solicitacao_id)
                     .where(
                         Message.conversa_id == actor.user_id,
-                        or_(
-                            Message.versao_contexto_id == current,
-                            Message.id.in_(
-                                select(Execution.id).where(
-                                    Execution.versao_publicada_id == current
-                                )
-                            )
-                            if current
-                            else Message.versao_contexto_id.is_(None),
-                        ),
                         Message.criada_em >= utc_now() - timedelta(days=90),
                     )
                     .order_by(Message.criada_em.desc(), Message.id)

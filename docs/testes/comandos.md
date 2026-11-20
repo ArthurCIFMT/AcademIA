@@ -1435,3 +1435,18 @@ Os cartões definem testes FE, lint/tipos/build e navegador por etapa, reaprovei
 os comandos existentes. Não declarar novas capturas, seletores ou cenários como
 executados nesta manutenção documental. A próxima etapa visual é UX-01; testes
 da aplicação serão executados quando uma entrega alterar interface/interação.
+
+
+## Histórico do chat e regressão completa do MVP — 2026-11-19
+
+[Correção, comandos e limites](historico-chat-mvp-20261119.md),
+[recibo estruturado](historico-chat-mvp-20261119.json) e
+[avaliação da modelagem](../analises/2026-11-19-tamanho-modelagem.md).
+Backend completo: 354 unitários/contratos e 179 integração/banco aprovados;
+3 opt-in de LLM real ignorados. Frontend completo: 94 aprovados/20 arquivos.
+Ruff/formato, mypy 236 fontes e lint/tipos/build frontend aprovados.
+PostgreSQL/Qdrant/E5/Mailpit reais, dados sintéticos e LLM controlado.
+Histórico sobrevive à nova ficha; contexto enviado à IA continua curto e atual.
+Sem migration, quota LLM, navegação E2E nova ou requalificação AI-06/TST-01.
+Falhas intermediárias de setup/expectativa antiga estão registradas no guia,
+sem somar reexecuções como novos casos nem substituir relatórios históricos.

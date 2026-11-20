@@ -435,3 +435,9 @@ não foi incluída. Resultados históricos não são usados como ensaio da vers�
 Apenas documentos/prompt mestre/rastreabilidade/SPEC foram atualizados; frontend,
 backend e dados não mudaram. Próximo recomendado desta trilha: UX-01. A entrega
 final considera UX-09 em PG-02; isso não reabre o PG-01 funcional histórico.
+
+2026-11-19: correção do histórico do chat após nova ficha, com CA-18.9/CA-18.10,
+DTO aditivo e identificação de contexto anterior. A janela enviada ao LLM continua
+limitada e expurgo/revogação preservados. [Regressão do MVP](../testes/historico-chat-mvp-20261119.md)
+e [avaliação da modelagem](../analises/2026-11-19-tamanho-modelagem.md).
+Nenhum cartão UX foi executado, modelo/corpus trocado ou schema migrado.

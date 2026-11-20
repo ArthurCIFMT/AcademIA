@@ -6,6 +6,19 @@ import type { Turn } from "./api";
 const id="11111111-1111-4111-8111-111111111111";
 const turn:Turn={solicitacao_id:id,pergunta:"Dúvida sintética",criada_em:"2026-11-11T12:00:00Z",finalidade:"DUVIDA",estado:"RESPOSTA_PRONTA",motivo:"OK",resposta:{idioma:"pt-BR",tipo:"INFORMACAO",texto:"<script>alert(1)</script> [clique](javascript:alert(1))",evidencias_ids:["fragment"]},fontes:[{fragmento_id:"fragment",documento_versao_id:"doc",titulo:"Fonte sintética",origem_url:"https://example.test/fonte",idioma:"pt-BR",pagina:3,linha_inicio:null,linha_fim:null,secao:null}],versao_publicada_id:null};
 afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
+
+test("histórico anterior continua legível após atualização e não dispara geração",async()=>{
+ let updated=false;
+ const older={...turn,contexto_anterior:true,versao_contexto_id:null};
+ const current={...turn,solicitacao_id:"22222222-2222-4222-8222-222222222222",pergunta:"Dúvida da ficha atual",resposta:{...turn.resposta!,texto:"Resposta da ficha atual"},contexto_anterior:false,versao_contexto_id:"ficha-atual"};
+ const fetcher=mount(async()=>Response.json(updated?[older,current]:[older]));
+ expect(await screen.findByText(turn.resposta!.texto)).toBeTruthy();
+ expect(screen.getByText(/Conversa anterior à ficha atual/)).toBeTruthy();
+ updated=true;click("Consultar estado e histórico");
+ expect(await screen.findByText("Resposta da ficha atual")).toBeTruthy();
+ expect(screen.getByText(turn.resposta!.texto)).toBeTruthy();
+ expect(fetcher.mock.calls.every(([,options])=>options.method!=="POST")).toBe(true);
+});
 function mount(handler:(url:string,options:RequestInit)=>Promise<Response>, query="") {
  const fetcher=vi.fn(handler);vi.stubGlobal("fetch",fetcher);vi.spyOn(crypto,"randomUUID").mockReturnValue(id);
  render(<MemoryRouter initialEntries={["/area/cliente/assistente"+query]}><TrainingChatPage csrf="csrf-test"/></MemoryRouter>);

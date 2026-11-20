@@ -78,6 +78,9 @@ Dúvidas que não afetem o trabalho independente não interrompem outras capacid
 
 O MER original preserva a origem do projeto. O modelo lógico descreve também
 partes futuras; as [migrations](database/README.md) indicam o schema físico entregue.
+A [avaliação de tamanho](docs/analises/2026-11-19-tamanho-modelagem.md)
+distingue 18 entidades originais, 43 tabelas planejadas e 32 tabelas do MVP;
+as simplificações identificadas são propostas, sem alteração de schema nesta revisão.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](docs/arquitetura/rag-semantico.md).
@@ -128,6 +131,10 @@ ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálo
 Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
 exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
 O catálogo de demonstração não prepara nem substitui o corpus do RAG.
+A [correção do histórico de chat](docs/testes/historico-chat-mvp-20261119.md)
+preserva conversas de fichas anteriores na consulta paginada, sem enviá-las
+automaticamente ao LLM no contexto da ficha nova. Retenção e revogação continuam
+protegendo conteúdo expirado e fontes indisponíveis.
 O [preparo local do RAG](docs/instalacao/preparar-rag-local.md), concluído
 em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
 documentos. A gestão do corpus é técnica, desativada na rotina administrativa;
@@ -644,6 +651,13 @@ com fontes recuperadas e contexto curto, distinguindo conversa de geração de f
 - CA-18.7: chat tem no máximo uma chamada generativa, contexto/saída limitados;
   benchmark registra tempo total e busca separadamente.
 - CA-18.8: Instrução inserida na pergunta ou no documento não altera permissões, remove bloqueio de triagem nem concede escrita direta ao modelo; tentativa de acessar conversa de outro cliente é recusada.
+
+- CA-18.9: publicar uma ficha nova não remove as dúvidas anteriores da consulta do
+  próprio cliente; histórico paginado conserva os últimos 90 dias e identifica
+  mensagens de contexto anterior, sem misturar clientes.
+- CA-18.10: consultar histórico não chama o LLM; a janela enviada ao modelo continua
+  limitada ao contexto vigente. Respostas apoiadas em conteúdo expurgado ou fontes
+  revogadas não são restauradas pela consulta histórica.
 
 ##### RF-19 — Propor alteração dinâmica de treino via IA
 
@@ -1195,7 +1209,7 @@ Seleção não comprova indexação nem qualidade real.
 | MRF11 | Evidências e fundamentação | MOD-05; MOD-06; MOD-12 | Cliente; instrutor; curador | Vincular respostas, análise e geração às fontes efetivamente usadas. | **CA-MRF11.1:** Referência identifica documento/versão, página/seção e trecho recuperado, sem URL/citação inventada.<br>**CA-MRF11.2:** Literatura/livro fornece conhecimento; catálogo fornece IDs e inventário; nenhum substitui o outro.<br>**CA-MRF11.3:** Fonte estrangeira é explicada em português preservando sentido, unidades e negações; tradução não aprova automaticamente corpus.<br>**CA-MRF11.4:** Livro/material inicial depende de seleção técnica do responsável/curador, mantendo origem/licença registrada, sem workflow jurídico externo obrigatório; não presumir cobertura para toda condição. |
 | MRF12 | Isolamento e proteção do contexto | MOD-01; MOD-03; MOD-04; MOD-05; MOD-06 | Cliente; instrutor autorizado | Aplicar autorização, minimização e resistência a instruções indevidas. | **CA-MRF12.1:** Backend resolve cliente e designação; trocar IDs não muda escopo autorizado.<br>**CA-MRF12.2:** Histórico, resumo, fichas e cache de A nunca entram no contexto de B; dados privados não são indexados como literatura compartilhada.<br>**CA-MRF12.3:** PDF/mensagem é dado, não instrução para mudar permissões; modelo não executa SQL, navegação livre ou escrita direta no domínio.<br>**CA-MRF12.4:** Conteúdo excluído por retenção/rejeição não volta ao contexto ativo por cache/exportação; conversa histórica não restaura ficha excluída. |
 | MRF13 | Avaliação de qualidade e tempo | MOD-00; MOD-05; MOD-06; MOD-04; MOD-10 | Equipe técnica; instrutor/curador avaliador | Testar dúvidas, resumos, triagem, geração e falhas no provedor real. | **CA-MRF13.1:** Casos rotulados cobrem elegível, grave, incompleto, contraditório, fonte ausente, recurso ausente, PT/EN, injeção, falha e clientes distintos.<br>**CA-MRF13.2:** Avaliar se resumo preserva alertas, recuperação é pertinente, resposta tem suporte e ficha respeita restrições; critérios/limiares aceitos antes do ensaio.<br>**CA-MRF13.3:** Medir p50/p95 total por rota, busca separada, chamadas e tokens no mesmo ambiente/configuração; não prometer velocidade de LLM gratuito sem benchmark.<br>**CA-MRF13.4:** Bloqueios críticos do conjunto impedem publicação; JSON válido não basta; doubles não comprovam integração/modelo real.<br>**CA-MRF13.5:** Testar retenção/rejeições/concorrência; revisar os 32 casos documentais antes de reutilizá-los como aceite. |
-| MRF14 | Chat e adaptação controlada | MOD-06; MOD-04; MOD-03 | Cliente; instrutor designado | Responder dúvidas com contexto curto; pedido explícito de adaptação segue fluxo de ficha. | **CA-MRF14.1:** Dúvida geral funciona sem ficha/onboarding; carregar somente pergunta, janela recente limitada e trechos pertinentes.<br>**CA-MRF14.2:** Chat informativo não publica mudança silenciosa; adaptação exige solicitação explícita, snapshot, nova triagem, evidência e validações de geração.<br>**CA-MRF14.3:** Nova versão preserva partes não relacionadas e inicia parecer PENDENTE; falha/abstenção mantém vigente.<br>**CA-MRF14.4:** Dados de saúde recém-relatados que afetem elegibilidade exigem confirmação/atualização versionada antes de gerar; não são incorporados silenciosamente no cadastro.<br>**CA-MRF14.5:** Erros são controlados e mensagens isoladas; conversa completa/anamnese inteira não são reenviadas a cada resposta. |
+| MRF14 | Chat e adaptação controlada | MOD-06; MOD-04; MOD-03 | Cliente; instrutor designado | Responder dúvidas com contexto curto; pedido explícito de adaptação segue fluxo de ficha. | **CA-MRF14.1:** Dúvida geral funciona sem ficha/onboarding; carregar somente pergunta, janela recente limitada e trechos pertinentes.<br>**CA-MRF14.2:** Chat informativo não publica mudança silenciosa; adaptação exige solicitação explícita, snapshot, nova triagem, evidência e validações de geração.<br>**CA-MRF14.3:** Nova versão preserva partes não relacionadas e inicia parecer PENDENTE; falha/abstenção mantém vigente.<br>**CA-MRF14.4:** Dados de saúde recém-relatados que afetem elegibilidade exigem confirmação/atualização versionada antes de gerar; não são incorporados silenciosamente no cadastro.<br>**CA-MRF14.5:** Erros são controlados e mensagens isoladas; conversa completa/anamnese inteira não são reenviadas a cada resposta. O histórico consultável permanece após nova ficha, com contexto anterior identificado; isso não amplia a janela enviada ao modelo nem restaura suporte expurgado/revogado. |
 | MRF15 | Provedores, operação e retenção | MOD-00; MOD-05; MOD-06; MOD-12 | Equipe técnica; provedores LLM/embeddings | Usar adaptadores substituíveis e configuração compatível com modelo gratuito escolhido. | **CA-MRF15.1:** LLM e embeddings têm portas/configuração; opção gratuita é prioridade, mas modelo, limites de uso, contexto e execução local/API exigem ADR e ensaio.<br>**CA-MRF15.2:** Segredos vêm de ambiente; logs não copiam anamnese/biometria nem raciocínio interno.<br>**CA-MRF15.3:** Timeout/quota/indisponibilidade têm estados claros e orçamento de tentativas; nenhuma falha da IA impede ficha manual.<br>**CA-MRF15.4:** Retenção de mensagens/execuções/evidências é definida separadamente das 15 fichas; execução local antecede Docker. |
 
 #### Contratos e execução
@@ -3183,6 +3197,122 @@ referência, eventos, decisões e presença. ASSINATURA → matrícula.
 PLANO/COBRANCA/PAGAMENTO e AULA → capacidades posteriores correspondentes.
 Corpus, metadados e eventos duráveis completam as lacunas documentadas.
 PNG original é origem histórica, não foi regravado.
+### 4. Avaliação do tamanho conceitual, lógico e físico após o MVP
+
+Fonte versionada: [docs/analises/2026-11-19-tamanho-modelagem.md](docs/analises/2026-11-19-tamanho-modelagem.md).
+
+Data: 2026-11-19. Escopo: avaliar o MER original, o modelo lógico completo e
+o banco do MVP. Nenhum schema, migration, DBML, JSON lógico ou imagem do MER
+foi alterado nesta avaliação. Otimizações abaixo são propostas, não implementações.
+
+#### Conclusão
+
+O MVP tem complexidade moderada e justificável para os requisitos aprovados.
+Não há evidência de que seja necessário reduzir radicalmente o banco ou fundir
+entidades de domínio. Há redundâncias pontuais de armazenamento/constraints
+que podem ser simplificadas em uma entrega própria; elas merecem mais atenção
+do que simplesmente tentar reduzir a quantidade de tabelas.
+
+Para um sistema apenas de cadastro e treino manual, a estrutura seria grande.
+O escopo solicitado inclui identidade segura, papéis acumuláveis, designação,
+onboarding e treinos versionados, fontes RAG, execução da IA, isolamento e auditoria.
+São esses requisitos que explicam boa parte da diferença em relação ao MER inicial.
+
+#### Contagens verificadas
+
+| Artefato | Quantidade | Interpretação |
+|---|---:|---|
+| MER PNG original | 18 entidades com nome | Extraídas do XML draw.io incorporado no próprio PNG, sem modificar a imagem. |
+| Modelo lógico completo | 43 tabelas, 335 colunas | Inclui capacidades futuras e configuração da academia. |
+| ORM/migrations do MVP | 32 tabelas, 262 colunas, 53 constraints de FK | Modelo físico implementado, distinto do escopo futuro. |
+| PostgreSQL de desenvolvimento | 32 tabelas, 78 índices totais | Consulta de catálogo/estatísticas em transação somente leitura. |
+| Tamanho dessas tabelas e índices | 2.039.808 bytes, aproximadamente 1,95 MiB | Amostra local pequena; não inclui WAL, tamanho total do cluster, PDFs, pesos ou Qdrant. Não é teste de capacidade. |
+
+Os 18 índices declarados explicitamente no ORM não são os 78 índices totais:
+o total inclui índices de chaves primárias/unicidades. Não interpretar os outros
+como supérfluos sem analisar as constraints que atendem.
+
+Fontes: [MER original](docs/arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png),
+[modelo lógico](docs/arquitetura/modelo-de-dados/modelo-logico.json),
+[DBML](docs/arquitetura/modelo-de-dados/modelo-logico.dbml),
+[migrations](database/migrations/versions) e modelos SQLAlchemy em backend/.
+As contagens físicas foram comparadas com o catálogo do banco, sem ler conteúdo
+de saúde ou mensagens de clientes. Estimativas de linhas não foram tratadas
+como contagens exatas nem usadas para justificar capacidade de produção.
+
+#### De onde vêm as 32 tabelas do MVP
+
+| Grupo | Tabelas | Justificativa |
+|---|---:|---|
+| Identidade, perfis e designação | 7 | usuario, usuario_papel, cliente, funcionario, sessao, token_acesso e designacao. Permitem sobreposição de papéis, conta/cadastro independentes e responsável histórico. |
+| Onboarding/avaliação | 3 | onboarding_versao, convite_onboarding e avaliacao. Histórico e sessão restrita não devem ser confundidos com cadastro ou login normal. |
+| Exercícios e fichas | 8 | exercicio, exercicio_recurso_grupo, exercicio_recurso, versao_ficha, dia_ficha, item_ficha, parecer e validacao_ficha. Catálogo, requisitos de equipamento, prescrição, publicação e parecer têm regras diferentes. |
+| Equipamentos | 1 | equipamento, incluindo disponibilidade. |
+| Literatura/RAG | 4 | documento, documento_versao, ingestao e fragmento. Origem bibliográfica, aprovação, processamento e vetor são conceitos distintos. |
+| IA e chat | 6 | execucao_ia, triagem, etapa_ia, evidencia_execucao, conversa e mensagem. Contexto, consumo, evidência e conversa privada são rastreáveis. |
+| Auditoria e comunicação | 3 | auditoria, outbox e notificacao. Autoria, idempotência de eventos e estado de entrega persistem mesmo se uma integração falhar. |
+| Total | 32 | Sem tabelas financeiras ou biométricas antecipadas. |
+
+Onze tabelas existem apenas no modelo futuro: academia, plano, matricula,
+cobranca, pagamento, biometria, evento_acesso, decisao_acesso, catraca_comando,
+presenca e aula_ocorrencia. Academia é configuração singleton planejada;
+as outras dez pertencem às extensões de acesso/matrícula, financeiro e agenda.
+Não confundir essas onze previsões com tabelas desnecessárias já implantadas.
+
+#### Simplificações concretas a considerar
+
+| Proposta | Evidência e benefício provável | Custo/condição |
+|---|---|---|
+| Unificar a fonte persistida da triagem | execucao_ia.resultado.triagem e triagem.resumo armazenam o mesmo TriageResult. Reduzir duplicação de dados privados e risco de divergência é mais útil que apagar entidades arbitrariamente. | Definir a fonte canônica e hidratar o DTO na leitura; manter snapshot, política, motivos, auditoria, replay e expurgo em 90 dias. Não foi alterado agora. |
+| Revisar etapa_ia.dados | O JSON de Consumption repete parte de chamadas/limites/tokens já em colunas. Pode-se montar o DTO a partir de uma representação canônica. | Conferir campos exclusivos do JSON, estados em voo e consumo desconhecido. Não remover evidência de chamadas ou orçamento para economizar campos. |
+| Revisar mensagem.pergunta/pedido | A pergunta está tanto na coluna quanto no JSON do pedido, que também congela uma janela curta de histórico. Há duplicação deliberada para retomada/hash. | Só simplificar preservando a representação histórica necessária ao hash e ao replay; não reconstruir o pedido antigo com o contexto atual. |
+| Remover uma FK redundante do contexto da mensagem | A FK simples de versao_contexto_id já é coberta pela FK composta (conversa_id, versao_contexto_id) → (cliente_id, id). A composta ainda protege o dono. | Ganho pequeno, requer migration nova e testes de null, referência inexistente e versão de outro cliente. Preservar a composta. |
+| Avaliar a tabela conversa | Hoje contém somente id do cliente, em relação 1:1. Mensagem poderia referenciar cliente diretamente, poupando uma tabela e sua criação. | Economia pequena e mudança de FKs/serviço. Manter se forem previstos vários chats ou metadados por conversa. Não remover somente para deixar o diagrama menor. |
+| Diagramar por escopo/módulo | Separar visão conceitual, MVP físico e escopo futuro torna a apresentação acadêmica mais compreensível. | Melhora legibilidade, sem ganho automático de espaço/desempenho; não esconder tabelas reais ou substituir a imagem original silenciosamente. |
+
+As primeiras três propostas envolvem redundância real. Mesmo assim, o tamanho
+local não indica urgência de armazenamento; a prioridade é clareza e manutenção.
+Não foram executados EXPLAIN ANALYZE, ensaio de escala ou medição comparativa de
+latência. Não prometer ganho percentual ou propor índices novos sem consulta-alvo.
+
+#### O que preservar
+
+- USUARIO e papéis acumuláveis, com perfis específicos. Fundir cliente/funcionário
+  em uma tabela com campos opcionais mistura estados e responsabilidades.
+- Ficha, dia e item separados; prescrição pertence à ficha, não ao catálogo.
+  O vínculo por ID de exercício e o snapshot histórico do item têm funções distintas.
+- Grupos de recursos: permitem combinações obrigatórias e alternativas completas.
+  Uma lista plana de equipamentos perde a diferença entre combinar recursos e
+  oferecer alternativas, afetando a validação da IA.
+- Publicação e parecer por versão. Validacao_ficha pode parecer um registro
+  adicional, mas mantém revisão conferida/idempotência e o parecer é posterior;
+  não juntar estados só para diminuir a contagem.
+- Documento/versão/ingestão/fragmento e evidências de execução. Fragmento guarda
+  offsets, hashes e referências, não uma segunda cópia integral do livro. O banco
+  vetorial especializado é separado do PostgreSQL conforme os requisitos.
+- Snapshots de onboarding em JSONB validados por schema. O projeto já evita criar
+  tabela para cada medida, queixa, medicamento ou condição; normalizar tudo isso
+  seria um aumento desnecessário para o trabalho acadêmico atual.
+- Unicidades compostas que sustentam FKs de titularidade. Mesmo quando id já é
+  PK global, a referência composta impede ligar dados de pessoas diferentes.
+- Retenção de 15 fichas completas e 90 dias de conteúdo privado de chat/execução,
+  sem apagar metadados de auditoria necessários. Número de tabelas não determina
+  sozinho crescimento; documentos, mensagens, snapshots e vetores são relevantes.
+
+JSONB é adequado a documentos de esquema controlado, mas não substitui FKs e
+constraints relacionais. Referências técnicas: [JSON e projeto de documentos](https://www.postgresql.org/docs/17/datatype-json.html#JSON-DESIGN)
+e [constraints](https://www.postgresql.org/docs/17/ddl-constraints.html).
+Essas referências fundamentam as opções; as prioridades acima são avaliação
+arquitetural deste projeto, não recomendação de remover dados sem medir.
+
+#### Encaminhamento
+
+Manter o schema do MVP nesta correção. Se houver interesse em simplificar depois,
+começar pela fonte única de triagem/consumo e avaliar a FK repetida; cada alteração
+deve ter migration nova quando pertinente, dados preservados e testes de regressão.
+Atualizar DBML/JSON/dicionário junto da decisão aplicada, nunca modificar migration
+já executada. A correção do histórico solicitada nesta entrega reutiliza os
+campos e índices existentes e não exige aumentar o modelo.
 
 ## 18. Onboarding, triagem e contratos de dados
 
@@ -5784,6 +5914,14 @@ assistida, com auditoria mínima. Não cria tabelas paralelas de execução/tria
 O registro interno inclui códigos, resumo, snapshot, política e referências;
 execucao_ia/triagem/etapa_ia/evidencia_execucao são implementadas em
 AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.
+
+#### Histórico consultável e janela de IA
+
+CA-18.9/CA-18.10 distinguem consulta de histórico e contexto enviado ao modelo.
+Mensagem já possui versao_contexto_id; não é necessária nova entidade para
+recuperar mensagens anteriores à ficha vigente. O DTO informa essa referência
+e contexto_anterior; 20 turnos/página e 90 dias permanecem. Não reenviar a conversa
+inteira nem reintroduzir resposta apoiada em ficha expurgada/fonte revogada.
 ### 3. Limites e avaliação
 
 Fonte versionada: [docs/requisitos/configuracao-ia-rag.md](docs/requisitos/configuracao-ia-rag.md).
@@ -5899,6 +6037,14 @@ troca automática nem equivalência de qualificação. Os parâmetros anteriores
 descritos nas seções históricas não substituem a configuração canônica vigente.
 Saída longa pode ser interrompida sem publicação; reduzir reserva não garante
 que qualquer ficha permitida pelo schema caiba no plano gratuito.
+
+#### Consulta histórica após troca de ficha
+
+Histórico visível e memória de geração são limites distintos: o cliente consulta
+suas mensagens dos últimos 90 dias, em páginas de 20, mesmo após nova ficha.
+Até três perguntas anteriores do contexto vigente entram na janela do modelo;
+consultar mensagens antigas não aumenta esse orçamento. Expurgo/revogação e
+isolamento continuam validados; detalhes em chat-e-adaptacao.md e CA-18.9/CA-18.10.
 ### 4. Configuração canônica
 
 Fonte versionada: [docs/requisitos/schemas/configuracao-ia-v2.json](docs/requisitos/schemas/configuracao-ia-v2.json).
@@ -10420,7 +10566,7 @@ POST exige também CSRF/Origin. Autorização ocorre antes de histórico/RAG/pro
 | Método e rota | Comportamento |
 |---|---|
 | POST /api/v1/ia/chat | Criar/repetir explicitamente um turno idempotente |
-| GET /api/v1/ia/chat?page=1 | Histórico do contexto vigente, páginas de até 20 turnos |
+| GET /api/v1/ia/chat?page=1 | Histórico do cliente em todos os contextos retidos, páginas de até 20 turnos |
 | GET /api/v1/ia/chat/contexto/adaptacao | IDs da ficha e snapshot atuais, número do snapshot e títulos dos dias; sem dados médicos |
 | GET /api/v1/ia/chat/{solicitacao_id} | Retomar recibo próprio sem executar geração |
 | GET /api/v1/ia/chat/{solicitacao_id}/diferencas | Consultar antes/depois retidos de uma adaptação publicada |
@@ -10507,11 +10653,24 @@ Retry de transporte é explícito com o mesmo UUID; entrada diferente exige UUID
 Após 100 segundos, uma reserva abandonada sem execução não pode ser reaberta.
 Execução terminal nunca repete chamada LLM ao reusar UUID.
 
-Histórico serve apenas o contexto atual, incluindo o turno da adaptação que o
-publicou, e os últimos 90 dias. Não reenviar perguntas de versões substituídas.
-Consulta direta de dúvida antiga retira resposta/fontes se mudou o contexto;
-revogação de evidência também retira resposta/fontes. Comparação lê apenas
-conteúdo ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
+Histórico consultável inclui as mensagens do próprio cliente nos últimos 90 dias,
+independentemente da ficha vigente, com paginação de 20 turnos. Gerar/adaptar uma
+ficha não apaga nem esconde dúvidas anteriores. O DTO acrescenta os campos
+opcionais versao_contexto_id e contexto_anterior; a tela identifica a conversa
+anterior à ficha atual sem apresentar seus dados como contexto novo.
+
+A janela enviada ao modelo continua separada: até três perguntas anteriores do
+mesmo cliente e versão de contexto, dentro do limite de caracteres. Consultar
+histórico/turno não chama RAG/LLM nem reenfileira execução. Replay de POST associado
+a contexto antigo continua recusado; a consulta GET histórica permanece possível.
+
+Uma resposta de contexto anterior continua disponível se suas fontes estão
+aprovadas e o conteúdo da ficha de origem, quando houver, está retido. A verificação
+de retenção usa o serviço público de MOD-04, sem ler suas tabelas internamente.
+Expurgo da ficha de origem ou revogação da evidência retiram resposta/fontes;
+pergunta/recibo permanecem conforme a retenção do chat. Mensagem anterior à primeira
+ficha não ganha referência artificial a uma versão. Comparação lê apenas conteúdo
+ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
 A manutenção existente de AI-03 também expurga perguntas/pedidos após 90 dias,
 preservando recibos e contadores de auditoria. Esse prazo independe das 15 fichas.
 
@@ -10536,8 +10695,17 @@ em fronteira de dados, rejeição de referências/JSON inválidos, texto HTML in
 links inseguros bloqueados e cota atômica concorrente/replay.
 Testes usam PostgreSQL/Qdrant reais e respostas/embeddings sintéticos controlados;
 a regressão também exercita E5 e Mailpit reais. Não comprova qualidade/latência do
-LLM gratuito. AI-06 e o E2E TST-01 permanecem abertos, assim como as pendências
-técnicas anteriores do corpus/livro.
+LLM gratuito. Na entrega original de AI-05, AI-06/TST-01 ainda estavam abertos;
+o fechamento posterior está no manifesto e nos relatórios próprios. A correção
+abaixo não requalifica o LLM nem encerra pendências técnicas do corpus/livro.
+
+#### Correção após revisão manual — 2026-11-19
+
+Separadas a consulta histórica e a seleção de contexto do modelo. Mudança aditiva
+de DTO, sem migration, novas tabelas ou alteração de prompts/modelos/corpus.
+Regressões: antes da primeira ficha, duas publicações, 23 mensagens em duas páginas,
+zero chamadas em leitura, escopo por cliente, fonte revogada, expurgo e 90 dias.
+Consultar [evidências da regressão do MVP](docs/testes/historico-chat-mvp-20261119.md).
 ### 22. DTOs de pedido e turno de chat
 
 Fonte versionada: [docs/requisitos/schemas/chat-ia-v1.schema.json](docs/requisitos/schemas/chat-ia-v1.schema.json).
@@ -10805,6 +10973,24 @@ Fonte versionada: [docs/requisitos/schemas/chat-ia-v1.schema.json](docs/requisit
           }
         ],
         "title": "Versao Publicada Id"
+      },
+      "versao_contexto_id": {
+        "anyOf": [
+          {
+            "format": "uuid",
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Versao Contexto Id"
+      },
+      "contexto_anterior": {
+        "default": false,
+        "title": "Contexto Anterior",
+        "type": "boolean"
       }
     },
     "required": [
@@ -14142,6 +14328,15 @@ Histórico v3 e extrapolações L03/L04 não foram declarados corrigidos. Amostr
 pequena e percentis descritivos não comprovam ampla cobertura ou segurança universal.
 TST-01/PG-01 foram fechados pela [consolidação própria do MVP](docs/testes/tst01-consolidacao.json),
 sem nova chamada ao modelo ou mudança dos resultados de AI-06.
+
+#### Regressão de histórico — revisão manual de 2026-11-19
+
+CA-18.9/CA-18.10: dúvidas antes da primeira ficha e durante uma ficha anterior
+continuam consultáveis após duas publicações; 23 mensagens atravessam duas páginas.
+GET não abre chamada de modelo, a janela nova não contém perguntas de contexto
+antigo, outro cliente não obtém histórico/turno e fonte revogada/expurgo continuam
+ocultando resposta e fontes. Ver tests/ai/test_chat_history.py,
+test_chat_integration.py e TrainingChat.test.tsx; [relatório](docs/testes/historico-chat-mvp-20261119.md).
 ### 3. Regras permanentes de trabalho
 
 Fonte versionada: [AGENTS.md](AGENTS.md).
@@ -17343,6 +17538,110 @@ UX-09 concluído com falha obrigatória ou somente com mockups/testes unitários
 Relatórios AI-06/TST-01 históricos conservam seus hashes; não são alterados para
 parecer que exercitaram uma interface nova. Falhas de API ou requisito novo
 descobertos são registrados para uma entrega funcional própria.
+### 22. Correção do histórico e regressão completa de unitários/integração do MVP
+
+Fonte versionada: [docs/testes/historico-chat-mvp-20261119.md](docs/testes/historico-chat-mvp-20261119.md).
+
+#### Entrega
+
+O histórico deixava de mostrar mensagens após gerar/adaptar uma ficha porque a
+consulta filtrava apenas a versão vigente. Agora a consulta inclui todos os
+contextos do próprio cliente nos últimos 90 dias, em páginas de 20 turnos. A tela
+identifica conversas anteriores à ficha atual. Não há limite de 15 mensagens:
+15 é a retenção de versões completas de ficha, independente da paginação do chat.
+
+Novas perguntas continuam enviando ao modelo somente a janela de até três
+perguntas do contexto vigente; leitura/recarga não chamam RAG/LLM. GET histórico
+funciona sem reexecutar o POST antigo, que conserva suas guardas de contexto e
+idempotência. Conta de outro cliente permanece sem acesso. Se a ficha de origem
+foi expurgada ou sua evidência foi revogada, a resposta/fontes ficam ocultas;
+a pergunta/recibo continuam conforme o prazo do chat. Não se restaura conteúdo.
+
+CA-18.9/CA-18.10, MRF14.5, arquitetura, AI-05, schema JSON e SPEC acompanham a
+correção. Campos aditivos opcionais: versao_contexto_id e contexto_anterior.
+Sem migration, novo modelo LLM, mudança de prompt enviado ao LLM, corpus ou UX
+planejada. Os testes também continuam verificando exercícios por ID e recursos
+viáveis do catálogo na publicação, conforme o contrato de treinos existente.
+
+#### Verificação executada
+
+| Verificação | Resultado desta entrega |
+|---|---|
+| Backend completo: unitários/contratos | 354 aprovados, nenhum ignorado/falho |
+| Backend completo: integração/banco | 179 aprovados, 3 opt-in de LLM real ignorados, nenhuma falha final |
+| Frontend completo | 94 aprovados em 20 arquivos |
+| Focal de chat | 20 aprovados, já incluídos nos comandos completos; não somar novamente |
+| Backend estático | Ruff, formato e mypy (236 fontes) aprovados |
+| Frontend estático/build | Lint, tipos e build aprovados |
+
+Dados sintéticos no academia_test, migrations reais com rollback, Qdrant temporário,
+E5 CPU e Mailpit reais. O Mailpit usa caixa sintética separada, sem relay para
+e-mails externos. Nenhuma conta ou cadastro de desenvolvimento foi alterado.
+API e frontend de uso manual permaneceram desligados. PostgreSQL/Mailpit foram
+iniciados para os testes e encerrados depois, com as cinco portas locais verificadas.
+
+Foram exercitados identidade/sessão/autorização, pessoas, designações, onboarding,
+avaliações, equipamento/catálogo, treino manual/publicação/parecer/retenção,
+notificações/auditoria, ingestão/busca RAG e orquestração/geração/chat/quotas,
+incluindo isolamento, concorrência e idempotência dos cenários existentes.
+Os provedores LLM usam respostas controladas nesta regressão. Três testes
+opt-in de provedor real foram ignorados intencionalmente; chaves Groq/Gemini
+removidas do processo. Nenhuma quota foi consumida. Não mede disponibilidade,
+qualidade ou latência atuais do modelo gratuito; não é novo aceite AI-06/TST-01,
+ensaio de carga ou nova navegação E2E. Evidências históricas não foram substituídas.
+
+Falhas intermediárias preservadas: a primeira execução unitária teve 46 erros de
+setup por faltar o diretório pai de basetemp; após criá-lo, os 354 passaram. A
+primeira execução completa de integração teve 178 aprovados/uma falha/três skips:
+um teste ainda exigia histórico vazio após expirar a 16ª ficha. A expectativa foi
+atualizada para manter o recibo visível e verificar expressamente ABSTENCAO,
+contexto anterior e ausência de resposta/fontes; as demais guardas permanecem.
+A repetição completa acima passou. Não houve remoção ou relaxamento de bloqueios.
+
+#### Reprodução
+
+Na raiz, verificar SPEC e documentação. Em backend/, usar uv/Python 3.12, ambiente
+de teste configurado e diretório temporário existente; executar sem chamar os
+testes reais de LLM. Em PowerShell, depois de carregar a configuração, remover
+GROQ_API_KEY/GEMINI_API_KEY e as flags de ensaio real do ambiente do processo.
+Definir ACADEMIA_AI_REAL=0, ACADEMIA_LLM_PROFILE=principal,
+ACADEMIA_TEST_MAILPIT=1, ACADEMIA_TEST_EMBEDDINGS_REAL=1 e o caminho dos pesos E5
+locais. O .env não deve reintroduzir chaves: os comandos abaixo pressupõem o
+ambiente já carregado e sanitizado, sem --env-file no subprocesso.
+
+```powershell
+uv run --locked pytest -q --junitxml ./data/unitarios-N.xml
+uv run --locked pytest -o addopts='' -m 'integration or database' -q --junitxml ./data/integracao-N.xml
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+```
+
+A execução desta entrega usou o Python do .venv já sincronizado, cópia temporária
+dos fontes e wrappers locais para carregar/sanitizar ambiente sem expor chaves;
+isso não acrescenta scripts de manutenção pontual ao repositório.
+No frontend: npm test -- --run --maxWorkers=1, npm run lint,
+npm run typecheck e npm run build. Não instalar dependências novas.
+
+Regressões novas em backend/tests/ai/test_chat_history.py e
+frontend/src/features/training-chat/TrainingChat.test.tsx: duas publicações,
+pergunta antes da primeira ficha, 23 mensagens/duas páginas, janela do modelo,
+zero chamadas em leitura, outro cliente, retenção e recarga da tela.
+Os testes existentes cobrem revogação e 16ª versão expurgada.
+
+O [registro estruturado](docs/testes/historico-chat-mvp-20261119.json) contém hashes dos
+fontes e JUnits/JSON frontend, contagens e limites; relatórios brutos e logs ficam
+locais, sem credenciais/dados reais no Git. O registro focal de 20 inclui o teste
+de retenção já existente; a correção posterior da expectativa da 16ª ficha foi
+exercitada na repetição completa, não naquele primeiro comando focal.
+
+#### Modelagem
+
+A [avaliação do MER](docs/analises/2026-11-19-tamanho-modelagem.md) distingue 18
+entidades conceituais, 43 tabelas planejadas e 32 implementadas. O schema é
+justificável pelo escopo; propostas de reduzir duplicação de triagem/consumo,
+FK redundante e tabela conversa não foram aplicadas. A imagem original,
+DBML/JSON lógico e migrations permanecem intactos.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -17918,12 +18217,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
+| `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
-| `docs/arquitetura/chat-e-adaptacao.md` | `44d159e9be791f5cee8501a05dd6b9a299263e9b80a8a0f198b094a48703c5d8` |
+| `docs/arquitetura/chat-e-adaptacao.md` | `b53d5e7f800567ea7e636e1a20a3db70d5a4cf0034fcc7496831db509b1b9975` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
@@ -17948,7 +18248,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `00a51d77798ead39a9f4c09f0bffcb8852d94d6eb8972268fd0157c7ca61a8a8` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `adf135ced6681f54989fce8edc074e8fab1c5ffc3feaee3b8171079d31345f84` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `e67719b92d533b59609ca38fc01fe93a2812baeb162fb4672607dec23a4c7bab` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `66a73587ce0b53d1de35adf9573cd65637ed50302eb9d0b406b04764ffddc8bd` |
@@ -17962,9 +18262,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f1d5e1385ec3f38dcc9c899b7660928861b226dcd71fc8bf88452c45ac6000a9` |
+| `docs/especificacao/compilacao-spec.json` | `34781dfcd65cb32c8ad9e7a0dfa3a3a42bc91770022bcd4ddf30b48e6d0be0cf` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `3785defed29388fc4569b58bbc21a06e999d3beb77a7d8f688a27ecfcc9a013e` |
-| `docs/especificacao/visao-geral.md` | `cec484bdaa5e3654bbe0ec1a764ff53ab76bf5ea94fa6dc0673c25bf7b9d4ad7` |
+| `docs/especificacao/visao-geral.md` | `1da786f16e289ceaab37b04315212f13489b87d85c49775f4e94e17ed33c51c1` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -17976,17 +18276,17 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `d9fb0ad4b829b997289b248effe18ce36be8ffe3a186ec04792f696fc705c743` |
-| `docs/requisitos/configuracao-ia-rag.md` | `83f4e22e3aae1f36c47aaa51627cfd196f88ab192a02c732bdac69b45b9aa7d4` |
+| `docs/prompts/README.md` | `18c7d2c637c97baf3a9bd57d0d525b809e18f5605f5351cc46adea37ef7cea4b` |
+| `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
-| `docs/requisitos/macrorequisitos-ia-rag.md` | `9dcc16553c1aef82d0375a1cd7634249436fcc7d516f74a28e27f91d36549344` |
+| `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
 | `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `258468801558c4a1660b241a8347fbabceb094a314d1febae9b46ccf5a8b504e` |
+| `docs/requisitos/requisitos-funcionais.md` | `e7199153c64f025116c6ad54cf41a83b296bc0a06cbc42a09b72ee244dac5e9c` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
-| `docs/requisitos/schemas/chat-ia-v1.schema.json` | `0ea43764d15b1a9bf12edb88ae4d8f97d524cbf721281c410dc13862cfeaa853` |
+| `docs/requisitos/schemas/chat-ia-v1.schema.json` | `7b5cb6057dd147853625ea4fb5319209d027ca7546fa53339d470eaf93e59ec4` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json` | `94aadd81685f9edeab19351388e1fb1968af11a18dc44e2ef027f8c51aab2115` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-groq20b-v2.json` | `cf01e0b8e26b5d278daf8a1d4ea29be727f3bea65c47801d76e47cfd9e7ff904` |
 | `docs/requisitos/schemas/configuracao-ia-v2.json` | `494cb1696d58a8a3465b6cd56a60630cacd7df46721be23dc588825a2618d304` |
@@ -18014,9 +18314,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
 | `docs/testes/estrategia.md` | `15269ecb21cf8b2fb3c6e8f56434e4095a85e0fbe6b9fda4b5ba927278956c6c` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
+| `docs/testes/historico-chat-mvp-20261119.md` | `efa4a40fe2e6dce5254a3abd5d09f7e72fefe1ec416088088c1a587e3d4566b0` |
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
-| `docs/testes/rag-ia-semantico.md` | `c255846226e125dbbc86bd1531c678fc7ddbcdd109d96508103f7b91407fbab3` |
+| `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
 | `docs/testes/reformulacao-visual.md` | `34b6e7ab7acf72e60f7e74052eab5db832e3b4a2369c93b5bf4e79e0289a1252` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |

@@ -60,6 +60,9 @@ Dúvidas que não afetem o trabalho independente não interrompem outras capacid
 
 O MER original preserva a origem do projeto. O modelo lógico descreve também
 partes futuras; as [migrations](../../database/README.md) indicam o schema físico entregue.
+A [avaliação de tamanho](../../docs/analises/2026-11-19-tamanho-modelagem.md)
+distingue 18 entidades originais, 43 tabelas planejadas e 32 tabelas do MVP;
+as simplificações identificadas são propostas, sem alteração de schema nesta revisão.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](../../docs/arquitetura/rag-semantico.md).
@@ -110,6 +113,10 @@ ajusta seleção de cargos, orientação sobre Mailpit e carga opt-in de catálo
 Aceites em banco isolado não populam o desenvolvimento: contas, equipamentos,
 exercícios e corpus precisam estar presentes no ambiente em que se abre a SPA.
 O catálogo de demonstração não prepara nem substitui o corpus do RAG.
+A [correção do histórico de chat](../../docs/testes/historico-chat-mvp-20261119.md)
+preserva conversas de fichas anteriores na consulta paginada, sem enviá-las
+automaticamente ao LLM no contexto da ficha nova. Retenção e revogação continuam
+protegendo conteúdo expirado e fontes indisponíveis.
 O [preparo local do RAG](../../docs/instalacao/preparar-rag-local.md), concluído
 em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
 documentos. A gestão do corpus é técnica, desativada na rotina administrativa;

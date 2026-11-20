@@ -51,3 +51,11 @@ assistida, com auditoria mínima. Não cria tabelas paralelas de execução/tria
 O registro interno inclui códigos, resumo, snapshot, política e referências;
 execucao_ia/triagem/etapa_ia/evidencia_execucao são implementadas em
 AI-03, usando as portas definidas em AI-02. A API de preparação não armazena anamnese no log ou no índice RAG.
+
+## Histórico consultável e janela de IA
+
+CA-18.9/CA-18.10 distinguem consulta de histórico e contexto enviado ao modelo.
+Mensagem já possui versao_contexto_id; não é necessária nova entidade para
+recuperar mensagens anteriores à ficha vigente. O DTO informa essa referência
+e contexto_anterior; 20 turnos/página e 90 dias permanecem. Não reenviar a conversa
+inteira nem reintroduzir resposta apoiada em ficha expurgada/fonte revogada.

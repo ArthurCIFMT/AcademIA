@@ -187,3 +187,11 @@ agentiva por execução, resumo/decisão de triagem, etapas fixas e evidências.
 Consultar [dados vigentes](modelo-de-dados/dados-rag-ia.md) antes de FND-03.
 EXERCICIO e seus recursos atendem RF-38; conteúdo prescrito fica em ITEM_FICHA.
 A imagem original permanece intacta, sem migrations nesta revisão.
+
+## Avaliação do tamanho após o MVP — 2026-11-19
+
+[Análise quantitativa e propostas de simplificação](../analises/2026-11-19-tamanho-modelagem.md):
+18 entidades no MER original, 43 tabelas no modelo lógico completo e 32 tabelas
+efetivamente implantadas no MVP. Esses artefatos têm níveis/escopos diferentes.
+A avaliação não altera o MER, o DBML/JSON ou migrations; propostas dependem de
+medição e de uma entrega própria se adotadas.

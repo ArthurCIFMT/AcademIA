@@ -1,7 +1,7 @@
 import { requestApi } from "../../lib/api/auth";
 import type { Source } from "../ai-training/api";
 import type { Detail } from "../training-review/api";
-export type Turn={solicitacao_id:string;pergunta:string;criada_em:string;finalidade:string;estado:string;motivo:string;resposta:{idioma:"pt-BR";tipo:string;texto:string;evidencias_ids:string[]}|null;fontes:Source[];versao_publicada_id:string|null};
+export type Turn={solicitacao_id:string;pergunta:string;criada_em:string;finalidade:string;estado:string;motivo:string;resposta:{idioma:"pt-BR";tipo:string;texto:string;evidencias_ids:string[]}|null;fontes:Source[];versao_publicada_id:string|null;versao_contexto_id?:string|null;contexto_anterior?:boolean};
 export type Ask={solicitacao_id:string;mensagem:string;finalidade:"DUVIDA"|"ADAPTACAO";versao_base_id?:string;onboarding_id?:string;dia_alvo?:number};
 export type AdaptContext={versao_base_id:string;onboarding_id:string;snapshot_numero:number;dias:string[]};
 export type Diff={anterior:Detail;atual:Detail;conteudo_expirado:boolean};

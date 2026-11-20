@@ -111,3 +111,11 @@ troca automática nem equivalência de qualificação. Os parâmetros anteriores
 descritos nas seções históricas não substituem a configuração canônica vigente.
 Saída longa pode ser interrompida sem publicação; reduzir reserva não garante
 que qualquer ficha permitida pelo schema caiba no plano gratuito.
+
+## Consulta histórica após troca de ficha
+
+Histórico visível e memória de geração são limites distintos: o cliente consulta
+suas mensagens dos últimos 90 dias, em páginas de 20, mesmo após nova ficha.
+Até três perguntas anteriores do contexto vigente entram na janela do modelo;
+consultar mensagens antigas não aumenta esse orçamento. Expurgo/revogação e
+isolamento continuam validados; detalhes em chat-e-adaptacao.md e CA-18.9/CA-18.10.

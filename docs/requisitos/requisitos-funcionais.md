@@ -247,6 +247,13 @@ com fontes recuperadas e contexto curto, distinguindo conversa de geração de f
   benchmark registra tempo total e busca separadamente.
 - CA-18.8: Instrução inserida na pergunta ou no documento não altera permissões, remove bloqueio de triagem nem concede escrita direta ao modelo; tentativa de acessar conversa de outro cliente é recusada.
 
+- CA-18.9: publicar uma ficha nova não remove as dúvidas anteriores da consulta do
+  próprio cliente; histórico paginado conserva os últimos 90 dias e identifica
+  mensagens de contexto anterior, sem misturar clientes.
+- CA-18.10: consultar histórico não chama o LLM; a janela enviada ao modelo continua
+  limitada ao contexto vigente. Respostas apoiadas em conteúdo expurgado ou fontes
+  revogadas não são restauradas pela consulta histórica.
+
 ### RF-19 — Propor alteração dinâmica de treino via IA
 
 Propor adaptação quando dor, limitação ou condição interferir no treino.

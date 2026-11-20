@@ -94,3 +94,12 @@ Histórico v3 e extrapolações L03/L04 não foram declarados corrigidos. Amostr
 pequena e percentis descritivos não comprovam ampla cobertura ou segurança universal.
 TST-01/PG-01 foram fechados pela [consolidação própria do MVP](tst01-consolidacao.json),
 sem nova chamada ao modelo ou mudança dos resultados de AI-06.
+
+## Regressão de histórico — revisão manual de 2026-11-19
+
+CA-18.9/CA-18.10: dúvidas antes da primeira ficha e durante uma ficha anterior
+continuam consultáveis após duas publicações; 23 mensagens atravessam duas páginas.
+GET não abre chamada de modelo, a janela nova não contém perguntas de contexto
+antigo, outro cliente não obtém histórico/turno e fonte revogada/expurgo continuam
+ocultando resposta e fontes. Ver tests/ai/test_chat_history.py,
+test_chat_integration.py e TrainingChat.test.tsx; [relatório](historico-chat-mvp-20261119.md).

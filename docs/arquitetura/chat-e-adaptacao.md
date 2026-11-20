@@ -25,7 +25,7 @@ POST exige também CSRF/Origin. Autorização ocorre antes de histórico/RAG/pro
 | Método e rota | Comportamento |
 |---|---|
 | POST /api/v1/ia/chat | Criar/repetir explicitamente um turno idempotente |
-| GET /api/v1/ia/chat?page=1 | Histórico do contexto vigente, páginas de até 20 turnos |
+| GET /api/v1/ia/chat?page=1 | Histórico do cliente em todos os contextos retidos, páginas de até 20 turnos |
 | GET /api/v1/ia/chat/contexto/adaptacao | IDs da ficha e snapshot atuais, número do snapshot e títulos dos dias; sem dados médicos |
 | GET /api/v1/ia/chat/{solicitacao_id} | Retomar recibo próprio sem executar geração |
 | GET /api/v1/ia/chat/{solicitacao_id}/diferencas | Consultar antes/depois retidos de uma adaptação publicada |
@@ -112,11 +112,24 @@ Retry de transporte é explícito com o mesmo UUID; entrada diferente exige UUID
 Após 100 segundos, uma reserva abandonada sem execução não pode ser reaberta.
 Execução terminal nunca repete chamada LLM ao reusar UUID.
 
-Histórico serve apenas o contexto atual, incluindo o turno da adaptação que o
-publicou, e os últimos 90 dias. Não reenviar perguntas de versões substituídas.
-Consulta direta de dúvida antiga retira resposta/fontes se mudou o contexto;
-revogação de evidência também retira resposta/fontes. Comparação lê apenas
-conteúdo ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
+Histórico consultável inclui as mensagens do próprio cliente nos últimos 90 dias,
+independentemente da ficha vigente, com paginação de 20 turnos. Gerar/adaptar uma
+ficha não apaga nem esconde dúvidas anteriores. O DTO acrescenta os campos
+opcionais versao_contexto_id e contexto_anterior; a tela identifica a conversa
+anterior à ficha atual sem apresentar seus dados como contexto novo.
+
+A janela enviada ao modelo continua separada: até três perguntas anteriores do
+mesmo cliente e versão de contexto, dentro do limite de caracteres. Consultar
+histórico/turno não chama RAG/LLM nem reenfileira execução. Replay de POST associado
+a contexto antigo continua recusado; a consulta GET histórica permanece possível.
+
+Uma resposta de contexto anterior continua disponível se suas fontes estão
+aprovadas e o conteúdo da ficha de origem, quando houver, está retido. A verificação
+de retenção usa o serviço público de MOD-04, sem ler suas tabelas internamente.
+Expurgo da ficha de origem ou revogação da evidência retiram resposta/fontes;
+pergunta/recibo permanecem conforme a retenção do chat. Mensagem anterior à primeira
+ficha não ganha referência artificial a uma versão. Comparação lê apenas conteúdo
+ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
 A manutenção existente de AI-03 também expurga perguntas/pedidos após 90 dias,
 preservando recibos e contadores de auditoria. Esse prazo independe das 15 fichas.
 
@@ -141,5 +154,14 @@ em fronteira de dados, rejeição de referências/JSON inválidos, texto HTML in
 links inseguros bloqueados e cota atômica concorrente/replay.
 Testes usam PostgreSQL/Qdrant reais e respostas/embeddings sintéticos controlados;
 a regressão também exercita E5 e Mailpit reais. Não comprova qualidade/latência do
-LLM gratuito. AI-06 e o E2E TST-01 permanecem abertos, assim como as pendências
-técnicas anteriores do corpus/livro.
+LLM gratuito. Na entrega original de AI-05, AI-06/TST-01 ainda estavam abertos;
+o fechamento posterior está no manifesto e nos relatórios próprios. A correção
+abaixo não requalifica o LLM nem encerra pendências técnicas do corpus/livro.
+
+## Correção após revisão manual — 2026-11-19
+
+Separadas a consulta histórica e a seleção de contexto do modelo. Mudança aditiva
+de DTO, sem migration, novas tabelas ou alteração de prompts/modelos/corpus.
+Regressões: antes da primeira ficha, duas publicações, 23 mensagens em duas páginas,
+zero chamadas em leitura, escopo por cliente, fonte revogada, expurgo e 90 dias.
+Consultar [evidências da regressão do MVP](../testes/historico-chat-mvp-20261119.md).

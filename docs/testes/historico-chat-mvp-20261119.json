@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "data": "2026-11-19",
+  "escopo": "Correção do histórico e regressão unitária/integração de todo o MVP; não é novo AI-06/TST-01.",
+  "base_git": "c3c28c919c01d232e3d5658dbcd986c46a6e2a54",
+  "backend_unitarios_contratos": {
+    "casos": 354,
+    "aprovados": 354,
+    "falhas": 0,
+    "erros": 0,
+    "ignorados": 0,
+    "segundos": 39.218,
+    "junit_sha256": "6c42d1df567b07f51fb3c2c16460b50a32427de13bd8c38e9b08646acacb67b8",
+    "casos_ignorados": []
+  },
+  "backend_integracao_banco": {
+    "casos": 182,
+    "aprovados": 179,
+    "falhas": 0,
+    "erros": 0,
+    "ignorados": 3,
+    "segundos": 511.232,
+    "junit_sha256": "265d4a5dbbaf992e48f9e3e771f55bb2254e8f89eae4d1486e8e1ddc953db255",
+    "casos_ignorados": [
+      {
+        "id": "tests.ai.test_evaluation_real.test_real_semantic_llm_benchmark",
+        "motivo": "Ensaio real opt-in: chave, E5 e PostgreSQL obrigatórios."
+      },
+      {
+        "id": "tests.ai.test_live_mvp.test_live_generation_publication_and_aerobic_chat[generation]",
+        "motivo": "Selecionar explicitamente uma rota; consome quota gratuita."
+      },
+      {
+        "id": "tests.ai.test_live_mvp.test_live_generation_publication_and_aerobic_chat[chat]",
+        "motivo": "Selecionar explicitamente uma rota; consome quota gratuita."
+      }
+    ]
+  },
+  "regressao_focal_incluida_na_matriz": {
+    "casos": 20,
+    "aprovados": 20,
+    "falhas": 0,
+    "erros": 0,
+    "ignorados": 0,
+    "segundos": 43.919,
+    "junit_sha256": "3229e62fbdf174cb10966959cfa723a2a72eabbf1c83950d4480713b922d0519",
+    "casos_ignorados": []
+  },
+  "frontend": {
+    "aprovados": 94,
+    "falhas": 0,
+    "ignorados": 0,
+    "arquivos": 20,
+    "relatorio_sha256": "8e79b5f3ac08862ca0313713b4513d856de48e124d08df74202215bed3ac8cd8"
+  },
+  "verificacoes": {
+    "ruff": true,
+    "ruff_format": true,
+    "mypy_fontes": 236,
+    "frontend_lint": true,
+    "frontend_tipos": true,
+    "frontend_build": true,
+    "spec_fontes": 122,
+    "documentacao_sem_inconsistencias": true,
+    "mer_original_preservado": true
+  },
+  "servicos_reais": [
+    "PostgreSQL 17 / academia_test",
+    "Qdrant local persistente temporário",
+    "E5 multilíngue CPU",
+    "Mailpit SMTP/HTTP local"
+  ],
+  "chamadas_llm_reais": 0,
+  "limites": [
+    "Sem nova navegação E2E ou medição de carga.",
+    "Os três testes ignorados exigem LLM real explicitamente habilitado; as chaves foram removidas do processo.",
+    "A falha inicial do teste de retenção era uma expectativa antiga de histórico vazio; as verificações de conteúdo expurgado foram preservadas e ampliadas.",
+    "A primeira rodada de unitários teve 46 erros de preparação por diretório temporário ausente; após criar o diretório, os 354 passaram."
+  ],
+  "fontes_sha256": {
+    "backend/app/modules/ai/chat/service.py": "d5d7d340b0a5fec0414aa933190a5ad2196413b2ad04161a3ba5a154487765e1",
+    "backend/app/modules/ai/chat/views.py": "87336b82266411c02ee989cb6eb8496ee3fa3edae6f2ad74a75dac5536db3211",
+    "backend/tests/ai/test_chat_history.py": "b79fa33241263d788c01a670072f50767ae99f37419c674b2e9642937fb31f2a",
+    "backend/tests/ai/test_chat_integration.py": "0777422a281ff4614ce72a8f6236de951db43ff50652dcef3282f85e211787f7",
+    "backend/tests/ai/test_evaluation_guards.py": "f8bc17df22263db238f09d86f2fd5ea02b7db105409b0bc16cb6d9ee941e4bda",
+    "frontend/src/features/training-chat/TrainingChat.tsx": "8f18bec3523017f5c5b70acbc7d0c7faf65f6f1eea807752fdfdbdf708bd7805",
+    "frontend/src/features/training-chat/TrainingChat.test.tsx": "f82914728797326f91e041fd9058449387655a6f8d73b3f14abf1973cc05942a",
+    "frontend/src/features/training-chat/api.ts": "6e3bcf944254fb0dd05d1248d5923f199c226940219f886bd1ee2c4e75fdacfb",
+    "docs/requisitos/schemas/chat-ia-v1.schema.json": "602a2b6fb7b24053e430177b0c6c3e52d7f06c72e71c291005994df25b6ae4e5"
+  },
+  "modelagem": {
+    "entidades_mer_original": 18,
+    "tabelas_logicas_planejadas": 43,
+    "colunas_logicas": 335,
+    "tabelas_mvp": 32,
+    "colunas_mvp": 262,
+    "fks_mvp": 53,
+    "indices_postgresql": 78,
+    "bytes_tabelas_indices_amostra_local": 2039808,
+    "schema_alterado": false
+  },
+  "servicos_apos_testes": {
+    "postgres": false,
+    "mailpit": false,
+    "api": false,
+    "frontend": false
+  }
+}

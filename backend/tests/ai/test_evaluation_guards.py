@@ -59,7 +59,13 @@ def test_sixteenth_version_cannot_be_recovered_from_chat(
     for _ in range(15):
         assert generator.generate(actor, actor.user_id, request()).estado == "PUBLICADA"
     shown = chat.turn(actor, question.solicitacao_id)
-    assert not shown.resposta and not shown.fontes and chat.history(actor, 1) == []
+    assert not shown.resposta and not shown.fontes
+    assert shown.estado == "ABSTENCAO"
+    assert shown.motivo == "CONTEXTO_OU_FONTES_SUPERADOS"
+    assert shown.contexto_anterior
+    assert shown.versao_contexto_id == first.versao_publicada_id
+    history = chat.history(actor, 1)
+    assert len(history) == 1 and history[0] == shown
     with sessions.begin() as session:
         expired = published_workout(
             session, actor, actor.user_id, first.versao_publicada_id
