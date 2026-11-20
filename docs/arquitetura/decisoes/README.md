@@ -26,3 +26,5 @@ GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão
 - [ADR-011 — Amostra real mínima e quatro exercícios por dia](ADR-011-amostra-real-minima.md).
 
 - [ADR-012 — Contrato estruturado, contexto compacto e cobertura aeróbica](ADR-012-estabilidade-ia-e-cobertura-aerobica.md).
+
+- [ADR-013 — Normalização da persistência de IA e chat](ADR-013-normalizacao-persistencia-ia-chat.md): revisão 0016, fontes canônicas, backup e reversão, preservando contratos e regras.

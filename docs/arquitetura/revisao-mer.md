@@ -186,7 +186,8 @@ Revisão atual substitui planos de pesquisa, ferramentas dinâmicas e suficiênc
 agentiva por execução, resumo/decisão de triagem, etapas fixas e evidências.
 Consultar [dados vigentes](modelo-de-dados/dados-rag-ia.md) antes de FND-03.
 EXERCICIO e seus recursos atendem RF-38; conteúdo prescrito fica em ITEM_FICHA.
-A imagem original permanece intacta, sem migrations nesta revisão.
+A imagem original permanece intacta; aquela revisão semântica foi documental,
+sem migration própria. A normalização física posterior está registrada abaixo.
 
 ## Avaliação do tamanho após o MVP — 2026-11-19
 
@@ -195,3 +196,29 @@ A imagem original permanece intacta, sem migrations nesta revisão.
 efetivamente implantadas no MVP. Esses artefatos têm níveis/escopos diferentes.
 A avaliação não altera o MER, o DBML/JSON ou migrations; propostas dependem de
 medição e de uma entrega própria se adotadas.
+
+## Normalização aplicada — revisão 0016
+
+A avaliação anterior é o retrato antes da mudança, preservado como histórico.
+Por solicitação explícita do responsável, a
+[ADR-013](decisoes/ADR-013-normalizacao-persistencia-ia-chat.md) adota fontes
+canônicas para pergunta, triagem e consumo e remove o marcador conversa sem
+atributos próprios. Preserva entidades de domínio, contratos e FKs compostas.
+
+| Modelo | Antes da 0016 | Após a 0016 |
+|---|---:|---:|
+| Físico do MVP | 32 tabelas, 262 colunas, 53 FKs | 31 tabelas, 258 colunas, 51 FKs |
+| Lógico completo, incluindo futuro | 43 tabelas, 335 colunas | 42 tabelas, 331 colunas |
+| MER conceitual original | 18 entidades | Preservado, sem regravar a imagem |
+
+Onze tabelas do modelo lógico continuam futuras, incluindo configuração da
+academia, matrícula/planos, financeiro, biometria/acesso e agenda. Diferenças de
+contagem entre o conceito original e o físico não medem desperdício: identidade,
+versionamento, recursos, segurança e evidências exigem estruturas distintas.
+
+O [painel e diagrama físico](modelo-de-dados/visualizacao-otimizada/README.md)
+permitem comparar escopos e ver todas as FKs reais a partir dos metadados ORM.
+O [relatório de backup, migração e regressão](../testes/otimizacao-modelagem-20261119.md)
+registra verificação de dados legados e testes atuais. Não afirmar ganho de bytes
+ou desempenho sem medição comparável; a otimização aplicada reduz redundância
+e deixa mais clara a fonte de cada dado.

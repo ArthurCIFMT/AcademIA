@@ -24,10 +24,9 @@ from tests.knowledge.test_indexing import sessions as sessions
 def test_prior_context_visibility_respects_retention(retained: bool) -> None:
     message = Message(
         id=uuid4(),
-        conversa_id=uuid4(),
+        cliente_id=uuid4(),
         solicitacao_id=uuid4(),
-        pedido={"finalidade": "DUVIDA"},
-        pergunta="Pergunta sintética",
+        pedido={"finalidade": "DUVIDA", "mensagem": "Pergunta sintética"},
         criada_em=utc_now(),
         versao_contexto_id=uuid4(),
         estado="RESPOSTA_PRONTA",

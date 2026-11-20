@@ -52,6 +52,21 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   duplicar embeddings íntegros. Não apagar metadados para esconder falhas.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.
   Chamadas LLM são únicas por etapa; estado interrompido não dispara replay.
+- Revisão 0016: mensagem aponta diretamente ao cliente; não há tabela conversa.
+  Unique(cliente_id,solicitacao_id), índice(cliente_id,criada_em) e FK composta
+  mensagem(cliente_id,versao_contexto_id) → versao_ficha(cliente_id,id) preservam
+  idempotência, histórico e titularidade. A FK simples de contexto é redundante
+  e foi removida; o contexto pode ser nulo sem dispensar a FK do cliente.
+- Pergunta tem uma única fonte em mensagem.pedido.mensagem, string obrigatória de
+  1 a 1.000 caracteres após btrim. Pedido completo e hashes continuam congelados;
+  consulta histórica não os reconstrói com onboarding/ficha/histórico atuais.
+- Resumo de triagem canônico em execucao_ia.resultado.triagem; a tabela triagem
+  conserva metadados de política/snapshot/decisão, sem JSON resumo duplicado.
+  Retenção privada de 90 dias remove o conteúdo, preservando recibos e auditoria.
+- Consumo canônico nas colunas de etapa_ia, sem JSON dados ou cópia em resultado.
+  DTOs são hidratados; total de tokens é derivado. Entrada/saída são ambos nulos
+  ou ambos conhecidos não negativos. Consumo desconhecido não significa zero;
+  não perder reserva, contadores ou registro de chamada durante limpeza/replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
 - Foto ativa por cliente matriculado; substituição mantém metadados, descarta
   referência antiga via provedor; reconhecimento não libera acesso sozinho.
@@ -93,7 +108,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 USUARIO → usuario/usuario_papel/perfis/sessoes; CLIENTE/FUNCIONARIO preservados.
 ONBOARDING/Queixa → versões com dados estruturados e origem; evitar queixa duplicada.
 VERSAO_FICHA/ITEM_FICHA → dias/itens/parecer; INSTRUCAO → designação + recursos.
-INTERACAO_IA → conversa/mensagem/execução/triagem/etapas/evidências.
+INTERACAO_IA → mensagem por cliente/execução/triagem/etapas/evidências.
+O marcador conversa introduzido na 0015 foi removido na normalização 0016,
+sem retirar a funcionalidade de conversa ou a separação entre histórico e contexto.
 EQUIPAMENTO/EXERCICIO → catálogo e combinações; BIOMETRIA/REGISTRO_ACESSO →
 referência, eventos, decisões e presença. ASSINATURA → matrícula.
 PLANO/COBRANCA/PAGAMENTO e AULA → capacidades posteriores correspondentes.

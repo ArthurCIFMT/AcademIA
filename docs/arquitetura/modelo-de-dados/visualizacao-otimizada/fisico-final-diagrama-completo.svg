@@ -1,0 +1,1156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3174" height="4937" viewBox="0 0 3174 4937"><rect width="100%" height="100%" fill="#f5f7fb"/>
+<text x="40" y="58.8" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="#16243a">MVP após otimização</text>
+<text x="40" y="98.0" font-family="Arial,sans-serif" font-size="20" font-weight="400" fill="#52627a">Modelo físico otimizado — migração 0016 · 31 tabelas · 258 colunas · 51 FKs</text>
+<rect x="40" y="160" width="2660" height="586" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="198.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#146a82">MOD-01 | Identidade e perfis</text>
+<rect x="40" y="782" width="680" height="346" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="820.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#435db4">MOD-02 | Designação de instrutores</text>
+<rect x="40" y="1164" width="2000" height="466" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="1202.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#996222">MOD-03 | Onboarding e avaliação</text>
+<rect x="40" y="1666" width="2660" height="874" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="1704.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#6655a5">MOD-04 | Exercícios e fichas</text>
+<rect x="40" y="2576" width="2660" height="658" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="2614.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#24745b">MOD-05 | Literatura e RAG</text>
+<rect x="40" y="3270" width="2660" height="658" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="3308.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#9a4861">MOD-06 | IA e chat</text>
+<rect x="40" y="3964" width="680" height="394" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="4002.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#446b80">MOD-10 | Equipamentos</text>
+<rect x="40" y="4394" width="2000" height="442" rx="12" fill="#edf2f8" stroke="#ccd6e3"/>
+<text x="62" y="4432.7" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#7c653b">MOD-12 | Auditoria e comunicação</text>
+<polyline points="680,4576 2765,4576 2765,558 680,558" fill="none" stroke="#7c653b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#7c653b"/>
+<polyline points="680,1346 2783,1346 2783,318 680,318" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#996222"/>
+<polyline points="680,1346 2801,1346 2801,1346 2000,1346" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="2000,1346 2008.104023921174,1342.085310192999 2008.104023921174,1349.914689807001" fill="#996222"/>
+<polyline points="680,1370 2819,1370 2819,318 1340,318" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="1340,318 1348.104023921174,314.0853101929989 1348.104023921174,321.9146898070011" fill="#996222"/>
+<polyline points="680,318 2837,318 2837,558 680,558" fill="none" stroke="#146a82" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#146a82"/>
+<polyline points="1340,1346 2855,1346 2855,1322 2000,1322" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="2000,1322 2008.104023921174,1318.085310192999 2008.104023921174,1325.914689807001" fill="#996222"/>
+<polyline points="680,1060 2873,1060 2873,558 680,558" fill="none" stroke="#435db4" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#435db4"/>
+<polyline points="680,964 2891,964 2891,318 680,318" fill="none" stroke="#435db4" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#435db4"/>
+<polyline points="680,988 2909,988 2909,318 1340,318" fill="none" stroke="#435db4" stroke-width="1"/>
+<polygon points="1340,318 1348.104023921174,314.0853101929989 1348.104023921174,321.9146898070011" fill="#435db4"/>
+<polyline points="680,1848 2927,1848 2927,2136 1340,2136" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,2136 1348.104023921174,2132.085310192999 1348.104023921174,2139.914689807001" fill="#6655a5"/>
+<polyline points="1340,3046 2945,3046 2945,558 680,558" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#24745b"/>
+<polyline points="1340,2974 2963,2974 2963,558 680,558" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#24745b"/>
+<polyline points="1340,2758 2981,2758 2981,2734 680,2734" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="680,2734 688.1040239211741,2730.085310192999 688.1040239211741,2737.914689807001" fill="#24745b"/>
+<polyline points="1340,3094 2999,3094 2999,558 680,558" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#24745b"/>
+<polyline points="680,3452 3017,3452 3017,3428 2000,3428" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,3428 2008.104023921174,3424.085310192999 2008.104023921174,3431.914689807001" fill="#9a4861"/>
+<polyline points="1340,3452 3035,3452 3035,3428 2000,3428" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,3428 2008.104023921174,3424.085310192999 2008.104023921174,3431.914689807001" fill="#9a4861"/>
+<polyline points="1340,3476 3053,3476 3053,2734 2000,2734" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,2734 2008.104023921174,2730.085310192999 2008.104023921174,2737.914689807001" fill="#9a4861"/>
+<polyline points="2000,3452 3071,3452 3071,558 680,558" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#9a4861"/>
+<polyline points="2000,3476 2765,3476 2765,318 680,318" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#9a4861"/>
+<polyline points="2000,3476 2783,3476 2783,1346 2000,1346" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,1346 2008.104023921174,1342.085310192999 2008.104023921174,1349.914689807001" fill="#9a4861"/>
+<polyline points="2000,3476 2801,3476 2801,2160 1340,2160" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="1340,2160 1348.104023921174,2156.085310192999 1348.104023921174,2163.914689807001" fill="#9a4861"/>
+<polyline points="2000,3476 2819,3476 2819,2160 1340,2160" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="1340,2160 1348.104023921174,2156.085310192999 1348.104023921174,2163.914689807001" fill="#9a4861"/>
+<polyline points="2000,1872 2837,1872 2837,4122 680,4122" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,4122 688.1040239211741,4118.085310192999 688.1040239211741,4125.914689807001" fill="#6655a5"/>
+<polyline points="2000,1848 2855,1848 2855,1824 2660,1824" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="2660,1824 2668.1040239211743,1820.085310192999 2668.1040239211743,1827.914689807001" fill="#6655a5"/>
+<polyline points="2660,1848 2873,1848 2873,1824 1340,1824" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,1824 1348.104023921174,1820.085310192999 1348.104023921174,1827.914689807001" fill="#6655a5"/>
+<polyline points="2000,2758 2891,2758 2891,2734 2660,2734" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="2660,2734 2668.1040239211743,2730.085310192999 2668.1040239211743,2737.914689807001" fill="#24745b"/>
+<polyline points="1340,318 2909,318 2909,558 680,558" fill="none" stroke="#146a82" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#146a82"/>
+<polyline points="2660,2998 2927,2998 2927,558 680,558" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#24745b"/>
+<polyline points="2660,2758 2945,2758 2945,2734 1340,2734" fill="none" stroke="#24745b" stroke-width="1"/>
+<polygon points="1340,2734 1348.104023921174,2730.085310192999 1348.104023921174,2737.914689807001" fill="#24745b"/>
+<polyline points="2660,2016 2963,2016 2963,1824 680,1824" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,1824 688.1040239211741,1820.085310192999 688.1040239211741,1827.914689807001" fill="#6655a5"/>
+<polyline points="2660,2040 2981,2040 2981,1824 1340,1824" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,1824 1348.104023921174,1820.085310192999 1348.104023921174,1827.914689807001" fill="#6655a5"/>
+<polyline points="2660,3452 2999,3452 2999,318 680,318" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#9a4861"/>
+<polyline points="2660,3452 3017,3452 3017,2160 1340,2160" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="1340,2160 1348.104023921174,2156.085310192999 1348.104023921174,2163.914689807001" fill="#9a4861"/>
+<polyline points="1340,4576 3035,4576 3035,558 680,558" fill="none" stroke="#7c653b" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#7c653b"/>
+<polyline points="2000,1346 3053,1346 3053,318 680,318" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#996222"/>
+<polyline points="2000,1538 3071,1538 3071,558 680,558" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#996222"/>
+<polyline points="2000,1490 2765,1490 2765,558 680,558" fill="none" stroke="#996222" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#996222"/>
+<polyline points="2000,2064 2783,2064 2783,318 1340,318" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,318 1348.104023921174,314.0853101929989 1348.104023921174,321.9146898070011" fill="#6655a5"/>
+<polyline points="2000,2040 2801,2040 2801,2136 1340,2136" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,2136 1348.104023921174,2132.085310192999 1348.104023921174,2139.914689807001" fill="#6655a5"/>
+<polyline points="2000,342 2819,342 2819,558 680,558" fill="none" stroke="#146a82" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#146a82"/>
+<polyline points="2660,342 2837,342 2837,558 680,558" fill="none" stroke="#146a82" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#146a82"/>
+<polyline points="1340,3692 2855,3692 2855,3428 2000,3428" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,3428 2008.104023921174,3424.085310192999 2008.104023921174,3431.914689807001" fill="#9a4861"/>
+<polyline points="1340,3716 2873,3716 2873,1322 2000,1322" fill="none" stroke="#9a4861" stroke-width="1"/>
+<polygon points="2000,1322 2008.104023921174,1318.085310192999 2008.104023921174,1325.914689807001" fill="#9a4861"/>
+<polyline points="1340,582 2891,582 2891,558 680,558" fill="none" stroke="#146a82" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#146a82"/>
+<polyline points="680,2088 2909,2088 2909,558 680,558" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#6655a5"/>
+<polyline points="680,2040 2927,2040 2927,2136 1340,2136" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,2136 1348.104023921174,2132.085310192999 1348.104023921174,2139.914689807001" fill="#6655a5"/>
+<polyline points="1340,2232 2945,2232 2945,558 680,558" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,558 688.1040239211741,554.0853101929989 688.1040239211741,561.9146898070011" fill="#6655a5"/>
+<polyline points="1340,2160 2963,2160 2963,318 680,318" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,318 688.1040239211741,314.0853101929989 688.1040239211741,321.9146898070011" fill="#6655a5"/>
+<polyline points="1340,2160 2981,2160 2981,1346 2000,1346" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="2000,1346 2008.104023921174,1342.085310192999 2008.104023921174,1349.914689807001" fill="#6655a5"/>
+<polyline points="1340,2160 2999,2160 2999,1346 680,1346" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="680,1346 688.1040239211741,1342.085310192999 688.1040239211741,1349.914689807001" fill="#6655a5"/>
+<polyline points="1340,2160 3017,2160 3017,2160 1340,2160" fill="none" stroke="#6655a5" stroke-width="1"/>
+<polygon points="1340,2160 1348.104023921174,2156.085310192999 1348.104023921174,2163.914689807001" fill="#6655a5"/>
+<rect x="80" y="4472" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="4472" width="600" height="43" rx="4" fill="#7c653b" stroke="#7c653b"/>
+<text x="94" y="4499.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">auditoria</text>
+<text x="94" y="4532.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="4541" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b">PK</text>
+<text x="146" y="4555.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b">FK</text>
+<text x="146" y="4579.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ator_id</text>
+<text x="435" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="4589" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4603.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">acao</text>
+<text x="435" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<text x="92" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4627.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">recurso_tipo</text>
+<text x="435" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(60)</text>
+<rect x="81" y="4637" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4651.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">recurso_id</text>
+<text x="435" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4675.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">motivo</text>
+<text x="435" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="81" y="4685" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4699.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">correlation_id</text>
+<text x="435" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="4722.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="146" y="4723.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ocorrido_em</text>
+<text x="435" y="4722.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="80" y="1242" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="1242" width="600" height="43" rx="4" fill="#996222" stroke="#996222"/>
+<text x="94" y="1269.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">avaliacao</text>
+<text x="94" y="1302.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="1311" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">PK</text>
+<text x="146" y="1325.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="146" y="1349.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="435" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="1359" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="146" y="1373.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">instrutor_id</text>
+<text x="435" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="146" y="1397.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">onboarding_id</text>
+<text x="435" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="1407" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="146" y="1421.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">registrado_em</text>
+<text x="435" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="92" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="146" y="1445.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">dados</text>
+<text x="435" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="80" y="238" width="600" height="200" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="238" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="94" y="265.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">cliente</text>
+<text x="94" y="298.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="307" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK FK</text>
+<text x="146" y="321.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">usuario_id</text>
+<text x="435" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="345.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">nome</text>
+<text x="435" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(120)</text>
+<rect x="81" y="355" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="369.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">data_nascimento</text>
+<text x="435" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">DATE</text>
+<text x="92" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="393.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">telefone</text>
+<text x="435" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<rect x="81" y="403" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="417.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ativo</text>
+<text x="435" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<rect x="740" y="1242" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="1242" width="600" height="43" rx="4" fill="#996222" stroke="#996222"/>
+<text x="754" y="1269.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">convite_onboarding</text>
+<text x="754" y="1302.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="1311" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">PK</text>
+<text x="806" y="1325.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="806" y="1349.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">onboarding_id</text>
+<text x="1095" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="1359" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1373.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">token_hash</text>
+<text x="1095" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">CHAR(64)</text>
+<text x="752" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1397.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">expira_em</text>
+<text x="1095" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="741" y="1407" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1421.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revogado_em</text>
+<text x="1095" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="752" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1445.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">consumido_em</text>
+<text x="1095" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="741" y="1455" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1468.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1469.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">sessao_restrita_hash</text>
+<text x="1095" y="1468.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">CHAR(64)</text>
+<text x="752" y="1492.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="806" y="1493.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">sessao_expira_em</text>
+<text x="1095" y="1492.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="80" y="860" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="860" width="600" height="43" rx="4" fill="#435db4" stroke="#435db4"/>
+<text x="94" y="887.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">designacao</text>
+<text x="94" y="920.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="929" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="942.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4">PK</text>
+<text x="146" y="943.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="942.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="966.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4">FK</text>
+<text x="146" y="967.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="435" y="966.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="977" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="990.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4">FK</text>
+<text x="146" y="991.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">instrutor_id</text>
+<text x="435" y="990.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="1014.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4"></text>
+<text x="146" y="1015.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">inicio</text>
+<text x="435" y="1014.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="81" y="1025" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1038.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4"></text>
+<text x="146" y="1039.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">fim</text>
+<text x="435" y="1038.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="92" y="1062.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#435db4">FK</text>
+<text x="146" y="1063.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">atribuido_por</text>
+<text x="435" y="1062.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="80" y="1744" width="600" height="176" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="1744" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="94" y="1771.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">dia_ficha</text>
+<text x="94" y="1804.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="1813" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="146" y="1827.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="146" y="1851.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_id</text>
+<text x="435" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="1861" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="1875.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ordem</text>
+<text x="435" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="92" y="1898.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="1899.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">titulo</text>
+<text x="435" y="1898.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(60)</text>
+<rect x="80" y="2654" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="2654" width="600" height="43" rx="4" fill="#24745b" stroke="#24745b"/>
+<text x="94" y="2681.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">documento</text>
+<text x="94" y="2714.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="2723" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">PK</text>
+<text x="146" y="2737.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="146" y="2761.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ambiente</text>
+<text x="435" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(15)</text>
+<rect x="81" y="2771" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="146" y="2785.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">catalogo_id</text>
+<text x="435" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(40)</text>
+<text x="92" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="146" y="2809.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">titulo</text>
+<text x="435" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="81" y="2819" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="146" y="2833.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">origem_url</text>
+<text x="435" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="92" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="146" y="2857.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">licenca</text>
+<text x="435" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="740" y="2654" width="600" height="536" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="2654" width="600" height="43" rx="4" fill="#24745b" stroke="#24745b"/>
+<text x="754" y="2681.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">documento_versao</text>
+<text x="754" y="2714.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="2723" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">PK</text>
+<text x="806" y="2737.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="806" y="2761.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">documento_id</text>
+<text x="1095" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="2771" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="806" y="2785.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ambiente</text>
+<text x="1095" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(15)</text>
+<text x="752" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2809.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">numero</text>
+<text x="1095" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="741" y="2819" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2833.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">sha256</text>
+<text x="1095" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<text x="752" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2857.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">idioma</text>
+<text x="1095" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(12)</text>
+<rect x="741" y="2867" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2881.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">arquivo_ref</text>
+<text x="1095" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="752" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2905.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">formato</text>
+<text x="1095" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(3)</text>
+<rect x="741" y="2915" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2929.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tamanho_bytes</text>
+<text x="1095" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="752" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="2953.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">metadados</text>
+<text x="1095" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="741" y="2963" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="806" y="2977.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_por</text>
+<text x="1095" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3001.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_em</text>
+<text x="1095" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="741" y="3011" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3025.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1095" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="752" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="806" y="3049.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">aprovado_por</text>
+<text x="1095" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="3059" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3073.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">aprovado_em</text>
+<text x="1095" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="752" y="3096.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="806" y="3097.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revogado_por</text>
+<text x="1095" y="3096.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="3107" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3120.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3121.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revogado_em</text>
+<text x="1095" y="3120.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="752" y="3144.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3145.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">motivo_revogacao</text>
+<text x="1095" y="3144.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="741" y="3155" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3168.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="806" y="3169.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="1095" y="3168.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="80" y="4042" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="4042" width="600" height="43" rx="4" fill="#446b80" stroke="#446b80"/>
+<text x="94" y="4069.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">equipamento</text>
+<text x="94" y="4102.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="4111" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4124.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80">PK</text>
+<text x="146" y="4125.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="4124.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="4148.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4149.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">nome</text>
+<text x="435" y="4148.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(120)</text>
+<rect x="81" y="4159" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4172.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4173.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">descricao</text>
+<text x="435" y="4172.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="92" y="4196.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4197.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">categoria</text>
+<text x="435" y="4196.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<rect x="81" y="4207" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4220.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4221.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">imagem_ref</text>
+<text x="435" y="4220.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="92" y="4244.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4245.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ativo</text>
+<text x="435" y="4244.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<rect x="81" y="4255" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="4268.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4269.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">operacional</text>
+<text x="435" y="4268.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<text x="92" y="4292.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#446b80"></text>
+<text x="146" y="4293.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="435" y="4292.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="80" y="3348" width="600" height="368" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="3348" width="600" height="43" rx="4" fill="#9a4861" stroke="#9a4861"/>
+<text x="94" y="3375.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">etapa_ia</text>
+<text x="94" y="3408.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="3417" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">PK</text>
+<text x="146" y="3431.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="146" y="3455.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">execucao_id</text>
+<text x="435" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="3465" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3479.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tipo</text>
+<text x="435" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="92" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3503.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="435" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<rect x="81" y="3513" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3527.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">chamadas</text>
+<text x="435" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="92" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3551.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">limite_saida_tokens</text>
+<text x="435" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="81" y="3561" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3575.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">prompt_bytes</text>
+<text x="435" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="92" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3599.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">prompt_sha256</text>
+<text x="435" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<rect x="81" y="3609" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3622.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3623.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">enviada_em</text>
+<text x="435" y="3622.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="92" y="3646.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3647.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">duracao_ms</text>
+<text x="435" y="3646.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="81" y="3657" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3671.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tokens_entrada</text>
+<text x="435" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="92" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="146" y="3695.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tokens_saida</text>
+<text x="435" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="740" y="3348" width="600" height="200" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="3348" width="600" height="43" rx="4" fill="#9a4861" stroke="#9a4861"/>
+<text x="754" y="3375.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">evidencia_execucao</text>
+<text x="754" y="3408.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="3417" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">PK</text>
+<text x="806" y="3431.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="806" y="3455.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">execucao_id</text>
+<text x="1095" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="3465" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="806" y="3479.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">fragmento_id</text>
+<text x="1095" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="806" y="3503.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">finalidade</text>
+<text x="1095" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<rect x="741" y="3513" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="806" y="3527.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">metadados</text>
+<text x="1095" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="1400" y="3348" width="600" height="536" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="3348" width="600" height="43" rx="4" fill="#9a4861" stroke="#9a4861"/>
+<text x="1414" y="3375.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">execucao_ia</text>
+<text x="1414" y="3408.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="3417" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">PK</text>
+<text x="1466" y="3431.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="1466" y="3455.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ator_id</text>
+<text x="1755" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="3465" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="1466" y="3479.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="1755" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3503.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">idempotency_key</text>
+<text x="1755" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(100)</text>
+<rect x="1401" y="3513" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3527.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">entrada_hash</text>
+<text x="1755" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<text x="1412" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3551.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">request_hash</text>
+<text x="1755" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<rect x="1401" y="3561" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3575.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">finalidade</text>
+<text x="1755" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="1412" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3599.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1755" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(35)</text>
+<rect x="1401" y="3609" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3622.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="1466" y="3623.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">onboarding_id</text>
+<text x="1755" y="3622.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="3646.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="1466" y="3647.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_base_id</text>
+<text x="1755" y="3646.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="3657" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="1466" y="3671.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_publicada_id</text>
+<text x="1755" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3695.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">worker_id</text>
+<text x="1755" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="3705" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3718.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3719.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">config_version</text>
+<text x="1755" y="3718.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="3742.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3743.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">modelo</text>
+<text x="1755" y="3742.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(100)</text>
+<rect x="1401" y="3753" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3766.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3767.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">prompt_version</text>
+<text x="1755" y="3766.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(60)</text>
+<text x="1412" y="3790.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3791.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">iniciada_em</text>
+<text x="1755" y="3790.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1401" y="3801" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3814.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3815.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">prazo_em</text>
+<text x="1755" y="3814.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="1412" y="3838.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3839.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">terminada_em</text>
+<text x="1755" y="3838.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1401" y="3849" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3862.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="1466" y="3863.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">resultado</text>
+<text x="1755" y="3862.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="740" y="1744" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="1744" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="754" y="1771.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">exercicio</text>
+<text x="754" y="1804.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="1813" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="806" y="1827.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1851.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">nome</text>
+<text x="1095" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(120)</text>
+<rect x="741" y="1861" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1875.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">nome_normalizado</text>
+<text x="1095" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(120)</text>
+<text x="752" y="1898.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1899.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">descricao</text>
+<text x="1095" y="1898.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="741" y="1909" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1922.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1923.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">grupo_muscular</text>
+<text x="1095" y="1922.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<text x="752" y="1946.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1947.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">dispensa_equipamento</text>
+<text x="1095" y="1946.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<rect x="741" y="1957" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="1970.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1971.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ativo</text>
+<text x="1095" y="1970.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<text x="752" y="1994.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="1995.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="1095" y="1994.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1400" y="1744" width="600" height="152" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="1744" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="1414" y="1771.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">exercicio_recurso</text>
+<text x="1414" y="1804.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="1813" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="1466" y="1827.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="1466" y="1851.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">grupo_id</text>
+<text x="1755" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="1861" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="1466" y="1875.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">equipamento_id</text>
+<text x="1755" y="1874.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2060" y="1744" width="600" height="128" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="2060" y="1744" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="2074" y="1771.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">exercicio_recurso_grupo</text>
+<text x="2074" y="1804.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="2061" y="1813" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="2126" y="1827.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="2415" y="1826.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="2126" y="1851.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">exercicio_id</text>
+<text x="2415" y="1850.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1400" y="2654" width="600" height="464" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="2654" width="600" height="43" rx="4" fill="#24745b" stroke="#24745b"/>
+<text x="1414" y="2681.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">fragmento</text>
+<text x="1414" y="2714.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="2723" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">PK</text>
+<text x="1466" y="2737.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="1466" y="2761.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ingestao_id</text>
+<text x="1755" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="2771" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2785.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ordem</text>
+<text x="1755" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2809.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">pagina_inicio</text>
+<text x="1755" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1401" y="2819" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2833.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">pagina_fim</text>
+<text x="1755" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2857.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">linha_inicio</text>
+<text x="1755" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1401" y="2867" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2881.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">linha_fim</text>
+<text x="1755" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2905.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">secao</text>
+<text x="1755" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="1401" y="2915" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2929.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">inicio</text>
+<text x="1755" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2953.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">fim</text>
+<text x="1755" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1401" y="2963" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="2977.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">texto_hash</text>
+<text x="1755" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<text x="1412" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="3001.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tokens</text>
+<text x="1755" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1401" y="3011" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="3025.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">input_tokens</text>
+<text x="1755" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="3049.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">vetor_id</text>
+<text x="1755" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="3059" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="3073.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">colecao</text>
+<text x="1755" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(100)</text>
+<text x="1412" y="3096.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="1466" y="3097.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">indexado_em</text>
+<text x="1755" y="3096.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="740" y="238" width="600" height="200" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="238" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="754" y="265.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">funcionario</text>
+<text x="754" y="298.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="307" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK FK</text>
+<text x="806" y="321.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">usuario_id</text>
+<text x="1095" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="806" y="345.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">nome</text>
+<text x="1095" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(120)</text>
+<rect x="741" y="355" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="806" y="369.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cargo</text>
+<text x="1095" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<text x="752" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="806" y="393.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">data_admissao</text>
+<text x="1095" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">DATE</text>
+<rect x="741" y="403" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="806" y="417.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ativo</text>
+<text x="1095" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<rect x="2060" y="2654" width="600" height="440" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="2060" y="2654" width="600" height="43" rx="4" fill="#24745b" stroke="#24745b"/>
+<text x="2074" y="2681.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">ingestao</text>
+<text x="2074" y="2714.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="2061" y="2723" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">PK</text>
+<text x="2126" y="2737.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="2415" y="2736.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="2126" y="2761.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">documento_versao_id</text>
+<text x="2415" y="2760.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="2771" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2785.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">aprovacao_revisao</text>
+<text x="2415" y="2784.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="2072" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2809.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">extracao_id</text>
+<text x="2415" y="2808.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="2819" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2833.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">config_hash</text>
+<text x="2415" y="2832.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<text x="2072" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2857.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">configuracao</text>
+<text x="2415" y="2856.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="2061" y="2867" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2881.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">plano_hash</text>
+<text x="2415" y="2880.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(64)</text>
+<text x="2072" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2905.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">colecao</text>
+<text x="2415" y="2904.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(100)</text>
+<rect x="2061" y="2915" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2929.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="2415" y="2928.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="2072" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2953.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">total</text>
+<text x="2415" y="2952.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="2061" y="2963" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="2977.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">erro_codigo</text>
+<text x="2415" y="2976.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<text x="2072" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b">FK</text>
+<text x="2126" y="3001.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_por</text>
+<text x="2415" y="3000.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="3011" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="3025.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">iniciada_em</text>
+<text x="2415" y="3024.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="2072" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="3049.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">concluida_em</text>
+<text x="2415" y="3048.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="2061" y="3059" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#24745b"></text>
+<text x="2126" y="3073.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="2415" y="3072.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="2060" y="1912" width="600" height="344" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="2060" y="1912" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="2074" y="1939.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">item_ficha</text>
+<text x="2074" y="1972.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="2061" y="1981" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="1994.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="2126" y="1995.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="2415" y="1994.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="2018.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="2126" y="2019.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">dia_id</text>
+<text x="2415" y="2018.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="2029" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="2126" y="2043.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">exercicio_id</text>
+<text x="2415" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2067.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ordem</text>
+<text x="2415" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="2061" y="2077" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2091.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">series</text>
+<text x="2415" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="2072" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2115.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">repeticoes</text>
+<text x="2415" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(40)</text>
+<rect x="2061" y="2125" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2139.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">carga_kg</text>
+<text x="2415" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">NUMERIC(8, 2)</text>
+<text x="2072" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2163.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">intervalo_segundos</text>
+<text x="2415" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="2061" y="2173" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2186.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2187.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cadencia</text>
+<text x="2415" y="2186.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(40)</text>
+<text x="2072" y="2210.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2211.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">observacoes</text>
+<text x="2415" y="2210.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="2061" y="2221" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="2234.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="2126" y="2235.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">exercicio_snapshot</text>
+<text x="2415" y="2234.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="2060" y="3348" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="2060" y="3348" width="600" height="43" rx="4" fill="#9a4861" stroke="#9a4861"/>
+<text x="2074" y="3375.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">mensagem</text>
+<text x="2074" y="3408.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="2061" y="3417" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">PK</text>
+<text x="2126" y="3431.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="2415" y="3430.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="2126" y="3455.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="2415" y="3454.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="3465" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="2126" y="3479.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">solicitacao_id</text>
+<text x="2415" y="3478.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="2126" y="3503.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="2415" y="3502.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<rect x="2061" y="3513" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="2126" y="3527.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">erro_codigo</text>
+<text x="2415" y="3526.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="2072" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="2126" y="3551.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">pedido</text>
+<text x="2415" y="3550.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="2061" y="3561" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="2126" y="3575.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_contexto_id</text>
+<text x="2415" y="3574.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="2126" y="3599.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criada_em</text>
+<text x="2415" y="3598.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="740" y="4472" width="600" height="320" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="4472" width="600" height="43" rx="4" fill="#7c653b" stroke="#7c653b"/>
+<text x="754" y="4499.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">notificacao</text>
+<text x="754" y="4532.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="4541" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b">PK</text>
+<text x="806" y="4555.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b">FK</text>
+<text x="806" y="4579.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">destinatario_id</text>
+<text x="1095" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="4589" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4603.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">evento_id</text>
+<text x="1095" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4627.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">canal</text>
+<text x="1095" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<rect x="741" y="4637" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4651.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tipo</text>
+<text x="1095" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="752" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4675.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1095" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<rect x="741" y="4685" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4699.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">tentativas</text>
+<text x="1095" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="752" y="4722.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4723.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criada_em</text>
+<text x="1095" y="4722.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="741" y="4733" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="4746.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4747.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">atualizada_em</text>
+<text x="1095" y="4746.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="752" y="4770.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="806" y="4771.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">lida_em</text>
+<text x="1095" y="4770.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1400" y="1242" width="600" height="344" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="1242" width="600" height="43" rx="4" fill="#996222" stroke="#996222"/>
+<text x="1414" y="1269.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">onboarding_versao</text>
+<text x="1414" y="1302.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="1311" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">PK</text>
+<text x="1466" y="1325.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="1324.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="1466" y="1349.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="1755" y="1348.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="1359" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1373.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">numero</text>
+<text x="1755" y="1372.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1397.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1755" y="1396.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(20)</text>
+<rect x="1401" y="1407" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1421.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">schema_version</text>
+<text x="1755" y="1420.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1445.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">idade_snapshot</text>
+<text x="1755" y="1444.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1401" y="1455" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1468.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1469.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">dados</text>
+<text x="1755" y="1468.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<text x="1412" y="1492.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="1466" y="1493.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_por</text>
+<text x="1755" y="1492.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="1503" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1516.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1517.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">concluido_em</text>
+<text x="1755" y="1516.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="1412" y="1540.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222">FK</text>
+<text x="1466" y="1541.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">concluido_por</text>
+<text x="1755" y="1540.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="1551" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="1564.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#996222"></text>
+<text x="1466" y="1565.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="1755" y="1564.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="1400" y="4472" width="600" height="248" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="4472" width="600" height="43" rx="4" fill="#7c653b" stroke="#7c653b"/>
+<text x="1414" y="4499.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">outbox</text>
+<text x="1414" y="4532.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="4541" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b">PK</text>
+<text x="1466" y="4555.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="4554.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4579.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">evento_tipo</text>
+<text x="1755" y="4578.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(80)</text>
+<rect x="1401" y="4589" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4603.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">schema_version</text>
+<text x="1755" y="4602.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="1412" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4627.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">payload</text>
+<text x="1755" y="4626.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="1401" y="4637" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4651.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1755" y="4650.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="1412" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4675.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_em</text>
+<text x="1755" y="4674.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1401" y="4685" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#7c653b"></text>
+<text x="1466" y="4699.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">entregue_em</text>
+<text x="1755" y="4698.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1400" y="1936" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="1936" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="1414" y="1963.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">parecer</text>
+<text x="1414" y="1996.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="2005" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2018.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="1466" y="2019.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="2018.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="1466" y="2043.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_id</text>
+<text x="1755" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="2053" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="1466" y="2067.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">instrutor_id</text>
+<text x="1755" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="1466" y="2091.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1755" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(20)</text>
+<rect x="1401" y="2101" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="1466" y="2115.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">motivo</text>
+<text x="1755" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="1412" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="1466" y="2139.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_em</text>
+<text x="1755" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1400" y="238" width="600" height="272" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="1400" y="238" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="1414" y="265.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">sessao</text>
+<text x="1414" y="298.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="1401" y="307" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK</text>
+<text x="1466" y="321.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1755" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="1412" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">FK</text>
+<text x="1466" y="345.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">usuario_id</text>
+<text x="1755" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="1401" y="355" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="369.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">token_hash</text>
+<text x="1755" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">CHAR(64)</text>
+<text x="1412" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="393.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">csrf_hash</text>
+<text x="1755" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">CHAR(64)</text>
+<rect x="1401" y="403" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="417.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_em</text>
+<text x="1755" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="1412" y="440.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="441.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">ultimo_uso_em</text>
+<text x="1755" y="440.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="1401" y="451" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="1412" y="464.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="465.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">expira_em</text>
+<text x="1755" y="464.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="1412" y="488.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="1466" y="489.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revogada_em</text>
+<text x="1755" y="488.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="2060" y="238" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="2060" y="238" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="2074" y="265.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">token_acesso</text>
+<text x="2074" y="298.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="2061" y="307" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK</text>
+<text x="2126" y="321.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="2415" y="320.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="2072" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">FK</text>
+<text x="2126" y="345.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">usuario_id</text>
+<text x="2415" y="344.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="2061" y="355" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="2126" y="369.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">hash</text>
+<text x="2415" y="368.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">CHAR(64)</text>
+<text x="2072" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="2126" y="393.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">finalidade</text>
+<text x="2415" y="392.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(30)</text>
+<rect x="2061" y="403" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="2072" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="2126" y="417.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">expira_em</text>
+<text x="2415" y="416.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="2072" y="440.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="2126" y="441.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">consumido_em</text>
+<text x="2415" y="440.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="740" y="3588" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="3588" width="600" height="43" rx="4" fill="#9a4861" stroke="#9a4861"/>
+<text x="754" y="3615.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">triagem</text>
+<text x="754" y="3648.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="3657" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">PK</text>
+<text x="806" y="3671.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="3670.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="806" y="3695.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">execucao_id</text>
+<text x="1095" y="3694.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="3705" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3718.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861">FK</text>
+<text x="806" y="3719.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">onboarding_id</text>
+<text x="1095" y="3718.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="3742.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="806" y="3743.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">regra_version</text>
+<text x="1095" y="3742.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="741" y="3753" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="3766.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="806" y="3767.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="1095" y="3766.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(35)</text>
+<text x="752" y="3790.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#9a4861"></text>
+<text x="806" y="3791.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">motivos</text>
+<text x="1095" y="3790.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">JSONB</text>
+<rect x="80" y="478" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="478" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="94" y="505.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">usuario</text>
+<text x="94" y="538.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="547" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="560.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK</text>
+<text x="146" y="561.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="435" y="560.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="584.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="585.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">email</text>
+<text x="435" y="584.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(254)</text>
+<rect x="81" y="595" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="608.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="609.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">senha_hash</text>
+<text x="435" y="608.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="92" y="632.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="633.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado</text>
+<text x="435" y="632.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(20)</text>
+<rect x="81" y="643" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="656.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="657.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">criado_em</text>
+<text x="435" y="656.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="92" y="680.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="146" y="681.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="435" y="680.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="740" y="478" width="600" height="152" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="478" width="600" height="43" rx="4" fill="#146a82" stroke="#146a82"/>
+<text x="754" y="505.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">usuario_papel</text>
+<text x="754" y="538.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="547" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="560.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">PK</text>
+<text x="806" y="561.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="560.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="584.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82">FK</text>
+<text x="806" y="585.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">usuario_id</text>
+<text x="1095" y="584.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="595" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="608.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#146a82"></text>
+<text x="806" y="609.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">papel</text>
+<text x="1095" y="608.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(30)</text>
+<rect x="80" y="1960" width="600" height="224" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="80" y="1960" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="94" y="1987.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">validacao_ficha</text>
+<text x="94" y="2020.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="81" y="2029" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK FK</text>
+<text x="146" y="2043.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_id</text>
+<text x="435" y="2042.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="2067.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">solicitacao_id</text>
+<text x="435" y="2066.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="81" y="2077" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="146" y="2091.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">validado_por</text>
+<text x="435" y="2090.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="92" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="2115.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revisao</text>
+<text x="435" y="2114.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="81" y="2125" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="92" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="2139.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">restricoes_conferidas</text>
+<text x="435" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<text x="92" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="146" y="2163.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">validado_em</text>
+<text x="435" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="740" y="2056" width="600" height="440" rx="8" fill="white" stroke="#ccd6e3"/>
+<rect x="740" y="2056" width="600" height="43" rx="4" fill="#6655a5" stroke="#6655a5"/>
+<text x="754" y="2083.1" font-family="Arial,sans-serif" font-size="19" font-weight="700" fill="white">versao_ficha</text>
+<text x="754" y="2116.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#52627a">CHAVE   COLUNA                           TIPO</text>
+<rect x="741" y="2125" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">PK</text>
+<text x="806" y="2139.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">id</text>
+<text x="1095" y="2138.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="806" y="2163.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">cliente_id</text>
+<text x="1095" y="2162.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="2173" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2186.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2187.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">numero</text>
+<text x="1095" y="2186.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<text x="752" y="2210.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2211.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">origem</text>
+<text x="1095" y="2210.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(20)</text>
+<rect x="741" y="2221" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2234.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="806" y="2235.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">autor_id</text>
+<text x="1095" y="2234.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="2258.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="806" y="2259.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">onboarding_id</text>
+<text x="1095" y="2258.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="2269" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2282.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="806" y="2283.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">avaliacao_id</text>
+<text x="1095" y="2282.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<text x="752" y="2306.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5">FK</text>
+<text x="806" y="2307.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">versao_base_id</text>
+<text x="1095" y="2306.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">UUID</text>
+<rect x="741" y="2317" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2330.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2331.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">estado_publicacao</text>
+<text x="1095" y="2330.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(25)</text>
+<text x="752" y="2354.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2355.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">vigente</text>
+<text x="1095" y="2354.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">BOOLEAN</text>
+<rect x="741" y="2365" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2378.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2379.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">publicada_em</text>
+<text x="1095" y="2378.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<text x="752" y="2402.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2403.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">conteudo_excluido_em</text>
+<text x="1095" y="2402.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TIMESTAMP WITH TIME ZONE</text>
+<rect x="741" y="2413" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2426.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2427.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">motivo_exclusao</text>
+<text x="1095" y="2426.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">VARCHAR(40)</text>
+<text x="752" y="2450.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2451.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">revision</text>
+<text x="1095" y="2450.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">INTEGER</text>
+<rect x="741" y="2461" width="598" height="24" rx="0" fill="#f6f8fb" stroke="#f6f8fb"/>
+<text x="752" y="2474.7" font-family="Arial,sans-serif" font-size="13" font-weight="700" fill="#6655a5"></text>
+<text x="806" y="2475.6" font-family="Arial,sans-serif" font-size="14" font-weight="400" fill="#16243a">explicacao</text>
+<text x="1095" y="2474.7" font-family="Arial,sans-serif" font-size="13" font-weight="400" fill="#52627a">TEXT</text>
+<text x="40" y="4910.3" font-family="Arial,sans-serif" font-size="17" font-weight="400" fill="#52627a">PK = chave primária · FK = referência · setas: origem → destino · FKs compostas detalhadas no catálogo e no .drawio.</text>
+</svg>

@@ -1,0 +1,391 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Comparação da modelagem AcademIA</title><style>body{font:16px Arial,sans-serif;color:#16243a;margin:40px;max-width:1800px;background:#f5f7fb} a{color:#146a82} section{background:white;padding:24px;margin:28px 0;border:1px solid #ccd6e3;border-radius:8px}table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border-bottom:1px solid #dce3ed;padding:8px 12px;text-align:left}th{background:#edf2f8}code{font-size:14px}details{margin:18px 0}summary{cursor:pointer;font-weight:bold}img{max-width:100%;height:auto}small{color:#52627a}.scroll{overflow:auto;max-height:85vh}svg{background:white}h1,h2,h3{line-height:1.2}</style><h1>AcademIA | evolução da modelagem</h1><p>MER original e modelo físico do MVP após normalização da persistência — 19/11/2026</p><p>Modelo físico normalizado da migração 0016. Apenas metadados de schema; sem dados de clientes. As 11 tabelas futuras do modelo lógico permanecem fora do MVP mostrado.</p><p><a href="catalogo.json">Catálogo completo de metadados (JSON)</a></p><img src="comparacao-modelagem.png" alt="Comparação de contagens"/>
+<section><h2>MVP após otimização</h2><p>31 tabelas · 258 colunas · 51 constraints de FK. Cada relação composta aparece como uma FK.</p><p>Modelo físico otimizado — migração 0016</p><p><a href="fisico-final-diagrama-completo.svg">Diagrama com todas as colunas (SVG)</a> · <a href="fisico-final.drawio">Diagrama editável com todas as relações (.drawio)</a></p>
+<details open><summary>MOD-12 | Auditoria e comunicação</summary>
+<h3 id="fisico-final-auditoria">auditoria</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ator_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>acao</code></td><td><code>VARCHAR(80)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>recurso_tipo</code></td><td><code>VARCHAR(60)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>recurso_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>motivo</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>correlation_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ocorrido_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: ator_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-notificacao">notificacao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>destinatario_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>evento_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>canal</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>tipo</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>tentativas</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>atualizada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>lida_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: destinatario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-outbox">outbox</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>evento_tipo</code></td><td><code>VARCHAR(80)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>schema_version</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>payload</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>entregue_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+</details>
+<details open><summary>MOD-03 | Onboarding e avaliação</summary>
+<h3 id="fisico-final-avaliacao">avaliacao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id; onboarding_versao.cliente_id, id</code></td></tr>
+<tr><td><code>instrutor_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>funcionario.usuario_id</code></td></tr>
+<tr><td><code>onboarding_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>onboarding_versao.cliente_id, id</code></td></tr>
+<tr><td><code>registrado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>dados</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: cliente_id, onboarding_id → <a href="#fisico-final-onboarding_versao">onboarding_versao.cliente_id, id</a></small></p>
+<p><small>FK: instrutor_id → <a href="#fisico-final-funcionario">funcionario.usuario_id</a></small></p>
+<h3 id="fisico-final-convite_onboarding">convite_onboarding</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>onboarding_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>onboarding_versao.id</code></td></tr>
+<tr><td><code>token_hash</code></td><td><code>CHAR(64)</code></td><td><code>required unique</code></td><td><code>—</code></td></tr>
+<tr><td><code>expira_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>revogado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>consumido_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>sessao_restrita_hash</code></td><td><code>CHAR(64)</code></td><td><code>unique</code></td><td><code>—</code></td></tr>
+<tr><td><code>sessao_expira_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: onboarding_id → <a href="#fisico-final-onboarding_versao">onboarding_versao.id</a></small></p>
+<h3 id="fisico-final-onboarding_versao">onboarding_versao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id</code></td></tr>
+<tr><td><code>numero</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(20)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>schema_version</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>idade_snapshot</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>dados</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_por</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>concluido_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>concluido_por</code></td><td><code>UUID</code></td><td><code></code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: concluido_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: criado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+</details>
+<details open><summary>MOD-01 | Identidade e perfis</summary>
+<h3 id="fisico-final-cliente">cliente</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>usuario_id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>nome</code></td><td><code>VARCHAR(120)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>data_nascimento</code></td><td><code>DATE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>telefone</code></td><td><code>VARCHAR(25)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>ativo</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: usuario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-funcionario">funcionario</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>usuario_id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>nome</code></td><td><code>VARCHAR(120)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cargo</code></td><td><code>VARCHAR(80)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>data_admissao</code></td><td><code>DATE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ativo</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: usuario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-sessao">sessao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>usuario_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>token_hash</code></td><td><code>CHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>csrf_hash</code></td><td><code>CHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ultimo_uso_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>expira_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>revogada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: usuario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-token_acesso">token_acesso</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>usuario_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>hash</code></td><td><code>CHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>finalidade</code></td><td><code>VARCHAR(30)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>expira_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>consumido_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: usuario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-usuario">usuario</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>email</code></td><td><code>VARCHAR(254)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>senha_hash</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(20)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<h3 id="fisico-final-usuario_papel">usuario_papel</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>usuario_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>papel</code></td><td><code>VARCHAR(30)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: usuario_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+</details>
+<details open><summary>MOD-02 | Designação de instrutores</summary>
+<h3 id="fisico-final-designacao">designacao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id</code></td></tr>
+<tr><td><code>instrutor_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>funcionario.usuario_id</code></td></tr>
+<tr><td><code>inicio</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>fim</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>atribuido_por</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+</tbody></table>
+<p><small>FK: atribuido_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: instrutor_id → <a href="#fisico-final-funcionario">funcionario.usuario_id</a></small></p>
+</details>
+<details open><summary>MOD-04 | Exercícios e fichas</summary>
+<h3 id="fisico-final-dia_ficha">dia_ficha</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>versao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>versao_ficha.id</code></td></tr>
+<tr><td><code>ordem</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>titulo</code></td><td><code>VARCHAR(60)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: versao_id → <a href="#fisico-final-versao_ficha">versao_ficha.id</a></small></p>
+<h3 id="fisico-final-exercicio">exercicio</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>nome</code></td><td><code>VARCHAR(120)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>nome_normalizado</code></td><td><code>VARCHAR(120)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>descricao</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>grupo_muscular</code></td><td><code>VARCHAR(80)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>dispensa_equipamento</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ativo</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<h3 id="fisico-final-exercicio_recurso">exercicio_recurso</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>grupo_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>exercicio_recurso_grupo.id</code></td></tr>
+<tr><td><code>equipamento_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>equipamento.id</code></td></tr>
+</tbody></table>
+<p><small>FK: equipamento_id → <a href="#fisico-final-equipamento">equipamento.id</a></small></p>
+<p><small>FK: grupo_id → <a href="#fisico-final-exercicio_recurso_grupo">exercicio_recurso_grupo.id</a></small></p>
+<h3 id="fisico-final-exercicio_recurso_grupo">exercicio_recurso_grupo</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>exercicio_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>exercicio.id</code></td></tr>
+</tbody></table>
+<p><small>FK: exercicio_id → <a href="#fisico-final-exercicio">exercicio.id</a></small></p>
+<h3 id="fisico-final-item_ficha">item_ficha</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>dia_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>dia_ficha.id</code></td></tr>
+<tr><td><code>exercicio_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>exercicio.id</code></td></tr>
+<tr><td><code>ordem</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>series</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>repeticoes</code></td><td><code>VARCHAR(40)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>carga_kg</code></td><td><code>NUMERIC(8, 2)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>intervalo_segundos</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cadencia</code></td><td><code>VARCHAR(40)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>observacoes</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>exercicio_snapshot</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: dia_id → <a href="#fisico-final-dia_ficha">dia_ficha.id</a></small></p>
+<p><small>FK: exercicio_id → <a href="#fisico-final-exercicio">exercicio.id</a></small></p>
+<h3 id="fisico-final-parecer">parecer</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>versao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>versao_ficha.id</code></td></tr>
+<tr><td><code>instrutor_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>funcionario.usuario_id</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(20)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>motivo</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: instrutor_id → <a href="#fisico-final-funcionario">funcionario.usuario_id</a></small></p>
+<p><small>FK: versao_id → <a href="#fisico-final-versao_ficha">versao_ficha.id</a></small></p>
+<h3 id="fisico-final-validacao_ficha">validacao_ficha</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>versao_id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>versao_ficha.id</code></td></tr>
+<tr><td><code>solicitacao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>validado_por</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>revisao</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>restricoes_conferidas</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>validado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: validado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: versao_id → <a href="#fisico-final-versao_ficha">versao_ficha.id</a></small></p>
+<h3 id="fisico-final-versao_ficha">versao_ficha</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id; onboarding_versao.cliente_id, id; avaliacao.cliente_id, onboarding_id, id; versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>numero</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>origem</code></td><td><code>VARCHAR(20)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>autor_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>onboarding_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>onboarding_versao.cliente_id, id; avaliacao.cliente_id, onboarding_id, id</code></td></tr>
+<tr><td><code>avaliacao_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>avaliacao.cliente_id, onboarding_id, id</code></td></tr>
+<tr><td><code>versao_base_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>estado_publicacao</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>vigente</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>publicada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>conteudo_excluido_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>motivo_exclusao</code></td><td><code>VARCHAR(40)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>explicacao</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: autor_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: cliente_id, onboarding_id → <a href="#fisico-final-onboarding_versao">onboarding_versao.cliente_id, id</a></small></p>
+<p><small>FK: cliente_id, onboarding_id, avaliacao_id → <a href="#fisico-final-avaliacao">avaliacao.cliente_id, onboarding_id, id</a></small></p>
+<p><small>FK: cliente_id, versao_base_id → <a href="#fisico-final-versao_ficha">versao_ficha.cliente_id, id</a></small></p>
+</details>
+<details open><summary>MOD-05 | Literatura e RAG</summary>
+<h3 id="fisico-final-documento">documento</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ambiente</code></td><td><code>VARCHAR(15)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>catalogo_id</code></td><td><code>VARCHAR(40)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>titulo</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>origem_url</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>licenca</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<h3 id="fisico-final-documento_versao">documento_versao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>documento_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>documento.id, ambiente</code></td></tr>
+<tr><td><code>ambiente</code></td><td><code>VARCHAR(15)</code></td><td><code>required</code></td><td><code>documento.id, ambiente</code></td></tr>
+<tr><td><code>numero</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>sha256</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>idioma</code></td><td><code>VARCHAR(12)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>arquivo_ref</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>formato</code></td><td><code>VARCHAR(3)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>tamanho_bytes</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>metadados</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_por</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>criado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>aprovado_por</code></td><td><code>UUID</code></td><td><code></code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>aprovado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>revogado_por</code></td><td><code>UUID</code></td><td><code></code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>revogado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>motivo_revogacao</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: aprovado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: criado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: documento_id, ambiente → <a href="#fisico-final-documento">documento.id, ambiente</a></small></p>
+<p><small>FK: revogado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<h3 id="fisico-final-fragmento">fragmento</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ingestao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>ingestao.id</code></td></tr>
+<tr><td><code>ordem</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>pagina_inicio</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>pagina_fim</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>linha_inicio</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>linha_fim</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>secao</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>inicio</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>fim</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>texto_hash</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>tokens</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>input_tokens</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>vetor_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>colecao</code></td><td><code>VARCHAR(100)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>indexado_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: ingestao_id → <a href="#fisico-final-ingestao">ingestao.id</a></small></p>
+<h3 id="fisico-final-ingestao">ingestao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>documento_versao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>documento_versao.id</code></td></tr>
+<tr><td><code>aprovacao_revisao</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>extracao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>config_hash</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>configuracao</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>plano_hash</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>colecao</code></td><td><code>VARCHAR(100)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>total</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>erro_codigo</code></td><td><code>VARCHAR(80)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>criado_por</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>iniciada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>concluida_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: criado_por → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: documento_versao_id → <a href="#fisico-final-documento_versao">documento_versao.id</a></small></p>
+</details>
+<details open><summary>MOD-10 | Equipamentos</summary>
+<h3 id="fisico-final-equipamento">equipamento</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>nome</code></td><td><code>VARCHAR(120)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>descricao</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>categoria</code></td><td><code>VARCHAR(80)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>imagem_ref</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>ativo</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>operacional</code></td><td><code>BOOLEAN</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>revision</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+</details>
+<details open><summary>MOD-06 | IA e chat</summary>
+<h3 id="fisico-final-etapa_ia">etapa_ia</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>execucao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>execucao_ia.id</code></td></tr>
+<tr><td><code>tipo</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>chamadas</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>limite_saida_tokens</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>prompt_bytes</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>prompt_sha256</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>enviada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>duracao_ms</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>tokens_entrada</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>tokens_saida</code></td><td><code>INTEGER</code></td><td><code></code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: execucao_id → <a href="#fisico-final-execucao_ia">execucao_ia.id</a></small></p>
+<h3 id="fisico-final-evidencia_execucao">evidencia_execucao</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>execucao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>execucao_ia.id</code></td></tr>
+<tr><td><code>fragmento_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>fragmento.id</code></td></tr>
+<tr><td><code>finalidade</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>metadados</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: execucao_id → <a href="#fisico-final-execucao_ia">execucao_ia.id</a></small></p>
+<p><small>FK: fragmento_id → <a href="#fisico-final-fragmento">fragmento.id</a></small></p>
+<h3 id="fisico-final-execucao_ia">execucao_ia</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>ator_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>usuario.id</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id; onboarding_versao.cliente_id, id; versao_ficha.cliente_id, id; versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>idempotency_key</code></td><td><code>VARCHAR(100)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>entrada_hash</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>request_hash</code></td><td><code>VARCHAR(64)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>finalidade</code></td><td><code>VARCHAR(25)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(35)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>onboarding_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>onboarding_versao.cliente_id, id</code></td></tr>
+<tr><td><code>versao_base_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>versao_publicada_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>worker_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>config_version</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>modelo</code></td><td><code>VARCHAR(100)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>prompt_version</code></td><td><code>VARCHAR(60)</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>iniciada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>prazo_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>terminada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>resultado</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: ator_id → <a href="#fisico-final-usuario">usuario.id</a></small></p>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: cliente_id, onboarding_id → <a href="#fisico-final-onboarding_versao">onboarding_versao.cliente_id, id</a></small></p>
+<p><small>FK: cliente_id, versao_base_id → <a href="#fisico-final-versao_ficha">versao_ficha.cliente_id, id</a></small></p>
+<p><small>FK: cliente_id, versao_publicada_id → <a href="#fisico-final-versao_ficha">versao_ficha.cliente_id, id</a></small></p>
+<h3 id="fisico-final-mensagem">mensagem</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>cliente_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>cliente.usuario_id; versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>solicitacao_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>TEXT</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>erro_codigo</code></td><td><code>TEXT</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>pedido</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>versao_contexto_id</code></td><td><code>UUID</code></td><td><code></code></td><td><code>versao_ficha.cliente_id, id</code></td></tr>
+<tr><td><code>criada_em</code></td><td><code>TIMESTAMP WITH TIME ZONE</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: cliente_id → <a href="#fisico-final-cliente">cliente.usuario_id</a></small></p>
+<p><small>FK: cliente_id, versao_contexto_id → <a href="#fisico-final-versao_ficha">versao_ficha.cliente_id, id</a></small></p>
+<h3 id="fisico-final-triagem">triagem</h3><table><thead><tr><th>Coluna</th><th>Tipo</th><th>Restrições</th><th>Referência</th></tr></thead><tbody>
+<tr><td><code>id</code></td><td><code>UUID</code></td><td><code>pk required</code></td><td><code>—</code></td></tr>
+<tr><td><code>execucao_id</code></td><td><code>UUID</code></td><td><code>required unique</code></td><td><code>execucao_ia.id</code></td></tr>
+<tr><td><code>onboarding_id</code></td><td><code>UUID</code></td><td><code>required</code></td><td><code>onboarding_versao.id</code></td></tr>
+<tr><td><code>regra_version</code></td><td><code>INTEGER</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+<tr><td><code>estado</code></td><td><code>VARCHAR(35)</code></td><td><code></code></td><td><code>—</code></td></tr>
+<tr><td><code>motivos</code></td><td><code>JSONB</code></td><td><code>required</code></td><td><code>—</code></td></tr>
+</tbody></table>
+<p><small>FK: execucao_id → <a href="#fisico-final-execucao_ia">execucao_ia.id</a></small></p>
+<p><small>FK: onboarding_id → <a href="#fisico-final-onboarding_versao">onboarding_versao.id</a></small></p>
+</details>
+</section>
+</html>

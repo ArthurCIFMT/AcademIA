@@ -1,0 +1,2449 @@
+{
+  "schema_version": 1,
+  "titulo": "MVP após normalização da persistência — migração 0016",
+  "data": "2026-11-19",
+  "tipo_modelo": "fisico_relacional",
+  "escopo": "Somente metadados físicos; sem dados de clientes. 11 tabelas futuras separadas do MVP.",
+  "foreign_keys_representacao": "Constraints do modelo físico, incluindo FKs compostas; uma constraint corresponde a uma relação.",
+  "contem_dados_de_clientes": false,
+  "contagens": {
+    "tabelas": 31,
+    "colunas": 258,
+    "foreign_keys": 51
+  },
+  "origem": {
+    "arquivo": "modelo-fisico-final.json",
+    "sha256": "d12c5f84e58e664af4a64b38b793076a1518273d579ab977ebb75d7cfe0ceace"
+  },
+  "tables": [
+    {
+      "name": "auditoria",
+      "owner": "MOD-12",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "ator_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "acao",
+          "type": "VARCHAR(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "recurso_tipo",
+          "type": "VARCHAR(60)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "recurso_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "correlation_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ocorrido_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ator_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "avaliacao",
+      "owner": "MOD-03",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "instrutor_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "registrado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "onboarding_id"
+          ],
+          "target_table": "onboarding_versao",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "instrutor_id"
+          ],
+          "target_table": "funcionario",
+          "target_columns": [
+            "usuario_id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "onboarding_id",
+          "id"
+        ]
+      ]
+    },
+    {
+      "name": "cliente",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "usuario_id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "VARCHAR(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "data_nascimento",
+          "type": "DATE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "telefone",
+          "type": "VARCHAR(25)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "usuario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "convite_onboarding",
+      "owner": "MOD-03",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "token_hash",
+          "type": "CHAR(64)",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revogado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "consumido_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "sessao_restrita_hash",
+          "type": "CHAR(64)",
+          "flags": "unique",
+          "ref": null
+        },
+        {
+          "name": "sessao_expira_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "onboarding_id"
+          ],
+          "target_table": "onboarding_versao",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "sessao_restrita_hash"
+        ],
+        [
+          "token_hash"
+        ]
+      ]
+    },
+    {
+      "name": "designacao",
+      "owner": "MOD-02",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "instrutor_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "inicio",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "atribuido_por",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "atribuido_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "instrutor_id"
+          ],
+          "target_table": "funcionario",
+          "target_columns": [
+            "usuario_id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "dia_ficha",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "versao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ordem",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "titulo",
+          "type": "VARCHAR(60)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "versao_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "versao_id",
+          "ordem"
+        ]
+      ]
+    },
+    {
+      "name": "documento",
+      "owner": "MOD-05",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "ambiente",
+          "type": "VARCHAR(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "catalogo_id",
+          "type": "VARCHAR(40)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "titulo",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "origem_url",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "licenca",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [],
+      "unique": [
+        [
+          "ambiente",
+          "catalogo_id"
+        ],
+        [
+          "id",
+          "ambiente"
+        ]
+      ]
+    },
+    {
+      "name": "documento_versao",
+      "owner": "MOD-05",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "documento_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ambiente",
+          "type": "VARCHAR(15)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "numero",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "sha256",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "idioma",
+          "type": "VARCHAR(12)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "arquivo_ref",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "formato",
+          "type": "VARCHAR(3)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tamanho_bytes",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "metadados",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "aprovado_por",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "aprovado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revogado_por",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revogado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo_revogacao",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "aprovado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "criado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "documento_id",
+            "ambiente"
+          ],
+          "target_table": "documento",
+          "target_columns": [
+            "id",
+            "ambiente"
+          ]
+        },
+        {
+          "columns": [
+            "revogado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "ambiente",
+          "sha256"
+        ],
+        [
+          "documento_id",
+          "numero"
+        ]
+      ]
+    },
+    {
+      "name": "equipamento",
+      "owner": "MOD-10",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "VARCHAR(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "categoria",
+          "type": "VARCHAR(80)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "imagem_ref",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "operacional",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [],
+      "unique": []
+    },
+    {
+      "name": "etapa_ia",
+      "owner": "MOD-06",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tipo",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "chamadas",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "limite_saida_tokens",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_bytes",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_sha256",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "enviada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "duracao_ms",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "tokens_entrada",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "tokens_saida",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "execucao_id"
+          ],
+          "target_table": "execucao_ia",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "execucao_id",
+          "tipo"
+        ]
+      ]
+    },
+    {
+      "name": "evidencia_execucao",
+      "owner": "MOD-06",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fragmento_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "finalidade",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "metadados",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "execucao_id"
+          ],
+          "target_table": "execucao_ia",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "fragmento_id"
+          ],
+          "target_table": "fragmento",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "execucao_id",
+          "fragmento_id"
+        ]
+      ]
+    },
+    {
+      "name": "execucao_ia",
+      "owner": "MOD-06",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "ator_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "idempotency_key",
+          "type": "VARCHAR(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "entrada_hash",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "request_hash",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "finalidade",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(35)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "versao_base_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "versao_publicada_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "worker_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "config_version",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "modelo",
+          "type": "VARCHAR(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prompt_version",
+          "type": "VARCHAR(60)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "iniciada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "prazo_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "terminada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "resultado",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ator_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "onboarding_id"
+          ],
+          "target_table": "onboarding_versao",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "versao_base_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "versao_publicada_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "idempotency_key"
+        ]
+      ]
+    },
+    {
+      "name": "exercicio",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "VARCHAR(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "nome_normalizado",
+          "type": "VARCHAR(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "descricao",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "grupo_muscular",
+          "type": "VARCHAR(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dispensa_equipamento",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [],
+      "unique": [
+        [
+          "nome_normalizado"
+        ]
+      ]
+    },
+    {
+      "name": "exercicio_recurso",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "grupo_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "equipamento_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "equipamento_id"
+          ],
+          "target_table": "equipamento",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "grupo_id"
+          ],
+          "target_table": "exercicio_recurso_grupo",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "grupo_id",
+          "equipamento_id"
+        ]
+      ]
+    },
+    {
+      "name": "exercicio_recurso_grupo",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "exercicio_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "exercicio_id"
+          ],
+          "target_table": "exercicio",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "fragmento",
+      "owner": "MOD-05",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "ingestao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ordem",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "pagina_inicio",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "pagina_fim",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "linha_inicio",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "linha_fim",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "secao",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "inicio",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "fim",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "texto_hash",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tokens",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "input_tokens",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "vetor_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "colecao",
+          "type": "VARCHAR(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "indexado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ingestao_id"
+          ],
+          "target_table": "ingestao",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "ingestao_id",
+          "ordem"
+        ],
+        [
+          "vetor_id"
+        ]
+      ]
+    },
+    {
+      "name": "funcionario",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "usuario_id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "nome",
+          "type": "VARCHAR(120)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cargo",
+          "type": "VARCHAR(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "data_admissao",
+          "type": "DATE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ativo",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "usuario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "ingestao",
+      "owner": "MOD-05",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "documento_versao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "aprovacao_revisao",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "extracao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "config_hash",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "configuracao",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "plano_hash",
+          "type": "VARCHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "colecao",
+          "type": "VARCHAR(100)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "total",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "erro_codigo",
+          "type": "VARCHAR(80)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "iniciada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "concluida_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "criado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "documento_versao_id"
+          ],
+          "target_table": "documento_versao",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "documento_versao_id",
+          "config_hash"
+        ]
+      ]
+    },
+    {
+      "name": "item_ficha",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "dia_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "exercicio_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ordem",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "series",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "repeticoes",
+          "type": "VARCHAR(40)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "carga_kg",
+          "type": "NUMERIC(8, 2)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "intervalo_segundos",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "cadencia",
+          "type": "VARCHAR(40)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "observacoes",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "exercicio_snapshot",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "dia_id"
+          ],
+          "target_table": "dia_ficha",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "exercicio_id"
+          ],
+          "target_table": "exercicio",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "dia_id",
+          "ordem"
+        ]
+      ]
+    },
+    {
+      "name": "mensagem",
+      "owner": "MOD-06",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "solicitacao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "erro_codigo",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "pedido",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "versao_contexto_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "criada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "versao_contexto_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "solicitacao_id"
+        ]
+      ]
+    },
+    {
+      "name": "notificacao",
+      "owner": "MOD-12",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "destinatario_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "evento_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "canal",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tipo",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "tentativas",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "atualizada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "lida_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "destinatario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "destinatario_id",
+          "evento_id",
+          "canal"
+        ]
+      ]
+    },
+    {
+      "name": "onboarding_versao",
+      "owner": "MOD-03",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "numero",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "schema_version",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "idade_snapshot",
+          "type": "INTEGER",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_por",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "concluido_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "concluido_por",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "concluido_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "criado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "id"
+        ],
+        [
+          "cliente_id",
+          "numero"
+        ]
+      ]
+    },
+    {
+      "name": "outbox",
+      "owner": "MOD-12",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "evento_tipo",
+          "type": "VARCHAR(80)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "schema_version",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "payload",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "entregue_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [],
+      "unique": []
+    },
+    {
+      "name": "parecer",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "versao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "instrutor_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "motivo",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "instrutor_id"
+          ],
+          "target_table": "funcionario",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "versao_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "sessao",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "token_hash",
+          "type": "CHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "csrf_hash",
+          "type": "CHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "ultimo_uso_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revogada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "usuario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "token_hash"
+        ]
+      ]
+    },
+    {
+      "name": "token_acesso",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "hash",
+          "type": "CHAR(64)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "finalidade",
+          "type": "VARCHAR(30)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "expira_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "consumido_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "usuario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "hash"
+        ]
+      ]
+    },
+    {
+      "name": "triagem",
+      "owner": "MOD-06",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "execucao_id",
+          "type": "UUID",
+          "flags": "required unique",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "regra_version",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(35)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivos",
+          "type": "JSONB",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "execucao_id"
+          ],
+          "target_table": "execucao_ia",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "onboarding_id"
+          ],
+          "target_table": "onboarding_versao",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "execucao_id"
+        ]
+      ]
+    },
+    {
+      "name": "usuario",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "email",
+          "type": "VARCHAR(254)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "senha_hash",
+          "type": "TEXT",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "estado",
+          "type": "VARCHAR(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "criado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [],
+      "unique": [
+        [
+          "email"
+        ]
+      ]
+    },
+    {
+      "name": "usuario_papel",
+      "owner": "MOD-01",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "usuario_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "papel",
+          "type": "VARCHAR(30)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "usuario_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "usuario_id",
+          "papel"
+        ]
+      ]
+    },
+    {
+      "name": "validacao_ficha",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "versao_id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "solicitacao_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "validado_por",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "revisao",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "restricoes_conferidas",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "validado_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "validado_por"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "versao_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "id"
+          ]
+        }
+      ],
+      "unique": []
+    },
+    {
+      "name": "versao_ficha",
+      "owner": "MOD-04",
+      "columns": [
+        {
+          "name": "id",
+          "type": "UUID",
+          "flags": "pk required",
+          "ref": null
+        },
+        {
+          "name": "cliente_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "numero",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "origem",
+          "type": "VARCHAR(20)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "autor_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "onboarding_id",
+          "type": "UUID",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "avaliacao_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "versao_base_id",
+          "type": "UUID",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "estado_publicacao",
+          "type": "VARCHAR(25)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "vigente",
+          "type": "BOOLEAN",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "publicada_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "conteudo_excluido_em",
+          "type": "TIMESTAMP WITH TIME ZONE",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo_exclusao",
+          "type": "VARCHAR(40)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "INTEGER",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "explicacao",
+          "type": "TEXT",
+          "flags": "",
+          "ref": null
+        }
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "autor_id"
+          ],
+          "target_table": "usuario",
+          "target_columns": [
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id"
+          ],
+          "target_table": "cliente",
+          "target_columns": [
+            "usuario_id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "onboarding_id"
+          ],
+          "target_table": "onboarding_versao",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "onboarding_id",
+            "avaliacao_id"
+          ],
+          "target_table": "avaliacao",
+          "target_columns": [
+            "cliente_id",
+            "onboarding_id",
+            "id"
+          ]
+        },
+        {
+          "columns": [
+            "cliente_id",
+            "versao_base_id"
+          ],
+          "target_table": "versao_ficha",
+          "target_columns": [
+            "cliente_id",
+            "id"
+          ]
+        }
+      ],
+      "unique": [
+        [
+          "cliente_id",
+          "id"
+        ],
+        [
+          "cliente_id",
+          "numero"
+        ]
+      ]
+    }
+  ]
+}

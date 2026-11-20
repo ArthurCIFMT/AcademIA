@@ -311,26 +311,20 @@ Table fragmento {
   Note: 'Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em'
 }
 
-Table conversa {
-  id uuid [pk]
-  Note: 'Migration 0015: uma conversa por cliente; PK também é FK do titular'
-}
-
 Table mensagem {
   id uuid [pk]
-  conversa_id uuid [not null]
+  cliente_id uuid [not null]
   solicitacao_id uuid [not null]
-  pergunta text [not null]
   estado text [not null]
   erro_codigo text
   pedido jsonb [not null]
   versao_contexto_id uuid
   criada_em timestamptz [not null]
   indexes {
-    (conversa_id, solicitacao_id) [unique]
-    (conversa_id, criada_em)
+    (cliente_id, solicitacao_id) [unique]
+    (cliente_id, criada_em)
   }
-  Note: 'Migration 0015: um turno; resposta em execucao_ia; FK composta titular/versão; pergunta/pedido privados por 90 dias'
+  Note: 'Migration 0016: titular direto; FK composta cliente_id/versao_contexto_id; pergunta somente em pedido.mensagem JSON string de 1 a 1000 caracteres; pedido/hash congelados; 90 dias'
 }
 
 Table execucao_ia {
@@ -356,18 +350,17 @@ Table execucao_ia {
   indexes {
     (cliente_id, idempotency_key) [unique]
   }
-  Note: 'Owner MOD-06. Única por cliente+chave; sem duplicar conteúdo de ficha excluída'
+  Note: 'Migration 0016: resultado.triagem canônico; consumo hidratado de etapa_ia, sem cópia no resultado; FKs de contexto compostas por cliente conforme invariantes; sem cópia da ficha'
 }
 
 Table triagem {
   id uuid [pk]
   execucao_id uuid [not null, unique]
   onboarding_id uuid [not null]
-  resumo jsonb [not null]
   regra_version integer [not null]
   estado varchar(35)
   motivos jsonb [not null]
-  Note: 'Owner MOD-06. Três estados de domínio, falhas técnicas pertencem à execução'
+  Note: 'Migration 0016: metadados de triagem; resumo canônico em execucao_ia.resultado.triagem; três estados de domínio; 90 dias; falhas técnicas da execução'
 }
 
 Table etapa_ia {
@@ -382,12 +375,11 @@ Table etapa_ia {
   limite_saida_tokens integer [not null]
   prompt_bytes integer [not null]
   prompt_sha256 char(64) [not null]
-  dados jsonb [not null]
   enviada_em timestamptz
   indexes {
     (execucao_id, tipo) [unique]
   }
-  Note: 'Owner MOD-06. Dados de consumo sem chain-of-thought'
+  Note: 'Migration 0016: consumo canônico nas colunas; DTO e total de tokens derivados; tokens de entrada/saída ambos nulos ou ambos conhecidos não negativos; sem JSON dados/chain-of-thought'
 }
 
 Table evidencia_execucao {
@@ -585,10 +577,8 @@ Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
-Ref: conversa.id > cliente.usuario_id
-Ref: mensagem.conversa_id > conversa.id
-Ref: mensagem.versao_contexto_id > versao_ficha.id
-Ref: mensagem.(conversa_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
+Ref: mensagem.cliente_id > cliente.usuario_id
+Ref: mensagem.(cliente_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
 Ref: execucao_ia.cliente_id > cliente.usuario_id
 Ref: execucao_ia.onboarding_id > onboarding_versao.id
 Ref: execucao_ia.versao_base_id > versao_ficha.id

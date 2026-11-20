@@ -1450,3 +1450,18 @@ Histórico sobrevive à nova ficha; contexto enviado à IA continua curto e atua
 Sem migration, quota LLM, navegação E2E nova ou requalificação AI-06/TST-01.
 Falhas intermediárias de setup/expectativa antiga estão registradas no guia,
 sem somar reexecuções como novos casos nem substituir relatórios históricos.
+
+
+## Normalização da modelagem — revisão 0016 — 2026-11-19
+
+[Backup, aplicação e regressão](otimizacao-modelagem-20261119.md) e
+[recibo](otimizacao-modelagem-20261119.json). Nova migration0016, sem editar as
+anteriores: fonte única de perguntas/triagem/consumo e retirada do marcador conversa.
+MVP31 tabelas/258 colunas/51FKs, lógico completo42/331; MER original preservado.
+Backend 359 unitários/contratos e 187 integração/banco aprovados;
+3 opt-in de LLM real ignorados. Frontend 94 aprovados/20 arquivos;
+oito jornadas E2E novas aprovadas com migration0016 e rollback. Ruff/formato,
+mypy238, lint/tipos/build frontend aprovados. Sem nova qualificação AI-06/TST-01.
+Backup de fontes/Git/PG/corpus/Qdrant verificado; restore real e ensaio de migration
+com rollback; aplicação definitiva preservou dados canônicos em todas as tabelas.
+Comandos completos/focais e falhas intermediárias ficam no guia, sem somar reexecuções.

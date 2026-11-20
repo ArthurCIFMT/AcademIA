@@ -227,6 +227,7 @@ def test_real_database_publication_pending_replay_and_no_duplicate_content(
         assert published.ficha.origem == "IA" and published.ficha.explicacao
         row = session.scalar(select(Execution))
         assert row and "proposta" not in row.resultado
+        assert "consumo" not in row.resultado and row.resultado["triagem"]
         assert session.scalar(select(func.count()).select_from(TriageRecord)) == 1
         assert session.scalar(select(func.count()).select_from(WorkoutVersion)) == 1
     with pytest.raises(ExecutionConflict):
@@ -378,7 +379,7 @@ def test_migration_roundtrip_and_metadata(
     assert not compare_metadata(context, Base.metadata)
     command.downgrade(config, "0013")
     command.upgrade(config, "head")
-    assert connection.scalar(text("SELECT version_num FROM alembic_version")) == "0015"
+    assert connection.scalar(text("SELECT version_num FROM alembic_version")) == "0016"
 
 
 @pytest.mark.integration
@@ -409,7 +410,11 @@ def test_retention_of_raw_execution_data_preserves_idempotency_and_counters(
     assert len(replay.consumo) == 2 and len(provider.calls) == 2
     with sessions.begin() as session:
         triage = session.scalar(select(TriageRecord))
-        assert triage is not None and triage.resumo == {}
+        assert triage is not None and triage.motivos
+        assert not hasattr(triage, "resumo")
+        row = session.scalar(select(Execution))
+        assert row is not None and row.resultado["triagem"] is None
+        assert "consumo" not in row.resultado
 
 
 @pytest.mark.integration

@@ -78,9 +78,13 @@ Dúvidas que não afetem o trabalho independente não interrompem outras capacid
 
 O MER original preserva a origem do projeto. O modelo lógico descreve também
 partes futuras; as [migrations](database/README.md) indicam o schema físico entregue.
-A [avaliação de tamanho](docs/analises/2026-11-19-tamanho-modelagem.md)
-distingue 18 entidades originais, 43 tabelas planejadas e 32 tabelas do MVP;
-as simplificações identificadas são propostas, sem alteração de schema nesta revisão.
+A [avaliação anterior de tamanho](docs/analises/2026-11-19-tamanho-modelagem.md)
+preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
+A [normalização 0016](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
+remove redundâncias e mantém as regras: modelo lógico atual com 42 tabelas/331
+colunas, incluindo onze tabelas futuras; MVP físico com 31 tabelas/258 colunas/51
+FKs. A [comparação visual](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
+separa o conceito original, o físico entregue e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](docs/arquitetura/rag-semantico.md).
@@ -206,7 +210,13 @@ AI-01 entrega [triagem e preparação autorizada](docs/arquitetura/triagem-acade
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
-e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
+e publicação transacional. A normalização 0016 conserva essas entidades de IA,
+sem resumo/consumo duplicados: triagem completa em resultado.triagem, consumo
+nas colunas de etapa_ia e pergunta em mensagem.pedido.mensagem. Mensagem aponta
+diretamente ao cliente, mantendo titularidade composta e histórico. Os
+[resultados da migração/regressão](docs/testes/otimizacao-modelagem-20261119.md)
+incluem backup e teste de dados legados; não requalificam o LLM por herança.
+AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
 ADR-006. A revisão vinculada da amostra v4 aprovou as cinco saídas. Não se reutilizou aceite
 antigo para a versão corrigida. Pendências do corpus e limites da demonstração
 permanecem explícitos; a aprovação é da configuração/modelo avaliados.
@@ -1793,10 +1803,93 @@ Não alterar onboarding, aprovação do instrutor, cadastros ou acesso de client
 [Regressão da revisão manual](docs/testes/reparo-ia-20261119.md) separa testes
 controlados, recuperação real e chamadas reais. Relatórios AI-06/TST-01 anteriores
 são históricos: não herdam novos hashes nem comprovam a versão alterada.
+### 13. Normalização de IA/chat, fontes canônicas, backup e reversão
+
+Fonte versionada: [docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md).
+
+Status: ACEITA por solicitação explícita do responsável em 2026-11-19.
+Escopo: otimizar a modelagem existente, fazer backup antes da mudança, preservar
+os dados/requisitos e comparar o resultado com o MER original.
+
+#### Contexto
+
+A [análise anterior](docs/analises/2026-11-19-tamanho-modelagem.md) identificou
+duplicações na persistência de IA e um marcador de conversa sem atributos próprios.
+O modelo completo descrevia 43 tabelas/335 colunas; o MVP físico tinha 32/262.
+Diminuir essa contagem não é motivo para fundir entidades com regras distintas
+ou retirar constraints de titularidade, auditoria e históricos necessários.
+
+#### Decisão
+
+- Remover a tabela conversa, que continha somente o identificador do cliente.
+  Mensagem vincula-se diretamente a cliente.usuario_id pela coluna cliente_id.
+  Continuam unicidade por cliente/solicitação, índice temporal e FK composta
+  (cliente_id,versao_contexto_id) → versao_ficha(cliente_id,id). Remover apenas a
+  FK simples de contexto redundante; não retirar a proteção contra outro titular.
+- Pergunta possui uma única fonte em mensagem.pedido.mensagem. Não há coluna
+  pergunta duplicada; propriedade de leitura e DTO continuam disponíveis. Pedido
+  é objeto JSON com mensagem string obrigatória de 1 a 1.000 caracteres após btrim.
+  O pedido completo e hashes permanecem congelados para idempotência e replay.
+- O resumo completo de triagem fica em execucao_ia.resultado.triagem. Triagem
+  conserva seus metadados de snapshot, política, estado e motivos, sem resumo JSON
+  duplicado. Manter a retenção privada de 90 dias e os recibos de auditoria.
+- Consumo possui fonte canônica nas colunas de etapa_ia: remover JSON dados e
+  cópia consumo do resultado da execução. Hidratar o DTO na leitura e derivar
+  total_tokens da soma de entrada/saída. Ambos os campos são nulos ou conhecidos
+  não negativos; não converter ausência de uso reportado em zero artificial.
+- Manter catálogos/recursos, versões/dias/itens, publicação/parecer/validação,
+  identidade/perfis, literatura/versões/ingestões/fragmentos e auditoria separados.
+  Não introduzir requisito funcional, API, dependência ou camada nova.
+
+#### Migração, backup e reversão
+
+A revisão nova 0016 sucede 0015; migrations aplicadas permanecem intactas.
+Antes de descartar cópias, conferir consistência das perguntas, triagens e consumo
+legados. Divergência interrompe a migration com erro seguro, sem expor dados
+privados nem escolher silenciosamente qual cópia vence. Consumo em resultado
+podia ficar desatualizado enquanto uma execução estava em voo; as etapas já
+eram a fonte autoritativa de leitura e continuam sendo.
+
+Fazer backup privado dos fontes/estado Git e dump PostgreSQL antes de aplicar ao
+desenvolvimento. Guardar hashes, conferir o dump e restaurá-lo em banco isolado
+para verificar a recuperação; dados, credenciais e backups ficam fora do Git.
+O [guia do banco](database/README.md#backup-e-restauração-da-revisão-0016)
+e as [evidências desta entrega](docs/testes/otimizacao-modelagem-20261119.md)
+registram o procedimento e seu resultado efetivo.
+
+Downgrade para 0015 recria as representações anteriores a partir das fontes
+canônicas e os marcadores de conversa dos titulares com mensagens. Marcador vazio
+sem mensagens não possui identidade independente no domínio; restauração exata
+do estado anterior usa o backup. Para voltar a executar a versão antiga, combinar
+schema e fontes compatíveis; não rodar código 0015 sobre schema 0016.
+
+#### Resultado estrutural e limites
+
+O modelo lógico do escopo completo passa a 42 tabelas/331 colunas. O MVP físico
+passa a 31 tabelas/258 colunas/51 FKs; onze tabelas planejadas continuam futuras.
+São uma tabela e quatro colunas a menos, além de duas FKs; a normalização também
+elimina cópias internas de JSON. Não equivale a redução percentual de tamanho em
+disco, melhora de latência ou resultado de teste de carga. Essas métricas exigem
+medição própria e uma amostra representativa.
+
+O MER original é preservado como origem conceitual de 18 entidades. A
+[comparação e os diagramas](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
+separam essa origem, o físico entregue e as capacidades futuras. O diagrama físico
+usa metadados ORM para representar as FKs compostas reais.
+
+#### Verificação exigida
+
+Testar upgrade/downgrade com dados legados, abortar cópias divergentes antes de
+descarte, comparar schema e ORM, verificar contexto nulo/inexistente/alheio,
+pedidos inválidos, replay e fonte única de consumo/triagem. Executar regressão do
+MVP e checagens documentais com resultados atuais no relatório vinculado.
+Não herdar aprovação de testes antigos nem declarar nova qualificação AI-06/TST-01.
+Sem chamadas LLM extras, alteração de prompts enviados ao modelo, corpus, quotas,
+triagem, parecer posterior ou seleção de recursos disponíveis.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
-Modelo lógico do escopo completo, incluindo capacidades futuras. Não representa todas essas tabelas já instaladas. A origem e a evolução do MER estão no capítulo 10.
+Modelo lógico do escopo completo: 42 tabelas/331 colunas, incluindo onze tabelas futuras. O físico do MVP na revisão 0016 tem 31 tabelas/258 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual.
 
 ### 1. Modelo DBML completo
 
@@ -2116,26 +2209,20 @@ Table fragmento {
   Note: 'Migration 0013: texto/vetor no Qdrant; offsets e página PDF ou linhas TXT; checkpoint indexado_em'
 }
 
-Table conversa {
-  id uuid [pk]
-  Note: 'Migration 0015: uma conversa por cliente; PK também é FK do titular'
-}
-
 Table mensagem {
   id uuid [pk]
-  conversa_id uuid [not null]
+  cliente_id uuid [not null]
   solicitacao_id uuid [not null]
-  pergunta text [not null]
   estado text [not null]
   erro_codigo text
   pedido jsonb [not null]
   versao_contexto_id uuid
   criada_em timestamptz [not null]
   indexes {
-    (conversa_id, solicitacao_id) [unique]
-    (conversa_id, criada_em)
+    (cliente_id, solicitacao_id) [unique]
+    (cliente_id, criada_em)
   }
-  Note: 'Migration 0015: um turno; resposta em execucao_ia; FK composta titular/versão; pergunta/pedido privados por 90 dias'
+  Note: 'Migration 0016: titular direto; FK composta cliente_id/versao_contexto_id; pergunta somente em pedido.mensagem JSON string de 1 a 1000 caracteres; pedido/hash congelados; 90 dias'
 }
 
 Table execucao_ia {
@@ -2161,18 +2248,17 @@ Table execucao_ia {
   indexes {
     (cliente_id, idempotency_key) [unique]
   }
-  Note: 'Owner MOD-06. Única por cliente+chave; sem duplicar conteúdo de ficha excluída'
+  Note: 'Migration 0016: resultado.triagem canônico; consumo hidratado de etapa_ia, sem cópia no resultado; FKs de contexto compostas por cliente conforme invariantes; sem cópia da ficha'
 }
 
 Table triagem {
   id uuid [pk]
   execucao_id uuid [not null, unique]
   onboarding_id uuid [not null]
-  resumo jsonb [not null]
   regra_version integer [not null]
   estado varchar(35)
   motivos jsonb [not null]
-  Note: 'Owner MOD-06. Três estados de domínio, falhas técnicas pertencem à execução'
+  Note: 'Migration 0016: metadados de triagem; resumo canônico em execucao_ia.resultado.triagem; três estados de domínio; 90 dias; falhas técnicas da execução'
 }
 
 Table etapa_ia {
@@ -2187,12 +2273,11 @@ Table etapa_ia {
   limite_saida_tokens integer [not null]
   prompt_bytes integer [not null]
   prompt_sha256 char(64) [not null]
-  dados jsonb [not null]
   enviada_em timestamptz
   indexes {
     (execucao_id, tipo) [unique]
   }
-  Note: 'Owner MOD-06. Dados de consumo sem chain-of-thought'
+  Note: 'Migration 0016: consumo canônico nas colunas; DTO e total de tokens derivados; tokens de entrada/saída ambos nulos ou ambos conhecidos não negativos; sem JSON dados/chain-of-thought'
 }
 
 Table evidencia_execucao {
@@ -2390,10 +2475,8 @@ Ref: documento_versao.revogado_por > usuario.id
 Ref: ingestao.documento_versao_id > documento_versao.id
 Ref: ingestao.criado_por > usuario.id
 Ref: fragmento.ingestao_id > ingestao.id
-Ref: conversa.id > cliente.usuario_id
-Ref: mensagem.conversa_id > conversa.id
-Ref: mensagem.versao_contexto_id > versao_ficha.id
-Ref: mensagem.(conversa_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
+Ref: mensagem.cliente_id > cliente.usuario_id
+Ref: mensagem.(cliente_id, versao_contexto_id) > versao_ficha.(cliente_id, id)
 Ref: execucao_ia.cliente_id > cliente.usuario_id
 Ref: execucao_ia.onboarding_id > onboarding_versao.id
 Ref: execucao_ia.versao_base_id > versao_ficha.id
@@ -2802,39 +2885,38 @@ Unicidades: ingestao_id+ordem.
 | colecao | varchar(100) | required | — |
 | indexado_em | timestamptz | opcional | — |
 
-#### conversa — MOD-06
-
-Migration 0015: uma conversa por cliente; identidade coincide com a do titular.
-
-| Campo | Tipo | Regras | Referência |
-|---|---|---|---|
-| id | uuid | pk | cliente.usuario_id |
-
 #### mensagem — MOD-06
 
-Um turno/pergunta por solicitação. Resposta normalizada em execucao_ia;
-sem duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
-FK composta conversa_id+versao_contexto_id referencia versao_ficha.cliente_id+id.
-Índice de histórico conversa_id+criada_em. Pergunta de 1 a 1.000 caracteres,
-pedido JSON objeto congelado pelo servidor. Estado reserva/preparação/recibo.
+Migration 0016 remove o marcador conversa e vincula o turno diretamente ao cliente,
+sem alterar a API, a autorização ou o histórico. Resposta em execucao_ia, sem
+duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
+FK composta cliente_id+versao_contexto_id referencia versao_ficha.cliente_id+id;
+não há FK simples redundante para o contexto. Índice cliente_id+criada_em.
+Pedido JSON objeto congelado pelo servidor: a chave mensagem é obrigatória,
+deve ser string com 1 a 1.000 caracteres após btrim. A propriedade de leitura
+pergunta e o DTO vêm desse campo; não há coluna pergunta nem reconstrução do
+pedido usando contexto novo. Estado reserva/preparação/recibo.
 
-Unicidades: conversa_id+solicitacao_id.
+Unicidades: cliente_id+solicitacao_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| conversa_id | uuid | required | conversa.id |
+| cliente_id | uuid | required | cliente.usuario_id |
 | solicitacao_id | uuid | required | — |
-| pergunta | text | required | — |
 | estado | text | required | — |
 | erro_codigo | text | opcional | — |
 | pedido | jsonb | required | — |
-| versao_contexto_id | uuid | opcional | versao_ficha.id |
+| versao_contexto_id | uuid | opcional | versao_ficha(cliente_id,id), FK composta com o titular |
 | criada_em | timestamptz | required | — |
 
 #### execucao_ia — MOD-06
 
-Única por cliente+chave; sem duplicar conteúdo de ficha excluída
+Única por cliente+chave; sem duplicar conteúdo de ficha excluída.
+Na revisão 0016, resultado.triagem é a fonte canônica do resumo de triagem.
+Resultado não persiste cópia de consumo: o DTO o hidrata das colunas de etapa_ia.
+FKs de onboarding/base/publicação incluem cliente_id conforme as migrations
+e invariantes de titularidade; as referências de campo abaixo são conceituais.
 
 Unicidades: cliente_id+idempotency_key.
 
@@ -2863,14 +2945,16 @@ Unicidades: cliente_id+idempotency_key.
 
 #### triagem — MOD-06
 
-Três estados de domínio, falhas técnicas pertencem à execução
+Metadados de triagem: snapshot, política, estado e códigos de motivo. A revisão
+0016 remove a coluna resumo duplicada; o resumo completo possui uma única fonte,
+execucao_ia.resultado.triagem, sujeita à retenção privada de 90 dias. Três estados
+de domínio; falhas técnicas pertencem à execução. Não remover metadados de auditoria.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | execucao_id | uuid | required unique | execucao_ia.id |
 | onboarding_id | uuid | required | onboarding_versao.id |
-| resumo | jsonb | required | — |
 | regra_version | integer | required | — |
 | estado | varchar(35) | opcional | — |
 | motivos | jsonb | required | — |
@@ -2878,7 +2962,12 @@ Três estados de domínio, falhas técnicas pertencem à execução
 
 #### etapa_ia — MOD-06
 
-Dados de consumo sem chain-of-thought
+Na revisão 0016, as colunas são a fonte canônica do consumo por etapa; não há
+JSON dados nem cópia de consumo em execucao_ia.resultado. O DTO é hidratado dessas
+colunas e total_tokens é a soma de entrada/saída. Ambos os campos de tokens
+devem ser nulos (uso não informado) ou ambos conhecidos e não negativos;
+não converter consumo desconhecido em zero. Reserva e número de chamadas
+persistem independentemente de uma resposta válida. Sem chain-of-thought.
 
 Unicidades: execucao_id+tipo.
 
@@ -2895,7 +2984,6 @@ Unicidades: execucao_id+tipo.
 | limite_saida_tokens | integer | required | — |
 | prompt_bytes | integer | required | — |
 | prompt_sha256 | char(64) | required | — |
-| dados | jsonb | required | — |
 | enviada_em | timestamptz | opcional | — |
 
 
@@ -3150,6 +3238,21 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   duplicar embeddings íntegros. Não apagar metadados para esconder falhas.
 - Execução única por cliente/chave; mesma chave com entrada diferente retorna 409.
   Chamadas LLM são únicas por etapa; estado interrompido não dispara replay.
+- Revisão 0016: mensagem aponta diretamente ao cliente; não há tabela conversa.
+  Unique(cliente_id,solicitacao_id), índice(cliente_id,criada_em) e FK composta
+  mensagem(cliente_id,versao_contexto_id) → versao_ficha(cliente_id,id) preservam
+  idempotência, histórico e titularidade. A FK simples de contexto é redundante
+  e foi removida; o contexto pode ser nulo sem dispensar a FK do cliente.
+- Pergunta tem uma única fonte em mensagem.pedido.mensagem, string obrigatória de
+  1 a 1.000 caracteres após btrim. Pedido completo e hashes continuam congelados;
+  consulta histórica não os reconstrói com onboarding/ficha/histórico atuais.
+- Resumo de triagem canônico em execucao_ia.resultado.triagem; a tabela triagem
+  conserva metadados de política/snapshot/decisão, sem JSON resumo duplicado.
+  Retenção privada de 90 dias remove o conteúdo, preservando recibos e auditoria.
+- Consumo canônico nas colunas de etapa_ia, sem JSON dados ou cópia em resultado.
+  DTOs são hidratados; total de tokens é derivado. Entrada/saída são ambos nulos
+  ou ambos conhecidos não negativos. Consumo desconhecido não significa zero;
+  não perder reserva, contadores ou registro de chamada durante limpeza/replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
 - Foto ativa por cliente matriculado; substituição mantém metadados, descarta
   referência antiga via provedor; reconhecimento não libera acesso sozinho.
@@ -3191,7 +3294,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 USUARIO → usuario/usuario_papel/perfis/sessoes; CLIENTE/FUNCIONARIO preservados.
 ONBOARDING/Queixa → versões com dados estruturados e origem; evitar queixa duplicada.
 VERSAO_FICHA/ITEM_FICHA → dias/itens/parecer; INSTRUCAO → designação + recursos.
-INTERACAO_IA → conversa/mensagem/execução/triagem/etapas/evidências.
+INTERACAO_IA → mensagem por cliente/execução/triagem/etapas/evidências.
+O marcador conversa introduzido na 0015 foi removido na normalização 0016,
+sem retirar a funcionalidade de conversa ou a separação entre histórico e contexto.
 EQUIPAMENTO/EXERCICIO → catálogo e combinações; BIOMETRIA/REGISTRO_ACESSO →
 referência, eventos, decisões e presença. ASSINATURA → matrícula.
 PLANO/COBRANCA/PAGAMENTO e AULA → capacidades posteriores correspondentes.
@@ -3313,6 +3418,56 @@ deve ter migration nova quando pertinente, dados preservados e testes de regress
 Atualizar DBML/JSON/dicionário junto da decisão aplicada, nunca modificar migration
 já executada. A correção do histórico solicitada nesta entrega reutiliza os
 campos e índices existentes e não exige aumentar o modelo.
+### 5. Comparação com o MER original e diagrama físico final
+
+Fonte versionada: [docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md).
+
+O [painel navegável](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/index.html) separa o modelo conceitual original, o físico do
+MVP antes/depois da normalização e o escopo lógico completo. A comparação não
+regrava o [MER original em PNG](docs/arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png).
+
+| Retrato | Tabelas/entidades | Colunas | FKs físicas |
+|---|---:|---:|---:|
+| MER original fornecido pelo responsável | 18 entidades conceituais | Não comparadas a colunas físicas | Não comparadas a FKs físicas |
+| MVP físico antes da revisão 0016 | 32 tabelas | 262 | 53 |
+| MVP físico após a revisão 0016 | 31 tabelas | 258 | 51 |
+| Modelo lógico completo após a revisão | 42 tabelas | 331 | Inclui capacidades futuras; não é contagem física instalada |
+
+As onze tabelas futuras são academia, plano, matricula, cobranca, pagamento,
+biometria, evento_acesso, decisao_acesso, catraca_comando, presenca e aula_ocorrencia.
+Academia é configuração singleton planejada; as outras pertencem às extensões
+de matrícula/acesso, financeiro e agenda. Não foram criadas antecipadamente.
+
+#### Ver o resultado
+
+- [Imagem comparativa](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/comparacao-modelagem.png), para apresentação acadêmica.
+- [Diagrama físico completo em SVG](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/fisico-final-diagrama-completo.svg), ampliável
+  sem perder definição, com as 31 tabelas, 258 colunas e 51 FKs.
+- [Diagrama editável no draw.io](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/fisico-final.drawio), gerado do mesmo retrato físico.
+- [Modelo lógico completo DBML](docs/arquitetura/modelo-de-dados/modelo-logico.dbml), [JSON](docs/arquitetura/modelo-de-dados/modelo-logico.json)
+  e [dicionário](docs/arquitetura/modelo-de-dados/dicionario.md), incluindo o escopo futuro.
+
+O diagrama físico usa metadados do ORM SQLAlchemy vigente, comparados com as
+migrations nos testes. É a representação das colunas/FKs implementadas; uma FK
+composta é uma única constraint com vários pares de colunas. Referências simples
+do DBML lógico não substituem essas proteções de titularidade. Qdrant é um banco
+vetorial separado e não aparece como tabela PostgreSQL adicional.
+
+O crescimento em relação às 18 entidades originais decorre de concretização:
+papéis e credenciais, versões/dias/itens, recursos alternativos, pareceres,
+curadoria/ingestão, execução da IA e auditoria possuem estruturas próprias.
+Uma entidade conceitual pode originar várias tabelas; essas contagens não são
+uma comparação de memória ou desempenho. A redução aplicada foi uma tabela,
+quatro colunas e duas FKs, além de cópias JSON internas removidas.
+
+#### Escopo e evidências
+
+A [ADR-013](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md) descreve
+as fontes canônicas e o que foi preservado. O [relatório de backup, migração e
+regressão](../../../testes/otimizacao-modelagem-20261119.md) registra os resultados
+desta versão. Backups privados e bancos ficam fora do Git. Testes históricos
+mantêm seus hashes e não são apresentados como reexecução da versão atual.
+Não há promessa de redução de bytes ou latência sem medição própria.
 
 ## 18. Onboarding, triagem e contratos de dados
 
@@ -5866,8 +6021,8 @@ Fonte versionada: [docs/arquitetura/modelo-de-dados/dados-rag-ia.md](docs/arquit
 Modelo do escopo completo: documento/versão implementados na migration 0012
 ([RAG-01](docs/arquitetura/corpus.md)); ingestão e fragmentos entregues na migration 0013
 ([RAG-04](docs/arquitetura/indexacao-documental.md)); orquestrador/triagem/etapas/evidências entregues na migration 0014
-([AI-03](docs/arquitetura/geracao-persistente.md)); conversa/mensagem privadas entregues na
-migration 0015 ([AI-05](docs/arquitetura/chat-e-adaptacao.md)).
+([AI-03](docs/arquitetura/geracao-persistente.md)); mensagens privadas entregues na
+migration 0015 ([AI-05](docs/arquitetura/chat-e-adaptacao.md)) e normalizadas na revisão 0016.
 RAG-03 mantém [artefatos privados de extração](docs/arquitetura/extracao-documental.md), por
 versão/hash/configuração, fora do índice e do Git. Não são ingestões vetoriais ativas.
 MER original permanece preservado. Substitui a extensão agentiva.
@@ -5876,10 +6031,10 @@ MER original permanece preservado. Substitui a extensão agentiva.
 |---|---|---|
 | Documento e versão | MOD-05 / PostgreSQL | fonte, hash, idioma, licença, estado, aprovação/revogação |
 | Ingestão e fragmento | MOD-05 / metadados relacionais + banco vetorial especializado | versão documental, página/seção, configuração/embedding; ingestão idempotente |
-| Conversa e mensagem | MOD-06 / PostgreSQL | cliente autorizado, ordem, estados, correlação; histórico paginado e janela limitada no LLM |
+| Mensagem por cliente | MOD-06 / PostgreSQL | titular direto, ordem, estados, correlação; pergunta em pedido.mensagem congelado; histórico paginado e janela limitada no LLM, sem tabela-marcador conversa |
 | Execução | MOD-06 / PostgreSQL | finalidade dúvida/triagem/ficha/adaptação, pedido idempotente, estado, modelo/prompts/política/corpus e orçamento |
-| Resumo e decisão de triagem | MOD-06 / PostgreSQL | snapshot MOD-03, projeção estruturada/versionada, dados ausentes e alertas preservados; decisão/motivos sem diagnóstico |
-| Etapa e evidência usada | MOD-06 / PostgreSQL | busca/análise/geração/validação; fonte/trecho e versões reais; consumo/tempo sem raciocínio interno |
+| Resumo e decisão de triagem | MOD-06 / PostgreSQL | resumo canônico em execucao_ia.resultado.triagem; tabela triagem mantém snapshot/política/decisão/motivos, sem resumo duplicado; dados ausentes e alertas preservados |
+| Etapa e evidência usada | MOD-06 / PostgreSQL | busca/análise/geração/validação; fonte/trecho e versões reais; consumo canônico nas colunas de etapa_ia, DTO hidratado e tokens totais derivados, sem raciocínio interno |
 | Exercício/variação e recursos | MOD-04 / PostgreSQL | catálogo separado de ITEM_FICHA, relação com recursos MOD-10; dispensa explícita |
 | Versão e item de ficha | MOD-04 / PostgreSQL | origem IA/manual, autoria humana quando aplicável, execução de origem, snapshot e parecer separados |
 
@@ -5904,7 +6059,7 @@ Modelo lógico, campos, retenção e orçamento foram definidos na preparação:
 [modelo DBML](docs/arquitetura/modelo-de-dados/modelo-logico.dbml), [dicionário](docs/arquitetura/modelo-de-dados/dicionario.md),
 [invariantes](docs/arquitetura/modelo-de-dados/invariantes-e-estados.md) e
 [campos/triagem](docs/requisitos/onboarding-e-triagem.md).
-Os demais serviços e migrations permanecem tarefas de implementação. [Arquitetura](docs/arquitetura/rag-semantico.md) e
+As capacidades futuras permanecem delimitadas pelo manifesto. [Arquitetura](docs/arquitetura/rag-semantico.md) e
 [macrorequisitos](docs/requisitos/macrorequisitos-ia-rag.md).
 
 #### Marco AI-01
@@ -5922,6 +6077,20 @@ Mensagem já possui versao_contexto_id; não é necessária nova entidade para
 recuperar mensagens anteriores à ficha vigente. O DTO informa essa referência
 e contexto_anterior; 20 turnos/página e 90 dias permanecem. Não reenviar a conversa
 inteira nem reintroduzir resposta apoiada em ficha expurgada/fonte revogada.
+
+#### Normalização da persistência — revisão 0016
+
+A [ADR-013](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md) remove
+conversa, coluna pergunta, triagem.resumo e etapa_ia.dados. Mensagem usa cliente_id
+com FK direta ao cliente e FK composta titular/contexto da ficha. O JSON do pedido
+é a fonte da pergunta, preservado para hash e replay. Não duplicar o consumo no
+resultado da execução: hidratá-lo das colunas, com tokens de entrada/saída ambos
+nulos ou conhecidos não negativos e soma total derivada. O resumo completo da
+triagem permanece somente em execucao_ia.resultado.triagem, sem alterar seu DTO.
+Essas mudanças preservam contratos, orçamento e limpeza de dados privados em
+90 dias; não unificam tabelas de domínio com responsabilidades distintas.
+As [evidências de migração e regressão](docs/testes/otimizacao-modelagem-20261119.md)
+registram a preservação dos dados legados e os limites da verificação.
 ### 3. Limites e avaliação
 
 Fonte versionada: [docs/requisitos/configuracao-ia-rag.md](docs/requisitos/configuracao-ia-rag.md).
@@ -10635,12 +10804,16 @@ corpus compartilhado e do Git. DUVIDA não usa esse mapeamento de saúde.
 
 #### Persistência, orçamento e retenção
 
-Migration 0015 cria conversa (uma por cliente, PK igual ao cliente) e mensagem
-(um turno/pergunta, pedido congelado pelo servidor, estado e referência de
-contexto). O resultado do assistente fica em execucao_ia; não duplicar ficha ou
-resposta em mensagem. Chave única conversa+solicitacao e FK composta garantem
-que a versão de contexto pertence ao mesmo cliente. Explicação e comparação
-de fichas são resolvidas pelo serviço de MOD-04.
+Migration 0015 introduziu o chat persistente. A revisão 0016 remove o marcador
+conversa e vincula mensagem diretamente ao cliente por cliente_id. Cada turno
+conserva pedido congelado pelo servidor, estado e referência de contexto; a
+pergunta é lida de pedido.mensagem, sem coluna duplicada. O JSON exige chave
+mensagem string com 1 a 1.000 caracteres após btrim. A API ainda entrega pergunta
+no DTO; não muda entradas, UUIDs, hashes, recibos ou limites de histórico.
+O resultado do assistente fica em execucao_ia; não duplicar ficha ou resposta em
+mensagem. Chave única cliente+solicitacao e FK composta cliente/contexto garantem
+que a versão pertence ao titular, sem FK simples redundante. Explicação e
+comparação de fichas são resolvidas pelo serviço público de MOD-04.
 
 Dúvida/adaptação compartilham seis novas execuções em 60 segundos por cliente.
 Reserva transacional com advisory lock PostgreSQL ocorre antes de RAG/embeddings;
@@ -10673,6 +10846,8 @@ ficha não ganha referência artificial a uma versão. Comparação lê apenas c
 ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
 A manutenção existente de AI-03 também expurga perguntas/pedidos após 90 dias,
 preservando recibos e contadores de auditoria. Esse prazo independe das 15 fichas.
+O consumo do recibo é hidratado das colunas de etapa_ia, sem JSON dados ou cópia
+em execucao_ia.resultado; a triagem completa permanece canônica em resultado.triagem.
 
 #### Interface e segurança
 
@@ -10706,6 +10881,15 @@ de DTO, sem migration, novas tabelas ou alteração de prompts/modelos/corpus.
 Regressões: antes da primeira ficha, duas publicações, 23 mensagens em duas páginas,
 zero chamadas em leitura, escopo por cliente, fonte revogada, expurgo e 90 dias.
 Consultar [evidências da regressão do MVP](docs/testes/historico-chat-mvp-20261119.md).
+
+#### Normalização do modelo — revisão 0016
+
+A correção histórica acima precede esta normalização. A
+[ADR-013](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md) detalha fonte
+única de pergunta, triagem e consumo, remoção de conversa e preservação das
+constraints de titularidade. A [migração e regressão](docs/testes/otimizacao-modelagem-20261119.md)
+verificam dados legados, replay e reversão; não acrescentam chamadas LLM,
+mudança de corpus ou nova qualificação semântica do provedor gratuito.
 ### 22. DTOs de pedido e turno de chat
 
 Fonte versionada: [docs/requisitos/schemas/chat-ia-v1.schema.json](docs/requisitos/schemas/chat-ia-v1.schema.json).
@@ -17642,6 +17826,147 @@ entidades conceituais, 43 tabelas planejadas e 32 implementadas. O schema é
 justificável pelo escopo; propostas de reduzir duplicação de triagem/consumo,
 FK redundante e tabela conversa não foram aplicadas. A imagem original,
 DBML/JSON lógico e migrations permanecem intactos.
+### 23. Backup, migração com dados legados e regressão da normalização 0016
+
+Fonte versionada: [docs/testes/otimizacao-modelagem-20261119.md](docs/testes/otimizacao-modelagem-20261119.md).
+
+#### Resultado e escopo
+
+Revisão 0016 aplicada ao banco de desenvolvimento depois do backup conferido,
+ensaio com rollback e regressão do MVP. Fontes e schema são compatíveis e os
+dados fora das duplicações aprovadas foram preservados por comparação de todas
+as tabelas antes/depois. A [ADR-013](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
+explica as fontes canônicas. Contratos REST/JSON, permissões, triagem, versões,
+parecer, equipamentos e prompts enviados ao LLM continuam com as mesmas regras.
+
+| Retrato | Entidades/tabelas | Colunas | FKs físicas |
+|---|---:|---:|---:|
+| MER original | 18 entidades conceituais | Não equivalem diretamente a colunas | Não comparadas |
+| MVP antes | 32 | 262 | 53 |
+| MVP otimizado | 31 | 258 | 51 |
+| Modelo lógico completo atual | 42 | 331 | Inclui 11 tabelas futuras |
+
+O [painel visual](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/index.html)
+e o [diagrama editável](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/fisico-final.drawio)
+mostram todas as tabelas/colunas/relações físicas, incluindo FKs compostas.
+O [MER original](docs/arquitetura/modelo-de-dados/original/MER_Academia_Completo_v4.drawio.png)
+foi preservado. A análise anterior permanece histórica; não foi reescrita como
+se a otimização já tivesse sido aplicada naquela revisão.
+
+#### O que foi simplificado
+
+- Removido conversa, marcador 1:1 que apenas repetia o ID do cliente. Mensagem
+  usa cliente_id diretamente, com índice/unicidade e FK composta de titularidade.
+- Removida a FK simples de contexto redundante; a composta continua protegendo
+  existência e dono, inclusive aceitando contexto nulo antes da primeira ficha.
+- Removida mensagem.pergunta física; a propriedade/DTO lê pedido.mensagem.
+  Pedido congelado, janela histórica e hashes permanecem intactos.
+- Removido triagem.resumo duplicado; resumo completo continua em
+  execucao_ia.resultado.triagem. Metadados/decisões da triagem permanecem auditáveis.
+- Removidos etapa_ia.dados e resultado.consumo duplicados. Consumo é projetado
+  das colunas de etapa, com soma de tokens derivada. Ausente continua desconhecido;
+  zero explicitamente reportado continua zero. Restrição SQL exige o par coerente.
+
+Foram removidas uma tabela e quatro colunas; duas FKs deixaram de ser necessárias.
+No pequeno banco local havia 7.533 bytes de representações UTF-8 dos conteúdos
+duplicados removidos (399 pergunta, 3.573 triagem, 3.539 etapa e 22 consumo).
+Esse valor mede texto lógico, não páginas liberadas no disco: sem VACUUM FULL,
+ensaio de escala, EXPLAIN ou promessa de desempenho. A principal vantagem é
+evitar divergências de cópias e reduzir dados privados repetidos.
+
+Manter o restante do schema foi uma decisão: identidade, histórico, recursos
+alternativos, parecer, validação, literatura e auditoria possuem responsabilidades
+distintas. Voltar a 18 tabelas só para igualar o MER conceitual removeria detalhes
+necessários. Onze tabelas de matrícula/acesso/financeiro/agenda/configuração ainda
+são futuras; não foram antecipadas por esta otimização.
+
+#### Backup e aplicação segura
+
+Backup local privado em Documents/Codex/academia-otimizacao-modelagem-20261119/backup-antes:
+ZIP dos 694 fontes versionados, MER, SPEC, DBML/JSON; bundle do histórico Git;
+dumps custom de academia_dev/academia_test; Qdrant e corpus locais. ZIP relido
+por hash e bundle verificado. Credenciais/.env, dependências e backups não entram
+no Git. O guia LEIA-ME.txt e os manifestos da pasta registram a recuperação.
+
+O dump de desenvolvimento foi restaurado efetivamente em academia_test vazio,
+numa transação revertida, comparando contagens/hashes de todas as 32 tabelas.
+A comparação inicial diferiu na representação temporal; padronizado UTC/ISO,
+a segunda passou. O banco de testes voltou vazio. Antes da aplicação, migration
+também foi ensaiada em transação de desenvolvimento e revertida, preservando
+o estado bruto anterior e a revisão 0015.
+
+Na aplicação definitiva, uma transação comparou novamente o conteúdo canônico
+de todas as tabelas; somente representações duplicadas/marcadores foram retirados.
+Dados cadastrais, contas, fichas, onboarding, literatura, pedidos, hashes, recibos,
+eventos e autoria não foram substituídos por fixtures ou apagados por limpeza.
+Nenhuma migration já aplicada foi editada. O banco de desenvolvimento está em0016;
+academia_test conserva o rollback dos ensaios. API/frontend de uso manual não
+foram ligados para usuários; o E2E usou servidores temporários próprios.
+
+Upgrade aborta antes do DDL se encontrar cópias privadas divergentes. Downgrade
+0015 recompõe as colunas removidas e conversas de clientes com mensagens a partir
+dos valores canônicos; marcadores vazios sem semântica independente só são
+recuperados exatamente pelo dump. Não executar código antigo sobre banco novo.
+Ver o [guia do banco](database/README.md#backup-e-restauração-da-revisão-0016).
+
+#### Testes executados
+
+| Verificação atual | Resultado |
+|---|---|
+| Backend completo unitários/contratos | 359 aprovados |
+| Backend completo integração/banco | 187 aprovados; 3 opt-in de LLM real ignorados |
+| Frontend completo | 94 aprovados em 20 arquivos |
+| E2E navegador/API/PG/SMTP | 8 jornadas aprovadas, uma tentativa cada; migration0016 e rollback confirmado |
+| Estático backend | Ruff/formato, mypy 238 fontes aprovados |
+| Estático frontend | Lint, tipos e build aprovados |
+
+Casos novos verificam fonte única, desconhecido/zero conhecido, reserva/despacho/
+cancelamento/releitura, ida/volta0015↔0016, mensagens legadas, replay sem nova
+chamada, abortar legado divergente sem migration parcial, JSON/pergunta inválidos,
+cliente inexistente/contexto alheio e par de tokens. Os 16 focais aprovados na
+primeira rodada e cinco focais na repetição não são somados aos comandos completos.
+Dois focais novos falharam inicialmente por um UPDATE que não alcançava linhas
+e um literal JSON interpretado como bind SQLAlchemy; os testes foram corrigidos,
+mantendo todas as guardas. A repetição completa passou. Lint inicial das linhas
+SQL também foi corrigido sem alterar os comandos executados.
+
+Os oito E2E exercitam cadastro/convite/onboarding/treino manual, duas sessões/CSRF,
+triagem grave/ausente, geração/adaptação, retenção/rejeição/exportação, equipamentos,
+indisponibilidade da IA e recuperação/perfis. A [captura sintética de celular](docs/testes/otimizacao-modelagem-20261119-celular.png)
+mostra a ficha consultável; logs brutos ficam na saída local do E2E. Nenhuma
+conta de desenvolvimento aparece na captura.
+PostgreSQL/Qdrant/E5/Mailpit reais na integração; LLM controlado. Nenhuma chamada
+externa nova, retry ou contratação de plano pago. Os três testes ignorados exigem
+ativação explícita de LLM real e não são aprovação por herança.
+Os relatórios AI-06/TST-01 antigos conservam a identidade originalmente exercitada.
+
+#### Reprodução
+
+Usar os [comandos existentes](docs/testes/comandos.md) em ambiente isolado e uma pasta nova
+de saída, mantendo chaves LLM removidas do processo. Pesos E5 locais e Mailpit
+ativos para seus ensaios. Os wrappers temporários desta execução ficam fora do
+Git; não foram adicionados scripts pontuais de migração/manutenção ao projeto.
+
+```powershell
+# backend/, depois de carregar configuração de teste sem chaves LLM
+uv run --locked pytest -q
+uv run --locked pytest -o addopts='' -m 'integration or database' -q
+uv run --locked pytest -o addopts='' tests/ai/test_normalized_migration.py tests/ai/test_persistence_projection.py
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked mypy
+```
+
+Na integração definir ACADEMIA_TEST_MAILPIT=1 e ACADEMIA_TEST_EMBEDDINGS_REAL=1,
+ACADEMIA_AI_REAL=0 e perfil principal; usar academia_test vazio e pesos locais.
+Para E2E definir ACADEMIA_E2E=1 e executar python -m tests.acceptance --output
+data/e2e/rodada-N com Node24/Edge conforme o guia existente. No frontend executar
+npm test -- --run --maxWorkers=1, npm run lint, npm run typecheck e npm run build.
+Na raiz verificar documentação/SPEC com os comandos de AGENTS.md.
+
+[Recibo estruturado](docs/testes/otimizacao-modelagem-20261119.json): contagens, hashes dos
+relatórios/fontes, limites e backup sem conteúdo privado. Artefatos brutos,
+dumps, pesos, chaves, logs e scripts temporários continuam fora do Git.
 
 ## 23. Execução local e dependências do estágio entregue
 
@@ -17695,6 +18020,9 @@ A revisão `0010` cria as [fichas manuais e invariantes de versões](docs/arquit
 A revisão `0011` registra a [validação de publicação e os pareceres imutáveis](docs/arquitetura/publicacao-e-parecer.md).
 A revisão `0012` cria [documentos, versões e decisões de curadoria](docs/arquitetura/corpus.md), com proveniência protegida.
 A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
+A revisão `0014` cria execução, triagem, etapas e evidências de IA; `0015` entrega
+mensagens de chat. A revisão vigente `0016` normaliza fontes de pergunta,
+triagem e consumo, sem alterar contratos funcionais; veja o marco abaixo.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -17743,6 +18071,51 @@ A manutenção de AI-03 remove mensagens após 90 dias e preserva recibos.
 Upgrade/downgrade e comparação ORM/schema integram os testes relacionados.
 MER original e migrations anteriores preservados; modelo lógico/dicionário
 registram essa normalização. [Contrato](docs/arquitetura/chat-e-adaptacao.md).
+
+#### Revisão 0016 — fontes canônicas de IA e chat
+
+0015 → 0016 remove o marcador conversa e liga mensagem diretamente ao cliente.
+Pergunta vem do pedido JSON congelado; a triagem completa permanece somente em
+execucao_ia.resultado.triagem e o consumo é hidratado das colunas de etapa_ia,
+sem cópias JSON redundantes. DTOs, hashes, estados, orçamento, histórico e limpeza
+privada de 90 dias permanecem. FKs compostas de titularidade continuam protegidas.
+[Decisão](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md).
+
+O MVP físico contém 31 tabelas/258 colunas/51 FKs; o modelo lógico de 42 tabelas
+também descreve onze tabelas futuras. Não confundir o escopo lógico completo com
+objetos já instalados. Nenhuma tabela financeira ou biométrica foi antecipada.
+O [relatório de migração/regressão](docs/testes/otimizacao-modelagem-20261119.md)
+registra resultados novos; testes antigos conservam sua identidade histórica.
+
+A migration interrompe antes do descarte quando as cópias legadas de pergunta,
+triagem ou consumo de etapa divergem. Não corrigir isso apagando dados ou
+silenciando a validação: preservar o backup e investigar a divergência.
+
+#### Backup e restauração da revisão 0016
+
+Antes de migrar o desenvolvimento, parar API/frontend para manter fontes e banco
+compatíveis. Guardar em diretório privado fora do Git: cópia dos fontes/estado Git,
+dump PostgreSQL em formato custom, hashes e manifesto sem segredos. O dump contém
+dados privados, portanto não deve ser anexado à documentação ou ao repositório.
+
+1. Com credenciais carregadas localmente, gerar dump por pg_dump em formato custom.
+   Não copiar senhas ou URLs com senha para comandos públicos, logs ou histórico.
+2. Conferir tamanho/hash e leitura por pg_restore --list. Restaurar o dump em um
+   banco novo, isolado e dedicado à verificação; conferir a revisão Alembic e os
+   dados esperados. Não usar restauração sobre o banco ativo como teste.
+3. Aplicar upgrade head pelos comandos acima somente com backup verificado.
+   Preservar o dump original; registrar revisão, contagens e resultado da migration.
+4. Se precisar voltar, encerrar a aplicação, restaurar a cópia dos fontes
+   compatíveis e o dump em banco dedicado, configurar a URL local e verificar
+   antes de retomar. Não sobrescrever o banco original sem conferir o destino.
+
+O downgrade 0016 → 0015 é exercitado em banco isolado e recompõe campos duplicados
+e conversas com mensagens a partir das fontes canônicas. Para recuperação exata,
+inclusive marcadores vazios anteriores, usar o backup completo. Datas, UUIDs e
+conteúdo de mensagens não devem ser reconstruídos com contexto atualizado.
+Os [passos/evidências desta execução](docs/testes/otimizacao-modelagem-20261119.md)
+indicam o diretório privado do backup, a verificação de restauração e os limites
+do teste. O projeto não acrescenta backups privados nem scripts pontuais ao Git.
 ### 2. Backend
 
 Fonte versionada: [backend/README.md](backend/README.md).
@@ -18216,14 +18589,14 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `AGENTS.md` | `7ad6b40b7a543af3fef9281dd1f70a9b9eec8f27165d46b022ded3645e6c42d1` |
 | `backend/README.md` | `583c2658d7fe15c5bde015e826f666258262a0292eec1f2246c15d9b93d9462b` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
-| `database/README.md` | `9ed9ac852a8fdc68eb756d8f8003a7c040d9b7fadf4b61a702f860f71f362e92` |
+| `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
 | `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
-| `docs/arquitetura/chat-e-adaptacao.md` | `b53d5e7f800567ea7e636e1a20a3db70d5a4cf0034fcc7496831db509b1b9975` |
+| `docs/arquitetura/chat-e-adaptacao.md` | `2a239cc5576db5cef8b6b5e890afb2ece2ed88e3a65979e1c92282b640270e92` |
 | `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
@@ -18239,6 +18612,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-010-avaliacao-academica-reduzida.md` | `a44a743cedd86f0eca7e722915c068a78ec6526888024d0ec3f0f347d9f609ca` |
 | `docs/arquitetura/decisoes/ADR-011-amostra-real-minima.md` | `31758187da83231312208077b3ca892f86a6dbcf4466fccf68d934e5cad2eab5` |
 | `docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md` | `b459a09f63eeb1e6cf3790cab2dc685c864da923117d4db94eedeec43d7fe1c9` |
+| `docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md` | `1d6fe210330d7ed97d4454fcef830c3a1664fc08b9d403f5b899d376c339d763` |
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
@@ -18248,10 +18622,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
-| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `adf135ced6681f54989fce8edc074e8fab1c5ffc3feaee3b8171079d31345f84` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `e67719b92d533b59609ca38fc01fe93a2812baeb162fb4672607dec23a4c7bab` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f6cf4992937cebccc74da226a204869e8feab21040ba9a4456db6fa8b0e711ab` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `66a73587ce0b53d1de35adf9573cd65637ed50302eb9d0b406b04764ffddc8bd` |
+| `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `664bf7a2316d9287f798d6a48cbaa169d6a10ebb395945764c1bd693d6ea38f4` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `b77921d0c6361201b58dfe7031e3ab2e84fef981ee8827dfdbb4c2e14a14f09c` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `e81127b081b15e07772699dcd2c32a59bc68d1e729b2689ea43c54d7d7b337a8` |
+| `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
@@ -18262,9 +18637,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `4681fc0a558bff68ddf6020301b4e344cc8b63e1d1bb5a1de7aabc5670c397a6` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `34781dfcd65cb32c8ad9e7a0dfa3a3a42bc91770022bcd4ddf30b48e6d0be0cf` |
+| `docs/especificacao/compilacao-spec.json` | `4e6b842f759e284251f1a4712d92818675a16b40b98ad439ab8d40892f06a060` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `3785defed29388fc4569b58bbc21a06e999d3beb77a7d8f688a27ecfcc9a013e` |
-| `docs/especificacao/visao-geral.md` | `1da786f16e289ceaab37b04315212f13489b87d85c49775f4e94e17ed33c51c1` |
+| `docs/especificacao/visao-geral.md` | `6b2e40bbcc239ec21e645172e80c9c749e205e247d369da75902bbbd4239cec0` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -18276,7 +18651,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `18c7d2c637c97baf3a9bd57d0d525b809e18f5605f5351cc46adea37ef7cea4b` |
+| `docs/prompts/README.md` | `63c2d4042cc6383823ef480ea9901a39f585fac320f722a6e2f13d37fef2d41f` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
@@ -18315,6 +18690,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/estrategia.md` | `15269ecb21cf8b2fb3c6e8f56434e4095a85e0fbe6b9fda4b5ba927278956c6c` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/historico-chat-mvp-20261119.md` | `efa4a40fe2e6dce5254a3abd5d09f7e72fefe1ec416088088c1a587e3d4566b0` |
+| `docs/testes/otimizacao-modelagem-20261119.md` | `1f74745b6165c4c27f671b71ac895539b2d2256e7b5ea7dae9630e766d21b44e` |
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |

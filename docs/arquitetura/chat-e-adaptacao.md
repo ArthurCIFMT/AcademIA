@@ -94,12 +94,16 @@ corpus compartilhado e do Git. DUVIDA não usa esse mapeamento de saúde.
 
 ## Persistência, orçamento e retenção
 
-Migration 0015 cria conversa (uma por cliente, PK igual ao cliente) e mensagem
-(um turno/pergunta, pedido congelado pelo servidor, estado e referência de
-contexto). O resultado do assistente fica em execucao_ia; não duplicar ficha ou
-resposta em mensagem. Chave única conversa+solicitacao e FK composta garantem
-que a versão de contexto pertence ao mesmo cliente. Explicação e comparação
-de fichas são resolvidas pelo serviço de MOD-04.
+Migration 0015 introduziu o chat persistente. A revisão 0016 remove o marcador
+conversa e vincula mensagem diretamente ao cliente por cliente_id. Cada turno
+conserva pedido congelado pelo servidor, estado e referência de contexto; a
+pergunta é lida de pedido.mensagem, sem coluna duplicada. O JSON exige chave
+mensagem string com 1 a 1.000 caracteres após btrim. A API ainda entrega pergunta
+no DTO; não muda entradas, UUIDs, hashes, recibos ou limites de histórico.
+O resultado do assistente fica em execucao_ia; não duplicar ficha ou resposta em
+mensagem. Chave única cliente+solicitacao e FK composta cliente/contexto garantem
+que a versão pertence ao titular, sem FK simples redundante. Explicação e
+comparação de fichas são resolvidas pelo serviço público de MOD-04.
 
 Dúvida/adaptação compartilham seis novas execuções em 60 segundos por cliente.
 Reserva transacional com advisory lock PostgreSQL ocorre antes de RAG/embeddings;
@@ -132,6 +136,8 @@ ficha não ganha referência artificial a uma versão. Comparação lê apenas c
 ainda retido de MOD-04 e informa expiração. Não restaura ficha apagada.
 A manutenção existente de AI-03 também expurga perguntas/pedidos após 90 dias,
 preservando recibos e contadores de auditoria. Esse prazo independe das 15 fichas.
+O consumo do recibo é hidratado das colunas de etapa_ia, sem JSON dados ou cópia
+em execucao_ia.resultado; a triagem completa permanece canônica em resultado.triagem.
 
 ## Interface e segurança
 
@@ -165,3 +171,12 @@ de DTO, sem migration, novas tabelas ou alteração de prompts/modelos/corpus.
 Regressões: antes da primeira ficha, duas publicações, 23 mensagens em duas páginas,
 zero chamadas em leitura, escopo por cliente, fonte revogada, expurgo e 90 dias.
 Consultar [evidências da regressão do MVP](../testes/historico-chat-mvp-20261119.md).
+
+## Normalização do modelo — revisão 0016
+
+A correção histórica acima precede esta normalização. A
+[ADR-013](decisoes/ADR-013-normalizacao-persistencia-ia-chat.md) detalha fonte
+única de pergunta, triagem e consumo, remoção de conversa e preservação das
+constraints de titularidade. A [migração e regressão](../testes/otimizacao-modelagem-20261119.md)
+verificam dados legados, replay e reversão; não acrescentam chamadas LLM,
+mudança de corpus ou nova qualificação semântica do provedor gratuito.

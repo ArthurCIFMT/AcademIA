@@ -441,3 +441,14 @@ DTO aditivo e identificação de contexto anterior. A janela enviada ao LLM cont
 limitada e expurgo/revogação preservados. [Regressão do MVP](../testes/historico-chat-mvp-20261119.md)
 e [avaliação da modelagem](../analises/2026-11-19-tamanho-modelagem.md).
 Nenhum cartão UX foi executado, modelo/corpus trocado ou schema migrado.
+
+2026-11-19, otimização da modelagem solicitada pelo responsável:
+[ADR-013](../arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md),
+[backup/migração/regressão](../testes/otimizacao-modelagem-20261119.md) e
+[comparação visual](../arquitetura/modelo-de-dados/visualizacao-otimizada/README.md).
+A revisão 0016 reduz o físico de 32/262 para 31 tabelas/258 colunas, preservando
+as FKs compostas; o lógico completo passa de 43/335 para 42/331, com onze tabelas
+futuras. AI-03/AI-05 passam a referenciar fontes únicas de triagem, consumo e
+pergunta. Não executar outro cartão, alterar regras funcionais ou considerar
+essa manutenção uma nova qualificação AI-06/TST-01. Resultados atuais ficam no
+relatório específico; marcos anteriores conservam suas evidências históricas.

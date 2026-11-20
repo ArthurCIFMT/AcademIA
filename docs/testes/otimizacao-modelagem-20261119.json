@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "data": "2026-11-19",
+  "base_git": "bf2a8316aea707a0f9bfe83463aa4cde482f0b8d",
+  "migration": "0016",
+  "aplicada_ao_desenvolvimento": true,
+  "modelo_antes": {
+    "tabelas": 32,
+    "colunas": 262,
+    "fks": 53
+  },
+  "modelo_depois": {
+    "tabelas": 31,
+    "colunas": 258,
+    "fks": 51
+  },
+  "modelo_logico_completo": {
+    "tabelas": 42,
+    "colunas": 331,
+    "tabelas_futuras": 11
+  },
+  "mer_original": {
+    "entidades_conceituais": 18,
+    "preservado": true
+  },
+  "backup": {
+    "fontes_versionados": 694,
+    "git_bundle_verificado": true,
+    "dump_dev_sha256": "869261e4c0fcd5394a700fe39eb79ec53c8acf6d0d83791b27122405f09bf688",
+    "restauracao_real_em_test_com_rollback": true,
+    "corpus_qdrant_copiados": true,
+    "dados_preservados_migracao": true,
+    "conteudo_privado_publicado": false
+  },
+  "backend_unitarios_contratos": {
+    "aprovados": 359,
+    "ignorados": 0,
+    "falhas": 0,
+    "erros": 0,
+    "casos": 359,
+    "segundos": 72.114,
+    "junit_sha256": "85ba02194c66201259a3d0b507da46aeee0c065c56f0da5cd5f66abc1dc52a57",
+    "ignorados_motivos": []
+  },
+  "backend_integracao_banco": {
+    "aprovados": 187,
+    "ignorados": 3,
+    "falhas": 0,
+    "erros": 0,
+    "casos": 190,
+    "segundos": 648.026,
+    "junit_sha256": "d30ac22d985ade636739a43d3540148721abcb2712a99e27e1ed8c252826c5bf",
+    "ignorados_motivos": [
+      "Ensaio real opt-in: chave, E5 e PostgreSQL obrigatórios.",
+      "Selecionar explicitamente uma rota; consome quota gratuita.",
+      "Selecionar explicitamente uma rota; consome quota gratuita."
+    ]
+  },
+  "frontend": {
+    "aprovados": 94,
+    "arquivos": 20,
+    "falhas": 0,
+    "relatorio_sha256": "6922bec2ac578d045adbcca7308c56f832886992f7c2781643d64f33b723e67d"
+  },
+  "e2e": {
+    "migration": "0016",
+    "aprovados": 8,
+    "jornadas": [
+      {
+        "id": "E2E-01",
+        "titulo": "E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 20175,
+        "passou": true
+      },
+      {
+        "id": "E2E-02",
+        "titulo": "E2E-02 sessão de dois clientes, CSRF e resposta maliciosa inerte",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 5565,
+        "passou": true
+      },
+      {
+        "id": "E2E-03",
+        "titulo": "E2E-03 triagem grave, NAO_SEI e onboarding ausente",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 9032,
+        "passou": true
+      },
+      {
+        "id": "E2E-04",
+        "titulo": "E2E-04 geração única, confirmação do onboarding e adaptação versionada",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 9085,
+        "passou": true
+      },
+      {
+        "id": "E2E-05",
+        "titulo": "E2E-05 retenção de 16 versões, rejeição e exportação",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 7954,
+        "passou": true
+      },
+      {
+        "id": "E2E-06",
+        "titulo": "E2E-06 equipamento muda durante a publicação e API recusa",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 6023,
+        "passou": true
+      },
+      {
+        "id": "E2E-07",
+        "titulo": "E2E-07 treino manual continua após indisponibilidade da IA",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 5856,
+        "passou": true
+      },
+      {
+        "id": "E2E-08",
+        "titulo": "E2E-08 recuperação e perfis de cliente/funcionário independentes",
+        "estado": "expected",
+        "tentativas": 1,
+        "navegador": "157.0.4341.60",
+        "duracao_ms": 4962,
+        "passou": true
+      }
+    ],
+    "rollback": true,
+    "relatorio_sha256": "b616cfd2b54a03a8aac6dbba73335e82c7d52ba0c69c659ec26b3ca2b48260fd",
+    "chamadas_llm_externo": 0,
+    "aceite_integral_requalificado": false,
+    "captura_sintetica_sha256": "592eeef011ef4bf566c7960900f3261109ba0287cde179109279e81b5d370ff3"
+  },
+  "checagens": {
+    "ruff": true,
+    "ruff_format": true,
+    "mypy_fontes": 238,
+    "frontend_lint": true,
+    "frontend_tipos": true,
+    "frontend_build": true,
+    "spec_fontes": 125,
+    "documentacao_sem_inconsistencias": true
+  },
+  "duplicacoes_texto_utf8_antes_bytes": {
+    "pergunta_texto": 399,
+    "triagem_json_texto": 3573,
+    "etapa_json_texto": 3539,
+    "consumo_json_texto": 22,
+    "total_texto_utf8_bytes": 7533
+  },
+  "fontes_sha256": {
+    "database/migrations/versions/0016_normalize_ai_chat.py": "35df38f619b79a93b8a2945a04413289b382abbfe34e517f10c23928164c8f60",
+    "backend/app/modules/ai/chat/models.py": "2925cb225c0bc41f5db73bd8db7e88d48518f080578494ea2e890a22d780a2a8",
+    "backend/app/modules/ai/chat/service.py": "62222563b4dbf0a56282cc10639061f612ffa8148736dd7097835f14a119cf9a",
+    "backend/app/modules/ai/chat/quota.py": "b4c9c2f77803cce6731897828e470434335db8f900d770550b3e87afd6cd46fd",
+    "backend/app/modules/ai/persistence/models.py": "cbb0fa97be98ee9cfbf128df30cebe3f8eb8196ca86d25c28582696338f6f4a9",
+    "backend/app/modules/ai/persistence/state.py": "349bff8a3dd7c515ade5c5eede6fe48db8ee3a676cd040d9520409cba1b20b38",
+    "backend/app/modules/ai/persistence/maintenance.py": "d3ad7454809f793dc26bee99fea3064e36a0b99754eef8fe76e42483a4475be7",
+    "backend/tests/ai/test_normalized_migration.py": "37ca64670612954920a446c57162f62d73933d810d99c998ac05338e711fd706",
+    "backend/tests/ai/test_persistence_projection.py": "cd71450f9d7ecd6bcfd05a3c6a7790a5e05862b1c0237ec12d91198db7fb15e4",
+    "backend/tests/ai/test_chat_history.py": "8bc2f65db7217c604e7f257fd5a579ff3131e7cb00c3c00ef3cdd1a0476b6a49",
+    "backend/tests/ai/test_generation.py": "018275ae3d322b8f1abe04c249736c3e066e9778e0a48789c8aa0d60e2813c87",
+    "docs/arquitetura/modelo-de-dados/modelo-logico.json": "70e30ebcfaf7f33ec03f15893baaccb0a2c8c6b0439b0880802fd8bcfef34872",
+    "docs/arquitetura/modelo-de-dados/modelo-logico.dbml": "260e58206587950735d9a14703b1aba5a177f1fcd13eb91bda76d30724d2f91f"
+  },
+  "limites": [
+    "Sem nova chamada/qualificação de LLM real; três opt-in ignorados.",
+    "Sem medição de carga ou promessa de ganho de latência/tamanho em disco.",
+    "Marcadores de conversa vazios não são recompostos pelo downgrade; recuperação exata usa dump.",
+    "Comparação inicial de restauração foi repetida com UTC/ISO explícitos.",
+    "Dois testes novos de migration falharam inicialmente por dados de teste/SQL parametrizado e foram corrigidos; sem retirar guardas."
+  ]
+}

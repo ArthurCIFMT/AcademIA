@@ -27,7 +27,7 @@ def occupied_slots(session: Session, client: UUID, exclude: UUID | None = None) 
         select(func.count())
         .select_from(Message)
         .where(
-            Message.conversa_id == client,
+            Message.cliente_id == client,
             Message.criada_em > cutoff,
             ~select(Execution.id).where(Execution.id == Message.id).exists(),
         )

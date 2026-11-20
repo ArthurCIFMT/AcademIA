@@ -5,7 +5,7 @@ from sqlalchemy import delete, select, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.ai.adapters.health_config import ConfiguredContext
-from app.modules.ai.chat.models import Conversation, Message
+from app.modules.ai.chat.models import Message
 from app.modules.ai.chat.quota import occupied_slots
 from app.modules.ai.chat.views import ChatView, present
 from app.modules.ai.generation import GenerationService
@@ -123,15 +123,12 @@ class ChatService:
                         or not request.dia_alvo
                     ):
                         raise WorkoutError(409)
-                if not session.get(Conversation, actor.user_id):
-                    session.add(Conversation(id=actor.user_id))
-                    session.flush()
                 # Usar perguntas recentes somente do mesmo contexto.
                 previous = list(
                     session.scalars(
                         select(Message)
                         .where(
-                            Message.conversa_id == actor.user_id,
+                            Message.cliente_id == actor.user_id,
                             Message.versao_contexto_id == current,
                             Message.criada_em >= utc_now() - timedelta(days=90),
                         )
@@ -153,9 +150,8 @@ class ChatService:
                 session.add(
                     Message(
                         id=id,
-                        conversa_id=actor.user_id,
+                        cliente_id=actor.user_id,
                         solicitacao_id=request.solicitacao_id,
-                        pergunta=request.mensagem,
                         estado="RESERVADA",
                         erro_codigo=None,
                         pedido=request.model_dump(mode="json"),
@@ -200,7 +196,7 @@ class ChatService:
         self.generator.authorize(actor, actor.user_id)
         with self.sessions.begin() as session:
             message = session.get(Message, PostgresState.id(actor, id))
-            if message is None or message.conversa_id != actor.user_id:
+            if message is None or message.cliente_id != actor.user_id:
                 raise KeyError(id)
             request = RunRequest.model_validate(message.pedido)
         receipt = PostgresState(self.sessions).lookup(actor, actor.user_id, request)
@@ -221,7 +217,7 @@ class ChatService:
                 session.scalars(
                     select(Message.solicitacao_id)
                     .where(
-                        Message.conversa_id == actor.user_id,
+                        Message.cliente_id == actor.user_id,
                         Message.criada_em >= utc_now() - timedelta(days=90),
                     )
                     .order_by(Message.criada_em.desc(), Message.id)

@@ -1379,23 +1379,9 @@
       ]
     },
     {
-      "name": "conversa",
-      "owner": "MOD-06",
-      "note": "Migration 0015: uma conversa por cliente; PK também é FK do titular",
-      "columns": [
-        {
-          "name": "id",
-          "type": "uuid",
-          "flags": "pk",
-          "ref": "cliente.usuario_id"
-        }
-      ],
-      "unique": []
-    },
-    {
       "name": "mensagem",
       "owner": "MOD-06",
-      "note": "Migration 0015: um turno por pedido; resposta em execucao_ia, sem duplicar prescrição; FK composta titular/versão e expurgo privado em 90 dias",
+      "note": "Migration 0016: um turno por pedido e cliente; FK composta (cliente_id, versao_contexto_id) para versao_ficha(cliente_id, id), sem FK simples redundante. Pergunta somente em pedido.mensagem, JSON string de 1 a 1000 caracteres; pedido congelado/hash preservados e expurgo em 90 dias; índice cliente_id/criada_em",
       "columns": [
         {
           "name": "id",
@@ -1404,20 +1390,14 @@
           "ref": null
         },
         {
-          "name": "conversa_id",
+          "name": "cliente_id",
           "type": "uuid",
           "flags": "required",
-          "ref": "conversa.id"
+          "ref": "cliente.usuario_id"
         },
         {
           "name": "solicitacao_id",
           "type": "uuid",
-          "flags": "required",
-          "ref": null
-        },
-        {
-          "name": "pergunta",
-          "type": "text",
           "flags": "required",
           "ref": null
         },
@@ -1443,7 +1423,7 @@
           "name": "versao_contexto_id",
           "type": "uuid",
           "flags": "",
-          "ref": "versao_ficha.id"
+          "ref": null
         },
         {
           "name": "criada_em",
@@ -1454,7 +1434,7 @@
       ],
       "unique": [
         [
-          "conversa_id",
+          "cliente_id",
           "solicitacao_id"
         ]
       ]
@@ -1462,7 +1442,7 @@
     {
       "name": "execucao_ia",
       "owner": "MOD-06",
-      "note": "Única por cliente+chave; sem duplicar conteúdo de ficha excluída",
+      "note": "Migration 0016: única por cliente+chave; resultado.triagem é a fonte canônica do resumo de triagem; resultado não duplica consumo, hidratado de etapa_ia, nem conteúdo de ficha excluída; FKs de contexto compostas por cliente conforme invariantes",
       "columns": [
         {
           "name": "id",
@@ -1589,7 +1569,7 @@
     {
       "name": "triagem",
       "owner": "MOD-06",
-      "note": "Três estados de domínio, falhas técnicas pertencem à execução",
+      "note": "Migration 0016: metadados de triagem, sem cópia do resumo; conteúdo canônico em execucao_ia.resultado.triagem. Três estados de domínio; falhas técnicas pertencem à execução; retenção privada de 90 dias",
       "columns": [
         {
           "name": "id",
@@ -1608,12 +1588,6 @@
           "type": "uuid",
           "flags": "required",
           "ref": "onboarding_versao.id"
-        },
-        {
-          "name": "resumo",
-          "type": "jsonb",
-          "flags": "required",
-          "ref": null
         },
         {
           "name": "regra_version",
@@ -1639,7 +1613,7 @@
     {
       "name": "etapa_ia",
       "owner": "MOD-06",
-      "note": "Dados de consumo sem chain-of-thought",
+      "note": "Migration 0016: consumo canônico nas colunas, sem JSON dados; DTO hidratado na leitura, tokens totais derivados da soma; tokens_entrada/tokens_saida ambos nulos ou ambos conhecidos não negativos; sem chain-of-thought",
       "columns": [
         {
           "name": "id",
@@ -1704,12 +1678,6 @@
         {
           "name": "prompt_sha256",
           "type": "char(64)",
-          "flags": "required",
-          "ref": null
-        },
-        {
-          "name": "dados",
-          "type": "jsonb",
           "flags": "required",
           "ref": null
         },

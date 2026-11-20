@@ -46,6 +46,9 @@ A revisão `0010` cria as [fichas manuais e invariantes de versões](../docs/arq
 A revisão `0011` registra a [validação de publicação e os pareceres imutáveis](../docs/arquitetura/publicacao-e-parecer.md).
 A revisão `0012` cria [documentos, versões e decisões de curadoria](../docs/arquitetura/corpus.md), com proveniência protegida.
 A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](../docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
+A revisão `0014` cria execução, triagem, etapas e evidências de IA; `0015` entrega
+mensagens de chat. A revisão vigente `0016` normaliza fontes de pergunta,
+triagem e consumo, sem alterar contratos funcionais; veja o marco abaixo.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -94,3 +97,48 @@ A manutenção de AI-03 remove mensagens após 90 dias e preserva recibos.
 Upgrade/downgrade e comparação ORM/schema integram os testes relacionados.
 MER original e migrations anteriores preservados; modelo lógico/dicionário
 registram essa normalização. [Contrato](../docs/arquitetura/chat-e-adaptacao.md).
+
+## Revisão 0016 — fontes canônicas de IA e chat
+
+0015 → 0016 remove o marcador conversa e liga mensagem diretamente ao cliente.
+Pergunta vem do pedido JSON congelado; a triagem completa permanece somente em
+execucao_ia.resultado.triagem e o consumo é hidratado das colunas de etapa_ia,
+sem cópias JSON redundantes. DTOs, hashes, estados, orçamento, histórico e limpeza
+privada de 90 dias permanecem. FKs compostas de titularidade continuam protegidas.
+[Decisão](../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md).
+
+O MVP físico contém 31 tabelas/258 colunas/51 FKs; o modelo lógico de 42 tabelas
+também descreve onze tabelas futuras. Não confundir o escopo lógico completo com
+objetos já instalados. Nenhuma tabela financeira ou biométrica foi antecipada.
+O [relatório de migração/regressão](../docs/testes/otimizacao-modelagem-20261119.md)
+registra resultados novos; testes antigos conservam sua identidade histórica.
+
+A migration interrompe antes do descarte quando as cópias legadas de pergunta,
+triagem ou consumo de etapa divergem. Não corrigir isso apagando dados ou
+silenciando a validação: preservar o backup e investigar a divergência.
+
+## Backup e restauração da revisão 0016
+
+Antes de migrar o desenvolvimento, parar API/frontend para manter fontes e banco
+compatíveis. Guardar em diretório privado fora do Git: cópia dos fontes/estado Git,
+dump PostgreSQL em formato custom, hashes e manifesto sem segredos. O dump contém
+dados privados, portanto não deve ser anexado à documentação ou ao repositório.
+
+1. Com credenciais carregadas localmente, gerar dump por pg_dump em formato custom.
+   Não copiar senhas ou URLs com senha para comandos públicos, logs ou histórico.
+2. Conferir tamanho/hash e leitura por pg_restore --list. Restaurar o dump em um
+   banco novo, isolado e dedicado à verificação; conferir a revisão Alembic e os
+   dados esperados. Não usar restauração sobre o banco ativo como teste.
+3. Aplicar upgrade head pelos comandos acima somente com backup verificado.
+   Preservar o dump original; registrar revisão, contagens e resultado da migration.
+4. Se precisar voltar, encerrar a aplicação, restaurar a cópia dos fontes
+   compatíveis e o dump em banco dedicado, configurar a URL local e verificar
+   antes de retomar. Não sobrescrever o banco original sem conferir o destino.
+
+O downgrade 0016 → 0015 é exercitado em banco isolado e recompõe campos duplicados
+e conversas com mensagens a partir das fontes canônicas. Para recuperação exata,
+inclusive marcadores vazios anteriores, usar o backup completo. Datas, UUIDs e
+conteúdo de mensagens não devem ser reconstruídos com contexto atualizado.
+Os [passos/evidências desta execução](../docs/testes/otimizacao-modelagem-20261119.md)
+indicam o diretório privado do backup, a verificação de restauração e os limites
+do teste. O projeto não acrescenta backups privados nem scripts pontuais ao Git.

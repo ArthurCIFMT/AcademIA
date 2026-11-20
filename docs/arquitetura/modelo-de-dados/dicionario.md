@@ -370,39 +370,38 @@ Unicidades: ingestao_id+ordem.
 | colecao | varchar(100) | required | — |
 | indexado_em | timestamptz | opcional | — |
 
-## conversa — MOD-06
-
-Migration 0015: uma conversa por cliente; identidade coincide com a do titular.
-
-| Campo | Tipo | Regras | Referência |
-|---|---|---|---|
-| id | uuid | pk | cliente.usuario_id |
-
 ## mensagem — MOD-06
 
-Um turno/pergunta por solicitação. Resposta normalizada em execucao_ia;
-sem duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
-FK composta conversa_id+versao_contexto_id referencia versao_ficha.cliente_id+id.
-Índice de histórico conversa_id+criada_em. Pergunta de 1 a 1.000 caracteres,
-pedido JSON objeto congelado pelo servidor. Estado reserva/preparação/recibo.
+Migration 0016 remove o marcador conversa e vincula o turno diretamente ao cliente,
+sem alterar a API, a autorização ou o histórico. Resposta em execucao_ia, sem
+duplicar conteúdo de ficha. Expurgar conteúdo privado após 90 dias.
+FK composta cliente_id+versao_contexto_id referencia versao_ficha.cliente_id+id;
+não há FK simples redundante para o contexto. Índice cliente_id+criada_em.
+Pedido JSON objeto congelado pelo servidor: a chave mensagem é obrigatória,
+deve ser string com 1 a 1.000 caracteres após btrim. A propriedade de leitura
+pergunta e o DTO vêm desse campo; não há coluna pergunta nem reconstrução do
+pedido usando contexto novo. Estado reserva/preparação/recibo.
 
-Unicidades: conversa_id+solicitacao_id.
+Unicidades: cliente_id+solicitacao_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| conversa_id | uuid | required | conversa.id |
+| cliente_id | uuid | required | cliente.usuario_id |
 | solicitacao_id | uuid | required | — |
-| pergunta | text | required | — |
 | estado | text | required | — |
 | erro_codigo | text | opcional | — |
 | pedido | jsonb | required | — |
-| versao_contexto_id | uuid | opcional | versao_ficha.id |
+| versao_contexto_id | uuid | opcional | versao_ficha(cliente_id,id), FK composta com o titular |
 | criada_em | timestamptz | required | — |
 
 ## execucao_ia — MOD-06
 
-Única por cliente+chave; sem duplicar conteúdo de ficha excluída
+Única por cliente+chave; sem duplicar conteúdo de ficha excluída.
+Na revisão 0016, resultado.triagem é a fonte canônica do resumo de triagem.
+Resultado não persiste cópia de consumo: o DTO o hidrata das colunas de etapa_ia.
+FKs de onboarding/base/publicação incluem cliente_id conforme as migrations
+e invariantes de titularidade; as referências de campo abaixo são conceituais.
 
 Unicidades: cliente_id+idempotency_key.
 
@@ -431,14 +430,16 @@ Unicidades: cliente_id+idempotency_key.
 
 ## triagem — MOD-06
 
-Três estados de domínio, falhas técnicas pertencem à execução
+Metadados de triagem: snapshot, política, estado e códigos de motivo. A revisão
+0016 remove a coluna resumo duplicada; o resumo completo possui uma única fonte,
+execucao_ia.resultado.triagem, sujeita à retenção privada de 90 dias. Três estados
+de domínio; falhas técnicas pertencem à execução. Não remover metadados de auditoria.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
 | execucao_id | uuid | required unique | execucao_ia.id |
 | onboarding_id | uuid | required | onboarding_versao.id |
-| resumo | jsonb | required | — |
 | regra_version | integer | required | — |
 | estado | varchar(35) | opcional | — |
 | motivos | jsonb | required | — |
@@ -446,7 +447,12 @@ Três estados de domínio, falhas técnicas pertencem à execução
 
 ## etapa_ia — MOD-06
 
-Dados de consumo sem chain-of-thought
+Na revisão 0016, as colunas são a fonte canônica do consumo por etapa; não há
+JSON dados nem cópia de consumo em execucao_ia.resultado. O DTO é hidratado dessas
+colunas e total_tokens é a soma de entrada/saída. Ambos os campos de tokens
+devem ser nulos (uso não informado) ou ambos conhecidos e não negativos;
+não converter consumo desconhecido em zero. Reserva e número de chamadas
+persistem independentemente de uma resposta válida. Sem chain-of-thought.
 
 Unicidades: execucao_id+tipo.
 
@@ -463,7 +469,6 @@ Unicidades: execucao_id+tipo.
 | limite_saida_tokens | integer | required | — |
 | prompt_bytes | integer | required | — |
 | prompt_sha256 | char(64) | required | — |
-| dados | jsonb | required | — |
 | enviada_em | timestamptz | opcional | — |
 
 

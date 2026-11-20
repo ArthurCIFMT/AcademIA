@@ -5,7 +5,7 @@ from datetime import timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.modules.ai.persistence.models import Execution, TriageRecord
+from app.modules.ai.persistence.models import Execution
 from app.modules.ai.schemas.execution import RunResult
 from app.modules.identity.service import utc_now
 
@@ -32,12 +32,7 @@ def purge_expired(sessions: sessionmaker[Session]) -> int:
         for row in rows:
             row.resultado = strip_private(
                 RunResult.model_validate(row.resultado)
-            ).model_dump(mode="json", exclude={"proposta", "evidencias"})
-            triage = session.scalar(
-                select(TriageRecord).where(TriageRecord.execucao_id == row.id)
-            )
-            if triage:
-                triage.resumo = {}
+            ).model_dump(mode="json", exclude={"proposta", "evidencias", "consumo"})
         return len(rows)
 
 

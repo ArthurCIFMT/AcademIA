@@ -94,12 +94,16 @@
         {
           "arquivo": "docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md",
           "titulo": "Reparo do contrato de IA e cobertura aeróbica"
+        },
+        {
+          "arquivo": "docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md",
+          "titulo": "Normalização de IA/chat, fontes canônicas, backup e reversão"
         }
       ]
     },
     {
       "titulo": "17. Modelo de dados, relacionamentos e invariantes",
-      "nota": "Modelo lógico do escopo completo, incluindo capacidades futuras. Não representa todas essas tabelas já instaladas. A origem e a evolução do MER estão no capítulo 10.",
+      "nota": "Modelo lógico do escopo completo: 42 tabelas/331 colunas, incluindo onze tabelas futuras. O físico do MVP na revisão 0016 tem 31 tabelas/258 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual.",
       "fontes": [
         {
           "arquivo": "docs/arquitetura/modelo-de-dados/modelo-logico.dbml",
@@ -118,6 +122,10 @@
         {
           "arquivo": "docs/analises/2026-11-19-tamanho-modelagem.md",
           "titulo": "Avaliação do tamanho conceitual, lógico e físico após o MVP"
+        },
+        {
+          "arquivo": "docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md",
+          "titulo": "Comparação com o MER original e diagrama físico final"
         }
       ]
     },
@@ -571,6 +579,10 @@
         {
           "arquivo": "docs/testes/historico-chat-mvp-20261119.md",
           "titulo": "Correção do histórico e regressão completa de unitários/integração do MVP"
+        },
+        {
+          "arquivo": "docs/testes/otimizacao-modelagem-20261119.md",
+          "titulo": "Backup, migração com dados legados e regressão da normalização 0016"
         }
       ]
     },

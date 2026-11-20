@@ -60,9 +60,13 @@ Dúvidas que não afetem o trabalho independente não interrompem outras capacid
 
 O MER original preserva a origem do projeto. O modelo lógico descreve também
 partes futuras; as [migrations](../../database/README.md) indicam o schema físico entregue.
-A [avaliação de tamanho](../../docs/analises/2026-11-19-tamanho-modelagem.md)
-distingue 18 entidades originais, 43 tabelas planejadas e 32 tabelas do MVP;
-as simplificações identificadas são propostas, sem alteração de schema nesta revisão.
+A [avaliação anterior de tamanho](../../docs/analises/2026-11-19-tamanho-modelagem.md)
+preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
+A [normalização 0016](../../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
+remove redundâncias e mantém as regras: modelo lógico atual com 42 tabelas/331
+colunas, incluindo onze tabelas futuras; MVP físico com 31 tabelas/258 colunas/51
+FKs. A [comparação visual](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
+separa o conceito original, o físico entregue e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](../../docs/arquitetura/rag-semantico.md).
@@ -188,7 +192,13 @@ AI-01 entrega [triagem e preparação autorizada](../../docs/arquitetura/triagem
 sem análise assistida configurada, estado de saúde permanece null e a preparação
 não chama LLM pela rota GET. AI-02 fornece prompts, schemas, orquestrador e
 adaptadores. AI-03 entrega a composição durável, quatro tabelas na migration 0014
-e publicação transacional. AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
+e publicação transacional. A normalização 0016 conserva essas entidades de IA,
+sem resumo/consumo duplicados: triagem completa em resultado.triagem, consumo
+nas colunas de etapa_ia e pergunta em mensagem.pedido.mensagem. Mensagem aponta
+diretamente ao cliente, mantendo titularidade composta e histórico. Os
+[resultados da migração/regressão](../../docs/testes/otimizacao-modelagem-20261119.md)
+incluem backup e teste de dados legados; não requalificam o LLM por herança.
+AI-06 acrescenta testes determinísticos e ensaio real do GPT-OSS 120B conforme
 ADR-006. A revisão vinculada da amostra v4 aprovou as cinco saídas. Não se reutilizou aceite
 antigo para a versão corrigida. Pendências do corpus e limites da demonstração
 permanecem explícitos; a aprovação é da configuração/modelo avaliados.

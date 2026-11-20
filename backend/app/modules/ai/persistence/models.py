@@ -77,7 +77,6 @@ class TriageRecord(Base):
     onboarding_id: Mapped[UUID] = mapped_column(
         ForeignKey("academia.onboarding_versao.id")
     )
-    resumo: Mapped[dict[str, object]] = mapped_column(JSONB)
     regra_version: Mapped[int]
     estado: Mapped[str | None] = mapped_column(String(35))
     motivos: Mapped[list[str]] = mapped_column(JSONB)
@@ -90,6 +89,12 @@ class StageRecord(Base):
         CheckConstraint(
             "chamadas BETWEEN 0 AND 1 AND limite_saida_tokens > 0 AND prompt_bytes > 0",
             name="ck_etapa_orcamento",
+        ),
+        CheckConstraint(
+            "(tokens_entrada IS NULL AND tokens_saida IS NULL) OR "
+            "(tokens_entrada IS NOT NULL AND tokens_saida IS NOT NULL "
+            "AND tokens_entrada >= 0 AND tokens_saida >= 0)",
+            name="ck_etapa_tokens",
         ),
     )
     id: Mapped[UUID] = mapped_column(primary_key=True)
@@ -104,7 +109,6 @@ class StageRecord(Base):
     duracao_ms: Mapped[int | None]
     tokens_entrada: Mapped[int | None]
     tokens_saida: Mapped[int | None]
-    dados: Mapped[dict[str, object]] = mapped_column(JSONB)
 
 
 class EvidenceRecord(Base):

@@ -23,6 +23,7 @@ from app.modules.ai.schemas.execution import (
     RunRequest,
     RunResult,
     Stage,
+    Usage,
     request_payload,
 )
 from app.modules.audit.service import record_audit
@@ -62,12 +63,40 @@ class PostgresState:
 
     @staticmethod
     def _serialize(result: RunResult) -> dict[str, object]:
-        return result.model_dump(mode="json", exclude={"proposta", "evidencias"})
+        return result.model_dump(
+            mode="json", exclude={"proposta", "evidencias", "consumo"}
+        )
+
+    @staticmethod
+    def _consumption(stage: StageRecord) -> Consumption:
+        incoming, outgoing = stage.tokens_entrada, stage.tokens_saida
+        if (incoming is None) != (outgoing is None):
+            raise ValueError("Consumo persistido incoerente.")
+        usage = (
+            Usage(
+                prompt_tokens=incoming,
+                completion_tokens=outgoing,
+                total_tokens=incoming + outgoing,
+            )
+            if incoming is not None and outgoing is not None
+            else None
+        )
+        return Consumption.model_validate(
+            {
+                "etapa": stage.tipo,
+                "chamadas_fisicas": stage.chamadas,
+                "limite_saida_tokens": stage.limite_saida_tokens,
+                "prompt_bytes": stage.prompt_bytes,
+                "prompt_sha256": stage.prompt_sha256,
+                "uso": usage,
+                "consumo_desconhecido": usage is None,
+            }
+        )
 
     def _view(self, session: Session, row: Execution) -> RunResult:
         result = RunResult.model_validate(row.resultado)
         consumption = [
-            Consumption.model_validate(stage.dados)
+            self._consumption(stage)
             for stage in session.scalars(
                 select(StageRecord)
                 .where(StageRecord.execucao_id == row.id)
@@ -240,7 +269,6 @@ class PostgresState:
                     duracao_ms=None,
                     tokens_entrada=None,
                     tokens_saida=None,
-                    dados=consumption.model_dump(mode="json"),
                 )
             )
 
@@ -250,15 +278,8 @@ class PostgresState:
             entry = session.get(StageRecord, uuid5(row.id, stage))
             if row.estado != "EM_EXECUCAO" or entry is None or entry.chamadas:
                 raise ProviderError("DESPACHO_RECUSADO")
-            consumption = Consumption.model_validate(entry.dados).model_copy(
-                update={"chamadas_fisicas": 1}
-            )
             entry.enviada_em = self.now()
-            entry.chamadas, entry.estado, entry.dados = (
-                1,
-                "ENVIADA",
-                consumption.model_dump(mode="json"),
-            )
+            entry.chamadas, entry.estado = 1, "ENVIADA"
 
     def usage(
         self, actor: Actor, id: UUID, stage: Stage, completion: Completion
@@ -267,22 +288,16 @@ class PostgresState:
             entry = session.get(StageRecord, uuid5(row.id, stage))
             if entry is None or entry.chamadas != 1:
                 raise ProviderError("CONSUMO_SEM_DESPACHO")
-            consumption = Consumption.model_validate(entry.dados).model_copy(
-                update={
-                    "uso": completion.usage,
-                    "consumo_desconhecido": completion.usage is None,
-                }
-            )
-            entry.dados, entry.estado = consumption.model_dump(mode="json"), "RECEBIDA"
+            entry.estado = "RECEBIDA"
             if entry.enviada_em:
                 entry.duracao_ms = max(
                     0, int((self.now() - entry.enviada_em).total_seconds() * 1000)
                 )
-            if completion.usage:
-                entry.tokens_entrada, entry.tokens_saida = (
-                    completion.usage.prompt_tokens,
-                    completion.usage.completion_tokens,
-                )
+            entry.tokens_entrada, entry.tokens_saida = (
+                (completion.usage.prompt_tokens, completion.usage.completion_tokens)
+                if completion.usage is not None
+                else (None, None)
+            )
 
     def active(self, actor: Actor, id: UUID, now: float) -> bool:
         with self._locked(actor, id) as (session, row):
@@ -340,7 +355,6 @@ class PostgresState:
                 triage_id = uuid5(row.id, "triagem")
                 stored_triage = session.get(TriageRecord, triage_id)
                 if stored_triage:
-                    stored_triage.resumo = triage.model_dump(mode="json")
                     stored_triage.estado = triage.estado
                     stored_triage.motivos = list(triage.motivos)
                 else:
@@ -349,7 +363,6 @@ class PostgresState:
                             id=uuid5(row.id, "triagem"),
                             execucao_id=row.id,
                             onboarding_id=triage.snapshot.id,
-                            resumo=triage.model_dump(mode="json"),
                             regra_version=triage.regra_versao,
                             estado=triage.estado,
                             motivos=list(triage.motivos),
