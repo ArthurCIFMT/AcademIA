@@ -37,8 +37,10 @@ as regras condicionais entre respostas e listas. Resposta `NAO_SEI` pode
 concluir o formulário. A elegibilidade para IA é tratada pela triagem em
 etapa própria. A transação usa o bloqueio do cadastro e compara versão e
 revisão. Uma base superada retorna 409. A conclusão grava data e responsável
-e congela a idade calculada pela data civil de São Paulo. O banco armazena
-o instante em UTC.
+e congela em `idade_snapshot` os anos completos calculados automaticamente a
+partir do cadastro, pela data civil de São Paulo. A consulta própria exibe a
+idade registrada na conclusão. Uma nova conclusão recalcula a idade para sua
+versão. A triagem usa o valor registrado, e o banco armazena o instante em UTC.
 
 A migration 0006 permite um rascunho por cliente. Os gatilhos protegem
 versões concluídas e avaliações de alteração ou exclusão. O serviço

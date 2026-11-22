@@ -4,6 +4,7 @@ export type ClientSummary = {
   id: string;
   nome: string;
   email: string;
+  idade: number;
   ativo: boolean;
   estado_conta: "CONVIDADO" | "ATIVO" | "INATIVO" | "BLOQUEADO";
   revisao: number;

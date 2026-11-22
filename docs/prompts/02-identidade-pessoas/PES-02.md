@@ -43,6 +43,8 @@ não implementar revogação global como consequência implícita do perfil de c
 - Duplicidade ou validação rejeitada não cria dados parciais.
 - Interface e API rejeitam nascimento futuro ou idade de 100 anos completos
   ou mais na data civil de São Paulo, tanto ao cadastrar quanto ao atualizar.
+- Lista e detalhe mostram a idade atual em anos completos, calculada pela
+  API na consulta. A data de nascimento permanece no detalhe autorizado.
 - Cliente não consulta terceiro; inativar preserva histórico.
 - Cliente cadastrado realiza o primeiro login pelo mecanismo documentado sem
   cadastro duplicado; token de onboarding não abre sessão geral por si só.

@@ -240,7 +240,9 @@ async def test_attendant_registration_search_and_first_login(
 @pytest.mark.integration
 @pytest.mark.anyio
 async def test_inactivation_preserves_employee_role_and_history(
-    api: httpx.AsyncClient, sessions: sessionmaker[Session]
+    api: httpx.AsyncClient,
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     headers = await _login(api, _ADMIN)
     inactive = "inativo@example.test"
@@ -263,6 +265,18 @@ async def test_inactivation_preserves_employee_role_and_history(
     assert linked.status_code == 201 and linked.json()["convite"] is None
     row = linked.json()
     url = f"{_CLIENTS}/{row['id']}"
+    with monkeypatch.context() as clock:
+        # 1º de janeiro às 02:59 UTC ainda é 31 de dezembro em São Paulo.
+        clock.setattr(
+            clients, "utc_now", lambda: datetime(2026, 1, 1, 2, 59, tzinfo=UTC)
+        )
+        assert (await api.get(url)).json()["idade"] == 35
+        clock.setattr(clients, "utc_now", lambda: datetime(2026, 1, 1, 3, tzinfo=UTC))
+        detail = (await api.get(url)).json()
+        listing = (await api.get(_CLIENTS)).json()["itens"][0]
+        assert detail["idade"] == listing["idade"] == 36
+        assert detail["revisao"] == listing["revisao"] == row["revisao"]
+        assert "data_nascimento" not in listing
     api.cookies.clear()
     headers = await _login(api, _ATTENDANT)
     assert (await api.get("/api/v1/auth/session")).json()["roles"] == [

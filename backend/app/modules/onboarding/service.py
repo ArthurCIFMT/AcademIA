@@ -1,12 +1,12 @@
 from datetime import date, datetime
 from uuid import UUID, uuid4
-from zoneinfo import ZoneInfo
 
 from pydantic import ValidationError
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.selectable import ScalarSelect
 
+from app.contracts.time import academy_date, age_at
 from app.modules.identity.service import utc_now
 from app.modules.onboarding.models import Evaluation, OnboardingVersion
 from app.modules.onboarding.schemas import (
@@ -23,7 +23,6 @@ from app.modules.people.onboarding_directory import lock_onboarding_client
 
 DRAFT = "RASCUNHO"
 COMPLETED = "CONCLUIDO"
-_ACADEMY_ZONE = ZoneInfo("America/Sao_Paulo")
 
 
 class OnboardingError(Exception):
@@ -203,17 +202,11 @@ def save_draft(
     return draft_view(draft)
 
 
-def age_at(birth: date, today: date) -> int:
-    return (
-        today.year - birth.year - ((today.month, today.day) < (birth.month, birth.day))
-    )
-
-
 def _finalize(
     row: OnboardingVersion, data: OnboardingData, birth: date, author_id: UUID
 ) -> SnapshotView:
     now = utc_now()
-    age = age_at(birth, now.astimezone(_ACADEMY_ZONE).date())
+    age = age_at(birth, academy_date(now))
     if age < 0:
         raise OnboardingError(409)
     row.dados = data.model_dump(mode="json")

@@ -2,7 +2,7 @@ import { requestApi } from "../../lib/api/auth";
 import type { FormData } from "./form";
 
 export type Draft = { id: string; numero: number; revisao: number; dados: FormData };
-export type Snapshot = Draft & { concluido_em: string };
+export type Snapshot = Draft & { concluido_em: string; idade_snapshot: number };
 export type OwnOnboarding = { rascunho: Draft | null; concluido: Snapshot | null };
 export type Scope = { kind: "invite"; draftId: string } | { kind: "own"; csrf: string; base: Snapshot | null };
 

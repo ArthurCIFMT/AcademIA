@@ -16,6 +16,7 @@ const unavailableBrowser = "Abra o convite em um navegador atualizado, por uma c
 const dateFormat = new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo",
 });
+const ageFormat = new Intl.NumberFormat("pt-BR", { style: "unit", unit: "year", unitDisplay: "long" });
 
 function loadError(error: unknown, invite: boolean) {
   if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
@@ -184,6 +185,7 @@ function OwnForm({ initialDraft, initialSnapshot, csrf, reload }: {
     return (
       <div className="onboarding-form">
         <p>Versão {snapshot.numero} concluída em {dateFormat.format(new Date(snapshot.concluido_em))}.</p>
+        <p>Idade na conclusão · {ageFormat.format(snapshot.idade_snapshot)}</p>
         <button type="button" onClick={() => setEditing(true)}>{draft ? "Continuar atualização" : "Atualizar meus dados"}</button>
         <OnboardingFields data={snapshot.dados} />
       </div>

@@ -1,7 +1,6 @@
 from datetime import date
 from typing import Annotated
 from uuid import UUID, uuid4
-from zoneinfo import ZoneInfo
 
 from pydantic import (
     BaseModel,
@@ -15,6 +14,7 @@ from sqlalchemy import func, or_, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
+from app.contracts.time import academy_date, age_at
 from app.events.contracts import AuditEvent
 from app.modules.audit.service import record_audit
 from app.modules.identity.accounts import EmailAlreadyExists, validate_email
@@ -55,13 +55,8 @@ class ClientFields(BaseModel):
     @field_validator("data_nascimento")
     @classmethod
     def valid_birth_date(cls, value: date) -> date:
-        today = utc_now().astimezone(ZoneInfo("America/Sao_Paulo")).date()
-        age = (
-            today.year
-            - value.year
-            - ((today.month, today.day) < (value.month, value.day))
-        )
-        if value > today or age >= 100:
+        today = academy_date(utc_now())
+        if value > today or age_at(value, today) >= 100:
             raise ValueError(
                 "Informe uma data de nascimento não futura e com menos de 100 anos."
             )
@@ -92,6 +87,7 @@ class ClientSummary(BaseModel):
     id: UUID
     nome: str
     email: str
+    idade: int
     ativo: bool
     estado_conta: AccountState
     revisao: int
@@ -110,11 +106,12 @@ class ClientPage(BaseModel):
     total: int
 
 
-def _summary(profile: ClientProfile, user: User) -> ClientSummary:
+def _summary(profile: ClientProfile, user: User, today: date) -> ClientSummary:
     return ClientSummary(
         id=user.id,
         nome=profile.nome,
         email=user.email,
+        idade=age_at(profile.data_nascimento, today),
         ativo=profile.ativo,
         estado_conta=AccountState(user.estado),
         revisao=user.revision,
@@ -137,8 +134,9 @@ def list_clients(session: Session, search: str, page: int, limit: int) -> Client
         .offset((page - 1) * limit)
         .limit(limit)
     ).all()
+    today = academy_date(utc_now())
     return ClientPage(
-        itens=[_summary(profile, user) for profile, user in rows],
+        itens=[_summary(profile, user, today) for profile, user in rows],
         pagina=page,
         limite=limit,
         total=total,
@@ -164,7 +162,7 @@ def _client_record(
 def get_client(session: Session, user_id: UUID) -> ClientDetail:
     profile, user = _client_record(session, user_id)
     return ClientDetail(
-        **_summary(profile, user).model_dump(),
+        **_summary(profile, user, academy_date(utc_now())).model_dump(),
         data_nascimento=profile.data_nascimento,
         telefone=profile.telefone,
         convite=latest_invite(session, user_id),

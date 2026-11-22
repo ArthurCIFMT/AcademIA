@@ -46,6 +46,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Campo obrigatório ausente impede conclusão mas permite rascunho autorizado.
 - Reabrir rascunho recupera valores; conclusão registra instante.
+- A conclusão calcula os anos completos pela data civil de São Paulo e
+  registra a idade daquele momento na versão que a triagem vai consumir.
 - Atualização posterior não muda snapshot já usado por ficha.
 - Confirmar complemento cria versão nova; acesso alheio ou versão-base superada
   é recusado, e análise anterior não é reaproveitada após mudança relevante.

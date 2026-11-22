@@ -11,8 +11,11 @@ civil não futura e com menos de 100 anos completos na data de cadastro/edição
 em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
-Idade é calculada na data de conclusão e congelada no snapshot, sem repetir data
-de nascimento no prompt. Autogeração inicial limitada a adultos (18+), porque o
+A idade atual aparece no cadastro administrativo em anos completos. O backend
+usa a mesma regra ao concluir uma versão do onboarding, com a data civil de São
+Paulo, e guarda a idade daquele momento. O cliente vê o valor na consulta da
+versão concluída. A triagem recebe esse valor sem repetir a data de nascimento
+no prompt. Autogeração inicial limitada a adultos (18+), porque o
 corpus selecionado é delimitado a esse contexto. Cadastro de menor não é proibido,
 mas autogeração retorna BLOQUEADO_POR_SEGURANCA com motivo ESCOPO_ETARIO, sem
 declarar doença. Fluxo manual não ganha bloqueio clínico novo implícito.

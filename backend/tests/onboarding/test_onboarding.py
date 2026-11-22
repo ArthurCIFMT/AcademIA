@@ -4,7 +4,7 @@ from asyncio import to_thread
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from os import environ
 from pathlib import Path
 from threading import Barrier
@@ -19,6 +19,7 @@ from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.schema import CreateSchema, DropSchema
 
+from app.contracts.time import academy_date, age_at
 from app.database.base import Base
 from app.database.connection import (
     check_database,
@@ -52,7 +53,6 @@ from app.modules.onboarding.schemas import (
 )
 from app.modules.onboarding.service import (
     OnboardingError,
-    age_at,
     append_evaluation,
     complete_draft,
     confirm_update,
@@ -242,6 +242,10 @@ async def test_own_draft_completion_and_version_confirmation(
         assert previous["dados"]["usa_medicamentos"] == "NAO_SEI"
         assert previous["concluido_por"] == str(people.client)
         assert previous["concluido_em"].endswith("Z")
+        assert previous["idade_snapshot"] == age_at(
+            _BIRTH, academy_date(datetime.fromisoformat(previous["concluido_em"]))
+        )
+        assert "data_nascimento" not in previous and "idade" not in previous["dados"]
         assert finished.headers["Cache-Control"] == "no-store"
 
         proposed = await client.patch(

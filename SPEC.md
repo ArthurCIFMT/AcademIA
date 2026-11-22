@@ -468,6 +468,8 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
 Permitir que usuários administrativos localizem e consultem clientes.
 
 - CA-02.1: usuário autorizado lista clientes.
+  A lista e o detalhe exibem a idade atual em anos completos, derivada do
+  nascimento pela data civil de São Paulo a cada consulta.
 - CA-02.2: pesquisa por nome ou e-mail retorna correspondências.
 - CA-02.3: usuário sem autorização não consulta dados de terceiros.
 
@@ -584,6 +586,8 @@ Concluir o formulário somente após o preenchimento obrigatório.
 
 - CA-13.1: formulário obrigatório incompleto não é concluído.
 - CA-13.2: conclusão registra estado e data/hora.
+  O backend também calcula a idade em anos completos a partir do cadastro
+  e registra esse valor na versão concluída, sem campo de idade no formulário.
 - CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
   versionado que preserva alertas relevantes; chat geral não exige onboarding.
 - CA-13.4: NAO_SEI pode concluir o formulário estruturalmente válido, mas mantém estado DADOS_INSUFICIENTES na triagem quando a informação for necessária; conclusão não equivale a autorização de geração.
@@ -594,6 +598,7 @@ Permitir ao cliente revisar os dados que informou.
 
 - CA-14.1: cliente autenticado consulta somente o próprio onboarding.
 - CA-14.2: valores exibidos correspondem aos persistidos.
+  A consulta inclui a idade registrada na conclusão.
 - CA-14.3: consulta de outro cliente é bloqueada.
 
 #### Fichas de treino e IA
@@ -3528,8 +3533,11 @@ civil não futura e com menos de 100 anos completos na data de cadastro/edição
 em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
-Idade é calculada na data de conclusão e congelada no snapshot, sem repetir data
-de nascimento no prompt. Autogeração inicial limitada a adultos (18+), porque o
+A idade atual aparece no cadastro administrativo em anos completos. O backend
+usa a mesma regra ao concluir uma versão do onboarding, com a data civil de São
+Paulo, e guarda a idade daquele momento. O cliente vê o valor na consulta da
+versão concluída. A triagem recebe esse valor sem repetir a data de nascimento
+no prompt. Autogeração inicial limitada a adultos (18+), porque o
 corpus selecionado é delimitado a esse contexto. Cadastro de menor não é proibido,
 mas autogeração retorna BLOQUEADO_POR_SEGURANCA com motivo ESCOPO_ETARIO, sem
 declarar doença. Fluxo manual não ganha bloqueio clínico novo implícito.
@@ -12172,6 +12180,9 @@ data de nascimento são obrigatórios. No cadastro e na atualização, a data ci
 de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
 ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
+A listagem e o detalhe retornam `idade` em anos completos, calculada a cada
+consulta pela data civil de São Paulo. A idade muda no aniversário, sem gravação
+periódica e sem mudar a revisão do cadastro. A data de nascimento fica no detalhe.
 A operação de vínculo exige indicação explícita, conta ativa ou convidada,
 perfil de funcionário existente e ausência de perfil de cliente. A criação
 normal recusa e-mail em uso em qualquer estado de conta. Duplicidade e
@@ -12347,8 +12358,10 @@ as regras condicionais entre respostas e listas. Resposta `NAO_SEI` pode
 concluir o formulário. A elegibilidade para IA é tratada pela triagem em
 etapa própria. A transação usa o bloqueio do cadastro e compara versão e
 revisão. Uma base superada retorna 409. A conclusão grava data e responsável
-e congela a idade calculada pela data civil de São Paulo. O banco armazena
-o instante em UTC.
+e congela em `idade_snapshot` os anos completos calculados automaticamente a
+partir do cadastro, pela data civil de São Paulo. A consulta própria exibe a
+idade registrada na conclusão. Uma nova conclusão recalcula a idade para sua
+versão. A triagem usa o valor registrado, e o banco armazena o instante em UTC.
 
 A migration 0006 permite um rascunho por cliente. Os gatilhos protegem
 versões concluídas e avaliações de alteração ou exclusão. O serviço
@@ -18971,7 +18984,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `573951f32f5389c3bdb94a8b38fe5404638cc0e3e3b394092b5d3ab494e43ffa` |
-| `docs/arquitetura/clientes.md` | `08c126ad191c48ee0634f022a7ce82ecde1c5b6cff20bc69779aff702f6c8efe` |
+| `docs/arquitetura/clientes.md` | `d25a3710ceb3db72e236f3ca7548cb6ff5947bcb8b74fa0eb9c9024a0420ddc9` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
@@ -19003,7 +19016,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
-| `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
+| `docs/arquitetura/onboarding.md` | `da48c35990aa0d88fe561a3c2c9e48a5b4fd2a1440cf37497e90a98eb51596eb` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
@@ -19026,14 +19039,14 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `7a9e92cff7d86a2887de0aa5cf410a78e0cc5c7f2142d3a72eb1e24c75e3d7f5` |
+| `docs/prompts/README.md` | `db2637c332b3ca296fed904618095d351a3d3b07552f054d1345561310aa0f9c` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
-| `docs/requisitos/onboarding-e-triagem.md` | `6a5ee7f6bf037071184fc4bf0236582c58f84e81ffa6fd115fc8e06096247c16` |
+| `docs/requisitos/onboarding-e-triagem.md` | `d91f10aefd1cd8de311a459fc9ed9c6e8b62ee64e2ce2aae08ad691517ba206b` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `c8db0c583113b3e91be691fc54a59b6e5b3c6414cb72f61c673abf9a00e5d202` |
+| `docs/requisitos/requisitos-funcionais.md` | `408e3cfef5aa179f54b447b795a15971d475f17b161809cc4fb3be01c0db38a4` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `7b5cb6057dd147853625ea4fb5319209d027ca7546fa53339d470eaf93e59ec4` |

@@ -18,7 +18,7 @@ const valid: FormData = {
   limitacoes: [], restricao_exercicio_declarada: "NAO", evento_saude_importante_recente: "NAO", observacoes: "",
 };
 const draft = { id: "rascunho-sintetico", numero: 1, revisao: 2, dados: valid } satisfies Draft;
-const snapshot = { ...draft, concluido_em: "2026-11-10T12:00:00Z" };
+const snapshot = { ...draft, concluido_em: "2026-11-10T12:00:00Z", idade_snapshot: 31 };
 
 let originalLocks: PropertyDescriptor | undefined;
 beforeEach(() => {
@@ -126,11 +126,12 @@ test("uma aba antiga não envia o rascunho se outro convite trocou o cookie", as
 
 test("exibe a versão concluída e só atualiza com confirmação e revisão do rascunho", async () => {
   const saved = { ...draft, numero: 2, revisao: 1, dados: { ...valid, peso_kg: 76.3 } };
-  const next = { ...saved, concluido_em: snapshot.concluido_em };
+  const next = { ...saved, concluido_em: "2026-11-11T12:00:00Z", idade_snapshot: 32 };
   const request = mount("/area/cliente/onboarding", session(), session(),
     Response.json({ rascunho: null, concluido: snapshot }),
     Response.json({ rascunho: null, concluido: snapshot }), Response.json(saved), Response.json(next));
   expect(await screen.findByText(/Versão 1 concluída/)).toBeTruthy();
+  expect(screen.getByText("Idade na conclusão · 31 anos")).toBeTruthy();
   expect(screen.getByText("Não sei")).toBeTruthy();
   click("Atualizar meus dados");
   change("Peso (kg)", "76.3");
@@ -147,6 +148,7 @@ test("exibe a versão concluída e só atualiza com confirmação e revisão do 
   click("Revisar atualização");
   click("Confirmar nova versão");
   expect(await screen.findByText(/Versão 2 concluída/)).toBeTruthy();
+  expect(screen.getByText("Idade na conclusão · 32 anos")).toBeTruthy();
   expect(request).toHaveBeenLastCalledWith(own + "/atualizacoes", expect.objectContaining({
     method: "POST",
     headers: expect.objectContaining({ "X-CSRF-Token": "csrf-sintetico" }),

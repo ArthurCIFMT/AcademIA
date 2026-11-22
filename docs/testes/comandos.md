@@ -237,6 +237,20 @@ O ensaio no Edge com viewport de 390 px usou Vite, FastAPI, PostgreSQL de
 teste e Mailpit. Confirmou cadastro, busca por e-mail, primeiro login e
 bloqueio da área de cliente após inativação. O schema de teste foi removido.
 
+## Idade no cadastro e no onboarding
+
+Em backend/, com PostgreSQL de teste, execute:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/people/test_clients.py tests/onboarding/test_onboarding.py tests/ai/test_triage.py tests/ai/test_triage_integration.py tests/contracts -q
+```
+
+Inclui antes e depois do aniversário pela data civil de São Paulo e o cálculo
+automático do snapshot pela API de onboarding. Resultado: 61 passaram e dois
+cenários condicionais ficaram sem execução. Em frontend/, `npm test --
+src/features/clients tests/onboarding` aprovou 13 testes. Lint, tipos, build,
+Ruff e mypy também passaram.
+
 ## Designação de instrutor
 
 A partir de `backend/`, com PostgreSQL de teste:

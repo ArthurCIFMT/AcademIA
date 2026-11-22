@@ -6,6 +6,8 @@ import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
 import { changeClient, getClient, listClients, type ClientDetail, type ClientPage } from "./api";
 import "./clients.css";
 
+const ageFormat = new Intl.NumberFormat("pt-BR", { style: "unit", unit: "year", unitDisplay: "long" });
+
 const accountLabels = {
   CONVIDADO: "Aguardando primeiro acesso",
   ATIVO: "Conta ativa",
@@ -138,7 +140,7 @@ export function ClientDirectory({
               <ul className="clients-list">
                 {directory.itens.map(item => (
                   <li key={item.id}>
-                    <span>{item.nome} · {item.email} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
+                    <span>{item.nome} · {ageFormat.format(item.idade)} · {item.email} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
                     <button type="button" disabled={busy}
                       onClick={() => void run(async () => setForm(await getClient(item.id)))}>
                       Consultar {item.nome}
@@ -163,6 +165,7 @@ export function ClientDirectory({
       ) : (
         <>
           <h4>{form ? "Editar cliente" : "Novo cliente"}</h4>
+          {form && <p>Idade atual · {ageFormat.format(form.idade)}</p>}
           {form && <p>{form.email} · {accountLabels[form.estado_conta]}</p>}
           {form && session.roles.includes("ADMINISTRADOR") && (
             <p><Link to={"/area/administracao/designacoes?cliente=" + encodeURIComponent(form.id)}>

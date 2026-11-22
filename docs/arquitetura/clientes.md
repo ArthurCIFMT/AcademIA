@@ -23,6 +23,9 @@ data de nascimento são obrigatórios. No cadastro e na atualização, a data ci
 de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
 ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
+A listagem e o detalhe retornam `idade` em anos completos, calculada a cada
+consulta pela data civil de São Paulo. A idade muda no aniversário, sem gravação
+periódica e sem mudar a revisão do cadastro. A data de nascimento fica no detalhe.
 A operação de vínculo exige indicação explícita, conta ativa ou convidada,
 perfil de funcionário existente e ausência de perfil de cliente. A criação
 normal recusa e-mail em uso em qualquer estado de conta. Duplicidade e

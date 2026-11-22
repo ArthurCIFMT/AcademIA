@@ -41,6 +41,7 @@ e validações; mostrar dados ausentes e preservar snapshots anteriores.
 - Usuário preenche, salva, reabre e conclui em viewport móvel.
 - Obrigatórios inválidos não concluem; erro de rede permite recuperar edição.
 - Cliente não escolhe ID alheio para abrir onboarding.
+- A consulta mostra a idade registrada na conclusão, como dado somente de leitura.
 
 ## Testes obrigatórios
 

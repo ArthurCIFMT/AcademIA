@@ -479,3 +479,7 @@ intervalo padrão no editor. AI-04 diferencia os motivos salvos de bloqueio e
 abstenção. AI-05 esclarece o escopo das dúvidas gerais e o prompt v5 reforça
 respostas parciais sustentadas por fontes. A ficha manual vigente não impede
 uma geração elegível. Ver [comandos e verificação](../testes/comandos.md#revisão-manual-de-2026-11-22).
+
+PES-02 também passou a mostrar a idade atual no cadastro. ONB-02 e ONB-03
+usam a mesma regra de anos completos e mostram a idade histórica da conclusão.
+Ver [testes de idade](../testes/comandos.md#idade-no-cadastro-e-no-onboarding).

@@ -11,6 +11,7 @@ const client: ClientDetail = {
   id: "cd45f050-4b76-43fa-a313-eb0ca1612cd3",
   nome: "Cliente Sintético",
   email: "cliente@example.test",
+  idade: 36,
   data_nascimento: "1990-01-01",
   telefone: null,
   ativo: true,
@@ -67,6 +68,7 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   fireEvent.change(screen.getByLabelText("E-mail", { exact: true }), { target: { value: client.email } });
   fireEvent.click(screen.getByRole("button", { name: "Salvar cadastro" }));
   expect(await screen.findByText("Cliente cadastrado.")).toBeTruthy();
+  expect(screen.getByText("Idade atual · 36 anos")).toBeTruthy();
   expect(screen.getByText(/Falha no envio do convite/)).toBeTruthy();
   expect(request).toHaveBeenCalledWith(base, expect.objectContaining({
     method: "POST", headers: expect.objectContaining({ "X-CSRF-Token": "csrf-sintetico" }),
@@ -81,6 +83,7 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   fireEvent.click(screen.getByRole("button", { name: "Voltar à lista" }));
   fireEvent.change(screen.getByLabelText("Nome ou e-mail"), { target: { value: client.email } });
   fireEvent.click(screen.getByRole("button", { name: "Pesquisar" }));
+  expect(await screen.findByText(/Cliente Sintético · 36 anos/)).toBeTruthy();
   fireEvent.click(await screen.findByRole("button", { name: "Consultar Cliente Sintético" }));
   expect(request).toHaveBeenCalledWith(base + "?pagina=1&busca=cliente%40example.test", expect.anything());
   await screen.findByRole("heading", { name: "Editar cliente" });

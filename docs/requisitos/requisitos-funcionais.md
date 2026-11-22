@@ -37,6 +37,8 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
 Permitir que usuários administrativos localizem e consultem clientes.
 
 - CA-02.1: usuário autorizado lista clientes.
+  A lista e o detalhe exibem a idade atual em anos completos, derivada do
+  nascimento pela data civil de São Paulo a cada consulta.
 - CA-02.2: pesquisa por nome ou e-mail retorna correspondências.
 - CA-02.3: usuário sem autorização não consulta dados de terceiros.
 
@@ -153,6 +155,8 @@ Concluir o formulário somente após o preenchimento obrigatório.
 
 - CA-13.1: formulário obrigatório incompleto não é concluído.
 - CA-13.2: conclusão registra estado e data/hora.
+  O backend também calcula a idade em anos completos a partir do cadastro
+  e registra esse valor na versão concluída, sem campo de idade no formulário.
 - CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
   versionado que preserva alertas relevantes; chat geral não exige onboarding.
 - CA-13.4: NAO_SEI pode concluir o formulário estruturalmente válido, mas mantém estado DADOS_INSUFICIENTES na triagem quando a informação for necessária; conclusão não equivale a autorização de geração.
@@ -163,6 +167,7 @@ Permitir ao cliente revisar os dados que informou.
 
 - CA-14.1: cliente autenticado consulta somente o próprio onboarding.
 - CA-14.2: valores exibidos correspondem aos persistidos.
+  A consulta inclui a idade registrada na conclusão.
 - CA-14.3: consulta de outro cliente é bloqueada.
 
 ## Fichas de treino e IA
