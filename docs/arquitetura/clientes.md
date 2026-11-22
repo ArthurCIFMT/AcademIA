@@ -14,14 +14,15 @@ a essa extração e mantém o contrato de funcionários.
 | GET /api/v1/clientes | Lista paginada. `busca` filtra parte do nome ou e-mail e ignora diferenças de maiúsculas. `pagina` começa em 1, com 20 resultados por padrão e máximo de 100. |
 | GET /api/v1/clientes/{user_id} | Consulta o cadastro, o estado da conta e do perfil e a entrega do último convite. |
 | POST /api/v1/clientes | Cria o cadastro e devolve 201. `vincular_existente` permite anexar o perfil à conta de funcionário identificada pelo e-mail. |
-| PUT /api/v1/clientes/{user_id} | Atualiza nome, nascimento, telefone e estado do perfil. Exige a `revisao` da consulta. |
+| PUT /api/v1/clientes/{user_id} | Atualiza nome, nascimento, telefone, CPF e estado do perfil. Exige a `revisao` da consulta. |
 | POST /api/v1/clientes/{user_id}/convite | Emite outro convite de primeiro acesso. Exige conta convidada, perfil ativo e a `revisao` da consulta. |
 
 Administrador e atendente ativos acessam as rotas. O backend verifica
 permissões da sessão e exige origem e CSRF nas mutações. Nome, e-mail e
 data de nascimento são obrigatórios. No cadastro e na atualização, a data civil
 de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
-ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
+ou idade de 100 anos completos ou mais. A tela informa data inválida quando
+necessário, sem lembrete permanente sobre idade. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
 A listagem e o detalhe retornam `idade` em anos completos, calculada a cada
 consulta pela data civil de São Paulo. A idade muda no aniversário, sem gravação
@@ -31,7 +32,18 @@ perfil de funcionário existente e ausência de perfil de cliente. A criação
 normal recusa e-mail em uso em qualquer estado de conta. Duplicidade e
 revisão desatualizada retornam 409.
 
-O cadastro usa as tabelas da revisão 0003. Conta, perfil e papel são escritos
+O CPF é opcional e aceita onze dígitos ou a forma pontuada. A API verifica
+os dígitos e normaliza o valor para onze caracteres numéricos, incluindo zeros
+à esquerda. Valor inválido retorna 422. A unicidade vale inclusive para perfis
+inativos, e duplicidade retorna 409 sem criar conta ou emitir convite.
+Uma atualização que omite `cpf` preserva o valor. Enviar `null` ou vazio
+remove o valor cadastrado. O campo aparece em respostas de detalhe e mutação
+destas rotas, com acesso administrativo ou de atendimento e `Cache-Control:
+no-store`. Listagem, busca, autenticação, onboarding, IA, e-mails e auditoria
+ficam fora desse tratamento.
+
+O cadastro usa as tabelas da revisão 0003, com CPF em `cliente` desde a
+revisão 0017. Conta, perfil e papel são escritos
 na mesma transação com auditoria. A inativação muda somente o perfil cliente,
 preserva histórico e mantém as permissões de eventual perfil de funcionário
 ativo. A elegibilidade para acesso físico pertence aos módulos de matrícula e

@@ -8,7 +8,9 @@ Responsável técnico do corpus/casos: mantenedor do projeto por delegação, se
 
 CLIENTE: nome 2–120 caracteres, e-mail válido/único normalizado, data_nascimento
 civil não futura e com menos de 100 anos completos na data de cadastro/edição
-em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
+em São Paulo e telefone opcional até 25 caracteres. CPF opcional fica no
+[cadastro do cliente](../arquitetura/clientes.md), fora do onboarding e do
+contexto enviado à IA. Foto e sexo não são obrigatórios no cadastro inicial.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 A idade atual aparece no cadastro administrativo em anos completos. O backend

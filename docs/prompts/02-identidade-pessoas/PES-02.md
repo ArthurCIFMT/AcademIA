@@ -41,8 +41,12 @@ não implementar revogação global como consequência implícita do perfil de c
 
 - Cadastro válido retorna identificador e persiste após recarregar.
 - Duplicidade ou validação rejeitada não cria dados parciais.
+- CPF opcional aceito com ou sem pontuação, normalizado, validado e único
+  quando preenchido. Apenas o detalhe autorizado exibe o CPF. A edição permite
+  limpar o campo e uma requisição legada que o omite preserva o valor.
 - Interface e API rejeitam nascimento futuro ou idade de 100 anos completos
   ou mais na data civil de São Paulo, tanto ao cadastrar quanto ao atualizar.
+  Mostrar erro quando necessário, sem lembrete permanente sobre o limite.
 - Lista e detalhe mostram a idade atual em anos completos, calculada pela
   API na consulta. A data de nascimento permanece no detalhe autorizado.
 - Cliente não consulta terceiro; inativar preserva histórico.

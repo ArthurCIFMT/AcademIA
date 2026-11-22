@@ -31,6 +31,9 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
 - CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
   Cadastro e atualização rejeitam datas de nascimento futuras e idades de
   100 anos completos ou mais na data civil de São Paulo.
+- CA-01.4: CPF é opcional. Quando informado, o sistema aceita com ou sem
+  pontuação, valida os dígitos verificadores e rejeita duplicidade entre
+  clientes, inclusive inativos, sem criar uma conta parcial.
 
 ### RF-02 — Consultar e pesquisar clientes
 
@@ -41,12 +44,15 @@ Permitir que usuários administrativos localizem e consultem clientes.
   nascimento pela data civil de São Paulo a cada consulta.
 - CA-02.2: pesquisa por nome ou e-mail retorna correspondências.
 - CA-02.3: usuário sem autorização não consulta dados de terceiros.
+  CPF é exibido somente no detalhe cadastral autorizado.
 
 ### RF-03 — Atualizar e alterar estado do cliente
 
 Permitir alteração cadastral e ativação ou desativação do cliente.
 
 - CA-03.1: alterações válidas persistem após nova consulta.
+  O campo CPF pode ser preenchido, corrigido ou limpo com as mesmas validações
+  do cadastro.
 - CA-03.2: perfil cliente desativado perde capacidades de cliente e entrada pela
   catraca, sem desativar automaticamente eventual perfil funcionário. Conta global
   INATIVA/BLOQUEADA impede todas as sessões/operações; aplicar ADR-002.

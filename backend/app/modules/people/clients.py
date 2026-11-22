@@ -1,3 +1,4 @@
+import re
 from datetime import date
 from typing import Annotated
 from uuid import UUID, uuid4
@@ -51,6 +52,9 @@ class ClientFields(BaseModel):
     telefone: (
         Annotated[str, StringConstraints(strip_whitespace=True, max_length=25)] | None
     ) = None
+    cpf: (
+        Annotated[str, StringConstraints(strip_whitespace=True, max_length=14)] | None
+    ) = None
 
     @field_validator("data_nascimento")
     @classmethod
@@ -66,6 +70,28 @@ class ClientFields(BaseModel):
     @classmethod
     def empty_phone_is_absent(cls, value: str | None) -> str | None:
         return value or None
+
+    @field_validator("cpf")
+    @classmethod
+    def normalize_cpf(cls, value: str | None) -> str | None:
+        if not value:
+            return None
+        if not re.fullmatch(r"[0-9]{11}|[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}", value):
+            raise ValueError("Informe um CPF válido.")
+        digits = value.replace(".", "").replace("-", "")
+        if len(set(digits)) == 1:
+            raise ValueError("Informe um CPF válido.")
+        numbers = [int(digit) for digit in digits]
+        for size in (9, 10):
+            total = sum(
+                digit * weight
+                for digit, weight in zip(
+                    numbers[:size], range(size + 1, 1, -1), strict=True
+                )
+            )
+            if (total * 10 % 11) % 10 != numbers[size]:
+                raise ValueError("Informe um CPF válido.")
+        return digits
 
 
 class CreateClient(ClientFields):
@@ -96,6 +122,7 @@ class ClientSummary(BaseModel):
 class ClientDetail(ClientSummary):
     data_nascimento: date
     telefone: str | None
+    cpf: str | None
     convite: InviteStatus | None
 
 
@@ -165,6 +192,7 @@ def get_client(session: Session, user_id: UUID) -> ClientDetail:
         **_summary(profile, user, academy_date(utc_now())).model_dump(),
         data_nascimento=profile.data_nascimento,
         telefone=profile.telefone,
+        cpf=profile.cpf,
         convite=latest_invite(session, user_id),
     )
 
@@ -230,6 +258,7 @@ def create_client(
             nome=data.nome,
             data_nascimento=data.data_nascimento,
             telefone=data.telefone,
+            cpf=data.cpf,
             ativo=True,
         )
     )
@@ -250,8 +279,15 @@ def update_client(
     if user.revision != data.revisao:
         raise ClientError(409)
 
-    before = (profile.nome, profile.data_nascimento, profile.telefone, profile.ativo)
-    after = (data.nome, data.data_nascimento, data.telefone, data.ativo)
+    cpf = data.cpf if "cpf" in data.model_fields_set else profile.cpf
+    before = (
+        profile.nome,
+        profile.data_nascimento,
+        profile.telefone,
+        profile.cpf,
+        profile.ativo,
+    )
+    after = (data.nome, data.data_nascimento, data.telefone, cpf, data.ativo)
     if before != after:
         if profile.ativo and not data.ativo and user.estado == AccountState.CONVIDADO:
             employee = session.get(EmployeeProfile, user_id)
@@ -260,7 +296,13 @@ def update_client(
         action = "client.updated"
         if profile.ativo != data.ativo:
             action = "client.reactivated" if data.ativo else "client.deactivated"
-        profile.nome, profile.data_nascimento, profile.telefone, profile.ativo = after
+        (
+            profile.nome,
+            profile.data_nascimento,
+            profile.telefone,
+            profile.cpf,
+            profile.ativo,
+        ) = after
         user.revision += 1
         _audit(session, actor, correlation, user_id, action)
     return get_client(session, user_id)

@@ -13,6 +13,7 @@ export type ClientSummary = {
 export type ClientDetail = ClientSummary & {
   data_nascimento: string;
   telefone: string | null;
+  cpf: string | null;
   convite: {
     estado: "ENVIANDO" | "ENVIADO" | "FALHOU" | "INCERTO" | "SEM_CONFIRMACAO";
     expira_em: string;
@@ -30,6 +31,7 @@ export type ClientFields = {
   nome: string;
   data_nascimento: string;
   telefone: string | null;
+  cpf: string | null;
 };
 
 type ClientMutation = (ClientFields & { email: string; vincular_existente: boolean })

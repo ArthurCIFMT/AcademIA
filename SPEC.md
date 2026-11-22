@@ -81,10 +81,12 @@ partes futuras; as [migrations](database/README.md) indicam o schema físico ent
 A [avaliação anterior de tamanho](docs/analises/2026-11-19-tamanho-modelagem.md)
 preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
 A [normalização 0016](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
-remove redundâncias e mantém as regras: modelo lógico atual com 42 tabelas/331
-colunas, incluindo onze tabelas futuras; MVP físico com 31 tabelas/258 colunas/51
-FKs. A [comparação visual](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
-separa o conceito original, o físico entregue e o escopo completo.
+remove redundâncias e preserva as regras. A revisão 0017 acrescenta CPF
+opcional ao cadastro de clientes. O modelo lógico atual tem 42 tabelas e
+332 colunas, incluindo onze tabelas futuras. O físico atual tem 31 tabelas,
+259 colunas e 51 FKs.
+A [comparação visual da revisão 0016](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
+separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](docs/arquitetura/rag-semantico.md).
@@ -474,6 +476,9 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
 - CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
   Cadastro e atualização rejeitam datas de nascimento futuras e idades de
   100 anos completos ou mais na data civil de São Paulo.
+- CA-01.4: CPF é opcional. Quando informado, o sistema aceita com ou sem
+  pontuação, valida os dígitos verificadores e rejeita duplicidade entre
+  clientes, inclusive inativos, sem criar uma conta parcial.
 
 ##### RF-02 — Consultar e pesquisar clientes
 
@@ -484,12 +489,15 @@ Permitir que usuários administrativos localizem e consultem clientes.
   nascimento pela data civil de São Paulo a cada consulta.
 - CA-02.2: pesquisa por nome ou e-mail retorna correspondências.
 - CA-02.3: usuário sem autorização não consulta dados de terceiros.
+  CPF é exibido somente no detalhe cadastral autorizado.
 
 ##### RF-03 — Atualizar e alterar estado do cliente
 
 Permitir alteração cadastral e ativação ou desativação do cliente.
 
 - CA-03.1: alterações válidas persistem após nova consulta.
+  O campo CPF pode ser preenchido, corrigido ou limpo com as mesmas validações
+  do cadastro.
 - CA-03.2: perfil cliente desativado perde capacidades de cliente e entrada pela
   catraca, sem desativar automaticamente eventual perfil funcionário. Conta global
   INATIVA/BLOQUEADA impede todas as sessões/operações; aplicar ADR-002.
@@ -1951,7 +1959,7 @@ triagem, parecer posterior ou seleção de recursos disponíveis.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
-Modelo lógico do escopo completo: 42 tabelas/331 colunas, incluindo onze tabelas futuras. O físico do MVP na revisão 0016 tem 31 tabelas/258 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual.
+Modelo lógico do escopo completo: 42 tabelas/332 colunas, incluindo onze tabelas futuras. O físico na revisão 0017 tem 31 tabelas/259 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
 
 ### 1. Modelo DBML completo
 
@@ -1995,6 +2003,7 @@ Table cliente {
   nome varchar(120) [not null]
   data_nascimento date [not null]
   telefone varchar(25)
+  cpf varchar(11) [unique]
   ativo boolean [not null]
 }
 
@@ -2624,6 +2633,7 @@ Unicidades: usuario_id+papel.
 | nome | varchar(120) | required | — |
 | data_nascimento | date | required | — |
 | telefone | varchar(25) | opcional | — |
+| cpf | varchar(11) | opcional, único quando preenchido, onze dígitos de 0 a 9 | — |
 | ativo | boolean | required | — |
 
 #### funcionario — MOD-01
@@ -3545,7 +3555,9 @@ Responsável técnico do corpus/casos: mantenedor do projeto por delegação, se
 
 CLIENTE: nome 2–120 caracteres, e-mail válido/único normalizado, data_nascimento
 civil não futura e com menos de 100 anos completos na data de cadastro/edição
-em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
+em São Paulo e telefone opcional até 25 caracteres. CPF opcional fica no
+[cadastro do cliente](docs/arquitetura/clientes.md), fora do onboarding e do
+contexto enviado à IA. Foto e sexo não são obrigatórios no cadastro inicial.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 A idade atual aparece no cadastro administrativo em anos completos. O backend
@@ -12209,14 +12221,15 @@ a essa extração e mantém o contrato de funcionários.
 | GET /api/v1/clientes | Lista paginada. `busca` filtra parte do nome ou e-mail e ignora diferenças de maiúsculas. `pagina` começa em 1, com 20 resultados por padrão e máximo de 100. |
 | GET /api/v1/clientes/{user_id} | Consulta o cadastro, o estado da conta e do perfil e a entrega do último convite. |
 | POST /api/v1/clientes | Cria o cadastro e devolve 201. `vincular_existente` permite anexar o perfil à conta de funcionário identificada pelo e-mail. |
-| PUT /api/v1/clientes/{user_id} | Atualiza nome, nascimento, telefone e estado do perfil. Exige a `revisao` da consulta. |
+| PUT /api/v1/clientes/{user_id} | Atualiza nome, nascimento, telefone, CPF e estado do perfil. Exige a `revisao` da consulta. |
 | POST /api/v1/clientes/{user_id}/convite | Emite outro convite de primeiro acesso. Exige conta convidada, perfil ativo e a `revisao` da consulta. |
 
 Administrador e atendente ativos acessam as rotas. O backend verifica
 permissões da sessão e exige origem e CSRF nas mutações. Nome, e-mail e
 data de nascimento são obrigatórios. No cadastro e na atualização, a data civil
 de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
-ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
+ou idade de 100 anos completos ou mais. A tela informa data inválida quando
+necessário, sem lembrete permanente sobre idade. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
 A listagem e o detalhe retornam `idade` em anos completos, calculada a cada
 consulta pela data civil de São Paulo. A idade muda no aniversário, sem gravação
@@ -12226,7 +12239,18 @@ perfil de funcionário existente e ausência de perfil de cliente. A criação
 normal recusa e-mail em uso em qualquer estado de conta. Duplicidade e
 revisão desatualizada retornam 409.
 
-O cadastro usa as tabelas da revisão 0003. Conta, perfil e papel são escritos
+O CPF é opcional e aceita onze dígitos ou a forma pontuada. A API verifica
+os dígitos e normaliza o valor para onze caracteres numéricos, incluindo zeros
+à esquerda. Valor inválido retorna 422. A unicidade vale inclusive para perfis
+inativos, e duplicidade retorna 409 sem criar conta ou emitir convite.
+Uma atualização que omite `cpf` preserva o valor. Enviar `null` ou vazio
+remove o valor cadastrado. O campo aparece em respostas de detalhe e mutação
+destas rotas, com acesso administrativo ou de atendimento e `Cache-Control:
+no-store`. Listagem, busca, autenticação, onboarding, IA, e-mails e auditoria
+ficam fora desse tratamento.
+
+O cadastro usa as tabelas da revisão 0003, com CPF em `cliente` desde a
+revisão 0017. Conta, perfil e papel são escritos
 na mesma transação com auditoria. A inativação muda somente o perfil cliente,
 preserva histórico e mantém as permissões de eventual perfil de funcionário
 ativo. A elegibilidade para acesso físico pertence aos módulos de matrícula e
@@ -18377,8 +18401,11 @@ A revisão `0011` registra a [validação de publicação e os pareceres imutáv
 A revisão `0012` cria [documentos, versões e decisões de curadoria](docs/arquitetura/corpus.md), com proveniência protegida.
 A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
 A revisão `0014` cria execução, triagem, etapas e evidências de IA; `0015` entrega
-mensagens de chat. A revisão vigente `0016` normaliza fontes de pergunta,
-triagem e consumo, sem alterar contratos funcionais; veja o marco abaixo.
+mensagens de chat. A revisão `0016` normaliza as fontes de pergunta, triagem e
+consumo. A revisão vigente `0017` acrescenta CPF opcional e único ao
+[cadastro de clientes](docs/arquitetura/clientes.md). Registros anteriores
+mantêm seus dados e começam com CPF nulo. O downgrade 0017 → 0016 remove
+essa coluna e os CPFs preenchidos.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -18437,7 +18464,7 @@ sem cópias JSON redundantes. DTOs, hashes, estados, orçamento, histórico e li
 privada de 90 dias permanecem. FKs compostas de titularidade continuam protegidas.
 [Decisão](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md).
 
-O MVP físico contém 31 tabelas/258 colunas/51 FKs; o modelo lógico de 42 tabelas
+Após a revisão 0016, o MVP físico tinha 31 tabelas/258 colunas/51 FKs. O modelo lógico de 42 tabelas
 também descreve onze tabelas futuras. Não confundir o escopo lógico completo com
 objetos já instalados. Nenhuma tabela financeira ou biométrica foi antecipada.
 O [relatório de migração/regressão](docs/testes/otimizacao-modelagem-20261119.md)
@@ -19107,7 +19134,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
-| `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
+| `database/README.md` | `46d9182d3d720db4578210bfea6e1a9810e00d4adfe4f04e64725785459ba087` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
@@ -19115,7 +19142,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5890ceb1d06f7a4242974d48735a65d93b47f7c9dbb2c7132da10dfad96c74f4` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `6fc01e490f47806403411dd9729f7040e9d569ef48a5c5f70228a8a01ee10e8d` |
-| `docs/arquitetura/clientes.md` | `fdd065864055f1e1e5ce52e19373826e9583b3db766541d6ab9b06a2ccbd7548` |
+| `docs/arquitetura/clientes.md` | `4348ff17792db0f940a80a635d78f9de1cedb9bd9c3c0a3889a297d94b98f781` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
@@ -19141,9 +19168,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `664bf7a2316d9287f798d6a48cbaa169d6a10ebb395945764c1bd693d6ea38f4` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `ed6b12bf00c1addfe53fbeac63a726cb10a373264ecafe103b856c34aaeb1c3a` |
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `b77921d0c6361201b58dfe7031e3ab2e84fef981ee8827dfdbb4c2e14a14f09c` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `e81127b081b15e07772699dcd2c32a59bc68d1e729b2689ea43c54d7d7b337a8` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `1a2d18489fad63e5333e8a3742ce6911043df2243d64753095b43aa85821edf3` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
@@ -19155,9 +19182,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
+| `docs/especificacao/compilacao-spec.json` | `7f6b99538f55b69a9aec99b6ffe51f4860a266ebd3372d57056ea7440492430e` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `3cb5ade09f41ec4d7ed059863bb48cbb056b64880fc8e29fe4f3e637ed668b88` |
+| `docs/especificacao/visao-geral.md` | `94e5a7a071a94af55cc70b1b3c586f3b4e0e916734043d6fc5ce531686634eee` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19175,9 +19202,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `eda90388210d992424201d2e936eb958a118631845e0c89af050c2dff982f2f8` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
-| `docs/requisitos/onboarding-e-triagem.md` | `d91f10aefd1cd8de311a459fc9ed9c6e8b62ee64e2ce2aae08ad691517ba206b` |
+| `docs/requisitos/onboarding-e-triagem.md` | `053c3a217b7c90b786a053184a6e59ea685318c728ac192738a051c249d8e866` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `408e3cfef5aa179f54b447b795a15971d475f17b161809cc4fb3be01c0db38a4` |
+| `docs/requisitos/requisitos-funcionais.md` | `43c00ad1bddcf20fb0fd23636f98f572c0db33c919844805bec5bbb7a72ce7db` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `7b5cb6057dd147853625ea4fb5319209d027ca7546fa53339d470eaf93e59ec4` |

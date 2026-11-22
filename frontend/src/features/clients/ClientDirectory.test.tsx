@@ -14,6 +14,7 @@ const client: ClientDetail = {
   idade: 36,
   data_nascimento: "1990-01-01",
   telefone: null,
+  cpf: "01234567890",
   ativo: true,
   estado_conta: "CONVIDADO",
   revisao: 1,
@@ -65,6 +66,8 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   fireEvent.click(await screen.findByRole("button", { name: "Cadastrar cliente" }));
   fireEvent.change(screen.getByLabelText("Nome", { exact: true }), { target: { value: client.nome } });
   fireEvent.change(screen.getByLabelText("Data de nascimento"), { target: { value: client.data_nascimento } });
+  expect(screen.queryByText(/menos de 100 anos/)).toBeNull();
+  fireEvent.change(screen.getByLabelText("CPF (opcional)"), { target: { value: "012.345.678-90" } });
   fireEvent.change(screen.getByLabelText("E-mail", { exact: true }), { target: { value: client.email } });
   fireEvent.click(screen.getByRole("button", { name: "Salvar cadastro" }));
   expect(await screen.findByText("Cliente cadastrado.")).toBeTruthy();
@@ -73,7 +76,7 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   expect(request).toHaveBeenCalledWith(base, expect.objectContaining({
     method: "POST", headers: expect.objectContaining({ "X-CSRF-Token": "csrf-sintetico" }),
     body: JSON.stringify({
-      nome: client.nome, data_nascimento: client.data_nascimento, telefone: null,
+      nome: client.nome, data_nascimento: client.data_nascimento, telefone: null, cpf: "012.345.678-90",
       email: client.email, vincular_existente: false,
     }),
   }));
@@ -88,13 +91,14 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   fireEvent.click(await screen.findByRole("button", { name: "Consultar Cliente Sintético" }));
   expect(request).toHaveBeenCalledWith(base + "?pagina=1&busca=cliente%40example.test", expect.anything());
   await screen.findByRole("heading", { name: "Editar cliente" });
+  expect((screen.getByLabelText("CPF (opcional)") as HTMLInputElement).value).toBe(client.cpf);
   fireEvent.click(screen.getByLabelText("Perfil de cliente ativo"));
   fireEvent.click(screen.getByRole("button", { name: "Salvar alterações" }));
   expect(await screen.findByText("Alterações salvas.")).toBeTruthy();
   expect(request).toHaveBeenCalledWith(base + "/" + client.id, expect.objectContaining({
     method: "PUT",
     body: JSON.stringify({
-      nome: client.nome, data_nascimento: client.data_nascimento, telefone: null,
+      nome: client.nome, data_nascimento: client.data_nascimento, telefone: null, cpf: client.cpf,
       revisao: 2, ativo: false,
     }),
   }));

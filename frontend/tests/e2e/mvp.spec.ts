@@ -60,6 +60,8 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await page.getByRole("button", { name: "Cadastrar cliente", exact: true }).click();
   await page.getByLabel("Nome", { exact: true }).fill("Cliente Jornada");
   await page.getByLabel("Data de nascimento").fill("1995-06-15");
+  await expect(page.getByText(/menos de 100 anos/)).toHaveCount(0);
+  await page.getByLabel("CPF (opcional)").fill("012.345.678-90");
   await page.getByLabel("E-mail", { exact: true }).fill(clientEmail);
   const created = page.waitForResponse(r => r.url().endsWith("/api/v1/clientes") && r.request().method() === "POST");
   await page.getByRole("button", { name: "Salvar cadastro", exact: true }).click();
@@ -74,6 +76,10 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   const clients = page.getByRole("list", { name: "Clientes encontrados" });
   await expect(clients.getByRole("listitem")).toHaveCount(1);
   await expect(clients.getByRole("heading", { name: "Cliente Jornada", exact: true })).toBeVisible();
+  await expect(clients).not.toContainText("01234567890");
+  await page.getByRole("button", { name: "Consultar Cliente Jornada", exact: true }).click();
+  await expect(page.getByLabel("CPF (opcional)")).toHaveValue("01234567890");
+  await page.getByRole("button", { name: "Voltar à lista", exact: true }).click();
   await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux08-clientes.png", fullPage: true });
   const clientPage = await browser.newPage({ baseURL: origin });
   await firstAccess(clientPage, clientEmail);

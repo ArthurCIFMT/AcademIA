@@ -103,7 +103,7 @@
     },
     {
       "titulo": "17. Modelo de dados, relacionamentos e invariantes",
-      "nota": "Modelo lógico do escopo completo: 42 tabelas/331 colunas, incluindo onze tabelas futuras. O físico do MVP na revisão 0016 tem 31 tabelas/258 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual.",
+      "nota": "Modelo lógico do escopo completo: 42 tabelas/332 colunas, incluindo onze tabelas futuras. O físico na revisão 0017 tem 31 tabelas/259 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.",
       "fontes": [
         {
           "arquivo": "docs/arquitetura/modelo-de-dados/modelo-logico.dbml",

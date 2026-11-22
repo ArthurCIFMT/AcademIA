@@ -1539,3 +1539,22 @@ desta revisão. Não houve alteração dos .cmd, script, testes ou configuraçã
 privada; os 14 unitários e ciclos reais anteriores não foram reexecutados.
 Novas execuções seguem os [comandos focais](iniciador-local-20261120.md#reprodução-dos-testes-focais)
 quando o iniciador/ciclo for efetivamente afetado.
+
+## Cadastro de clientes com CPF opcional — revisão 0017
+
+Com PostgreSQL de teste e Mailpit ativos, a partir de `backend/`:
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = "1"
+uv run --locked --env-file ../.env pytest -o addopts="" tests/people tests/database tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata tests/ai/test_normalized_migration.py
+```
+
+43 testes aprovados, com persistência, conflito sem cadastro parcial,
+contrato OpenAPI e ida/volta de migrations. A execução usou o Python de
+`.venv` com `.env` e diretório temporário próprio em `backend/data/`.
+A suíte completa de frontend passou com 116 testes. O
+[executor de aceitação](aceitacao-mvp.md) passou em oito jornadas no Edge,
+com CPF cadastrado e consultado na primeira jornada, rollback confirmado e
+zero chamadas a LLM externo. Lint, tipos, build, Ruff, mypy e DOC/SPEC passaram.
+A migração local preservou os cadastros existentes e o iniciador reconheceu
+a revisão 0017 com a configuração atual.

@@ -112,7 +112,7 @@
     {
       "name": "cliente",
       "owner": "MOD-01",
-      "note": "",
+      "note": "CPF opcional com onze dígitos, normalizado pelo backend.",
       "columns": [
         {
           "name": "usuario_id",
@@ -136,6 +136,12 @@
           "name": "telefone",
           "type": "varchar(25)",
           "flags": "",
+          "ref": null
+        },
+        {
+          "name": "cpf",
+          "type": "varchar(11)",
+          "flags": "unique",
           "ref": null
         },
         {

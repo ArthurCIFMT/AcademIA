@@ -63,10 +63,12 @@ partes futuras; as [migrations](../../database/README.md) indicam o schema físi
 A [avaliação anterior de tamanho](../../docs/analises/2026-11-19-tamanho-modelagem.md)
 preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
 A [normalização 0016](../../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
-remove redundâncias e mantém as regras: modelo lógico atual com 42 tabelas/331
-colunas, incluindo onze tabelas futuras; MVP físico com 31 tabelas/258 colunas/51
-FKs. A [comparação visual](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
-separa o conceito original, o físico entregue e o escopo completo.
+remove redundâncias e preserva as regras. A revisão 0017 acrescenta CPF
+opcional ao cadastro de clientes. O modelo lógico atual tem 42 tabelas e
+332 colunas, incluindo onze tabelas futuras. O físico atual tem 31 tabelas,
+259 colunas e 51 FKs.
+A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
+separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
 são histórico. A arquitetura agentiva foi substituída pela
 [arquitetura semântica vigente](../../docs/arquitetura/rag-semantico.md).

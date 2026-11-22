@@ -4,6 +4,8 @@ from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from psycopg.errors import UniqueViolation
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.contracts.errors import ErrorResponse
@@ -47,6 +49,13 @@ def client_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIRoute
                 yield session
         except ClientError as exc:
             raise HTTPException(exc.status) from None
+        except IntegrityError as exc:
+            if (
+                isinstance(exc.orig, UniqueViolation)
+                and exc.orig.diag.constraint_name == "uq_cliente_cpf"
+            ):
+                raise HTTPException(409) from None
+            raise
         except InviteLimitReached:
             raise HTTPException(429) from None
 

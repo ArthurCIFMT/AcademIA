@@ -47,8 +47,11 @@ A revisão `0011` registra a [validação de publicação e os pareceres imutáv
 A revisão `0012` cria [documentos, versões e decisões de curadoria](../docs/arquitetura/corpus.md), com proveniência protegida.
 A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](../docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
 A revisão `0014` cria execução, triagem, etapas e evidências de IA; `0015` entrega
-mensagens de chat. A revisão vigente `0016` normaliza fontes de pergunta,
-triagem e consumo, sem alterar contratos funcionais; veja o marco abaixo.
+mensagens de chat. A revisão `0016` normaliza as fontes de pergunta, triagem e
+consumo. A revisão vigente `0017` acrescenta CPF opcional e único ao
+[cadastro de clientes](../docs/arquitetura/clientes.md). Registros anteriores
+mantêm seus dados e começam com CPF nulo. O downgrade 0017 → 0016 remove
+essa coluna e os CPFs preenchidos.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -107,7 +110,7 @@ sem cópias JSON redundantes. DTOs, hashes, estados, orçamento, histórico e li
 privada de 90 dias permanecem. FKs compostas de titularidade continuam protegidas.
 [Decisão](../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md).
 
-O MVP físico contém 31 tabelas/258 colunas/51 FKs; o modelo lógico de 42 tabelas
+Após a revisão 0016, o MVP físico tinha 31 tabelas/258 colunas/51 FKs. O modelo lógico de 42 tabelas
 também descreve onze tabelas futuras. Não confundir o escopo lógico completo com
 objetos já instalados. Nenhuma tabela financeira ou biométrica foi antecipada.
 O [relatório de migração/regressão](../docs/testes/otimizacao-modelagem-20261119.md)

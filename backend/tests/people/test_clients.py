@@ -38,6 +38,7 @@ _ADMIN = "admin@example.test"
 _ATTENDANT = "atendente@example.test"
 _PASSWORD = "senha-sintetica-pes02"
 _BIRTH = "1990-01-01"
+_SYNTHETIC_CPF = "01234567890"
 
 
 @pytest.fixture
@@ -147,7 +148,12 @@ async def _read_mail(email: str) -> str:
 
 def test_validation_and_openapi(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA")
-    paths = create_app().openapi()["paths"]
+    openapi = create_app().openapi()
+    paths = openapi["paths"]
+    schemas = openapi["components"]["schemas"]
+    assert "cpf" in schemas["ClientDetail"]["properties"]
+    assert "cpf" not in schemas["ClientSummary"]["properties"]
+    assert "cpf" not in schemas["CreateClient"]["required"]
     assert "201" in paths[_CLIENTS]["post"]["responses"]
     assert "429" in paths[_CLIENTS + "/{user_id}/convite"]["post"]["responses"]
     data = CreateClient.model_validate({**_form("a@example.test"), "telefone": " "})
@@ -156,6 +162,30 @@ def test_validation_and_openapi(monkeypatch: pytest.MonkeyPatch) -> None:
         CreateClient.model_validate(
             {**_form("a@example.test"), "data_nascimento": "2099-01-01"}
         )
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        (None, None),
+        (" ", None),
+        (_SYNTHETIC_CPF, _SYNTHETIC_CPF),
+        (" 012.345.678-90 ", _SYNTHETIC_CPF),
+    ],
+)
+def test_optional_cpf_is_normalized(raw: str | None, expected: str | None) -> None:
+    assert (
+        CreateClient.model_validate({**_form("cpf@example.test"), "cpf": raw}).cpf
+        == expected
+    )
+
+
+@pytest.mark.parametrize(
+    "invalid", ["01234567891", "11111111111", "012-345-678.90", "abc"]
+)
+def test_invalid_cpf_is_rejected(invalid: str) -> None:
+    with pytest.raises(ValueError, match="Informe um CPF válido"):
+        CreateClient.model_validate({**_form("cpf@example.test"), "cpf": invalid})
 
 
 @pytest.mark.parametrize(
@@ -319,6 +349,63 @@ class CaptureMail:
     def deliver(self, message: EmailMessage) -> DeliveryState:
         self.bodies.append(str(message.get_content()))
         return self.state
+
+
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_cpf_persists_and_duplicate_creation_rolls_back(
+    api: httpx.AsyncClient,
+    sessions: sessionmaker[Session],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sink = CaptureMail()
+    monkeypatch.setattr(
+        invitations,
+        "local_email_delivery",
+        lambda factory: EmailDelivery(factory, sink, "academia@example.test"),
+    )
+    headers = await _login(api, _ATTENDANT)
+    email = "cpf@example.test"
+    created = await api.post(
+        _CLIENTS, json={**_form(email), "cpf": "012.345.678-90"}, headers=headers
+    )
+    assert created.status_code == 201
+    detail = created.json()
+    url = f"{_CLIENTS}/{detail['id']}"
+    assert detail["cpf"] == (await api.get(url)).json()["cpf"] == _SYNTHETIC_CPF
+    assert "cpf" not in (await api.get(_CLIENTS)).json()["itens"][0]
+
+    other_email = "duplicado@example.test"
+    duplicate = {**_form(other_email), "cpf": _SYNTHETIC_CPF}
+    conflict = await api.post(_CLIENTS, json=duplicate, headers=headers)
+    assert conflict.status_code == 409 and _SYNTHETIC_CPF not in conflict.text
+    with sessions.begin() as db:
+        assert db.scalar(select(User.id).where(User.email == other_email)) is None
+    assert len(sink.bodies) == 1 and _SYNTHETIC_CPF not in sink.bodies[0]
+
+    second = await api.post(_CLIENTS, json=_form(other_email), headers=headers)
+    assert second.status_code == 201 and second.json()["cpf"] is None
+    other_url = f"{_CLIENTS}/{second.json()['id']}"
+    edit = {"nome": "Nome novo", "data_nascimento": _BIRTH, "ativo": True}
+    conflict = await api.put(
+        other_url,
+        json={**edit, "revisao": second.json()["revisao"], "cpf": _SYNTHETIC_CPF},
+        headers=headers,
+    )
+    assert (
+        conflict.status_code == 409
+        and (await api.get(other_url)).json() == second.json()
+    )
+    saved = await api.put(
+        url, json={**edit, "revisao": detail["revisao"]}, headers=headers
+    )
+    assert saved.status_code == 200 and saved.json()["cpf"] == _SYNTHETIC_CPF
+    cleared = await api.put(
+        url,
+        json={**edit, "revisao": saved.json()["revisao"], "cpf": None},
+        headers=headers,
+    )
+    assert cleared.status_code == 200 and (await api.get(url)).json()["cpf"] is None
 
 
 @pytest.mark.integration

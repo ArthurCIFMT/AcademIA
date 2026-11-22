@@ -35,6 +35,7 @@ Table cliente {
   nome varchar(120) [not null]
   data_nascimento date [not null]
   telefone varchar(25)
+  cpf varchar(11) [unique]
   ativo boolean [not null]
 }
 

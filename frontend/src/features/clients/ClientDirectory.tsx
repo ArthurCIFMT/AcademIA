@@ -24,8 +24,8 @@ function clientBirthDateRange() {
 
 function message(failure: unknown) {
   if (failure instanceof ApiError) {
-    if (failure.status === 409) return "Operação em conflito. Confira o e-mail e o vínculo ou recarregue o cadastro.";
-    if (failure.status === 422) return "Confira os dados preenchidos.";
+    if (failure.status === 409) return "Operação em conflito. Confira o e-mail, o CPF e o vínculo ou recarregue o cadastro.";
+    if (failure.status === 422) return "Confira os dados preenchidos, inclusive o CPF se informado.";
     if (failure.status === 429) return "Limite de convites atingido. Tente novamente mais tarde.";
     if (failure.status === 401 || failure.status === 403) return "Acesso ao cadastro de clientes indisponível.";
   }
@@ -94,10 +94,11 @@ export function ClientDirectory({
       nome: String(fields.get("nome") ?? ""),
       data_nascimento: String(fields.get("data_nascimento") ?? ""),
       telefone: String(fields.get("telefone") ?? "").trim() || null,
+      cpf: String(fields.get("cpf") ?? "").trim() || null,
     };
     const { min, max } = clientBirthDateRange();
     if (!data.data_nascimento || data.data_nascimento < min || data.data_nascimento > max) {
-      setError("Informe uma data de nascimento até hoje e com menos de 100 anos.");
+      setError("Informe uma data de nascimento válida.");
       return;
     }
     void run(async () => {
@@ -177,9 +178,9 @@ export function ClientDirectory({
                 <legend>Dados do cliente</legend>
                 <label className="ac-field">Nome<input name="nome" maxLength={120} required defaultValue={form?.nome} /></label>
                 <label className="ac-field">Data de nascimento<input name="data_nascimento" type="date" required
-                  min={birthDateRange.min} max={birthDateRange.max} defaultValue={form?.data_nascimento}
-                  aria-describedby="client-birth-range" /></label>
-                <small id="client-birth-range">Informe uma data até hoje e com menos de 100 anos.</small>
+                  min={birthDateRange.min} max={birthDateRange.max} defaultValue={form?.data_nascimento} /></label>
+                <label className="ac-field">CPF (opcional)<input name="cpf" type="text" inputMode="numeric"
+                  autoComplete="off" maxLength={14} defaultValue={form?.cpf ?? ""} /></label>
                 <label className="ac-field">Telefone<input name="telefone" type="tel" maxLength={25} defaultValue={form?.telefone ?? ""} /></label>
               </fieldset>
               <fieldset className="directory-group">

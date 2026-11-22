@@ -47,6 +47,7 @@ Unicidades: usuario_id+papel.
 | nome | varchar(120) | required | — |
 | data_nascimento | date | required | — |
 | telefone | varchar(25) | opcional | — |
+| cpf | varchar(11) | opcional, único quando preenchido, onze dígitos de 0 a 9 | — |
 | ativo | boolean | required | — |
 
 ## funcionario — MOD-01
