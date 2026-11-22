@@ -334,7 +334,8 @@ test("E2E-04 geração única, confirmação do onboarding e adaptação version
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux06-dias.png", fullPage: true });
   await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
-  expect(await page.locator(".my-training").evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole("link", { name: "AcademIA", exact: true })).toBeInViewport();
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await expect(page.getByRole("button", { name: "Exportar ficha em JSON" })).toBeVisible();

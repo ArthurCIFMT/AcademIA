@@ -76,7 +76,8 @@ troca o menu para a disposição superior. O de 63 rem empilha os painéis.
 
 UX-02 implementou tokens, formulário e estados comuns. UX-03 aplicou o menu
 por perfil e as telas de entrada. UX-04–UX-08 integram os fluxos por área.
-UX-09 compara a aplicação real com esta linha de base. Preservar restrições
-de saúde, recursos, avisos, autorização e status da IA durante essa evolução.
+O [aceite de UX-09](../testes/ux09-aceite-visual.md) compara a aplicação real
+com esta linha de base. Preservar restrições de saúde, recursos, avisos,
+autorização e status da IA nas próximas interfaces.
 Estado salvo e nova solicitação continuam operações diferentes. As respostas
 do assistente no protótipo são estáticas e não geram ou alteram fichas.

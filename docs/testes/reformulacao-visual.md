@@ -1,6 +1,6 @@
 # Validação da reformulação visual
 
-Status: UX-01 a UX-08 verificados. Consulte a
+Status: UX-01 a UX-09 verificados. Consulte a
 [linha de base](ux01-referencia-visual.md) e a
 [verificação dos componentes e das telas existentes](ux02-base-visual.md),
 além dos ensaios de [navegação e acesso](ux03-navegacao-e-acesso.md),
@@ -8,7 +8,8 @@ além dos ensaios de [navegação e acesso](ux03-navegacao-e-acesso.md),
 [Assistente](ux05-assistente.md), [fichas no celular](ux06-fichas-no-celular.md)
 [área do instrutor](ux07-area-do-instrutor.md)
 e [cadastros e catálogos](ux08-cadastros-e-catalogos.md).
-O aceite da aplicação redesenhada segue a trilha abaixo.
+O [aceite final das telas existentes](ux09-aceite-visual.md) reúne a matriz de
+navegador, a regressão integrada e as comparações com UX-01.
 Fonte: [critérios de experiência](../requisitos/experiencia-e-interface.md).
 
 ## Ambiente e dados

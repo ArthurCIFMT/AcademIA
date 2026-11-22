@@ -17,6 +17,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
 const admin = ["ADMINISTRADOR"];
 const samples = [
   ...cases,
+  ["editor", "/area/instrutor/clientes/cliente/treinos", ["INSTRUTOR"], "Cliente de exemplo"],
   ["atendimento", "/area/atendimento/clientes", ["ATENDENTE"], "cliente@example.test"],
   ["funcionarios", "/area/administracao/funcionarios", admin, "Atendente de exemplo"],
   ["designacoes", "/area/administracao/designacoes?cliente=cliente", admin, "Responsável atual: Nenhum"],
@@ -30,6 +31,7 @@ const actions = {
   cadastro: "Cadastrar cliente", atendimento: "Cadastrar cliente",
   funcionarios: "Cadastrar funcionário", designacoes: "Buscar instrutor",
   inventario: "Cadastrar equipamento", exercicios: "Cadastrar exercício",
+  editor: "Novo rascunho manual",
 };
 const rows = (...itens) => ({ itens, pagina: 1, limite: 20, total: itens.length });
 const equipment = { id: "remo", nome: "Remo de exemplo", categoria: "Cardio",
@@ -45,6 +47,11 @@ const directoryFixtures = {
   "/api/v1/exercicios": rows({ id: "remada", nome: "Remada de exemplo", descricao: "Exercício sintético",
     grupo_muscular: "Costas", ativo: true, elegivel: true, dispensa_equipamento: false, combinacoes: [[resource]] }),
   "/api/v1/exercicios/recursos": [resource],
+  "/api/v1/treinos/clientes/cliente/contexto": { cliente_nome: "Cliente de exemplo", onboarding: { id: "onboarding", numero: 1 },
+    avaliacoes: [], equipamentos: [resource], versao_atual_id: null, exercicios: [{
+      id: "remada", nome: "Remada de exemplo", combinacoes_disponiveis: [["remo"]],
+    }] },
+  "/api/v1/treinos/clientes/cliente/versoes": rows(),
 };
 
 async function build() {
@@ -96,8 +103,8 @@ async function withPage(browser, origin, width, roles, inspect) {
     if (pathname === "/api/v1/auth/session") return roles.length
       ? route.fulfill({ json: { user_id: "cliente", roles, csrf_token: "sintetico", expires_at: "2099-01-01T00:00:00Z" } })
       : route.fulfill({ status: 401, json: {} });
-    if (Object.hasOwn(fixtures, pathname)) return route.fulfill({ json: fixtures[pathname] });
     if (Object.hasOwn(directoryFixtures, pathname)) return route.fulfill({ json: directoryFixtures[pathname] });
+    if (Object.hasOwn(fixtures, pathname)) return route.fulfill({ json: fixtures[pathname] });
     unexpected.push(pathname);
     return route.fulfill({ status: 404, json: {} });
   });
@@ -115,7 +122,24 @@ async function assertReflow(page, width, scenario) {
     scroll: document.documentElement.scrollWidth, viewport: innerWidth,
   }));
   assert.equal(metrics.viewport, width);
-  assert.ok(metrics.scroll <= width, `Rolagem da página: ${scenario} (${width} → ${metrics.scroll} px)`);
+  if (metrics.scroll > width) {
+    const overflow = await page.evaluate(() => [...document.querySelectorAll("body *")]
+      .filter(element => element.getBoundingClientRect().right > innerWidth + 1)
+      .slice(0, 8).map(element => element.tagName + "." + element.className));
+    assert.fail(`Rolagem da página: ${scenario} (${width} → ${metrics.scroll} px): ${overflow.join(", ")}`);
+  }
+}
+
+async function checkSkipLink(page) {
+  const skip = page.getByRole("link", { name: "Ir para o conteúdo" });
+  await skip.focus();
+  assert.ok(await skip.evaluate(element => {
+    const style = getComputedStyle(element);
+    return style.outlineStyle !== "none" && parseFloat(style.outlineWidth) > 0;
+  }), "Foco sem indicação visível no atalho");
+  await skip.press("Enter");
+  assert.ok(await page.getByRole("main").evaluate(element => element === document.activeElement),
+    "O atalho não moveu o foco ao conteúdo");
 }
 
 async function capture(page, name, files) {
@@ -142,11 +166,13 @@ async function inspectApp(browser, origin, width, sample, files) {
       ? page.getByText("Altura (cm)", { exact: true }) : page.getByText(marker).first();
     await content.waitFor({ timeout: 8000 });
     await assertReflow(page, width, name);
-    if (!actions[name]) return;
-    const action = page.getByRole("button", { name: actions[name], exact: true });
-    await action.waitFor({ timeout: 3000 });
-    const bounds = await action.boundingBox();
-    assert.ok(bounds.width >= 44 && bounds.height >= 44, `Alvo principal menor que 44 px em ${name}`);
+    if (width === 390) await checkSkipLink(page);
+    const action = actions[name] ? page.getByRole("button", { name: actions[name], exact: true }) : null;
+    if (action) {
+      await action.waitFor({ timeout: 3000 });
+      const bounds = await action.boundingBox();
+      assert.ok(bounds.width >= 44 && bounds.height >= 44, `Alvo principal menor que 44 px em ${name}`);
+    }
     const formFields = { cadastro: "Data de nascimento", atendimento: "Data de nascimento",
       funcionarios: "Data de admissão", inventario: "Foto (JPG ou PNG)", exercicios: "Descrição do movimento" };
     if (formFields[name]) {
@@ -158,8 +184,25 @@ async function inspectApp(browser, origin, width, sample, files) {
       }
       await assertReflow(page, width, name + " aberto");
     }
-    if ((width === 390 && ["entrada", "cadastro", "onboarding"].includes(name))
-      || (width === 1440 && name === "parecer")) await capture(page, name + "-" + width + ".png", files);
+    if (name === "editor") {
+      await action.press("Enter");
+      await page.getByRole("button", { name: "Adicionar dia" }).press("Enter");
+      await page.getByRole("button", { name: "Adicionar exercício" }).press("Enter");
+      await page.getByLabel("Exercício", { exact: true }).selectOption("remada");
+      for (const label of ["Remover exercício", "Remover dia"]) {
+        const remove = page.getByRole("button", { name: label, exact: true });
+        assert.equal(await remove.getAttribute("data-variant"), "danger");
+      }
+      await assertReflow(page, width, "editor com dia e exercício");
+    }
+    if ((width === 390 || width === 1440) && (cases.some(([key]) => key === name) || name === "editor")) {
+      await capture(page, name + "-" + width + ".png", files);
+    }
+    if (width === 320 || width === 390) {
+      await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
+      await assertReflow(page, width, name + " com texto a 200%");
+      if (width === 320 && name === "ficha") await capture(page, "ficha-320-ampliada.png", files);
+    }
   });
 }
 
@@ -259,7 +302,8 @@ async function main() {
       const report = { navegador: "Microsoft Edge " + browser.version(), larguras_px: widths,
         rotas: samples.map(([nome, rota, papeis]) => ({ nome, rota, papeis })),
         interacoes: ["Validação e mensagens", "Abertura por teclado e toque", "Escape e devolução do foco",
-          "Rolagem da tabela local por teclado a 320 px", "Texto a 200% em 390 px"],
+          "Atalho para o conteúdo com foco visível em todas as rotas a 390 px",
+          "Rolagem da tabela local por teclado a 320 px", "Texto a 200% em 320 e 390 px na SPA"],
         contraste: contrast, capturas: files };
       await fs.writeFile(path.join(output, "resultado.json"), JSON.stringify(report, null, 2) + "\n");
       console.log(JSON.stringify(report, null, 2));

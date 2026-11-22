@@ -21,6 +21,8 @@
   align-items: center;
   gap: var(--ac-space-2);
   min-height: var(--ac-touch-target);
+  min-inline-size: 0;
+  max-inline-size: 100%;
   color: var(--ac-text);
   font-weight: 800;
   font-size: 1.4rem;
@@ -28,14 +30,20 @@
   text-decoration: none;
 }
 
-.site-brand span {
+.site-brand-mark {
   display: grid;
   place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  flex: none;
+  inline-size: min(2.4rem, 14vw);
+  aspect-ratio: 1;
   border-radius: .75rem;
   color: var(--ac-surface);
   background: var(--ac-brand);
+}
+
+.site-brand-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 .site-account, .site-areas {
@@ -161,7 +169,7 @@
 }
 
 @media (max-width: 47rem) {
-  .site-bar-inner { padding: var(--ac-space-2) var(--ac-space-4); }
+  .site-bar-inner { padding: var(--ac-space-2) min(var(--ac-space-4), 5vw); }
   .site-workspace { display: block; }
   .site-sidebar {
     padding: var(--ac-space-2) var(--ac-space-4);

@@ -39,7 +39,10 @@ function SkipLink({ focusMain }: { focusMain: () => void }) {
 }
 
 function Brand({ to }: { to: string }) {
-  return <Link className="site-brand" to={to}><span aria-hidden="true">A</span>AcademIA</Link>;
+  return <Link className="site-brand" to={to}>
+    <span className="site-brand-mark" aria-hidden="true">A</span>
+    <span className="site-brand-name">AcademIA</span>
+  </Link>;
 }
 
 export function PublicFrame({ children }: { children: ReactNode }) {

@@ -170,8 +170,8 @@ function Editor({ context, clientId, csrf, initial, onSaved, reload, onOpenRevis
                       { ...day, itens: moved(day.itens, itemIndex, -1) })}>Subir exercício</button>
                     <button type="button" disabled={itemIndex === day.itens.length - 1} onClick={() => updateDay(dayIndex,
                       { ...day, itens: moved(day.itens, itemIndex, 1) })}>Descer exercício</button>
-                    <button type="button" onClick={() => updateDay(dayIndex,
-                      { ...day, itens: day.itens.filter((_, index) => index !== itemIndex) })}>Remover exercício</button>
+                    <Button variant="danger" onClick={() => updateDay(dayIndex,
+                      { ...day, itens: day.itens.filter((_, index) => index !== itemIndex) })}>Remover exercício</Button>
                   </div>
                 </fieldset>
               );
@@ -183,7 +183,7 @@ function Editor({ context, clientId, csrf, initial, onSaved, reload, onOpenRevis
               })}>Adicionar exercício</button>
               <button type="button" disabled={dayIndex === 0} onClick={() => setDays(moved(days, dayIndex, -1))}>Subir dia</button>
               <button type="button" disabled={dayIndex === days.length - 1} onClick={() => setDays(moved(days, dayIndex, 1))}>Descer dia</button>
-              <button type="button" onClick={() => setDays(days.filter((_, index) => index !== dayIndex))}>Remover dia</button>
+              <Button variant="danger" onClick={() => setDays(days.filter((_, index) => index !== dayIndex))}>Remover dia</Button>
             </div>
           </fieldset>
         ))}

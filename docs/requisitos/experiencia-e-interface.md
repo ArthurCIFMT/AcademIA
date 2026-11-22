@@ -1,6 +1,7 @@
 # Experiência, navegação e qualidade visual
 
-Status: ESPECIFICADO, com [referência visual concluída em UX-01](../interface/README.md).
+Status: [aceite visual das telas existentes concluído em UX-09](../testes/ux09-aceite-visual.md),
+com [referência visual](../interface/README.md) definida em UX-01.
 A [base visual foi aplicada em UX-02](../interface/componentes.md) e a
 [navegação por perfil e telas de acesso em UX-03](../interface/navegacao-e-acesso.md).
 Solicitação do responsável em
@@ -110,7 +111,7 @@ Cada novo módulo posteriormente entregue aplica os mesmos componentes e critér
 UX-09 verifica o conjunto atual; módulos posteriores ainda exigem seus próprios
 testes e revisão visual. A validação final do projeto considera esse acabamento.
 
-[Plano de testes](../testes/reformulacao-visual.md). Preferências, protótipos e
-evidências de UX-01 ainda serão produzidos na execução; este documento não inventa
-arquivos, capturas ou resultados já concluídos. Atualizações entram nesta fonte,
-nos cartões afetados e no SPEC gerado, preservando RF/RN/MRF e o MER.
+[Plano de testes](../testes/reformulacao-visual.md). Consulte os
+[protótipos e a linha de base de UX-01](../testes/ux01-referencia-visual.md).
+Atualizações entram nesta fonte, nos cartões afetados e no SPEC gerado,
+preservando RF/RN/MRF e o MER.
