@@ -1,49 +1,82 @@
-:root {
-  font-family: system-ui, sans-serif;
-  color: #172b29;
-  background: #f4f8f6;
-}
+@import "./styles/tokens.css";
+@import "./styles/ui.css";
 
 body {
   margin: 0;
+  font-family: var(--ac-font);
+  line-height: var(--ac-line-height);
+  color: var(--ac-text);
+  background: var(--ac-background);
 }
 
 .shell {
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 48rem;
+  max-width: var(--ac-legacy-width);
   padding: clamp(1rem, 6vw, 3rem);
+  overflow-wrap: anywhere;
 }
 
-h1 {
-  margin-bottom: 0.4rem;
+:where(.shell h1) {
+  margin-bottom: var(--ac-space-2);
+  font-size: var(--ac-heading);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+}
+
+:where(.shell a) {
+  color: var(--ac-brand);
+  text-underline-offset: .18em;
+}
+
+/* Dimensões intrínsecas antes das regras do módulo. */
+:where(.shell input, .shell select, .shell textarea, .shell button) {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+:where(.shell fieldset) {
+  min-inline-size: 0;
 }
 
 .status {
-  margin-top: 2rem;
-  padding: 1.25rem;
-  border: 1px solid #cadbd4;
-  border-radius: 0.75rem;
-  background: white;
+  margin-top: var(--ac-space-6);
+  padding: var(--ac-space-5);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
+  background: var(--ac-surface);
 }
 
 .status h2 {
   margin-top: 0;
-  font-size: 1.15rem;
+  font-size: var(--ac-subheading);
 }
 
-button {
-  padding: 0.65rem 1rem;
-  min-height: 44px;
-  color: white;
-  background: #125448;
-  border: 0;
-  border-radius: 0.4rem;
+:where(button) {
+  padding: var(--ac-space-2) var(--ac-space-4);
+  min-height: var(--ac-touch-target);
+  color: var(--ac-surface);
+  background: var(--ac-brand);
+  border: 1px solid transparent;
+  border-radius: var(--ac-radius-control);
   font: inherit;
+  font-weight: 650;
   cursor: pointer;
 }
 
-button:focus-visible {
-  outline: 3px solid #125448;
+:where(button:not(:disabled)):hover {
+  background: var(--ac-brand-dark);
+}
+
+:where(button:disabled) {
+  color: var(--ac-muted);
+  background: var(--ac-background);
+  border-color: var(--ac-control-border);
+  cursor: not-allowed;
+}
+
+:where(.shell, .ac-ui) :focus-visible {
+  outline: 3px solid var(--ac-focus);
   outline-offset: 3px;
 }

@@ -1,5 +1,10 @@
 # Registro de comandos de verificação
 
+## Base visual UX-02
+
+Os [comandos e resultados](ux02-base-visual.md#reprodução) reproduzem os testes
+do frontend, o build e a inspeção no Edge com a SPA e o mostruário React.
+
 ## Referência visual UX-01
 
 O [relatório](ux01-referencia-visual.md#reprodução) registra o build da linha

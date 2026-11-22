@@ -223,8 +223,10 @@ da usabilidade. RNF-19/RNF-20 e a
 [especificação de experiência](../requisitos/experiencia-e-interface.md) são
 fontes normativas. UX-01 entregou a
 [referência visual e os protótipos](../interface/README.md), verificados no
-navegador com dados sintéticos. UX-02 está liberado para materializar os tokens
-e componentes no produto. As etapas seguintes continuam uma por vez e podem
+navegador com dados sintéticos. UX-02 implementou a
+[base visual e os componentes](../interface/componentes.md) do frontend.
+UX-03 está liberado para aplicar o padrão à navegação por perfil e às telas
+de acesso. As etapas seguintes continuam uma por vez e podem
 anteceder outros módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,

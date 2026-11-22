@@ -1,7 +1,7 @@
 # Experiência, navegação e qualidade visual
 
 Status: ESPECIFICADO, com [referência visual concluída em UX-01](../interface/README.md).
-A aplicação da referência começa em UX-02. Solicitação do responsável em
+A [base visual foi aplicada em UX-02](../interface/componentes.md). Solicitação do responsável em
 2026-11-19, após a revisão manual do MVP. Complementa RNF-14, RNF-19 e RNF-20.
 
 ## Objetivo e limites

@@ -1,0 +1,173 @@
+{
+  "navegador": "Microsoft Edge 158.0.4370.33",
+  "larguras_px": [
+    320,
+    390,
+    768,
+    1440
+  ],
+  "rotas": [
+    {
+      "nome": "entrada",
+      "rota": "/login",
+      "papeis": []
+    },
+    {
+      "nome": "onboarding",
+      "rota": "/area/cliente/onboarding",
+      "papeis": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "nome": "duvida",
+      "rota": "/area/cliente/assistente",
+      "papeis": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "nome": "quota",
+      "rota": "/area/cliente/treino-ia?solicitacao=11111111-1111-4111-8111-111111111111",
+      "papeis": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "nome": "ficha",
+      "rota": "/area/cliente/treinos",
+      "papeis": [
+        "CLIENTE"
+      ]
+    },
+    {
+      "nome": "parecer",
+      "rota": "/area/instrutor/clientes/cliente/treinos/ficha/revisao",
+      "papeis": [
+        "INSTRUTOR"
+      ]
+    },
+    {
+      "nome": "cadastro",
+      "rota": "/area/administracao/clientes",
+      "papeis": [
+        "ADMINISTRADOR",
+        "ATENDENTE"
+      ]
+    },
+    {
+      "nome": "atendimento",
+      "rota": "/area/atendimento/clientes",
+      "papeis": [
+        "ATENDENTE"
+      ]
+    }
+  ],
+  "interacoes": [
+    "Validação e mensagens",
+    "Abertura por teclado e toque",
+    "Escape e devolução do foco",
+    "Rolagem da tabela local por teclado a 320 px",
+    "Texto a 200% em 390 px"
+  ],
+  "contraste": [
+    {
+      "par": "Texto principal",
+      "cores": [
+        "rgb(20, 44, 48)",
+        "rgb(243, 246, 244)"
+      ],
+      "minimo": 4.5,
+      "razao": 13.47
+    },
+    {
+      "par": "Texto secundário",
+      "cores": [
+        "rgb(78, 98, 100)",
+        "rgb(243, 246, 244)"
+      ],
+      "minimo": 4.5,
+      "razao": 5.93
+    },
+    {
+      "par": "Botão principal",
+      "cores": [
+        "rgb(255, 255, 255)",
+        "rgb(7, 87, 79)"
+      ],
+      "minimo": 4.5,
+      "razao": 8.45
+    },
+    {
+      "par": "Botão secundário",
+      "cores": [
+        "rgb(7, 87, 79)",
+        "rgb(255, 255, 255)"
+      ],
+      "minimo": 4.5,
+      "razao": 8.45
+    },
+    {
+      "par": "Campo",
+      "cores": [
+        "rgb(104, 126, 123)",
+        "rgb(255, 255, 255)"
+      ],
+      "minimo": 3,
+      "razao": 4.32
+    },
+    {
+      "par": "Foco",
+      "cores": [
+        "rgb(28, 87, 160)",
+        "rgb(243, 246, 244)"
+      ],
+      "minimo": 3,
+      "razao": 6.61
+    },
+    {
+      "par": "Desabilitado",
+      "cores": [
+        "rgb(78, 98, 100)",
+        "rgb(243, 246, 244)"
+      ],
+      "minimo": 4.5,
+      "razao": 5.93
+    },
+    {
+      "par": "success",
+      "cores": [
+        "rgb(7, 87, 79)",
+        "rgb(225, 240, 235)"
+      ],
+      "minimo": 4.5,
+      "razao": 7.19
+    },
+    {
+      "par": "conflict",
+      "cores": [
+        "rgb(99, 67, 0)",
+        "rgb(255, 245, 217)"
+      ],
+      "minimo": 4.5,
+      "razao": 8.28
+    },
+    {
+      "par": "error",
+      "cores": [
+        "rgb(132, 47, 36)",
+        "rgb(252, 236, 233)"
+      ],
+      "minimo": 4.5,
+      "razao": 7.59
+    }
+  ],
+  "capturas": [
+    "componentes-320.png",
+    "entrada-390.png",
+    "onboarding-390.png",
+    "cadastro-390.png",
+    "parecer-1440.png",
+    "componentes-1440.png"
+  ]
+}

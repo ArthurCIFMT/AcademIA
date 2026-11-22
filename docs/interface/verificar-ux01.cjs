@@ -8,7 +8,6 @@ const { once } = require("node:events");
 const root = path.resolve(__dirname, "../..");
 const { chromium } = require(path.join(root, "frontend/node_modules/playwright"));
 const [dist, output] = process.argv.slice(2).map(value => path.resolve(value));
-assert.ok(dist && output, "Informe o build do MVP e uma pasta nova para as capturas.");
 const proto = path.join(__dirname, "prototipo");
 const time = "2026-11-11T12:00:00Z";
 const requestId = "11111111-1111-4111-8111-111111111111";
@@ -213,6 +212,7 @@ async function inspectPrototype(browser, origin) {
 }
 
 async function main() {
+  assert.ok(dist && output, "Informe o build do MVP e uma pasta nova para as capturas.");
   await fs.mkdir(output);
   await Promise.all(["antes", "prototipo"].map(dir => fs.mkdir(path.join(output, dir))));
   server.listen(0, "127.0.0.1");
@@ -237,4 +237,8 @@ async function main() {
   }
 }
 
-main().catch(error => { console.error(error); process.exitCode = 1; });
+if (require.main === module) {
+  main().catch(error => { console.error(error); process.exitCode = 1; });
+}
+
+module.exports = { fixtures, cases };

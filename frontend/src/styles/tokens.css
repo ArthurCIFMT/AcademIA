@@ -1,0 +1,32 @@
+:root {
+  color-scheme: light;
+  --ac-font: system-ui, "Segoe UI", sans-serif;
+  --ac-line-height: 1.55;
+  --ac-heading: clamp(2rem, 1.5rem + 2vw, 3.1rem);
+  --ac-subheading: 1.35rem;
+  --ac-background: #f3f6f4;
+  --ac-surface: #ffffff;
+  --ac-text: #142c30;
+  --ac-muted: #4e6264;
+  --ac-brand: #07574f;
+  --ac-brand-dark: #073b3b;
+  --ac-brand-soft: #e1f0eb;
+  --ac-border: #d5e0dc;
+  --ac-control-border: #687e7b;
+  --ac-focus: #1c57a0;
+  --ac-warning-bg: #fff5d9;
+  --ac-warning-text: #634300;
+  --ac-error-bg: #fcece9;
+  --ac-error-text: #842f24;
+  --ac-space-1: .25rem;
+  --ac-space-2: .5rem;
+  --ac-space-3: .75rem;
+  --ac-space-4: 1rem;
+  --ac-space-5: 1.5rem;
+  --ac-space-6: 2rem;
+  --ac-radius-control: .6rem;
+  --ac-radius-panel: 1rem;
+  --ac-touch-target: 44px;
+  --ac-content-width: 72rem;
+  --ac-legacy-width: 48rem;
+}

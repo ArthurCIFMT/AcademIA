@@ -319,7 +319,10 @@ UX-06 → UX-07 → UX-08 → UX-09. UX-01 entregou o
 [plano, o mapa e os protótipos](../interface/README.md).
 [As evidências](../testes/ux01-referencia-visual.md) registram a linha de base,
 28 capturas e as verificações a 320/390/768/1440 px, de teclado e contraste.
-UX-02 está PRONTO para implementar a base visual no frontend.
+UX-02 aplicou a [base visual e os componentes](../interface/componentes.md)
+ao frontend. [A verificação](../testes/ux02-base-visual.md) registrou 103 testes
+de frontend, oito rotas em quatro larguras, contraste, teclado e toque.
+UX-03 está PRONTO para aplicar a navegação por perfil e as telas de acesso.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -330,8 +333,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [UX-01](11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | CONCLUIDO |
-| [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | PRONTO |
-| [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | BLOQUEADO |
+| [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | CONCLUIDO |
+| [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | PRONTO |
 | [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
 | [UX-05](11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
 | [UX-06](11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | BLOQUEADO |

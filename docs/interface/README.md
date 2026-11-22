@@ -1,7 +1,8 @@
 # UX-01 · Referência visual do AcademIA
 
 [Abrir o protótipo local](prototipo/index.html) ·
-[Resultados da verificação](../testes/ux01-referencia-visual.md)
+[Resultados da verificação](../testes/ux01-referencia-visual.md) ·
+[Componentes implementados em UX-02](componentes.md)
 
 O protótipo começa em **Meus treinos**. Use o seletor **Área** para ver a
 navegação de cliente, instrutor, atendimento e administração. O logotipo
@@ -72,8 +73,8 @@ visível, ficha e formulário empilhados e ações que quebram linha. Em **320 p
 é preservada com quebra de texto e células estreitas. O breakpoint de 47 rem
 troca o menu para a disposição superior. O de 63 rem empilha os painéis.
 
-Em UX-02, implementar primeiro tokens, formulário e estados comuns. Para
-UX-03, aplicar menu e entrada; UX-04–UX-08 integram os fluxos por área.
+UX-02 implementou tokens, formulário e estados comuns. Para UX-03, aplicar
+menu e entrada. UX-04–UX-08 integram os fluxos por área.
 UX-09 compara a aplicação real com esta linha de base. Preservar restrições
 de saúde, recursos, avisos, autorização e status da IA durante essa evolução.
 Estado salvo e nova solicitação continuam operações diferentes. As respostas
