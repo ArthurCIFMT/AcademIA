@@ -124,3 +124,31 @@ test("cliente sem papel de instrutor não abre a manutenção de fichas", async 
   expect(await screen.findByRole("heading", { name: "Acesso não permitido" })).toBeTruthy();
   expect(request.mock.calls.map(([url]) => url)).toEqual(["/api/v1/auth/session"]);
 });
+
+test("conflito preserva o rascunho local até abrir explicitamente a revisão salva", async () => {
+  const latest = { ...workout, revisao: 2, dias: [{ ...workout.dias[0], titulo: "Dia salvo em outra aba" }] };
+  const request = mount(session(), Response.json(context), history(workout), Response.json(workout),
+    new Response(null, { status: 409 }), Response.json(latest));
+  await screen.findByText("Cliente sintético");
+  click("Editar rascunho 1");
+  await screen.findByLabelText("Título do dia");
+  fill("Título do dia", "Alteração local");
+  click("Salvar rascunho");
+  expect((await screen.findByRole("alert")).textContent).toMatch(/alterações locais continuam/);
+  expect(screen.getByLabelText<HTMLInputElement>("Título do dia").value).toBe("Alteração local");
+  click("Descartar edição e abrir revisão salva");
+  await screen.findByText("Revisão salva 2");
+  expect(screen.getByLabelText<HTMLInputElement>("Título do dia").value).toBe("Dia salvo em outra aba");
+  expect(request.mock.calls.filter(([, options]) => options.method === "PUT")).toHaveLength(1);
+});
+
+test("perda da designação ao salvar retira o cliente e os campos da tela", async () => {
+  mount(session(), Response.json(context), history(workout), Response.json(workout), new Response(null, { status: 403 }));
+  await screen.findByText("Cliente sintético");
+  click("Editar rascunho 1");
+  await screen.findByLabelText("Título do dia");
+  click("Salvar rascunho");
+  await screen.findByText("Seu acesso ao treino deste cliente não está disponível.");
+  expect(screen.queryByText("Cliente sintético")).toBeNull();
+  expect(screen.queryByLabelText("Título do dia")).toBeNull();
+});

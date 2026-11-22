@@ -1,6 +1,36 @@
-.training-review { max-width: 48rem; overflow-wrap: anywhere; }
-.training-review li, .training-review section { margin-block: 1rem; }
-.training-review fieldset { display: grid; gap: .65rem; min-width: 0; }
-.training-review textarea, .training-review select { max-width: 100%; box-sizing: border-box; }
-.training-review button { margin: .4rem .4rem .4rem 0; white-space: normal; }
-.training-review label { display: block; margin-block: .65rem; }
+.training-review li { margin-block: var(--ac-space-3); }
+.training-review fieldset {
+  display: grid;
+  gap: var(--ac-space-2);
+  min-inline-size: 0;
+  padding: 0;
+  border: 0;
+}
+.training-review legend { font-weight: 700; }
+.training-review label {
+  display: block;
+  margin-block: var(--ac-space-2);
+}
+.training-review label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: var(--ac-space-2);
+  min-block-size: var(--ac-touch-target);
+}
+.training-review .ac-button { justify-self: start; margin-block: var(--ac-space-2); }
+.review-status {
+  width: fit-content;
+  padding: var(--ac-space-1) var(--ac-space-2);
+  border-radius: var(--ac-radius-control);
+  color: var(--ac-muted);
+  background: var(--ac-background);
+  font-weight: 650;
+}
+.review-status[data-decision="ACEITO"] {
+  color: var(--ac-brand);
+  background: var(--ac-brand-soft);
+}
+.review-status[data-decision="REJEITADO"] {
+  color: var(--ac-warning-text);
+  background: var(--ac-warning-bg);
+}

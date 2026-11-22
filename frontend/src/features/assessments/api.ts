@@ -27,9 +27,10 @@ export async function getAssessments(clientId: string, page: number, signal: Abo
   return response.json() as Promise<AssessmentHistory>;
 }
 
-export async function createAssessment(clientId: string, csrf: string, body: AssessmentRequest) {
+export async function createAssessment(clientId: string, csrf: string, body: AssessmentRequest, signal: AbortSignal) {
   await requestApi(endpoint(clientId), {
     method: "POST",
+    signal,
     headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf },
     body: JSON.stringify(body),
   });

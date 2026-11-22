@@ -23,22 +23,26 @@ export type History = { itens: WorkoutMeta[]; pagina: number; limite: number; to
 export type Content = { onboarding_id: string; avaliacao_id: string | null; dias: Day[] };
 
 const base = (id: string) => "/v1/treinos/clientes/" + encodeURIComponent(id);
+export async function loadContext(clientId: string, signal: AbortSignal): Promise<Context> {
+  return (await requestApi(base(clientId) + "/contexto", { signal })).json() as Promise<Context>;
+}
 export async function loadWorkspace(clientId: string, page: number, signal: AbortSignal) {
   const [context, history] = await Promise.all([
-    requestApi(base(clientId) + "/contexto", { signal }),
+    loadContext(clientId, signal),
     requestApi(base(clientId) + "/versoes?pagina=" + page, { signal }),
   ]);
-  return { context: await context.json() as Context, history: await history.json() as History };
+  return { context, history: await history.json() as History };
 }
-export async function loadWorkout(clientId: string, versionId: string): Promise<Workout> {
-  return (await requestApi(base(clientId) + "/versoes/" + encodeURIComponent(versionId), {})).json() as Promise<Workout>;
+export async function loadWorkout(clientId: string, versionId: string, signal: AbortSignal): Promise<Workout> {
+  return (await requestApi(base(clientId) + "/versoes/" + encodeURIComponent(versionId), { signal })).json() as Promise<Workout>;
 }
 export async function saveWorkout(
   clientId: string, csrf: string, content: Content,
-  requestId: string, baseId: string | null, existing: Workout | null,
+  requestId: string, baseId: string | null, existing: Workout | null, signal: AbortSignal,
 ): Promise<Workout> {
   const response = await requestApi(base(clientId) + "/rascunhos" + (existing ? "/" + encodeURIComponent(existing.id) : ""), {
     method: existing ? "PUT" : "POST",
+    signal,
     headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf },
     body: JSON.stringify(existing
       ? { ...content, revisao: existing.revisao }

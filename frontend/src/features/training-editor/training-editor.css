@@ -1,11 +1,16 @@
 .training-editor fieldset {
   display: grid;
-  gap: 0.6rem;
+  gap: var(--ac-space-3);
   min-width: 0;
-  padding: 0.8rem;
-  border: 1px solid #cadbd4;
-  border-radius: 0.65rem;
-  background: #fff;
+  padding: var(--ac-space-4);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
+  background: var(--ac-surface);
+}
+.training-editor legend {
+  max-inline-size: 100%;
+  padding-inline: var(--ac-space-2);
+  font-weight: 700;
 }
 .training-editor label {
   display: grid;
@@ -17,19 +22,27 @@
 .training-editor textarea {
   box-sizing: border-box;
   width: 100%;
-  min-height: 44px;
-  padding: 0.35rem;
+  min-height: var(--ac-touch-target);
+  padding: var(--ac-space-2);
+  border: 1px solid var(--ac-control-border);
+  border-radius: var(--ac-radius-control);
+  background: var(--ac-surface);
+  color: var(--ac-text);
   font: inherit;
 }
 .training-editor textarea { min-height: 4rem; }
-.training-editor .training-day { background: #f4f8f6; }
+.training-editor .training-day { background: var(--ac-background); }
+.training-numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--ac-space-2) var(--ac-space-3);
+}
 .training-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-block: 0.5rem;
 }
-.training-history { padding-left: 1.25rem; overflow-wrap: anywhere; }
 .training-editor button:disabled { opacity: 0.65; cursor: default; }
 @media (max-width: 30rem) {
   .training-editor fieldset { padding: 0.55rem; }

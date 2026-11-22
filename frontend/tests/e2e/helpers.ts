@@ -102,7 +102,8 @@ export async function generate(page: Page) {
   return await response.json() as { solicitacao_id: string; estado: string; versao_publicada_id: string | null };
 }
 export async function manualEditor(page: Page, clientId: string, exercise = "Agachamento E2E") {
-  await page.goto("/area/instrutor/clientes/" + clientId + "/treinos");
+  const path = "/area/instrutor/clientes/" + clientId + "/treinos";
+  if (new URL(page.url()).pathname !== path) await page.goto(path);
   await page.getByRole("button", { name: "Novo rascunho manual", exact: true }).click();
   await page.getByLabel("Onboarding de referência").selectOption({ index: 1 });
   await page.getByRole("button", { name: "Adicionar dia", exact: true }).click();

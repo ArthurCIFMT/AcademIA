@@ -1,0 +1,66 @@
+.instructor-workspace {
+  max-inline-size: 60rem;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.instructor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ac-space-2) var(--ac-space-3);
+  margin-block: var(--ac-space-3);
+}
+
+.instructor-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--ac-touch-target);
+}
+
+.instructor-actions a[aria-current] {
+  color: var(--ac-brand-dark);
+  font-weight: 700;
+}
+
+.instructor-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  gap: var(--ac-space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.instructor-card {
+  min-inline-size: 0;
+  margin-block: var(--ac-space-3);
+  padding: var(--ac-space-4);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
+  background: var(--ac-surface);
+}
+
+.instructor-cards .instructor-card {
+  margin-block: 0;
+}
+
+.instructor-card > :first-child {
+  margin-block-start: 0;
+}
+
+.instructor-card summary {
+  cursor: pointer;
+  min-block-size: var(--ac-touch-target);
+  align-content: center;
+  color: var(--ac-brand-dark);
+  font-weight: 650;
+}
+
+.instructor-meta {
+  color: var(--ac-muted);
+}
+
+.instructor-note {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}

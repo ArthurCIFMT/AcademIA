@@ -86,11 +86,25 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await page.getByRole("checkbox", { name: "Halteres Jornada", exact: true }).check();
   await page.getByRole("button", { name: "Salvar exercício", exact: true }).click();
   await expect(page.getByText("Exercício salvo.", { exact: true })).toBeVisible();
-  await instructor.goto("/area/instrutor/clientes/" + client.id + "/avaliacoes");
+  await instructor.setViewportSize({ width: 390, height: 844 });
+  await instructor.goto("/area/instrutor/clientes");
+  await instructor.getByRole("link", { name: "Avaliações de Cliente Jornada" }).press("Enter");
+  await expect(instructor.getByRole("heading", { name: "Cliente Jornada", exact: true })).toBeVisible();
+  const health = instructor.getByText("Onboarding concluído · versão 1", { exact: true });
+  await expect(instructor.getByText("Possui alguma condição de saúde?", { exact: true })).toBeHidden();
+  await health.press("Enter");
+  await expect(instructor.getByText("Possui alguma condição de saúde?", { exact: true })).toBeVisible();
+  await health.press("Enter");
   await instructor.getByLabel("Observação da avaliação").fill("Avaliação sintética de rotina.");
   await instructor.getByRole("button", { name: "Registrar avaliação", exact: true }).click();
   await expect(instructor.getByText("Avaliação registrada.", { exact: true })).toBeVisible();
+  await instructor.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux07-avaliacoes.png", fullPage: true });
+  await instructor.getByRole("link", { name: "Fichas de treino", exact: true }).click();
+  await expect(instructor.getByRole("heading", { name: "Cliente Jornada", exact: true })).toBeVisible();
   await manualEditor(instructor, client.id, "Rosca Jornada");
+  await expect(instructor.getByRole("heading", { name: "Cliente Jornada · Versão 1" })).toBeVisible();
+  expect(await instructor.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await instructor.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux07-publicacao.png", fullPage: true });
   const published = await publishManual(instructor);
   expect(published.treino.ficha.autor_id).toBe(instructorId);
   expect(published.treino.parecer.estado).toBe("PENDENTE");
@@ -115,6 +129,25 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await signOut(clientPage); await signIn(clientPage, clientEmail);
   await clientPage.goto("/area/cliente/treinos");
   await expect(clientPage.getByText("Rosca Jornada", { exact: true })).toBeVisible();
+  const assignmentPath = "/v1/designacoes/clientes/" + client.id;
+  const assignment = await (await page.request.get("/api" + assignmentPath)).json() as { vigente: { id: string } };
+  const changed = await mutate(page, assignmentPath, {
+    instrutor_id: fixture.usuarios.instrutor_alheio.id, vigente_id: assignment.vigente.id,
+  }, "PUT");
+  expect(changed.status()).toBe(200);
+  await instructor.getByRole("button", { name: "Recarregar versão" }).click();
+  await expect(instructor.getByRole("alert")).toContainText("Seu acesso a esta ficha não está disponível.");
+  await expect(instructor.getByText("Rosca Jornada", { exact: true })).toHaveCount(0);
+  await expect(instructor.getByRole("button", { name: "Registrar parecer" })).toHaveCount(0);
+  await instructor.getByRole("navigation", { name: "Área do cliente designado" })
+    .getByRole("link", { name: "Fichas de treino", exact: true }).click();
+  await expect(instructor.getByRole("alert")).toContainText("Seu acesso ao treino deste cliente não está disponível.");
+  await expect(instructor.getByRole("button", { name: "Novo rascunho manual" })).toHaveCount(0);
+  const successor = await browser.newPage({ baseURL: origin });
+  await signIn(successor, fixture.usuarios.instrutor_alheio.email);
+  await successor.goto("/area/instrutor/clientes");
+  await successor.getByRole("link", { name: "Fichas de Cliente Jornada", exact: true }).click();
+  await expect(successor.getByRole("heading", { name: "Cliente Jornada", exact: true })).toBeVisible();
 });
 
 test("E2E-02 sessão de dois clientes, CSRF e resposta maliciosa inerte", async ({ page, browser }) => {
@@ -342,6 +375,7 @@ test("E2E-06 equipamento muda durante a publicação e API recusa", async ({ pag
   const exerciseResponse = await mutate(page, "/v1/exercicios", { nome: "Exercício de revalidação", descricao: "Fixture dependente do equipamento.", grupo_muscular: "Geral", ativo: true, dispensa_equipamento: false, combinacoes: [[equipment.id]] });
   expect(exerciseResponse.status()).toBe(201);
   const instructor = await browser.newPage({ baseURL: origin }); await signIn(instructor, fixture.usuarios.instrutor.email);
+  await instructor.setViewportSize({ width: 390, height: 844 });
   await manualEditor(instructor, fixture.usuarios.equipamentos.id, "Exercício de revalidação");
   const changed = await mutate(page, "/v1/admin/equipamentos/" + equipment.id, { nome: equipment.nome,
     ativo: true, operacional: false, revisao: equipment.revisao }, "PUT");
@@ -350,6 +384,8 @@ test("E2E-06 equipamento muda durante a publicação e API recusa", async ({ pag
   await instructor.getByRole("button", { name: "Publicar versão salva", exact: true }).click();
   expect((await refused).status()).toBe(409);
   await expect(instructor.getByRole("alert").filter({ hasText: /recursos mudaram/ })).toBeVisible();
+  await expect(instructor.getByText("Exercício de revalidação", { exact: true })).toBeVisible();
+  await instructor.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux07-conflito.png", fullPage: true });
   const denied = await mutate(instructor, "/v1/admin/equipamentos/" + equipment.id,
     { nome: equipment.nome, ativo: true, operacional: true, revisao: 2 }, "PUT");
   expect(denied.status()).toBe(403);

@@ -19,6 +19,7 @@ const detail: Detail = {
   validacao: null,
 };
 const published: Detail = { ...detail, ficha: { ...detail.ficha, estado_publicacao: "PUBLICADO", vigente: true } };
+const context = () => Response.json({ cliente_nome: "Cliente de revisão" });
 const session = (role = "INSTRUTOR") => Response.json({
   user_id: "instrutor", roles: [role], csrf_token: "csrf-sintetico",
   expires_at: new Date(Date.now() + 60000).toISOString(),
@@ -38,10 +39,11 @@ const click = (name: string) => fireEvent.click(screen.getByRole("button", { nam
 test("publica a versão salva com parecer pendente e registra avaliação posterior", async () => {
   const accepted: Detail = { ...published, parecer: { id: "parecer", estado: "ACEITO",
     instrutor_id: "instrutor", criado_em: "2026-11-10T10:00:00Z", motivo: null } };
-  const request = mount([session(), Response.json(detail),
+  const request = mount([session(), Response.json(detail), context(),
     Response.json({ treino: published, aviso_email: { estado: "FALHOU", tentativas: 1 } }),
     Response.json(accepted)]);
   await screen.findByText("Movimento sintético");
+  expect(screen.getByRole("heading", { name: "Cliente de revisão · Versão 1" })).toBeTruthy();
   expect(screen.getByRole<HTMLButtonElement>("button", { name: "Publicar versão salva" }).disabled).toBe(true);
   fireEvent.click(screen.getByRole("checkbox"));
   click("Publicar versão salva");
@@ -61,7 +63,7 @@ test("publica a versão salva com parecer pendente e registra avaliação poster
 test("falha de rede preserva motivo e chave para repetir o mesmo parecer", async () => {
   const rejected: Detail = { ...published, parecer: { id: "parecer", estado: "REJEITADO",
     instrutor_id: "instrutor", criado_em: "2026-11-10T10:00:00Z", motivo: "Rever a carga." } };
-  const request = mount([session(), Response.json(published), new Error("offline"), Response.json(rejected)]);
+  const request = mount([session(), Response.json(published), context(), new Error("offline"), Response.json(rejected)]);
   await screen.findByText("Ficha vigente");
   fireEvent.change(screen.getByLabelText("Decisão"), { target: { value: "REJEITADO" } });
   fireEvent.change(screen.getByLabelText("Motivo do parecer"), { target: { value: "Rever a carga." } });
@@ -77,13 +79,20 @@ test("falha de rede preserva motivo e chave para repetir o mesmo parecer", async
 
 test("expiração oculta conteúdo e perda de autorização limpa a versão", async () => {
   const expired: Detail = { ...published, ficha: { ...published.ficha, estado_publicacao: "CONTEUDO_EXPIRADO", vigente: false } };
-  mount([session(), Response.json(expired), new Response(null, { status: 403 })]);
+  mount([session(), Response.json(expired), context(), new Response(null, { status: 403 }), context()]);
   await screen.findByText("Conteúdo expirado");
   expect(screen.queryByText("Movimento sintético")).toBeNull();
   click("Recarregar versão");
   await screen.findByRole("alert");
   expect(screen.queryByText("Conteúdo expirado")).toBeNull();
   expect(screen.queryByRole("button", { name: "Registrar parecer" })).toBeNull();
+});
+
+test("revogação no carregamento do contexto retira também conteúdo retornado pelo detalhe", async () => {
+  mount([session(), Response.json(detail), new Response(null, { status: 403 })]);
+  await screen.findByText("Seu acesso a esta ficha não está disponível.");
+  expect(screen.queryByText("Movimento sintético")).toBeNull();
+  expect(screen.queryByRole("button", { name: "Publicar versão salva" })).toBeNull();
 });
 
 test("fila possui link autorizado e estado vazio, cliente não acessa a revisão", async () => {

@@ -44,6 +44,7 @@ const fixtures = {
   },
   "/api/v1/treinos/clientes/cliente/publicadas": { schema_version: 1, versao_vigente_id: "ficha", itens: [meta] },
   "/api/v1/treinos/clientes/cliente/publicadas/ficha/ficha": workout,
+  "/api/v1/treinos/clientes/cliente/contexto": { cliente_nome: person.nome },
   "/api/v1/treinos/clientes/cliente/versoes/ficha/revisao": workout,
   "/api/v1/clientes": paginate([person]),
 };

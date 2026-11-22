@@ -19,21 +19,21 @@ export async function readDetail(client: string, id: string, signal: AbortSignal
 export async function readQueue(page: number, signal: AbortSignal): Promise<Queue> {
   return (await requestApi("/v1/treinos/pendentes?pagina=" + page, { signal })).json() as Promise<Queue>;
 }
-async function mutate(path: string, csrf: string, body: object) {
+async function mutate(path: string, csrf: string, body: object, signal: AbortSignal) {
   return requestApi(path, { method: "POST", headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf },
-    body: JSON.stringify(body) });
+    body: JSON.stringify(body), signal });
 }
-export async function publish(client: string, detail: Detail, csrf: string, requestId: string) {
+export async function publish(client: string, detail: Detail, csrf: string, requestId: string, signal: AbortSignal) {
   const { ficha } = detail;
   return (await mutate(version(client, ficha.id) + "/publicacao", csrf, {
     solicitacao_id: requestId, revisao: ficha.revisao, onboarding_id: ficha.onboarding_id,
     versao_base_id: ficha.versao_base_id, restricoes_conferidas: true,
-  })).json() as Promise<{ treino: Detail; aviso_email: MailStatus | null }>;
+  }, signal)).json() as Promise<{ treino: Detail; aviso_email: MailStatus | null }>;
 }
 export async function review(client: string, id: string, csrf: string,
-  body: { solicitacao_id: string; estado: "ACEITO" | "REJEITADO"; motivo: string | null }): Promise<Detail> {
-  return (await mutate(version(client, id) + "/parecer", csrf, body)).json() as Promise<Detail>;
+  body: { solicitacao_id: string; estado: "ACEITO" | "REJEITADO"; motivo: string | null }, signal: AbortSignal): Promise<Detail> {
+  return (await mutate(version(client, id) + "/parecer", csrf, body, signal)).json() as Promise<Detail>;
 }
-export async function resend(client: string, id: string, csrf: string, previous: number | null): Promise<MailStatus | null> {
-  return (await mutate(version(client, id) + "/aviso", csrf, { tentativa_anterior: previous })).json() as Promise<MailStatus | null>;
+export async function resend(client: string, id: string, csrf: string, previous: number | null, signal: AbortSignal): Promise<MailStatus | null> {
+  return (await mutate(version(client, id) + "/aviso", csrf, { tentativa_anterior: previous }, signal)).json() as Promise<MailStatus | null>;
 }

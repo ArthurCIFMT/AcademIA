@@ -29,6 +29,13 @@ na revisão inicial. Entrada divergente ou revisão desatualizada retorna
 também exige conferência. A tela mantém a edição diante de falha de rede
 e oferece recarga das opções.
 
+O editor da UX-07 identifica o cliente, a versão e a revisão salva. Dias
+e exercícios têm títulos próprios. Quando o catálogo ou a disponibilidade
+muda, o editor sinaliza a alternativa anterior para conferência e mantém
+os campos locais. Após conflito de revisão, **Descartar edição e abrir
+revisão salva** é uma ação explícita. A recusa de acesso encerra a edição
+do cliente e retira os dados da tela.
+
 ## Validações técnicas
 
 Os limites do formulário são até sete dias, trinta itens por dia, título

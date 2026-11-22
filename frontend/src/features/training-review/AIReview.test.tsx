@@ -11,7 +11,7 @@ test.each(["ACEITO", "REJEITADO"] as const)("instrutor consulta contexto e regis
   context.contexto.aviso = { instrutor_designado_id: "instructor", interno_registrado: true, email_estado: "FALHOU", email_tentativas: 2 };
   const fetcher = vi.fn(async (url: string, init: RequestInit) => {
     if (url.endsWith("/auth/session")) return Response.json({ user_id: "instructor", roles: ["INSTRUTOR"], csrf_token: "csrf", expires_at: new Date(Date.now()+60000).toISOString() });
-    if (url.endsWith("/contexto")) return Response.json(context);
+    if (url.endsWith("/contexto")) return Response.json(url.includes("/v1/ia/") ? context : { cliente_nome: "Cliente de revisão" });
     if (url.endsWith("/aviso")) return Response.json({ estado: "ENVIADO", tentativas: 3 });
     if (init.method === "POST") return Response.json({ ...context.contexto.treino, parecer: { estado: decision, motivo: "Rever carga", instrutor_id: "instructor", criado_em: "2026-11-11T12:00:00Z" } });
     return Response.json(context.contexto.treino);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { ApiError } from "../../lib/api/auth";
+import { Button, StatusMessage } from "../../ui/primitives";
 import {
   assignmentHistory,
   changeAssignment,
@@ -13,6 +14,7 @@ import {
   type Page,
 } from "./api";
 import "./assignments.css";
+import "./client-workspace.css";
 
 function dateLabel(value: string) {
   return new Date(value).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
@@ -203,31 +205,34 @@ export function MyAssignmentsPage() {
   }
 
   return (
-    <section className="assignments-panel" aria-labelledby="my-clients-title">
-      <h3 id="my-clients-title">Meus clientes</h3>
+    <section className="instructor-workspace" aria-labelledby="my-clients-title">
+      <h2 id="my-clients-title">Meus clientes</h2>
+      <div className="instructor-actions">
+        <Link to="/area/instrutor/revisoes">Fichas aguardando parecer</Link>
+        <Button variant="secondary" disabled={!records && !failed} onClick={() => load(query.page)}>Atualizar clientes</Button>
+      </div>
       {records ? (
         <>
           {records.itens.length ? (
-            <ul>{records.itens.map(item => (
-              <li key={item.id}>
-                {item.nome} · Desde {dateLabel(item.inicio)}{" "}
-                <Link to={encodeURIComponent(item.id) + "/avaliacoes"} aria-label={"Avaliações de " + item.nome}>
-                  Avaliações
-                </Link>{" "}
-                <Link to={encodeURIComponent(item.id) + "/treinos"} aria-label={"Fichas de " + item.nome}>
-                  Fichas de treino
-                </Link>
+            <ul className="instructor-cards">{records.itens.map(item => (
+              <li key={item.id} className="instructor-card">
+                <h3>{item.nome}</h3>
+                <p className="instructor-meta">Sob sua responsabilidade desde <time dateTime={item.inicio}>{dateLabel(item.inicio)}</time></p>
+                <div className="instructor-actions">
+                  <Link to={encodeURIComponent(item.id) + "/avaliacoes"} aria-label={"Avaliações de " + item.nome}>Avaliações</Link>
+                  <Link to={encodeURIComponent(item.id) + "/treinos"} aria-label={"Fichas de " + item.nome}>Fichas de treino</Link>
+                </div>
               </li>
             ))}</ul>
-          ) : <p>Nenhum cliente designado nesta página.</p>}
+          ) : <StatusMessage state="empty" title="Nenhum cliente designado nesta página." />}
           <Pager label="Páginas dos meus clientes" page={records} onPage={load} />
         </>
       ) : failed ? (
         <>
-          <p role="alert">Não foi possível carregar os clientes designados.</p>
-          <button type="button" onClick={() => load(query.page)}>Tentar novamente</button>
+          <StatusMessage state="error" title="Não foi possível carregar os clientes designados." />
+          <Button variant="secondary" onClick={() => load(query.page)}>Tentar novamente</Button>
         </>
-      ) : <p role="status">Carregando clientes designados…</p>}
+      ) : <StatusMessage state="loading" title="Carregando clientes designados…" />}
     </section>
   );
 }

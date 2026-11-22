@@ -5,6 +5,14 @@ treino**, o instrutor salva um rascunho e abre **Publicar ou avaliar a versão
 salva**. A tela mostra a prescrição persistida e o acesso às avaliações/onboarding.
 O instrutor confirma que conferiu suas restrições e solicita a publicação.
 
+A UX-07 liga a fila, as avaliações e as fichas do cliente pela navegação
+profissional. A tela de revisão combina o detalhe da versão com o nome do
+cliente obtido do contexto autorizado de treinos. Autoria, revisão salva
+e estado do parecer identificam o conteúdo avaliado. A publicação e o
+parecer têm ações e confirmações independentes. Para alterar o conteúdo
+publicado, o instrutor abre as fichas do cliente e copia a versão para um
+novo rascunho.
+
 ## Validação e publicação
 
 O backend revalida designação, autoria, revisão do rascunho, onboarding atual,

@@ -248,7 +248,8 @@ com verificação no navegador e nas jornadas integradas. UX-04 entregou
 [onboarding por etapas no convite e na conta do cliente](docs/testes/ux04-onboarding-etapas.md).
 UX-05 reuniu [dúvida, geração e adaptação no Assistente](docs/testes/ux05-assistente.md).
 UX-06 reorganizou [fichas e histórico do cliente no celular](docs/testes/ux06-fichas-no-celular.md).
-UX-07 está liberado para a área de trabalho do instrutor.
+UX-07 reorganizou a [área de trabalho do instrutor](docs/testes/ux07-area-do-instrutor.md).
+UX-08 está liberado para cadastros, catálogos e operação administrativa.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
@@ -12660,6 +12661,13 @@ na revisão inicial. Entrada divergente ou revisão desatualizada retorna
 também exige conferência. A tela mantém a edição diante de falha de rede
 e oferece recarga das opções.
 
+O editor da UX-07 identifica o cliente, a versão e a revisão salva. Dias
+e exercícios têm títulos próprios. Quando o catálogo ou a disponibilidade
+muda, o editor sinaliza a alternativa anterior para conferência e mantém
+os campos locais. Após conflito de revisão, **Descartar edição e abrir
+revisão salva** é uma ação explícita. A recusa de acesso encerra a edição
+do cliente e retira os dados da tela.
+
 #### Validações técnicas
 
 Os limites do formulário são até sete dias, trinta itens por dia, título
@@ -12709,6 +12717,14 @@ TRN-03 implementa o fluxo manual do MOD-04. Em **Meus clientes → Fichas de
 treino**, o instrutor salva um rascunho e abre **Publicar ou avaliar a versão
 salva**. A tela mostra a prescrição persistida e o acesso às avaliações/onboarding.
 O instrutor confirma que conferiu suas restrições e solicita a publicação.
+
+A UX-07 liga a fila, as avaliações e as fichas do cliente pela navegação
+profissional. A tela de revisão combina o detalhe da versão com o nome do
+cliente obtido do contexto autorizado de treinos. Autoria, revisão salva
+e estado do parecer identificam o conteúdo avaliado. A publicação e o
+parecer têm ações e confirmações independentes. Para alterar o conteúdo
+publicado, o instrutor abre as fichas do cliente e copia a versão para um
+novo rascunho.
 
 #### Validação e publicação
 
@@ -13583,7 +13599,9 @@ rede, retomada do rascunho e confirmação de versão. UX-05 reuniu as três
 ações do Assistente com [testes de frontend, navegador e integração](docs/testes/ux05-assistente.md).
 UX-06 entregou navegação por dia e por versão em **Meus treinos**,
 com [evidências móveis de parecer, download e expurgo](docs/testes/ux06-fichas-no-celular.md).
-UX-07 está PRONTO.
+UX-07 conectou clientes designados, avaliações, ficha manual e parecer
+na [área de trabalho do instrutor](docs/testes/ux07-area-do-instrutor.md).
+UX-08 está PRONTO.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -13599,8 +13617,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | CONCLUIDO |
 | [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | CONCLUIDO |
 | [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | CONCLUIDO |
-| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | PRONTO |
-| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | BLOQUEADO |
+| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | CONCLUIDO |
+| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | PRONTO |
 | [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
 
 #### Pós-MVP — matrícula e controle de acesso
@@ -17872,12 +17890,13 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
-Status: UX-01 a UX-06 verificados. Consulte a
+Status: UX-01 a UX-07 verificados. Consulte a
 [linha de base](docs/testes/ux01-referencia-visual.md) e a
 [verificação dos componentes e das telas existentes](docs/testes/ux02-base-visual.md),
 além dos ensaios de [navegação e acesso](docs/testes/ux03-navegacao-e-acesso.md),
 [onboarding por etapas](docs/testes/ux04-onboarding-etapas.md),
-[Assistente](docs/testes/ux05-assistente.md) e [fichas no celular](docs/testes/ux06-fichas-no-celular.md).
+[Assistente](docs/testes/ux05-assistente.md), [fichas no celular](docs/testes/ux06-fichas-no-celular.md)
+e [área do instrutor](docs/testes/ux07-area-do-instrutor.md).
 O aceite da aplicação redesenhada segue a trilha abaixo.
 Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
 
@@ -19084,7 +19103,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
-| `docs/arquitetura/fichas-manuais.md` | `3b54610f7625eeda0e5f08bb17a128f5707aed6848a31907bd1f49f40d4d1007` |
+| `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
@@ -19098,7 +19117,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `27f7fad51f650505cd72ea4ef64a61ff3c7481b401485f16678b0e28e0af60d1` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
-| `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
+| `docs/arquitetura/publicacao-e-parecer.md` | `7023dc870367f5e9436e8328dc6cec2b689cef745f08b83901c45c8fb2826425` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `eedca2de2fc1cf8d20173bc8b0766a33589299cdd5cdb202ece4b14a7ef3ddca` |
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
@@ -19106,7 +19125,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `5b034a809c96a455e6f45e304b010648f3ef7e5a43a718acf1d259f43b7e4b80` |
+| `docs/especificacao/visao-geral.md` | `cb403bc1162ea5cfe16770e9dbff9bfe46da4e2195a6240e27e3cc773777c10c` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19119,7 +19138,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `da560124523fe9bf0e73195316bcb1ac839f07ec83b5acc65b3afafa65bbbcb5` |
+| `docs/prompts/README.md` | `3ae5d737c8bfb157f2f620b7ea1b9295f113b854fb5ede757a504155a99608b3` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `86c684d482b1dbe0459736da5c01eaa31d04a37419edd28b54f3b9af9274eb5a` |
@@ -19163,7 +19182,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
-| `docs/testes/reformulacao-visual.md` | `bf3df50823a2ad4cfafd5e191b5c07a398fed2bfb91e037202248877b7ab1eb1` |
+| `docs/testes/reformulacao-visual.md` | `02d17e79a17fb9c75d3967e73c0568fffdbfea6d16428cacde600c062b474f29` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |
