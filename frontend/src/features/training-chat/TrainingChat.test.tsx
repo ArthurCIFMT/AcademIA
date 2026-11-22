@@ -19,16 +19,16 @@ test("histórico anterior continua legível após atualização e não dispara g
  expect(screen.getByText(turn.resposta!.texto)).toBeTruthy();
  expect(fetcher.mock.calls.every(([,options])=>options.method!=="POST")).toBe(true);
 });
-function mount(handler:(url:string,options:RequestInit)=>Promise<Response>, query="") {
+function mount(handler:(url:string,options:RequestInit)=>Promise<Response>, query="", mode: "DUVIDA" | "ADAPTACAO" = "DUVIDA") {
  const fetcher=vi.fn(handler);vi.stubGlobal("fetch",fetcher);vi.spyOn(crypto,"randomUUID").mockReturnValue(id);
- render(<MemoryRouter initialEntries={["/area/cliente/assistente"+query]}><TrainingChatPage csrf="csrf-test"/></MemoryRouter>);
+ render(<MemoryRouter initialEntries={["/area/cliente/assistente"+query]}><TrainingChatPage csrf="csrf-test" mode={mode}/></MemoryRouter>);
  return fetcher;
 }
 const click=(name:string)=>fireEvent.click(screen.getByRole("button",{name}));
 test("distingue uma dúvida sem evidência de uma falha técnica", async()=>{
  mount(async()=>Response.json([{...turn,estado:"ABSTENCAO",motivo:"RESPOSTA_VALIDADA",resposta:null,fontes:[]}]));
  expect(await screen.findByText("As fontes consultadas não sustentaram uma resposta para esta pergunta.")).toBeTruthy();
- expect(screen.getByText(/onboarding é usado na geração de ficha/)).toBeTruthy();
+ expect(screen.getByText(/A dúvida não altera sua ficha/)).toBeTruthy();
  expect(screen.queryByRole("alert")).toBeNull();
 });
 
@@ -39,7 +39,7 @@ test("dúvida sem ficha envia somente mensagem e texto retornado é inerte",asyn
   if(url.includes("?page="))return Response.json(sent?[turn]:[]);
   return Response.json(turn);
  });
- fireEvent.change(screen.getByLabelText("Mensagem"),{target:{value:"Dúvida sintética"}});
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }),{target:{value:"Dúvida sintética"}});
  click("Enviar dúvida");
  await screen.findByText(turn.resposta!.texto);
  expect(document.querySelector("script")).toBeNull();
@@ -57,7 +57,7 @@ test("erro de transporte permite repetição explícita do mesmo ID sem loop",as
   if(options.method==="POST"){posts++;if(posts===1)throw Error("offline");return Response.json(turn);}
   return Response.json(url.includes("?page=")?[]:turn);
  });
- fireEvent.change(screen.getByLabelText("Mensagem"),{target:{value:"Dúvida sintética"}});
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }),{target:{value:"Dúvida sintética"}});
  click("Enviar dúvida");
  await screen.findByText(/Não foi possível confirmar a resposta/);
  expect(posts).toBe(1);
@@ -73,10 +73,9 @@ test("adaptação exige contexto e confirmação do onboarding, com alvo explíc
   if(url.endsWith("/contexto/adaptacao"))return Response.json({versao_base_id:"base",onboarding_id:"snapshot",snapshot_numero:2,dias:["Dia A","Dia B"]});
   if(options.method==="POST"){done=true;return Response.json(adapted);}
   return Response.json(url.includes("?page=")?done?[adapted]:[]:adapted);
- });
- fireEvent.change(screen.getByLabelText("Objetivo"),{target:{value:"ADAPTACAO"}});
- await screen.findByText(/Onboarding confirmado disponível/);
- fireEvent.change(screen.getByLabelText("Mensagem"),{target:{value:"Adaptar somente o dia A"}});
+ }, "?modo=adaptacao", "ADAPTACAO");
+ await screen.findByText(/Dados de treino confirmados, versão 2/);
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }),{target:{value:"Adaptar somente o dia A"}});
  expect(screen.getByRole<HTMLButtonElement>("button",{name:"Solicitar adaptação"}).disabled).toBe(true);
  fireEvent.click(screen.getByRole("checkbox"));
  click("Solicitar adaptação");
@@ -84,6 +83,25 @@ test("adaptação exige contexto e confirmação do onboarding, com alvo explíc
  expect(screen.getByRole("link",{name:"Consultar versão e parecer"})).toBeTruthy();
  const body=JSON.parse(String(fetcher.mock.calls.find(([,o])=>o.method==="POST")![1].body));
  expect(body).toMatchObject({finalidade:"ADAPTACAO",onboarding_id:"snapshot",versao_base_id:"base",dia_alvo:1});
+});
+
+test("nova base invalida a confirmação anterior ao consultar estado", async () => {
+ let version = 1;
+ const fetcher = mount(async url => url.endsWith("/contexto/adaptacao")
+  ? Response.json({ versao_base_id: "base-" + version, onboarding_id: "snapshot-" + version, snapshot_numero: version, dias: ["Dia A", "Dia B"] })
+  : Response.json([]), "?modo=adaptacao", "ADAPTACAO");
+ await screen.findByText(/Dados de treino confirmados, versão 1/);
+ fireEvent.change(screen.getByLabelText("Dia que desejo adaptar"), { target: { value: "2" } });
+ fireEvent.click(screen.getByRole("checkbox"));
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }), { target: { value: "Ajustar o treino" } });
+ expect(screen.getByRole<HTMLButtonElement>("button", { name: "Solicitar adaptação" }).disabled).toBe(false);
+ version = 2;
+ click("Consultar estado e histórico");
+ await screen.findByText(/Dados de treino confirmados, versão 2/);
+ expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(false);
+ expect(screen.getByRole<HTMLButtonElement>("button", { name: "Solicitar adaptação" }).disabled).toBe(true);
+ expect(screen.getByLabelText<HTMLSelectElement>("Dia que desejo adaptar").value).toBe("1");
+ expect(fetcher.mock.calls.every(([, options]) => options.method !== "POST")).toBe(true);
 });
 test("perda de autorização limpa histórico e fonte, sem chamar LLM pelo navegador",async()=>{
  let denied=false;
@@ -99,7 +117,7 @@ test("429 não dispara repetição automática e fonte javascript não vira link
  const fetcher=mount(async(url,options)=>options.method==="POST"?new Response(null,{status:429}):Response.json(url.includes("?page=")?[unsafe]:unsafe));
  await screen.findByText(turn.resposta!.texto);
  expect(screen.queryByRole("link",{name:"Fonte sintética"})).toBeNull();
- fireEvent.change(screen.getByLabelText("Mensagem"),{target:{value:"Nova dúvida"}});
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }),{target:{value:"Nova dúvida"}});
  click("Enviar dúvida");
  await screen.findByText(/Limite de seis solicitações/);
  await waitFor(()=>expect(fetcher.mock.calls.filter(([,o])=>o.method==="POST")).toHaveLength(1));
@@ -114,12 +132,24 @@ test("não consulta UUID ainda em criação e retoma somente após o envio",asyn
   if(url.includes("?page="))return Response.json(done?[turn]:[]);
   return done?Response.json(turn):new Response(null,{status:404});
  });
- fireEvent.change(screen.getByLabelText("Mensagem"),{target:{value:"Dúvida sintética"}});
+ fireEvent.change(screen.getByRole("textbox", { name: "Mensagem" }),{target:{value:"Dúvida sintética"}});
  click("Enviar dúvida");
+ fireEvent.submit(screen.getByRole("textbox", { name: "Mensagem" }).closest("form")!);
  await screen.findByRole("button",{name:"Enviando…"});
  expect(fetcher.mock.calls.some(([url,o])=>o.method!=="POST"&&url.endsWith("/"+id))).toBe(false);
  done=true;finish(Response.json(turn));
  await screen.findByText(turn.resposta!.texto);
  expect(screen.queryByRole("alert")).toBeNull();
  expect(fetcher.mock.calls.filter(([,o])=>o.method==="POST")).toHaveLength(1);
+});
+
+test("recusa do recibo aborta histórico concorrente e impede retorno de conteúdo privado", async () => {
+ let finish!: (result: Response) => void;
+ const lateHistory = new Promise<Response>(resolve => { finish = resolve; });
+ const fetcher = mount(async url => url.includes("?page=") ? lateHistory : new Response(null, { status: 401 }), "?solicitacao=" + id);
+ await screen.findByText(/Seu acesso ao chat/);
+ expect(fetcher.mock.calls.find(([url]) => url.includes("?page="))?.[1].signal?.aborted).toBe(true);
+ finish(Response.json([turn]));
+ expect(screen.queryByRole("textbox", { name: "Mensagem" })).toBeNull();
+ expect(screen.queryByText(turn.resposta!.texto)).toBeNull();
 });

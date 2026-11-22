@@ -30,8 +30,7 @@ type MenuItem = { path: string; label: string };
 const tasks: Record<Role, MenuItem[]> = {
   CLIENTE: [
     { path: paths.clientTraining, label: "Meus treinos" },
-    { path: paths.clientAssistant, label: "Assistente de treino" },
-    { path: paths.clientGeneration, label: "Gerar treino com IA" },
+    { path: paths.clientAssistant, label: "Assistente" },
     { path: paths.clientOnboarding, label: "Meus dados de treino" },
     { path: paths.equipmentCatalog, label: "Equipamentos disponíveis" },
   ],

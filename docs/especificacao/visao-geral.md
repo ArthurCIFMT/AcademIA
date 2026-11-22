@@ -228,7 +228,8 @@ navegador com dados sintéticos. UX-02 implementou a
 UX-03 aplicou o padrão à [navegação por perfil e às telas de acesso](../interface/navegacao-e-acesso.md),
 com verificação no navegador e nas jornadas integradas. UX-04 entregou
 [onboarding por etapas no convite e na conta do cliente](../testes/ux04-onboarding-etapas.md).
-UX-05 está liberado para a experiência do assistente e da geração de treino.
+UX-05 reuniu [dúvida, geração e adaptação no Assistente](../testes/ux05-assistente.md).
+UX-06 está liberado para fichas e histórico do cliente no celular.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 

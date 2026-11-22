@@ -17,6 +17,14 @@ test("quota esgotada explica a falha sem repetir a chamada", async () => {
   expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
 });
 
+test("limite HTTP de geração permanece legível enquanto a consulta retorna 404", async () => {
+  const fetcher = mount(async (_, init) => new Response(null, { status: init.method === "POST" ? 429 : 404 }));
+  click("Solicitar geração");
+  expect(await screen.findByText(/O limite de solicitações foi atingido/)).toBeTruthy();
+  expect(screen.queryByText(/Consultando solicitação/)).toBeNull();
+  expect(fetcher.mock.calls.filter(([, init]) => init.method === "POST")).toHaveLength(1);
+});
+
 function mount(handler: (url: string, init: RequestInit) => Promise<Response>, query = "") {
   const fetcher = vi.fn(handler);
   vi.stubGlobal("fetch", fetcher);
@@ -79,6 +87,18 @@ test("cancelamento em voo não abre segunda geração", async () => {
   finish(Response.json(receipt("CANCELADA")));
   await waitFor(() => expect(screen.getByRole("button", { name: "Preparar nova solicitação" })).toBeTruthy());
   expect(fetcher.mock.calls.filter(([, init]) => init.method === "POST")).toHaveLength(1);
+});
+
+test("perda de autorização na consulta aborta geração concorrente", async () => {
+  let finish!: (response: Response) => void;
+  const pending = new Promise<Response>(resolve => { finish = resolve; });
+  const fetcher = mount(async (_, init) => init.method === "POST" ? pending : new Response(null, { status: 401 }));
+  click("Solicitar geração");
+  await screen.findByText(/Seu acesso a esta solicitação/);
+  expect(fetcher.mock.calls.find(([, init]) => init.method === "POST")?.[1].signal?.aborted).toBe(true);
+  finish(Response.json(receipt()));
+  expect(screen.queryByText("Ficha publicada")).toBeNull();
+  expect(screen.queryByRole("button", { name: "Solicitar geração" })).toBeNull();
 });
 
 test("perda de autorização remove ficha e fontes do acompanhamento", async () => {

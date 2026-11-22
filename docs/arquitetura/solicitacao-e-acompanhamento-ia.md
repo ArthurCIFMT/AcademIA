@@ -83,6 +83,16 @@ O instrutor vê a tentativa realmente salva, inclusive ao abrir a página depois
 A consulta ao aviso acompanha o destinatário atualmente designado, sem expor e-mail,
 corpo ou credenciais, e sem recriar aviso de um destinatário anterior.
 
+## Integração visual em UX-05
+
+A ação **Gerar ficha** do Assistente usa a mesma rota
+`/area/cliente/treino-ia`, inclusive nos links antigos com
+`?solicitacao=<UUID>`. Consultar o recibo e preparar outro pedido
+são ações distintas. Só **Solicitar geração** envia um POST com novo UUID.
+A tela mostra publicação e parecer separadamente, mantém as fontes com
+localização bibliográfica e distingue limite do sistema, quota do provedor,
+indisponibilidade, bloqueio da triagem e falta de evidência.
+
 ## Verificação
 
 [Comandos e resultados](../testes/comandos.md#acompanhamento-e-interface-ai-04).

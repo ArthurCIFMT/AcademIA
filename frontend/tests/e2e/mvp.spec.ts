@@ -121,7 +121,7 @@ test("E2E-02 sessão de dois clientes, CSRF e resposta maliciosa inerte", async 
   let dialogs = 0, attackRequests = 0;
   page.on("dialog", dialog => { dialogs++; void dialog.dismiss(); });
   page.on("request", req => { if (req.url().includes("e2e-ataque")) attackRequests++; });
-  await page.getByLabel("Mensagem", { exact: true }).fill("E2E_RENDERIZACAO");
+  await page.getByRole("textbox", { name: "Mensagem", exact: true }).fill("E2E_RENDERIZACAO");
   const answered = page.waitForResponse(r => r.url().endsWith("/api/v1/ia/chat") && r.request().method() === "POST");
   await page.getByRole("button", { name: "Enviar dúvida", exact: true }).click();
   const turn = await (await answered).json() as { solicitacao_id: string };
@@ -143,9 +143,13 @@ test("E2E-02 sessão de dois clientes, CSRF e resposta maliciosa inerte", async 
   const oldCsrf = await page.request.post("/api/v1/ia/chat", { headers: { Origin: origin, "X-CSRF-Token": aSession.csrf_token },
     data: { solicitacao_id: randomUUID(), mensagem: "Token da outra sessão", finalidade: "DUVIDA" } });
   expect(oldCsrf.status()).toBe(403);
-  await page.getByLabel("Mensagem", { exact: true }).fill("O que é cadência?");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.getByRole("textbox", { name: "Mensagem", exact: true }).fill("O que é cadência?");
   await page.getByRole("button", { name: "Enviar dúvida", exact: true }).click();
   await expect(page.getByText("Resposta sintética de teste: cadência é o tempo de uma repetição.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Documento sintético" }).first()).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux05-duvida.png", fullPage: true });
 });
 
 test("E2E-03 triagem grave, NAO_SEI e onboarding ausente", async ({ browser }) => {
@@ -159,9 +163,23 @@ test("E2E-03 triagem grave, NAO_SEI e onboarding ausente", async ({ browser }) =
   const receipt = await generate(page); expect(receipt.estado).toBe("PUBLICADA");
   await expect(page.getByRole("article", { name: "Ficha gerada" })).toBeVisible();
   await page.goto("/area/cliente/assistente");
-  await page.getByLabel("Mensagem", { exact: true }).fill("Posso tirar uma dúvida sem parecer?");
-  await page.getByRole("button", { name: "Enviar dúvida", exact: true }).click();
-  await expect(page.getByText("Resposta sintética de teste: cadência é o tempo de uma repetição.", { exact: true })).toBeVisible();
+  let chatPosts = 0;
+  page.on("request", request => {
+    if (request.method() === "POST" && request.url().endsWith("/api/v1/ia/chat")) chatPosts++;
+  });
+  const send = page.getByRole("button", { name: "Enviar dúvida", exact: true });
+  for (let number = 1; number <= 7; number++) {
+    const message = page.getByRole("textbox", { name: "Mensagem", exact: true });
+    await message.fill("Posso tirar uma dúvida sem parecer? Pergunta " + number);
+    const reply = page.waitForResponse(response => response.request().method() === "POST" && response.url().endsWith("/api/v1/ia/chat"));
+    await send.press("Enter");
+    expect((await reply).status()).toBe(number < 7 ? 200 : 429);
+    if (number < 7) await expect(message).toHaveValue("");
+  }
+  await expect(page.getByRole("alert")).toContainText("Limite de seis solicitações por minuto");
+  await page.getByRole("button", { name: "Consultar estado e histórico" }).click();
+  await expect(page.getByText("Resposta sintética de teste: cadência é o tempo de uma repetição.", { exact: true }).first()).toBeVisible();
+  expect(chatPosts).toBe(7);
 });
 
 test("E2E-04 geração única, confirmação do onboarding e adaptação versionada", async ({ page, browser }) => {
@@ -171,13 +189,33 @@ test("E2E-04 geração única, confirmação do onboarding e adaptação version
   const noticeIds = async () => (await (await coach.request.get("/api/v1/notificacoes/pendentes")).json() as { id: string }[]).map(v => v.id).sort();
   const noticesBefore = await noticeIds();
   await signIn(page, client.email);
-  const first = await generate(page); expect(first.estado).toBe("PUBLICADA");
+  await page.setViewportSize({ width: 390, height: 844 });
+  const writes: string[] = [];
+  page.on("request", request => {
+    const path = new URL(request.url()).pathname;
+    if (request.method() === "POST" && path.startsWith("/api/v1/ia/")) writes.push(path);
+  });
+  await page.goto("/area/cliente/assistente");
+  const actions = page.getByRole("navigation", { name: "Ações do assistente" });
+  await actions.getByRole("link", { name: "Gerar ficha" }).press("Enter");
+  const submit = page.getByRole("button", { name: "Solicitar geração", exact: true });
+  await expect(submit).toBeVisible();
+  expect(writes).toEqual([]);
+  const generated = page.waitForResponse(response =>
+    response.request().method() === "POST" && response.url().endsWith("/api/v1/ia/fichas/execucoes"));
+  await submit.press("Enter");
+  const first = await (await generated).json() as { estado: string; solicitacao_id: string; versao_publicada_id: string };
+  expect(first.estado).toBe("PUBLICADA");
   const noticesAfter = await noticeIds();
   expect(noticesAfter.filter(id => !noticesBefore.includes(id))).toHaveLength(1);
   const replay = await mutate(page, "/v1/ia/fichas/execucoes", { solicitacao_id: first.solicitacao_id });
   expect((await replay.json()).versao_publicada_id).toBe(first.versao_publicada_id);
   await page.reload(); await page.getByRole("button", { name: "Consultar estado salvo", exact: true }).click();
   await expect(page.getByText("Versão 1 · Vigente", { exact: true })).toBeVisible();
+  await expect(page.getByText("Parecer do instrutor · Pendente", { exact: true })).toBeVisible();
+  expect(writes).toEqual(["/api/v1/ia/fichas/execucoes"]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux05-geracao.png", fullPage: true });
   expect(await noticeIds()).toEqual(noticesAfter);
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/area/cliente/onboarding");
@@ -198,15 +236,21 @@ test("E2E-04 geração única, confirmação do onboarding e adaptação version
   await expect(page.getByText(/Versão 2 concluída/)).toBeVisible();
   const before = await (await page.request.get("/api/v1/treinos/clientes/" + client.id + "/publicadas/" + first.versao_publicada_id + "/ficha")).json();
   await page.goto("/area/cliente/assistente");
-  await page.getByLabel("Objetivo", { exact: true }).selectOption("ADAPTACAO");
+  await actions.getByRole("link", { name: "Adaptar um dia" }).press("Enter");
+  await expect(actions.getByRole("link", { name: "Adaptar um dia" })).toHaveAttribute("aria-current", "page");
+  expect(writes).toEqual(["/api/v1/ia/fichas/execucoes"]);
   await expect(page.getByRole("button", { name: "Solicitar adaptação", exact: true })).toBeDisabled();
+  await expect(page.getByLabel("Dia que desejo adaptar")).toHaveValue("1");
   await page.getByLabel("Conferi e confirmei no onboarding os dados relevantes para esta adaptação").check();
-  await page.getByLabel("Mensagem", { exact: true }).fill("Ajustar somente o primeiro dia, contexto já confirmado.");
+  await page.getByRole("textbox", { name: "Mensagem", exact: true }).fill("Ajustar somente o primeiro dia, contexto já confirmado.");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux05-adaptacao.png", fullPage: true });
   const adapted = page.waitForResponse(r => r.url().endsWith("/api/v1/ia/chat") && r.request().method() === "POST");
   await page.getByRole("button", { name: "Solicitar adaptação", exact: true }).click();
   const result = await (await adapted).json(); expect(result.estado).toBe("PUBLICADA");
   await page.getByRole("button", { name: "Comparar versões", exact: true }).click();
   await expect(page.getByRole("region", { name: "Diferenças da adaptação" })).toBeVisible();
+  expect(writes).toEqual(["/api/v1/ia/fichas/execucoes", "/api/v1/ia/chat"]);
   const after = await (await page.request.get("/api/v1/treinos/clientes/" + client.id + "/publicadas/" + result.versao_publicada_id + "/ficha")).json();
   expect(after.ficha.numero).toBe(2); expect(after.parecer.estado).toBe("PENDENTE");
   expect(after.ficha.dias[1]).toEqual(before.ficha.dias[1]);
@@ -269,9 +313,9 @@ test("E2E-06 equipamento muda durante a publicação e API recusa", async ({ pag
 test("E2E-07 treino manual continua após indisponibilidade da IA", async ({ page, browser }) => {
   const client = fixture.usuarios.manual;
   await signIn(page, client.email); await page.goto("/area/cliente/assistente");
-  await page.getByLabel("Mensagem", { exact: true }).fill("Dúvida durante indisponibilidade.");
+  await page.getByRole("textbox", { name: "Mensagem", exact: true }).fill("Dúvida durante indisponibilidade.");
   await page.getByRole("button", { name: "Enviar dúvida", exact: true }).click();
-  await expect(page.getByText("O serviço não conseguiu concluir a resposta", { exact: true })).toBeVisible();
+  await expect(page.getByText("O assistente está indisponível no momento. Tente mais tarde.", { exact: true })).toBeVisible();
   const instructor = await browser.newPage({ baseURL: origin }); await signIn(instructor, fixture.usuarios.instrutor.email);
   await manualEditor(instructor, client.id); await publishManual(instructor);
   await page.goto("/area/cliente/treinos");

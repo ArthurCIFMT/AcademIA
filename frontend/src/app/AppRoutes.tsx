@@ -1,5 +1,3 @@
-import { TrainingChatPage } from "../features/training-chat/TrainingChat";
-import { AITrainingPage } from "../features/ai-training/AITraining";
 import { Link, Navigate, Outlet, Route, Routes, useLocation, useMatch, useOutletContext } from "react-router-dom";
 
 import { AssessmentPage } from "../features/assessments/AssessmentPage";
@@ -21,6 +19,7 @@ import { ServiceStatus } from "../features/status/ServiceStatus";
 import { roles, type Role, type Session } from "../lib/api/auth";
 import { Button, StatusMessage } from "../ui/primitives";
 import { areas, paths } from "./areaNavigation";
+import { AssistantPage } from "./AssistantPage";
 import { AreaFrame, PublicFrame, PublicLayout } from "./Frames";
 
 function SessionBoundary() {
@@ -81,7 +80,7 @@ function AccessDenied() {
   );
 }
 
-type Feature = "training-chat" | "ai-training" | "staff" | "clients" | "assignments" | "my-assignments"
+type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
   | "training-queue" | "my-training" | "corpus";
 
@@ -97,8 +96,7 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "assignments": return <AssignmentPage csrf={csrf} />;
     case "training-review": return <TrainingReviewPage key={userId} csrf={csrf} userId={userId} />;
     case "training-queue": return <TrainingQueuePage key={userId} />;
-    case "training-chat": return <TrainingChatPage key={userId} csrf={csrf} />;
-    case "ai-training": return <AITrainingPage key={userId} csrf={csrf} />;
+    case "assistant": return <AssistantPage key={userId} csrf={csrf} />;
     case "my-training": return <MyTrainingPage key={userId} clientId={userId} />;
     case "training-editor": return <WorkoutEditorPage key={userId} csrf={csrf} userId={userId} />;
     case "assessments": return <AssessmentPage key={userId} csrf={csrf} />;
@@ -130,7 +128,8 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: Fe
   }
   const role = requiredRole && allowed.includes(requiredRole) ? requiredRole : undefined;
   const maintenance = import.meta.env.VITE_CORPUS_MAINTENANCE_ENABLED === "true";
-  const activePath = feature === "training-review" ? paths.reviews
+  const activePath = feature === "assistant" ? paths.clientAssistant
+    : feature === "training-review" ? paths.reviews
     : feature === "training-editor" || feature === "assessments" ? paths.assignedClients
       : pathname.replace(/\/+$/, "").toLowerCase();
   return (
@@ -180,8 +179,8 @@ export function AppRoutes() {
         <Route path="/area/instrutor/clientes/:clientId/treinos/:versionId/revisao" element={<AreaPage requiredRole="INSTRUTOR" feature="training-review" />} />
         <Route path="/area/instrutor/clientes/:clientId/treinos" element={<AreaPage requiredRole="INSTRUTOR" feature="training-editor" />} />
         <Route path="/area/instrutor/clientes/:clientId/avaliacoes" element={<AreaPage requiredRole="INSTRUTOR" feature="assessments" />} />
-        <Route path={paths.clientAssistant} element={<AreaPage requiredRole="CLIENTE" feature="training-chat" />} />
-        <Route path={paths.clientGeneration} element={<AreaPage requiredRole="CLIENTE" feature="ai-training" />} />
+        <Route path={paths.clientAssistant} element={<AreaPage requiredRole="CLIENTE" feature="assistant" />} />
+        <Route path={paths.clientGeneration} element={<AreaPage requiredRole="CLIENTE" feature="assistant" />} />
         <Route path={paths.clientTraining} element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
         <Route path={paths.clientOnboarding} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
         {roles.map(role => <Route key={role} path={areas[role].path} element={<AreaPage requiredRole={role} />} />)}

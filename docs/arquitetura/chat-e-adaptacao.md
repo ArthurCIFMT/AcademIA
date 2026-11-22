@@ -153,6 +153,17 @@ remove conteúdo privado; retomada usa UUID na URL e somente GET.
 Falha/429 não abre retry automático. A confirmação de adaptação é invalidada se
 snapshot ou base mudar. A ficha publicada abre no recurso existente de consulta.
 
+UX-05 apresenta Dúvida, Geração e Adaptação sob a entrada **Assistente** da
+área do cliente. `/area/cliente/assistente` abre Dúvida e
+`/area/cliente/assistente?modo=adaptacao` abre Adaptação. O histórico paginado
+identifica a finalidade de cada mensagem; a solicitação selecionada aparece
+junto ao formulário. Fontes exibem título, página ou intervalo de linhas.
+Em adaptação, a interface mostra a ficha vigente, a versão do onboarding e
+o dia-alvo. Uma mudança de contexto exige nova confirmação. Ler histórico,
+contexto, recibo ou diferenças continua sem enviar pedido à IA. Se uma
+requisição privada retornar 401 ou 403, as demais requisições da tela são
+abortadas e o conteúdo privado é retirado da interface.
+
 Mensagens e documentos são dados sem autoridade para SQL, ferramentas,
 permissões ou publicação. JSON Schema, referências reais, titularidade, validações
 em código e publicação por contrato limitam os efeitos. Não alegar imunidade
