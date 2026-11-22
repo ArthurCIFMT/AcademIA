@@ -1,4 +1,4 @@
-import { requestApi } from "../../lib/api/auth";
+import { ApiError, requestApi } from "../../lib/api/auth";
 
 export type OpinionState = "PENDENTE" | "ACEITO" | "REJEITADO";
 export type Summary = {
@@ -21,13 +21,31 @@ export type Workout = {
 export type Workspace = { history: History; workout: Workout | null; removed: boolean };
 const base = (clientId: string) => "/v1/treinos/clientes/" + encodeURIComponent(clientId) + "/publicadas";
 
+export function removedVersion(history: History, versionId: string): Workspace {
+  return {
+    history: {
+      ...history,
+      versao_vigente_id: history.versao_vigente_id === versionId ? null : history.versao_vigente_id,
+      itens: history.itens.filter(item => item.id !== versionId),
+    },
+    workout: null,
+    removed: true,
+  };
+}
+
 export async function loadTraining(clientId: string, versionId: string | null, signal: AbortSignal): Promise<Workspace> {
   const history = await (await requestApi(base(clientId), { signal })).json() as History;
   const selected = versionId ?? history.versao_vigente_id;
   if (!selected) return { history, workout: null, removed: false };
   if (!history.itens.some((item) => item.id === selected)) return { history, workout: null, removed: true };
-  const workout = await (await requestApi(base(clientId) + "/" + encodeURIComponent(selected) + "/ficha", { signal })).json() as Workout;
-  return { history, workout, removed: false };
+  try {
+    const response = await requestApi(base(clientId) + "/" + encodeURIComponent(selected) + "/ficha", { signal });
+    return { history, workout: await response.json() as Workout, removed: false };
+  } catch (error) {
+    // A versão pode expirar entre a listagem e a leitura.
+    if (error instanceof ApiError && error.status === 404) return removedVersion(history, selected);
+    throw error;
+  }
 }
 
 export async function downloadTraining(clientId: string, versionId: string, signal: AbortSignal) {

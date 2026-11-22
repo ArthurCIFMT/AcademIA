@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, expect, test, vi } from "vitest";
 
 import { App } from "../../App";
+import { sampleContext } from "../ai-training/fixtures";
 import { downloadTraining, type History, type OpinionState, type Workout } from "./api";
 
 const route = "/area/cliente/treinos";
@@ -50,12 +51,13 @@ test.each<OpinionState>(["PENDENTE", "ACEITO", "REJEITADO"])("exibe dias e presc
   mount(session(), Response.json(history), Response.json({ ...workout,
     parecer: { ...workout.parecer, estado: state, motivo: state === "REJEITADO" ? "Motivo sintético" : null } }));
   await screen.findByText("Movimento sintético");
-  expect(screen.getByText("Dia A")).toBeTruthy();
-  expect(screen.getByText("Dia B")).toBeTruthy();
+  expect(screen.getByRole("heading", { name: "Dia A" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Dia B" })).toBeTruthy();
   expect(screen.getByText("12,50 kg")).toBeTruthy();
   expect(screen.getByText("60 segundos")).toBeTruthy();
   expect(screen.getByText("2-0-2")).toBeTruthy();
   expect(screen.getByText("Observações · Prescrição sintética")).toBeTruthy();
+  fireEvent.click(screen.getByText("Detalhes do parecer e da autoria"));
   expect(screen.getByText("Identificação do autor · instrutor")).toBeTruthy();
   expect(screen.getByRole("note").textContent).toMatch(/equipamento indisponível/);
   expect(screen.getByRole("button", { name: "Exportar ficha em JSON" })).toBeTruthy();
@@ -67,15 +69,85 @@ test("histórico recarrega versão escolhida e retira conteúdo que deixou de es
   const versions = { ...history, itens: [summary, older] };
   const request = mount(session(), Response.json(versions), Response.json(workout),
     Response.json(versions), Response.json({ ...workout, ficha: { ...workout.ficha, ...older,
-      dias: [{ titulo: "Treino histórico", itens: [] }] } }), Response.json(history));
+      dias: [{ titulo: "Treino histórico", itens: [] }] } }), Response.json(history),
+    Response.json(history), Response.json(workout));
   await screen.findByText("Movimento sintético");
+  fireEvent.click(screen.getByText("Histórico de versões"));
   fireEvent.change(screen.getByLabelText("Versão da ficha"), { target: { value: older.id } });
-  await screen.findByText("Treino histórico");
+  await screen.findByRole("heading", { name: "Treino histórico" });
+  expect(screen.getByText("Ficha vigente · Versão 2")).toBeTruthy();
+  expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 1 · Histórica" }));
   click("Atualizar fichas");
   await screen.findByText("A versão selecionada deixou de estar disponível.");
   expect(screen.queryByText("Treino histórico")).toBeNull();
   expect(screen.queryByRole("button", { name: "Exportar ficha em JSON" })).toBeNull();
   expect(request.mock.calls.map(([url]) => url)).toContain(root + "/versao-1/ficha");
+  click("Ver ficha vigente");
+  await screen.findByText("Movimento sintético");
+  expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 2 · Vigente" }));
+});
+
+test("troca o dia sem nova consulta e diferencia carga zero de dado ausente", async () => {
+  const twoDays = structuredClone(workout);
+  twoDays.ficha.dias[1].itens = [{
+    ...twoDays.ficha.dias[0].itens[0], carga_kg: "0.00", cadencia: null, observacoes: "Pausa sintética",
+    equipamento_ids: [], exercicio_snapshot: {
+      ...twoDays.ficha.dias[0].itens[0].exercicio_snapshot, nome: "Exercício do segundo dia", dispensa_equipamento: true,
+    },
+  }];
+  const request = mount(session(), Response.json(history), Response.json(twoDays),
+    Response.json(history), Response.json(twoDays));
+  await screen.findByText("Movimento sintético");
+  click("Dia B");
+  expect(screen.queryByText("Movimento sintético")).toBeNull();
+  expect(screen.getByText("Exercício do segundo dia")).toBeTruthy();
+  expect(screen.getByText("0,00 kg")).toBeTruthy();
+  expect(screen.getByText("Não informada")).toBeTruthy();
+  expect(screen.getByText("Dispensa equipamento")).toBeTruthy();
+  expect(screen.getByText("Observações · Pausa sintética")).toBeTruthy();
+  expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Dia B" }));
+  expect(request).toHaveBeenCalledTimes(3);
+  click("Atualizar fichas");
+  await screen.findByText("Exercício do segundo dia");
+  expect(screen.getByRole("button", { name: "Dia B" }).getAttribute("aria-current")).toBe("step");
+});
+
+test("versão expirada entre listagem e leitura não volta ao seletor nem pode ser exportada", async () => {
+  const older = { ...summary, id: "versao-1", numero: 1, vigente: false };
+  const versions = { ...history, itens: [summary, older] };
+  mount(session(), Response.json(versions), Response.json(workout), Response.json(versions),
+    new Response(null, { status: 404 }));
+  await screen.findByText("Movimento sintético");
+  fireEvent.click(screen.getByText("Histórico de versões"));
+  fireEvent.change(screen.getByLabelText("Versão da ficha"), { target: { value: older.id } });
+  await screen.findByText("A versão selecionada deixou de estar disponível.");
+  expect(screen.queryByRole("option", { name: /Versão 1/ })).toBeNull();
+  expect(screen.queryByRole("button", { name: "Exportar ficha em JSON" })).toBeNull();
+});
+
+test("consulta fontes de ficha IA sob demanda e preserva o aviso de fonte alterada", async () => {
+  const ai = { ...workout, ficha: { ...workout.ficha, origem: "IA" } };
+  const request = mount(session(), Response.json(history), Response.json(ai),
+    Response.json({ ...sampleContext, fontes_alteradas: true }));
+  await screen.findByText("Movimento sintético");
+  expect(request).toHaveBeenCalledTimes(3);
+  click("Ver fontes da ficha");
+  await screen.findByText(/Uma fonte utilizada não está mais aprovada/);
+  expect(request.mock.calls[3][0]).toBe("/api/v1/ia/fichas/clientes/cliente/versoes/versao-2/contexto");
+  expect(request.mock.calls[3][1]).toMatchObject({ cache: "no-store" });
+  expect(screen.getByRole("link", { name: "Literatura de teste" })).toBeTruthy();
+});
+
+test("expurgo retornado pelo contexto de IA retira prescrição e download", async () => {
+  const ai = { ...workout, ficha: { ...workout.ficha, origem: "IA" } };
+  const context = structuredClone(sampleContext);
+  context.contexto.treino.ficha.estado_publicacao = "CONTEUDO_EXPIRADO";
+  mount(session(), Response.json(history), Response.json(ai), Response.json(context));
+  await screen.findByText("Movimento sintético");
+  click("Ver fontes da ficha");
+  await screen.findByText("A versão selecionada deixou de estar disponível.");
+  expect(screen.queryByText("Movimento sintético")).toBeNull();
+  expect(screen.queryByRole("button", { name: "Exportar ficha em JSON" })).toBeNull();
 });
 
 test("exporta JSON por nova requisição autenticada e libera o arquivo temporário", async () => {

@@ -229,7 +229,8 @@ UX-03 aplicou o padrão à [navegação por perfil e às telas de acesso](../int
 com verificação no navegador e nas jornadas integradas. UX-04 entregou
 [onboarding por etapas no convite e na conta do cliente](../testes/ux04-onboarding-etapas.md).
 UX-05 reuniu [dúvida, geração e adaptação no Assistente](../testes/ux05-assistente.md).
-UX-06 está liberado para fichas e histórico do cliente no celular.
+UX-06 reorganizou [fichas e histórico do cliente no celular](../testes/ux06-fichas-no-celular.md).
+UX-07 está liberado para a área de trabalho do instrutor.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 

@@ -329,7 +329,9 @@ UX-04 entregou onboarding em quatro etapas para convite e conta do cliente.
 A [verificação](../testes/ux04-onboarding-etapas.md) cobre teclado, falha de
 rede, retomada do rascunho e confirmação de versão. UX-05 reuniu as três
 ações do Assistente com [testes de frontend, navegador e integração](../testes/ux05-assistente.md).
-UX-06 está PRONTO.
+UX-06 entregou navegação por dia e por versão em **Meus treinos**,
+com [evidências móveis de parecer, download e expurgo](../testes/ux06-fichas-no-celular.md).
+UX-07 está PRONTO.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -344,8 +346,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | CONCLUIDO |
 | [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | CONCLUIDO |
 | [UX-05](11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | CONCLUIDO |
-| [UX-06](11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | PRONTO |
-| [UX-07](11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |
+| [UX-06](11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | CONCLUIDO |
+| [UX-07](11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | PRONTO |
 | [UX-08](11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | BLOQUEADO |
 | [UX-09](11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
 

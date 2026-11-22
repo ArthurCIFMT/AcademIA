@@ -110,6 +110,8 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await clientPage.reload();
   await expect(clientPage.getByText("Rosca Jornada", { exact: true })).toBeVisible();
   await expect(clientPage.getByText(/Parecer.*Rejeitado/)).toBeVisible();
+  await expect(clientPage.getByText(/Motivo · Parecer sintético/)).toBeVisible();
+  await clientPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux06-rejeitada.png", fullPage: true });
   await signOut(clientPage); await signIn(clientPage, clientEmail);
   await clientPage.goto("/area/cliente/treinos");
   await expect(clientPage.getByText("Rosca Jornada", { exact: true })).toBeVisible();
@@ -255,6 +257,32 @@ test("E2E-04 geração única, confirmação do onboarding e adaptação version
   expect(after.ficha.numero).toBe(2); expect(after.parecer.estado).toBe("PENDENTE");
   expect(after.ficha.dias[1]).toEqual(before.ficha.dias[1]);
   expect(after.ficha.dias[0].itens[0].series).toBe(before.ficha.dias[0].itens[0].series + 1);
+  await page.setViewportSize({ width: 320, height: 844 });
+  await page.goto("/area/cliente/treinos");
+  await expect(page.getByRole("heading", { name: "Versão 2 · Vigente" })).toBeVisible();
+  const days = page.getByRole("navigation", { name: "Dias da ficha" });
+  const detailReads: string[] = [];
+  page.on("request", request => {
+    if (new URL(request.url()).pathname.endsWith("/ficha")) detailReads.push(request.url());
+  });
+  await days.getByRole("button", { name: "Dia 2", exact: true }).press("Enter");
+  await expect(page.getByRole("heading", { name: "Dia 2", exact: true })).toBeFocused();
+  const second = page.getByRole("region", { name: "Dia 2" });
+  await expect(second.getByText("8-12", { exact: true })).toBeVisible();
+  await expect(second.getByText("60 segundos", { exact: true })).toBeVisible();
+  await expect(second.getByText("Observações · Fixture E2E.", { exact: true })).toBeVisible();
+  expect(detailReads).toEqual([]);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux06-dias.png", fullPage: true });
+  await page.evaluate(() => { document.documentElement.style.fontSize = "200%"; });
+  expect(await page.locator(".my-training").evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole("button", { name: "Exportar ficha em JSON" })).toBeVisible();
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux06-ampliacao.png", fullPage: true });
+  await page.getByRole("button", { name: "Ver fontes da ficha" }).press("Enter");
+  await expect(page.getByRole("link", { name: "Documento sintético", exact: true }).first()).toBeVisible();
+  expect(writes).toEqual(["/api/v1/ia/fichas/execucoes", "/api/v1/ia/chat"]);
   const outsider = await browser.newPage({ baseURL: origin }); await signIn(outsider, fixture.usuarios.instrutor_alheio.email);
   expect((await outsider.request.get("/api/v1/treinos/clientes/" + client.id + "/versoes/" + result.versao_publicada_id + "/revisao")).status()).toBe(403);
 });
@@ -276,16 +304,33 @@ test("E2E-05 retenção de 16 versões, rejeição e exportação", async ({ pag
     expect(published.status()).toBe(200); versions.push(draft.id);
   }
   const clientPage = await browser.newPage({ baseURL: origin }); await signIn(clientPage, client.email);
+  await clientPage.setViewportSize({ width: 390, height: 844 });
   await clientPage.goto("/area/cliente/treinos");
-  await expect(clientPage.getByLabel("Versão da ficha").locator("option")).toHaveCount(15);
+  const selector = clientPage.getByRole("combobox", { name: "Versão da ficha" });
+  const available = selector.locator("option:not(:disabled)");
+  await clientPage.getByText("Histórico de versões", { exact: true }).press("Enter");
+  await expect(available).toHaveCount(15);
   await expect(clientPage.getByText("Versão 16 · Vigente", { exact: true })).toBeVisible();
   for (const suffix of ["/ficha", "/exportacao"]) {
     expect((await clientPage.request.get("/api/v1/treinos/clientes/" + client.id + "/publicadas/" + versions[0] + suffix)).status()).toBe(404);
   }
   await review(page, client.id, versions[14], "REJEITADO");
-  await clientPage.reload(); await expect(clientPage.getByLabel("Versão da ficha").locator("option")).toHaveCount(15);
+  await clientPage.reload();
+  await clientPage.getByText("Histórico de versões", { exact: true }).press("Enter");
+  await expect(available).toHaveCount(15);
+  await selector.selectOption(versions[14]);
+  await expect(clientPage.getByRole("heading", { name: "Versão 15 · Histórica" })).toBeFocused();
+  await expect(clientPage.getByText("Ficha vigente · Versão 16", { exact: true })).toBeVisible();
+  await expect(clientPage.getByText(/Parecer.*Rejeitado/)).toBeVisible();
   await review(page, client.id, versions[15], "REJEITADO");
-  await clientPage.reload(); await expect(clientPage.getByLabel("Versão da ficha").locator("option")).toHaveCount(14);
+  await clientPage.getByRole("button", { name: "Atualizar fichas" }).click();
+  await expect(clientPage.getByText("A versão selecionada deixou de estar disponível.")).toBeVisible();
+  await expect(available).toHaveCount(14);
+  await expect(clientPage.getByRole("heading", { name: "Dia de retenção" })).toHaveCount(0);
+  await expect(clientPage.getByRole("button", { name: "Exportar ficha em JSON" })).toHaveCount(0);
+  await clientPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux06-expirada.png", fullPage: true });
+  await clientPage.getByRole("button", { name: "Ver ficha vigente" }).press("Enter");
+  await expect(clientPage.getByRole("heading", { name: "Versão 16 · Vigente" })).toBeFocused();
   await expect(clientPage.getByText(/Parecer.*Rejeitado/)).toBeVisible();
   expect((await clientPage.request.get("/api/v1/treinos/clientes/" + client.id + "/publicadas/" + versions[14] + "/exportacao")).status()).toBe(404);
 });

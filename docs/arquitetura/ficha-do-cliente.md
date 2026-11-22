@@ -9,23 +9,35 @@ nenhuma migration ou dependência nova foi necessária.
 
 ## Fluxo da interface
 
-**Área do cliente → Meus treinos** abre a ficha vigente. A prescrição aparece
-em cartões por dia, na ordem salva, com exercício/descrição, séries, repetições,
-carga, intervalo, cadência e observações. Origem e identificação do autor são
-exibidas. Datas usam pt-BR e America/Sao_Paulo; carga usa vírgula decimal.
+**Área do cliente → Meus treinos** abre a ficha vigente no primeiro dia. A
+navegação permite escolher outro dia da mesma versão em memória, sem chamada
+à API. A seleção move o foco para o título do dia. A prescrição mostra
+exercício, descrição, séries, repetições, descanso, carga, cadência, recursos
+e observações na ordem salva. Origem e dados de autoria ficam junto ao
+parecer. Datas usam pt-BR e America/Sao_Paulo. A carga usa vírgula
+decimal e distingue zero de ausência.
 
 O parecer PENDENTE, ACEITO ou REJEITADO aparece separado, com motivo,
 responsável e data quando disponíveis. Todos permitem consulta e exportação.
 A ausência de responsável atual também não bloqueia a consulta própria.
 O chat continua sendo uma entrega dos cartões AI.
 
-O seletor oferece apenas versões publicadas completas retidas, até quinze
-incluindo a vigente. Rascunhos e conteúdo expirado ficam fora da lista.
-Ao atualizar ou retornar à janela, a tela busca os dados novamente.
-Versão removida deixa de ser exibida e oferece retorno à vigente.
-Erros de consulta limpam a versão mostrada; estado vazio orienta quem
-ainda não possui ficha publicada. Troca de sessão desmonta o contexto e
-cancela requisições/downloads pendentes.
+O painel **Histórico de versões** oferece até quinze versões publicadas
+completas, incluindo a vigente. Consultar uma versão histórica mantém
+visível a identificação da vigente e a ação de retorno. Rascunhos e
+conteúdo expirado ficam fora da lista. A interface revalida ao atualizar
+ou retornar à janela. Se uma versão selecionada expirar, inclusive entre
+a listagem e a leitura, a ficha sai da tela e a exportação deixa de estar
+disponível. Erros de consulta limpam a versão mostrada. Estado vazio orienta
+quem ainda não possui ficha publicada. Troca de sessão desmonta o contexto
+e cancela requisições e downloads pendentes.
+
+Em ficha de IA, **Ver fontes da ficha** consulta sob demanda o contrato
+de [contexto da versão](solicitacao-e-acompanhamento-ia.md#acompanhamento-e-revisão).
+Uma fonte alterada é identificada separadamente do parecer. Uma falha
+técnica na consulta das fontes mantém a prescrição disponível. Se o
+contexto indicar expurgo ou recusa de acesso, a interface retira a ficha
+e cancela o download ainda em andamento.
 
 ## Equipamentos
 

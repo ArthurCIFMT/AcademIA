@@ -1,14 +1,149 @@
-.my-training { width: 100%; max-width: 48rem; overflow-wrap: anywhere; }
-.my-training select { display: block; width: 100%; box-sizing: border-box; margin-block: .5rem 1rem; }
-.my-training-prescription h4, .my-training-day h5 { font-size: 1.15rem; }
-.my-training-item h6 { font-size: 1rem; margin-block: .5rem; }
-.my-training-day, .my-training-opinion { border: 1px solid #bcc7cd; border-radius: .5rem; padding: .8rem; margin-block: 1rem; }
-.my-training-item { border-bottom: 1px solid #d9e0e4; padding-block: .7rem; }
-.my-training ol { padding-left: 1.25rem; }
-.my-training dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr)); gap: .75rem; }
-.my-training dt { font-weight: 600; }
-.my-training dd { margin: .3rem 0; }
-.my-training-warning { border-left: .25rem solid #9c6012; padding: .7rem; background: #fff6de; color: #533308; }
-.my-training button { margin-block: .5rem; white-space: normal; }
+.my-training {
+  max-inline-size: 56rem;
+  overflow-wrap: anywhere;
+}
 
-.my-training label { display: block; margin-top: 1rem; }
+.my-training-title,
+.my-training-current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ac-space-3);
+  margin-block-end: var(--ac-space-4);
+}
+
+.my-training-title h2,
+.my-training-current p,
+.my-training-summary p {
+  margin: 0;
+}
+
+.my-training-history,
+.my-training-summary,
+.my-training-item {
+  min-inline-size: 0;
+  padding: var(--ac-space-4);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
+  background: var(--ac-surface);
+}
+
+.my-training-history {
+  margin-block-end: var(--ac-space-4);
+}
+
+.my-training summary {
+  cursor: pointer;
+  width: fit-content;
+  max-width: 100%;
+  min-block-size: var(--ac-touch-target);
+  align-content: center;
+  color: var(--ac-brand-dark);
+  font-weight: 650;
+}
+
+.my-training-summary {
+  display: grid;
+  justify-items: start;
+  gap: var(--ac-space-2);
+}
+
+.my-training-opinion {
+  padding: var(--ac-space-1) var(--ac-space-2);
+  border-radius: var(--ac-radius-control);
+  color: var(--ac-muted);
+  background: var(--ac-background);
+  font-weight: 650;
+}
+
+.my-training-opinion[data-state="ACEITO"] {
+  color: var(--ac-brand);
+  background: var(--ac-brand-soft);
+}
+
+.my-training-opinion[data-state="REJEITADO"],
+.my-training-warning {
+  color: var(--ac-warning-text);
+  background: var(--ac-warning-bg);
+}
+
+.my-training-review-reason {
+  font-weight: 600;
+}
+
+.my-training-days {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ac-space-2);
+  margin-block: var(--ac-space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.my-training-days li {
+  max-inline-size: 100%;
+}
+
+.my-training-items {
+  display: grid;
+  gap: var(--ac-space-3);
+  padding-inline-start: 1.5em;
+}
+
+.my-training-item::marker {
+  color: var(--ac-brand-dark);
+  font-weight: 650;
+}
+
+.my-training-item h5 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.my-training-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 6.5rem), 1fr));
+  gap: var(--ac-space-2);
+  margin-block: var(--ac-space-4);
+}
+
+.my-training-values div {
+  padding: var(--ac-space-2);
+  border-radius: var(--ac-radius-control);
+  background: var(--ac-background);
+}
+
+.my-training-values dt,
+.my-training-muted {
+  color: var(--ac-muted);
+}
+
+.my-training-values dd {
+  margin: 0;
+  font-weight: 650;
+}
+
+.my-training-resources ul,
+.my-training-resources p {
+  margin-block: var(--ac-space-1);
+}
+
+.my-training-warning,
+.my-training-observation {
+  padding: var(--ac-space-2);
+  border-radius: var(--ac-radius-control);
+}
+
+.my-training-observation {
+  margin-block-end: 0;
+  background: var(--ac-brand-soft);
+  white-space: pre-wrap;
+}
+
+.my-training-actions,
+.my-training-sources {
+  display: grid;
+  justify-items: start;
+  gap: var(--ac-space-2);
+}

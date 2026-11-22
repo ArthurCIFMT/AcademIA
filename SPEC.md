@@ -247,7 +247,8 @@ UX-03 aplicou o padrão à [navegação por perfil e às telas de acesso](docs/i
 com verificação no navegador e nas jornadas integradas. UX-04 entregou
 [onboarding por etapas no convite e na conta do cliente](docs/testes/ux04-onboarding-etapas.md).
 UX-05 reuniu [dúvida, geração e adaptação no Assistente](docs/testes/ux05-assistente.md).
-UX-06 está liberado para fichas e histórico do cliente no celular.
+UX-06 reorganizou [fichas e histórico do cliente no celular](docs/testes/ux06-fichas-no-celular.md).
+UX-07 está liberado para a área de trabalho do instrutor.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
@@ -12829,23 +12830,35 @@ nenhuma migration ou dependência nova foi necessária.
 
 #### Fluxo da interface
 
-**Área do cliente → Meus treinos** abre a ficha vigente. A prescrição aparece
-em cartões por dia, na ordem salva, com exercício/descrição, séries, repetições,
-carga, intervalo, cadência e observações. Origem e identificação do autor são
-exibidas. Datas usam pt-BR e America/Sao_Paulo; carga usa vírgula decimal.
+**Área do cliente → Meus treinos** abre a ficha vigente no primeiro dia. A
+navegação permite escolher outro dia da mesma versão em memória, sem chamada
+à API. A seleção move o foco para o título do dia. A prescrição mostra
+exercício, descrição, séries, repetições, descanso, carga, cadência, recursos
+e observações na ordem salva. Origem e dados de autoria ficam junto ao
+parecer. Datas usam pt-BR e America/Sao_Paulo. A carga usa vírgula
+decimal e distingue zero de ausência.
 
 O parecer PENDENTE, ACEITO ou REJEITADO aparece separado, com motivo,
 responsável e data quando disponíveis. Todos permitem consulta e exportação.
 A ausência de responsável atual também não bloqueia a consulta própria.
 O chat continua sendo uma entrega dos cartões AI.
 
-O seletor oferece apenas versões publicadas completas retidas, até quinze
-incluindo a vigente. Rascunhos e conteúdo expirado ficam fora da lista.
-Ao atualizar ou retornar à janela, a tela busca os dados novamente.
-Versão removida deixa de ser exibida e oferece retorno à vigente.
-Erros de consulta limpam a versão mostrada; estado vazio orienta quem
-ainda não possui ficha publicada. Troca de sessão desmonta o contexto e
-cancela requisições/downloads pendentes.
+O painel **Histórico de versões** oferece até quinze versões publicadas
+completas, incluindo a vigente. Consultar uma versão histórica mantém
+visível a identificação da vigente e a ação de retorno. Rascunhos e
+conteúdo expirado ficam fora da lista. A interface revalida ao atualizar
+ou retornar à janela. Se uma versão selecionada expirar, inclusive entre
+a listagem e a leitura, a ficha sai da tela e a exportação deixa de estar
+disponível. Erros de consulta limpam a versão mostrada. Estado vazio orienta
+quem ainda não possui ficha publicada. Troca de sessão desmonta o contexto
+e cancela requisições e downloads pendentes.
+
+Em ficha de IA, **Ver fontes da ficha** consulta sob demanda o contrato
+de [contexto da versão](docs/arquitetura/solicitacao-e-acompanhamento-ia.md#acompanhamento-e-revisão).
+Uma fonte alterada é identificada separadamente do parecer. Uma falha
+técnica na consulta das fontes mantém a prescrição disponível. Se o
+contexto indicar expurgo ou recusa de acesso, a interface retira a ficha
+e cancela o download ainda em andamento.
 
 #### Equipamentos
 
@@ -13568,7 +13581,9 @@ UX-04 entregou onboarding em quatro etapas para convite e conta do cliente.
 A [verificação](docs/testes/ux04-onboarding-etapas.md) cobre teclado, falha de
 rede, retomada do rascunho e confirmação de versão. UX-05 reuniu as três
 ações do Assistente com [testes de frontend, navegador e integração](docs/testes/ux05-assistente.md).
-UX-06 está PRONTO.
+UX-06 entregou navegação por dia e por versão em **Meus treinos**,
+com [evidências móveis de parecer, download e expurgo](docs/testes/ux06-fichas-no-celular.md).
+UX-07 está PRONTO.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -13583,8 +13598,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | CONCLUIDO |
 | [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | CONCLUIDO |
 | [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | CONCLUIDO |
-| [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | PRONTO |
-| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |
+| [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | CONCLUIDO |
+| [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | PRONTO |
 | [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | BLOQUEADO |
 | [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
 
@@ -17857,12 +17872,12 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
-Status: UX-01 a UX-05 verificados. Consulte a
+Status: UX-01 a UX-06 verificados. Consulte a
 [linha de base](docs/testes/ux01-referencia-visual.md) e a
 [verificação dos componentes e das telas existentes](docs/testes/ux02-base-visual.md),
 além dos ensaios de [navegação e acesso](docs/testes/ux03-navegacao-e-acesso.md),
-[onboarding por etapas](docs/testes/ux04-onboarding-etapas.md)
-e [Assistente](docs/testes/ux05-assistente.md).
+[onboarding por etapas](docs/testes/ux04-onboarding-etapas.md),
+[Assistente](docs/testes/ux05-assistente.md) e [fichas no celular](docs/testes/ux06-fichas-no-celular.md).
 O aceite da aplicação redesenhada segue a trilha abaixo.
 Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
 
@@ -19068,7 +19083,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
 | `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
-| `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
+| `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `3b54610f7625eeda0e5f08bb17a128f5707aed6848a31907bd1f49f40d4d1007` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
@@ -19091,7 +19106,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `e1fb6f6999ba743282bc5fb319a1d37abdda53f1aa160051b22a72a942a4a4d5` |
+| `docs/especificacao/visao-geral.md` | `5b034a809c96a455e6f45e304b010648f3ef7e5a43a718acf1d259f43b7e4b80` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19104,7 +19119,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `a516dbee4026125d6bc5c2c81951fb8db799a2b7031ceb3530296f45bf23de9d` |
+| `docs/prompts/README.md` | `da560124523fe9bf0e73195316bcb1ac839f07ec83b5acc65b3afafa65bbbcb5` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `86c684d482b1dbe0459736da5c01eaa31d04a37419edd28b54f3b9af9274eb5a` |
@@ -19148,7 +19163,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
-| `docs/testes/reformulacao-visual.md` | `e77bea19e9e7c4b463223b06a8e75ab09479374f490d4fc6381a8640c5c97513` |
+| `docs/testes/reformulacao-visual.md` | `bf3df50823a2ad4cfafd5e191b5c07a398fed2bfb91e037202248877b7ab1eb1` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |
