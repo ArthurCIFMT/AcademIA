@@ -1,5 +1,11 @@
 # Registro de comandos de verificação
 
+## Navegação e telas de acesso UX-03
+
+Os [comandos e resultados](ux03-navegacao-e-acesso.md#reprodução) reproduzem
+os testes de frontend, o build, o ensaio integrado do MVP e a verificação
+de largura no Edge com dados sintéticos.
+
 ## Base visual UX-02
 
 Os [comandos e resultados](ux02-base-visual.md#reprodução) reproduzem os testes

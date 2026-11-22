@@ -73,6 +73,8 @@ A área some assim que o usuário solicita a saída. Se a API não confirmar o
 logout, a interface mantém a área oculta e oferece nova tentativa.
 
 Consulte o [roteiro no navegador](../testes/iam-04-navegador.md).
+O [guia de UX-03](../interface/navegacao-e-acesso.md) registra a estrutura
+de navegação, foco e formulários aplicada ao mesmo contrato.
 
 ## Recuperação de acesso (IAM-05)
 

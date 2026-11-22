@@ -1,8 +1,9 @@
 # Validação da reformulação visual
 
-Status: UX-01 e UX-02 verificados. Consulte a
+Status: UX-01 a UX-03 verificados. Consulte a
 [linha de base](ux01-referencia-visual.md) e a
-[verificação dos componentes e das telas existentes](ux02-base-visual.md).
+[verificação dos componentes e das telas existentes](ux02-base-visual.md),
+além do [ensaio de navegação e acesso](ux03-navegacao-e-acesso.md).
 O aceite da aplicação redesenhada segue a trilha abaixo.
 Fonte: [critérios de experiência](../requisitos/experiencia-e-interface.md).
 

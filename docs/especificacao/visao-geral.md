@@ -225,8 +225,9 @@ fontes normativas. UX-01 entregou a
 [referência visual e os protótipos](../interface/README.md), verificados no
 navegador com dados sintéticos. UX-02 implementou a
 [base visual e os componentes](../interface/componentes.md) do frontend.
-UX-03 está liberado para aplicar o padrão à navegação por perfil e às telas
-de acesso. As etapas seguintes continuam uma por vez e podem
+UX-03 aplicou o padrão à [navegação por perfil e às telas de acesso](../interface/navegacao-e-acesso.md),
+com verificação no navegador e nas jornadas integradas. UX-04 está liberado
+para o onboarding por etapas. As etapas seguintes continuam uma por vez e podem
 anteceder outros módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,

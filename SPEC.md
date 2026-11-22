@@ -243,8 +243,9 @@ fontes normativas. UX-01 entregou a
 [referência visual e os protótipos](docs/interface/README.md), verificados no
 navegador com dados sintéticos. UX-02 implementou a
 [base visual e os componentes](docs/interface/componentes.md) do frontend.
-UX-03 está liberado para aplicar o padrão à navegação por perfil e às telas
-de acesso. As etapas seguintes continuam uma por vez e podem
+UX-03 aplicou o padrão à [navegação por perfil e às telas de acesso](docs/interface/navegacao-e-acesso.md),
+com verificação no navegador e nas jornadas integradas. UX-04 está liberado
+para o onboarding por etapas. As etapas seguintes continuam uma por vez e podem
 anteceder outros módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
@@ -1099,7 +1100,9 @@ explica os ensaios futuros. A criação dos prompts não implementa nem aprova t
 Fonte versionada: [docs/requisitos/experiencia-e-interface.md](docs/requisitos/experiencia-e-interface.md).
 
 Status: ESPECIFICADO, com [referência visual concluída em UX-01](docs/interface/README.md).
-A [base visual foi aplicada em UX-02](docs/interface/componentes.md). Solicitação do responsável em
+A [base visual foi aplicada em UX-02](docs/interface/componentes.md) e a
+[navegação por perfil e telas de acesso em UX-03](docs/interface/navegacao-e-acesso.md).
+Solicitação do responsável em
 2026-11-19, após a revisão manual do MVP. Complementa RNF-14, RNF-19 e RNF-20.
 
 #### Objetivo e limites
@@ -12124,6 +12127,8 @@ A área some assim que o usuário solicita a saída. Se a API não confirmar o
 logout, a interface mantém a área oculta e oferece nova tentativa.
 
 Consulte o [roteiro no navegador](docs/testes/iam-04-navegador.md).
+O [guia de UX-03](docs/interface/navegacao-e-acesso.md) registra a estrutura
+de navegação, foco e formulários aplicada ao mesmo contrato.
 
 #### Recuperação de acesso (IAM-05)
 
@@ -13523,7 +13528,10 @@ UX-06 → UX-07 → UX-08 → UX-09. UX-01 entregou o
 UX-02 aplicou a [base visual e os componentes](docs/interface/componentes.md)
 ao frontend. [A verificação](docs/testes/ux02-base-visual.md) registrou 103 testes
 de frontend, oito rotas em quatro larguras, contraste, teclado e toque.
-UX-03 está PRONTO para aplicar a navegação por perfil e as telas de acesso.
+UX-03 aplicou [navegação por perfil e telas de acesso](docs/interface/navegacao-e-acesso.md).
+A [verificação](docs/testes/ux03-navegacao-e-acesso.md) cobre 103 testes de
+frontend, oito jornadas integradas e oito rotas em quatro larguras.
+UX-04 está PRONTO para implementar o onboarding por etapas.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -13535,8 +13543,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [UX-01](docs/prompts/11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | CONCLUIDO |
 | [UX-02](docs/prompts/11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | CONCLUIDO |
-| [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | PRONTO |
-| [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
+| [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | CONCLUIDO |
+| [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | PRONTO |
 | [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
 | [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | BLOQUEADO |
 | [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |
@@ -17812,9 +17820,10 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
-Status: UX-01 e UX-02 verificados. Consulte a
+Status: UX-01 a UX-03 verificados. Consulte a
 [linha de base](docs/testes/ux01-referencia-visual.md) e a
-[verificação dos componentes e das telas existentes](docs/testes/ux02-base-visual.md).
+[verificação dos componentes e das telas existentes](docs/testes/ux02-base-visual.md),
+além do [ensaio de navegação e acesso](docs/testes/ux03-navegacao-e-acesso.md).
 O aceite da aplicação redesenhada segue a trilha abaixo.
 Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
 
@@ -18996,7 +19005,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
-| `docs/arquitetura/autenticacao.md` | `2584f21715090498119d5a429d23755b105db1cb6c80f5e7ea5b55c8a1b20076` |
+| `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
 | `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
@@ -19043,7 +19052,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `c7cb1bfa54413730b36292d3e2079204958843ebe79c8a489849227699d04cb1` |
+| `docs/especificacao/visao-geral.md` | `437e9b006eede9beb1e7dcc0da327d921716469518402d0fb1ae3b836e598aeb` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19056,10 +19065,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `b38661a2cb8f887cf11db6848fa6b4274581b9226297dd22129387bf2fc39462` |
+| `docs/prompts/README.md` | `df4e78b1bc171e904f5537fc6c5bb29845aaca5595e42835c7e18a0221269f93` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
-| `docs/requisitos/experiencia-e-interface.md` | `46fb3b3c523970128082c836e561cd35618ef29881c3a2966d8dce40503739f7` |
+| `docs/requisitos/experiencia-e-interface.md` | `86c684d482b1dbe0459736da5c01eaa31d04a37419edd28b54f3b9af9274eb5a` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
 | `docs/requisitos/onboarding-e-triagem.md` | `d91f10aefd1cd8de311a459fc9ed9c6e8b62ee64e2ce2aae08ad691517ba206b` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
@@ -19100,7 +19109,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
-| `docs/testes/reformulacao-visual.md` | `dba14ee74a41709b65e08db947cf78a9ca86265098af8f1d559b6554f959dd50` |
+| `docs/testes/reformulacao-visual.md` | `79e555aa83c31417ea2e40253ea14d5826fbcca7cbab96a4c12e15e19f6d8d04` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |

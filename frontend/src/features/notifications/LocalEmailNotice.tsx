@@ -1,3 +1,5 @@
+import "./notifications.css";
+
 export function LocalEmailNotice() {
   const configured = import.meta.env.VITE_TEST_MAILBOX_URL?.trim();
   let mailbox: string | undefined;
@@ -11,7 +13,7 @@ export function LocalEmailNotice() {
     }
   }
   return (
-    <p role="note">
+    <p className="local-mail-info" role="note">
       Ambiente acadêmico local: os e-mails ficam na caixa de testes Mailpit.
       Eles não são enviados ao Gmail, Outlook ou outros provedores.{" "}
       {mailbox && <a href={mailbox} target="_blank" rel="noopener noreferrer">Abrir caixa de e-mails de teste</a>}

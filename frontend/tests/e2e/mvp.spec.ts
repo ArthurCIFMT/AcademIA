@@ -16,7 +16,12 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   const staffEmail = "e2e-jornada-instrutor-" + fixture.sufixo + "@example.test";
   const clientEmail = "e2e-jornada-cliente-" + fixture.sufixo + "@example.test";
   await signIn(page, fixture.usuarios.admin.email);
-  await page.goto("/area/administracao/funcionarios");
+  const adminMenu = page.getByRole("navigation", { name: "Seções da área" });
+  await adminMenu.getByRole("link", { name: "Gerenciar funcionários" }).click();
+  await expect(adminMenu.getByRole("link", { name: "Gerenciar funcionários" })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("main")).toBeFocused();
+  await expect(page.getByRole("button", { name: "Cadastrar funcionário" })).toBeVisible();
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-administracao.png", fullPage: true });
   await page.getByRole("button", { name: "Cadastrar funcionário", exact: true }).click();
   await page.getByLabel("Nome", { exact: true }).fill("Instrutor Jornada");
   await expect(page.getByRole("textbox", { name: "Cargo", exact: true })).toHaveCount(0);
@@ -29,6 +34,11 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await firstAccess(instructor, staffEmail);
   await signIn(instructor, staffEmail);
   const instructorId = (await session(instructor)).user_id;
+  const coachMenu = instructor.getByRole("navigation", { name: "Seções da área" });
+  await expect(coachMenu.getByRole("link", { name: "Meus clientes" })).toBeVisible();
+  await expect(coachMenu.getByRole("link", { name: "Gerenciar funcionários" })).toHaveCount(0);
+  await expect(instructor.getByText("Nenhum aviso pendente.")).toBeVisible();
+  await instructor.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-instrutor.png", fullPage: true });
 
   await page.goto("/area/administracao/clientes");
   await page.getByRole("button", { name: "Cadastrar cliente", exact: true }).click();
@@ -80,6 +90,7 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   expect(published.treino.parecer.estado).toBe("PENDENTE");
   await clientPage.setViewportSize({ width: 390, height: 844 });
   await clientPage.goto("/area/cliente/treinos");
+  await expect(clientPage.locator(".site-mobile-menu summary")).toHaveText("Menu · Meus treinos");
   await expect(clientPage.getByText("Rosca Jornada", { exact: true })).toBeVisible();
   await expect(clientPage.getByText(/Parecer.*Pendente/)).toBeVisible();
   expect(await clientPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -255,22 +266,58 @@ test("E2E-07 treino manual continua após indisponibilidade da IA", async ({ pag
 
 test("E2E-08 recuperação e perfis de cliente/funcionário independentes", async ({ page, browser }) => {
   const staff = fixture.usuarios.atendente;
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/login");
+  await expect(page.getByRole("heading", { name: "Entrar", exact: true })).toBeVisible();
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-login-desktop.png", fullPage: true });
   await signIn(page, fixture.usuarios.admin.email);
   const client = await mutate(page, "/v1/clientes", { nome: "Atendente com perfil cliente",
     data_nascimento: "1990-01-01", email: staff.email, vincular_existente: true });
   expect(client.status()).toBe(201); const profile = await client.json();
-  const staffPage = await browser.newPage({ baseURL: origin }); await signIn(staffPage, staff.email);
+  const staffPage = await browser.newPage({ baseURL: origin, viewport: { width: 390, height: 844 }, hasTouch: true });
+  await signIn(staffPage, staff.email);
   expect((await session(staffPage)).roles).toEqual(expect.arrayContaining(["CLIENTE", "ATENDENTE"]));
+  const switcher = staffPage.getByRole("navigation", { name: "Áreas disponíveis" });
+  const mobile = staffPage.locator(".site-mobile-menu");
+  const summary = mobile.locator("summary");
+  await expect(switcher.getByRole("link", { name: "Administração" })).toHaveCount(0);
+  await expect(summary).toHaveText("Menu · Início da área");
+  await summary.press("Enter");
+  await expect(mobile.getByRole("link", { name: "Clientes e convites" })).toBeVisible();
+  await staffPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-atendimento-celular.png", fullPage: true });
+  await mobile.getByRole("link", { name: "Clientes e convites" }).tap();
+  await expect(summary).toHaveText("Menu · Clientes e convites");
+  await expect(staffPage.getByRole("main")).toBeFocused();
+  await expect(mobile.getByRole("link", { name: "Clientes e convites" })).toBeHidden();
+  expect(await staffPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await switcher.getByRole("link", { name: "Cliente", exact: true }).tap();
+  await expect(staffPage.getByRole("heading", { name: "Área do cliente" })).toBeVisible();
+  await summary.tap();
+  await expect(mobile.getByRole("link", { name: "Meus treinos" })).toBeVisible();
+  await staffPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-cliente-celular.png", fullPage: true });
+  await mobile.getByRole("link", { name: "Meus treinos" }).focus();
+  await staffPage.keyboard.press("Escape");
+  await expect(summary).toBeFocused();
+  await expect(mobile.getByRole("link", { name: "Meus treinos" })).toBeHidden();
+  expect((await session(staffPage)).roles).toEqual(expect.arrayContaining(["CLIENTE", "ATENDENTE"]));
+  await staffPage.goto("/area/administracao/funcionarios");
+  await expect(staffPage.getByRole("heading", { name: "Acesso não permitido" })).toBeVisible();
+  await expect(staffPage.getByRole("button", { name: "Cadastrar funcionário" })).toHaveCount(0);
   const inactive = await mutate(page, "/v1/clientes/" + staff.id, { nome: profile.nome,
     data_nascimento: profile.data_nascimento, revisao: profile.revisao, ativo: false }, "PUT");
   expect(inactive.status()).toBe(200);
   expect((await staffPage.request.get("/api/v1/clientes")).status()).toBe(200);
   expect((await staffPage.request.get("/api/v1/onboarding/meu")).status()).toBe(403);
   const recovering = await browser.newPage({ baseURL: origin });
+  const recoveryMessage = "Se o e-mail estiver elegível para recuperação, você receberá um link.";
+  await recovering.goto("/recuperar-acesso");
+  await recovering.getByLabel("E-mail", { exact: true }).fill("desconhecido-" + fixture.sufixo + "@example.test");
+  await recovering.getByRole("button", { name: "Solicitar recuperação", exact: true }).click();
+  await expect(recovering.getByRole("status")).toHaveText(recoveryMessage);
   await recovering.goto("/recuperar-acesso");
   await recovering.getByLabel("E-mail", { exact: true }).fill(staff.email);
   await recovering.getByRole("button", { name: "Solicitar recuperação", exact: true }).click();
-  await expect(recovering.getByText(/Se o e-mail estiver elegível/)).toBeVisible();
+  await expect(recovering.getByRole("status")).toHaveText(recoveryMessage);
   const link = await mailLink(staff.email, "/redefinir-senha");
   await recovering.goto(link);
   await recovering.getByLabel("Nova senha", { exact: true }).fill(password + "-nova");

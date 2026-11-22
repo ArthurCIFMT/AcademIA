@@ -1,0 +1,21 @@
+.local-mail-info {
+  padding: var(--ac-space-3);
+  border-radius: var(--ac-radius-control);
+  color: var(--ac-brand);
+  background: var(--ac-brand-soft);
+}
+
+.notice-list {
+  padding-inline-start: var(--ac-space-5);
+  margin: 0;
+}
+
+.notice-list li + li {
+  margin-block-start: var(--ac-space-2);
+}
+
+.notice-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--ac-space-3);
+}

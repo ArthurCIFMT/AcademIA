@@ -322,7 +322,10 @@ UX-06 → UX-07 → UX-08 → UX-09. UX-01 entregou o
 UX-02 aplicou a [base visual e os componentes](../interface/componentes.md)
 ao frontend. [A verificação](../testes/ux02-base-visual.md) registrou 103 testes
 de frontend, oito rotas em quatro larguras, contraste, teclado e toque.
-UX-03 está PRONTO para aplicar a navegação por perfil e as telas de acesso.
+UX-03 aplicou [navegação por perfil e telas de acesso](../interface/navegacao-e-acesso.md).
+A [verificação](../testes/ux03-navegacao-e-acesso.md) cobre 103 testes de
+frontend, oito jornadas integradas e oito rotas em quatro larguras.
+UX-04 está PRONTO para implementar o onboarding por etapas.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -334,8 +337,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [UX-01](11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | CONCLUIDO |
 | [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | CONCLUIDO |
-| [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | PRONTO |
-| [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
+| [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | CONCLUIDO |
+| [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | PRONTO |
 | [UX-05](11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
 | [UX-06](11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | BLOQUEADO |
 | [UX-07](11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | BLOQUEADO |

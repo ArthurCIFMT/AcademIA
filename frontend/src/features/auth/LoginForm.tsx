@@ -1,7 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiError, type LoginCredentials } from "../../lib/api/auth";
+import { Button, FormField, StatusMessage } from "../../ui/primitives";
+import { AccessPanel } from "./AccessPanel";
 
 function loginError(error: unknown) {
   if (error instanceof ApiError) {
@@ -20,12 +22,15 @@ function loginError(error: unknown) {
   return "Não foi possível entrar. Tente novamente.";
 }
 
-export function LoginForm({ onLogin }: { onLogin: (credentials: LoginCredentials) => Promise<void> }) {
+export function LoginForm({ onLogin, notice }: {
+  onLogin: (credentials: LoginCredentials) => Promise<void>; notice?: ReactNode;
+}) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting) return;
     const form = event.currentTarget;
     const fields = new FormData(form);
     setError("");
@@ -44,17 +49,19 @@ export function LoginForm({ onLogin }: { onLogin: (credentials: LoginCredentials
   }
 
   return (
-    <>
-      <h2>Entrar</h2>
+    <AccessPanel title="Entrar" introduction="Acesse sua área na academia.">
+      {notice}
       <form className="login-form" onSubmit={handleSubmit}>
-        <label htmlFor="login-email">E-mail</label>
-        <input id="login-email" name="email" type="email" autoComplete="username" required disabled={submitting} />
-        <label htmlFor="login-password">Senha</label>
-        <input id="login-password" name="senha" type="password" autoComplete="current-password" required disabled={submitting} />
-        <button type="submit" disabled={submitting}>{submitting ? "Entrando…" : "Entrar"}</button>
-        {error && <p role="alert">{error}</p>}
+        <FormField label="E-mail">
+          {field => <input {...field} name="email" type="email" autoComplete="username" required disabled={submitting} />}
+        </FormField>
+        <FormField label="Senha">
+          {field => <input {...field} name="senha" type="password" autoComplete="current-password" required disabled={submitting} />}
+        </FormField>
+        {error && <StatusMessage state="error" title={error} />}
+        <Button type="submit" pending={submitting} pendingLabel="Entrando…">Entrar</Button>
       </form>
-      <p><Link to="/recuperar-acesso">Esqueci minha senha</Link></p>
-    </>
+      <Link className="access-return" to="/recuperar-acesso">Esqueci minha senha</Link>
+    </AccessPanel>
   );
 }

@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Button, Card, StatusMessage } from "../../ui/primitives";
+import "./notifications.css";
 
 const labels = {
   TREINO_PARA_AVALIAR: "Treino para avaliar",
@@ -60,28 +62,27 @@ export function PendingNotices() {
   }, [attempt]);
 
   return (
-    <section aria-labelledby="notificacoes-title">
-      <h3 id="notificacoes-title">Avisos pendentes</h3>
-      {result.status === "loading" && <p role="status">Carregando avisos…</p>}
-      {result.status === "denied" && <p role="alert">Acesso aos avisos indisponível.</p>}
+    <Card title="Avisos pendentes">
+      {result.status === "loading" && <StatusMessage state="loading" title="Carregando avisos…" />}
+      {result.status === "denied" && <StatusMessage state="error" title="Acesso aos avisos indisponível." />}
       {result.status === "failed" && (
-        <>
-          <p role="alert">Não foi possível carregar os avisos.</p>
-          <button type="button" onClick={() => {
+        <div className="notice-actions">
+          <StatusMessage state="error" title="Não foi possível carregar os avisos." />
+          <Button onClick={() => {
             setResult({ status: "loading" });
             setAttempt(attempt + 1);
-          }}>Tentar novamente</button>
-        </>
+          }}>Tentar novamente</Button>
+        </div>
       )}
       {result.status === "ready" && (result.notices.length === 0
-        ? <p>Nenhum aviso pendente.</p>
-        : <ul>{result.notices.map((notice) => (
+        ? <StatusMessage state="empty" title="Nenhum aviso pendente." />
+        : <ul className="notice-list">{result.notices.map((notice) => (
           <li key={notice.id}>
             {labels[notice.tipo]} · <time dateTime={notice.criada_em}>
-              {new Date(notice.criada_em).toLocaleString("pt-BR")}
+              {new Date(notice.criada_em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}
             </time>
           </li>
         ))}</ul>)}
-    </section>
+    </Card>
   );
 }
