@@ -92,6 +92,12 @@ libera geração e não remove bloqueio determinístico. Não há aprovação m�
 diagnóstico ou inferência clínica nova. Hashes de cenários privados ficam fora do
 corpus compartilhado e do Git. DUVIDA não usa esse mapeamento de saúde.
 
+No acompanhamento de geração, o recibo diferencia possível alerta sinalizado na
+análise de texto de falta de evidência específica. A interface não exibe o
+texto privado usado na triagem. No chat de dúvidas, abstenção indica que as
+fontes não sustentaram a resposta, enquanto fonte revogada ou contexto expurgado
+tem mensagem própria. A interface aponta o fluxo que usa o onboarding.
+
 ## Persistência, orçamento e retenção
 
 Migration 0015 introduziu o chat persistente. A revisão 0016 remove o marcador

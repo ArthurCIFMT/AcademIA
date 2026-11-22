@@ -39,6 +39,12 @@ Esses limites tratam armazenamento e entrada do protótipo. O instrutor
 preenche os valores da prescrição. Um rascunho pode ter dias sem itens
 enquanto é montado.
 
+O formulário usa `Dia N` quando o título fica em branco e sugere 60 segundos
+quando o intervalo não é preenchido. Ambos são exibidos no editor e podem
+ser alterados antes da publicação. Zero segundos informado explicitamente
+continua válido. Carga, cadência, observações e avaliação podem ficar ausentes.
+A tela envia os valores resolvidos no mesmo contrato de gravação.
+
 O backend revalida o exercício e a alternativa por contrato do catálogo,
 guardando no item o nome, a descrição, o grupo muscular, a revisão do
 catálogo e os IDs dos equipamentos utilizados. Edições posteriores no

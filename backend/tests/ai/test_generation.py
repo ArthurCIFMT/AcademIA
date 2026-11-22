@@ -23,6 +23,7 @@ from app.modules.ai.orchestration.settings import Config, GeminiSettings, GroqSe
 from app.modules.ai.persistence.models import Execution, TriageRecord
 from app.modules.ai.persistence.state import PostgresState
 from app.modules.ai.ports.execution import ExecutionConflict
+from app.modules.assignments.service import ChangeAssignment, change_assignment
 from app.modules.knowledge.ingestion.indexing import Indexer
 from app.modules.knowledge.ingestion.parser import parse
 from app.modules.knowledge.ingestion.service import Extractor
@@ -31,8 +32,17 @@ from app.modules.knowledge.schemas import Decision, Metadata
 from app.modules.knowledge.service import approved_references, decide, register
 from app.modules.knowledge.vector.qdrant import QdrantStore
 from app.modules.knowledge.vector.settings import VectorSettings
-from app.modules.training.publication import published_workout
+from app.modules.onboarding.service import get_current_snapshot
+from app.modules.training.catalog import eligible_exercises
+from app.modules.training.publication import publish_manual, published_workout
+from app.modules.training.review_schemas import PublishWorkout
 from app.modules.training.workout_models import WorkoutVersion
+from app.modules.training.workout_schemas import (
+    CreateWorkout,
+    WorkoutDayInput,
+    WorkoutItemInput,
+)
+from app.modules.training.workouts import create_draft
 from app.policies.access import Actor
 from tests.ai.test_execution import request
 from tests.ai.test_triage_integration import complete, exercise, seed
@@ -237,6 +247,75 @@ def test_real_database_publication_pending_replay_and_no_duplicate_content(
             req.model_copy(update={"mensagem": "Entrada diferente"}),
         )
     assert len(provider.calls) == 2
+
+
+@pytest.mark.integration
+def test_generation_with_current_manual_workout_preserves_its_history(
+    sessions: sessionmaker[Session], scenario: Scenario
+) -> None:
+    people, service, provider = scenario
+    client, trainer = people["cliente"], people["instrutor"]
+    with sessions.begin() as session:
+        change_assignment(
+            session,
+            client.user_id,
+            ChangeAssignment(instrutor_id=trainer.user_id, vigente_id=None),
+            people["admin"],
+            uuid4(),
+        )
+        snapshot = get_current_snapshot(session, client.user_id)
+        assert snapshot
+        exercise = eligible_exercises(session)[0]
+        manual = create_draft(
+            session,
+            trainer,
+            client.user_id,
+            CreateWorkout(
+                solicitacao_id=uuid4(),
+                versao_base_id=None,
+                onboarding_id=snapshot.id,
+                dias=[
+                    WorkoutDayInput(
+                        titulo="Dia manual",
+                        itens=[
+                            WorkoutItemInput(
+                                exercicio_id=exercise.id,
+                                equipamento_ids=exercise.combinacoes_disponiveis[0],
+                                series=2,
+                                repeticoes="10",
+                                intervalo_segundos=60,
+                            )
+                        ],
+                    )
+                ],
+            ),
+            uuid4(),
+        )
+        publish_manual(
+            session,
+            trainer,
+            client.user_id,
+            manual.id,
+            PublishWorkout(
+                solicitacao_id=uuid4(),
+                revisao=manual.revisao,
+                onboarding_id=snapshot.id,
+                versao_base_id=None,
+                restricoes_conferidas=True,
+            ),
+            uuid4(),
+        )
+
+    result = service.generate(client, client.user_id, request())
+    assert result.estado == "PUBLICADA" and len(provider.calls) == 2
+    assert provider.calls[1]["ficha_base"] is None
+    with sessions.begin() as session:
+        current = published_workout(session, client, client.user_id)
+        previous = published_workout(session, client, client.user_id, manual.id)
+        assert current and current.ficha.origem == "IA"
+        assert previous and previous.ficha.origem == "MANUAL"
+        assert previous.ficha.estado_publicacao == "SUBSTITUIDO"
+        assert previous.ficha.dias == manual.dias
 
 
 @pytest.mark.integration

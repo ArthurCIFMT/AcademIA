@@ -1,6 +1,6 @@
 import re
 from collections.abc import AsyncIterator, Iterator
-from datetime import date
+from datetime import UTC, date, datetime
 from email.message import EmailMessage
 from os import environ
 from pathlib import Path
@@ -28,8 +28,8 @@ from app.modules.identity.service import digest, utc_now
 from app.modules.identity.settings import AuthSettings
 from app.modules.notifications.email import EmailDelivery
 from app.modules.notifications.models import DeliveryState
-from app.modules.people import invitations
-from app.modules.people.clients import CreateClient
+from app.modules.people import clients, invitations
+from app.modules.people.clients import CreateClient, UpdateClient
 from app.modules.people.profiles import ClientProfile, EmployeeProfile
 
 _ORIGIN = "https://academia.example.test"
@@ -156,6 +156,35 @@ def test_validation_and_openapi(monkeypatch: pytest.MonkeyPatch) -> None:
         CreateClient.model_validate(
             {**_form("a@example.test"), "data_nascimento": "2099-01-01"}
         )
+
+
+@pytest.mark.parametrize(
+    ("birth", "valid"),
+    [
+        ("1926-11-21", False),
+        ("1926-11-22", True),
+        ("2026-11-21", True),
+        ("2026-11-22", False),
+    ],
+)
+def test_birth_date_boundary_for_creation_and_update(
+    monkeypatch: pytest.MonkeyPatch, birth: str, valid: bool
+) -> None:
+    # Em São Paulo ainda é 21/11, embora a data UTC já tenha mudado.
+    monkeypatch.setattr(
+        clients, "utc_now", lambda: datetime(2026, 11, 22, 1, tzinfo=UTC)
+    )
+    data = {"nome": "Pessoa sintética", "data_nascimento": birth}
+    inputs = (
+        (CreateClient, {**data, "email": "limite@example.test"}),
+        (UpdateClient, {**data, "revisao": 1, "ativo": True}),
+    )
+    for schema, payload in inputs:
+        if valid:
+            assert schema.model_validate(payload).data_nascimento.isoformat() == birth
+        else:
+            with pytest.raises(ValueError, match="menos de 100 anos"):
+                schema.model_validate(payload)
 
 
 @pytest.mark.integration

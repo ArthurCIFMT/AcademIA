@@ -99,6 +99,26 @@ test("editar conteúdo publicado cria outro rascunho com a base atual", async ()
   expect(JSON.parse(String(write[1].body))).toMatchObject({ versao_base_id: published.id });
 });
 
+test("salva exercício sem exigir título, intervalo, carga ou cadência digitados", async () => {
+  const request = mount(session(), Response.json(context), history(),
+    Response.json(workout, { status: 201 }), Response.json(context), history(workout));
+  await screen.findByText("Cliente sintético");
+  click("Novo rascunho manual");
+  click("Adicionar dia");
+  click("Adicionar exercício");
+  fill("Exercício", "exercicio-sintetico");
+  fill("Séries", "2");
+  fill("Repetições", "10");
+  expect(screen.getByLabelText<HTMLInputElement>("Título do dia").required).toBe(false);
+  expect(screen.getByLabelText<HTMLInputElement>("Intervalo (segundos)").required).toBe(false);
+  click("Salvar rascunho");
+  await screen.findByText("Rascunho salvo.");
+  const [write] = request.mock.calls.filter(([, options]) => options.method === "POST");
+  expect(JSON.parse(String(write[1].body))).toMatchObject({
+    dias: [{ titulo: "Dia 1", itens: [{ intervalo_segundos: 60, carga_kg: null, cadencia: null, observacoes: null }] }],
+  });
+});
+
 test("cliente sem papel de instrutor não abre a manutenção de fichas", async () => {
   const request = mount(session("CLIENTE"));
   expect(await screen.findByRole("heading", { name: "Acesso não permitido" })).toBeTruthy();

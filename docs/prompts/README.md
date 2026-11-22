@@ -471,3 +471,11 @@ caminhos. O mestre/contexto e o SPEC incorporam a regra e o
 Não foi criado um cartão de reparo obrigatório nem alterada a ordem dos 70 cartões.
 Etapas sem impacto registram isso; manutenção documental não altera os executáveis
 ou repete testes da aplicação. O próximo cartão visual continua UX-01.
+
+### Ajustes da revisão manual — 2026-11-22
+
+PES-02 valida nascimento na interface e na API. TRN-02 preenche título e
+intervalo padrão no editor. AI-04 diferencia os motivos salvos de bloqueio e
+abstenção. AI-05 esclarece o escopo das dúvidas gerais e o prompt v5 reforça
+respostas parciais sustentadas por fontes. A ficha manual vigente não impede
+uma geração elegível. Ver [comandos e verificação](../testes/comandos.md#revisão-manual-de-2026-11-22).

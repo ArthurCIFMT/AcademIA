@@ -14,6 +14,17 @@ const labels: Record<string, string> = {
   CANCELADA: "Solicitação cancelada", LIMITE_EXCEDIDO: "O contexto excedeu os limites da geração",
   INTERROMPIDA: "O contexto mudou ou a execução foi interrompida",
 };
+const reasons = new Map([
+  ["QUOTA_EXCEDIDA", "O limite de uso da IA gratuita foi atingido. Aguarde antes de preparar outra solicitação; atualizar a página não renova a quota."],
+  ["REQUISICAO_PROVEDOR_RECUSADA", "O provedor recusou esta solicitação. O erro foi registrado para análise."],
+  ["ESCOPO_ETARIO", "A geração automática está disponível a partir dos 18 anos, conforme a idade registrada no onboarding. O instrutor pode montar a ficha manualmente."],
+  ["ALERTA_GRAVE_DECLARADO", "As respostas do onboarding indicam um alerta previsto na triagem. Confira se os dados estão corretos e fale com seu instrutor sobre uma ficha manual."],
+  ["ALERTA_GRAVE_TEXTO", "A análise do texto do onboarding sinalizou um possível alerta. Isso não é um diagnóstico. Confira se as informações estão corretas e fale com seu instrutor sobre uma ficha manual."],
+  ["SUPORTE_SAUDE_INSUFICIENTE", "A base do assistente não confirmou evidência suficiente para gerar uma ficha considerando as informações do seu onboarding. O instrutor pode montar a ficha manualmente."],
+  ["DADO_DESCONHECIDO", "A triagem precisa de informações ainda marcadas como desconhecidas no onboarding."],
+  ["LACUNA_OU_CONTRADICAO", "A triagem sinalizou informações incompletas ou contraditórias. Confira as respostas do onboarding."],
+  ["SEM_EXERCICIOS_VIAVEIS", "O catálogo da academia não tem exercícios disponíveis para esta geração."],
+]);
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const when = (value: string) => new Date(value).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
 function errorMessage(error: unknown) {
@@ -95,11 +106,7 @@ export function AITrainingPage({ csrf }: { csrf: string }) {
   }
   const current = id && data?.id === id ? data.value : null;
   const result = current?.execucao ?? (receipt?.id === id ? receipt.value : null);
-  const reason = result?.motivo === "QUOTA_EXCEDIDA"
-    ? "O limite de uso da IA gratuita foi atingido. Aguarde antes de preparar outra solicitação; atualizar a página não renova a quota."
-    : result?.motivo === "REQUISICAO_PROVEDOR_RECUSADA"
-      ? "O provedor recusou esta solicitação. O erro foi registrado para análise."
-      : null;
+  const reason = result ? reasons.get(result.motivo) : undefined;
   const generation = current?.geracao;
   const training = generation?.contexto.treino;
   const expired = training?.ficha.estado_publicacao === "CONTEUDO_EXPIRADO";

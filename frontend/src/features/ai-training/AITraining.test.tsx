@@ -54,6 +54,15 @@ test.each([
   expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
 });
 
+test.each([
+  ["BLOQUEADA", "ALERTA_GRAVE_TEXTO", /análise do texto do onboarding/],
+  ["ABSTENCAO", "SUPORTE_SAUDE_INSUFICIENTE", /não confirmou evidência suficiente/],
+])("mostra o motivo salvo de %s sem repetir a geração", async (estado, motivo, explanation) => {
+  const fetcher = mount(async () => Response.json({ execucao: { ...receipt(estado), motivo }, geracao: null }), "?solicitacao=" + id);
+  expect((await screen.findByRole("alert")).textContent).toMatch(explanation);
+  expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
+});
+
 test("cancelamento em voo não abre segunda geração", async () => {
   let state = "EM_EXECUCAO";
   let finish: (response: Response) => void = () => {};

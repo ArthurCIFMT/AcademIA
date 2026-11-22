@@ -41,6 +41,8 @@ não implementar revogação global como consequência implícita do perfil de c
 
 - Cadastro válido retorna identificador e persiste após recarregar.
 - Duplicidade ou validação rejeitada não cria dados parciais.
+- Interface e API rejeitam nascimento futuro ou idade de 100 anos completos
+  ou mais na data civil de São Paulo, tanto ao cadastrar quanto ao atualizar.
 - Cliente não consulta terceiro; inativar preserva histórico.
 - Cliente cadastrado realiza o primeiro login pelo mecanismo documentado sem
   cadastro duplicado; token de onboarding não abre sessão geral por si só.

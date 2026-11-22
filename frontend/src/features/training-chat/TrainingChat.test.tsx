@@ -25,6 +25,13 @@ function mount(handler:(url:string,options:RequestInit)=>Promise<Response>, quer
  return fetcher;
 }
 const click=(name:string)=>fireEvent.click(screen.getByRole("button",{name}));
+test("distingue uma dúvida sem evidência de uma falha técnica", async()=>{
+ mount(async()=>Response.json([{...turn,estado:"ABSTENCAO",motivo:"RESPOSTA_VALIDADA",resposta:null,fontes:[]}]));
+ expect(await screen.findByText("As fontes consultadas não sustentaram uma resposta para esta pergunta.")).toBeTruthy();
+ expect(screen.getByText(/onboarding é usado na geração de ficha/)).toBeTruthy();
+ expect(screen.queryByRole("alert")).toBeNull();
+});
+
 test("dúvida sem ficha envia somente mensagem e texto retornado é inerte",async()=>{
  let sent=false;
  const fetcher=mount(async(url,options)=>{

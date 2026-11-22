@@ -45,6 +45,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
   origem MANUAL, instrutor designado autor e snapshot do catálogo (CA-15.14).
 - Nova versão não muda itens, autoria e prescrição histórica.
 - Não aceitar item inexistente/inativo, recursos indisponíveis em nova ficha nem alteração por outro cliente.
+- Permitir deixar título do dia e intervalo em branco no editor. Exibir e
+  enviar os valores padrão ajustáveis `Dia N` e 60 segundos. Preservar
+  zero segundos quando informado explicitamente.
 - Retenção não reutiliza números de versão; snapshots de execuções não são
   reexpostos como fichas completas fora do limite.
 

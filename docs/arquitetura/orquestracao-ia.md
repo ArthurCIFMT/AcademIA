@@ -139,9 +139,12 @@ latência/cota gratuita real e corpus completo serão medidos em AI-06.
 
 Em AI-06, a [ADR-007](decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
 duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
-O prompt academia-ia-v4 exige idioma em todo texto novo e fundamentação explícita;
+O prompt academia-ia-v5 mantém idioma em todo texto novo e fundamentação explícita;
 o modelo recebe texto completo e referências mínimas, com proveniência integral
 preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
+Em dúvidas gerais, v5 esclarece que o histórico ajuda a entender a pergunta
+atual e que trechos pertinentes podem sustentar uma resposta parcial. O chat
+não recebe onboarding ou catálogo. Ensaios anteriores conservam sua versão.
 
 A triagem explicita lacunas do esquema sem exigir exames fora do escopo.
 Depois de validar a proposta e o diff, a apresentação pública conta dias/itens e

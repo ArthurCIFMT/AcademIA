@@ -1,6 +1,6 @@
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-20.
+Versão documental: 1.0. Revisão: 2026-11-22.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -133,6 +133,11 @@ O [preparo local do RAG](../../docs/instalacao/preparar-rag-local.md), concluíd
 em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
 documentos. A gestão do corpus é técnica, desativada na rotina administrativa;
 perfis, dados de clientes e demais módulos permanecem preservados.
+A revisão manual de 22/11 limita datas de nascimento no cadastro, facilita o
+preenchimento de [fichas manuais](../../docs/arquitetura/fichas-manuais.md) e
+esclarece estados de [dúvida e geração](../../docs/arquitetura/chat-e-adaptacao.md).
+Chat e geração seguem fluxos distintos. Triagem do onboarding e evidência
+específica de saúde continuam necessárias quando aplicáveis à ficha automática.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|

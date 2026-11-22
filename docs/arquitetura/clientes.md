@@ -19,7 +19,9 @@ a essa extração e mantém o contrato de funcionários.
 
 Administrador e atendente ativos acessam as rotas. O backend verifica
 permissões da sessão e exige origem e CSRF nas mutações. Nome, e-mail e
-data de nascimento são obrigatórios. O telefone é opcional. O e-mail é o
+data de nascimento são obrigatórios. No cadastro e na atualização, a data civil
+de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
+ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
 A operação de vínculo exige indicação explícita, conta ativa ou convidada,
 perfil de funcionário existente e ausência de perfil de cliente. A criação

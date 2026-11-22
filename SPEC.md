@@ -1,7 +1,7 @@
 <!-- Gerado por python scripts/gerar_spec.py --write. Edite as fontes versionadas; use --check para detectar divergência. -->
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-20.
+Versão documental: 1.0. Revisão: 2026-11-22.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -151,6 +151,11 @@ O [preparo local do RAG](docs/instalacao/preparar-rag-local.md), concluído
 em 2026-11-19, registra/importa as fontes e ativa recortes revisados de três
 documentos. A gestão do corpus é técnica, desativada na rotina administrativa;
 perfis, dados de clientes e demais módulos permanecem preservados.
+A revisão manual de 22/11 limita datas de nascimento no cadastro, facilita o
+preenchimento de [fichas manuais](docs/arquitetura/fichas-manuais.md) e
+esclarece estados de [dúvida e geração](docs/arquitetura/chat-e-adaptacao.md).
+Chat e geração seguem fluxos distintos. Triagem do onboarding e evidência
+específica de saúde continuam necessárias quando aplicáveis à ficha automática.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|
@@ -455,6 +460,8 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
   funcionária pode receber perfil cliente na mesma identidade pelo fluxo autorizado,
   sem criar usuário duplicado ou conceder sessão só por informar e-mail.
 - CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
+  Cadastro e atualização rejeitam datas de nascimento futuras e idades de
+  100 anos completos ou mais na data civil de São Paulo.
 
 ##### RF-02 — Consultar e pesquisar clientes
 
@@ -618,7 +625,11 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
   dependência de LLM/RAG; catálogo de RF-38 separa movimento de prescrição.
 - CA-15.12: Pedido de geração tem chave idempotente, cliente e entrada identificados; replay não chama LLM/publica outra versão e mesma chave com entrada divergente retorna conflito.
 - CA-15.13: Timeout, quota, chave ausente, cancelamento, JSON inválido ou resposta tardia encerram a tentativa sem nova versão e sem corromper a vigente; não há retry LLM automático ou contratação/fallback pago oculto.
-- CA-15.14: Instrutor designado cria rascunho manual por dias/itens, preenche séries/repetições/carga/intervalos e publica pelo mesmo serviço de domínio, com origem MANUAL, autoria e snapshot do catálogo; cliente/instrutor alheio não cria ficha para terceiro.
+- CA-15.14: instrutor designado cria rascunho manual por dias/itens, informa séries
+  e repetições e pode ajustar carga e intervalo. A tela permite deixar título
+  e intervalo em branco com valores padrão explícitos. A publicação pelo mesmo
+  serviço de domínio registra origem MANUAL, autoria e snapshot do catálogo.
+  Cliente e instrutor alheio não criam ficha para terceiro.
 - CA-15.15: Geração usa a configuração vigente (v2, ADR-006) e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
 
 ##### RF-16 — Visualizar ficha de treino atual
@@ -667,6 +678,8 @@ com fontes recuperadas e contexto curto, distinguindo conversa de geração de f
 - CA-18.4: indisponibilidade/timeout retornam erro controlado e não corrompem treino.
 - CA-18.5: resposta informativa cita fontes reais recuperadas; falta/conflito de suporte
   produz abstenção e não é apresentado como diagnóstico, tratamento ou liberação médica.
+  Quando somente parte da dúvida geral tem suporte, a resposta cita essa parte
+  e informa o limite. A tela diferencia abstenção, falha do serviço e fonte revogada.
 - CA-18.6: pedido explícito de gerar/adaptar ficha é roteado para RF-15/RF-19; resposta
   de dúvida não modifica conteúdo silenciosamente.
 - CA-18.7: chat tem no máximo uma chamada generativa, contexto/saída limitados;
@@ -3511,7 +3524,8 @@ Responsável técnico do corpus/casos: mantenedor do projeto por delegação, se
 #### Cadastro e público do protótipo
 
 CLIENTE: nome 2–120 caracteres, e-mail válido/único normalizado, data_nascimento
-civil não futura, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
+civil não futura e com menos de 100 anos completos na data de cadastro/edição
+em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 Idade é calculada na data de conclusão e congelada no snapshot, sem repetir data
@@ -8225,9 +8239,12 @@ latência/cota gratuita real e corpus completo serão medidos em AI-06.
 
 Em AI-06, a [ADR-007](docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md) acrescentou
 duas consultas fixas de geração (prescrição/descanso), reunindo até cinco trechos.
-O prompt academia-ia-v4 exige idioma em todo texto novo e fundamentação explícita;
+O prompt academia-ia-v5 mantém idioma em todo texto novo e fundamentação explícita;
 o modelo recebe texto completo e referências mínimas, com proveniência integral
 preservada no backend. Não há nova chamada LLM, planner ou loop de reparo.
+Em dúvidas gerais, v5 esclarece que o histórico ajuda a entender a pergunta
+atual e que trechos pertinentes podem sustentar uma resposta parcial. O chat
+não recebe onboarding ou catálogo. Ensaios anteriores conservam sua versão.
 
 A triagem explicita lacunas do esquema sem exigir exames fora do escopo.
 Depois de validar a proposta e o diff, a apresentação pública conta dias/itens e
@@ -10831,6 +10848,12 @@ libera geração e não remove bloqueio determinístico. Não há aprovação m�
 diagnóstico ou inferência clínica nova. Hashes de cenários privados ficam fora do
 corpus compartilhado e do Git. DUVIDA não usa esse mapeamento de saúde.
 
+No acompanhamento de geração, o recibo diferencia possível alerta sinalizado na
+análise de texto de falta de evidência específica. A interface não exibe o
+texto privado usado na triagem. No chat de dúvidas, abstenção indica que as
+fontes não sustentaram a resposta, enquanto fonte revogada ou contexto expurgado
+tem mensagem própria. A interface aponta o fluxo que usa o onboarding.
+
 #### Persistência, orçamento e retenção
 
 Migration 0015 introduziu o chat persistente. A revisão 0016 remove o marcador
@@ -12145,7 +12168,9 @@ a essa extração e mantém o contrato de funcionários.
 
 Administrador e atendente ativos acessam as rotas. O backend verifica
 permissões da sessão e exige origem e CSRF nas mutações. Nome, e-mail e
-data de nascimento são obrigatórios. O telefone é opcional. O e-mail é o
+data de nascimento são obrigatórios. No cadastro e na atualização, a data civil
+de referência é a de São Paulo. A interface e a API rejeitam nascimento futuro
+ou idade de 100 anos completos ou mais. O telefone é opcional. O e-mail é o
 identificador da conta e permanece fixo na edição cadastral deste módulo.
 A operação de vínculo exige indicação explícita, conta ativa ou convidada,
 perfil de funcionário existente e ausência de perfil de cliente. A criação
@@ -12588,6 +12613,12 @@ segundos. A carga é decimal não negativa de até duas casas decimais e
 Esses limites tratam armazenamento e entrada do protótipo. O instrutor
 preenche os valores da prescrição. Um rascunho pode ter dias sem itens
 enquanto é montado.
+
+O formulário usa `Dia N` quando o título fica em branco e sugere 60 segundos
+quando o intervalo não é preenchido. Ambos são exibidos no editor e podem
+ser alterados antes da publicação. Zero segundos informado explicitamente
+continua válido. Carga, cadência, observações e avaliação podem ficar ausentes.
+A tela envia os valores resolvidos no mesmo contrato de gravação.
 
 O backend revalida o exercício e a alternativa por contrato do catálogo,
 guardando no item o nome, a descrição, o grupo muscular, a revisão do
@@ -14824,8 +14855,10 @@ necessária para sua entrega.
   Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
 - Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
   de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
-- Prompt academia-ia-v4 explicita lacunas do esquema sem exigir exames fora do escopo.
-  Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
+- Prompt academia-ia-v5 mantém as regras de triagem de v4, sem exigir exames fora
+  do escopo. Negativas explícitas são válidas e relato contraditório continua
+  sinalizado. Em dúvidas, responder a parte sustentada pelos trechos e indicar
+  quando faltarem informações sobre o cliente ou a academia.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
 - Demonstração acadêmica reduzida segue ADR-011 e docs/requisitos/escopo-ia-academico.md:
@@ -18927,7 +18960,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
-| `AGENTS.md` | `1932a601aae90fb4542150ddf0da25268341e4d393131fed28a726d9cb29867b` |
+| `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
 | `database/README.md` | `9095f49aa9195354cc92c145bd0487839ba56d2e709e9a4a69cb0ddc4b2359a1` |
@@ -18937,8 +18970,8 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
-| `docs/arquitetura/chat-e-adaptacao.md` | `2a239cc5576db5cef8b6b5e890afb2ece2ed88e3a65979e1c92282b640270e92` |
-| `docs/arquitetura/clientes.md` | `6dc2f2961cc494104bd43e1ca8af82d758106225fec3582e142c5fcc24cc2fad` |
+| `docs/arquitetura/chat-e-adaptacao.md` | `573951f32f5389c3bdb94a8b38fe5404638cc0e3e3b394092b5d3ab494e43ffa` |
+| `docs/arquitetura/clientes.md` | `08c126ad191c48ee0634f022a7ce82ecde1c5b6cff20bc69779aff702f6c8efe` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
@@ -18958,7 +18991,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `197e682c2f6a765cbf8b2cf7ed675ca5b4d86bbfc8e9639ed86f467431a33eb4` |
-| `docs/arquitetura/fichas-manuais.md` | `4ced43a7b0032be75966f31d806543f17c11100bf4c13bc3055dbef7e7a5bad5` |
+| `docs/arquitetura/fichas-manuais.md` | `3b54610f7625eeda0e5f08bb17a128f5707aed6848a31907bd1f49f40d4d1007` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
 | `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
@@ -18971,7 +19004,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modulos.md` | `f625c5995e2edc7de1612f75efb5b7d2c53f7c1024e8aefea17a120ff615ef00` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `aa93096229cd8892e70d15d1341adc201651801f12bdef19e7c13c5cfcb3ff01` |
-| `docs/arquitetura/orquestracao-ia.md` | `b2d1eb8c2fa95c70ca4295de1752603deb8efc94f17a08cc895482cbb6735926` |
+| `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `435fe80670d96e223c043b74a0e1ef9a8ce0e3ed3067a89e1cadbfaefb50fe08` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `eedca2de2fc1cf8d20173bc8b0766a33589299cdd5cdb202ece4b14a7ef3ddca` |
@@ -18980,7 +19013,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `839424fc5cc2f4fe9f8f8e9088eae8b7552716731f80aab65375faa5f21b68a5` |
+| `docs/especificacao/visao-geral.md` | `203c560f8959ca47787eb00f193ac5bc58346a04cdaaa9efe3c179536e0ee9f1` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -18993,14 +19026,14 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `eb5ce9ae464532853cc61f1a915cc8dd7b2ba8f7476e60f3148d093516a9cc5f` |
+| `docs/prompts/README.md` | `7a9e92cff7d86a2887de0aa5cf410a78e0cc5c7f2142d3a72eb1e24c75e3d7f5` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
-| `docs/requisitos/onboarding-e-triagem.md` | `495703905ac7aa90ae53c9d5ec756a7904b173899d0e63b8fc79e7f4b4bb7ac1` |
+| `docs/requisitos/onboarding-e-triagem.md` | `6a5ee7f6bf037071184fc4bf0236582c58f84e81ffa6fd115fc8e06096247c16` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
-| `docs/requisitos/requisitos-funcionais.md` | `e7199153c64f025116c6ad54cf41a83b296bc0a06cbc42a09b72ee244dac5e9c` |
+| `docs/requisitos/requisitos-funcionais.md` | `c8db0c583113b3e91be691fc54a59b6e5b3c6414cb72f61c673abf9a00e5d202` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `7b5cb6057dd147853625ea4fb5319209d027ca7546fa53339d470eaf93e59ec4` |

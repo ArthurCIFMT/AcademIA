@@ -20,6 +20,14 @@ const inviteLabels = {
   SEM_CONFIRMACAO: "Envio sem confirmação",
 };
 
+function clientBirthDateRange() {
+  const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }).format(new Date());
+  const [year, month, day] = today.split("-").map(Number);
+  const earliest = new Date(Date.UTC(year - 100, month - 1, day));
+  if (earliest.getUTCMonth() === month - 1) earliest.setUTCDate(earliest.getUTCDate() + 1);
+  return { min: earliest.toISOString().slice(0, 10), max: today };
+}
+
 function message(failure: unknown) {
   if (failure instanceof ApiError) {
     if (failure.status === 409) return "Operação em conflito. Confira o e-mail e o vínculo ou recarregue o cadastro.";
@@ -44,6 +52,7 @@ export function ClientDirectory({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const birthDateRange = clientBirthDateRange();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -87,6 +96,11 @@ export function ClientDirectory({
       data_nascimento: String(fields.get("data_nascimento") ?? ""),
       telefone: String(fields.get("telefone") ?? "").trim() || null,
     };
+    const { min, max } = clientBirthDateRange();
+    if (!data.data_nascimento || data.data_nascimento < min || data.data_nascimento > max) {
+      setError("Informe uma data de nascimento até hoje e com menos de 100 anos.");
+      return;
+    }
     void run(async () => {
       const updated = form
         ? await changeClient("/" + encodeURIComponent(form.id), "PUT", {
@@ -158,7 +172,10 @@ export function ClientDirectory({
           <form key={form ? form.id + "/" + form.revisao : "new"} className="clients-form" onSubmit={save}>
             <fieldset disabled={busy}>
               <label>Nome<input name="nome" maxLength={120} required defaultValue={form?.nome} /></label>
-              <label>Data de nascimento<input name="data_nascimento" type="date" required defaultValue={form?.data_nascimento} /></label>
+              <label>Data de nascimento<input name="data_nascimento" type="date" required
+                min={birthDateRange.min} max={birthDateRange.max} defaultValue={form?.data_nascimento}
+                aria-describedby="client-birth-range" /></label>
+              <small id="client-birth-range">Informe uma data até hoje e com menos de 100 anos.</small>
               <label>Telefone<input name="telefone" type="tel" maxLength={25} defaultValue={form?.telefone ?? ""} /></label>
               {form ? (
                 <label><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de cliente ativo</label>

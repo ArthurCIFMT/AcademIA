@@ -5,6 +5,11 @@ import { ask, context, differences, history, read, type Ask, type AdaptContext, 
 import "./training-chat.css";
 
 const states:Record<string,string>={PUBLICADA:"Nova versão publicada com parecer pendente",RESPOSTA_PRONTA:"Resposta disponível",ABSTENCAO:"Não há evidência suficiente para responder ou adaptar",CONFLITO:"As fontes apresentam conflito",BLOQUEADA:"Adaptação bloqueada pela triagem",DADOS_INSUFICIENTES:"Confira e complete o onboarding",FALHA:"O serviço não conseguiu concluir a resposta",JSON_INVALIDO:"A resposta da IA não pôde ser utilizada",SCHEMA_INVALIDO:"A proposta não passou pela validação",TIMEOUT:"O tempo da execução foi excedido",LIMITE_EXCEDIDO:"O contexto excedeu o limite",INTERROMPIDA:"O contexto foi alterado",CANCELADA:"Solicitação cancelada",EM_EXECUCAO:"Solicitação em andamento",AGUARDANDO:"Aguardando execução"};
+function turnStatus(turn: Turn) {
+ if (turn.motivo === "CONTEXTO_OU_FONTES_SUPERADOS") return "A resposta anterior perdeu seu contexto ou suas fontes.";
+ if (turn.finalidade === "DUVIDA" && turn.estado === "ABSTENCAO") return "As fontes consultadas não sustentaram uma resposta para esta pergunta.";
+ return states[turn.estado] ?? "Consulte o estado salvo";
+}
 function failure(error:unknown) {
  if(error instanceof ApiError) {
   if([401,403].includes(error.status))return "Seu acesso ao chat não está disponível.";
@@ -79,13 +84,13 @@ export function TrainingChatPage({csrf}:{csrf:string}) {
  const shown=latest&&!turns.some(t=>t.solicitacao_id===latest.solicitacao_id)?[...turns,latest]:turns;
  return <section className="training-chat">
   <h3>Assistente de treino</h3>
-  <p>Tire dúvidas sobre exercícios e atividade física. O assistente usa fontes e não fornece diagnóstico médico. Conversar não altera sua ficha.</p>
+  <p>O assistente usa fontes para responder dúvidas gerais sobre exercícios e atividade física. O onboarding é usado na geração de ficha ou na adaptação de um treino existente.</p>
   <p><Link to="/area/cliente/treinos">Meus treinos</Link> · <Link to="/area/cliente/treino-ia">Gerar uma ficha</Link> · <Link to="/area/cliente/onboarding">Conferir meu onboarding</Link></p>
   <button type="button" onClick={()=>{setError("");setSendError("");setRefresh(v=>v+1);}}>Consultar estado e histórico</button>
   {(sendError||error)&&<p role="alert">{sendError||error}</p>}
   <ol aria-label="Histórico do assistente">{shown.map(turn=><li key={turn.solicitacao_id}>
    {turn.contexto_anterior&&<p>Conversa anterior à ficha atual. Ela permanece no histórico e não é reenviada automaticamente à IA.</p>}
-   <p><strong>Você:</strong> {turn.pergunta}</p><p role="status">{states[turn.estado]??"Consulte o estado salvo"}</p>
+   <p><strong>Você:</strong> {turn.pergunta}</p><p role="status">{turnStatus(turn)}</p>
    {turn.resposta&&<p className="chat-text">{turn.resposta.texto}</p>}
    <ul>{turn.fontes.map(source=><li key={source.fragmento_id}>{safeLink(source.origem_url)?<a href={safeLink(source.origem_url)} target="_blank" rel="noopener noreferrer">{source.titulo}</a>:source.titulo}<span>{source.pagina!==null?" · Página "+source.pagina:source.linha_inicio!==null?" · Linhas "+source.linha_inicio+"–"+source.linha_fim:""}</span></li>)}</ul>
    {turn.versao_publicada_id&&<><p><Link to={"/area/cliente/treino-ia?solicitacao="+encodeURIComponent(turn.solicitacao_id)}>Consultar versão e parecer</Link></p><button type="button" onClick={()=>void compare(turn.solicitacao_id)}>Comparar versões</button></>}

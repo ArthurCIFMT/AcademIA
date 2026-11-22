@@ -29,6 +29,8 @@ Permitir que usuário administrativo registre novo cliente e o vincule a um e-ma
   funcionária pode receber perfil cliente na mesma identidade pelo fluxo autorizado,
   sem criar usuário duplicado ou conceder sessão só por informar e-mail.
 - CA-01.3: dados inválidos retornam validação e não criam cadastro parcial.
+  Cadastro e atualização rejeitam datas de nascimento futuras e idades de
+  100 anos completos ou mais na data civil de São Paulo.
 
 ### RF-02 — Consultar e pesquisar clientes
 
@@ -192,7 +194,11 @@ catálogo elegível e trechos recuperados do livro/literatura aprovada.
   dependência de LLM/RAG; catálogo de RF-38 separa movimento de prescrição.
 - CA-15.12: Pedido de geração tem chave idempotente, cliente e entrada identificados; replay não chama LLM/publica outra versão e mesma chave com entrada divergente retorna conflito.
 - CA-15.13: Timeout, quota, chave ausente, cancelamento, JSON inválido ou resposta tardia encerram a tentativa sem nova versão e sem corromper a vigente; não há retry LLM automático ou contratação/fallback pago oculto.
-- CA-15.14: Instrutor designado cria rascunho manual por dias/itens, preenche séries/repetições/carga/intervalos e publica pelo mesmo serviço de domínio, com origem MANUAL, autoria e snapshot do catálogo; cliente/instrutor alheio não cria ficha para terceiro.
+- CA-15.14: instrutor designado cria rascunho manual por dias/itens, informa séries
+  e repetições e pode ajustar carga e intervalo. A tela permite deixar título
+  e intervalo em branco com valores padrão explícitos. A publicação pelo mesmo
+  serviço de domínio registra origem MANUAL, autoria e snapshot do catálogo.
+  Cliente e instrutor alheio não criam ficha para terceiro.
 - CA-15.15: Geração usa a configuração vigente (v2, ADR-006) e regras acadêmicas de triagem; não requer laudo médico nem aceite prévio do instrutor. Qualidade e latência exigem ensaio real, não apenas JSON válido ou mock.
 
 ### RF-16 — Visualizar ficha de treino atual
@@ -241,6 +247,8 @@ com fontes recuperadas e contexto curto, distinguindo conversa de geração de f
 - CA-18.4: indisponibilidade/timeout retornam erro controlado e não corrompem treino.
 - CA-18.5: resposta informativa cita fontes reais recuperadas; falta/conflito de suporte
   produz abstenção e não é apresentado como diagnóstico, tratamento ou liberação médica.
+  Quando somente parte da dúvida geral tem suporte, a resposta cita essa parte
+  e informa o limite. A tela diferencia abstenção, falha do serviço e fonte revogada.
 - CA-18.6: pedido explícito de gerar/adaptar ficha é roteado para RF-15/RF-19; resposta
   de dúvida não modifica conteúdo silenciosamente.
 - CA-18.7: chat tem no máximo uma chamada generativa, contexto/saída limitados;

@@ -7,7 +7,8 @@ Responsável técnico do corpus/casos: mantenedor do projeto por delegação, se
 ## Cadastro e público do protótipo
 
 CLIENTE: nome 2–120 caracteres, e-mail válido/único normalizado, data_nascimento
-civil não futura, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
+civil não futura e com menos de 100 anos completos na data de cadastro/edição
+em São Paulo, telefone opcional até 25 caracteres. Sem CPF/foto/sexo obrigatórios.
 FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; datas/status
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 Idade é calculada na data de conclusão e congelada no snapshot, sem repetir data

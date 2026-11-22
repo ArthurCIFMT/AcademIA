@@ -7,6 +7,8 @@ import { loadWorkspace, loadWorkout, saveWorkout, type Context, type Content, ty
   type Item, type Workout, type WorkoutMeta } from "./api";
 import "./training-editor.css";
 
+const DEFAULT_REST_SECONDS = 60;
+
 function moved<T>(items: T[], index: number, step: number): T[] {
   const copy = [...items];
   [copy[index], copy[index + step]] = [copy[index + step], copy[index]];
@@ -46,11 +48,11 @@ function Editor({ context, clientId, csrf, initial, onSaved, reload }: {
     }
     const content: Content = {
       onboarding_id: onboardingId, avaliacao_id: assessment || null,
-      dias: days.map((day) => ({ titulo: day.titulo, itens: day.itens.map((item) => ({
+      dias: days.map((day, index) => ({ titulo: day.titulo.trim() || `Dia ${index + 1}`, itens: day.itens.map((item) => ({
         exercicio_id: item.exercicio_id, equipamento_ids: item.equipamento_ids,
         series: Number(item.series), repeticoes: item.repeticoes,
         carga_kg: item.carga_kg === "" ? null : item.carga_kg,
-        intervalo_segundos: Number(item.intervalo_segundos),
+        intervalo_segundos: item.intervalo_segundos === "" ? DEFAULT_REST_SECONDS : Number(item.intervalo_segundos),
         cadencia: item.cadencia || null, observacoes: item.observacoes || null,
       })) })),
     };
@@ -93,7 +95,7 @@ function Editor({ context, clientId, csrf, initial, onSaved, reload }: {
           <fieldset key={dayIndex} className="training-day">
             <legend>Dia {dayIndex + 1}</legend>
             <label>Título do dia
-              <input required maxLength={60} value={day.titulo}
+              <input maxLength={60} value={day.titulo} placeholder={`Dia ${dayIndex + 1}`}
                 onChange={(event) => updateDay(dayIndex, { ...day, titulo: event.target.value })} />
             </label>
             {day.itens.map((item, itemIndex) => {
@@ -132,8 +134,10 @@ function Editor({ context, clientId, csrf, initial, onSaved, reload }: {
                     onChange={(event) => updateItem(dayIndex, itemIndex, { ...item, repeticoes: event.target.value })} /></label>
                   <label>Carga (kg)<input type="number" min={0} max={999999.99} step="0.01" value={item.carga_kg ?? ""}
                     onChange={(event) => updateItem(dayIndex, itemIndex, { ...item, carga_kg: event.target.value })} /></label>
-                  <label>Intervalo (segundos)<input required type="number" min={0} max={3600} step={1} value={item.intervalo_segundos}
+                  <label>Intervalo (segundos)<input type="number" min={0} max={3600} step={1} value={item.intervalo_segundos}
+                    placeholder={String(DEFAULT_REST_SECONDS)} aria-describedby={itemId + "-rest-help"}
                     onChange={(event) => updateItem(dayIndex, itemIndex, { ...item, intervalo_segundos: event.target.value })} /></label>
+                  <small id={itemId + "-rest-help"}>Se ficar em branco, o rascunho usa {DEFAULT_REST_SECONDS} segundos. Você pode ajustar antes de publicar.</small>
                   <label>Cadência<input maxLength={40} value={item.cadencia ?? ""}
                     onChange={(event) => updateItem(dayIndex, itemIndex, { ...item, cadencia: event.target.value })} /></label>
                   <label>Observações<textarea maxLength={1000} value={item.observacoes ?? ""}

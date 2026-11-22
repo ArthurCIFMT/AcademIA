@@ -1,5 +1,27 @@
 # Registro de comandos de verificação
 
+## Revisão manual de 2026-11-22
+
+Em backend/, execute `uv run --locked pytest -q` e, com PostgreSQL de teste,
+`uv run --locked --env-file ../.env pytest -m "database or integration" -q`.
+PES-02 cobre o limite de 100 anos completos e a virada da data em São Paulo.
+A regressão de AI-03 começa com ficha manual vigente, publica por IA e
+confere a ficha manual no histórico. Os ensaios de integração usam LLM controlado.
+
+Em frontend/, execute `npm test`, `npm run lint`, `npm run typecheck` e
+`npm run build`. O editor verifica o envio com título e intervalo em branco.
+As telas de IA verificam a distinção entre alerta, falta de evidência e falha.
+Resultado da rodada: 363 verificações de backend (unitários/contratos),
+176 de PostgreSQL/integração e 98 de frontend aprovadas. A rodada de integração
+manteve 15 casos sem execução pelas condições específicas de suas fixtures.
+Ruff, mypy, lint, tipos, build e checagens documentais passaram.
+
+Um ensaio real à parte usou corpus local, E5/Qdrant e uma chamada ao GPT-OSS
+120B no prompt v5 para uma pergunta geral sintética sobre atividade aeróbica.
+A busca devolveu cinco trechos. O modelo respondeu com uma citação válida
+e distinguiu a recomendação semanal de uma meta diária fixa na esteira.
+Este teste pontual não constitui nova qualificação AI-06.
+
 ## Corpus local e área técnica — 2026-11-19
 
 [Guia de operação](../instalacao/preparar-rag-local.md) e

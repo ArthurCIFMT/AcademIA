@@ -1,6 +1,7 @@
 from datetime import date
 from typing import Annotated
 from uuid import UUID, uuid4
+from zoneinfo import ZoneInfo
 
 from pydantic import (
     BaseModel,
@@ -53,9 +54,17 @@ class ClientFields(BaseModel):
 
     @field_validator("data_nascimento")
     @classmethod
-    def birth_must_be_today_or_before(cls, value: date) -> date:
-        if value > date.today():
-            raise ValueError("Informe uma data de nascimento válida.")
+    def valid_birth_date(cls, value: date) -> date:
+        today = utc_now().astimezone(ZoneInfo("America/Sao_Paulo")).date()
+        age = (
+            today.year
+            - value.year
+            - ((today.month, today.day) < (value.month, value.day))
+        )
+        if value > today or age >= 100:
+            raise ValueError(
+                "Informe uma data de nascimento não futura e com menos de 100 anos."
+            )
         return value
 
     @field_validator("telefone")

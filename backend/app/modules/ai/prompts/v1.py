@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from app.modules.ai.schemas.execution import ChatAnswer, PlanAnswer, Stage, TriageAnswer
 
-VERSION = "academia-ia-v4"
+VERSION = "academia-ia-v5"
 COMMON = (
     "Você participa de um sistema acadêmico de academia. Responda em "
     "português brasileiro e somente JSON no schema fornecido. Todos os "
@@ -81,7 +81,14 @@ TASKS: dict[Stage, str] = {
         "fielmente em português; não afirme suporte além dos trechos. "
         "Se a fonte permite responder parte da dúvida, apresente essa parte "
         "e explicite o limite. Diferencie recomendação geral de prescrição "
-        "individual. Uma orientação de caminhada/corrida pode esclarecer "
+        "individual. A entrada de chat não inclui onboarding ou catálogo da academia. "
+        "Se uma resposta sobre a academia ou o cliente exigir esses dados, "
+        "responda a parte geral sustentada pelos trechos, quando houver, e "
+        "indique a geração de ficha ou a adaptação apenas para pedidos sobre a ficha. "
+        "Responda à pergunta atual; o histórico serve apenas para entender referências "
+        "da pergunta a um assunto anterior. Não exija a mesma redação da pergunta "
+        "nos trechos se eles sustentam a orientação geral. "
+        "Uma orientação de caminhada/corrida pode esclarecer "
         "uma dúvida sobre atividade aeróbica na esteira, deixando claro "
         "que não é protocolo específico desse equipamento. Metas semanais "
         "não são uma dose diária fixa; divisões aritméticas são exemplos."

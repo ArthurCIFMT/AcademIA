@@ -239,8 +239,10 @@ necessária para sua entrega.
   Livro Nahas: escopo explícito de páginas na política v2; não tratar como extração integral.
 - Geração usa duas buscas semânticas fixas (prescrição e descanso) e contexto final
   de até cinco trechos; não acrescenta chamadas LLM ou pesquisa iterativa.
-- Prompt academia-ia-v4 explicita lacunas do esquema sem exigir exames fora do escopo.
-  Negativas explícitas são válidas, mas relato clínico contraditório continua sinalizado.
+- Prompt academia-ia-v5 mantém as regras de triagem de v4, sem exigir exames fora
+  do escopo. Negativas explícitas são válidas e relato contraditório continua
+  sinalizado. Em dúvidas, responder a parte sustentada pelos trechos e indicar
+  quando faltarem informações sobre o cliente ou a academia.
 - Itens da ficha são gerados pelo LLM. Após validação, o backend monta títulos de
   geração e resumo factual; não publica justificativa livre do modelo (ADR-007).
 - Demonstração acadêmica reduzida segue ADR-011 e docs/requisitos/escopo-ia-academico.md:
