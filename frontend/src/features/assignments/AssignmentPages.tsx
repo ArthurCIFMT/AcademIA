@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { ApiError } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { DirectoryPager, DirectoryTag } from "../clients/directory-ui";
 import {
   assignmentHistory,
   changeAssignment,
@@ -13,25 +14,10 @@ import {
   type Instructor,
   type Page,
 } from "./api";
-import "./assignments.css";
 import "./client-workspace.css";
 
 function dateLabel(value: string) {
   return new Date(value).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" });
-}
-
-function Pager({ page, onPage, label }: {
-  page: Page<unknown>; onPage: (page: number) => void; label: string;
-}) {
-  if (page.pagina === 1 && page.total <= page.limite) return null;
-  return (
-    <nav className="assignments-controls" aria-label={label}>
-      <button type="button" onClick={() => onPage(page.pagina - 1)} disabled={page.pagina === 1}>Anterior</button>
-      <span>Página {page.pagina}</span>
-      <button type="button" onClick={() => onPage(page.pagina + 1)}
-        disabled={page.pagina * page.limite >= page.total}>Próxima</button>
-    </nav>
-  );
 }
 
 function InstructorPicker({ busy, onAssign }: { busy: boolean; onAssign: (id: string) => void }) {
@@ -58,36 +44,37 @@ function InstructorPicker({ busy, onAssign }: { busy: boolean; onAssign: (id: st
 
   return (
     <>
-      <form className="assignments-controls" onSubmit={event => {
+      <form className="directory-actions directory-search" onSubmit={event => {
         event.preventDefault();
         load(String(new FormData(event.currentTarget).get("busca") ?? "").trim(), 1);
       }}>
-        <label>Nome ou e-mail do instrutor<input name="busca" type="search" maxLength={254} disabled={busy} /></label>
-        <button type="submit" disabled={busy}>Buscar instrutor</button>
+        <label className="ac-field">Nome ou e-mail do instrutor<input className="ac-field-control" name="busca" type="search"
+          maxLength={254} disabled={busy} /></label>
+        <Button type="submit" variant="secondary" disabled={busy}>Buscar instrutor</Button>
       </form>
       {options ? (
         <>
           {options.itens.length ? (
-            <fieldset disabled={busy}>
+            <fieldset className="directory-group" disabled={busy}>
               <legend>Instrutores ativos</legend>
               {options.itens.map(person => (
-                <label className="assignment-choice" key={person.id}>
+                <label className="directory-choice" key={person.id}>
                   <input type="radio" name="instrutor" checked={selected === person.id}
                     onChange={() => setSelected(person.id)} />
                   {person.nome} · {person.email}
                 </label>
               ))}
-              <button type="button" disabled={!selected} onClick={() => onAssign(selected)}>Salvar designação</button>
+              <Button disabled={busy || !selected} onClick={() => onAssign(selected)}>Salvar designação</Button>
             </fieldset>
-          ) : <p>Nenhum instrutor ativo encontrado.</p>}
-          <Pager label="Páginas de instrutores" page={options} onPage={page => load(filter.term, page)} />
+          ) : <StatusMessage state="empty" title="Nenhum instrutor ativo encontrado." />}
+          <DirectoryPager label="Páginas de instrutores" page={options} disabled={busy} changePage={page => load(filter.term, page)} />
         </>
       ) : failed ? (
         <>
-          <p role="alert">Não foi possível carregar os instrutores.</p>
-          <button type="button" onClick={() => load(filter.term, filter.page)}>Tentar novamente</button>
+          <StatusMessage state="error" title="Não foi possível carregar os instrutores." />
+          <Button variant="secondary" onClick={() => load(filter.term, filter.page)}>Tentar novamente</Button>
         </>
-      ) : <p role="status">Carregando instrutores…</p>}
+      ) : <StatusMessage state="loading" title="Carregando instrutores…" />}
     </>
   );
 }
@@ -99,6 +86,7 @@ function ManageAssignments({ clientId, csrf }: { clientId: string; csrf: string 
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -116,7 +104,8 @@ function ManageAssignments({ clientId, csrf }: { clientId: string; csrf: string 
   }
 
   async function assign(instructorId: string) {
-    if (!view) return;
+    if (!view || saving.current) return;
+    saving.current = true;
     setBusy(true);
     setError("");
     setNotice("");
@@ -129,45 +118,48 @@ function ManageAssignments({ clientId, csrf }: { clientId: string; csrf: string 
         ? "A designação mudou ou o instrutor ficou indisponível. Recarregue antes de tentar novamente."
         : "Não foi possível salvar a designação.");
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   }
 
   if (!view && loadFailed) return (
     <>
-      <p role="alert">Não foi possível consultar a designação.</p>
-      <button type="button" onClick={() => reload(query.page)}>Tentar novamente</button>
+      <StatusMessage state="error" title="Não foi possível consultar a designação." />
+      <Button variant="secondary" onClick={() => reload(query.page)}>Tentar novamente</Button>
     </>
   );
 
   return (
     <>
-      {notice && <p role="status">{notice}</p>}
+      {notice && <StatusMessage state="success" title={notice} />}
       {error && (
         <>
-          <p role="alert">{error}</p>
-          <button type="button" onClick={() => { setError(""); reload(1); }}>Recarregar designação</button>
+          <StatusMessage state="error" title={error} />
+          <Button variant="secondary" onClick={() => { setError(""); reload(1); }}>Recarregar designação</Button>
         </>
       )}
       {view ? (
         <>
-          <h4>{view.cliente.nome}</h4>
-          <p>Responsável atual: {view.vigente?.instrutor_nome ?? "Nenhum"}</p>
-          {view.vigente && !view.instrutor_ativo && <p>O responsável cadastrado está indisponível.</p>}
+          <div className="directory-card">
+            <h4>{view.cliente.nome}</h4>
+            <p>Responsável atual: {view.vigente?.instrutor_nome ?? "Nenhum"}</p>
+            {view.vigente && !view.instrutor_ativo && <DirectoryTag tone="attention">Responsável indisponível</DirectoryTag>}
+          </div>
           {view.cliente_elegivel
             ? <InstructorPicker busy={busy} onAssign={id => void assign(id)} />
-            : <p>O perfil do cliente precisa estar habilitado para receber designação.</p>}
+            : <StatusMessage state="empty" title="O perfil do cliente precisa estar habilitado para receber designação." />}
           <h4>Histórico</h4>
           {view.historico.itens.length ? (
-            <ul>{view.historico.itens.map(item => (
-              <li key={item.id}>
+            <ul className="directory-cards">{view.historico.itens.map(item => (
+              <li className="directory-card" key={item.id}>
                 {item.instrutor_nome} · {dateLabel(item.inicio)} até {item.fim && dateLabel(item.fim)}
               </li>
             ))}</ul>
           ) : <p>Nenhuma designação encerrada nesta página.</p>}
-          <Pager label="Páginas do histórico" page={view.historico} onPage={reload} />
+          <DirectoryPager label="Páginas do histórico" page={view.historico} disabled={busy} changePage={reload} />
         </>
-      ) : <p role="status">Carregando designação…</p>}
+      ) : <StatusMessage state="loading" title="Carregando designação…" />}
     </>
   );
 }
@@ -176,9 +168,9 @@ export function AssignmentPage({ csrf }: { csrf: string }) {
   const [params] = useSearchParams();
   const id = params.get("cliente");
   return (
-    <section className="assignments-panel" aria-labelledby="assignment-title">
+    <section className="directory" aria-labelledby="assignment-title">
       <h3 id="assignment-title">Instrutor responsável</h3>
-      <Link to="/area/administracao/clientes">Voltar ao cadastro de clientes</Link>
+      <div className="directory-actions"><Link to="/area/administracao/clientes">Voltar ao cadastro de clientes</Link></div>
       {id ? <ManageAssignments key={id} clientId={id} csrf={csrf} /> : <p>Selecione um cliente no cadastro.</p>}
     </section>
   );
@@ -225,7 +217,7 @@ export function MyAssignmentsPage() {
               </li>
             ))}</ul>
           ) : <StatusMessage state="empty" title="Nenhum cliente designado nesta página." />}
-          <Pager label="Páginas dos meus clientes" page={records} onPage={load} />
+          <DirectoryPager label="Páginas dos meus clientes" page={records} changePage={load} />
         </>
       ) : failed ? (
         <>

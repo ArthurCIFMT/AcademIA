@@ -14,11 +14,37 @@ const [dist, output] = process.argv.slice(2).map(value => path.resolve(value));
 const preview = "/src/ui/preview/index.html";
 const widths = [320, 390, 768, 1440];
 const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css" };
-const samples = [...cases, ["atendimento", "/area/atendimento/clientes", ["ATENDENTE"], "cliente@example.test"]];
+const admin = ["ADMINISTRADOR"];
+const samples = [
+  ...cases,
+  ["atendimento", "/area/atendimento/clientes", ["ATENDENTE"], "cliente@example.test"],
+  ["funcionarios", "/area/administracao/funcionarios", admin, "Atendente de exemplo"],
+  ["designacoes", "/area/administracao/designacoes?cliente=cliente", admin, "Responsável atual: Nenhum"],
+  ["inventario", "/area/administracao/equipamentos", admin, "Remo de exemplo"],
+  ["exercicios", "/area/administracao/exercicios", admin, "Remada de exemplo"],
+  ["catalogo-publico", "/equipamentos", [], "Remo de exemplo"],
+];
 const actions = {
   entrada: "Entrar", onboarding: "Concluir onboarding", duvida: "Enviar dúvida",
   quota: "Consultar estado salvo", ficha: "Exportar ficha em JSON", parecer: "Registrar parecer",
   cadastro: "Cadastrar cliente", atendimento: "Cadastrar cliente",
+  funcionarios: "Cadastrar funcionário", designacoes: "Buscar instrutor",
+  inventario: "Cadastrar equipamento", exercicios: "Cadastrar exercício",
+};
+const rows = (...itens) => ({ itens, pagina: 1, limite: 20, total: itens.length });
+const equipment = { id: "remo", nome: "Remo de exemplo", categoria: "Cardio",
+  descricao: "Equipamento sintético", imagem_url: null, ativo: true, operacional: true, revisao: 1 };
+const resource = { id: equipment.id, nome: equipment.nome, disponivel: true };
+const directoryFixtures = {
+  "/api/v1/funcionarios": rows({ id: "atendente", nome: "Atendente de exemplo", papeis: ["ATENDENTE"], ativo: true }),
+  "/api/v1/designacoes/clientes/cliente": { cliente: { id: "cliente", nome: "Cliente de exemplo" },
+    cliente_elegivel: true, vigente: null, instrutor_ativo: false, historico: rows() },
+  "/api/v1/designacoes/instrutores": rows({ id: "instrutor", nome: "Instrutor de exemplo", email: "instrutor@example.test" }),
+  "/api/v1/admin/equipamentos": rows(equipment),
+  "/api/v1/equipamentos": rows(equipment),
+  "/api/v1/exercicios": rows({ id: "remada", nome: "Remada de exemplo", descricao: "Exercício sintético",
+    grupo_muscular: "Costas", ativo: true, elegivel: true, dispensa_equipamento: false, combinacoes: [[resource]] }),
+  "/api/v1/exercicios/recursos": [resource],
 };
 
 async function build() {
@@ -71,6 +97,7 @@ async function withPage(browser, origin, width, roles, inspect) {
       ? route.fulfill({ json: { user_id: "cliente", roles, csrf_token: "sintetico", expires_at: "2099-01-01T00:00:00Z" } })
       : route.fulfill({ status: 401, json: {} });
     if (Object.hasOwn(fixtures, pathname)) return route.fulfill({ json: fixtures[pathname] });
+    if (Object.hasOwn(directoryFixtures, pathname)) return route.fulfill({ json: directoryFixtures[pathname] });
     unexpected.push(pathname);
     return route.fulfill({ status: 404, json: {} });
   });
@@ -114,15 +141,21 @@ async function inspectApp(browser, origin, width, sample, files) {
     const content = name === "entrada" ? page.getByLabel(marker, { exact: true }) : name === "onboarding"
       ? page.getByText("Altura (cm)", { exact: true }) : page.getByText(marker).first();
     await content.waitFor({ timeout: 8000 });
+    await assertReflow(page, width, name);
+    if (!actions[name]) return;
     const action = page.getByRole("button", { name: actions[name], exact: true });
     await action.waitFor({ timeout: 3000 });
     const bounds = await action.boundingBox();
     assert.ok(bounds.width >= 44 && bounds.height >= 44, `Alvo principal menor que 44 px em ${name}`);
-    await assertReflow(page, width, name);
-    if (name === "cadastro" || name === "atendimento") {
+    const formFields = { cadastro: "Data de nascimento", atendimento: "Data de nascimento",
+      funcionarios: "Data de admissão", inventario: "Foto (JPG ou PNG)", exercicios: "Descrição do movimento" };
+    if (formFields[name]) {
       await action.click();
-      await page.getByLabel("Data de nascimento").waitFor();
-      await page.getByRole("button", { name: "Salvar cadastro" }).waitFor();
+      await page.getByLabel(formFields[name], { exact: true }).waitFor();
+      if (name === "exercicios") {
+        await page.getByRole("button", { name: "Adicionar alternativa" }).click();
+        await page.getByRole("checkbox", { name: equipment.nome, exact: true }).waitFor();
+      }
       await assertReflow(page, width, name + " aberto");
     }
     if ((width === 390 && ["entrada", "cadastro", "onboarding"].includes(name))

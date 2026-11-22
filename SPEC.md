@@ -249,7 +249,8 @@ com verificação no navegador e nas jornadas integradas. UX-04 entregou
 UX-05 reuniu [dúvida, geração e adaptação no Assistente](docs/testes/ux05-assistente.md).
 UX-06 reorganizou [fichas e histórico do cliente no celular](docs/testes/ux06-fichas-no-celular.md).
 UX-07 reorganizou a [área de trabalho do instrutor](docs/testes/ux07-area-do-instrutor.md).
-UX-08 está liberado para cadastros, catálogos e operação administrativa.
+UX-08 padronizou [cadastros, catálogos e operação administrativa](docs/testes/ux08-cadastros-e-catalogos.md).
+UX-09 está liberado para o aceite visual e a regressão integrada.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
@@ -12231,6 +12232,13 @@ biometria. O cadastro pode ser iniciado antes da matrícula, foto e onboarding.
 
 #### Primeiro acesso
 
+A UX-08 organiza resultados por nome, idade, e-mail e situação do perfil.
+A busca mantém o filtro ao paginar. Na edição, dados cadastrais, conta e
+convite aparecem em áreas próprias. **Convite de primeiro acesso** mostra
+o estado retornado pelo servidor e orienta como consultar o Mailpit. As
+telas administrativas usam dados cadastrais. O onboarding profissional
+continua acessível pelo fluxo de designação.
+
 Uma conta nova recebe o mesmo fluxo de credencial já usado para funcionários.
 Ao vincular uma conta ativa, a pessoa mantém a credencial que já possui.
 O envio ocorre após o commit e o resultado aparece no cadastro. Falha
@@ -12288,6 +12296,10 @@ A entrega reutiliza as tabelas instaladas nas revisões 0003 e 0004.
 
 #### Convite e primeiro acesso
 
+A UX-08 agrupa dados do funcionário e cargos. Cada cargo é uma opção
+selecionável de papel do sistema. O estado do convite fica separado da
+confirmação de cadastro e inclui a validade e o reenvio autorizado.
+
 O envio ocorre após o commit do cadastro. O detalhe mostra validade e estado
 da entrega. Falha de SMTP preserva a conta convidada e o perfil criado.
 O botão **Reenviar convite** emite novo link e invalida o anterior. São
@@ -12338,6 +12350,10 @@ Perfil cliente ativo com conta convidada pode receber designação. O instrutor
 precisa de conta ativa, perfil funcionário ativo e papel efetivo de instrutor.
 
 #### Leitura profissional
+
+Na administração, a UX-08 identifica o cliente e seu responsável atual
+antes da seleção, com pesquisa por nome ou e-mail e paginação dos instrutores
+e do histórico. A troca usa o identificador do vínculo vigente consultado.
 
 O adaptador `PostgresAssignmentReader` implementa `AssignmentReader`.
 Rotas que protegem informações por designação podem receber
@@ -12550,6 +12566,11 @@ com dados diferentes retorna 409.
 
 #### Fotos
 
+A UX-08 distingue o estado do cadastro da disponibilidade operacional no
+inventário e separa identificação, disponibilidade e imagem na edição.
+Quando a foto falta ou falha ao carregar, a interface informa a situação
+e mantém o equipamento legível pelo nome e pelos demais dados cadastrados.
+
 A API recebe `imagem_base64` no JSON, sem prefixo de Data URL. A atualização
 preserva a foto quando o campo é omitido e remove a associação quando recebe
 `null`. O backend usa Pillow para decodificar JPEG/PNG estático de até 4 MiB e
@@ -12606,6 +12627,11 @@ ID do exercício. Nome duplicado ou revisão superada retorna 409. Os parâmetro
 de séries, carga, descanso e ordem ficam no item da ficha.
 
 #### Disponibilidade e histórico
+
+Na UX-08, o cartão do exercício mostra a elegibilidade retornada pelo
+backend e permite consultar as alternativas cadastradas. A edição marca
+quais equipamentos são usados juntos e sinaliza os vínculos que ficaram
+indisponíveis. A dispensa continua sendo uma escolha explícita.
 
 O JSON recebe `combinacoes` como uma lista de alternativas. Cada alternativa
 contém os UUIDs dos equipamentos exigidos juntos. Uma alternativa completa
@@ -13601,7 +13627,8 @@ UX-06 entregou navegação por dia e por versão em **Meus treinos**,
 com [evidências móveis de parecer, download e expurgo](docs/testes/ux06-fichas-no-celular.md).
 UX-07 conectou clientes designados, avaliações, ficha manual e parecer
 na [área de trabalho do instrutor](docs/testes/ux07-area-do-instrutor.md).
-UX-08 está PRONTO.
+UX-08 padronizou [cadastros, catálogos e operação administrativa](docs/testes/ux08-cadastros-e-catalogos.md).
+UX-09 está PRONTO.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -13618,8 +13645,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | CONCLUIDO |
 | [UX-06](docs/prompts/11-experiencia-interface/UX-06.md) | Fichas e histórico do cliente no celular | MOD-04 | UX-05, TRN-04 | CONCLUIDO |
 | [UX-07](docs/prompts/11-experiencia-interface/UX-07.md) | Área de trabalho do instrutor | MOD-02, MOD-03, MOD-04 | UX-06, PES-03, ONB-04, TRN-02, TRN-03 | CONCLUIDO |
-| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | PRONTO |
-| [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | BLOQUEADO |
+| [UX-08](docs/prompts/11-experiencia-interface/UX-08.md) | Cadastros, catálogos e operação administrativa | MOD-01, MOD-02, MOD-04, MOD-10 | UX-07, PES-01, PES-02, EQP-01, TRN-01 | CONCLUIDO |
+| [UX-09](docs/prompts/11-experiencia-interface/UX-09.md) | Aceitação visual, acessibilidade e regressão integrada | MOD-00, MOD-01, MOD-02, MOD-03, MOD-04, MOD-06, MOD-10, MOD-12 | UX-08, TST-01 | PRONTO |
 
 #### Pós-MVP — matrícula e controle de acesso
 
@@ -17890,13 +17917,14 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
-Status: UX-01 a UX-07 verificados. Consulte a
+Status: UX-01 a UX-08 verificados. Consulte a
 [linha de base](docs/testes/ux01-referencia-visual.md) e a
 [verificação dos componentes e das telas existentes](docs/testes/ux02-base-visual.md),
 além dos ensaios de [navegação e acesso](docs/testes/ux03-navegacao-e-acesso.md),
 [onboarding por etapas](docs/testes/ux04-onboarding-etapas.md),
 [Assistente](docs/testes/ux05-assistente.md), [fichas no celular](docs/testes/ux06-fichas-no-celular.md)
-e [área do instrutor](docs/testes/ux07-area-do-instrutor.md).
+[área do instrutor](docs/testes/ux07-area-do-instrutor.md)
+e [cadastros e catálogos](docs/testes/ux08-cadastros-e-catalogos.md).
 O aceite da aplicação redesenhada segue a trilha abaixo.
 Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
 
@@ -19081,9 +19109,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
 | `docs/arquitetura/autorizacao.md` | `256f083ed772ab775c476bb4c09ca916d7f48dbd8f8e86d7d37061af6569e0c7` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
-| `docs/arquitetura/catalogo-exercicios.md` | `71cdce7a76593e4db41b28c6ad36868131c5a91cbf32a6a949c00e1974c1b38c` |
+| `docs/arquitetura/catalogo-exercicios.md` | `5890ceb1d06f7a4242974d48735a65d93b47f7c9dbb2c7132da10dfad96c74f4` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `6fc01e490f47806403411dd9729f7040e9d569ef48a5c5f70228a8a01ee10e8d` |
-| `docs/arquitetura/clientes.md` | `d25a3710ceb3db72e236f3ca7548cb6ff5947bcb8b74fa0eb9c9024a0420ddc9` |
+| `docs/arquitetura/clientes.md` | `fdd065864055f1e1e5ce52e19373826e9583b3db766541d6ab9b06a2ccbd7548` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
 | `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
@@ -19099,13 +19127,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-011-amostra-real-minima.md` | `31758187da83231312208077b3ca892f86a6dbcf4466fccf68d934e5cad2eab5` |
 | `docs/arquitetura/decisoes/ADR-012-estabilidade-ia-e-cobertura-aerobica.md` | `b459a09f63eeb1e6cf3790cab2dc685c864da923117d4db94eedeec43d7fe1c9` |
 | `docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md` | `1d6fe210330d7ed97d4454fcef830c3a1664fc08b9d403f5b899d376c339d763` |
-| `docs/arquitetura/designacoes.md` | `3ea1b218da2cac02d2d63eb56dde3c8cf9348fd000bd018ac7472be742ca314e` |
-| `docs/arquitetura/equipamentos.md` | `dbb33ec42e67f3f53bfc4c2061c8ccdb94c33764ce6523ab92f846bc0cf72233` |
+| `docs/arquitetura/designacoes.md` | `393b42673dc17c413348da48a80dee924c4ff56eb9fad0a7015bce4b03eb09b8` |
+| `docs/arquitetura/equipamentos.md` | `1bc2803d130d0ae5d91b791379f06d16b50ae9bd38a00beff270111892144098` |
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
 | `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
-| `docs/arquitetura/funcionarios.md` | `d9b0bb6a7fd25f08210c6a9e8e020cc80820973a3cd093748a46372947be6232` |
+| `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
@@ -19125,7 +19153,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `cb403bc1162ea5cfe16770e9dbff9bfe46da4e2195a6240e27e3cc773777c10c` |
+| `docs/especificacao/visao-geral.md` | `009fd89f2526b1907d5226f77d42646fcdeeef98f1b0b6cdc5adb3cfeae4f8f3` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19138,7 +19166,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `3ae5d737c8bfb157f2f620b7ea1b9295f113b854fb5ede757a504155a99608b3` |
+| `docs/prompts/README.md` | `9e5d0c5dbb3fae781e52ddd632ead81365319c3134cd315550ee2f1fdcc511b1` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `86c684d482b1dbe0459736da5c01eaa31d04a37419edd28b54f3b9af9274eb5a` |
@@ -19182,7 +19210,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
-| `docs/testes/reformulacao-visual.md` | `02d17e79a17fb9c75d3967e73c0568fffdbfea6d16428cacde600c062b474f29` |
+| `docs/testes/reformulacao-visual.md` | `6bdd5a1ba28db63b56d0bbbfc4f2a483ccc3c2c7273bce89c4273f40a18bf9d0` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |

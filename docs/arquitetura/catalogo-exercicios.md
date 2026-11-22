@@ -24,6 +24,11 @@ de séries, carga, descanso e ordem ficam no item da ficha.
 
 ## Disponibilidade e histórico
 
+Na UX-08, o cartão do exercício mostra a elegibilidade retornada pelo
+backend e permite consultar as alternativas cadastradas. A edição marca
+quais equipamentos são usados juntos e sinaliza os vínculos que ficaram
+indisponíveis. A dispensa continua sendo uma escolha explícita.
+
 O JSON recebe `combinacoes` como uma lista de alternativas. Cada alternativa
 contém os UUIDs dos equipamentos exigidos juntos. Uma alternativa completa
 basta para a seleção. Se `dispensa_equipamento` estiver marcada, envie

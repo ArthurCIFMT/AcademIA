@@ -1,7 +1,8 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { ApiError, type Session } from "../../lib/api/auth";
-import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
+import { Button, StatusMessage } from "../../ui/primitives";
+import { DirectoryPager, DirectoryTag, FirstAccessInvite, useDirectoryFocus } from "../clients/directory-ui";
 import {
   createStaff,
   getStaff,
@@ -13,19 +14,11 @@ import {
   type StaffPage,
   type StaffRole,
 } from "./api";
-import "./staff.css";
 
 const roleLabels = {
   ADMINISTRADOR: "Administrador",
   ATENDENTE: "Atendente",
   INSTRUTOR: "Instrutor",
-};
-const deliveryLabels = {
-  ENVIANDO: "Envio em andamento",
-  ENVIADO: "Enviado à caixa de teste (Mailpit)",
-  FALHOU: "Falha no envio",
-  INCERTO: "Envio incerto",
-  SEM_CONFIRMACAO: "Envio sem confirmação",
 };
 const accountLabels = {
   CONVIDADO: "Aguardando primeiro acesso",
@@ -59,7 +52,10 @@ export function StaffDirectory({
   const [form, setForm] = useState<StaffDetail | null | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [listError, setListError] = useState("");
   const [notice, setNotice] = useState("");
+  const pending = useRef(false);
+  const heading = useDirectoryFocus(form !== undefined);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -68,7 +64,7 @@ export function StaffDirectory({
       failure => {
         if (!controller.signal.aborted) {
           setDirectory(null);
-          setError(errorMessage(failure));
+          setListError(errorMessage(failure));
         }
       },
     );
@@ -76,6 +72,8 @@ export function StaffDirectory({
   }, [page, revision]);
 
   async function run(operation: () => Promise<void>) {
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError("");
     setNotice("");
@@ -84,6 +82,7 @@ export function StaffDirectory({
     } catch (failure) {
       setError(errorMessage(failure));
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -98,7 +97,7 @@ export function StaffDirectory({
     const papeis = fields.getAll("papel").filter((role): role is StaffRole =>
       staffRoles.some(allowed => allowed === role));
     if (papeis.length === 0) {
-      setError("Selecione pelo menos um papel.");
+      setError("Selecione pelo menos um cargo.");
       return;
     }
     const data = {
@@ -116,6 +115,7 @@ export function StaffDirectory({
             vincular_existente: fields.has("vincular"),
           }, session.csrf_token);
       setForm(result);
+      setListError("");
       setRevision(value => value + 1);
       setNotice(form ? "Alterações salvas." : "Funcionário cadastrado.");
       if (result.id === session.user_id && (!result.ativo || !result.papeis.includes("ADMINISTRADOR"))) {
@@ -127,97 +127,94 @@ export function StaffDirectory({
   function resend(staff: StaffDetail) {
     void run(async () => {
       setForm(await resendStaffInvite(staff.id, staff.revisao, session.csrf_token));
-      setNotice("Novo convite processado.");
     });
   }
 
   function changePage(nextPage: number) {
     setError("");
+    setListError("");
     setDirectory(null);
     setPage(nextPage);
   }
 
   return (
-    <section className="staff-panel" aria-labelledby="staff-title">
-      <h3 id="staff-title">Funcionários</h3>
-      <LocalEmailNotice />
-      {notice && <p role="status">{notice}</p>}
-      {error && <p role="alert">{error}</p>}
+    <section className="directory" aria-labelledby="staff-title">
+      <h3 id="staff-title" ref={heading} tabIndex={-1}>
+        {form === undefined ? "Funcionários" : form ? "Editar funcionário" : "Novo funcionário"}
+      </h3>
+      {notice && <StatusMessage state="success" title={notice} />}
+      {error && <StatusMessage state="error" title={error} />}
 
       {form === undefined ? (
         <>
-          <button type="button" disabled={busy} onClick={() => {
+          <div className="directory-actions"><Button disabled={busy} onClick={() => {
             setError(""); setNotice(""); setForm(null);
-          }}>Cadastrar funcionário</button>
+          }}>Cadastrar funcionário</Button></div>
           {directory ? (
             <>
-              {directory.itens.length === 0 && <p>Nenhum funcionário nesta página.</p>}
-              <ul className="staff-list">
+              {directory.itens.length === 0 && <StatusMessage state="empty" title="Nenhum funcionário nesta página." />}
+              <ul className="directory-cards" aria-label="Funcionários cadastrados">
                 {directory.itens.map(item => (
-                  <li key={item.id}>
-                    <span>{item.nome} · {item.papeis.map(role => roleLabels[role]).join(" / ")} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
-                    <button type="button" disabled={busy} onClick={() => open(item.id)}>
+                  <li className="directory-card" key={item.id}>
+                    <h4>{item.nome}</h4>
+                    <p className="directory-meta">{item.papeis.map(role => roleLabels[role]).join(" / ")}</p>
+                    <DirectoryTag tone={item.ativo ? "positive" : "attention"}>{item.ativo ? "Perfil ativo" : "Perfil inativo"}</DirectoryTag>
+                    <div className="directory-actions"><Button variant="secondary" disabled={busy} onClick={() => open(item.id)}>
                       Consultar {item.nome}
-                    </button>
+                    </Button></div>
                   </li>
                 ))}
               </ul>
-              <div className="staff-pages">
-                <button type="button" disabled={busy || page <= 1} onClick={() => changePage(page - 1)}>
-                  Anterior
-                </button>
-                <span>Página {page}</span>
-                <button type="button" disabled={busy || page * directory.limite >= directory.total}
-                  onClick={() => changePage(page + 1)}>Próxima</button>
-              </div>
+              <DirectoryPager page={directory} disabled={busy} label="Páginas de funcionários" changePage={changePage} />
             </>
-          ) : error
-            ? <button type="button" onClick={() => {
-                setError(""); setRevision(value => value + 1);
-              }}>Recarregar lista</button>
-            : <p role="status">Carregando funcionários…</p>}
+          ) : listError ? <>
+              <StatusMessage state="error" title={listError} />
+              <Button variant="secondary" onClick={() => {
+                setListError(""); setRevision(value => value + 1);
+              }}>Recarregar lista</Button>
+            </> : <StatusMessage state="loading" title="Carregando funcionários…" />}
         </>
       ) : (
         <>
-          <h4>{form ? "Editar funcionário" : "Novo funcionário"}</h4>
-          {form && <p>{form.email} · {accountLabels[form.estado_conta]}</p>}
-          <form key={form ? form.id + "/" + form.revisao : "new"} className="staff-form" onSubmit={save}>
-            <fieldset disabled={busy}>
-              <label>Nome<input name="nome" defaultValue={form?.nome} maxLength={120} required /></label>
-              <label>Data de admissão<input name="data_admissao" type="date" defaultValue={form?.data_admissao} required /></label>
-              {form ? (
-                <label><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de funcionário ativo</label>
-              ) : (
-                <>
-                  <label>E-mail<input name="email" type="email" maxLength={254} required /></label>
-                  <label><input name="vincular" type="checkbox" /> Vincular a conta de cliente já existente com este e-mail</label>
-                </>
-              )}
-              <fieldset>
+          {form && <div className="directory-card"><h4>{form.nome}</h4>
+            <p className="directory-meta">{form.email} · {accountLabels[form.estado_conta]}</p>
+          </div>}
+          <form key={form ? form.id + "/" + form.revisao : "new"} className="directory-form" onSubmit={save}>
+            <fieldset className="directory-fieldset" disabled={busy}>
+              <fieldset className="directory-group">
+                <legend>Dados do funcionário</legend>
+                <label className="ac-field">Nome<input name="nome" defaultValue={form?.nome} maxLength={120} required /></label>
+                <label className="ac-field">Data de admissão<input name="data_admissao" type="date" defaultValue={form?.data_admissao} required /></label>
+                {form ? (
+                  <label className="directory-choice"><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de funcionário ativo</label>
+                ) : (
+                  <>
+                    <label className="ac-field">E-mail<input name="email" type="email" maxLength={254} required /></label>
+                    <label className="directory-choice"><input name="vincular" type="checkbox" /> Vincular a conta de cliente já existente com este e-mail</label>
+                  </>
+                )}
+              </fieldset>
+              <fieldset className="directory-group" aria-describedby="staff-roles-help">
                 <legend>Cargos do funcionário</legend>
+                <p id="staff-roles-help">Selecione pelo menos um cargo. Os cargos selecionados definem o que o funcionário pode acessar.</p>
                 {staffRoles.map(role => (
-                  <label key={role}>
+                  <label className="directory-choice" key={role}>
                     <input name="papel" type="checkbox" value={role} defaultChecked={form?.papeis.includes(role)} />
                     {roleLabels[role]}
                   </label>
                 ))}
               </fieldset>
-              <button type="submit">{form ? "Salvar alterações" : "Salvar cadastro"}</button>
             </fieldset>
+            <div className="directory-actions">
+              <Button type="submit" pending={busy} pendingLabel="Salvando…">{form ? "Salvar alterações" : "Salvar cadastro"}</Button>
+              <Button variant="secondary" disabled={busy} onClick={() => {
+                setError(""); setNotice(""); setForm(undefined);
+              }}>Voltar à lista</Button>
+            </div>
           </form>
-          {form?.convite && <p>
-            {deliveryLabels[form.convite.estado]} · Validade até{" "}
-            <time dateTime={form.convite.expira_em}>
-              {new Date(form.convite.expira_em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}
-            </time>
-          </p>}
-          {form?.ativo && form.estado_conta === "CONVIDADO" && (
-            <button type="button" disabled={busy} onClick={() => resend(form)}>Reenviar convite</button>
-          )}
-          {" "}
-          <button type="button" disabled={busy} onClick={() => {
-            setError(""); setNotice(""); setForm(undefined);
-          }}>Voltar à lista</button>
+          {form && (form.convite || form.estado_conta === "CONVIDADO") &&
+            <FirstAccessInvite invite={form.convite} busy={busy}
+              onResend={form.ativo && form.estado_conta === "CONVIDADO" ? () => resend(form) : undefined} />}
         </>
       )}
     </section>

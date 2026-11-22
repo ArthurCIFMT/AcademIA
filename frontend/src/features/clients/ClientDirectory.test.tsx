@@ -83,7 +83,8 @@ test("atendente cadastra, reenvia convite, pesquisa e inativa um cliente", async
   fireEvent.click(screen.getByRole("button", { name: "Voltar à lista" }));
   fireEvent.change(screen.getByLabelText("Nome ou e-mail"), { target: { value: client.email } });
   fireEvent.click(screen.getByRole("button", { name: "Pesquisar" }));
-  expect(await screen.findByText(/Cliente Sintético · 36 anos/)).toBeTruthy();
+  expect(await screen.findByRole("heading", { name: "Cliente Sintético" })).toBeTruthy();
+  expect(screen.getByText(/36 anos ·/)).toBeTruthy();
   fireEvent.click(await screen.findByRole("button", { name: "Consultar Cliente Sintético" }));
   expect(request).toHaveBeenCalledWith(base + "?pagina=1&busca=cliente%40example.test", expect.anything());
   await screen.findByRole("heading", { name: "Editar cliente" });

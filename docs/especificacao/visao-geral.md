@@ -231,7 +231,8 @@ com verificação no navegador e nas jornadas integradas. UX-04 entregou
 UX-05 reuniu [dúvida, geração e adaptação no Assistente](../testes/ux05-assistente.md).
 UX-06 reorganizou [fichas e histórico do cliente no celular](../testes/ux06-fichas-no-celular.md).
 UX-07 reorganizou a [área de trabalho do instrutor](../testes/ux07-area-do-instrutor.md).
-UX-08 está liberado para cadastros, catálogos e operação administrativa.
+UX-08 padronizou [cadastros, catálogos e operação administrativa](../testes/ux08-cadastros-e-catalogos.md).
+UX-09 está liberado para o aceite visual e a regressão integrada.
 As etapas seguintes continuam uma por vez e podem anteceder outros módulos
 pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 

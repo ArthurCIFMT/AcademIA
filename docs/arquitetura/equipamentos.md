@@ -26,6 +26,11 @@ com dados diferentes retorna 409.
 
 ## Fotos
 
+A UX-08 distingue o estado do cadastro da disponibilidade operacional no
+inventário e separa identificação, disponibilidade e imagem na edição.
+Quando a foto falta ou falha ao carregar, a interface informa a situação
+e mantém o equipamento legível pelo nome e pelos demais dados cadastrados.
+
 A API recebe `imagem_base64` no JSON, sem prefixo de Data URL. A atualização
 preserva a foto quando o campo é omitido e remove a associação quando recebe
 `null`. O backend usa Pillow para decodificar JPEG/PNG estático de até 4 MiB e

@@ -42,6 +42,10 @@ A entrega reutiliza as tabelas instaladas nas revisões 0003 e 0004.
 
 ## Convite e primeiro acesso
 
+A UX-08 agrupa dados do funcionário e cargos. Cada cargo é uma opção
+selecionável de papel do sistema. O estado do convite fica separado da
+confirmação de cadastro e inclui a validade e o reenvio autorizado.
+
 O envio ocorre após o commit do cadastro. O detalhe mostra validade e estado
 da entrega. Falha de SMTP preserva a conta convidada e o perfil criado.
 O botão **Reenviar convite** emite novo link e invalida o anterior. São

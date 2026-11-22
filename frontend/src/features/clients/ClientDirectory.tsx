@@ -1,10 +1,10 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiError, type Session } from "../../lib/api/auth";
-import { LocalEmailNotice } from "../notifications/LocalEmailNotice";
+import { Button, StatusMessage } from "../../ui/primitives";
 import { changeClient, getClient, listClients, type ClientDetail, type ClientPage } from "./api";
-import "./clients.css";
+import { DirectoryPager, DirectoryTag, FirstAccessInvite, useDirectoryFocus } from "./directory-ui";
 
 const ageFormat = new Intl.NumberFormat("pt-BR", { style: "unit", unit: "year", unitDisplay: "long" });
 
@@ -14,14 +14,6 @@ const accountLabels = {
   INATIVO: "Conta inativa",
   BLOQUEADO: "Conta bloqueada",
 };
-const inviteLabels = {
-  ENVIANDO: "Envio em andamento",
-  ENVIADO: "Convite enviado à caixa de teste (Mailpit)",
-  FALHOU: "Falha no envio do convite",
-  INCERTO: "Envio incerto",
-  SEM_CONFIRMACAO: "Envio sem confirmação",
-};
-
 function clientBirthDateRange() {
   const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }).format(new Date());
   const [year, month, day] = today.split("-").map(Number);
@@ -54,6 +46,8 @@ export function ClientDirectory({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const pending = useRef(false);
+  const heading = useDirectoryFocus(form !== undefined);
   const birthDateRange = clientBirthDateRange();
 
   useEffect(() => {
@@ -72,6 +66,8 @@ export function ClientDirectory({
   }
 
   async function run(operation: () => Promise<void>) {
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError("");
     setNotice("");
@@ -80,6 +76,7 @@ export function ClientDirectory({
     } catch (failure) {
       setError(message(failure));
     } finally {
+      pending.current = false;
       setBusy(false);
     }
   }
@@ -119,93 +116,95 @@ export function ClientDirectory({
   }
 
   return (
-    <section className="clients-panel" aria-labelledby="clients-title">
-      <h3 id="clients-title">Clientes</h3>
-      <LocalEmailNotice />
-      {notice && <p role="status">{notice}</p>}
-      {error && <p role="alert">{error}</p>}
+    <section className="directory" aria-labelledby="clients-title">
+      <h3 id="clients-title" ref={heading} tabIndex={-1}>
+        {form === undefined ? "Clientes" : form ? "Editar cliente" : "Novo cliente"}
+      </h3>
+      {notice && <StatusMessage state="success" title={notice} />}
+      {error && <StatusMessage state="error" title={error} />}
       {form === undefined ? (
         <>
-          <button type="button" disabled={busy} onClick={() => openForm(null)}>Cadastrar cliente</button>
-          <form className="clients-search" onSubmit={event => {
+          <div className="directory-actions">
+            <Button disabled={busy} onClick={() => openForm(null)}>Cadastrar cliente</Button>
+          </div>
+          <form className="directory-actions directory-search" onSubmit={event => {
             event.preventDefault();
             load(String(new FormData(event.currentTarget).get("busca") ?? "").trim(), 1);
           }}>
-            <label>Nome ou e-mail<input name="busca" type="search" maxLength={254} defaultValue={filter.term} /></label>
-            <button type="submit">Pesquisar</button>
+            <label className="ac-field">Nome ou e-mail<input className="ac-field-control" name="busca" type="search"
+              maxLength={254} defaultValue={filter.term} disabled={busy} /></label>
+            <Button type="submit" variant="secondary" disabled={busy}>Pesquisar</Button>
           </form>
           {directory ? (
             <>
-              {directory.itens.length === 0 && <p>Nenhum cliente encontrado.</p>}
-              <ul className="clients-list">
+              {directory.itens.length === 0 && <StatusMessage state="empty" title="Nenhum cliente encontrado." />}
+              <ul className="directory-cards" aria-label="Clientes encontrados">
                 {directory.itens.map(item => (
-                  <li key={item.id}>
-                    <span>{item.nome} · {ageFormat.format(item.idade)} · {item.email} · {item.ativo ? "Perfil ativo" : "Perfil inativo"}</span>
-                    <button type="button" disabled={busy}
+                  <li className="directory-card" key={item.id}>
+                    <h4>{item.nome}</h4>
+                    <p className="directory-meta">{ageFormat.format(item.idade)} · {item.email}</p>
+                    <DirectoryTag tone={item.ativo ? "positive" : "attention"}>{item.ativo ? "Perfil ativo" : "Perfil inativo"}</DirectoryTag>
+                    <div className="directory-actions"><Button variant="secondary" disabled={busy}
                       onClick={() => void run(async () => setForm(await getClient(item.id)))}>
                       Consultar {item.nome}
-                    </button>
+                    </Button></div>
                   </li>
                 ))}
               </ul>
-              <div className="clients-pages">
-                <button type="button" disabled={filter.page <= 1} onClick={() => load(filter.term, filter.page - 1)}>Anterior</button>
-                <span>Página {filter.page}</span>
-                <button type="button" disabled={filter.page * directory.limite >= directory.total}
-                  onClick={() => load(filter.term, filter.page + 1)}>Próxima</button>
-              </div>
+              <DirectoryPager page={directory} disabled={busy} label="Páginas de clientes"
+                changePage={page => load(filter.term, page)} />
             </>
           ) : listError ? (
             <>
-              <p role="alert">{listError}</p>
-              <button type="button" onClick={() => load(filter.term, filter.page)}>Recarregar lista</button>
+              <StatusMessage state="error" title={listError} />
+              <Button variant="secondary" onClick={() => load(filter.term, filter.page)}>Recarregar lista</Button>
             </>
-          ) : <p role="status">Carregando clientes…</p>}
+          ) : <StatusMessage state="loading" title="Carregando clientes…" />}
         </>
       ) : (
         <>
-          <h4>{form ? "Editar cliente" : "Novo cliente"}</h4>
-          {form && <p>Idade atual · {ageFormat.format(form.idade)}</p>}
-          {form && <p>{form.email} · {accountLabels[form.estado_conta]}</p>}
-          {form && session.roles.includes("ADMINISTRADOR") && (
-            <p><Link to={"/area/administracao/designacoes?cliente=" + encodeURIComponent(form.id)}>
+          {form && <div className="directory-card">
+            <h4>{form.nome}</h4>
+            <p>Idade atual · {ageFormat.format(form.idade)}</p>
+            <p className="directory-meta">{form.email} · {accountLabels[form.estado_conta]}</p>
+            {session.roles.includes("ADMINISTRADOR") && <Link to={"/area/administracao/designacoes?cliente=" + encodeURIComponent(form.id)}>
               Gerenciar instrutor responsável
-            </Link></p>
-          )}
-          <form key={form ? form.id + "/" + form.revisao : "new"} className="clients-form" onSubmit={save}>
-            <fieldset disabled={busy}>
-              <label>Nome<input name="nome" maxLength={120} required defaultValue={form?.nome} /></label>
-              <label>Data de nascimento<input name="data_nascimento" type="date" required
-                min={birthDateRange.min} max={birthDateRange.max} defaultValue={form?.data_nascimento}
-                aria-describedby="client-birth-range" /></label>
-              <small id="client-birth-range">Informe uma data até hoje e com menos de 100 anos.</small>
-              <label>Telefone<input name="telefone" type="tel" maxLength={25} defaultValue={form?.telefone ?? ""} /></label>
-              {form ? (
-                <label><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de cliente ativo</label>
-              ) : (
-                <>
-                  <label>E-mail<input name="email" type="email" maxLength={254} required /></label>
-                  <label><input name="vincular" type="checkbox" /> Vincular à conta de funcionário já existente com este e-mail</label>
-                </>
-              )}
-              <button type="submit">{form ? "Salvar alterações" : "Salvar cadastro"}</button>
+            </Link>}
+          </div>}
+          <form key={form ? form.id + "/" + form.revisao : "new"} className="directory-form" onSubmit={save}>
+            <fieldset className="directory-fieldset" disabled={busy}>
+              <fieldset className="directory-group">
+                <legend>Dados do cliente</legend>
+                <label className="ac-field">Nome<input name="nome" maxLength={120} required defaultValue={form?.nome} /></label>
+                <label className="ac-field">Data de nascimento<input name="data_nascimento" type="date" required
+                  min={birthDateRange.min} max={birthDateRange.max} defaultValue={form?.data_nascimento}
+                  aria-describedby="client-birth-range" /></label>
+                <small id="client-birth-range">Informe uma data até hoje e com menos de 100 anos.</small>
+                <label className="ac-field">Telefone<input name="telefone" type="tel" maxLength={25} defaultValue={form?.telefone ?? ""} /></label>
+              </fieldset>
+              <fieldset className="directory-group">
+                <legend>{form ? "Situação do perfil" : "Conta de acesso"}</legend>
+                {form ? (
+                  <label className="directory-choice"><input name="ativo" type="checkbox" defaultChecked={form.ativo} /> Perfil de cliente ativo</label>
+                ) : (
+                  <>
+                    <label className="ac-field">E-mail<input name="email" type="email" maxLength={254} required /></label>
+                    <label className="directory-choice"><input name="vincular" type="checkbox" /> Vincular à conta de funcionário já existente com este e-mail</label>
+                  </>
+                )}
+              </fieldset>
             </fieldset>
+            <div className="directory-actions">
+              <Button type="submit" pending={busy} pendingLabel="Salvando…">{form ? "Salvar alterações" : "Salvar cadastro"}</Button>
+              <Button variant="secondary" disabled={busy} onClick={() => openForm(undefined)}>Voltar à lista</Button>
+            </div>
           </form>
-          {form?.convite && <p>
-            {inviteLabels[form.convite.estado]} · Validade até{" "}
-            <time dateTime={form.convite.expira_em}>
-              {new Date(form.convite.expira_em).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo" })}
-            </time>
-          </p>}
-          {form?.ativo && form.estado_conta === "CONVIDADO" && (
-            <button type="button" disabled={busy} onClick={() => void run(async () => {
-              setForm(await changeClient("/" + encodeURIComponent(form.id) + "/convite", "POST",
-                { revisao: form.revisao }, session.csrf_token));
-              setNotice("Novo convite processado.");
-            })}>Reenviar convite</button>
-          )}
-          {" "}
-          <button type="button" disabled={busy} onClick={() => openForm(undefined)}>Voltar à lista</button>
+          {form && (form.convite || form.estado_conta === "CONVIDADO") &&
+            <FirstAccessInvite invite={form.convite} busy={busy}
+              onResend={form.ativo && form.estado_conta === "CONVIDADO" ? () => void run(async () => {
+                setForm(await changeClient("/" + encodeURIComponent(form.id) + "/convite", "POST",
+                  { revisao: form.revisao }, session.csrf_token));
+              }) : undefined} />}
         </>
       )}
     </section>

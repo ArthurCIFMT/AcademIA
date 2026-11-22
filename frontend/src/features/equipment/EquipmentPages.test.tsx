@@ -47,6 +47,16 @@ test("o visitante consulta nome, descrição e imagem sem pedir uma sessão", as
   expect(request.mock.calls.map(([url]) => url)).toEqual([publicApi + "?pagina=1"]);
 });
 
+test("foto ausente ou indisponível mantém o nome e a descrição do equipamento", async () => {
+  mount("/equipamentos", page(item, { ...item, id: "sem-foto", nome: "Esteira", imagem_url: null }));
+  const image = await screen.findByRole("img", { name: "Foto de Remo" });
+  expect(screen.getByText("Foto não cadastrada")).toBeTruthy();
+  fireEvent.error(image);
+  expect(screen.getByText("Foto indisponível")).toBeTruthy();
+  expect(screen.getByRole("heading", { name: "Remo" })).toBeTruthy();
+  expect(screen.queryByRole("img", { name: "Foto de Remo" })).toBeNull();
+});
+
 test("o administrador cadastra com imagem e pode inativar o mesmo equipamento", async () => {
   const saved = { ...item, imagem_url: inventory + "/" + id + "/imagem" };
   const inactive = { ...saved, ativo: false, revisao: 2 };

@@ -1,7 +1,9 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
 
 import { ApiError } from "../../lib/api/auth";
+import { Button, StatusMessage } from "../../ui/primitives";
+import { DirectoryPager, DirectoryTag, useDirectoryFocus } from "../clients/directory-ui";
 import { equipmentCatalog, equipmentInventory, saveEquipment, type Equipment,
   type EquipmentFields, type InventoryItem, type Page } from "./api";
 import "./equipment.css";
@@ -28,35 +30,26 @@ function useEquipmentPage<T>(load: (page: number, signal: AbortSignal) => Promis
   return { page, error, reload };
 }
 
-function Pager({ page, reload }: { page: Page<Equipment>; reload: (page: number) => void }) {
-  if (page.pagina === 1 && page.total <= page.limite) return null;
-  return (
-    <nav className="equipment-actions" aria-label="Páginas de equipamentos">
-      <button type="button" disabled={page.pagina <= 1} onClick={() => reload(page.pagina - 1)}>Anterior</button>
-      <button type="button" disabled={page.pagina * page.limite >= page.total}
-        onClick={() => reload(page.pagina + 1)}>Próxima</button>
-    </nav>
-  );
-}
-
 function EquipmentPhoto({ item }: { item: Equipment }) {
-  return item.imagem_url && (
-    <img className="equipment-photo" src={item.imagem_url} alt={"Foto de " + item.nome} loading="lazy" />
-  );
+  const [failed, setFailed] = useState<string | null>(null);
+  const source = item.imagem_url;
+  return source && source !== failed
+    ? <img className="equipment-photo" src={source} alt={"Foto de " + item.nome} loading="lazy" onError={() => setFailed(source)} />
+    : <p className="equipment-photo-fallback">{source ? "Foto indisponível" : "Foto não cadastrada"}</p>;
 }
 
 export function EquipmentCatalogPage() {
   const { page, error, reload } = useEquipmentPage(equipmentCatalog);
   return (
-    <section aria-labelledby="equipment-catalog-title">
+    <section className="directory" aria-labelledby="equipment-catalog-title">
       <h2 id="equipment-catalog-title">Equipamentos disponíveis</h2>
       <p><Link to="/">Voltar ao início</Link></p>
       {page ? (
         <>
           {page.itens.length ? (
-            <ul className="equipment-list">
+            <ul className="directory-cards" aria-label="Equipamentos disponíveis">
               {page.itens.map((item) => (
-                <li key={item.id} className="equipment-card">
+                <li key={item.id} className="directory-card">
                   <EquipmentPhoto item={item} />
                   <h3>{item.nome}</h3>
                   {item.categoria && <p>{item.categoria}</p>}
@@ -64,15 +57,15 @@ export function EquipmentCatalogPage() {
                 </li>
               ))}
             </ul>
-          ) : <p>Nenhum equipamento disponível nesta página.</p>}
-          <Pager page={page} reload={reload} />
+          ) : <StatusMessage state="empty" title="Nenhum equipamento disponível nesta página." />}
+          <DirectoryPager page={page} label="Páginas de equipamentos" changePage={reload} />
         </>
       ) : error ? (
         <>
-          <p role="alert">Não foi possível consultar os equipamentos.</p>
-          <button type="button" onClick={() => reload()}>Tentar novamente</button>
+          <StatusMessage state="error" title="Não foi possível consultar os equipamentos." />
+          <Button variant="secondary" onClick={() => reload()}>Tentar novamente</Button>
         </>
-      ) : <p role="status">Carregando equipamentos…</p>}
+      ) : <StatusMessage state="loading" title="Carregando equipamentos…" />}
     </section>
   );
 }
@@ -100,10 +93,11 @@ function EquipmentForm({ item, csrf, close, onSave }: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [requestId] = useState(() => crypto.randomUUID());
+  const saving = useRef(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy) return;
+    if (saving.current) return;
     const fields = new FormData(event.currentTarget);
     const data: EquipmentFields = {
       nome: String(fields.get("nome") ?? "").trim(),
@@ -120,6 +114,7 @@ function EquipmentForm({ item, csrf, close, onSave }: {
       setError("Selecione uma imagem de até 4 MB.");
       return;
     }
+    saving.current = true;
     setBusy(true);
     setError("");
     try {
@@ -134,41 +129,46 @@ function EquipmentForm({ item, csrf, close, onSave }: {
       else if (status === 401 || status === 403) setError("Sua sessão perdeu a permissão para salvar este equipamento.");
       else setError("Não foi possível confirmar o salvamento. Os dados continuam nesta tela.");
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   }
 
   return (
-    <form className="equipment-form" onSubmit={(event) => void submit(event)}>
-      <fieldset disabled={busy}>
-        <legend>{item ? "Editar equipamento" : "Novo equipamento"}</legend>
-        <label htmlFor="equipment-name">Nome</label>
-        <input id="equipment-name" name="nome" required maxLength={120} defaultValue={item?.nome} />
-        <label htmlFor="equipment-category">Categoria</label>
-        <input id="equipment-category" name="categoria" maxLength={80} defaultValue={item?.categoria ?? ""} />
-        <label htmlFor="equipment-description">Descrição</label>
-        <textarea id="equipment-description" name="descricao" maxLength={1000} defaultValue={item?.descricao ?? ""} />
-        <label className="equipment-checkbox"><input type="checkbox" name="ativo" defaultChecked={item?.ativo ?? true} /> Ativo</label>
-        <label className="equipment-checkbox"><input type="checkbox" name="operacional" defaultChecked={item?.operacional ?? true} /> Operacional</label>
-        <label htmlFor="equipment-image">Foto (JPG ou PNG)</label>
-        <input id="equipment-image" type="file" accept="image/jpeg,image/png" onChange={(event) => {
-          setFile(event.target.files?.[0] ?? null);
-          setRemoveImage(false);
-        }} />
-        {item?.imagem_url && !file && (
-          <>
-            {!removeImage && <EquipmentPhoto item={item} />}
-            <label className="equipment-checkbox">
-              <input type="checkbox" checked={removeImage} onChange={(event) => setRemoveImage(event.target.checked)} />
-              Remover foto atual
-            </label>
-          </>
-        )}
+    <form className="directory-form" onSubmit={(event) => void submit(event)}>
+      <fieldset className="directory-fieldset" disabled={busy}>
+        <fieldset className="directory-group">
+          <legend>Identificação</legend>
+          <label className="ac-field">Nome<input name="nome" required maxLength={120} defaultValue={item?.nome} /></label>
+          <label className="ac-field">Categoria<input name="categoria" maxLength={80} defaultValue={item?.categoria ?? ""} /></label>
+          <label className="ac-field">Descrição<textarea name="descricao" maxLength={1000} defaultValue={item?.descricao ?? ""} /></label>
+        </fieldset>
+        <fieldset className="directory-group">
+          <legend>Disponibilidade</legend>
+          <p>O catálogo público mostra equipamentos ativos e operacionais.</p>
+          <label className="directory-choice"><input type="checkbox" name="ativo" defaultChecked={item?.ativo ?? true} /> Ativo</label>
+          <label className="directory-choice"><input type="checkbox" name="operacional" defaultChecked={item?.operacional ?? true} /> Operacional</label>
+        </fieldset>
+        <fieldset className="directory-group">
+          <legend>Imagem</legend>
+          <label className="ac-field">Foto (JPG ou PNG)
+            <input type="file" accept="image/jpeg,image/png" aria-describedby="equipment-image-limit" onChange={(event) => {
+              setFile(event.target.files?.[0] ?? null);
+              setRemoveImage(false);
+            }} />
+          </label>
+          <small id="equipment-image-limit">Opcional. Até 4 MB e 2048 px de cada lado.</small>
+          {item && !file && !removeImage && <EquipmentPhoto item={item} />}
+          {item?.imagem_url && !file && <label className="directory-choice">
+            <input type="checkbox" checked={removeImage} onChange={(event) => setRemoveImage(event.target.checked)} />
+            Remover foto atual
+          </label>}
+        </fieldset>
       </fieldset>
-      {error && <p role="alert">{error}</p>}
-      <div className="equipment-actions">
-        <button type="submit" disabled={busy}>{busy ? "Salvando…" : "Salvar equipamento"}</button>
-        <button type="button" disabled={busy} onClick={close}>Voltar ao inventário</button>
+      {error && <StatusMessage state="error" title={error} />}
+      <div className="directory-actions">
+        <Button type="submit" pending={busy} pendingLabel="Salvando…">Salvar equipamento</Button>
+        <Button variant="secondary" disabled={busy} onClick={close}>Voltar ao inventário</Button>
       </div>
     </form>
   );
@@ -178,6 +178,7 @@ export function EquipmentInventoryPage({ csrf }: { csrf: string }) {
   const { page, error, reload } = useEquipmentPage(equipmentInventory);
   const [editing, setEditing] = useState<InventoryItem | "new" | null>(null);
   const [notice, setNotice] = useState("");
+  const heading = useDirectoryFocus(editing !== null);
 
   function edit(item: InventoryItem | "new") {
     setNotice("");
@@ -190,37 +191,43 @@ export function EquipmentInventoryPage({ csrf }: { csrf: string }) {
   }
 
   return (
-    <section aria-labelledby="equipment-admin-title">
-      <h3 id="equipment-admin-title">Gerenciar equipamentos</h3>
-      {notice && <p role="status">{notice}</p>}
+    <section className="directory" aria-labelledby="equipment-admin-title">
+      <h3 id="equipment-admin-title" ref={heading} tabIndex={-1}>
+        {editing === "new" ? "Novo equipamento" : editing ? "Editar " + editing.nome : "Gerenciar equipamentos"}
+      </h3>
+      {notice && <StatusMessage state="success" title={notice} />}
       {editing ? (
         <EquipmentForm key={editing === "new" ? "new" : editing.id} csrf={csrf}
           item={editing === "new" ? undefined : editing} close={close}
           onSave={() => { setEditing(null); reload(1); setNotice("Equipamento salvo."); }} />
       ) : (
         <>
-          <button type="button" onClick={() => edit("new")}>Cadastrar equipamento</button>
+          <div className="directory-actions"><Button onClick={() => edit("new")}>Cadastrar equipamento</Button></div>
           {page ? (
             <>
               {page.itens.length ? (
-                <ul className="equipment-list">
+                <ul className="directory-cards" aria-label="Equipamentos cadastrados">
                   {page.itens.map((item) => (
-                    <li key={item.id} className="equipment-card">
+                    <li key={item.id} className="directory-card">
                       <h4>{item.nome}</h4>
-                      <p>{item.ativo ? "Ativo" : "Inativo"} · {item.operacional ? "Operacional" : "Indisponível"}</p>
-                      <button type="button" aria-label={"Editar " + item.nome} onClick={() => edit(item)}>Editar</button>
+                      <EquipmentPhoto item={item} />
+                      {item.categoria && <p className="directory-meta">{item.categoria}</p>}
+                      <DirectoryTag tone={item.ativo && item.operacional ? "positive" : "attention"}>
+                        {item.ativo ? "Ativo" : "Inativo"} · {item.operacional ? "Operacional" : "Indisponível"}
+                      </DirectoryTag>
+                      <div className="directory-actions"><Button variant="secondary" aria-label={"Editar " + item.nome} onClick={() => edit(item)}>Editar</Button></div>
                     </li>
                   ))}
                 </ul>
-              ) : <p>Nenhum equipamento cadastrado nesta página.</p>}
-              <Pager page={page} reload={reload} />
+              ) : <StatusMessage state="empty" title="Nenhum equipamento cadastrado nesta página." />}
+              <DirectoryPager page={page} label="Páginas do inventário" changePage={reload} />
             </>
           ) : error ? (
             <>
-              <p role="alert">Não foi possível consultar o inventário.</p>
-              <button type="button" onClick={() => reload()}>Tentar novamente</button>
+              <StatusMessage state="error" title="Não foi possível consultar o inventário." />
+              <Button variant="secondary" onClick={() => reload()}>Tentar novamente</Button>
             </>
-          ) : <p role="status">Carregando inventário…</p>}
+          ) : <StatusMessage state="loading" title="Carregando inventário…" />}
         </>
       )}
     </section>

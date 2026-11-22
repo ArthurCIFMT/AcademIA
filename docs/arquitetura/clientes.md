@@ -39,6 +39,13 @@ biometria. O cadastro pode ser iniciado antes da matrícula, foto e onboarding.
 
 ## Primeiro acesso
 
+A UX-08 organiza resultados por nome, idade, e-mail e situação do perfil.
+A busca mantém o filtro ao paginar. Na edição, dados cadastrais, conta e
+convite aparecem em áreas próprias. **Convite de primeiro acesso** mostra
+o estado retornado pelo servidor e orienta como consultar o Mailpit. As
+telas administrativas usam dados cadastrais. O onboarding profissional
+continua acessível pelo fluxo de designação.
+
 Uma conta nova recebe o mesmo fluxo de credencial já usado para funcionários.
 Ao vincular uma conta ativa, a pessoa mantém a credencial que já possui.
 O envio ocorre após o commit e o resultado aparece no cadastro. Falha

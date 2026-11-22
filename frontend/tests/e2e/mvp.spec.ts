@@ -27,9 +27,25 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await expect(page.getByRole("textbox", { name: "Cargo", exact: true })).toHaveCount(0);
   await page.getByLabel("Data de admissão").fill("2026-01-01");
   await page.getByLabel("E-mail", { exact: true }).fill(staffEmail);
+  await page.getByRole("button", { name: "Salvar cadastro", exact: true }).click();
+  await expect(page.getByRole("alert")).toHaveText("Selecione pelo menos um cargo.");
   await page.getByRole("checkbox", { name: "Instrutor", exact: true }).check();
+  // Isola a apresentação da falha no navegador; o SMTP real continua ativo para as outras ações.
+  await page.route("**/api/v1/funcionarios", async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    await route.fulfill({ response, json: { ...data, convite: { ...data.convite, estado: "FALHOU" } } });
+  }, { times: 1 });
   await page.getByRole("button", { name: "Salvar cadastro", exact: true }).click();
   await expect(page.getByText("Funcionário cadastrado.", { exact: true })).toBeVisible();
+  const staffInvite = page.getByRole("region", { name: "Convite de primeiro acesso" });
+  await expect(staffInvite.getByRole("alert")).toContainText("Falha no envio do convite");
+  await expect(staffInvite.getByText(/Convite enviado/)).toHaveCount(0);
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux08-convite.png", fullPage: true });
+  await staffInvite.getByRole("button", { name: "Reenviar convite" }).press("Enter");
+  await expect(staffInvite.getByRole("status")).toContainText("Convite enviado à caixa de teste");
   const instructor = await browser.newPage({ baseURL: origin });
   await firstAccess(instructor, staffEmail);
   await signIn(instructor, staffEmail);
@@ -49,6 +65,16 @@ test("E2E-01 cadastro, primeiro acesso, convite, onboarding e ficha manual", asy
   await page.getByRole("button", { name: "Salvar cadastro", exact: true }).click();
   const client = await (await created).json() as { id: string };
   await expect(page.getByText("Cliente cadastrado.", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Voltar à lista", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Clientes", exact: true })).toBeFocused();
+  await page.getByLabel("Nome ou e-mail", { exact: true }).fill(clientEmail);
+  const searched = page.waitForResponse(response => new URL(response.url()).searchParams.get("busca") === clientEmail);
+  await page.getByRole("button", { name: "Pesquisar", exact: true }).press("Enter");
+  expect((await searched).status()).toBe(200);
+  const clients = page.getByRole("list", { name: "Clientes encontrados" });
+  await expect(clients.getByRole("listitem")).toHaveCount(1);
+  await expect(clients.getByRole("heading", { name: "Cliente Jornada", exact: true })).toBeVisible();
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux08-clientes.png", fullPage: true });
   const clientPage = await browser.newPage({ baseURL: origin });
   await firstAccess(clientPage, clientEmail);
 
@@ -374,12 +400,21 @@ test("E2E-06 equipamento muda durante a publicação e API recusa", async ({ pag
   expect(equipmentResponse.status()).toBe(201); const equipment = await equipmentResponse.json();
   const exerciseResponse = await mutate(page, "/v1/exercicios", { nome: "Exercício de revalidação", descricao: "Fixture dependente do equipamento.", grupo_muscular: "Geral", ativo: true, dispensa_equipamento: false, combinacoes: [[equipment.id]] });
   expect(exerciseResponse.status()).toBe(201);
+  const visitor = await browser.newPage({ baseURL: origin, viewport: { width: 320, height: 844 } });
+  await visitor.goto("/equipamentos");
+  const catalog = visitor.getByRole("list", { name: "Equipamentos disponíveis" });
+  const resource = catalog.getByRole("listitem").filter({ has: visitor.getByRole("heading", { name: equipment.nome, exact: true }) });
+  await expect(resource.getByText("Foto não cadastrada")).toBeVisible();
+  expect(await visitor.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   const instructor = await browser.newPage({ baseURL: origin }); await signIn(instructor, fixture.usuarios.instrutor.email);
   await instructor.setViewportSize({ width: 390, height: 844 });
   await manualEditor(instructor, fixture.usuarios.equipamentos.id, "Exercício de revalidação");
   const changed = await mutate(page, "/v1/admin/equipamentos/" + equipment.id, { nome: equipment.nome,
     ativo: true, operacional: false, revisao: equipment.revisao }, "PUT");
   expect(changed.status()).toBe(200);
+  await visitor.reload();
+  await expect(catalog.or(visitor.getByText("Nenhum equipamento disponível nesta página."))).toBeVisible();
+  await expect(catalog.getByRole("heading", { name: equipment.nome, exact: true })).toHaveCount(0);
   const refused = instructor.waitForResponse(r => r.url().endsWith("/publicacao") && r.request().method() === "POST");
   await instructor.getByRole("button", { name: "Publicar versão salva", exact: true }).click();
   expect((await refused).status()).toBe(409);
@@ -389,6 +424,28 @@ test("E2E-06 equipamento muda durante a publicação e API recusa", async ({ pag
   const denied = await mutate(instructor, "/v1/admin/equipamentos/" + equipment.id,
     { nome: equipment.nome, ativo: true, operacional: true, revisao: 2 }, "PUT");
   expect(denied.status()).toBe(403);
+  await page.goto("/area/administracao/exercicios");
+  const editExercise = page.getByRole("button", { name: "Editar Exercício de revalidação", exact: true });
+  const exercise = page.getByRole("listitem").filter({ has: editExercise });
+  await expect(exercise.getByText("Recursos indisponíveis ou pendentes")).toBeVisible();
+  await exercise.getByText("Alternativas de equipamentos (1)", { exact: true }).press("Enter");
+  await expect(exercise.getByText("Equipamento de revalidação (indisponível)", { exact: true })).toBeVisible();
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux08-exercicios.png", fullPage: true });
+  for (let index = 0; index <= 20; index++) {
+    const seed = await mutate(page, "/v1/admin/equipamentos", { solicitacao_id: randomUUID(),
+      nome: "ZZ Inventário E2E " + String(index).padStart(2, "0"), ativo: false, operacional: false });
+    expect(seed.status()).toBe(201);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/area/administracao/equipamentos");
+  const pages = page.getByRole("navigation", { name: "Páginas do inventário" });
+  await expect(pages.getByText("Página 1 de 2")).toBeVisible();
+  await pages.getByRole("button", { name: "Próxima" }).press("Enter");
+  await expect(pages.getByText("Página 2 de 2")).toBeVisible();
+  const last = page.getByRole("listitem").filter({ has: page.getByRole("heading", { name: "ZZ Inventário E2E 20" }) });
+  await expect(last.getByText("Inativo · Indisponível")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux08-inventario.png", fullPage: true });
 });
 
 test("E2E-07 treino manual continua após indisponibilidade da IA", async ({ page, browser }) => {
@@ -414,7 +471,7 @@ test("E2E-08 recuperação e perfis de cliente/funcionário independentes", asyn
   await signIn(page, fixture.usuarios.admin.email);
   const client = await mutate(page, "/v1/clientes", { nome: "Atendente com perfil cliente",
     data_nascimento: "1990-01-01", email: staff.email, vincular_existente: true });
-  expect(client.status()).toBe(201); const profile = await client.json();
+  expect(client.status()).toBe(201);
   const staffPage = await browser.newPage({ baseURL: origin, viewport: { width: 390, height: 844 }, hasTouch: true });
   await signIn(staffPage, staff.email);
   expect((await session(staffPage)).roles).toEqual(expect.arrayContaining(["CLIENTE", "ATENDENTE"]));
@@ -444,9 +501,16 @@ test("E2E-08 recuperação e perfis de cliente/funcionário independentes", asyn
   await staffPage.goto("/area/administracao/funcionarios");
   await expect(staffPage.getByRole("heading", { name: "Acesso não permitido" })).toBeVisible();
   await expect(staffPage.getByRole("button", { name: "Cadastrar funcionário" })).toHaveCount(0);
-  const inactive = await mutate(page, "/v1/clientes/" + staff.id, { nome: profile.nome,
-    data_nascimento: profile.data_nascimento, revisao: profile.revisao, ativo: false }, "PUT");
-  expect(inactive.status()).toBe(200);
+  await page.goto("/area/administracao/clientes");
+  await page.getByLabel("Nome ou e-mail", { exact: true }).fill(staff.email);
+  await page.getByRole("button", { name: "Pesquisar", exact: true }).click();
+  await page.getByRole("button", { name: "Consultar Atendente com perfil cliente", exact: true }).click();
+  await page.getByLabel("Perfil de cliente ativo", { exact: true }).uncheck();
+  const inactivated = page.waitForResponse(response => response.url().endsWith("/api/v1/clientes/" + staff.id)
+    && response.request().method() === "PUT");
+  await page.getByRole("button", { name: "Salvar alterações", exact: true }).click();
+  expect((await inactivated).status()).toBe(200);
+  await expect(page.getByText("Alterações salvas.", { exact: true })).toBeVisible();
   expect((await staffPage.request.get("/api/v1/clientes")).status()).toBe(200);
   expect((await staffPage.request.get("/api/v1/onboarding/meu")).status()).toBe(403);
   const recovering = await browser.newPage({ baseURL: origin });

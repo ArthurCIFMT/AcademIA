@@ -83,7 +83,7 @@ test("admin cadastra, reenvia após falha, consulta e inativa pelo formulário",
   }));
 
   fireEvent.click(screen.getByRole("button", { name: "Reenviar convite" }));
-  expect(await screen.findByText(/Enviado à caixa/)).toBeTruthy();
+  expect(await screen.findByText(/Convite enviado à caixa/)).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Voltar à lista" }));
   fireEvent.click(await screen.findByRole("button", { name: "Consultar Pessoa Sintética" }));
   await screen.findByRole("heading", { name: "Editar funcionário" });

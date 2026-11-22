@@ -32,6 +32,10 @@ precisa de conta ativa, perfil funcionário ativo e papel efetivo de instrutor.
 
 ## Leitura profissional
 
+Na administração, a UX-08 identifica o cliente e seu responsável atual
+antes da seleção, com pesquisa por nome ou e-mail e paginação dos instrutores
+e do histórico. A troca usa o identificador do vínculo vigente consultado.
+
 O adaptador `PostgresAssignmentReader` implementa `AssignmentReader`.
 Rotas que protegem informações por designação podem receber
 `assignments: AssignmentAccess` e chamar `require_permission` com a operação

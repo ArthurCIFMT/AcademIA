@@ -1,6 +1,8 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { ApiError } from "../../lib/api/auth";
+import { Button, StatusMessage } from "../../ui/primitives";
+import { DirectoryPager, DirectoryTag, useDirectoryFocus } from "../clients/directory-ui";
 import { exercisePage, exerciseResources, saveExercise, type Exercise,
   type ExerciseFields, type ExercisePage, type Resource } from "./api";
 import "./exercises.css";
@@ -18,6 +20,7 @@ function ExerciseForm({ exercise, csrf, close, saved }: {
   const [attempt, setAttempt] = useState(0);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const saving = useRef(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -40,7 +43,7 @@ function ExerciseForm({ exercise, csrf, close, saved }: {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy) return;
+    if (saving.current) return;
     const values = new FormData(event.currentTarget);
     const data: ExerciseFields = {
       nome: String(values.get("nome")).trim(),
@@ -58,6 +61,7 @@ function ExerciseForm({ exercise, csrf, close, saved }: {
       setError("Selecione os equipamentos de cada alternativa ou remova a alternativa vazia.");
       return;
     }
+    saving.current = true;
     setBusy(true);
     setError("");
     try {
@@ -72,64 +76,82 @@ function ExerciseForm({ exercise, csrf, close, saved }: {
       else if (status === 401 || status === 403) setError("Sua sessão perdeu a permissão para salvar exercícios.");
       else setError("Não foi possível confirmar o salvamento. Os dados continuam nesta tela.");
     } finally {
+      saving.current = false;
       setBusy(false);
     }
   }
 
   return (
-    <form className="exercise-form" onSubmit={(event) => void submit(event)}>
-      <fieldset disabled={busy}>
-        <legend>{exercise ? "Editar exercício" : "Novo exercício"}</legend>
-        <label htmlFor="exercise-name">Nome</label>
-        <input id="exercise-name" name="nome" required maxLength={120} defaultValue={exercise?.nome} />
-        <label htmlFor="exercise-description">Descrição do movimento</label>
-        <textarea id="exercise-description" name="descricao" required maxLength={2000} defaultValue={exercise?.descricao} />
-        <label htmlFor="exercise-muscle">Grupo muscular</label>
-        <input id="exercise-muscle" name="grupo_muscular" required maxLength={80} defaultValue={exercise?.grupo_muscular} />
-        <label><input type="checkbox" name="ativo" defaultChecked={exercise?.ativo ?? true} /> Ativo</label>
-        <label><input type="checkbox" checked={bodyweight}
-          onChange={(event) => setBodyweight(event.target.checked)} /> Dispensa equipamento</label>
-        {bodyweight && groups.length > 0 && <p>Salvar com dispensa remove as combinações anteriores.</p>}
-        {!bodyweight && (
-          <>
-            {groups.length === 0 && <p>O exercício fica fora da seleção até receber uma alternativa ou uma dispensa.</p>}
-            {resourceError ? (
-              <div>
-                <p role="alert">Não foi possível consultar os equipamentos.</p>
-                <button type="button" onClick={() => {
-                  setResourceError(false);
-                  setAttempt((value) => value + 1);
-                }}>Tentar novamente</button>
-              </div>
-            ) : options === null && <p role="status">Carregando equipamentos…</p>}
-            {groups.map((group, index) => (
-              <fieldset className="exercise-combination" key={index}>
-                <legend>Alternativa {index + 1}</legend>
-                {[...resources.values()].map((resource) => (
-                  <label key={resource.id}>
-                    <input type="checkbox" checked={group.includes(resource.id)}
-                      disabled={!group.includes(resource.id) && group.length >= 20}
-                      onChange={() => toggle(index, resource.id)} />
-                    {resource.nome}{resource.disponivel ? "" : " (indisponível)"}
-                  </label>
-                ))}
-                <button type="button" onClick={() => setGroups(groups.filter((_, position) => position !== index))}>
-                  Remover alternativa {index + 1}
-                </button>
-              </fieldset>
-            ))}
-            <button type="button" disabled={!resources.size || groups.length >= 10}
-              onClick={() => setGroups([...groups, []])}>Adicionar alternativa</button>
-          </>
-        )}
+    <form className="directory-form" onSubmit={(event) => void submit(event)}>
+      <fieldset className="directory-fieldset" disabled={busy}>
+        <fieldset className="directory-group">
+          <legend>Dados do exercício</legend>
+          <label className="ac-field">Nome<input name="nome" required maxLength={120} defaultValue={exercise?.nome} /></label>
+          <label className="ac-field">Descrição do movimento
+            <textarea name="descricao" required maxLength={2000} defaultValue={exercise?.descricao} />
+          </label>
+          <label className="ac-field">Grupo muscular<input name="grupo_muscular" required maxLength={80} defaultValue={exercise?.grupo_muscular} /></label>
+          <label className="directory-choice"><input type="checkbox" name="ativo" defaultChecked={exercise?.ativo ?? true} /> Ativo</label>
+        </fieldset>
+        <fieldset className="directory-group">
+          <legend>Recursos necessários</legend>
+          <label className="directory-choice"><input type="checkbox" checked={bodyweight}
+            onChange={(event) => setBodyweight(event.target.checked)} /> Dispensa equipamento</label>
+          {bodyweight && groups.length > 0 && <p>Salvar com dispensa remove as combinações anteriores.</p>}
+          {!bodyweight && (
+            <>
+              {groups.length === 0
+                ? <p>O exercício fica fora da seleção até receber uma alternativa ou uma dispensa.</p>
+                : <p>Marque os equipamentos usados juntos em cada alternativa. Para um exercício ativo, basta uma alternativa completa disponível.</p>}
+              {resourceError ? (
+                <div>
+                  <StatusMessage state="error" title="Não foi possível consultar os equipamentos." />
+                  <Button variant="secondary" onClick={() => {
+                    setResourceError(false);
+                    setAttempt(value => value + 1);
+                  }}>Tentar novamente</Button>
+                </div>
+              ) : options === null && <p role="status">Carregando equipamentos…</p>}
+              {groups.map((group, index) => (
+                <fieldset className="directory-group exercise-combination" key={index}>
+                  <legend>Alternativa {index + 1}</legend>
+                  {[...resources.values()].map(resource => (
+                    <label className="directory-choice" key={resource.id}>
+                      <input type="checkbox" checked={group.includes(resource.id)}
+                        disabled={!group.includes(resource.id) && group.length >= 20}
+                        onChange={() => toggle(index, resource.id)} />
+                      {resource.nome}{resource.disponivel ? "" : " (indisponível)"}
+                    </label>
+                  ))}
+                  <Button variant="secondary" onClick={() => setGroups(groups.filter((_, position) => position !== index))}>
+                    Remover alternativa {index + 1}
+                  </Button>
+                </fieldset>
+              ))}
+              <Button variant="secondary" disabled={!resources.size || groups.length >= 10}
+                onClick={() => setGroups([...groups, []])}>Adicionar alternativa</Button>
+            </>
+          )}
+        </fieldset>
       </fieldset>
-      {error && <p role="alert">{error}</p>}
-      <div className="exercise-actions">
-        <button type="submit" disabled={busy}>{busy ? "Salvando…" : "Salvar exercício"}</button>
-        <button type="button" disabled={busy} onClick={close}>Voltar ao catálogo</button>
+      {error && <StatusMessage state="error" title={error} />}
+      <div className="directory-actions">
+        <Button type="submit" pending={busy} pendingLabel="Salvando…">Salvar exercício</Button>
+        <Button variant="secondary" disabled={busy} onClick={close}>Voltar ao catálogo</Button>
       </div>
     </form>
   );
+}
+
+function ExerciseResources({ exercise }: { exercise: Exercise }) {
+  if (exercise.dispensa_equipamento) return <p>Dispensa equipamento</p>;
+  if (!exercise.combinacoes.length) return <p>Sem alternativa de equipamentos cadastrada</p>;
+  return <details className="directory-help">
+    <summary>Alternativas de equipamentos ({exercise.combinacoes.length})</summary>
+    <ol>{exercise.combinacoes.map((group, index) => <li key={index}>
+      {group.map(resource => resource.nome + (resource.disponivel ? "" : " (indisponível)")).join(" + ")}
+    </li>)}</ol>
+  </details>;
 }
 
 export function ExerciseCatalog({ csrf }: { csrf: string }) {
@@ -138,6 +160,7 @@ export function ExerciseCatalog({ csrf }: { csrf: string }) {
   const [error, setError] = useState(false);
   const [editor, setEditor] = useState<Exercise | "new" | null>(null);
   const [notice, setNotice] = useState("");
+  const heading = useDirectoryFocus(editor !== null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -160,9 +183,11 @@ export function ExerciseCatalog({ csrf }: { csrf: string }) {
   }
 
   return (
-    <section aria-labelledby="exercise-title">
-      <h3 id="exercise-title">Catálogo de exercícios</h3>
-      {notice && <p role="status">{notice}</p>}
+    <section className="directory" aria-labelledby="exercise-title">
+      <h3 id="exercise-title" ref={heading} tabIndex={-1}>
+        {editor === "new" ? "Novo exercício" : editor ? "Editar " + editor.nome : "Catálogo de exercícios"}
+      </h3>
+      {notice && <StatusMessage state="success" title={notice} />}
       {editor ? (
         <ExerciseForm key={editor === "new" ? editor : editor.id} csrf={csrf}
           exercise={editor === "new" ? undefined : editor}
@@ -170,37 +195,33 @@ export function ExerciseCatalog({ csrf }: { csrf: string }) {
           saved={() => { setEditor(null); setNotice("Exercício salvo."); load(query.page); }} />
       ) : (
         <>
-          <button type="button" onClick={() => edit("new")}>Cadastrar exercício</button>
+          <div className="directory-actions"><Button onClick={() => edit("new")}>Cadastrar exercício</Button></div>
           {result ? (
             <>
               {result.itens.length ? (
-                <ul className="exercise-list">
+                <ul className="directory-cards" aria-label="Exercícios cadastrados">
                   {result.itens.map((item) => (
-                    <li key={item.id}>
+                    <li key={item.id} className="directory-card">
                       <h4>{item.nome}</h4>
-                      <p>{item.grupo_muscular}</p>
+                      <p className="directory-meta">{item.grupo_muscular}</p>
+                      <DirectoryTag tone={item.elegivel ? "positive" : "attention"}>
+                        {item.elegivel ? "Disponível para seleção" : item.ativo ? "Recursos indisponíveis ou pendentes" : "Inativo"}
+                      </DirectoryTag>
                       <p>{item.descricao}</p>
-                      <p>{item.elegivel ? "Disponível para seleção" : item.ativo ? "Recursos indisponíveis ou pendentes" : "Inativo"}</p>
-                      <button type="button" aria-label={"Editar " + item.nome} onClick={() => edit(item)}>Editar</button>
+                      <ExerciseResources exercise={item} />
+                      <div className="directory-actions"><Button variant="secondary" aria-label={"Editar " + item.nome} onClick={() => edit(item)}>Editar</Button></div>
                     </li>
                   ))}
                 </ul>
-              ) : <p>Nenhum exercício cadastrado nesta página.</p>}
-              {(result.total > result.limite || result.pagina > 1) && (
-                <nav className="exercise-actions" aria-label="Páginas do catálogo">
-                  <button type="button" disabled={result.pagina <= 1}
-                    onClick={() => load(result.pagina - 1)}>Anterior</button>
-                  <button type="button" disabled={result.pagina * result.limite >= result.total}
-                    onClick={() => load(result.pagina + 1)}>Próxima</button>
-                </nav>
-              )}
+              ) : <StatusMessage state="empty" title="Nenhum exercício cadastrado nesta página." />}
+              <DirectoryPager page={result} label="Páginas do catálogo" changePage={load} />
             </>
           ) : error ? (
             <>
-              <p role="alert">Não foi possível carregar o catálogo.</p>
-              <button type="button" onClick={() => load(query.page)}>Tentar novamente</button>
+              <StatusMessage state="error" title="Não foi possível carregar o catálogo." />
+              <Button variant="secondary" onClick={() => load(query.page)}>Tentar novamente</Button>
             </>
-          ) : <p role="status">Carregando catálogo…</p>}
+          ) : <StatusMessage state="loading" title="Carregando catálogo…" />}
         </>
       )}
     </section>
