@@ -78,6 +78,23 @@ type ListKey = (typeof healthGroups)[number]["list"];
 type Row = Record<string, Scalar>;
 export type FormData = Partial<Record<ScalarKey, Scalar> & Record<ListKey, Row[] | null>>;
 
+export const onboardingSteps = [
+  { id: "rotina", title: "Objetivos e rotina" },
+  { id: "fisico", title: "Dados físicos" },
+  { id: "saude", title: "Saúde" },
+  { id: "revisao", title: "Revisão" },
+] as const;
+export type OnboardingStep = (typeof onboardingSteps)[number]["id"];
+export type EditingStep = Exclude<OnboardingStep, "revisao">;
+export const physicalFields = profileFields.slice(0, 2);
+export const routineFields = profileFields.slice(2);
+
+export class OnboardingValidationError extends Error {
+  constructor(message: string, readonly step: EditingStep, readonly field: string) {
+    super(message);
+  }
+}
+
 function normalizeField(field: Field, value: Scalar | undefined, complete: boolean): Scalar | undefined {
   if (value === null || value === undefined || value === "") {
     if (field.kind !== "notes" || !field.optional) return value === "" ? null : value;
@@ -102,17 +119,29 @@ function normalizeField(field: Field, value: Scalar | undefined, complete: boole
   return text || (field.optional ? "" : null);
 }
 
-function checked(field: Field, value: Scalar | undefined, complete: boolean): Scalar | undefined {
-  const normalized = normalizeField(field, value, complete);
-  if (complete && normalized == null) throw new Error("Preencha " + field.label + ".");
-  return normalized;
+function checked(
+  field: Field, value: Scalar | undefined, complete: boolean, step: EditingStep, name = field.name,
+): Scalar | undefined {
+  try {
+    const normalized = normalizeField(field, value, complete);
+    if (complete && normalized == null) throw new Error("Preencha " + field.label + ".");
+    return normalized;
+  } catch (error) {
+    if (!(error instanceof Error)) throw error;
+    throw new OnboardingValidationError(error.message, step, name);
+  }
 }
 
 export function prepareForm(form: FormData, complete: boolean): FormData {
   const result: FormData = {};
-  for (const field of [...profileFields, ...healthGroups.map(({ answer }) => answer), ...otherHealthFields]) {
-    const value = checked(field, form[field.name], complete);
-    if (value !== undefined) result[field.name] = value;
+  const sections = {
+    rotina: routineFields, fisico: physicalFields, saude: [...healthGroups.map(({ answer }) => answer), ...otherHealthFields],
+  } as const;
+  for (const step of ["rotina", "fisico", "saude"] as const) {
+    for (const field of sections[step]) {
+      const value = checked(field, form[field.name], complete, step);
+      if (value !== undefined) result[field.name] = value;
+    }
   }
   for (const group of healthGroups) {
     const rows = form[group.list];
@@ -121,14 +150,16 @@ export function prepareForm(form: FormData, complete: boolean): FormData {
       else if (rows === null) result[group.list] = null;
       continue;
     }
-    if (complete && !rows?.length) throw new Error("Adicione pelo menos um registro em " + group.label + ".");
+    if (complete && !rows?.length) {
+      throw new OnboardingValidationError("Adicione pelo menos um registro em " + group.label + ".", "saude", group.list);
+    }
     if (rows === null) result[group.list] = null;
     if (!rows) continue;
-    if (rows.length > group.max) throw new Error(group.label + " excede o limite de registros.");
-    result[group.list] = rows.map((row) => {
+    if (rows.length > group.max) throw new OnboardingValidationError(group.label + " excede o limite de registros.", "saude", group.list);
+    result[group.list] = rows.map((row, index) => {
       const item: Row = {};
       for (const field of group.fields) {
-        const value = checked(field, row[field.name], complete);
+        const value = checked(field, row[field.name], complete, "saude", `${group.list}.${index}.${field.name}`);
         if (value !== undefined) item[field.name] = value;
       }
       return item;

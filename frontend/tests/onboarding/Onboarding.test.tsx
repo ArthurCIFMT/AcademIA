@@ -54,6 +54,9 @@ const status = (code: number) => new Response(null, { status: code });
 const change = (label: string, value: string) =>
   fireEvent.change(screen.getByLabelText(label), { target: { value } });
 const click = (name: string) => fireEvent.click(screen.getByRole("button", { name }));
+async function goTo(name: string) {
+  fireEvent.click(await screen.findByRole("button", { name }));
+}
 const session = (role = "CLIENTE") => Response.json({
   user_id: "conta-sintetica", roles: [role], expires_at: new Date(Date.now() + 60_000).toISOString(),
   csrf_token: "csrf-sintetico",
@@ -65,6 +68,7 @@ test("troca o fragmento uma vez e abre só o rascunho do convite", async () => {
   expect(request).not.toHaveBeenCalled();
   click("Abrir formulário");
 
+  await goTo("Dados físicos");
   const input = await screen.findByLabelText<HTMLInputElement>("Altura (cm)");
   expect(input.value).toBe("170");
   expect(request.mock.calls.map(([url]) => url)).toEqual([invite + "/troca", invite + "/rascunho"]);
@@ -90,21 +94,31 @@ test("reabre, impede conclusão incompleta e mantém os campos após falha de re
   const request = mount(path, Response.json(incomplete), Response.json(incomplete),
     Response.json(incomplete), new Error("offline"), Response.json(incomplete), Response.json(saved),
     Response.json(saved), status(204));
-  const answer = await screen.findByLabelText<HTMLSelectElement>("Usa medicamentos?");
-  expect(answer.value).toBe("");
+  await goTo("Saúde");
+  expect(screen.getByLabelText<HTMLSelectElement>("Usa medicamentos?").value).toBe("");
   const initialRequests = request.mock.calls.length;
+  click("Revisão");
   click("Concluir onboarding");
   expect(screen.getByRole("alert").textContent).toMatch(/Usa medicamentos/);
+  expect(document.activeElement).toBe(screen.getByLabelText("Usa medicamentos?"));
+  expect(screen.getByLabelText("Usa medicamentos?").getAttribute("aria-invalid")).toBe("true");
   expect(request.mock.calls).toHaveLength(initialRequests);
   change("Usa medicamentos?", "SIM");
+  click("Revisão");
   click("Concluir onboarding");
   expect(screen.getByRole("alert").textContent).toMatch(/pelo menos um registro/);
+  expect(document.activeElement).toBe(screen.getByRole("button", { name: "Adicionar medicamento" }));
   click("Adicionar medicamento");
   change("Nome do medicamento", "Medicação sintética");
+  click("Dados físicos");
+  click("Saúde");
+  expect(screen.getByLabelText<HTMLInputElement>("Nome do medicamento").value).toBe("Medicação sintética");
+  expect(request.mock.calls).toHaveLength(initialRequests);
   click("Salvar rascunho");
 
   expect((await screen.findByRole("alert")).textContent).toMatch(/continuam nesta tela/);
   expect(screen.getByLabelText<HTMLInputElement>("Nome do medicamento").value).toBe("Medicação sintética");
+  click("Revisão");
   click("Concluir onboarding");
   expect(await screen.findByText("Onboarding concluído.")).toBeTruthy();
   const writes = request.mock.calls.filter(([, options]) => options.method);
@@ -118,10 +132,24 @@ test("reabre, impede conclusão incompleta e mantém os campos após falha de re
 test("uma aba antiga não envia o rascunho se outro convite trocou o cookie", async () => {
   const request = mount(path, Response.json(draft), Response.json(draft),
     Response.json({ ...draft, id: "outro-rascunho", dados: {} }));
-  await screen.findByLabelText("Altura (cm)");
+  await goTo("Dados físicos");
   click("Salvar rascunho");
   expect((await screen.findByRole("alert")).textContent).toMatch(/Outro convite/);
+  expect(screen.queryByLabelText("Altura (cm)")).toBeNull();
   expect(request.mock.calls.every(([, options]) => options.method === undefined)).toBe(true);
+});
+
+test("recarregar após conflito de revisão não mostra o rascunho de outro convite", async () => {
+  mount(path, Response.json(draft), Response.json(draft), Response.json(draft), status(409),
+    Response.json({ ...draft, id: "outro-rascunho" }));
+  await goTo("Dados físicos");
+  change("Altura (cm)", "172");
+  click("Salvar rascunho");
+  expect((await screen.findByRole("alert")).textContent).toMatch(/versão salva mais recente/);
+  expect(screen.getByLabelText<HTMLInputElement>("Altura (cm)").value).toBe("172");
+  click("Descartar alterações locais e recarregar");
+  expect((await screen.findByRole("alert")).textContent).toMatch(/Outro convite/);
+  expect(screen.queryByRole("navigation", { name: "Etapas do onboarding" })).toBeNull();
 });
 
 test("exibe a versão concluída e só atualiza com confirmação e revisão do rascunho", async () => {
@@ -134,6 +162,7 @@ test("exibe a versão concluída e só atualiza com confirmação e revisão do 
   expect(screen.getByText("Idade na conclusão · 31 anos")).toBeTruthy();
   expect(screen.getByText("Não sei")).toBeTruthy();
   click("Atualizar meus dados");
+  click("Dados físicos");
   change("Peso (kg)", "76.3");
   click("Salvar rascunho");
   expect(await screen.findByText("Rascunho salvo.")).toBeTruthy();
@@ -141,10 +170,13 @@ test("exibe a versão concluída e só atualiza com confirmação e revisão do 
   expect(last?.[0]).toBe(own + "/rascunho");
   expect(JSON.parse(String(last?.[1].body))).toEqual({ versao_base: snapshot.id, revisao: null, dados: saved.dados });
 
+  click("Revisão");
   click("Revisar atualização");
   expect(request.mock.calls.at(-1)).toEqual(last);
   click("Voltar à edição");
+  click("Dados físicos");
   expect(screen.getByLabelText<HTMLInputElement>("Peso (kg)").value).toBe("76.3");
+  click("Revisão");
   click("Revisar atualização");
   click("Confirmar nova versão");
   expect(await screen.findByText(/Versão 2 concluída/)).toBeTruthy();
@@ -169,7 +201,7 @@ test("uma falha ao revalidar no foco mantém a edição do cliente", async () =>
   const ownResult = { rascunho: draft, concluido: null };
   const request = mount("/area/cliente/onboarding", session(), session(),
     Response.json(ownResult), Response.json(ownResult), new Error("offline"));
-  await screen.findByLabelText("Altura (cm)");
+  await goTo("Dados físicos");
   change("Altura (cm)", "171.6");
   fireEvent.focus(window);
   await waitFor(() => expect(request.mock.calls.filter(([url]) => url.endsWith("/auth/session"))).toHaveLength(3));
@@ -196,6 +228,7 @@ test("outro fragmento inicia nova tentativa mesmo se o histórico reutilizar a c
     window.history.replaceState(reusedState, "", path + "#token=" + replacement);
     fireEvent.popState(window);
     click("Abrir formulário");
+    await goTo("Dados físicos");
     expect(await screen.findByLabelText("Altura (cm)")).toBeTruthy();
     expect(request.mock.calls[1][1].body).toBe(JSON.stringify({ token: replacement }));
   } finally {

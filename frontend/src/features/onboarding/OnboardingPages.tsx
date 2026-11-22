@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { ApiError } from "../../lib/api/auth";
@@ -7,11 +7,12 @@ import {
   ownOnboarding, saveDraft, WebLocksUnavailable,
   type Draft, type Scope, type Snapshot,
 } from "./api";
-import { prepareForm, type FormData } from "./form";
+import { onboardingSteps, OnboardingValidationError, prepareForm, type FormData, type OnboardingStep } from "./form";
 import { OnboardingFields } from "./OnboardingFields";
 import "./onboarding.css";
 
 const unavailableInvite = "O convite é inválido, expirou ou já foi usado. Solicite um novo link à academia.";
+const changedInvite = "Outro convite foi aberto neste navegador. Este rascunho não será enviado. Solicite outro link para retomá-lo.";
 const unavailableBrowser = "Abra o convite em um navegador atualizado, por uma conexão segura.";
 const dateFormat = new Intl.DateTimeFormat("pt-BR", {
   dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo",
@@ -19,6 +20,7 @@ const dateFormat = new Intl.DateTimeFormat("pt-BR", {
 const ageFormat = new Intl.NumberFormat("pt-BR", { style: "unit", unit: "year", unitDisplay: "long" });
 
 function loadError(error: unknown, invite: boolean) {
+  if (error instanceof InviteSessionChanged) return changedInvite;
   if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
     return invite ? unavailableInvite : "Sua sessão perdeu o acesso ao onboarding. Entre novamente.";
   }
@@ -61,9 +63,6 @@ function Loader<T>({ load, invite = false, children }: {
 }
 
 function mutationError(error: unknown, invite: boolean) {
-  if (error instanceof InviteSessionChanged) {
-    return "Outro convite foi aberto neste navegador. Este rascunho não será enviado. Solicite outro link para retomá-lo.";
-  }
   if (error instanceof WebLocksUnavailable) return unavailableBrowser;
   const denied = loadError(error, invite);
   if (denied) return denied;
@@ -87,19 +86,45 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
   const base = scope.kind === "own" ? scope.base : null;
   const [data, setData] = useState<FormData>(() => initial?.dados ?? base?.dados ?? {});
   const [revision, setRevision] = useState(initial?.revisao ?? null);
+  const [draftNumber, setDraftNumber] = useState(initial?.numero ?? null);
+  const [step, setStep] = useState<OnboardingStep>("rotina");
+  const [invalid, setInvalid] = useState<OnboardingValidationError | null>(null);
+  const [focusRequest, setFocusRequest] = useState<{ field?: string } | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [candidate, setCandidate] = useState<FormData | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [conflict, setConflict] = useState(false);
   const [notice, setNotice] = useState("");
+  const [lostAccess, setLostAccess] = useState(false);
+  const activeIndex = onboardingSteps.findIndex(({ id }) => id === step);
+  const previous = onboardingSteps[activeIndex - 1];
+  const next = onboardingSteps[activeIndex + 1];
+
+  useEffect(() => {
+    if (!focusRequest) return;
+    const target = focusRequest.field ? formRef.current?.elements.namedItem(focusRequest.field) : null;
+    (target instanceof HTMLElement ? target : titleRef.current)?.focus();
+  }, [focusRequest]);
+
+  function goTo(nextStep: OnboardingStep, field?: string) {
+    setStep(nextStep);
+    setFocusRequest({ field });
+  }
 
   function prepare(complete: boolean) {
     setError("");
     setNotice("");
+    setInvalid(null);
     try {
       return prepareForm(data, complete);
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "Revise o formulário.");
+      if (failure instanceof OnboardingValidationError) {
+        setInvalid(failure);
+        goTo(failure.step, failure.field);
+      }
     }
   }
 
@@ -113,6 +138,7 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
       }
       const saved = await saveDraft(scope, revision, values);
       setRevision(saved.revisao);
+      setDraftNumber(saved.numero);
       setData(saved.dados);
       onSaved?.(saved);
       if (finish) onComplete(await finishDraft(scope, saved.revisao));
@@ -120,6 +146,11 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
     } catch (failure) {
       setError(mutationError(failure, scope.kind === "invite"));
       setConflict(failure instanceof ApiError && failure.status === 409);
+      if (loadError(failure, scope.kind === "invite")) {
+        setData({});
+        setCandidate(null);
+        setLostAccess(true);
+      }
     } finally {
       setBusy(false);
     }
@@ -127,21 +158,60 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (busy || candidate) return;
+    if (busy || candidate || step !== "revisao") return;
     const values = prepare(true);
     if (!values) return;
     if (base) setCandidate(values);
     else void persist(values, true);
   }
 
+  if (lostAccess) return (
+    <>
+      <p role="alert">{error}</p>
+      {scope.kind === "own" && <Link to="/login">Entrar</Link>}
+    </>
+  );
+
   return (
-    <form className="onboarding-form" autoComplete="off" noValidate onSubmit={handleSubmit}>
-      <p>Preencha os dados para concluir. Se tiver dúvida sobre uma resposta de saúde, selecione “Não sei”.</p>
-      <fieldset className="onboarding-editor" disabled={busy || candidate !== null}>
-        <legend className="onboarding-legend">Formulário de onboarding</legend>
-        <OnboardingFields data={data} onChange={(next) => { setData(next); setNotice(""); }} />
-      </fieldset>
-      {error && <p role="alert">{error}</p>}
+    <form ref={formRef} className="onboarding-form" autoComplete="off" noValidate onSubmit={handleSubmit}>
+      <p>
+        {base && <>Versão vigente {base.numero}. </>}
+        {draftNumber === null ? "Nenhum rascunho salvo." : `Rascunho da versão ${draftNumber} · revisão ${revision}.`}
+      </p>
+      <nav aria-label="Etapas do onboarding">
+        <ol className="onboarding-steps">
+          {onboardingSteps.map(({ id, title }) => (
+            <li key={id}>
+              <button type="button" aria-current={step === id ? "step" : undefined}
+                disabled={busy || candidate !== null} onClick={() => goTo(id)}>{title}</button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <section aria-labelledby="onboarding-step-title">
+        <h4 id="onboarding-step-title" ref={titleRef} tabIndex={-1}>
+          Etapa {activeIndex + 1} de {onboardingSteps.length} · {onboardingSteps[activeIndex].title}
+        </h4>
+        {error && <p id="onboarding-feedback" role="alert">{error}</p>}
+        {step === "saude" && <p>Se tiver dúvida sobre uma resposta de saúde, selecione “Não sei”.</p>}
+        {step === "revisao" ? (
+          <>
+            <p>Confira as respostas antes de confirmar. Use as etapas acima para editar qualquer campo.</p>
+            <OnboardingFields data={data} />
+          </>
+        ) : (
+          <fieldset className="onboarding-editor" aria-labelledby="onboarding-step-title" disabled={busy}>
+            <OnboardingFields data={data} step={step} invalidField={invalid?.field} onChange={(values) => {
+              setData(values);
+              setNotice("");
+              if (invalid) {
+                setInvalid(null);
+                setError("");
+              }
+            }} />
+          </fieldset>
+        )}
+      </section>
       {notice && <p role="status">{notice}</p>}
       {busy && <p role="status">Salvando…</p>}
       {candidate ? (
@@ -152,16 +222,21 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
               setError("");
               void persist(candidate, true);
             }}>Confirmar nova versão</button>
-            <button type="button" disabled={busy} onClick={() => setCandidate(null)}>Voltar à edição</button>
+            <button type="button" disabled={busy} onClick={() => {
+              setCandidate(null);
+              goTo("revisao");
+            }}>Voltar à edição</button>
           </div>
         </section>
       ) : (
         <div className="onboarding-actions">
+          {previous && <button type="button" disabled={busy} onClick={() => goTo(previous.id)}>Voltar</button>}
+          {next && <button type="button" disabled={busy} onClick={() => goTo(next.id)}>Continuar</button>}
           <button type="button" disabled={busy} onClick={() => {
             const values = prepare(false);
             if (values) void persist(values, false);
           }}>Salvar rascunho</button>
-          <button type="submit" disabled={busy}>{base ? "Revisar atualização" : "Concluir onboarding"}</button>
+          {step === "revisao" && <button type="submit" disabled={busy}>{base ? "Revisar atualização" : "Concluir onboarding"}</button>}
           {onBack && <button type="button" disabled={busy} onClick={onBack}>
             Descartar alterações não salvas e voltar
           </button>}
@@ -226,7 +301,13 @@ function InviteFlow({ token, forget }: { token: string | null; forget: () => voi
     token === null ? "resume" : "ready",
   );
   const [opened, setOpened] = useState<Draft | null>(null);
+  const [expectedDraftId, setExpectedDraftId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const resume = useCallback(async (signal: AbortSignal) => {
+    const value = await invitedDraft(signal);
+    if (expectedDraftId !== null && value.id !== expectedDraftId) throw new InviteSessionChanged();
+    return value;
+  }, [expectedDraftId]);
 
   async function exchange() {
     if (!token || state === "opening") return;
@@ -248,11 +329,15 @@ function InviteFlow({ token, forget }: { token: string | null; forget: () => voi
   }
 
   if (opened) return <RestrictedForm initial={opened} reload={() => {
+    setExpectedDraftId(opened.id);
     setOpened(null);
     setState("resume");
   }} />;
-  if (state === "resume") return <Loader load={invitedDraft} invite>
-    {(value, reload) => <RestrictedForm initial={value} reload={reload} />}
+  if (state === "resume") return <Loader load={resume} invite>
+    {(value, reload) => <RestrictedForm initial={value} reload={() => {
+      setExpectedDraftId(value.id);
+      reload();
+    }} />}
   </Loader>;
   if (state === "invalid" || !token || !/^[A-Za-z0-9_-]{43}$/.test(token)) {
     return <p role="alert">{unavailableInvite}</p>;

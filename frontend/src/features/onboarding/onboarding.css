@@ -1,9 +1,9 @@
 .onboarding-form section {
   margin-block: 1.25rem;
   padding: 1rem;
-  background: white;
-  border: 1px solid #cadbd4;
-  border-radius: 0.65rem;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
 }
 
 .onboarding-form h3,
@@ -11,8 +11,37 @@
   margin-block: 0 0.75rem;
 }
 
-.onboarding-legend {
-  font-weight: 650;
+.onboarding-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ac-space-2);
+  list-style: none;
+  padding: 0;
+}
+
+.onboarding-steps button {
+  height: 100%;
+  width: 100%;
+  min-height: var(--ac-touch-target);
+  color: var(--ac-brand);
+  background: var(--ac-surface);
+  border-color: var(--ac-control-border);
+}
+
+.onboarding-steps button[aria-current="step"] {
+  color: var(--ac-surface);
+  background: var(--ac-brand);
+}
+
+.onboarding-editor > section:first-child {
+  margin-block-start: 0;
+}
+
+#onboarding-feedback {
+  color: var(--ac-error-text);
+  background: var(--ac-error-bg);
+  padding: var(--ac-space-2) var(--ac-space-3);
+  border-radius: var(--ac-radius-control);
 }
 
 .onboarding-editor {
@@ -56,9 +85,13 @@
   padding: 0.45rem;
   font: inherit;
   color: inherit;
-  background: #fff;
-  border: 1px solid #809892;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-control-border);
   border-radius: 0.4rem;
+}
+
+.onboarding-field [aria-invalid="true"] {
+  border-color: var(--ac-error-text);
 }
 
 .onboarding-field textarea {
@@ -88,6 +121,10 @@
 }
 
 @media (max-width: 30rem) {
+  .onboarding-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .onboarding-actions button {
     width: 100%;
   }

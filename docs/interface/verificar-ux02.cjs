@@ -100,8 +100,19 @@ async function inspectApp(browser, origin, width, sample, files) {
   const [name, url, roles, marker] = sample;
   await withPage(browser, origin, width, roles, async page => {
     await page.goto(origin + url);
+    if (name === "onboarding") {
+      const physical = page.getByRole("button", { name: "Dados físicos", exact: true });
+      const height = page.getByLabel("Altura (cm)", { exact: true });
+      await physical.or(height).waitFor({ timeout: 8000 });
+      if (await physical.isVisible()) {
+        await physical.press("Enter");
+        await height.waitFor();
+        await assertReflow(page, width, "onboarding em edição");
+        await page.getByRole("button", { name: "Revisão", exact: true }).press("Enter");
+      }
+    }
     const content = name === "entrada" ? page.getByLabel(marker, { exact: true }) : name === "onboarding"
-      ? page.getByLabel(/Altura/) : page.getByText(marker).first();
+      ? page.getByText("Altura (cm)", { exact: true }) : page.getByText(marker).first();
     await content.waitFor({ timeout: 8000 });
     const action = page.getByRole("button", { name: actions[name], exact: true });
     await action.waitFor({ timeout: 3000 });

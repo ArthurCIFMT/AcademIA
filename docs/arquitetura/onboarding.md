@@ -118,12 +118,21 @@ continua ligado ao rascunho exibido. Isso evita enviar os dados de uma aba
 antiga depois que outra aba abriu um convite diferente. Para editar por
 convite, use um navegador com Web Locks em HTTPS ou no ambiente local.
 
-Em **Cliente → Meu onboarding**, a sessão geral permite consultar a versão
-concluída e continuar um rascunho. Editar após uma conclusão oferece uma
-etapa de confirmação antes de publicar a nova versão. A tela mantém em
-memória os campos editados quando a gravação falha. Em caso de conflito,
-recarregar o estado salvo exige ação explícita. O navegador não guarda
-dados de saúde em armazenamento local.
+O convite e **Cliente → Meu onboarding** compartilham as etapas **Objetivos
+e rotina**, **Dados físicos**, **Saúde** e **Revisão**. Trocar de etapa mantém
+as respostas em memória e move o foco para o título. A tela indica a etapa
+atual e, separadamente, a versão vigente e a revisão do rascunho, quando
+existirem. A gravação exige ação explícita. A revisão mostra o que foi
+preenchido e, se faltar dado obrigatório, a conclusão retorna à etapa e
+focaliza o campo ou a ação para adicionar um registro.
+
+A sessão geral permite retomar um rascunho e consultar a versão concluída.
+A edição após uma conclusão exige confirmar a publicação de uma nova versão
+na etapa de revisão. Falha de rede conserva os dados em memória. Em caso de
+conflito, o cliente decide se descarta os ajustes locais e recarrega o estado
+salvo. Se a sessão de convite mudou para outro rascunho durante a tentativa
+de gravar ou recarregar, a edição é encerrada. Os campos de saúde permanecem
+fora da URL, do armazenamento persistente do navegador e de serviços externos.
 
 ## Avaliação pelo instrutor designado
 

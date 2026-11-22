@@ -57,22 +57,40 @@ export async function firstAccess(page: Page, email: string) {
   expect(page.url()).not.toContain("token=");
 }
 export async function completeOnboarding(page: Page) {
-  await page.getByLabel("Altura (cm)", { exact: true }).fill("170");
-  await page.getByLabel("Peso (kg)", { exact: true }).fill("70");
   await page.getByLabel("Objetivo principal").selectOption("CONDICIONAMENTO");
   await page.getByLabel("Experiência com exercícios").selectOption("INICIANTE");
   await page.getByLabel("Nível de atividade atual").selectOption("LEVE");
   await page.getByLabel("Dias disponíveis por semana").fill("3");
   await page.getByLabel("Tempo por sessão (minutos)").fill("45");
+  await page.getByRole("button", { name: "Dados físicos", exact: true }).press("Enter");
+  await expect(page.getByRole("heading", { name: "Etapa 2 de 4 · Dados físicos" })).toBeFocused();
+  await page.getByLabel("Altura (cm)", { exact: true }).fill("170");
+  await page.getByLabel("Peso (kg)", { exact: true }).fill("70");
+  await page.getByRole("button", { name: "Revisão", exact: true }).press("Enter");
+  await page.getByRole("button", { name: "Concluir onboarding", exact: true }).press("Enter");
+  await expect(page.getByLabel("Possui alguma condição de saúde?")).toBeFocused();
   for (const label of ["Possui alguma condição de saúde?", "Usa medicamentos?",
     "Possui dor, lesão ou limitação?", "Já recebeu alguma orientação para restringir exercícios?",
     "Teve algum evento de saúde importante recentemente?"]) {
     await page.getByLabel(label, { exact: true }).selectOption("NAO");
   }
-  await page.getByRole("button", { name: "Salvar rascunho", exact: true }).click();
+  const save = page.getByRole("button", { name: "Salvar rascunho", exact: true });
+  let offline = true;
+  await page.route("**/api/v1/onboarding/convite/rascunho", async route => {
+    if (offline && route.request().method() === "PATCH") {
+      offline = false;
+      await route.abort("internetdisconnected");
+    } else await route.continue();
+  });
+  await save.press("Enter");
+  await expect(page.getByRole("alert")).toContainText("Seus dados continuam nesta tela");
+  await expect(page.getByLabel("Usa medicamentos?")).toHaveValue("NAO");
+  await save.press("Enter");
   await expect(page.getByText("Rascunho salvo.", { exact: true })).toBeVisible();
   await page.reload();
+  await page.getByRole("button", { name: "Dados físicos", exact: true }).press("Enter");
   await expect(page.getByLabel("Peso (kg)", { exact: true })).toHaveValue("70");
+  await page.getByRole("button", { name: "Revisão", exact: true }).press("Enter");
   await page.getByRole("button", { name: "Concluir onboarding", exact: true }).click();
 }
 export async function generate(page: Page) {

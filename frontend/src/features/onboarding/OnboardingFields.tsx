@@ -1,11 +1,13 @@
 import { useId } from "react";
 
-import { healthGroups, otherHealthFields, profileFields, type Field, type FormData } from "./form";
+import { healthGroups, otherHealthFields, physicalFields, routineFields, type EditingStep, type Field, type FormData } from "./form";
 
-function FieldControl({ field, value, onChange }: {
+function FieldControl({ field, value, onChange, name = field.name, invalidField }: {
   field: Field;
   value: string | number | null | undefined;
   onChange?: (value: string | null) => void;
+  name?: string;
+  invalidField?: string;
 }) {
   const id = useId();
   if (!onChange) {
@@ -13,19 +15,24 @@ function FieldControl({ field, value, onChange }: {
     return <div className="onboarding-field"><dt>{field.label}</dt><dd>{display === 0 ? 0 : display || "Não informado"}</dd></div>;
   }
   const change = (value: string) => onChange(value === "" && field.kind !== "notes" ? null : value);
+  const invalid = invalidField === name;
+  const attributes = {
+    id, name, value: value ?? "", "aria-invalid": invalid || undefined,
+    "aria-describedby": invalid ? "onboarding-feedback" : undefined,
+  };
   return (
     <div className="onboarding-field">
       <label htmlFor={id}>{field.label}</label>
       {field.kind === "choice" ? (
-        <select id={id} value={value ?? ""} onChange={(event) => change(event.target.value)}>
+        <select {...attributes} onChange={(event) => change(event.target.value)}>
           <option value="">Selecione</option>
           {field.options.map(([key, label]) => <option key={key} value={key}>{label}</option>)}
         </select>
       ) : field.kind === "notes" ? (
-        <textarea id={id} value={value ?? ""} maxLength={field.maxLength}
+        <textarea {...attributes} maxLength={field.maxLength}
           onChange={(event) => change(event.target.value)} />
       ) : (
-        <input id={id} value={value ?? ""} type={field.kind === "number" ? "number" : "text"}
+        <input {...attributes} type={field.kind === "number" ? "number" : "text"}
           min={field.kind === "number" ? field.min : undefined}
           max={field.kind === "number" ? field.max : undefined}
           step={field.kind === "number" ? field.step : undefined}
@@ -37,28 +44,31 @@ function FieldControl({ field, value, onChange }: {
   );
 }
 
-export function OnboardingFields({ data, onChange }: {
+export function OnboardingFields({ data, onChange, step, invalidField }: {
   data: FormData;
   onChange?: (value: FormData) => void;
+  step?: EditingStep;
+  invalidField?: string;
 }) {
   const Fields = onChange ? "div" : "dl";
   return (
     <>
-      <section>
-        <h3>Dados físicos e rotina de treino</h3>
+      {(!step || step !== "saude") && <section>
+        {!step && <h3>Dados físicos e rotina de treino</h3>}
         <Fields className="onboarding-grid">
-          {profileFields.map((field) => <FieldControl key={field.name} field={field} value={data[field.name]}
+          {(step === "rotina" ? routineFields : step === "fisico" ? physicalFields : [...routineFields, ...physicalFields])
+            .map((field) => <FieldControl key={field.name} field={field} value={data[field.name]} invalidField={invalidField}
             onChange={onChange && ((value) => onChange({ ...data, [field.name]: value }))} />)}
         </Fields>
-      </section>
-      {healthGroups.map((group) => {
+      </section>}
+      {(!step || step === "saude") && healthGroups.map((group) => {
         const rows = data[group.list] ?? [];
         const show = data[group.answer.name] === "SIM";
         return (
           <section key={group.list}>
             <h3>{group.label}</h3>
             <Fields className="onboarding-grid">
-              <FieldControl field={group.answer} value={data[group.answer.name]}
+              <FieldControl field={group.answer} value={data[group.answer.name]} invalidField={invalidField}
                 onChange={onChange && ((value) => onChange({ ...data, [group.answer.name]: value }))} />
             </Fields>
             {show && rows.map((row, index) => {
@@ -68,6 +78,7 @@ export function OnboardingFields({ data, onChange }: {
                   <h4>{label}</h4>
                   <Fields className="onboarding-grid">
                     {group.fields.map((field) => <FieldControl key={field.name} field={field}
+                      name={`${group.list}.${index}.${field.name}`} invalidField={invalidField}
                       value={row[field.name]} onChange={onChange && ((value) =>
                         onChange({ ...data, [group.list]: rows.map((entry, position) =>
                           position === index ? { ...entry, [field.name]: value } : entry) }))} />)}
@@ -79,20 +90,21 @@ export function OnboardingFields({ data, onChange }: {
                 </div>
               );
             })}
-            {onChange && show && <button type="button" disabled={rows.length >= group.max}
+            {onChange && show && <button type="button" name={group.list} disabled={rows.length >= group.max}
+              aria-describedby={invalidField === group.list ? "onboarding-feedback" : undefined}
               onClick={() => onChange({ ...data, [group.list]: [...rows, {}] })}>Adicionar {group.item}</button>}
             {onChange && !show && rows.length > 0 &&
               <p>Ao salvar esta resposta, os registros desta seção serão removidos do rascunho.</p>}
           </section>
         );
       })}
-      <section>
+      {(!step || step === "saude") && <section>
         <h3>Restrições e observações</h3>
         <Fields className="onboarding-grid">
-          {otherHealthFields.map((field) => <FieldControl key={field.name} field={field} value={data[field.name]}
+          {otherHealthFields.map((field) => <FieldControl key={field.name} field={field} value={data[field.name]} invalidField={invalidField}
             onChange={onChange && ((value) => onChange({ ...data, [field.name]: value }))} />)}
         </Fields>
-      </section>
+      </section>}
     </>
   );
 }
