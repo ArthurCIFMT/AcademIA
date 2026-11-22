@@ -1,0 +1,188 @@
+{
+  "navegador": "Microsoft Edge 158.0.4370.33",
+  "telas_por_largura": [
+    {
+      "largura_px": 320,
+      "telas": 38
+    },
+    {
+      "largura_px": 390,
+      "telas": 38
+    },
+    {
+      "largura_px": 768,
+      "telas": 38
+    },
+    {
+      "largura_px": 1440,
+      "telas": 38
+    }
+  ],
+  "teclado": "OK",
+  "texto_200_pct": "390 px · passo físico do convite",
+  "contraste": [
+    {
+      "par": "Texto e fundo",
+      "cores": [
+        "#142c30",
+        "#f3f6f4"
+      ],
+      "razao": 13.47,
+      "minimo": 4.5
+    },
+    {
+      "par": "Texto secundário e fundo",
+      "cores": [
+        "#4e6264",
+        "#f3f6f4"
+      ],
+      "razao": 5.93,
+      "minimo": 4.5
+    },
+    {
+      "par": "Branco no botão",
+      "cores": [
+        "#ffffff",
+        "#07574f"
+      ],
+      "razao": 8.45,
+      "minimo": 4.5
+    },
+    {
+      "par": "Branco na capa",
+      "cores": [
+        "#ffffff",
+        "#164e4d"
+      ],
+      "razao": 9.41,
+      "minimo": 4.5
+    },
+    {
+      "par": "Texto de aviso",
+      "cores": [
+        "#634300",
+        "#fff5d9"
+      ],
+      "razao": 8.28,
+      "minimo": 4.5
+    },
+    {
+      "par": "Texto de erro",
+      "cores": [
+        "#842f24",
+        "#fcece9"
+      ],
+      "razao": 7.59,
+      "minimo": 4.5
+    },
+    {
+      "par": "Texto de informação",
+      "cores": [
+        "#07574f",
+        "#e1f0eb"
+      ],
+      "razao": 7.19,
+      "minimo": 4.5
+    },
+    {
+      "par": "Borda de campo",
+      "cores": [
+        "#687e7b",
+        "#ffffff"
+      ],
+      "razao": 4.32,
+      "minimo": 3
+    },
+    {
+      "par": "Foco na superfície",
+      "cores": [
+        "#1c57a0",
+        "#ffffff"
+      ],
+      "razao": 7.19,
+      "minimo": 3
+    },
+    {
+      "par": "Foco no fundo",
+      "cores": [
+        "#1c57a0",
+        "#f3f6f4"
+      ],
+      "razao": 6.61,
+      "minimo": 3
+    },
+    {
+      "par": "Foco no ativo",
+      "cores": [
+        "#1c57a0",
+        "#e1f0eb"
+      ],
+      "razao": 6.12,
+      "minimo": 3
+    }
+  ],
+  "capturas": {
+    "total": 28,
+    "alturas_viewport_px": {
+      "390": 844,
+      "1440": 1000
+    },
+    "cenarios": [
+      {
+        "arquivo": "entrada",
+        "rota": "/login",
+        "papeis": [],
+        "exemplo": "login"
+      },
+      {
+        "arquivo": "onboarding",
+        "rota": "/area/cliente/onboarding",
+        "papeis": [
+          "CLIENTE"
+        ],
+        "exemplo": "fisico"
+      },
+      {
+        "arquivo": "duvida",
+        "rota": "/area/cliente/assistente",
+        "papeis": [
+          "CLIENTE"
+        ],
+        "exemplo": "evidencia"
+      },
+      {
+        "arquivo": "quota",
+        "rota": "/area/cliente/treino-ia?solicitacao=11111111-1111-4111-8111-111111111111",
+        "papeis": [
+          "CLIENTE"
+        ],
+        "exemplo": "quota"
+      },
+      {
+        "arquivo": "ficha",
+        "rota": "/area/cliente/treinos",
+        "papeis": [
+          "CLIENTE"
+        ],
+        "exemplo": "treinos"
+      },
+      {
+        "arquivo": "parecer",
+        "rota": "/area/instrutor/clientes/cliente/treinos/ficha/revisao",
+        "papeis": [
+          "INSTRUTOR"
+        ],
+        "exemplo": "parecer"
+      },
+      {
+        "arquivo": "cadastro",
+        "rota": "/area/administracao/clientes",
+        "papeis": [
+          "ADMINISTRADOR",
+          "ATENDENTE"
+        ],
+        "exemplo": "clientes"
+      }
+    ]
+  }
+}

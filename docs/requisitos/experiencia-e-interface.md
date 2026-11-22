@@ -1,8 +1,8 @@
 # Experiência, navegação e qualidade visual
 
-Status: ESPECIFICADO, implementação PENDENTE. Solicitação do responsável em
+Status: ESPECIFICADO, com [referência visual concluída em UX-01](../interface/README.md).
+A aplicação da referência começa em UX-02. Solicitação do responsável em
 2026-11-19, após a revisão manual do MVP. Complementa RNF-14, RNF-19 e RNF-20.
-Não declara que o aplicativo atual já satisfaz estes critérios.
 
 ## Objetivo e limites
 

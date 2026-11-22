@@ -221,9 +221,11 @@ permanecem explícitos; a aprovação é da configuração/modelo avaliados.
 O responsável solicitou em 2026-11-19 uma reformulação explícita da aparência e
 da usabilidade. RNF-19/RNF-20 e a
 [especificação de experiência](../requisitos/experiencia-e-interface.md) são
-fontes normativas. UX-01–UX-09 estão planejados, sem implementação visual nesta
-revisão. Começar por UX-01 e executar uma etapa por vez, podendo anteceder outros
-módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09; PG-01 permanece histórico.
+fontes normativas. UX-01 entregou a
+[referência visual e os protótipos](../interface/README.md), verificados no
+navegador com dados sintéticos. UX-02 está liberado para materializar os tokens
+e componentes no produto. As etapas seguintes continuam uma por vez e podem
+anteceder outros módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
 fichas do cliente, instrutor, cadastros e

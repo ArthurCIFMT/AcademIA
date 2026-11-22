@@ -1,11 +1,15 @@
 # Validação da reformulação visual
 
-Status: PLANEJADA. Nenhuma tela foi redesenhada ou aprovada pela criação destes
-prompts. Fonte: [critérios de experiência](../requisitos/experiencia-e-interface.md).
+Status: UX-01 verificado. Consulte a
+[linha de base e os resultados de UX-01](ux01-referencia-visual.md).
+O aceite da aplicação redesenhada segue a trilha abaixo.
+Fonte: [critérios de experiência](../requisitos/experiencia-e-interface.md).
 
 ## Ambiente e dados
 
-Usar React/Vite e o backend existentes, PostgreSQL academia_test e fixtures
+Para a linha de base visual de UX-01, usar build do MVP com HTTP interceptado
+e fixtures sintéticas, conforme o relatório. Nos testes integrados, usar
+React/Vite e o backend existentes, PostgreSQL academia_test e fixtures
 sintéticas, com Mailpit quando o fluxo exigir. Não apagar ou usar o banco de
 desenvolvimento para a preparação automatizada. Preservar chaves, fotos e dados
 reais fora de capturas/commits. IA controlada serve para verificar interação e

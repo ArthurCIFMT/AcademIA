@@ -315,8 +315,11 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 Solicitada em 2026-11-19. Fonte: [experiência e interface](../requisitos/experiencia-e-interface.md),
 RNF-19/RNF-20 e [plano de testes](../testes/reformulacao-visual.md).
 Executar um cartão por vez, na ordem UX-01 → UX-02 → UX-03 → UX-04 → UX-05 →
-UX-06 → UX-07 → UX-08 → UX-09. UX-01 está PRONTO para planejamento/protótipos;
-os demais aguardam as dependências. Nenhuma dessas telas foi implementada agora.
+UX-06 → UX-07 → UX-08 → UX-09. UX-01 entregou o
+[plano, o mapa e os protótipos](../interface/README.md).
+[As evidências](../testes/ux01-referencia-visual.md) registram a linha de base,
+28 capturas e as verificações a 320/390/768/1440 px, de teclado e contraste.
+UX-02 está PRONTO para implementar a base visual no frontend.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -326,8 +329,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [UX-01](11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | PRONTO |
-| [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | BLOQUEADO |
+| [UX-01](11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | CONCLUIDO |
+| [UX-02](11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | PRONTO |
 | [UX-03](11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | BLOQUEADO |
 | [UX-04](11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
 | [UX-05](11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |

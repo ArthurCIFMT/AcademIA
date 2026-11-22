@@ -239,9 +239,11 @@ permanecem explícitos; a aprovação é da configuração/modelo avaliados.
 O responsável solicitou em 2026-11-19 uma reformulação explícita da aparência e
 da usabilidade. RNF-19/RNF-20 e a
 [especificação de experiência](docs/requisitos/experiencia-e-interface.md) são
-fontes normativas. UX-01–UX-09 estão planejados, sem implementação visual nesta
-revisão. Começar por UX-01 e executar uma etapa por vez, podendo anteceder outros
-módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09; PG-01 permanece histórico.
+fontes normativas. UX-01 entregou a
+[referência visual e os protótipos](docs/interface/README.md), verificados no
+navegador com dados sintéticos. UX-02 está liberado para materializar os tokens
+e componentes no produto. As etapas seguintes continuam uma por vez e podem
+anteceder outros módulos pós-MVP e Docker. PG-02 inclui o aceite UX-09.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
 fichas do cliente, instrutor, cadastros e
@@ -1094,9 +1096,9 @@ explica os ensaios futuros. A criação dos prompts não implementa nem aprova t
 
 Fonte versionada: [docs/requisitos/experiencia-e-interface.md](docs/requisitos/experiencia-e-interface.md).
 
-Status: ESPECIFICADO, implementação PENDENTE. Solicitação do responsável em
+Status: ESPECIFICADO, com [referência visual concluída em UX-01](docs/interface/README.md).
+A aplicação da referência começa em UX-02. Solicitação do responsável em
 2026-11-19, após a revisão manual do MVP. Complementa RNF-14, RNF-19 e RNF-20.
-Não declara que o aplicativo atual já satisfaz estes critérios.
 
 #### Objetivo e limites
 
@@ -13512,8 +13514,11 @@ Dados de exemplo serão criados somente ao implementar os testes/seeds.
 Solicitada em 2026-11-19. Fonte: [experiência e interface](docs/requisitos/experiencia-e-interface.md),
 RNF-19/RNF-20 e [plano de testes](docs/testes/reformulacao-visual.md).
 Executar um cartão por vez, na ordem UX-01 → UX-02 → UX-03 → UX-04 → UX-05 →
-UX-06 → UX-07 → UX-08 → UX-09. UX-01 está PRONTO para planejamento/protótipos;
-os demais aguardam as dependências. Nenhuma dessas telas foi implementada agora.
+UX-06 → UX-07 → UX-08 → UX-09. UX-01 entregou o
+[plano, o mapa e os protótipos](docs/interface/README.md).
+[As evidências](docs/testes/ux01-referencia-visual.md) registram a linha de base,
+28 capturas e as verificações a 320/390/768/1440 px, de teclado e contraste.
+UX-02 está PRONTO para implementar a base visual no frontend.
 
 Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
@@ -13523,8 +13528,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [UX-01](docs/prompts/11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | PRONTO |
-| [UX-02](docs/prompts/11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | BLOQUEADO |
+| [UX-01](docs/prompts/11-experiencia-interface/UX-01.md) | Plano visual, mapa de navegação e protótipos | MOD-00 | TST-01 | CONCLUIDO |
+| [UX-02](docs/prompts/11-experiencia-interface/UX-02.md) | Tokens visuais e componentes comuns acessíveis | MOD-00 | UX-01, FND-07 | PRONTO |
 | [UX-03](docs/prompts/11-experiencia-interface/UX-03.md) | Navegação por perfil e telas de acesso | MOD-00, MOD-01, MOD-12 | UX-02, IAM-04, IAM-05, NTF-01 | BLOQUEADO |
 | [UX-04](docs/prompts/11-experiencia-interface/UX-04.md) | Onboarding por etapas com privacidade preservada | MOD-03 | UX-03, ONB-03, ONB-04 | BLOQUEADO |
 | [UX-05](docs/prompts/11-experiencia-interface/UX-05.md) | Experiência unificada do assistente e da geração de treino | MOD-04, MOD-06, MOD-12 | UX-04, AI-04, AI-05 | BLOQUEADO |
@@ -13767,6 +13772,8 @@ Fonte versionada: [docs/prompts/11-experiencia-interface/UX-02.md](docs/prompts/
 #### Tarefa e contexto
 
 Implementar a base visual reutilizável definida em UX-01, sem migrar todas as telas de uma vez.
+Usar a [referência visual verificada](docs/interface/README.md) para derivar
+os tokens e componentes compartilhados.
 
 Leia AGENTS.md, visão geral/invariantes e fontes afetadas do SPEC.md,
 [contexto de execução](docs/prompts/00-contexto-de-execucao.md),
@@ -17800,12 +17807,16 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
-Status: PLANEJADA. Nenhuma tela foi redesenhada ou aprovada pela criação destes
-prompts. Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
+Status: UX-01 verificado. Consulte a
+[linha de base e os resultados de UX-01](docs/testes/ux01-referencia-visual.md).
+O aceite da aplicação redesenhada segue a trilha abaixo.
+Fonte: [critérios de experiência](docs/requisitos/experiencia-e-interface.md).
 
 #### Ambiente e dados
 
-Usar React/Vite e o backend existentes, PostgreSQL academia_test e fixtures
+Para a linha de base visual de UX-01, usar build do MVP com HTTP interceptado
+e fixtures sintéticas, conforme o relatório. Nos testes integrados, usar
+React/Vite e o backend existentes, PostgreSQL academia_test e fixtures
 sintéticas, com Mailpit quando o fluxo exigir. Não apagar ou usar o banco de
 desenvolvimento para a preparação automatizada. Preservar chaves, fotos e dados
 reais fora de capturas/commits. IA controlada serve para verificar interação e
@@ -19026,12 +19037,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bbe2d94e1021bc7404549c9433eb49e113f6b65c7f489d7ef120e2745aace269` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
-| `docs/especificacao/visao-geral.md` | `203c560f8959ca47787eb00f193ac5bc58346a04cdaaa9efe3c179536e0ee9f1` |
+| `docs/especificacao/visao-geral.md` | `bd147cc8bd4b0e28a6c6652843d1fe72a509b43967a924d0b3cdc045dfe7f22a` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
-| `docs/prompts/11-experiencia-interface/UX-02.md` | `493c0bd7a1ab7b62004d1363ae652c089b8a7e9cec4eceda574039f12155eb29` |
+| `docs/prompts/11-experiencia-interface/UX-02.md` | `450a9d31071288453e5d4e0eebbc32da50db36917aa624d0ee44540b7449f59c` |
 | `docs/prompts/11-experiencia-interface/UX-03.md` | `c3cdb4f3c5a9a8b28c79e5692b642a0f8e1c66c862956af23f7fbc3ae662ffa3` |
 | `docs/prompts/11-experiencia-interface/UX-04.md` | `7c8d965567fab3c896c658278ce172f55b990f8bcd350ea7b4d59cb47b7fa138` |
 | `docs/prompts/11-experiencia-interface/UX-05.md` | `df9d0e858e018d10ac6905fc4a391a00a849429ed263916bbcd706dff2d5662e` |
@@ -19039,10 +19050,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `db2637c332b3ca296fed904618095d351a3d3b07552f054d1345561310aa0f9c` |
+| `docs/prompts/README.md` | `51431c5726e7350a5eb31886f191d19c7e25c25c7f9071d5a593e7fea93438d6` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
-| `docs/requisitos/experiencia-e-interface.md` | `2a8e501f408fa058f6d64ba03afef7c62b61d4100d4e4c62339ad270e488e0e8` |
+| `docs/requisitos/experiencia-e-interface.md` | `f037df95ea3bde46d58fd94f5f1b7e5a47d3d4a4462da51e55b3dcb0fdca4270` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
 | `docs/requisitos/onboarding-e-triagem.md` | `d91f10aefd1cd8de311a459fc9ed9c6e8b62ee64e2ce2aae08ad691517ba206b` |
 | `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
@@ -19083,7 +19094,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/preparacao-ai06.md` | `9a207c106f51010db20c66cadc87ec6fe344508ad82ce97a3cac0ccd832cbd67` |
 | `docs/testes/rag-adultos-v1.json` | `2b1eb38f25df13ddac178b95920f82e7d1a7f93e9f339d97e4f8c4980be13a3c` |
 | `docs/testes/rag-ia-semantico.md` | `5650aaa2ee0d64fae6f7ff525160ac8b9b85374389e8ff5d69cd5f5181688b6b` |
-| `docs/testes/reformulacao-visual.md` | `34b6e7ab7acf72e60f7e74052eab5db832e3b4a2369c93b5bf4e79e0289a1252` |
+| `docs/testes/reformulacao-visual.md` | `dcc1cd153350b8ab853da80f54c526fc4caee3fe4a3a173008c90692da838919` |
 | `docs/testes/tst01-cenarios.json` | `7a1fb3ec4dbf8135e71b3ff5ccbb7bb17f881176daab771af8fd88915533c9b7` |
 | `docs/testes/tst01-consolidacao.json` | `4b46e18b37e3e229b552d0d5a2620cc4261941aec16c1a96593daf9a03aabe7a` |
 | `docs/testes/tst01-criticos.json` | `13d13d0252f3b8139e51be4229bcbd4e661a0ad1981f1410990a1255bafbd70d` |

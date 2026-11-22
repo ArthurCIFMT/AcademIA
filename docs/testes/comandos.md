@@ -1,5 +1,13 @@
 # Registro de comandos de verificação
 
+## Referência visual UX-01
+
+O [relatório](ux01-referencia-visual.md#reprodução) registra o build da linha
+de base, o comando de captura e a inspeção no Edge. O executor usa o
+Playwright existente. Esta etapa cobre a referência em HTML/CSS e a UI
+vigente com fixtures, e deixa a regressão integrada para as entregas de
+frontend correspondentes.
+
 ## Revisão manual de 2026-11-22
 
 Em backend/, execute `uv run --locked pytest -q` e, com PostgreSQL de teste,
