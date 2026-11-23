@@ -2239,6 +2239,12 @@
           "type": "varchar(25)",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
         }
       ],
       "unique": []

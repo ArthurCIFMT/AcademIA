@@ -1558,3 +1558,40 @@ com CPF cadastrado e consultado na primeira jornada, rollback confirmado e
 zero chamadas a LLM externo. Lint, tipos, build, Ruff, mypy e DOC/SPEC passaram.
 A migração local preservou os cadastros existentes e o iniciador reconheceu
 a revisão 0017 com a configuração atual.
+
+## AUL-01 — Agenda de aulas por ocorrências
+
+Com PostgreSQL de teste disponível, executar a partir de `backend/`:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts="" tests/classes tests/contracts
+```
+
+O [contrato da agenda](../arquitetura/agenda.md) é exercitado com sessões
+reais de administrador, atendente, instrutor e cliente. A suíte cobre
+datas e fusos, alteração e cancelamento refletidos na agenda pública,
+auditoria, replay de criação, revisão desatualizada, abertura sem sessão
+e ida/volta da migração 0018 com constraint de intervalo.
+O frontend cobre os formulários, a agenda pública, a agenda na área do
+cliente e a recusa de entrada na página administrativa.
+
+Para a verificação visual no Edge, a partir da raiz, usar dois diretórios novos:
+
+```powershell
+node docs/interface/verificar-ux02.cjs backend/data/aul01-build-N backend/data/aul01-visual-N
+```
+
+As três rotas da agenda fazem parte da matriz. A verificação usa respostas
+sintéticas e testa 320, 390, 768 e 1440 px, texto a 200% em 320 e 390 px,
+foco e alvos de interação. No ambiente de desenvolvimento, a revisão
+0018 foi aplicada e preservou os cadastros. A agenda reutiliza os serviços
+e configurações do iniciador existente.
+
+Resultados: 121 testes de frontend, 17 rotas na matriz visual e 27 testes na
+rodada final de backend, incluindo os cenários de regressão corrigidos.
+A execução ampla de backend anterior teve 562 aprovações, 9 pulos e 2 falhas
+de preparação. A rodada focal confirmou o teste histórico de onboarding com
+dados compatíveis com a revisão 0007 e o SMTP com deduplicação por Message-ID,
+como no iniciador. O [executor de aceitação do MVP](aceitacao-mvp.md) passou
+nas oito jornadas do Edge com a revisão 0018, rollback confirmado e zero
+chamadas a LLM externo. Lint, tipagem, build, Ruff, mypy e DOC/SPEC passaram.

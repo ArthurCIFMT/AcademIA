@@ -81,7 +81,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
   opcional só para lançamentos que não representam compra de plano.
   Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
-- Aulas: fim>início; estado CANCELADA preserva histórico. Reservas fora do primeiro escopo.
+- Aulas: `fim > inicio`, estado AGENDADA ou CANCELADA e revisão positiva.
+  Cancelar preserva o registro administrativo e retira a ocorrência da agenda pública.
+  [Contrato da agenda](../agenda.md).
 - Outbox e notificação idempotentes; autor da ação não apaga auditoria livremente.
   TTL técnico de 90 dias não apaga metadados necessários à ficha/auditoria.
 

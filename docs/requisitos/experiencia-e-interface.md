@@ -41,10 +41,10 @@ oculto como autorização. A curadoria técnica RAG permanece oculta por padrão
 
 | Área | Organização proposta, somente para capacidades existentes |
 |---|---|
-| Cliente | Meus treinos; Assistente; Meus dados de treino (onboarding); conta/sair. |
+| Cliente | Meus treinos; Assistente; Meus dados de treino (onboarding); equipamentos; agenda de aulas; conta/sair. |
 | Instrutor | Meus clientes; fichas e editor manual; revisões pendentes; avaliações; catálogo autorizado. |
 | Atendente | Clientes e convites; outras operações apenas quando seus módulos forem entregues. |
-| Administrador | Clientes; funcionários; designações; equipamentos; exercícios. Indicadores somente com DSH-01 entregue. |
+| Administrador | Clientes; funcionários; designações; equipamentos; exercícios; gestão da agenda. Indicadores somente com DSH-01 entregue. |
 
 Os rótulos podem ficar mais naturais, sem prometer alteração de dados inexistente.
 O formulário de convite já pode abrir em página dedicada fora dos menus da conta,

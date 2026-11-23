@@ -43,6 +43,7 @@ def test_0016_preserves_messages_results_replay_and_reversible_sources(
     chat.ask(actor, after)
     views = chat.history(actor, 1)
     messages = snapshot(conn)
+    tables = set(inspect(conn).get_table_names(schema="academia"))
     with sessions.begin() as session:
         results = {r.id: r.resultado for r in session.scalars(select(Execution))}
     calls = (len(llm.calls), len(provider.calls))
@@ -78,7 +79,7 @@ def test_0016_preserves_messages_results_replay_and_reversible_sources(
     assert chat.ask(actor, after).resposta
     assert calls == (len(llm.calls), len(provider.calls))
     assert not inspect(conn).has_table("conversa", schema="academia")
-    assert len(inspect(conn).get_table_names(schema="academia")) == 31
+    assert set(inspect(conn).get_table_names(schema="academia")) == tables
     assert len(inspect(conn).get_foreign_keys("mensagem", schema="academia")) == 2
     # A referência composta protege titularidade; a simples removida era redundante.
     with pytest.raises(DBAPIError), conn.begin_nested():

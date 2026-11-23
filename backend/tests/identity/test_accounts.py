@@ -76,7 +76,7 @@ def connection() -> Iterator[Connection]:
 
 @pytest.fixture
 def sessions(connection: Connection) -> sessionmaker[Session]:
-    command.upgrade(config_for(connection), "0003")
+    command.upgrade(config_for(connection), "head")
     return create_session_factory(connection)
 
 

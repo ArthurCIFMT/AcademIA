@@ -64,9 +64,9 @@ A [avaliação anterior de tamanho](../../docs/analises/2026-11-19-tamanho-model
 preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
 A [normalização 0016](../../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
 remove redundâncias e preserva as regras. A revisão 0017 acrescenta CPF
-opcional ao cadastro de clientes. O modelo lógico atual tem 42 tabelas e
-332 colunas, incluindo onze tabelas futuras. O físico atual tem 31 tabelas,
-259 colunas e 51 FKs.
+opcional ao cadastro de clientes. A revisão 0018 entrega as ocorrências da
+agenda. O modelo lógico atual tem 42 tabelas e 333 colunas, incluindo dez
+tabelas futuras. O físico atual tem 32 tabelas, 266 colunas e 51 FKs.
 A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -152,7 +152,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](../../docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
 | MOD-08 — Matrícula/financeiro | [Planos, matrícula independente de pagamento e financeiro](../../docs/requisitos/contexto-e-escopo.md) | Planejado para pós-MVP; financeiro tardio |
-| MOD-09 — Agenda | [Aulas e eventual reserva](../../docs/requisitos/requisitos-funcionais.md) | Planejado; reserva depende do gate próprio |
+| MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |
 | MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |

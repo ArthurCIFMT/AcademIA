@@ -619,7 +619,8 @@ Reserva/capacidade não entra no primeiro escopo sem GATE-07
 | inicio | timestamptz | required | — |
 | fim | timestamptz | required | — |
 | descricao | text | opcional | — |
-| estado | varchar(25) | required | — |
+| estado | varchar(25) | AGENDADA ou CANCELADA | — |
+| revision | integer | required, maior ou igual a 1 | — |
 
 ## notificacao — MOD-12
 

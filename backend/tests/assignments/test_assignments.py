@@ -11,7 +11,7 @@ import pytest
 from alembic import command
 from alembic.config import Config
 from fastapi import Response
-from sqlalchemy import Connection, func, inspect, select
+from sqlalchemy import Connection, func, insert, inspect, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.schema import CreateSchema, DropSchema
@@ -72,8 +72,8 @@ def _seed(factory: sessionmaker[Session]) -> People:
             )
             session.add(UserRole(id=uuid4(), usuario_id=user_id, papel=role))
             if role == Role.CLIENTE:
-                session.add(
-                    ClientProfile(
+                session.execute(
+                    insert(ClientProfile).values(
                         usuario_id=user_id,
                         nome=name,
                         data_nascimento=_DATE,
@@ -176,7 +176,12 @@ def test_revision_0005_enforces_period_and_unique_open_link(
     command.downgrade(config, "0004")
     assert not inspect(connection).has_table("designacao", schema="academia")
     with factory.begin() as session:
-        assert session.get(ClientProfile, people.client) is not None
+        found = session.scalar(
+            select(ClientProfile.usuario_id).where(
+                ClientProfile.usuario_id == people.client
+            )
+        )
+        assert found == people.client
 
 
 @pytest.mark.integration

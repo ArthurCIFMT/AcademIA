@@ -1,0 +1,19 @@
+.class-time-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: var(--ac-space-3);
+}
+
+.class-time-fields input {
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+
+.class-description {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.class-card-title {
+  font-size: 1.17em;
+}

@@ -11,7 +11,7 @@
 | MOD-06 | Orquestrador e IA | Resumo de onboarding, triagem assistida, rotas fixas de RAG, geração/adaptação pelo LLM, validação e chat com orçamento. |
 | MOD-07 | Biometria e acesso | API facial real, referência/captura, decisão, simulador externo de catraca, frequência e lotação. |
 | MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
-| MOD-09 | Agenda e reservas | Aulas, capacidade e eventual reserva. |
+| MOD-09 | Agenda e reservas | [Ocorrências e agenda pública](agenda.md). Capacidade e reservas dependem do escopo aprovado. |
 | MOD-10 | Equipamentos | MVP: cadastro administrativo, disponibilidade e contrato de recursos para prescrição. |
 | MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
 | MOD-12 | Auditoria e notificações | Evidências, entrega de avisos, eventos duráveis e rastreabilidade. |

@@ -103,7 +103,7 @@
     },
     {
       "titulo": "17. Modelo de dados, relacionamentos e invariantes",
-      "nota": "Modelo lógico do escopo completo: 42 tabelas/332 colunas, incluindo onze tabelas futuras. O físico na revisão 0017 tem 31 tabelas/259 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.",
+      "nota": "Modelo lógico do escopo completo: 42 tabelas/333 colunas, incluindo dez tabelas futuras. O físico na revisão 0018 tem 32 tabelas/266 colunas/51 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.",
       "fontes": [
         {
           "arquivo": "docs/arquitetura/modelo-de-dados/modelo-logico.dbml",
@@ -375,6 +375,10 @@
         {
           "arquivo": "docs/arquitetura/equipamentos.md",
           "titulo": "Equipamentos"
+        },
+        {
+          "arquivo": "docs/arquitetura/agenda.md",
+          "titulo": "Agenda de aulas"
         },
         {
           "arquivo": "docs/arquitetura/catalogo-exercicios.md",

@@ -13,6 +13,8 @@ export const paths = {
   clientGeneration: "/area/cliente/treino-ia",
   clientOnboarding: "/area/cliente/onboarding",
   equipmentCatalog: "/equipamentos",
+  publicClasses: "/aulas",
+  clientClasses: "/area/cliente/aulas",
   assignedClients: "/area/instrutor/clientes",
   reviews: "/area/instrutor/revisoes",
   instructorExercises: "/area/instrutor/exercicios",
@@ -21,6 +23,7 @@ export const paths = {
   staff: "/area/administracao/funcionarios",
   assignments: "/area/administracao/designacoes",
   equipment: "/area/administracao/equipamentos",
+  adminClasses: "/area/administracao/aulas",
   adminExercises: "/area/administracao/exercicios",
   corpus: "/tecnico/corpus",
 };
@@ -33,6 +36,7 @@ const tasks: Record<Role, MenuItem[]> = {
     { path: paths.clientAssistant, label: "Assistente" },
     { path: paths.clientOnboarding, label: "Meus dados de treino" },
     { path: paths.equipmentCatalog, label: "Equipamentos disponíveis" },
+    { path: paths.clientClasses, label: "Agenda de aulas" },
   ],
   INSTRUTOR: [
     { path: paths.assignedClients, label: "Meus clientes" },
@@ -46,6 +50,7 @@ const tasks: Record<Role, MenuItem[]> = {
     { path: paths.assignments, label: "Designações" },
     { path: paths.equipment, label: "Gerenciar equipamentos" },
     { path: paths.adminExercises, label: "Catálogo de exercícios" },
+    { path: paths.adminClasses, label: "Gerenciar aulas" },
   ],
 };
 

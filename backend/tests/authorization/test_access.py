@@ -86,7 +86,7 @@ def authorization_sessions() -> Iterator[sessionmaker[Session]]:
                 ini = Path(__file__).resolve().parents[3] / "database" / "alembic.ini"
                 config = Config(str(ini))
                 config.attributes.update(connection=connection, database_target="test")
-                command.upgrade(config, "0003")
+                command.upgrade(config, "head")
                 yield create_session_factory(connection)
             finally:
                 outer.rollback()

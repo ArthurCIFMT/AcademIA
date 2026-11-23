@@ -48,10 +48,12 @@ A revisão `0012` cria [documentos, versões e decisões de curadoria](../docs/a
 A revisão `0013` cria [ingestões, fragmentos e checkpoints de indexação](../docs/arquitetura/indexacao-documental.md), com proveniência imutável e ativação completa.
 A revisão `0014` cria execução, triagem, etapas e evidências de IA; `0015` entrega
 mensagens de chat. A revisão `0016` normaliza as fontes de pergunta, triagem e
-consumo. A revisão vigente `0017` acrescenta CPF opcional e único ao
+consumo. A revisão `0017` acrescenta CPF opcional e único ao
 [cadastro de clientes](../docs/arquitetura/clientes.md). Registros anteriores
 mantêm seus dados e começam com CPF nulo. O downgrade 0017 → 0016 remove
 essa coluna e os CPFs preenchidos.
+A revisão `0018` cria a tabela da [agenda de aulas](../docs/arquitetura/agenda.md).
+O downgrade 0018 → 0017 remove a tabela e as ocorrências nela cadastradas.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da

@@ -5,6 +5,7 @@ import { AssignmentPage, MyAssignmentsPage } from "../features/assignments/Assig
 import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
+import { AdminClassSchedule, PublicClassSchedule } from "../features/classes/ClassSchedule";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
 import { TrainingQueuePage, TrainingReviewPage } from "../features/training-review/TrainingReview";
 import { CorpusPage } from "../features/corpus/CorpusPage";
@@ -25,6 +26,7 @@ import { AreaFrame, PublicFrame, PublicLayout } from "./Frames";
 function SessionBoundary() {
   const isOnboarding = useMatch(paths.clientOnboarding) !== null;
   const isEquipmentAdmin = useMatch(paths.equipment) !== null;
+  const isClassesAdmin = useMatch(paths.adminClasses) !== null;
   const isAdminExercises = useMatch(paths.adminExercises) !== null;
   const isInstructorExercises = useMatch(paths.instructorExercises) !== null;
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
@@ -33,7 +35,7 @@ function SessionBoundary() {
   const isCorpus = useMatch("/area/administracao/corpus") !== null || isTechnicalCorpus;
   const isAIGeneration = useMatch(paths.clientGeneration) !== null;
   const isChat = useMatch(paths.clientAssistant) !== null;
-  const session = useSession(isChat || isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
+  const session = useSession(isChat || isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isClassesAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
   const { state } = session;
 
   if (state.status === "checking") return <PublicFrame><StatusMessage state="loading" title="Verificando sessão…" /></PublicFrame>;
@@ -82,7 +84,7 @@ function AccessDenied() {
 
 type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
-  | "training-queue" | "my-training" | "corpus";
+  | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes";
 
 function AreaContent({ feature, role, session, retrySession }: {
   feature?: Feature; role: Role; session: Session; retrySession: () => Promise<void>;
@@ -90,6 +92,8 @@ function AreaContent({ feature, role, session, retrySession }: {
   const { user_id: userId, csrf_token: csrf } = session;
   switch (feature) {
     case "equipment": return <EquipmentInventoryPage key={userId} csrf={csrf} />;
+    case "admin-classes": return <AdminClassSchedule key={userId} csrf={csrf} />;
+    case "client-classes": return <PublicClassSchedule inClientArea />;
     case "exercises": return <ExerciseCatalog key={userId} csrf={csrf} />;
     case "onboarding": return <OwnOnboardingPage key={userId} csrf={csrf} />;
     case "staff": return <StaffDirectory key={userId} session={session} onAccessChange={retrySession} />;
@@ -152,11 +156,13 @@ export function AppRoutes() {
             <div className="site-entry-links">
               <Link to="/login">Entrar</Link>
               <Link to={paths.equipmentCatalog}>Equipamentos disponíveis</Link>
+              <Link to={paths.publicClasses}>Agenda de aulas</Link>
             </div>
             <ServiceStatus />
           </section>
         } />
         <Route path={paths.equipmentCatalog} element={<EquipmentCatalogPage />} />
+        <Route path={paths.publicClasses} element={<PublicClassSchedule />} />
         <Route path="/recuperar-acesso" element={<RequestRecoveryPage />} />
         <Route path="/redefinir-senha" element={<ResetPasswordPage key="redefinir" />} />
         <Route path="/primeiro-acesso" element={<ResetPasswordPage key="primeiro-acesso" firstAccess />} />
@@ -170,6 +176,7 @@ export function AppRoutes() {
         <Route path="/area/administracao/corpus" element={<Navigate to={paths.corpus} replace />} />
         <Route path={paths.corpus} element={<AreaPage requiredRole="ADMINISTRADOR" feature="corpus" />} />
         <Route path={paths.equipment} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
+        <Route path={paths.adminClasses} element={<AreaPage requiredRole="ADMINISTRADOR" feature="admin-classes" />} />
         <Route path={paths.staff} element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
         <Route path={paths.adminClients} element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
         <Route path={paths.attendantClients} element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
@@ -183,6 +190,7 @@ export function AppRoutes() {
         <Route path={paths.clientGeneration} element={<AreaPage requiredRole="CLIENTE" feature="assistant" />} />
         <Route path={paths.clientTraining} element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
         <Route path={paths.clientOnboarding} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
+        <Route path={paths.clientClasses} element={<AreaPage requiredRole="CLIENTE" feature="client-classes" />} />
         {roles.map(role => <Route key={role} path={areas[role].path} element={<AreaPage requiredRole={role} />} />)}
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

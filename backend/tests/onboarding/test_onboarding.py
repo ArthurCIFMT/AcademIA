@@ -14,7 +14,7 @@ import httpx
 import pytest
 from alembic import command
 from alembic.config import Config
-from sqlalchemy import Connection, delete, inspect, select, update
+from sqlalchemy import Connection, delete, insert, inspect, select, update
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.schema import CreateSchema, DropSchema
@@ -101,8 +101,8 @@ def _seed(factory: sessionmaker[Session], suffix: str = "") -> People:
             )
             session.add(UserRole(id=uuid4(), usuario_id=user_id, papel=role))
             if role == Role.CLIENTE:
-                session.add(
-                    ClientProfile(
+                session.execute(
+                    insert(ClientProfile).values(
                         usuario_id=user_id,
                         nome=name,
                         data_nascimento=_BIRTH,
@@ -781,8 +781,14 @@ def test_0007_enforces_invite_constraints_and_downgrades_without_erasing_draft(
 
     command.upgrade(config, "0007")
     with factory.begin() as session:
-        _, issued = issue_invitation(session, people.client, people.attendant, uuid4())
-        assert issued is not None
+        session.add(
+            OnboardingInvitation(
+                id=uuid4(),
+                onboarding_id=draft.id,
+                token_hash=digest("convite-0007"),
+                expira_em=utc_now() + timedelta(hours=1),
+            )
+        )
     with (
         pytest.raises(IntegrityError, match="uq_convite_onboarding_nao_revogado"),
         factory.begin() as session,

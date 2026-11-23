@@ -500,6 +500,7 @@ Table aula_ocorrencia {
   fim timestamptz [not null]
   descricao text
   estado varchar(25) [not null]
+  revision integer [not null]
   Note: 'Owner MOD-09. Reserva/capacidade não entra no primeiro escopo sem GATE-07'
 }
 

@@ -11,6 +11,7 @@ from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
 from app.modules.assignments.http import install_assignments
+from app.modules.classes.http import classes_router
 from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
@@ -63,6 +64,7 @@ def create_app(
     app.include_router(generation_router(get_sessions))
     app.include_router(chat_router(get_sessions))
     app.include_router(equipment_router(get_sessions))
+    app.include_router(classes_router(get_sessions))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

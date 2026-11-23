@@ -24,6 +24,9 @@ const samples = [
   ["inventario", "/area/administracao/equipamentos", admin, "Remo de exemplo"],
   ["exercicios", "/area/administracao/exercicios", admin, "Remada de exemplo"],
   ["catalogo-publico", "/equipamentos", [], "Remo de exemplo"],
+  ["agenda-publica", "/aulas", [], "Pilates de exemplo"],
+  ["agenda-cliente", "/area/cliente/aulas", ["CLIENTE"], "Pilates de exemplo"],
+  ["agenda-administracao", "/area/administracao/aulas", admin, "Pilates de exemplo"],
 ];
 const actions = {
   entrada: "Entrar", onboarding: "Concluir onboarding", duvida: "Enviar dúvida",
@@ -32,12 +35,21 @@ const actions = {
   funcionarios: "Cadastrar funcionário", designacoes: "Buscar instrutor",
   inventario: "Cadastrar equipamento", exercicios: "Cadastrar exercício",
   editor: "Novo rascunho manual",
+  "agenda-administracao": "Cadastrar aula",
 };
 const rows = (...itens) => ({ itens, pagina: 1, limite: 20, total: itens.length });
 const equipment = { id: "remo", nome: "Remo de exemplo", categoria: "Cardio",
   descricao: "Equipamento sintético", imagem_url: null, ativo: true, operacional: true, revisao: 1 };
 const resource = { id: equipment.id, nome: equipment.nome, disponivel: true };
+const scheduledClass = { id: "aula", nome: "Pilates de exemplo",
+  inicio: "2030-02-02T02:30:00Z", fim: "2030-02-02T03:15:00Z",
+  descricao: "Aula de exemplo." };
 const directoryFixtures = {
+  "/api/v1/aulas": rows(scheduledClass),
+  "/api/v1/admin/aulas": rows(
+    { ...scheduledClass, estado: "AGENDADA", revisao: 1 },
+    { ...scheduledClass, id: "cancelada", nome: "Alongamento de exemplo", estado: "CANCELADA", revisao: 2 },
+  ),
   "/api/v1/funcionarios": rows({ id: "atendente", nome: "Atendente de exemplo", papeis: ["ATENDENTE"], ativo: true }),
   "/api/v1/designacoes/clientes/cliente": { cliente: { id: "cliente", nome: "Cliente de exemplo" },
     cliente_elegivel: true, vigente: null, instrutor_ativo: false, historico: rows() },
@@ -174,7 +186,8 @@ async function inspectApp(browser, origin, width, sample, files) {
       assert.ok(bounds.width >= 44 && bounds.height >= 44, `Alvo principal menor que 44 px em ${name}`);
     }
     const formFields = { cadastro: "Data de nascimento", atendimento: "Data de nascimento",
-      funcionarios: "Data de admissão", inventario: "Foto (JPG ou PNG)", exercicios: "Descrição do movimento" };
+      funcionarios: "Data de admissão", inventario: "Foto (JPG ou PNG)", exercicios: "Descrição do movimento",
+      "agenda-administracao": "Data de início" };
     if (formFields[name]) {
       await action.click();
       await page.getByLabel(formFields[name], { exact: true }).waitFor();
@@ -195,7 +208,7 @@ async function inspectApp(browser, origin, width, sample, files) {
       }
       await assertReflow(page, width, "editor com dia e exercício");
     }
-    if ((width === 390 || width === 1440) && (cases.some(([key]) => key === name) || name === "editor")) {
+    if ((width === 390 || width === 1440) && (cases.some(([key]) => key === name) || name === "editor" || name.startsWith("agenda-"))) {
       await capture(page, name + "-" + width + ".png", files);
     }
     if (width === 320 || width === 390) {
