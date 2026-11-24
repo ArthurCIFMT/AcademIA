@@ -422,13 +422,13 @@ Table matricula {
 
 Table biometria {
   id uuid [pk]
-  cliente_id uuid [not null, unique]
+  cliente_id uuid [not null]
   subject_externo varchar(120) [not null, unique]
-  image_id varchar(120) [not null]
+  image_id varchar(120) [unique]
   estado varchar(25) [not null]
   cadastrada_por uuid [not null]
   criada_em timestamptz [not null]
-  Note: 'Owner MOD-07. Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato'
+  Note: 'Owner MOD-07. Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar'
 }
 
 Table evento_acesso {

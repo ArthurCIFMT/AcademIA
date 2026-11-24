@@ -71,6 +71,8 @@ test("atendente matricula cliente pelo plano ativo e consulta a renovação", as
     }]);
     if (url.startsWith("/api/v1/atendimento/planos?")) return page([plan]);
     if (url.startsWith(historyPath + "?")) return page(entries);
+    if (url.endsWith("/biometria")) return Response.json({ cadastrada: false, elegivel: entries.length > 0,
+      disponivel: false, atualizada_em: null, pendencia: null });
     if (url === historyPath && options.method === "POST") {
       expect(options.headers).toMatchObject({ "X-CSRF-Token": "csrf-demo" });
       writes.push(JSON.parse(String(options.body)));

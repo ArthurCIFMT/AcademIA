@@ -1,12 +1,20 @@
+import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from pydantic import ValidationError
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import Settings
 from app.core.health import router as health_router
 from app.core.http import error_schemas, install_http_contract
+from app.modules.access.biometrics.http import biometrics_router
+from app.modules.access.biometrics.provider import (
+    CompreFace,
+    CompreFaceSettings,
+    FacialProvider,
+)
 from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
@@ -43,6 +51,7 @@ def create_app(
     *,
     identity_sessions: sessionmaker[Session] | None = None,
     auth_settings: AuthSettings | None = None,
+    biometrics_provider: FacialProvider | None = None,
 ) -> FastAPI:
     settings = Settings()
     app = FastAPI(
@@ -67,6 +76,15 @@ def create_app(
     app.include_router(equipment_router(get_sessions))
     app.include_router(classes_router(get_sessions))
     app.include_router(memberships_router(get_sessions))
+    if biometrics_provider is None:
+        try:
+            face_settings = CompreFaceSettings()
+        except ValidationError:
+            logging.getLogger(__name__).warning("Configuração do CompreFace inválida.")
+        else:
+            if face_settings.url is not None:
+                biometrics_provider = CompreFace(face_settings)
+    app.include_router(biometrics_router(get_sessions, biometrics_provider))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

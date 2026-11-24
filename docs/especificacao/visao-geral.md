@@ -65,9 +65,9 @@ preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
 A [normalização 0016](../../docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
 remove redundâncias e preserva as regras. A revisão 0017 acrescenta CPF
 opcional ao cadastro de clientes. A revisão 0018 entrega as ocorrências da
-agenda. A revisão 0019 entrega planos e matrículas. O modelo lógico atual
-tem 42 tabelas e 334 colunas, incluindo oito tabelas futuras. O físico atual
-tem 34 tabelas, 284 colunas e 54 FKs.
+agenda. A revisão 0019 entrega planos e matrículas. A revisão 0020 entrega a
+referência facial. O modelo lógico tem 42 tabelas e 334 colunas, incluindo sete
+tabelas futuras. O físico atual tem 35 tabelas, 291 colunas e 56 FKs.
 A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -151,7 +151,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-04 — Exercícios/fichas | [Catálogo](../../docs/arquitetura/catalogo-exercicios.md), [editor manual](../../docs/arquitetura/fichas-manuais.md), [publicação/parecer](../../docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](../../docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
-| MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](../../docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
+| MOD-07 — Biometria/acesso | [Referência facial](../../docs/arquitetura/biometria.md) e [fluxo de acesso](../../docs/arquitetura/fluxos-atualizados.md) | Cadastro e substituição entregues pelo ACS-01. Reconhecimento e catraca seguem no roteiro |
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |

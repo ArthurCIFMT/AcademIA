@@ -1,0 +1,7 @@
+.facial-reference {
+  margin-block: var(--ac-space-4);
+}
+
+.facial-reference input[type="file"] {
+  max-inline-size: 100%;
+}

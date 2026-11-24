@@ -1629,3 +1629,43 @@ e recusa da tela ao cliente. Ruff, mypy, lint, tipos e build aprovados.
 A revisão 0019 foi aplicada no banco local de desenvolvimento, com contagens
 de clientes, funcionários e aulas preservadas. A checagem de schema e os 14
 [testes do iniciador](iniciador-local-20261120.md) passaram com a nova revisão.
+
+## ACS-01 — Referência facial
+
+A partir de `backend/`, com PostgreSQL nativo e banco de teste separado:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+A parametrização real usa `ACADEMIA_TEST_COMPREFACE=1` e as três variáveis
+de conexão do [ACS-01](../arquitetura/biometria.md#rotas-e-configuração).
+Injete as chaves da coleção de teste somente no processo do ensaio. Em Windows,
+a rodada executou os mesmos alvos pelo Python 3.12 de `.venv/Scripts/`, com
+`../.env` carregado por dotenv. Recupera as imagens sintéticas fora do Git pelo
+caminho de amostras definido no [GATE-08](../arquitetura/preparacao-gate-08.md),
+recorta quadros distintos e apaga os exemplos cadastrados no fim da rodada.
+
+Resultado final de **32 testes aprovados**. O CompreFace 1.2.0/FaceNet em
+CPU confirmou a troca e a exclusão anterior, com recusa de zero ou vários
+rostos. O double confirmou falha após envio e falha ao excluir, com
+recuperação explícita, aviso e auditoria. Os testes também cobrem autorização,
+CSRF, exigência de matrícula, contrato OpenAPI e paridade das migrations.
+Na primeira execução, o cadastro recebeu 503. A rodada final rodou com o
+provedor aquecido e tempo limite local de 20 segundos configurado por padrão.
+
+Frontend, a partir de `frontend/`:
+
+```powershell
+node node_modules/vitest/vitest.mjs run
+node node_modules/typescript/bin/tsc --noEmit
+node node_modules/eslint/bin/eslint.js .
+node node_modules/vite/bin/vite.js build
+```
+
+Passaram 128 testes de frontend. Os casos de componentes cobrem bloqueio
+sem matrícula, envio protegido e recuperação sem reenviar foto. Ruff,
+mypy, lint, tipos e build passaram. A migration 0020 foi aplicada em
+desenvolvimento com registros anteriores preservados. A checagem de schema
+e os 14 testes do iniciador também passaram.

@@ -68,8 +68,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   ou ambos conhecidos não negativos. Consumo desconhecido não significa zero;
   não perder reserva, contadores ou registro de chamada durante limpeza/replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
-- Foto ativa por cliente matriculado; substituição mantém metadados, descarta
-  referência antiga via provedor; reconhecimento não libera acesso sozinho.
+- Uma referência facial ativa e uma candidata pendente por cliente matriculado.
+  A conclusão descarta o exemplo anterior via provedor e conserva auditoria.
+  A candidata pendente fica indisponível para identificação.
 - Evento unique(origem,event_id), comando/retorno correlacionados e idempotentes.
   Unique parcial presenca(cliente_id) WHERE saida_evento_id IS NULL.
   Apenas passagem confirmada muda frequência; replay não muda lotação.

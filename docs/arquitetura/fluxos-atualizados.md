@@ -71,6 +71,7 @@ cadastro não significa autorização de entrada. Matrícula contém plano, vali
 modalidade e limites; vencimento não apaga histórico nem referência.
 Funcionário autorizado pode substituir a foto, mantendo auditoria e retirando
 a referência anterior conforme política. Cliente não troca sua própria biometria.
+[Cadastro e recuperação de referência facial](biometria.md).
 
 ## API de reconhecimento facial — CompreFace confirmado
 

@@ -1871,7 +1871,7 @@
     {
       "name": "biometria",
       "owner": "MOD-07",
-      "note": "Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato",
+      "note": "Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar",
       "columns": [
         {
           "name": "id",
@@ -1882,7 +1882,7 @@
         {
           "name": "cliente_id",
           "type": "uuid",
-          "flags": "required unique",
+          "flags": "required",
           "ref": "cliente.usuario_id"
         },
         {
@@ -1894,7 +1894,7 @@
         {
           "name": "image_id",
           "type": "varchar(120)",
-          "flags": "required",
+          "flags": "unique",
           "ref": null
         },
         {

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNod
 
 import { ApiError } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { ClientBiometrics } from "../biometrics/ClientBiometrics";
 import { listClients, type ClientSummary } from "../clients/api";
 import { DirectoryPager, DirectoryTag } from "../clients/directory-ui";
 import {
@@ -232,6 +233,7 @@ function ClientMemberships({ client, csrf }: { client: ClientSummary; csrf: stri
       </li>)}
     </ul>}</PageResult>
     <Button variant="secondary" onClick={() => history.reload(1)}>Atualizar histórico</Button>
+    <ClientBiometrics key={notice} clientId={client.id} csrf={csrf} />
   </>;
 }
 

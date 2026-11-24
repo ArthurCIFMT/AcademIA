@@ -520,14 +520,14 @@ Fim civil inclusive no fuso da academia; sem FK obrigatória para pagamento
 
 ## biometria — MOD-07
 
-Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato
+Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| cliente_id | uuid | required unique | cliente.usuario_id |
+| cliente_id | uuid | required, unicidade parcial por estado | cliente.usuario_id |
 | subject_externo | varchar(120) | required unique | — |
-| image_id | varchar(120) | required | — |
+| image_id | varchar(120) | unique, nulo somente em PREPARANDO | — |
 | estado | varchar(25) | required | — |
 | cadastrada_por | uuid | required | funcionario.usuario_id |
 | criada_em | timestamptz | required | — |

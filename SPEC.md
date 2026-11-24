@@ -83,9 +83,9 @@ preserva o retrato de 18 entidades originais, 43 tabelas planejadas e 32 do MVP.
 A [normalização 0016](docs/arquitetura/decisoes/ADR-013-normalizacao-persistencia-ia-chat.md)
 remove redundâncias e preserva as regras. A revisão 0017 acrescenta CPF
 opcional ao cadastro de clientes. A revisão 0018 entrega as ocorrências da
-agenda. A revisão 0019 entrega planos e matrículas. O modelo lógico atual
-tem 42 tabelas e 334 colunas, incluindo oito tabelas futuras. O físico atual
-tem 34 tabelas, 284 colunas e 54 FKs.
+agenda. A revisão 0019 entrega planos e matrículas. A revisão 0020 entrega a
+referência facial. O modelo lógico tem 42 tabelas e 334 colunas, incluindo sete
+tabelas futuras. O físico atual tem 35 tabelas, 291 colunas e 56 FKs.
 A [comparação visual da revisão 0016](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -169,7 +169,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
-| MOD-07 — Biometria/acesso | [CompreFace, autorização, catraca fictícia e frequência](docs/arquitetura/fluxos-atualizados.md) | Planejado para pós-MVP |
+| MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [fluxo de acesso](docs/arquitetura/fluxos-atualizados.md) | Cadastro e substituição entregues pelo ACS-01. Reconhecimento e catraca seguem no roteiro |
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
@@ -1963,7 +1963,7 @@ triagem, parecer posterior ou seleção de recursos disponíveis.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
-Modelo lógico do escopo completo: 42 tabelas/334 colunas, incluindo oito tabelas futuras. O físico na revisão 0019 tem 34 tabelas/284 colunas/54 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
+Modelo lógico do escopo completo: 42 tabelas/334 colunas, incluindo sete tabelas futuras. O físico na revisão 0020 tem 35 tabelas/291 colunas/56 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
 
 ### 1. Modelo DBML completo
 
@@ -2394,13 +2394,13 @@ Table matricula {
 
 Table biometria {
   id uuid [pk]
-  cliente_id uuid [not null, unique]
+  cliente_id uuid [not null]
   subject_externo varchar(120) [not null, unique]
-  image_id varchar(120) [not null]
+  image_id varchar(120) [unique]
   estado varchar(25) [not null]
   cadastrada_por uuid [not null]
   criada_em timestamptz [not null]
-  Note: 'Owner MOD-07. Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato'
+  Note: 'Owner MOD-07. Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar'
 }
 
 Table evento_acesso {
@@ -3112,14 +3112,14 @@ Fim civil inclusive no fuso da academia; sem FK obrigatória para pagamento
 
 #### biometria — MOD-07
 
-Referência ativa única; substituição descarta foto/exemplo antigo conforme contrato
+Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| cliente_id | uuid | required unique | cliente.usuario_id |
+| cliente_id | uuid | required, unicidade parcial por estado | cliente.usuario_id |
 | subject_externo | varchar(120) | required unique | — |
-| image_id | varchar(120) | required | — |
+| image_id | varchar(120) | unique, nulo somente em PREPARANDO | — |
 | estado | varchar(25) | required | — |
 | cadastrada_por | uuid | required | funcionario.usuario_id |
 | criada_em | timestamptz | required | — |
@@ -3334,8 +3334,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   ou ambos conhecidos não negativos. Consumo desconhecido não significa zero;
   não perder reserva, contadores ou registro de chamada durante limpeza/replay.
 - Revogação/snapshot/inventário/configuração superados são revalidados na publicação.
-- Foto ativa por cliente matriculado; substituição mantém metadados, descarta
-  referência antiga via provedor; reconhecimento não libera acesso sozinho.
+- Uma referência facial ativa e uma candidata pendente por cliente matriculado.
+  A conclusão descarta o exemplo anterior via provedor e conserva auditoria.
+  A candidata pendente fica indisponível para identificação.
 - Evento unique(origem,event_id), comando/retorno correlacionados e idempotentes.
   Unique parcial presenca(cliente_id) WHERE saida_evento_id IS NULL.
   Apenas passagem confirmada muda frequência; replay não muda lotação.
@@ -12076,6 +12077,7 @@ inativo retira apenas as permissões daquele perfil.
 | Manter agenda de aulas e consultar seu histórico | Administrador ativo |
 | Gerenciar planos ativos e inativos | Administrador ativo |
 | Consultar planos ativos, matricular e renovar clientes, consultar histórico | Atendente ativo |
+| Consultar estado e manter referência facial | Atendente ativo. Escrita exige cliente elegível e matrícula registrada |
 | Consultar ocorrências públicas da agenda | Visitante ou usuário autenticado |
 | Manter catálogo de exercícios | Administrador ou instrutor ativo |
 | Manter literatura e curadoria RAG | Responsável técnico com identidade administrativa ativa; HTTP/tela só em manutenção explicitamente habilitada |
@@ -12753,7 +12755,79 @@ A autorização de entrada combina essa consulta com conta, identidade,
 modalidade e uso diário no motor do ACS-03. A contagem das passagens confirmadas
 pertence ao módulo de acesso e continua por cliente e dia civil, inclusive em
 caso de renovação. [Decisões do GATE-08](docs/arquitetura/preparacao-gate-08.md).
-### 12. Exercícios e recursos
+### 12. Cadastro e substituição da referência facial
+
+Fonte versionada: [docs/arquitetura/biometria.md](docs/arquitetura/biometria.md).
+
+O atendente autorizado seleciona o cliente na área **Atendimento → Matrículas**
+e envia ou captura a foto. O backend exige perfil de cliente habilitado e uma
+matrícula registrada pelo atendente. A data de vigência será avaliada no motor
+de acesso. Uma matrícula com início futuro permite preparar a referência.
+
+#### Validação e privacidade
+
+O AcademIA aceita JPG ou PNG estático de até 4 MiB e 4096 px por lado. A foto
+é decodificada, orientada e recodificada sem metadados no backend. O CompreFace
+valida exatamente um rosto com confiança inicial de detecção de 0,8, sem
+limitar a quantidade devolvida pelo detector. A similaridade inicial de 0,95
+pertence ao reconhecimento de uma nova captura.
+[Contrato do CompreFace 1.2.0](https://github.com/exadel-inc/CompreFace/blob/v1.2.0/docs/Rest-API-description.md).
+
+Os bytes da foto transitam somente em memória no backend. A instância local
+segue a configuração do GATE-08 e conserva a representação facial necessária,
+com armazenamento da imagem bruta desativado no provedor. O banco da aplicação
+guarda um identificador opaco por foto, o identificador do exemplo no provedor,
+estado, atendente e horário. A resposta ao navegador contém apenas o status.
+Auditoria e aviso interno para administradores registram a operação, sem
+armazenar foto, imagem codificada, credenciais ou IDs do provedor.
+
+#### Troca e recuperação
+
+1. O backend valida a foto e grava uma reserva `PREPARANDO` com identificador
+   próprio antes de enviar o exemplo ao CompreFace.
+2. Após o provedor confirmar o cadastro, a candidata fica `PRONTA`. Se houver
+   referência ativa anterior, o backend exige confirmação da remoção daquele
+   exemplo antes de concluir.
+3. A transação publica a nova referência `ATIVA`, remove o vínculo anterior
+   e grava auditoria e aviso. Uma referência pendente fica indisponível
+   para identificação. O PostgreSQL permite uma ativa e uma pendente por cliente,
+   e as escritas são serializadas pelo serviço de pessoas.
+4. Se houver falha do provedor, a API informa que a troca está pendente e
+   registra a falha. A referência anterior segue registrada. Se a exclusão
+   tiver ocorrido sem resposta, o retry confirma a ausência antes de publicar.
+   A ação **Verificar pendência** consulta o identificador reservado. Pode
+   encerrar um envio ausente ou concluir com o exemplo confirmado, sem pedir
+   novamente a foto. Se a resposta do provedor continuar incerta, a pendência
+   continua registrada.
+
+`active_client_for_subject` devolve apenas o cliente associado ao identificador
+de uma referência `ATIVA`. A captura de reconhecimento, a prova de identidade
+e a autorização do acesso são entregas posteriores. Confiança de detecção e
+similaridade são medidas diferentes.
+
+#### Rotas e configuração
+
+Com sessão e papel ATENDENTE, sob `/api/v1/atendimento/clientes/{client_id}/biometria`:
+
+| Método | Entrada | Saída |
+|---|---|---|
+| GET | Identificador de cliente | `cadastrada`, `elegivel`, `disponivel`, `atualizada_em` e `pendencia` |
+| POST | JSON com `imagem_base64` e cabeçalho CSRF | Status atualizado (200) |
+| POST em `/pendencia` | Cabeçalho CSRF, sem foto | Status após consultar e recuperar a tentativa pendente (200) |
+
+`disponivel` informa configuração local do adapter. Foto inválida retorna 422,
+conflito de elegibilidade ou pendência retorna 409 e falha de configuração ou
+operação externa retorna 503. A API não expõe fotos ou retorno bruto do provedor.
+
+Defina em `.env` local `ACADEMIA_COMPREFACE_URL`,
+`ACADEMIA_COMPREFACE_DETECTION_KEY` e `ACADEMIA_COMPREFACE_RECOGNITION_KEY`.
+Use chaves distintas de uma aplicação local de desenvolvimento e mantenha
+a coleção de testes separada. A URL aceita HTTPS ou HTTP de loopback.
+`ACADEMIA_COMPREFACE_TIMEOUT_SECONDS`, `ACADEMIA_COMPREFACE_DETECTION_THRESHOLD`
+e `ACADEMIA_COMPREFACE_MAX_IMAGE_BYTES` têm os valores iniciais em `.env.example`.
+O iniciador lê essas variáveis. A instância já provisionada do CompreFace é
+ligada separadamente conforme o [GATE-08](docs/arquitetura/preparacao-gate-08.md#execução-local-da-instância-dedicada).
+### 13. Exercícios e recursos
 
 Fonte versionada: [docs/arquitetura/catalogo-exercicios.md](docs/arquitetura/catalogo-exercicios.md).
 
@@ -12807,7 +12881,7 @@ e dos vínculos de cada grupo. O SQL sintético original continua restrito a
 é uma operação explícita para `academia_dev`, acrescentando equipamentos e
 exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
 não cria fichas e não substitui evidências bibliográficas do RAG.
-### 13. Editor manual
+### 14. Editor manual
 
 Fonte versionada: [docs/arquitetura/fichas-manuais.md](docs/arquitetura/fichas-manuais.md).
 
@@ -12888,7 +12962,7 @@ expirado com motivo e data, remove itens antes dos dias e preserva os
 metadados. Consultas de conteúdo expirado retornam a identificação e
 uma lista vazia de dias. A estrutura preserva referências futuras de
 execuções de treino por versão.
-### 14. Publicação, parecer e retenção
+### 15. Publicação, parecer e retenção
 
 Fonte versionada: [docs/arquitetura/publicacao-e-parecer.md](docs/arquitetura/publicacao-e-parecer.md).
 
@@ -13012,7 +13086,7 @@ cópia da ficha na execução IA que possa restaurar conteúdo expirado.
 geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
 tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
 falha exata. A tela lê o ledger atual antes do reenvio.
-### 15. Consulta e exportação
+### 16. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
 
@@ -13099,7 +13173,7 @@ retido. Não alterar a retenção nem remover pareceres/validações históricos
 [Testes e roteiro de navegador](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino).
 A validação usa PostgreSQL real de teste, clientes sintéticos, frontend React,
 FastAPI e Edge em 390 px. O esquema temporário é removido ao final.
-### 16. Auditoria e eventos
+### 17. Auditoria e eventos
 
 Fonte versionada: [docs/arquitetura/auditoria-e-eventos.md](docs/arquitetura/auditoria-e-eventos.md).
 
@@ -13125,7 +13199,7 @@ persistir seu efeito. Ao confirmar, o evento fica entregue. Se a transação
 falhar, o efeito é desfeito e o evento continua pendente para nova tentativa.
 Para efeitos externos, o consumidor da integração precisa usar a chave de
 idempotência do evento. O envio de avisos pertence a NTF-01.
-### 17. Avisos e e-mail
+### 18. Avisos e e-mail
 
 Fonte versionada: [docs/arquitetura/notificacoes.md](docs/arquitetura/notificacoes.md).
 
@@ -13219,7 +13293,7 @@ Use esse comando no lugar do processo temporário; não inicie dois servidores n
 mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
 **Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
 anterior; não redefina senhas diretamente no banco.
-### 18. Integrações de treino e acesso
+### 19. Integrações de treino e acesso
 
 Fonte versionada: [docs/arquitetura/fluxos-atualizados.md](docs/arquitetura/fluxos-atualizados.md).
 
@@ -13294,6 +13368,7 @@ cadastro não significa autorização de entrada. Matrícula contém plano, vali
 modalidade e limites; vencimento não apaga histórico nem referência.
 Funcionário autorizado pode substituir a foto, mantendo auditoria e retirando
 a referência anterior conforme política. Cliente não troca sua própria biometria.
+[Cadastro e recuperação de referência facial](docs/arquitetura/biometria.md).
 
 #### API de reconhecimento facial — CompreFace confirmado
 
@@ -13398,7 +13473,7 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
-### 19. Preparação do GATE-08
+### 20. Preparação do GATE-08
 
 Fonte versionada: [docs/arquitetura/preparacao-gate-08.md](docs/arquitetura/preparacao-gate-08.md).
 
@@ -13543,7 +13618,7 @@ docker compose -p academia-compreface --env-file "$p/.env" -f "$p/compose.yaml" 
 
 O iniciador de dois cliques do AcademIA continua com a configuração
 existente. A conexão do backend ao provedor é responsabilidade de ACS-01.
-### 20. Curadoria, versões e revogação do corpus
+### 21. Curadoria, versões e revogação do corpus
 
 Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
 
@@ -13953,8 +14028,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [MEM-01](docs/prompts/06-acesso/MEM-01.md) | [Planos e matrícula manual sem pagamento obrigatório](docs/arquitetura/matriculas.md) | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | CONCLUIDO |
-| [ACS-01](docs/prompts/06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | PRONTO |
-| [ACS-02](docs/prompts/06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
+| [ACS-01](docs/prompts/06-acesso/ACS-01.md) | [Cadastro e substituição da referência biométrica](docs/arquitetura/biometria.md) | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | CONCLUIDO |
+| [ACS-02](docs/prompts/06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | PRONTO |
 | [ACS-07](docs/prompts/06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | PRONTO |
 | [ACS-03](docs/prompts/06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
 | [ACS-04](docs/prompts/06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
@@ -18683,6 +18758,8 @@ A revisão `0018` cria a tabela da [agenda de aulas](docs/arquitetura/agenda.md)
 O downgrade 0018 → 0017 remove a tabela e as ocorrências nela cadastradas.
 A revisão `0019` adiciona [planos e matrículas](docs/arquitetura/matriculas.md).
 O downgrade 0019 → 0018 remove essas duas tabelas e os dados nelas cadastrados.
+A revisão `0020` adiciona as [referências faciais](docs/arquitetura/biometria.md).
+O downgrade remove os vínculos locais. Os exemplos do provedor devem ser tratados separadamente.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da
@@ -19238,6 +19315,14 @@ ACADEMIA_LLM_PROFILE=principal
 
 # Opcional: proxy de saída explicitamente autorizado; não é endpoint do modelo.
 ACADEMIA_LLM_PROXY_URL=
+
+# Cadastro facial opcional. Chaves privadas e distintas, somente no backend.
+ACADEMIA_COMPREFACE_URL=
+ACADEMIA_COMPREFACE_DETECTION_KEY=
+ACADEMIA_COMPREFACE_RECOGNITION_KEY=
+ACADEMIA_COMPREFACE_TIMEOUT_SECONDS=20
+ACADEMIA_COMPREFACE_DETECTION_THRESHOLD=0.8
+ACADEMIA_COMPREFACE_MAX_IMAGE_BYTES=4194304
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -19407,17 +19492,18 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `ac97001b04be1d08cfb237052d372b0cf0a367021644e9160ec98f719413e63f` |
+| `.env.example` | `e5f4fa30aaa8ab24c15386a75eafd331cba55297eeb699643a8cc6d3068ade9b` |
 | `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
-| `database/README.md` | `c8a8bf7c3f38b4163e7a102ed06e801596f3c3475dc25933bf5c52b0d9e28ed7` |
+| `database/README.md` | `1eefed8876ddcdf7258d5b938767b00b9975b6249be2d49a49da93e6ed9920af` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/agenda.md` | `d0e60a63783476b414eb495fbdb9d17b9d6c6e4a29606423e5a6bcd8a3ceb883` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
-| `docs/arquitetura/autorizacao.md` | `ddb1a52fb33096dc4d25d2d82e38f6924ed0229842fb8892ffdfbdc04921a970` |
+| `docs/arquitetura/autorizacao.md` | `981b311062b0b4ce40d41fac05297002d0e782161618b3fdb3e0b54517dc2925` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
+| `docs/arquitetura/biometria.md` | `e7fb96c787d9163880e1b7d62e88f3a1bbd7f29a2bbc8357132a5147db31ad84` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5890ceb1d06f7a4242974d48735a65d93b47f7c9dbb2c7132da10dfad96c74f4` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `6fc01e490f47806403411dd9729f7040e9d569ef48a5c5f70228a8a01ee10e8d` |
 | `docs/arquitetura/clientes.md` | `4348ff17792db0f940a80a635d78f9de1cedb9bd9c3c0a3889a297d94b98f781` |
@@ -19441,15 +19527,15 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
-| `docs/arquitetura/fluxos-atualizados.md` | `e68abd4f4f867dcd5cb675d8ea54f45552f0daf0f72ed14b6c818c5f7d600369` |
+| `docs/arquitetura/fluxos-atualizados.md` | `d99969680b6c7910e27496879cb13421555440fb19f982c9b3121ce7bcba1255` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/matriculas.md` | `7f3ae0e6275b70a128cb693fbc2a8e5b97391d1ca17233b26d49ecf9911f03ca` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `00eda075e60cda3fe73da4f2a726779b20156f77e09861c241cffd5eba7c312b` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `ca6483a88b814ed2afd3c6e1bca947c68254b13aac4dd015434697bae80f540a` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `18b4a1c6d022aff5c5b3893c5973e08360c7a8b51594c73aae4976594a488a4d` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `b8e26f51a08bc61d4442a8aa294aaa67950174e347c52a1d1336931faad35144` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `f66048652e6bd522ae1514f0e81857d82df34fecaf09bb61b3ac16784306d937` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `4afa3f79c1ccd4e2a0b21d7ab95611b4d236e49846a80cb6f61e2f702129fd38` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `dced3ee1e8e11d5e7bdc089a20a13c102d9a8b456cdef0895ef19afc352afbc1` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
@@ -19462,9 +19548,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f762f3ba911b328ac445e3c7afc6323e50e1879987c23e68056cef8e6ed448d8` |
+| `docs/especificacao/compilacao-spec.json` | `f5d925cdf6618dc1074dff0210b2fa9a4436efa5dab899cae9cac874ceb158c7` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `3dabbbda9cc636a568eaff3d9193a1b95b88cba41db7cf71378a426abd7835b1` |
+| `docs/especificacao/visao-geral.md` | `98bb96f7ad3b9408e0c357bb7250e1999a478459dd8a69f2a9f51d9d15d3d1d5` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
@@ -19477,7 +19563,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `7d98e56d03787316d22e73a5a000ca227f337d1bb89975baf49345017a5a3f1d` |
+| `docs/prompts/README.md` | `320e96bcabfba5a91811c99acc7f73c19c0c61816faefc3dec508a48e957ca0b` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |
