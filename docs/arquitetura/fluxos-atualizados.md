@@ -138,7 +138,8 @@ deve impedir saída. Registrar sempre quando o evento é simulado.
 
 Fluxo de demonstração: foto nova → API facial real → identidade local → motor
 valida conta/matrícula/modalidade/limites → comando à API fictícia → confirmação
-de passagem simulada → frequência/lotação. Liberação manual continua auditada.
+de passagem simulada → frequência/lotação. A [confirmação manual](confirmacao-manual.md)
+registra o atendente e o motivo e aproveita as mesmas regras de autorização.
 
 ## Evidências de aceite
 

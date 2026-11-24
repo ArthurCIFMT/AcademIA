@@ -2098,6 +2098,38 @@
       "unique": []
     },
     {
+      "name": "identificacao_manual",
+      "owner": "MOD-07",
+      "note": "Uma confirmação auditada por tentativa facial não identificada",
+      "columns": [
+        {
+          "name": "evento_id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": "evento_acesso.id"
+        },
+        {
+          "name": "evento_falha_id",
+          "type": "uuid",
+          "flags": "required unique",
+          "ref": "evento_acesso.id"
+        },
+        {
+          "name": "atendente_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "motivo",
+          "type": "varchar(240)",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": []
+    },
+    {
       "name": "presenca",
       "owner": "MOD-07",
       "note": "Uma presença aberta por cliente, apenas passagem simulada confirmada muda lotação",

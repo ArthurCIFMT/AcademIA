@@ -1764,3 +1764,26 @@ Ruff e mypy aprovados. A migration 0022 foi aplicada no banco de
 desenvolvimento com os cadastros e eventos anteriores preservados.
 Passaram os **16 testes do iniciador** e a checagem da revisão local.
 [Contrato da autorização](../arquitetura/autorizacao-acesso.md)
+
+## ACS-04 — Confirmação manual de identidade
+
+A partir de `backend/`, com PostgreSQL de teste isolado:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+No Windows, a rodada usou o Python 3.12 do backend e dotenv, com a coleção
+de ensaio de ACS-02 habilitada para a regressão de biometria real. A bateria
+aprovou **78 testes**. O fluxo manual exercitou autenticação, CSRF, motivo,
+identidade explícita, janela da tentativa, conflito de reenvio e trilha de
+auditoria. A falha facial original foi preservada. Matrícula ausente e limite
+diário atingido foram negados pelo mesmo motor. AcademIA e simulador trocaram
+mensagens HTTP reais e confirmaram uma única passagem após reenvio.
+
+A suíte de frontend aprovou **133 testes**, com a opção exibida após falha
+facial e o envio do motivo e da confirmação pelo atendente. TypeScript,
+ESLint, build, Ruff, mypy e DOC também passaram. A migration 0023 foi aplicada
+com os registros existentes preservados e os **16 testes do iniciador**
+passaram. [Contrato da confirmação manual](../arquitetura/confirmacao-manual.md)

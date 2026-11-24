@@ -469,6 +469,14 @@ Table catraca_comando {
   falha_envio varchar(25)
 }
 
+Table identificacao_manual {
+  evento_id uuid [pk]
+  evento_falha_id uuid [not null, unique]
+  atendente_id uuid [not null]
+  motivo varchar(240) [not null]
+  Note: 'Uma confirmação auditada por tentativa facial não identificada'
+}
+
 Table presenca {
   id uuid [pk]
   cliente_id uuid [not null]
@@ -607,6 +615,9 @@ Ref: decisao_acesso.evento_id > evento_acesso.id
 Ref: decisao_acesso.matricula_id > matricula.id
 Ref: catraca_comando.decisao_id > decisao_acesso.id
 Ref: catraca_comando.passagem_evento_id > evento_acesso.id
+Ref: identificacao_manual.evento_id > evento_acesso.id
+Ref: identificacao_manual.evento_falha_id > evento_acesso.id
+Ref: identificacao_manual.atendente_id > funcionario.usuario_id
 Ref: presenca.cliente_id > cliente.usuario_id
 Ref: presenca.entrada_evento_id > evento_acesso.id
 Ref: presenca.saida_evento_id > evento_acesso.id

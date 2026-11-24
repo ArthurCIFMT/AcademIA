@@ -15,6 +15,7 @@ inativo retira apenas as permissões daquele perfil.
 | Consultar estado e manter referência facial | Atendente ativo. Escrita exige cliente elegível e matrícula registrada |
 | Solicitar identificação por foto | Atendente ativo |
 | Solicitar decisão de acesso e reenviar comando | Atendente ativo |
+| Confirmar identidade manualmente após falha facial | Atendente ativo, com motivo e confirmação explícita |
 | Confirmar passagem da catraca fictícia | Simulador com token exclusivo de retorno |
 | Comunicar resultado de identificação facial | Serviço externo com token exclusivo configurado no backend |
 | Consultar ocorrências públicas da agenda | Visitante ou usuário autenticado |

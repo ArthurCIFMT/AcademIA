@@ -60,6 +60,8 @@ A revisão `0020` adiciona as [referências faciais](../docs/arquitetura/biometr
 O downgrade remove os vínculos locais. Os exemplos do provedor devem ser tratados separadamente.
 A revisão `0021` adiciona o registro idempotente de [identificações faciais](../docs/arquitetura/reconhecimento-facial.md). O downgrade remove os eventos dessa tabela.
 A revisão `0022` adiciona a [decisão de acesso e o comando da catraca](../docs/arquitetura/autorizacao-acesso.md).
+A revisão `0023` acrescenta a [confirmação manual de identidade](../docs/arquitetura/confirmacao-manual.md).
+O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da

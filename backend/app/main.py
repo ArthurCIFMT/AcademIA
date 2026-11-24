@@ -19,6 +19,7 @@ from app.modules.access.biometrics.provider import (
 from app.modules.access.events.contracts import AccessEventsSettings
 from app.modules.access.events.http import identification_router
 from app.modules.access.integrations.turnstile.contracts import AccessSettings
+from app.modules.access.manual.http import manual_access_router
 from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
@@ -100,15 +101,15 @@ def create_app(
     app.include_router(
         identification_router(get_sessions, biometrics_provider, access_events_settings)
     )
+    access_settings: AccessSettings | None = None
     try:
         access_settings = AccessSettings()
     except ValidationError:
         logging.getLogger(__name__).warning(
             "Configuração da autorização de acesso inválida."
         )
-        app.include_router(authorization_router(get_sessions, None))
-    else:
-        app.include_router(authorization_router(get_sessions, access_settings))
+    app.include_router(authorization_router(get_sessions, access_settings))
+    app.include_router(manual_access_router(get_sessions, access_settings))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

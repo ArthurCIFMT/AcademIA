@@ -113,7 +113,10 @@ def prepare_decision(
     clock: Callable[[], datetime],
 ) -> tuple[UUID, bool]:
     identification = db.get(AccessEvent, event_id, with_for_update=True)
-    if identification is None or identification.tipo != "IDENTIFICACAO":
+    if identification is None or identification.tipo not in {
+        "IDENTIFICACAO",
+        "IDENTIFICACAO_MANUAL",
+    }:
         raise AccessError(404)
     previous = db.scalar(
         select(AccessDecision).where(AccessDecision.evento_id == event_id)

@@ -41,6 +41,14 @@ class AccessEvent(Base):
             )""",
             name="ck_evento_acesso_identificacao",
         ),
+        CheckConstraint(
+            """tipo <> 'IDENTIFICACAO_MANUAL' OR (
+                origem = 'ATENDIMENTO_MANUAL' AND cliente_id IS NOT NULL
+                AND similaridade IS NULL AND resultado_identificacao IS NOT NULL
+                AND resultado_identificacao = 'IDENTIFICADO'
+            )""",
+            name="ck_evento_acesso_manual",
+        ),
     )
 
     id: Mapped[UUID] = mapped_column(primary_key=True)

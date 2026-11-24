@@ -9,15 +9,12 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.modules.access.authorization.contracts import DecisionView
+from app.modules.access.authorization.delivery import deliver_decision
 from app.modules.access.authorization.service import (
     AccessError,
-    pending_command,
     prepare_decision,
-    record_delivery,
     record_passage,
-    view_decision,
 )
-from app.modules.access.integrations.turnstile.client import dispatch
 from app.modules.access.integrations.turnstile.contracts import (
     AccessSettings,
     Passage,
@@ -68,14 +65,7 @@ def authorization_router(
         try:
             with get_sessions().begin() as db:
                 decision_id, created = prepare_decision(db, event_id, settings, clock)
-            with get_sessions().begin() as db:
-                command = pending_command(db, decision_id, clock())
-            if command is not None:
-                failure = dispatch(settings, command)
-                with get_sessions().begin() as db:
-                    record_delivery(db, decision_id, failure)
-            with get_sessions().begin() as db:
-                result = view_decision(db, decision_id, clock())
+            result = deliver_decision(get_sessions(), decision_id, settings, clock)
         except AccessError as error:
             raise HTTPException(error.status) from None
         response.headers["Cache-Control"] = "no-store"

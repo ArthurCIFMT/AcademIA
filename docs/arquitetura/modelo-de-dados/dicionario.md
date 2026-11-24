@@ -576,6 +576,17 @@ Unicidades: origem+event_id_externo.
 | passagem_evento_id | uuid | unique | evento_acesso.id |
 | falha_envio | varchar(25) | opcional | — |
 
+## identificacao_manual — MOD-07
+
+Uma confirmação auditada por tentativa facial não identificada.
+
+| Campo | Tipo | Regras | Referência |
+|---|---|---|---|
+| evento_id | uuid | pk | evento_acesso.id |
+| evento_falha_id | uuid | required unique | evento_acesso.id |
+| atendente_id | uuid | required | funcionario.usuario_id |
+| motivo | varchar(240) | required | — |
+
 ## presenca — MOD-07
 
 Uma presença aberta por cliente, apenas passagem simulada confirmada muda lotação
