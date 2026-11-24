@@ -13,7 +13,7 @@
 | MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
 | MOD-09 | Agenda e reservas | [Ocorrências e agenda pública](agenda.md). Capacidade e reservas dependem do escopo aprovado. |
 | MOD-10 | Equipamentos | MVP: cadastro administrativo, disponibilidade e contrato de recursos para prescrição. |
-| MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
+| MOD-11 | Dashboard e relatórios | [Indicadores administrativos](painel-administrativo.md) de clientes, funcionários, frequência e lotação. Receita em FIN-03. |
 | MOD-12 | Auditoria e notificações | Evidências, entrega de avisos, eventos duráveis e rastreabilidade. |
 
 ## Resultado da revisão de cobertura

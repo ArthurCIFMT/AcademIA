@@ -176,7 +176,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
-| MOD-11 — Indicadores | [Dashboard/relatórios](docs/arquitetura/modulos.md) | Planejado para pós-MVP |
+| MOD-11 — Indicadores | [Painel administrativo](docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
 O MVP acadêmico foi concluído: AI-06 aprovado na amostra v4, TST-01 concluído e PG-01 fechado. Por autorização
@@ -11956,7 +11956,7 @@ Fonte versionada: [docs/arquitetura/modulos.md](docs/arquitetura/modulos.md).
 | MOD-08 | Planos, matrícula e financeiro | Matrícula pelo atendente sem pagamento obrigatório, validade/limites e financeiro tardio. |
 | MOD-09 | Agenda e reservas | [Ocorrências e agenda pública](docs/arquitetura/agenda.md). Capacidade e reservas dependem do escopo aprovado. |
 | MOD-10 | Equipamentos | MVP: cadastro administrativo, disponibilidade e contrato de recursos para prescrição. |
-| MOD-11 | Dashboard e relatórios | Indicadores de clientes, frequência, lotação e receita. |
+| MOD-11 | Dashboard e relatórios | [Indicadores administrativos](docs/arquitetura/painel-administrativo.md) de clientes, funcionários, frequência e lotação. Receita em FIN-03. |
 | MOD-12 | Auditoria e notificações | Evidências, entrega de avisos, eventos duráveis e rastreabilidade. |
 
 #### Resultado da revisão de cobertura
@@ -13098,12 +13098,51 @@ Na área de atendimento, após **Cliente identificado**, o botão **Solicitar au
 chama o motor existente. **Consultar passagem** atualiza o estado do comando. Após
 a confirmação externa pela catraca fictícia, uma nova consulta ao histórico e à lotação
 reflete o evento. A interface conserva o fluxo auditado de identificação manual.
-DSH-01 consome indicadores no painel administrativo.
+O [painel administrativo](docs/arquitetura/painel-administrativo.md) consome a lotação e a frequência por data e hora pelo contrato de leitura do MOD-07.
 
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis
 para reconstrução em nova aplicação da migration.
-### 17. Exercícios e recursos
+### 17. Indicadores consolidados e permissões do painel administrativo
+
+Fonte versionada: [docs/arquitetura/painel-administrativo.md](docs/arquitetura/painel-administrativo.md).
+
+O início da **Área administrativa** apresenta os indicadores da academia e
+mantém os avisos pendentes. O botão **Atualizar indicadores** faz uma nova
+consulta. As séries têm valores legíveis em texto e permitem escolher o dia
+para consultar as faixas de uma hora, inclusive em tela pequena.
+
+| Indicador | Definição e origem |
+|---|---|
+| Clientes ativos | Conta e perfil ativos com papel efetivo de cliente, conforme MOD-01. |
+| Clientes com matrícula vigente | Pessoas distintas com matrícula ativa, no período contratado inclusivo, conforme MOD-08. A contagem inclui contas convidadas com matrícula vigente e independe do pagamento. |
+| Funcionários cadastrados | Total de perfis de funcionário mantidos pelo MOD-01, incluindo cadastros inativos. |
+| Pessoas presentes agora | Presenças abertas confirmadas pelo MOD-07. |
+| Frequência semanal | Entradas de visitas confirmadas nas quatro semanas civis mais recentes, incluindo a atual. Cada semana começa na segunda-feira. |
+| Frequência por dia e hora | Totais dos últimos sete dias civis, incluindo hoje. Para cada dia, detalha a quantidade de visitas por hora de entrada. |
+
+A academia usa o fuso `America/Sao_Paulo`. A frequência inclui uma visita
+quando seu instante de entrada está no recorte e é igual ou anterior ao instante
+da consulta. Datas civis são ISO 8601 e o instante de consulta é informado em UTC.
+Entradas repetidas, reconhecimento sem passagem e saídas sem entrada não criam
+visitas. Dias e semanas sem visitas retornam zero. O detalhamento horário lista
+somente as horas com visitas.
+
+#### Contrato REST
+
+`GET /api/v1/admin/dashboard` usa a sessão do navegador e exige o papel
+administrativo efetivo. Uma sessão ausente recebe HTTP 401 e um perfil sem
+permissão recebe HTTP 403. A resposta válida usa `Cache-Control: no-store`.
+Cada indicador tem `estado: DISPONIVEL` e `valor`, ou
+`estado: INDISPONIVEL` quando a leitura falha. As leituras são isoladas em
+transações e os demais indicadores continuam disponíveis numa falha parcial.
+A resposta e os logs usam somente agregados e o nome técnico do indicador em
+falha. Identidades, referências faciais e conteúdo de exceções ficam fora
+do contrato.
+
+O MOD-11 calcula os indicadores sob demanda pelas portas de leitura do MOD-01,
+MOD-07 e MOD-08. O escopo financeiro pertence ao FIN-03.
+### 18. Exercícios e recursos
 
 Fonte versionada: [docs/arquitetura/catalogo-exercicios.md](docs/arquitetura/catalogo-exercicios.md).
 
@@ -13157,7 +13196,7 @@ e dos vínculos de cada grupo. O SQL sintético original continua restrito a
 é uma operação explícita para `academia_dev`, acrescentando equipamentos e
 exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
 não cria fichas e não substitui evidências bibliográficas do RAG.
-### 18. Editor manual
+### 19. Editor manual
 
 Fonte versionada: [docs/arquitetura/fichas-manuais.md](docs/arquitetura/fichas-manuais.md).
 
@@ -13238,7 +13277,7 @@ expirado com motivo e data, remove itens antes dos dias e preserva os
 metadados. Consultas de conteúdo expirado retornam a identificação e
 uma lista vazia de dias. A estrutura preserva referências futuras de
 execuções de treino por versão.
-### 19. Publicação, parecer e retenção
+### 20. Publicação, parecer e retenção
 
 Fonte versionada: [docs/arquitetura/publicacao-e-parecer.md](docs/arquitetura/publicacao-e-parecer.md).
 
@@ -13362,7 +13401,7 @@ cópia da ficha na execução IA que possa restaurar conteúdo expirado.
 geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
 tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
 falha exata. A tela lê o ledger atual antes do reenvio.
-### 20. Consulta e exportação
+### 21. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
 
@@ -13449,7 +13488,7 @@ retido. Não alterar a retenção nem remover pareceres/validações históricos
 [Testes e roteiro de navegador](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino).
 A validação usa PostgreSQL real de teste, clientes sintéticos, frontend React,
 FastAPI e Edge em 390 px. O esquema temporário é removido ao final.
-### 21. Auditoria e eventos
+### 22. Auditoria e eventos
 
 Fonte versionada: [docs/arquitetura/auditoria-e-eventos.md](docs/arquitetura/auditoria-e-eventos.md).
 
@@ -13475,7 +13514,7 @@ persistir seu efeito. Ao confirmar, o evento fica entregue. Se a transação
 falhar, o efeito é desfeito e o evento continua pendente para nova tentativa.
 Para efeitos externos, o consumidor da integração precisa usar a chave de
 idempotência do evento. O envio de avisos pertence a NTF-01.
-### 22. Avisos e e-mail
+### 23. Avisos e e-mail
 
 Fonte versionada: [docs/arquitetura/notificacoes.md](docs/arquitetura/notificacoes.md).
 
@@ -13569,7 +13608,7 @@ Use esse comando no lugar do processo temporário; não inicie dois servidores n
 mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
 **Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
 anterior; não redefina senhas diretamente no banco.
-### 23. Integrações de treino e acesso
+### 24. Integrações de treino e acesso
 
 Fonte versionada: [docs/arquitetura/fluxos-atualizados.md](docs/arquitetura/fluxos-atualizados.md).
 
@@ -13754,7 +13793,7 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
-### 24. Preparação do GATE-08
+### 25. Preparação do GATE-08
 
 Fonte versionada: [docs/arquitetura/preparacao-gate-08.md](docs/arquitetura/preparacao-gate-08.md).
 
@@ -13899,7 +13938,7 @@ docker compose -p academia-compreface --env-file "$p/.env" -f "$p/compose.yaml" 
 
 O iniciador de dois cliques do AcademIA continua com a configuração
 existente. A conexão do backend ao provedor é responsabilidade de ACS-01.
-### 25. Curadoria, versões e revogação do corpus
+### 26. Curadoria, versões e revogação do corpus
 
 Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
 
@@ -14175,7 +14214,7 @@ Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](docs/arquitetura/preparacao-gate-08.md) | FECHADO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
-| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](docs/testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
 | PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](docs/arquitetura/preparacao-implementacao.md).
@@ -14323,7 +14362,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [AUL-01](docs/prompts/07-complementares/AUL-01.md) | [Agenda de aulas por ocorrências](docs/arquitetura/agenda.md) | MOD-09 | IAM-03, IAM-04 | CONCLUIDO |
 | [AUL-02](docs/prompts/07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
-| [DSH-01](docs/prompts/07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | PRONTO |
+| [DSH-01](docs/prompts/07-complementares/DSH-01.md) | [Dashboard administrativo base](docs/arquitetura/painel-administrativo.md) | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | CONCLUIDO |
 
 #### Financeiro tardio
 
@@ -14338,7 +14377,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [INF-01](docs/prompts/09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | BLOQUEADO |
+| [INF-01](docs/prompts/09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | PRONTO |
 | [INF-02](docs/prompts/09-infraestrutura/INF-02.md) | Compose dos serviços selecionados | MOD-00 | INF-01 | BLOQUEADO |
 | [INF-03](docs/prompts/09-infraestrutura/INF-03.md) | Rede, volumes e restrição de exposição | MOD-00 | INF-02 | BLOQUEADO |
 | [INF-04](docs/prompts/09-infraestrutura/INF-04.md) | Instalação e teste integrado em Docker | MOD-00 | INF-03, TST-01 | BLOQUEADO |
@@ -19906,7 +19945,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
 | `docs/arquitetura/fluxos-atualizados.md` | `b9db082e9613771d2092eb8a2d87002f67d5c4a7f82abf76e0a20efd059bc5c8` |
-| `docs/arquitetura/frequencia-lotacao.md` | `b4a1629608263d02668d2cc6de46a61d479c21c41cc821ca7a22f258fbf40e4d` |
+| `docs/arquitetura/frequencia-lotacao.md` | `f5d92ddbdcfd7d60f54211e0bfd8f852fffab3b89375da7f336c6cabb724d767` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
@@ -19916,10 +19955,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `8e499f4d0289aadf6c37bd391b67919f0c09ca091c6da784f90ac5bccf499ce1` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `474622ef424bfe35bedbb3f8f820b515043c7924432c78095b4d88eafa0f3b13` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
-| `docs/arquitetura/modulos.md` | `dced3ee1e8e11d5e7bdc089a20a13c102d9a8b456cdef0895ef19afc352afbc1` |
+| `docs/arquitetura/modulos.md` | `567e4428c065e8f3c5aacb6c60791bcc21cbe582870acfe4b6c61e0b7a7915f3` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `27f7fad51f650505cd72ea4ef64a61ff3c7481b401485f16678b0e28e0af60d1` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
+| `docs/arquitetura/painel-administrativo.md` | `88d60b0071ecfc1ade091daf32341b56dd1af83f7a047659cc038fc35515fdfb` |
 | `docs/arquitetura/preparacao-gate-08.md` | `19bdcc97c037db147843fe756107e9329727509ae067c9e441058b0aa50c29e0` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `7023dc870367f5e9436e8328dc6cec2b689cef745f08b83901c45c8fb2826425` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
@@ -19928,9 +19968,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `bf489254fab5e3a934dd0c1578c18718b7c915c1166e2379b7206509a5f522ba` |
+| `docs/especificacao/compilacao-spec.json` | `f833c4cd8c71acc84771d3c9dfdf200bf62821b91edcd265bb0a439a32ea8240` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `a081387c1abfdf16a31658f0b69db176dcb35c0604669db3f7f1b71dd3a7d38f` |
+| `docs/especificacao/visao-geral.md` | `5e4d711509d380bb320ebba59e3b348de2d4ef96c61e1ece559a1788f474d732` |
 | `docs/instalacao/catraca-ficticia.md` | `b432d1a97d369a25802f23e4bb91ab107d384ce6ed739296d30946d253d8fa9b` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `1cdffb0e3d72d5a807f1e30acf2477240ff21c59419a03ea67a4d844e0c44e68` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
@@ -19944,7 +19984,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `caeca67cbfefd9ce94d1ccd8127ed5b7a44efd00e2cdafb701679cf3ee41be6b` |
+| `docs/prompts/README.md` | `a0635670564cdbc26be031098b27f16c3a2b70bac3d321c5425b6a57f5d95e4e` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |

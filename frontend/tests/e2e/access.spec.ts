@@ -45,6 +45,9 @@ test("cliente móvel, atendente e administrador conferem matrícula, passagem e 
   const today = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }).format(new Date());
   try {
     await signIn(admin, fixture.usuarios.admin.email);
+    await expect(admin.getByRole("heading", { name: "Indicadores da academia" })).toBeVisible();
+    const metric = (label: string) => admin.locator(".dashboard-metric").filter({ hasText: label }).locator("dd");
+    await expect(metric("Pessoas presentes agora")).toHaveText("0");
     await menu(admin, "Gerenciar planos");
     await admin.getByRole("button", { name: "Novo plano" }).click();
     await admin.getByLabel("Nome", { exact: true }).fill(plan);
@@ -87,6 +90,10 @@ test("cliente móvel, atendente e administrador conferem matrícula, passagem e 
     await expect(client.getByText("Sem saída confirmada")).toBeVisible();
     expect(await client.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
+    await menu(admin, "Início da área");
+    await expect(metric("Clientes com matrícula vigente")).toHaveText("1");
+    await expect(metric("Pessoas presentes agora")).toHaveText("1");
+    await expect(admin.getByRole("list", { name: "Visitas por semana" }).getByRole("listitem").last().locator("strong")).toHaveText("1");
     await menu(admin, "Gerenciar clientes");
     await admin.getByRole("link", { name: "Frequência de " + name, exact: true }).click();
     await expect(admin.getByRole("heading", { name })).toBeVisible();
@@ -108,6 +115,11 @@ test("cliente móvel, atendente e administrador conferem matrícula, passagem e 
     await expect(admin.getByRole("list", { name: "Visitas confirmadas" }).locator("time")).toHaveCount(2);
     await menu(admin, "Lotação atual");
     await expect(admin.getByRole("status")).toHaveText("0 pessoas presentes");
+    await menu(admin, "Início da área");
+    await expect(metric("Pessoas presentes agora")).toHaveText("0");
+    await admin.setViewportSize({ width: 375, height: 812 });
+    await expect(admin.getByRole("combobox", { name: "Dia para detalhar" })).toBeVisible();
+    expect(await admin.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   } finally {
     await simulator.dispose();
     await Promise.all([adminContext.close(), staffContext.close(), clientContext.close()]);

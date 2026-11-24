@@ -41,6 +41,11 @@ STAFF_TITLES = {
 }
 
 
+def registered_employee_count(db: Session) -> int:
+    """Total de perfis de funcionário cadastrados, sejam ativos ou inativos."""
+    return db.scalar(select(func.count()).select_from(EmployeeProfile)) or 0
+
+
 def staff_title(roles: set[StaffRole]) -> str:
     return " / ".join(STAFF_TITLES[role] for role in STAFF_ROLES if role in roles)
 

@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, time
 from uuid import UUID
+from zoneinfo import ZoneInfo
 
-from sqlalchemy import func, select, true
+from sqlalchemy import Date, Integer, cast, func, select, true
 from sqlalchemy.orm import Session, aliased
 
 from app.modules.access.attendance.models import Presence
@@ -23,6 +24,13 @@ class AttendanceVisit:
 class AttendancePage:
     visits: tuple[AttendanceVisit, ...]
     total: int
+
+
+@dataclass(frozen=True)
+class AttendanceHour:
+    date: date
+    hour: int
+    visits: int
 
 
 def reconcile_client(db: Session, client_id: UUID) -> None:
@@ -78,6 +86,26 @@ def current_occupancy(db: Session) -> int:
         )
         or 0
     )
+
+
+def confirmed_visits_by_hour(
+    db: Session, first_day: date, *, through: datetime
+) -> tuple[AttendanceHour, ...]:
+    """Conta entradas de visitas confirmadas por data e hora da academia."""
+    zone = ZoneInfo("America/Sao_Paulo")
+    start = datetime.combine(first_day, time.min, tzinfo=zone).astimezone(UTC)
+    local_time = func.timezone(zone.key, AccessEvent.ocorrido_em)
+    day = cast(local_time, Date)
+    hour = cast(func.extract("hour", local_time), Integer)
+    rows = db.execute(
+        select(day, hour, func.count())
+        .select_from(Presence)
+        .join(AccessEvent, AccessEvent.id == Presence.entrada_evento_id)
+        .where(AccessEvent.ocorrido_em >= start, AccessEvent.ocorrido_em <= through)
+        .group_by(day, hour)
+        .order_by(day, hour)
+    )
+    return tuple(AttendanceHour(day, hour, visits) for day, hour, visits in rows)
 
 
 def attendance_history(

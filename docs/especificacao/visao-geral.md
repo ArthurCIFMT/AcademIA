@@ -158,7 +158,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |
-| MOD-11 — Indicadores | [Dashboard/relatórios](../../docs/arquitetura/modulos.md) | Planejado para pós-MVP |
+| MOD-11 — Indicadores | [Painel administrativo](../../docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
 O MVP acadêmico foi concluído: AI-06 aprovado na amostra v4, TST-01 concluído e PG-01 fechado. Por autorização

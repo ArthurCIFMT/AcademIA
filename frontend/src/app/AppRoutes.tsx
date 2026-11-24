@@ -15,6 +15,7 @@ import { TrainingQueuePage, TrainingReviewPage } from "../features/training-revi
 import { CorpusPage } from "../features/corpus/CorpusPage";
 import { MyTrainingPage } from "../features/my-training/MyTraining";
 import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
+import { Dashboard } from "../features/dashboard/Dashboard";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
 import { PendingNotices } from "../features/notifications/PendingNotices";
@@ -123,8 +124,13 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "clients": return <ClientDirectory key={userId} session={session} onAccessChange={retrySession}
       attendanceBase={role === "ADMINISTRADOR" || role === "ATENDENTE" ? clientAttendanceBase(role) : undefined} />;
     case "corpus": return <CorpusPage key={userId} csrf={csrf} />;
-    default: return role === "ADMINISTRADOR" || role === "INSTRUTOR"
-      ? <PendingNotices key={userId} /> : <p>Escolha uma tarefa no menu da área.</p>;
+    default:
+      if (role === "ADMINISTRADOR") return <div className="area-overview" key={userId}>
+        <Dashboard />
+        <PendingNotices />
+      </div>;
+      return role === "INSTRUTOR" ? <PendingNotices key={userId} />
+        : <p>Escolha uma tarefa no menu da área.</p>;
   }
 }
 

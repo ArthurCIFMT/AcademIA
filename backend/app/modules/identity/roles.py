@@ -29,6 +29,16 @@ def effective_roles(session: Session, user_id: UUID) -> frozenset[Role]:
     return frozenset(Role(role) for role in roles)
 
 
+def active_client_count(session: Session) -> int:
+    """Total de clientes com papel efetivo no momento da consulta."""
+    clients = (
+        _eligible_roles()
+        .with_only_columns(UserRole.usuario_id)
+        .where(UserRole.papel == Role.CLIENTE)
+    )
+    return session.scalar(select(func.count()).select_from(clients.subquery())) or 0
+
+
 def active_admin_ids(session: Session) -> list[UUID]:
     statement = (
         _eligible_roles()

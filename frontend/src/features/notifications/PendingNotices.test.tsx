@@ -16,8 +16,15 @@ function session(roles: string[]) {
 }
 
 function openArea(path: string, ...responses: Response[]) {
-  const fetchMock = vi.fn();
-  responses.forEach((response) => fetchMock.mockResolvedValueOnce(response));
+  const other = vi.fn();
+  responses.forEach((response) => other.mockResolvedValueOnce(response));
+  const count = { estado: "DISPONIVEL", valor: 0 };
+  const fetchMock = vi.fn((url: string) => url === "/api/v1/admin/dashboard"
+    ? Promise.resolve(Response.json({
+      consultado_em: "2026-11-24T02:30:00Z",
+      clientes_ativos: count, clientes_matriculados: count, funcionarios: count, lotacao: count,
+      frequencia: { estado: "DISPONIVEL", valor: { semanas: [], dias: [] } },
+    })) : other());
   vi.stubGlobal("fetch", fetchMock);
   render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>);
   return fetchMock;

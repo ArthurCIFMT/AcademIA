@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from uuid import UUID, uuid4
 
-from sqlalchemy import Select, func, select
+from sqlalchemy import ColumnElement, Select, func, select
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 
@@ -59,17 +59,34 @@ def has_registered_membership(db: Session, client_id: UUID) -> bool:
     )
 
 
+def _valid_period(day: date) -> tuple[ColumnElement[bool], ...]:
+    return (
+        Membership.estado == "ATIVA",
+        Membership.inicio <= day,
+        Membership.fim >= day,
+    )
+
+
+def enrolled_client_count(db: Session, *, at: datetime) -> int:
+    """Clientes distintos com matrícula vigente no dia civil da academia."""
+    return (
+        db.scalar(
+            select(func.count(Membership.cliente_id.distinct())).where(
+                *_valid_period(academy_date(at))
+            )
+        )
+        or 0
+    )
+
+
 def valid_membership(
     db: Session, client_id: UUID, *, at: datetime
 ) -> ValidMembership | None:
     """Porta de validade do MOD-08 para o acesso; não autoriza a passagem."""
-    today = academy_date(at)
     row = db.scalars(
         select(Membership).where(
             Membership.cliente_id == client_id,
-            Membership.estado == "ATIVA",
-            Membership.inicio <= today,
-            Membership.fim >= today,
+            *_valid_period(academy_date(at)),
         )
     ).one_or_none()
     if row is None:

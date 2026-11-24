@@ -26,6 +26,7 @@ from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
 from app.modules.assignments.http import install_assignments
 from app.modules.classes.http import classes_router
+from app.modules.dashboard.http import dashboard_router
 from app.modules.equipment.http import equipment_router
 from app.modules.identity.composition import install_identity
 from app.modules.identity.settings import AuthSettings
@@ -75,6 +76,7 @@ def create_app(
     app.include_router(notification_router(get_sessions))
     app.include_router(corpus_router(get_sessions))
     app.include_router(staff_router(get_sessions))
+    app.include_router(dashboard_router(get_sessions))
     app.include_router(client_router(get_sessions))
     app.include_router(onboarding_router(get_sessions))
     app.include_router(triage_router(get_sessions))

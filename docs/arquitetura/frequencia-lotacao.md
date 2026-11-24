@@ -51,7 +51,7 @@ Na área de atendimento, após **Cliente identificado**, o botão **Solicitar au
 chama o motor existente. **Consultar passagem** atualiza o estado do comando. Após
 a confirmação externa pela catraca fictícia, uma nova consulta ao histórico e à lotação
 reflete o evento. A interface conserva o fluxo auditado de identificação manual.
-DSH-01 consome indicadores no painel administrativo.
+O [painel administrativo](painel-administrativo.md) consome a lotação e a frequência por data e hora pelo contrato de leitura do MOD-07.
 
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis

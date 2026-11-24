@@ -56,7 +56,7 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](../arquitetura/preparacao-gate-08.md) | FECHADO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
-| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](../testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
 | PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](../arquitetura/preparacao-implementacao.md).
@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| DSH-01 | CONCLUIDO | [Painel administrativo](../arquitetura/painel-administrativo.md). 83 testes de backend, 143 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#dsh-01--painel-administrativo). |
 | ACS-06 | CONCLUIDO | [Telas de frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). 81 testes de backend, 137 de frontend, 16 do iniciador e nove jornadas no Edge. [Comandos e evidência](../testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
 | ACS-05 | CONCLUIDO | [Frequência e lotação](../arquitetura/frequencia-lotacao.md). 79 testes de backend e 16 do iniciador aprovados. Dois ensaios opcionais do CompreFace indisponíveis. [Comandos e evidência](../testes/comandos.md#acs-05--frequência-e-lotação). |
 | ACS-04 | CONCLUIDO | [Confirmação manual auditada](../arquitetura/confirmacao-manual.md). 78 testes de backend, 133 de frontend e 16 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-04--confirmação-manual-de-identidade). |
@@ -382,7 +383,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [AUL-01](07-complementares/AUL-01.md) | [Agenda de aulas por ocorrências](../arquitetura/agenda.md) | MOD-09 | IAM-03, IAM-04 | CONCLUIDO |
 | [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
-| [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | PRONTO |
+| [DSH-01](07-complementares/DSH-01.md) | [Dashboard administrativo base](../arquitetura/painel-administrativo.md) | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | CONCLUIDO |
 
 ## Financeiro tardio
 
@@ -397,7 +398,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [INF-01](09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | BLOQUEADO |
+| [INF-01](09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | PRONTO |
 | [INF-02](09-infraestrutura/INF-02.md) | Compose dos serviços selecionados | MOD-00 | INF-01 | BLOQUEADO |
 | [INF-03](09-infraestrutura/INF-03.md) | Rede, volumes e restrição de exposição | MOD-00 | INF-02 | BLOQUEADO |
 | [INF-04](09-infraestrutura/INF-04.md) | Instalação e teste integrado em Docker | MOD-00 | INF-03, TST-01 | BLOQUEADO |
@@ -433,8 +434,9 @@ FND-04 e a base PostgreSQL FND-05 estão concluídas. FND-06 concluiu os contrat
 AI-06 está CONCLUIDO na [amostra acadêmica v4](../testes/ai06-enxuto.md): cinco
 saídas aprovadas com revisão vinculada e zero falhas críticas observadas.
 TST-01 está CONCLUIDO e PG-01 FECHADO pela [consolidação do MVP](../testes/tst01-consolidacao.json).
-Próximo passo: revisão manual do responsável no aplicativo local. Não repetir
-ensaios reais aprovados; fases posteriores exigem seus cartões e gates próprios.
+A revisão manual permanece disponível no aplicativo local. ACS-06, AUL-01 e
+DSH-01 completaram o marco PG-03. Consulte o estado dos cartões antes de executar
+as entregas de financeiro e de infraestrutura.
 
 PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
 exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.

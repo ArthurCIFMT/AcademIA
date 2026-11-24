@@ -405,6 +405,10 @@
           "titulo": "Frequência e lotação a partir de passagens confirmadas"
         },
         {
+          "arquivo": "docs/arquitetura/painel-administrativo.md",
+          "titulo": "Indicadores consolidados e permissões do painel administrativo"
+        },
+        {
           "arquivo": "docs/arquitetura/catalogo-exercicios.md",
           "titulo": "Exercícios e recursos"
         },

@@ -1842,3 +1842,30 @@ CompreFace ficaram fora da rodada. O teste Edge foi executado separadamente,
 com um cenário aprovado. Ruff, mypy, ESLint, TypeScript e build passaram.
 Os 16 testes do iniciador e o ciclo completo de abertura/encerramento passaram
 com o banco local na revisão 0024.
+
+## DSH-01 — Painel administrativo
+
+Backend, a partir de `backend/`, com PostgreSQL de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/dashboard tests/access tests/memberships tests/contracts
+uv run --locked mypy
+```
+
+Passaram 83 testes de backend. A API foi conferida com indicadores zerados,
+contas de perfis distintos, matrículas vigentes/futuras/encerradas, limites de
+data no fuso de São Paulo e um erro real de consulta no PostgreSQL. Uma falha
+isolada preservou os outros resultados e o JSON agregado. Dois casos opcionais
+do CompreFace ficaram fora dessa rodada. A jornada opt-in do Edge foi executada
+separadamente com o mesmo comando do ACS-06.
+
+No Edge, o painel apresentou a matrícula vigente, uma visita na semana e
+lotação 0 → 1 → 0 após os retornos da catraca fictícia. A interface foi conferida
+em largura de 375 px. O reconhecimento usou uma referência sintética.
+
+Na pasta `frontend/`, a execução `node node_modules/vitest/vitest.mjs run --maxWorkers=1`
+aprovou 143 testes. A execução concorrente anterior registrou uma falha
+intermitente em uma asserção de foco do histórico de treinos, aprovada na
+rodada serial. Lint, Ruff, mypy, TypeScript e build passaram.
+O iniciador passou nos 16 testes e no ciclo local de abertura e encerramento.
+[Contrato do painel](../arquitetura/painel-administrativo.md)
