@@ -59,7 +59,8 @@ Para testar falha do equipamento, configure `ACADEMIA_TURNSTILE_FAULT` como
 reinicie e envie um comando. Esses modos impedem registrar o comando. O
 padrão `NONE` mantém o fluxo normal.
 
-O [ensaio automatizado](../testes/comandos.md#acs-07--simulador-de-catraca)
-usa um receptor HTTP de teste. A rota de recepção do AcademIA integra a
-entrega do ACS-03. Frequência e lotação dependem da passagem confirmada pelo
-motor de acesso e ficam sob responsabilidade do AcademIA.
+O [ensaio do simulador](../testes/comandos.md#acs-07--simulador-de-catraca)
+usa um receptor HTTP de teste. O [ACS-03](../arquitetura/autorizacao-acesso.md)
+integra a rota de recepção real do AcademIA. O primeiro registro precisa
+chegar antes da expiração. Depois disso, o destino ainda reconhece reenvios
+idênticos de eventos já confirmados.

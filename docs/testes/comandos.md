@@ -1728,3 +1728,39 @@ O ciclo real do iniciador verificou a prontidão da interface, da API
 e do simulador nativo e encerrou os processos próprios. O simulador usa o
 arquivo SQLite criado explicitamente no preparo e o fluxo de retorno foi
 ensaiado contra o receptor de teste. [Guia de operação](../instalacao/catraca-ficticia.md)
+
+## ACS-03 — Motor de autorização e passagens
+
+A partir de `backend/`, com PostgreSQL de teste isolado:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+A execução no Windows usou o Python 3.12 do backend e dotenv. Para repetir os
+casos reais de biometria incluídos nessa regressão, habilite a coleção de
+ensaio de ACS-02, como descrito em [Reconhecimento facial](#acs-02--reconhecimento-facial-e-eventos).
+
+A bateria de **70 testes** incluiu a tabela de decisão e o relógio de São
+Paulo, estados de matrícula, identidade, modalidade e limite. O caso de
+pagamento confirmado sem matrícula usou um registro sintético, revertido
+com o teste. Entrada com matrícula vigente passou sem módulo financeiro.
+Duas decisões simultâneas disputaram uma vaga em PostgreSQL e só uma
+reservou entrada.
+
+O ensaio com AcademIA e simulador em dois servidores HTTP confirmou
+autenticação, ALLOW/DENY, timeout, reenvio com o mesmo UUID, passagem única,
+direção incompatível, expiração e virada do dia civil. A aceitação no
+simulador preservou a contagem de passagens até o retorno autenticado.
+
+A regressão adicional do ACS-07 passou em **14 testes focados**. Incluiu
+reinício entre falha e reenvio, preservando instante e UUID, e duas
+passagens concorrentes com IDs diferentes, com uma única aceitação.
+Os dois testes fazem parte da bateria de 70 e também foram executados
+na suíte isolada do simulador.
+
+Ruff e mypy aprovados. A migration 0022 foi aplicada no banco de
+desenvolvimento com os cadastros e eventos anteriores preservados.
+Passaram os **16 testes do iniciador** e a checagem da revisão local.
+[Contrato da autorização](../arquitetura/autorizacao-acesso.md)

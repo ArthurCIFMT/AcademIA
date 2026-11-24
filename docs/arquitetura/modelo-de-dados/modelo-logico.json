@@ -2005,7 +2005,7 @@
         {
           "name": "evento_id",
           "type": "uuid",
-          "flags": "required",
+          "flags": "required unique",
           "ref": "evento_acesso.id"
         },
         {
@@ -2029,6 +2029,12 @@
         {
           "name": "criada_em",
           "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "regra_json",
+          "type": "jsonb",
           "flags": "required",
           "ref": null
         }
@@ -2074,6 +2080,18 @@
           "name": "estado",
           "type": "varchar(25)",
           "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "passagem_evento_id",
+          "type": "uuid",
+          "flags": "unique",
+          "ref": "evento_acesso.id"
+        },
+        {
+          "name": "falha_envio",
+          "type": "varchar(25)",
+          "flags": "",
           "ref": null
         }
       ],

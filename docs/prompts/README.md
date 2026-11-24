@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| ACS-03 | CONCLUIDO | [Motor e passagem simulada](../arquitetura/autorizacao-acesso.md). 70 testes de backend e 16 do iniciador aprovados. [Comandos e evidência](../testes/comandos.md#acs-03--motor-de-autorização-e-passagens). |
 | ACS-07 | CONCLUIDO | [Catraca fictícia](../instalacao/catraca-ficticia.md). 37 testes de contrato e iniciador, com dois servidores HTTP reais no ensaio e ciclo nativo confirmado. [Comandos e evidência](../testes/comandos.md#acs-07--simulador-de-catraca). |
 | ACS-02 | CONCLUIDO | [Reconhecimento facial](../arquitetura/reconhecimento-facial.md). 43 testes de backend incluindo comparação real e concorrência, 131 de frontend e 14 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). |
 | ACS-01 | CONCLUIDO | [Referência facial](../arquitetura/biometria.md). 32 testes de backend, incluindo cadastro e troca com CompreFace real, 128 de frontend e 14 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-01--referência-facial). |
@@ -367,9 +368,9 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [ACS-01](06-acesso/ACS-01.md) | [Cadastro e substituição da referência biométrica](../arquitetura/biometria.md) | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | CONCLUIDO |
 | [ACS-02](06-acesso/ACS-02.md) | [Captura facial e integração real de reconhecimento](../arquitetura/reconhecimento-facial.md) | MOD-07 | FND-06, ACS-01 | CONCLUIDO |
 | [ACS-07](06-acesso/ACS-07.md) | [API externa fictícia de catraca](../instalacao/catraca-ficticia.md) | MOD-07 | FND-06, GATE-08 | CONCLUIDO |
-| [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | PRONTO |
-| [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
-| [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |
+| [ACS-03](06-acesso/ACS-03.md) | [Motor de autorização e retorno](../arquitetura/autorizacao-acesso.md) | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | CONCLUIDO |
+| [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | PRONTO |
+| [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | PRONTO |
 | [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | BLOQUEADO |
 
 ## Pós-MVP — complementares

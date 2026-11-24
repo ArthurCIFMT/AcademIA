@@ -20,6 +20,7 @@ class Operation(StrEnum):
     MANAGE_PLANS = "manage_plans"
     MANAGE_MEMBERSHIPS = "manage_memberships"
     MANAGE_BIOMETRICS = "manage_biometrics"
+    AUTHORIZE_ACCESS = "authorize_access"
     MANAGE_EXERCISES = "manage_exercises"
     MANAGE_CORPUS = "manage_corpus"
     MANAGE_CLIENTS = "manage_clients"
@@ -48,6 +49,7 @@ _ADMINISTRATIVE = {
     Operation.MANAGE_PLANS: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_MEMBERSHIPS: frozenset({Role.ATENDENTE}),
     Operation.MANAGE_BIOMETRICS: frozenset({Role.ATENDENTE}),
+    Operation.AUTHORIZE_ACCESS: frozenset({Role.ATENDENTE}),
     Operation.MANAGE_EMPLOYEES: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_CLIENTS: frozenset({Role.ADMINISTRADOR, Role.ATENDENTE}),
     Operation.MANAGE_ASSIGNMENTS: frozenset({Role.ADMINISTRADOR}),

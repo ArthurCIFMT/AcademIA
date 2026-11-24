@@ -12,6 +12,7 @@ from app.database.connection import (
 )
 
 import_module("app.events.models")
+import_module("app.modules.access.authorization.models")
 import_module("app.modules.access.biometrics.models")
 import_module("app.modules.access.events.models")
 import_module("app.modules.ai.persistence.models")

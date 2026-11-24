@@ -556,11 +556,12 @@ Unicidades: origem+event_id_externo.
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| evento_id | uuid | required | evento_acesso.id |
+| evento_id | uuid | required unique | evento_acesso.id |
 | matricula_id | uuid | opcional | matricula.id |
 | resultado | varchar(15) | required | — |
 | motivo | varchar(80) | required | — |
 | criada_em | timestamptz | required | — |
+| regra_json | jsonb | required | — |
 
 ## catraca_comando — MOD-07
 
@@ -572,6 +573,8 @@ Unicidades: origem+event_id_externo.
 | direcao | varchar(15) | required | — |
 | expira_em | timestamptz | required | — |
 | estado | varchar(25) | required | — |
+| passagem_evento_id | uuid | unique | evento_acesso.id |
+| falha_envio | varchar(25) | opcional | — |
 
 ## presenca — MOD-07
 

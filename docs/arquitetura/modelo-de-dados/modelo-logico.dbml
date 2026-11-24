@@ -450,11 +450,12 @@ Table evento_acesso {
 
 Table decisao_acesso {
   id uuid [pk]
-  evento_id uuid [not null]
+  evento_id uuid [not null, unique]
   matricula_id uuid
   resultado varchar(15) [not null]
   motivo varchar(80) [not null]
   criada_em timestamptz [not null]
+  regra_json jsonb [not null]
 }
 
 Table catraca_comando {
@@ -464,6 +465,8 @@ Table catraca_comando {
   direcao varchar(15) [not null]
   expira_em timestamptz [not null]
   estado varchar(25) [not null]
+  passagem_evento_id uuid [unique]
+  falha_envio varchar(25)
 }
 
 Table presenca {
@@ -603,6 +606,7 @@ Ref: evento_acesso.cliente_id > cliente.usuario_id
 Ref: decisao_acesso.evento_id > evento_acesso.id
 Ref: decisao_acesso.matricula_id > matricula.id
 Ref: catraca_comando.decisao_id > decisao_acesso.id
+Ref: catraca_comando.passagem_evento_id > evento_acesso.id
 Ref: presenca.cliente_id > cliente.usuario_id
 Ref: presenca.entrada_evento_id > evento_acesso.id
 Ref: presenca.saida_evento_id > evento_acesso.id

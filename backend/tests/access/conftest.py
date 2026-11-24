@@ -1,3 +1,4 @@
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -7,6 +8,8 @@ from alembic.config import Config
 from sqlalchemy import Connection
 
 from app.database.connection import check_database, create_database_engine
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 
 @pytest.fixture
