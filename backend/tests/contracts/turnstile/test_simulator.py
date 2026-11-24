@@ -17,7 +17,7 @@ from fastapi.testclient import TestClient
 
 from simulators.turnstile.contracts import CALLBACK_PATH, Command, Passage, Settings
 from simulators.turnstile.http import create_app
-from simulators.turnstile.store import Store
+from simulators.turnstile.store import RejectedOperation, Store
 
 COMMAND_TOKEN = "sintetico_comando_acs07_para_testes"
 CALLBACK_TOKEN = "sintetico_retorno_acs07_para_testes"
@@ -378,3 +378,65 @@ def test_real_http_fault_does_not_accept_a_command(
             api.post(passage_route(command), json=passage_payload()).status_code == 404
         )
         assert api.post("/commands", json=command).status_code == 202
+
+
+@pytest.mark.integration
+def test_restart_keeps_original_passage_when_the_receiver_is_down(
+    settings: Settings,
+) -> None:
+    command = command_payload()
+    trigger = passage_payload()
+    received: list[Passage] = []
+
+    def reject(event: Passage) -> None:
+        received.append(event)
+        raise RejectedOperation(502, "CALLBACK_UNAVAILABLE")
+
+    with (
+        live_server(create_app(settings, clock=lambda: NOW, delivery=reject)) as url,
+        httpx.Client(base_url=url, headers=AUTH, trust_env=False, timeout=3) as api,
+    ):
+        assert api.post("/commands", json=command).status_code == 202
+        assert api.post(passage_route(command), json=trigger).status_code == 502
+
+    with (
+        live_server(
+            create_app(
+                settings,
+                clock=lambda: NOW + timedelta(minutes=1),
+                delivery=received.append,
+            )
+        ) as url,
+        httpx.Client(base_url=url, headers=AUTH, trust_env=False, timeout=3) as api,
+    ):
+        assert api.post(passage_route(command), json=trigger).status_code == 201
+        assert api.post(passage_route(command), json=trigger).status_code == 200
+
+    assert len(received) == 2 and received[0] == received[1]
+    assert received[0].occurred_at == NOW and received[0].simulated
+
+
+@pytest.mark.integration
+def test_concurrent_distinct_events_allow_only_one_passage_per_command(
+    settings: Settings,
+) -> None:
+    received: list[Passage] = []
+    command = command_payload()
+    with live_server(
+        create_app(settings, clock=lambda: NOW, delivery=received.append)
+    ) as url:
+        with httpx.Client(
+            base_url=url, headers=AUTH, trust_env=False, timeout=3
+        ) as api:
+            assert api.post("/commands", json=command).status_code == 202
+
+            def submit(event: dict[str, object]) -> int:
+                return api.post(passage_route(command), json=event).status_code
+
+            with ThreadPoolExecutor(max_workers=2) as jobs:
+                statuses = list(
+                    jobs.map(submit, [passage_payload(), passage_payload()])
+                )
+
+    assert sorted(statuses) == [201, 409]
+    assert len(received) == 1
