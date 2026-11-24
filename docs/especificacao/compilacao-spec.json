@@ -409,6 +409,10 @@
           "titulo": "Integrações de treino e acesso"
         },
         {
+          "arquivo": "docs/arquitetura/preparacao-gate-08.md",
+          "titulo": "Preparação do GATE-08"
+        },
+        {
           "arquivo": "docs/arquitetura/corpus.md",
           "titulo": "Curadoria, versões e revogação do corpus"
         }

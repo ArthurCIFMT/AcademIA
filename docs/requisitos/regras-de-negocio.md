@@ -50,9 +50,10 @@
 - RN-26: NTF-01 já prevê instrutor designado para ficha e administrador para
   alterações críticas, aviso interno persistente + e-mail, com falha/reenvio
   idempotente. Não depender de sucesso do e-mail para preservar pendência.
-- RN-08/RN-36: detalhes de janela de acesso e alternativa manual permanecem no
-  GATE-08 pós-MVP; fornecedor CompreFace, matrícula sem pagamento obrigatório e
-  catraca fictícia já estão definidos.
+- RN-08/RN-35/RN-36: o [GATE-08](../arquitetura/preparacao-gate-08.md) registra
+  as regras aprovadas de limite diário por plano, renovação sem sobreposição
+  e identificação manual sem dispensar os critérios de acesso. CompreFace,
+  matrícula sem pagamento obrigatório e catraca fictícia integram essa trilha.
 - RN-25: reservas/capacidade são escopo futuro (GATE-07); agenda básica permanece.
 - Financeiro/compra: FIN-02/GATE-09 são tardios. Compra confirmada pode preceder
   matrícula pelo atendente; o caminho acadêmico sem confirmação financeira continua.

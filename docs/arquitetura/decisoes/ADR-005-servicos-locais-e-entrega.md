@@ -22,10 +22,12 @@ feito por estes ADRs. FND-04/FND-05 registram comandos reais e versões travadas
 GATE-06 fechado documentalmente significa estratégia local definida, não serviços
 já instalados ou testes aprovados. Ausência de recurso impede só seu ensaio dependente.
 
-CompreFace e catraca são pós-MVP: manter API selecionada; hospedagem/versão e
-ensaio real continuam em GATE-08, sem bloquear scaffold. Reservas de aulas ficam
-dispensadas no MVP e pendentes de escopo futuro (GATE-07). Pagamentos automáticos
-continuam tardios (GATE-09). Não antecipar Docker da aplicação.
+CompreFace e catraca são pós-MVP. O [GATE-08](../preparacao-gate-08.md) registra
+a instância dedicada do CompreFace em Docker, autorizada em 22/11/2026, e o
+ensaio de prontidão. A API da catraca será executada nativamente nesta fase.
+Reservas de aulas ficam dispensadas no MVP e pendentes de escopo futuro
+(GATE-07). Pagamentos automáticos continuam tardios (GATE-09).
+A containerização do AcademIA permanece na etapa final.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).

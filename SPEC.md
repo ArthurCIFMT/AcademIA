@@ -1044,9 +1044,10 @@ Fonte versionada: [docs/requisitos/regras-de-negocio.md](docs/requisitos/regras-
 - RN-26: NTF-01 já prevê instrutor designado para ficha e administrador para
   alterações críticas, aviso interno persistente + e-mail, com falha/reenvio
   idempotente. Não depender de sucesso do e-mail para preservar pendência.
-- RN-08/RN-36: detalhes de janela de acesso e alternativa manual permanecem no
-  GATE-08 pós-MVP; fornecedor CompreFace, matrícula sem pagamento obrigatório e
-  catraca fictícia já estão definidos.
+- RN-08/RN-35/RN-36: o [GATE-08](docs/arquitetura/preparacao-gate-08.md) registra
+  as regras aprovadas de limite diário por plano, renovação sem sobreposição
+  e identificação manual sem dispensar os critérios de acesso. CompreFace,
+  matrícula sem pagamento obrigatório e catraca fictícia integram essa trilha.
 - RN-25: reservas/capacidade são escopo futuro (GATE-07); agenda básica permanece.
 - Financeiro/compra: FIN-02/GATE-09 são tardios. Compra confirmada pode preceder
   matrícula pelo atendente; o caminho acadêmico sem confirmação financeira continua.
@@ -1466,10 +1467,12 @@ feito por estes ADRs. FND-04/FND-05 registram comandos reais e versões travadas
 GATE-06 fechado documentalmente significa estratégia local definida, não serviços
 já instalados ou testes aprovados. Ausência de recurso impede só seu ensaio dependente.
 
-CompreFace e catraca são pós-MVP: manter API selecionada; hospedagem/versão e
-ensaio real continuam em GATE-08, sem bloquear scaffold. Reservas de aulas ficam
-dispensadas no MVP e pendentes de escopo futuro (GATE-07). Pagamentos automáticos
-continuam tardios (GATE-09). Não antecipar Docker da aplicação.
+CompreFace e catraca são pós-MVP. O [GATE-08](docs/arquitetura/preparacao-gate-08.md) registra
+a instância dedicada do CompreFace em Docker, autorizada em 22/11/2026, e o
+ensaio de prontidão. A API da catraca será executada nativamente nesta fase.
+Reservas de aulas ficam dispensadas no MVP e pendentes de escopo futuro
+(GATE-07). Pagamentos automáticos continuam tardios (GATE-09).
+A containerização do AcademIA permanece na etapa final.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).
@@ -3335,7 +3338,8 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   Apenas passagem confirmada muda frequência; replay não muda lotação.
 - Matrícula manual sem FK obrigatória para pagamento. Plano ativo ao contratar.
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
-  Limites contratados congelados; regra detalhada de janela fecha em MEM-01/GATE-08.
+  Limites contratados congelados. O [GATE-08](docs/arquitetura/preparacao-gate-08.md) registra
+  o limite por dia civil no fuso da academia e a renovação sem sobreposição.
 - Cobrança permite múltiplas tentativas; referência externa única por provedor quando
   existir. Compra de plano exige pagamento.plano_id com plano ativo na contratação;
   valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
@@ -13224,8 +13228,9 @@ a referência anterior conforme política. Cliente não troca sua própria biome
 
 #### API de reconhecimento facial — CompreFace confirmado
 
-CompreFace é a escolha confirmada em DEC-015. GATE-08 ainda define versão/modelo,
-hospedagem, critérios de captura, contratos e ensaio real; não reabre o fornecedor.
+CompreFace é a escolha confirmada em DEC-015. O
+[GATE-08](docs/arquitetura/preparacao-gate-08.md) registra a instância local, as regras aprovadas,
+o contrato e o ensaio real de prontidão do CompreFace 1.2.0 com FaceNet.
 
 - Validar exatamente um rosto antes de cadastrar ou reconhecer, usando detecção
   do provedor com limiar definido; limitar a resposta a um resultado não comprova
@@ -13252,10 +13257,10 @@ decisão adicional explícita, sem presumir que comparação de fotos a oferece.
 Fontes técnicas: [REST CompreFace](https://github.com/exadel-inc/CompreFace/blob/master/docs/Rest-API-description.md)
 e [limiar de similaridade](https://github.com/exadel-inc/CompreFace/blob/master/docs/Face-Recognition-Similarity-Threshold.md).
 
-A distribuição oficial do serviço usa Docker/Compose. Para manter Docker do
-AcademIA no final, preferir instância externa já disponível; se não houver,
-registrar com o professor a decisão de execução antes de ACS-01/ACS-02. A escolha
-do fornecedor não antecipa Docker nem aprova uma exceção de infraestrutura.
+A distribuição oficial do serviço usa Docker/Compose. Em 22/11/2026 o
+responsável autorizou uma instância local dedicada do CompreFace em Docker.
+O AcademIA e o simulador continuam com execução nativa nesta fase. A
+containerização da aplicação permanece na etapa INF-01–INF-04.
 
 #### Catraca fictícia — serviço externo de teste
 
@@ -13263,7 +13268,7 @@ O serviço simulador representa o equipamento, não o reconhecimento facial.
 Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
 com REST/JSON e OpenAPI. Não exige microserviços para o restante da aplicação.
 
-Contrato proposto a fechar em GATE-08:
+Resumo do [contrato definido no GATE-08](docs/arquitetura/preparacao-gate-08.md#contrato-da-catraca-fictícia):
 
 | Operação | Dados mínimos | Semântica |
 |---|---|---|
@@ -13324,7 +13329,152 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
-### 18. Curadoria, versões e revogação do corpus
+### 18. Preparação do GATE-08
+
+Fonte versionada: [docs/arquitetura/preparacao-gate-08.md](docs/arquitetura/preparacao-gate-08.md).
+
+Estado **FECHADO** em 24/11/2026. O gate foi tratado em conjunto por escolha
+do responsável. O [manifesto](docs/prompts/README.md) registra a liberação de
+MEM-01 e ACS-07. Os testes integrados de cada módulo pertencem ao seu cartão.
+
+#### Decisões vigentes
+
+- O atendente autorizado matricula e renova com plano ativo, sem exigir
+  confirmação de pagamento. A validade começa e termina em datas civis
+  inclusivas no fuso de São Paulo. Alterações no plano preservam a modalidade
+  e os limites já contratados na matrícula.
+- CompreFace realiza reconhecimento real. A identidade reconhecida entra
+  no motor de acesso do AcademIA, que avalia conta, matrícula, modalidade e
+  limites. O limiar inicial é 0,95 de similaridade.
+- A catraca acadêmica é uma API fictícia separada. A confirmação do comando
+  e a passagem simulada são eventos distintos. Frequência e lotação usam
+  passagens confirmadas. A alternativa manual registra responsável e motivo.
+- Em 22/11/2026 o responsável autorizou Docker apenas para uma instância
+  local dedicada do CompreFace, cuja distribuição oficial usa Compose. O
+  AcademIA e a catraca fictícia continuam com execução nativa nesta fase.
+  Os cartões INF-01–INF-04 seguem na etapa final.
+- O responsável aprovou, em 22/11/2026, as três regras abaixo para matrícula
+  e acesso. Aplicá-las nos cartões correspondentes.
+
+Fontes do projeto: [fluxos de acesso](docs/arquitetura/fluxos-atualizados.md),
+[regras de negócio](docs/requisitos/regras-de-negocio.md) e
+[invariantes](docs/arquitetura/modelo-de-dados/invariantes-e-estados.md).
+
+#### Regras aprovadas para os cartões de implementação
+
+| Tema | Regra | Cartão |
+|---|---|---|
+| Janela e unidade | Limite de entradas confirmadas por cliente no dia civil de São Paulo, configurável no plano e congelado na matrícula. Limite ausente representa acesso sem teto diário. Renovar no mesmo dia conserva o uso já realizado. | MEM-01, ACS-03 |
+| Renovação | Evitar sobreposição de períodos de matrícula do cliente. Uma renovação antecipada pode começar no dia seguinte ao fim do período já contratado. Preservar o histórico. | MEM-01 |
+| Alternativa manual | Após falha de reconhecimento, atendente autorizado confirma a identidade, informa o motivo e solicita passagem pelo mesmo motor. Conta, matrícula, validade, modalidade e limite continuam obrigatórios. O registro distingue a origem manual. | ACS-04 |
+
+#### Contratos para a integração
+
+| Tema | Decisão técnica | Cartão |
+|---|---|---|
+| Validade e modalidade | A consulta retorna a matrícula ativa no intervalo civil e a modalidade contratada. Para a demonstração, comparar essa modalidade com a do ponto de entrada configurado no backend. | MEM-01, ACS-03 |
+| Concorrência | Uma decisão de entrada pendente reserva uma unidade do limite aplicável até a passagem ou expiração do comando. A passagem confirmada consome a entrada. Repetição, negação, saída e autorização expirada não incrementam o uso. A reserva do limite e o registro da decisão são atômicos. | ACS-03, ACS-05 |
+| Serviço simulado | Serviço Python/FastAPI separado em `simulators/turnstile/`, executado nativamente. O AcademIA e a catraca trocam JSON versionado, com credenciais distintas por sentido e endereços fixados na configuração. | ACS-07, ACS-03 |
+
+##### Contrato da catraca fictícia
+
+| Mensagem | Dados | Resultado |
+|---|---|---|
+| `POST /commands` pelo AcademIA | `schema_version=1`, `request_id`, `access_decision_id`, `direction` (`ENTRY` ou `EXIT`), `decision` (`ALLOW` ou `DENY`), `expires_at` e `client_id` quando identificado | 202 com `schema_version=1`, `request_id` e `status=ACCEPTED`. A aceitação mantém frequência e lotação inalteradas. |
+| `POST /api/v1/acesso/catraca/passagens` pelo simulador | `schema_version=1`, `event_id`, `request_id`, `occurred_at`, `direction` e `simulated=true` | 201 com `schema_version=1`, `event_id` e `status=RECORDED` para passagem vinculada a uma autorização válida, de direção correspondente. |
+
+Os identificadores são UUIDs. Datas e horas trafegam em ISO 8601 com fuso.
+Comando e passagem repetidos com a mesma chave e conteúdo devolvem o recibo
+anterior com HTTP 200. Divergência na mesma chave retorna 409. O retorno tem deduplicação
+por origem e ID do evento. O sucesso também é limitado a uma passagem por
+comando. `DENY`, expiração e indisponibilidade são verificáveis no simulador.
+A URL de retorno vem da configuração do serviço. Validar
+`Authorization: Bearer` antes de processar, com tokens distintos para comando
+e retorno e sem incluí-los em logs. Usar loopback na demonstração local.
+
+##### Contrato de integração com CompreFace
+
+Referência validada no ensaio local: CompreFace 1.2.0 com FaceNet em CPU,
+detector `facenet.FaceDetector` e comparador `facenet.Calculator`. Usar
+`x-api-key` somente no backend, credenciais distintas para os serviços de
+detecção e reconhecimento, coleção de teste isolada, identificadores de
+pessoa opacos e limites de carga e tempo configuráveis. Referências de versão e API:
+[release 1.2.0](https://github.com/exadel-inc/CompreFace/releases/tag/v1.2.0) e
+[contrato REST](https://github.com/exadel-inc/CompreFace/blob/v1.2.0/docs/Rest-API-description.md).
+
+| Operação | Verificação esperada |
+|---|---|
+| Detecção | Usar `POST /api/v1/detection/detect` e conferir exatamente um rosto, sem truncar a resposta a um resultado. No ensaio, o limiar de detecção foi 0,8. A resposta 400 com código 28 identificou a imagem sem rosto. |
+| Cadastro | Enviar a referência a `POST /api/v1/recognition/faces`, relacionando `subject` opaco e `image_id` no backend. |
+| Reconhecimento | Usar `POST /api/v1/recognition/recognize` com uma nova captura. Resolver o `subject` local e considerar o limiar inicial de similaridade. Desconhecido, ambíguo e falha do provedor têm saídas distintas. |
+| Substituição | Confirmar a nova referência e descartar o exemplo anterior por `DELETE /api/v1/recognition/faces/{image_id}`. Tratar falhas parciais e impedir que uma referência não vigente autorize acesso. |
+
+Calibrar os critérios de captura e registrar a resposta por cenário.
+Similaridade de 0,95 é o limiar inicial da decisão, com desempenho a medir
+na instância. Comparar imagens não comprova prova de vida. Consultar a
+[documentação de similaridade](https://github.com/exadel-inc/CompreFace/blob/v1.2.0/docs/Face-Recognition-Similarity-Threshold.md).
+
+#### Ensaio e condição de fechamento
+
+| Etapa | Evidência esperada |
+|---|---|
+| Prontidão do provedor no GATE-08 | Instância acessível e autorizada para teste, versão e modelo identificados, autenticação e chamadas reais de detecção/cadastro/comparação/exclusão em coleção isolada. |
+| Biometria no ACS-01/02 | Referência e nova captura da mesma identidade, rosto diferente, imagem sem rosto, múltiplos rostos, pontuação insuficiente, troca de referência e falha do provedor. |
+| Acesso no MEM-01 e ACS-03/04 | Matrícula sem pagamento, vencimento, modalidade incompatível, limite, falha facial e alternativa manual auditada. |
+| Catraca e frequência no ACS-07, ACS-03 e ACS-05 | Comando aceito sem passagem, passagem autorizada, negação, expiração, timeout e repetição. A lotação muda só após passagem confirmada. |
+
+Usar dados de teste sintéticos e capturas distintas. A evidência registra
+versão, modelo, casos e resultados, com fotos e credenciais fora do Git
+e dos logs. A prontidão do provedor no gate verifica a API diretamente.
+O aceite integrado com o sistema ocorre nos cartões correspondentes.
+
+##### Resultado da prontidão do provedor em 24/11/2026
+
+O ensaio autenticado usou uma aplicação isolada no CompreFace e amostras
+renderizadas do DigiFace-1M. A referência e a nova captura vieram de
+quadros distintos do painel sintético. O download manteve as amostras
+fora do Git. [DigiFace-1M](https://microsoft.github.io/DigiFace1M/) e
+[revisão das amostras](https://github.com/microsoft/DigiFace1M/tree/1d173f305de9afefafb8589ce8e726ec685863e5/docs/img).
+
+| Cenário | Resultado observado |
+|---|---|
+| Detecção de referência, nova captura e outra identidade | HTTP 200 com um rosto em cada imagem |
+| Múltiplos rostos | HTTP 200 com dois rostos |
+| Imagem sem rosto | HTTP 400, código 28 |
+| Credencial inválida | Consulta recusada com HTTP 400 |
+| Cadastro de referência | HTTP 201 |
+| Nova captura da mesma identidade | Similaridade 0,99989 |
+| Terceira apresentação da mesma identidade | Similaridade 0,98737 |
+| Outra identidade | Similaridade 0,07171, abaixo do limiar de 0,95 |
+| Substituição | Novo exemplo criado, exemplo anterior excluído e listagem confirmando a troca |
+| Limpeza | Exemplos e identidade de teste removidos. Consulta autenticada confirmou coleção vazia |
+
+A primeira chamada coincidiu com o aquecimento do serviço e recebeu HTTP 502.
+A repetição após a API responder passou. Os valores medidos descrevem esta
+amostra sintética. ACS-01 e ACS-02 continuam responsáveis pelo aceite
+integrado de cadastro e reconhecimento.
+
+##### Execução local da instância dedicada
+
+O CompreFace publicou somente o endereço local `127.0.0.1:18080` e usa
+volume e rede próprios. O projeto Compose `academia-compreface` fica em
+`backend/data/compreface-v1.2.0/academia-local/`, fora do Git. O pacote
+oficial usa imagens 1.2.0. A cópia local vincula a porta 80 do frontend
+somente ao loopback, usa senha própria para seu PostgreSQL, configura a
+API para dispensar o armazenamento da imagem bruta no banco do provedor e reduz o log do núcleo
+para `WARNING`. A configuração privada guarda as chaves dos dois serviços.
+
+Para reiniciar a instância já provisionada, a partir da raiz e com Docker
+Desktop ativo:
+
+```powershell
+$p = "backend/data/compreface-v1.2.0/academia-local"
+docker compose -p academia-compreface --env-file "$p/.env" -f "$p/compose.yaml" up -d --pull never --no-build
+```
+
+O iniciador de dois cliques do AcademIA continua com a configuração
+existente. A conexão do backend ao provedor é responsabilidade de ACS-01.
+### 19. Curadoria, versões e revogação do corpus
 
 Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
 
@@ -13520,14 +13670,14 @@ O prompt operacional remete à especificação. A nova IA deve propor refinament
 quando faltar informação material, distinguindo proposta, decisão aceita e teste
 executado. A redução de uma tarefa por contexto não elimina seus critérios.
 
-#### Decisões ainda abertas no escopo posterior
+#### Decisões e pré-condições do escopo posterior
 
 | Tema | Definido | Falta fechar antes da capacidade dependente |
 |---|---|---|
 | Reserva de aulas | Agenda básica; capacidade só se reservas forem oferecidas | GATE-07: escopo opcional e regras de reserva/exceção |
-| Biometria | CompreFace e reconhecimento por captura real; similaridade inicial 0,95 não é acurácia de 95% | GATE-08: instância/versão, hospedagem, contrato e ensaio real |
-| Matrícula/acesso | Atendente matricula sem pagamento obrigatório; conta/matrícula/modalidade/limites são validados | GATE-08: parâmetros da janela e limites do plano, alternativa manual e integração concreta |
-| Catraca | API externa fictícia; comando aceito não é passagem | GATE-08: autenticação, contrato final de comando/retorno e demonstração integrada |
+| Biometria | [GATE-08](docs/arquitetura/preparacao-gate-08.md) fechado com CompreFace 1.2.0 e FaceNet. Limiar inicial de similaridade 0,95 | Integração e ensaio do fluxo completo em ACS-01/02 |
+| Matrícula/acesso | Matrícula pelo atendente sem pagamento obrigatório, limite diário, renovação sem sobreposição e identificação manual sob as mesmas regras | MEM-01 implementa os planos e as matrículas. ACS-03/04 implementam autorização e alternativa manual |
+| Catraca | API externa fictícia com contrato de comando e passagem definido no GATE-08 | Implementação em ACS-07 e integração em ACS-03/05 |
 | Pagamentos automáticos | Fase tardia e independente da matrícula acadêmica | GATE-09: provedor/sandbox, callbacks e regras específicas |
 | IA/RAG real | Modelos/configuração/corpus iniciais definidos | Provisionar recursos e executar avaliação de relevância, qualidade e latência nos cartões próprios |
 
@@ -13597,7 +13747,7 @@ Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | FECHADO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | FECHADO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
-| GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
+| GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](docs/arquitetura/preparacao-gate-08.md) | FECHADO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
@@ -13733,10 +13883,10 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [MEM-01](docs/prompts/06-acesso/MEM-01.md) | Planos e matrícula manual mínima, sem pagamento obrigatório | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | BLOQUEADO |
+| [MEM-01](docs/prompts/06-acesso/MEM-01.md) | Planos e matrícula manual mínima, sem pagamento obrigatório | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | PRONTO |
 | [ACS-01](docs/prompts/06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | BLOQUEADO |
 | [ACS-02](docs/prompts/06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
-| [ACS-07](docs/prompts/06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | BLOQUEADO |
+| [ACS-07](docs/prompts/06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | PRONTO |
 | [ACS-03](docs/prompts/06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
 | [ACS-04](docs/prompts/06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
 | [ACS-05](docs/prompts/06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |
@@ -19206,7 +19356,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
 | `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
-| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `4b774bc0b2629ff82a1f101660368900f3a0e8f5b7d2dbad31b188e8b8e581ef` |
+| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `93349b137d1d5fdb14cda476743b994ce5cec777b4b558a5076f0eeb3b85acbb` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `8fed154fd5b1522a5f41b8b8919ef2dc44e210ad26ff946b6861af38f63632d7` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
@@ -19220,27 +19370,28 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
-| `docs/arquitetura/fluxos-atualizados.md` | `115614d26e74eaf64d18bb0e50d17ca9525d2d58c60c4e4d559437d791afa533` |
+| `docs/arquitetura/fluxos-atualizados.md` | `e68abd4f4f867dcd5cb675d8ea54f45552f0daf0f72ed14b6c818c5f7d600369` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
 | `docs/arquitetura/modelo-de-dados/dicionario.md` | `e29bcdffcd848d83e1ed642e15ab2db1a8ede5bd925af71e9dd05da6fb5973cb` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `c14b2ea7ec9b17a510a4b6246b8ea52e479ab864fbe1c2fa7af42fe7d28e3052` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `b64ec721069302308a80759af597735dfcaae1133e618f1e542cd92847e777a9` |
 | `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `f0b7567d776595aa4aba484192a9f0829176904ea5cd509e8375be3b24b50d4e` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `dced3ee1e8e11d5e7bdc089a20a13c102d9a8b456cdef0895ef19afc352afbc1` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `27f7fad51f650505cd72ea4ef64a61ff3c7481b401485f16678b0e28e0af60d1` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
+| `docs/arquitetura/preparacao-gate-08.md` | `19bdcc97c037db147843fe756107e9329727509ae067c9e441058b0aa50c29e0` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `7023dc870367f5e9436e8328dc6cec2b689cef745f08b83901c45c8fb2826425` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `eedca2de2fc1cf8d20173bc8b0766a33589299cdd5cdb202ece4b14a7ef3ddca` |
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f91d573ff97605055cc52641c7ccd312ae46e12a1bc33f5f05d641c3d215b634` |
-| `docs/especificacao/roteiro-reconstrucao.md` | `8a51648113d89f8917b65ea7c950523029a7ea784e992814aa76732c191e811b` |
+| `docs/especificacao/compilacao-spec.json` | `4df27b13f0906fd8c5e5a61c05f0bc39bb854bae9bff7cb38abc1014b1103922` |
+| `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
 | `docs/especificacao/visao-geral.md` | `8f9afd8b32e7201d021890b0a3831745986b57e55ee263946241699098ef690a` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
@@ -19254,13 +19405,13 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `d2b37339430524436211c42f4875034e3e149e5adca88a9cd6b484d5112c757e` |
+| `docs/prompts/README.md` | `8ba7bb87bc6e8149b28a9c2ebb2e971c4b407a7447ca5690819666c77ba65e91` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |
 | `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
 | `docs/requisitos/onboarding-e-triagem.md` | `053c3a217b7c90b786a053184a6e59ea685318c728ac192738a051c249d8e866` |
-| `docs/requisitos/regras-de-negocio.md` | `06a7a900f9a79b44678100fc8ae0b9c39f5a9c99e32f2624b8dc1571be26aa29` |
+| `docs/requisitos/regras-de-negocio.md` | `785ad8c8e5934f1c2a8bd5881ae4c1c897d7843a76e6d1f242f996abd19170f3` |
 | `docs/requisitos/requisitos-funcionais.md` | `43c00ad1bddcf20fb0fd23636f98f572c0db33c919844805bec5bbb7a72ce7db` |
 | `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |

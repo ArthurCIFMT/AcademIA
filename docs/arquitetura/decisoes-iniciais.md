@@ -27,7 +27,7 @@
 | DEC-012 | Repositório remoto é `ArthurCIFMT/AcademIA`. | Entregas autorizadas devem ser sincronizadas. |
 | DEC-013 | Reconhecimento facial real e catraca fictícia por API externa. | Não há hardware; mocks isolados não comprovam reconhecimento. |
 | DEC-014 | Cadastro da foto após matrícula pelo atendente. | Referência vinculada ao cliente matriculado e autor da operação. |
-| DEC-015 | CompreFace é a API de reconhecimento facial escolhida. | Adapter Python; hospedagem/versão/contratos e ensaio real continuam em GATE-08. |
+| DEC-015 | CompreFace é a API de reconhecimento facial escolhida. | Adapter Python. Instância, contratos e ensaio de prontidão registrados no [GATE-08](preparacao-gate-08.md). |
 | DEC-016 | Nova ficha rejeitada substitui e exclui o conteúdo da rejeitada anterior. | RF-35 preserva consulta da última rejeitada, auditoria e treinos já executados. |
 | DEC-017 | Adaptação à saúde exige evidência pertinente recuperada do corpus aprovado. | Sem suporte suficiente, abster-se de gerar/publicar a adaptação. |
 | DEC-018 | Máximo de 15 versões publicadas completas por cliente, incluindo a vigente. | Excedente antigo tem conteúdo excluído; manter auditoria e snapshots de execuções (RF-17). |
@@ -50,7 +50,7 @@
 | REC-008 | Separar publicação, validação técnica e parecer por versão. | Não condicionar consulta/chat ao aceite; explicitar tratamento da atualidade e de rejeição. |
 | REC-009 | Armazenar timestamps em UTC/ISO 8601. | Consistência e rastreabilidade. |
 | REC-010 | Objetos tipados internamente; JSON nas fronteiras. | Evita serialização artificial dentro do monólito. |
-| REC-011 | Promovida à decisão confirmada DEC-015: CompreFace. | Escolha do responsável em 2026-11-04; configuração e ensaio ainda pendentes. |
+| REC-011 | Promovida à decisão confirmada DEC-015: CompreFace. | Escolha do responsável em 2026-11-04, com preparação registrada depois no [GATE-08](preparacao-gate-08.md). |
 
 ## Gates iniciais resolvidos
 

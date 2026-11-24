@@ -53,7 +53,7 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | FECHADO |
 | GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | FECHADO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
-| GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | Contrato/políticas e execução definidos antes do módulo | ABERTO |
+| GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](../arquitetura/preparacao-gate-08.md) | FECHADO |
 | GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
 | PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e DSH-01 concluídos; mudança de escopo explicitamente registrada | ABERTO |
@@ -359,10 +359,10 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [MEM-01](06-acesso/MEM-01.md) | Planos e matrícula manual mínima, sem pagamento obrigatório | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | BLOQUEADO |
+| [MEM-01](06-acesso/MEM-01.md) | Planos e matrícula manual mínima, sem pagamento obrigatório | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | PRONTO |
 | [ACS-01](06-acesso/ACS-01.md) | Cadastro e substituição da referência biométrica | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | BLOQUEADO |
 | [ACS-02](06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | BLOQUEADO |
-| [ACS-07](06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | BLOQUEADO |
+| [ACS-07](06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | PRONTO |
 | [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
 | [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
 | [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |

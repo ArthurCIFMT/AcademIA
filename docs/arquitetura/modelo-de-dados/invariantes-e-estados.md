@@ -75,7 +75,8 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   Apenas passagem confirmada muda frequência; replay não muda lotação.
 - Matrícula manual sem FK obrigatória para pagamento. Plano ativo ao contratar.
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
-  Limites contratados congelados; regra detalhada de janela fecha em MEM-01/GATE-08.
+  Limites contratados congelados. O [GATE-08](../preparacao-gate-08.md) registra
+  o limite por dia civil no fuso da academia e a renovação sem sobreposição.
 - Cobrança permite múltiplas tentativas; referência externa única por provedor quando
   existir. Compra de plano exige pagamento.plano_id com plano ativo na contratação;
   valor contratado permanece no pagamento, sem depender de preço futuro. O campo é

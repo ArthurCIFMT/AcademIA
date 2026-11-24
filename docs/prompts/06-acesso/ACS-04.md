@@ -27,7 +27,9 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 ## Implementação e entregáveis
 
-1. Definir com responsável se alternativa manual substitui só identificação ou permite exceções adicionais.
+1. Aplicar a [alternativa manual aprovada](../../arquitetura/preparacao-gate-08.md#regras-aprovadas-para-os-cartões-de-implementação):
+   o atendente confirma a identidade na falha facial e submete a passagem ao
+   motor de acesso com as mesmas regras de entrada.
 2. Implementar solicitação por papel autorizado, motivo obrigatório e auditoria durável.
 3. Preservar exigência de matrícula e regras enquanto nenhuma exceção explícita estiver aprovada.
 

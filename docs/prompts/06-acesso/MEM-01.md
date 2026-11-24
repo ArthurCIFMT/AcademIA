@@ -29,7 +29,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Criar plano ativo/inativo e matrícula pelo atendente com início, término,
    modalidade, limites e atendente responsável, sem exigir registro financeiro.
-2. Definir unidade/janela dos acessos e regra de expiração com responsável antes de codificar.
+2. Aplicar as [regras aprovadas de validade, renovação e janela de acesso](../../arquitetura/preparacao-gate-08.md#regras-aprovadas-para-os-cartões-de-implementação).
 3. Expor consulta de validade por contrato ao módulo de acesso.
 4. Cobrir compra confirmada seguida de matrícula pelo atendente na fase financeira,
    mantendo o cenário de matrícula válida sem pagamento. O cliente não se matricula
@@ -39,6 +39,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 - Plano inativo não origina matrícula nova.
 - Matrícula inexistente, futura ou vencida não é retornada como válida.
+- Renovação preserva os períodos anteriores e não sobrepõe matrículas do
+  cliente. A matrícula conserva o limite diário contratado.
 - Matrícula/renovação registra atendente e preserva histórico sem exigir pagamento,
   comprovante, MEM-00 ou serviço financeiro disponível.
 - Ausência de pagamento e estados pendente/recusado não impedem matrícula manual.

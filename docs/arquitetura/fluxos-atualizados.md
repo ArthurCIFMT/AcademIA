@@ -74,8 +74,9 @@ a referência anterior conforme política. Cliente não troca sua própria biome
 
 ## API de reconhecimento facial — CompreFace confirmado
 
-CompreFace é a escolha confirmada em DEC-015. GATE-08 ainda define versão/modelo,
-hospedagem, critérios de captura, contratos e ensaio real; não reabre o fornecedor.
+CompreFace é a escolha confirmada em DEC-015. O
+[GATE-08](preparacao-gate-08.md) registra a instância local, as regras aprovadas,
+o contrato e o ensaio real de prontidão do CompreFace 1.2.0 com FaceNet.
 
 - Validar exatamente um rosto antes de cadastrar ou reconhecer, usando detecção
   do provedor com limiar definido; limitar a resposta a um resultado não comprova
@@ -102,10 +103,10 @@ decisão adicional explícita, sem presumir que comparação de fotos a oferece.
 Fontes técnicas: [REST CompreFace](https://github.com/exadel-inc/CompreFace/blob/master/docs/Rest-API-description.md)
 e [limiar de similaridade](https://github.com/exadel-inc/CompreFace/blob/master/docs/Face-Recognition-Similarity-Threshold.md).
 
-A distribuição oficial do serviço usa Docker/Compose. Para manter Docker do
-AcademIA no final, preferir instância externa já disponível; se não houver,
-registrar com o professor a decisão de execução antes de ACS-01/ACS-02. A escolha
-do fornecedor não antecipa Docker nem aprova uma exceção de infraestrutura.
+A distribuição oficial do serviço usa Docker/Compose. Em 22/11/2026 o
+responsável autorizou uma instância local dedicada do CompreFace em Docker.
+O AcademIA e o simulador continuam com execução nativa nesta fase. A
+containerização da aplicação permanece na etapa INF-01–INF-04.
 
 ## Catraca fictícia — serviço externo de teste
 
@@ -113,7 +114,7 @@ O serviço simulador representa o equipamento, não o reconhecimento facial.
 Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
 com REST/JSON e OpenAPI. Não exige microserviços para o restante da aplicação.
 
-Contrato proposto a fechar em GATE-08:
+Resumo do [contrato definido no GATE-08](preparacao-gate-08.md#contrato-da-catraca-fictícia):
 
 | Operação | Dados mínimos | Semântica |
 |---|---|---|

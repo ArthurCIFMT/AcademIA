@@ -37,7 +37,7 @@ ou solicitar ajustes.
 |---|---|---|
 | RF-35, RF-17, RN-18/RN-33, MRF07/MRF10/MRF14 | A rejeitada continua visível; outra ficha posterior rejeitada exclui o conteúdo da rejeitada anterior, preservando auditoria e treinos executados. | Decisão do responsável sobre substituição de fichas rejeitadas. |
 | RF-15/RF-19, RN-15, MRF05/MRF09/MRF11/MRF14 | Adaptação por saúde depende de evidência pertinente recuperada do corpus aprovado; ausência de suporte impede gerar/publicar adaptação. | Confirmação do responsável sobre evidência obrigatória. |
-| RF-21/RF-36 e prompts de acesso | CompreFace confirmado; similarity normalizada 0–1, inicialmente 0,95. | Escolha explícita do responsável; hospedagem e ensaio continuam pendentes. |
+| RF-21/RF-36 e prompts de acesso | CompreFace confirmado; similarity normalizada 0–1, inicialmente 0,95. | Escolha explícita do responsável. O [GATE-08](../arquitetura/preparacao-gate-08.md) registra a hospedagem e o ensaio de prontidão. |
 
 Os demais pontos da análise e MRF08–MRF15 não foram aprovados automaticamente.
 O MER original em imagem permanece inalterado; prompts de modelagem devem refletir

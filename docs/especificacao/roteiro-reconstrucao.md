@@ -61,14 +61,14 @@ O prompt operacional remete à especificação. A nova IA deve propor refinament
 quando faltar informação material, distinguindo proposta, decisão aceita e teste
 executado. A redução de uma tarefa por contexto não elimina seus critérios.
 
-## Decisões ainda abertas no escopo posterior
+## Decisões e pré-condições do escopo posterior
 
 | Tema | Definido | Falta fechar antes da capacidade dependente |
 |---|---|---|
 | Reserva de aulas | Agenda básica; capacidade só se reservas forem oferecidas | GATE-07: escopo opcional e regras de reserva/exceção |
-| Biometria | CompreFace e reconhecimento por captura real; similaridade inicial 0,95 não é acurácia de 95% | GATE-08: instância/versão, hospedagem, contrato e ensaio real |
-| Matrícula/acesso | Atendente matricula sem pagamento obrigatório; conta/matrícula/modalidade/limites são validados | GATE-08: parâmetros da janela e limites do plano, alternativa manual e integração concreta |
-| Catraca | API externa fictícia; comando aceito não é passagem | GATE-08: autenticação, contrato final de comando/retorno e demonstração integrada |
+| Biometria | [GATE-08](../arquitetura/preparacao-gate-08.md) fechado com CompreFace 1.2.0 e FaceNet. Limiar inicial de similaridade 0,95 | Integração e ensaio do fluxo completo em ACS-01/02 |
+| Matrícula/acesso | Matrícula pelo atendente sem pagamento obrigatório, limite diário, renovação sem sobreposição e identificação manual sob as mesmas regras | MEM-01 implementa os planos e as matrículas. ACS-03/04 implementam autorização e alternativa manual |
+| Catraca | API externa fictícia com contrato de comando e passagem definido no GATE-08 | Implementação em ACS-07 e integração em ACS-03/05 |
 | Pagamentos automáticos | Fase tardia e independente da matrícula acadêmica | GATE-09: provedor/sandbox, callbacks e regras específicas |
 | IA/RAG real | Modelos/configuração/corpus iniciais definidos | Provisionar recursos e executar avaliação de relevância, qualidade e latência nos cartões próprios |
 
