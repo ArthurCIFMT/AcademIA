@@ -1702,3 +1702,29 @@ No frontend, `node node_modules/vitest/vitest.mjs run --maxWorkers=2` aprovou
 restrito a atendentes. TypeScript, ESLint, build, Ruff e mypy também passaram.
 A configuração do iniciador continua nativa. A checagem de schema e seus
 14 testes passaram com a revisão 0021 aplicada no banco local.
+
+## ACS-07 — Simulador de catraca
+
+Execute a partir da raiz do projeto com o Python já instalado no backend:
+
+```powershell
+& ./backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml -o addopts= backend/tests/contracts tests/test_iniciador_local.py
+& ./backend/.venv/Scripts/ruff.exe check --config backend/pyproject.toml simulators/turnstile backend/tests/contracts/turnstile scripts/academia_local.py tests/test_iniciador_local.py
+& ./backend/.venv/Scripts/ruff.exe format --check --config backend/pyproject.toml simulators/turnstile backend/tests/contracts/turnstile scripts/academia_local.py tests/test_iniciador_local.py
+```
+
+Em `backend/`, a verificação usual `uv run --locked mypy` resolve os contratos
+do simulador por meio do caminho configurado em `pyproject.toml`. A checagem
+explícita do simulador e iniciador também passou.
+
+**37 testes aprovados** entre contratos e iniciador. Os ensaios com dois
+servidores Uvicorn em loopback verificaram aceitação, negação, expiração,
+credenciais e reenvio. Timeout de retorno preservou o UUID e o instante
+original para que o receptor de teste deduplicasse a passagem. A resposta
+com UUID divergente foi recusada. Os modos de falha do equipamento foram
+exercitados por HTTP real e nenhum comando foi criado durante a falha.
+
+O ciclo real do iniciador verificou a prontidão da interface, da API
+e do simulador nativo e encerrou os processos próprios. O simulador usa o
+arquivo SQLite criado explicitamente no preparo e o fluxo de retorno foi
+ensaiado contra o receptor de teste. [Guia de operação](../instalacao/catraca-ficticia.md)

@@ -114,7 +114,8 @@ containerização da aplicação permanece na etapa INF-01–INF-04.
 
 O serviço simulador representa o equipamento, não o reconhecimento facial.
 Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
-com REST/JSON e OpenAPI. Não exige microserviços para o restante da aplicação.
+com REST/JSON e OpenAPI. A [execução e os testes locais](../instalacao/catraca-ficticia.md)
+mostram como enviar comandos e simular a passagem.
 
 Resumo do [contrato definido no GATE-08](preparacao-gate-08.md#contrato-da-catraca-fictícia):
 

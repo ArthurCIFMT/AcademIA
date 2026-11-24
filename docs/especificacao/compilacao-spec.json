@@ -658,6 +658,10 @@
           "titulo": "Iniciador Windows com painel, serviços próprios e encerramento"
         },
         {
+          "arquivo": "docs/instalacao/catraca-ficticia.md",
+          "titulo": "Inicialização e ensaio da catraca fictícia"
+        },
+        {
           "arquivo": "iniciador.local.example.json",
           "titulo": "Exemplo de caminhos locais do iniciador",
           "tipo": "codigo",

@@ -50,6 +50,7 @@ select = ["E", "F", "I", "UP"]
 
 [tool.mypy]
 python_version = "3.12"
+mypy_path = "$MYPY_CONFIG_FILE_DIR/.."
 plugins = ["pydantic.mypy"]
 strict = true
 files = ["app", "tests"]

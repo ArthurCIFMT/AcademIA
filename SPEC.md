@@ -170,7 +170,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
-| MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca e identificação entregues. A catraca e o motor de autorização seguem no roteiro |
+| MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](docs/instalacao/catraca-ficticia.md) entregues. O motor de autorização segue no roteiro |
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
@@ -13491,7 +13491,8 @@ containerização da aplicação permanece na etapa INF-01–INF-04.
 
 O serviço simulador representa o equipamento, não o reconhecimento facial.
 Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
-com REST/JSON e OpenAPI. Não exige microserviços para o restante da aplicação.
+com REST/JSON e OpenAPI. A [execução e os testes locais](docs/instalacao/catraca-ficticia.md)
+mostram como enviar comandos e simular a passagem.
 
 Resumo do [contrato definido no GATE-08](docs/arquitetura/preparacao-gate-08.md#contrato-da-catraca-fictícia):
 
@@ -14111,8 +14112,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [MEM-01](docs/prompts/06-acesso/MEM-01.md) | [Planos e matrícula manual sem pagamento obrigatório](docs/arquitetura/matriculas.md) | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | CONCLUIDO |
 | [ACS-01](docs/prompts/06-acesso/ACS-01.md) | [Cadastro e substituição da referência biométrica](docs/arquitetura/biometria.md) | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | CONCLUIDO |
 | [ACS-02](docs/prompts/06-acesso/ACS-02.md) | [Captura facial e integração real de reconhecimento](docs/arquitetura/reconhecimento-facial.md) | MOD-07 | FND-06, ACS-01 | CONCLUIDO |
-| [ACS-07](docs/prompts/06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | PRONTO |
-| [ACS-03](docs/prompts/06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
+| [ACS-07](docs/prompts/06-acesso/ACS-07.md) | [API externa fictícia de catraca](docs/instalacao/catraca-ficticia.md) | MOD-07 | FND-06, GATE-08 | CONCLUIDO |
+| [ACS-03](docs/prompts/06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | PRONTO |
 | [ACS-04](docs/prompts/06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |
 | [ACS-05](docs/prompts/06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | BLOQUEADO |
 | [ACS-06](docs/prompts/06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | BLOQUEADO |
@@ -19281,6 +19282,7 @@ select = ["E", "F", "I", "UP"]
 
 [tool.mypy]
 python_version = "3.12"
+mypy_path = "$MYPY_CONFIG_FILE_DIR/.."
 plugins = ["pydantic.mypy"]
 strict = true
 files = ["app", "tests"]
@@ -19409,6 +19411,16 @@ ACADEMIA_COMPREFACE_MAX_IMAGE_BYTES=4194304
 # Identificação externa de origem confiável. Token exclusivo, URL-safe.
 ACADEMIA_ACCESS_IDENTIFICATION_TOKEN=
 ACADEMIA_ACCESS_SIMILARITY_THRESHOLD=0.95
+
+# Catraca fictícia nativa. Configure os dois tokens para iniciar com o painel.
+ACADEMIA_TURNSTILE_URL=http://127.0.0.1:8011
+ACADEMIA_TURNSTILE_COMMAND_TOKEN=
+ACADEMIA_TURNSTILE_CALLBACK_TOKEN=
+# Com o iniciador, o retorno padrão usa a porta já configurada para a API.
+ACADEMIA_TURNSTILE_CALLBACK_URL=
+ACADEMIA_TURNSTILE_STORE_PATH=backend/data/turnstile.sqlite3
+ACADEMIA_TURNSTILE_CALLBACK_TIMEOUT_SECONDS=2
+ACADEMIA_TURNSTILE_FAULT=NONE
 ````
 ### 8. Exemplo de ambiente do frontend
 
@@ -19426,8 +19438,7 @@ Fonte versionada: [docs/instalacao/iniciar-com-dois-cliques.md](docs/instalacao/
 
 Na pasta do projeto, dê dois cliques em **Iniciar AcademIA.cmd**. Não é preciso
 digitar comandos nem abrir os PowerShells dos serviços. O pequeno painel inicia
-PostgreSQL, Mailpit, API e frontend e abre o site no navegador padrão quando o
-proxy e a API respondem corretamente. A primeira inicialização pode demorar.
+PostgreSQL, Mailpit, API, frontend e a [catraca fictícia quando configurada](docs/instalacao/catraca-ficticia.md). O navegador padrão abre quando os serviços respondem corretamente. A primeira inicialização pode demorar.
 
 #### Uso diário
 
@@ -19467,6 +19478,8 @@ encerre o painel. Depois da manutenção, abra novamente o iniciador.
 - A API recebe pedido de shutdown e tem tempo de encerramento antes de um
   eventual encerramento forçado apenas de sua árvore. O Qdrant continua local,
   aberto somente pelo único processo da API; não existe servidor Qdrant extra.
+- A catraca fictícia usa a porta local própria e o armazenamento previamente
+  preparado. Suas credenciais ficam no ambiente do simulador e do backend.
 - Usa a caixa persistente backend/data/mailpit.db, sem relay para e-mails externos.
   As configurações MP_* de relay do ambiente não são herdadas pelo Mailpit.
 
@@ -19556,7 +19569,74 @@ Mudanças apenas documentais ou sem efeito na execução local não precisam alt
 o código do iniciador nem repetir o ciclo completo. O agente registra essa
 avaliação e faz as verificações correspondentes ao escopo. Autorizações funcionais
 não dispensam as permissões técnicas exigidas pelo ambiente de trabalho.
-### 10. Exemplo de caminhos locais do iniciador
+### 10. Inicialização e ensaio da catraca fictícia
+
+Fonte versionada: [docs/instalacao/catraca-ficticia.md](docs/instalacao/catraca-ficticia.md).
+
+A catraca fictícia é um serviço Python/FastAPI em processo separado. Usa o
+ambiente Python do backend e escuta em `127.0.0.1:8011` por padrão. O [contrato
+do GATE-08](../arquitetura/preparacao-gate-08.md#contrato-da-catraca-fictícia)
+define o tráfego com o AcademIA. O simulador executa nativamente no Windows.
+
+#### Configuração e início
+
+- No `.env` privado, configure `ACADEMIA_TURNSTILE_COMMAND_TOKEN` e
+  `ACADEMIA_TURNSTILE_CALLBACK_TOKEN`, com valores aleatórios distintos,
+  URL-safe, de 32 a 256 caracteres. Ambos habilitam o simulador no iniciador.
+- `ACADEMIA_TURNSTILE_URL` define a origem HTTP de loopback. A porta deve ser
+  distinta das portas do restante do sistema.
+- O retorno é fixado por `ACADEMIA_TURNSTILE_CALLBACK_URL`. O caminho aceito é
+  `/api/v1/acesso/catraca/passagens` em HTTP de loopback. Com o iniciador, o
+  padrão usa a porta configurada para o backend. A origem continua externa
+  ao corpo recebido. O timeout do retorno é configurável e começa em dois
+  segundos.
+- O arquivo local e privado do simulador é definido por
+  `ACADEMIA_TURNSTILE_STORE_PATH`. O padrão é `backend/data/turnstile.sqlite3`,
+  relativo à raiz. Prepare esse arquivo uma vez, a partir da raiz do projeto:
+
+```powershell
+& ./backend/.venv/Scripts/python.exe -c 'from dotenv import load_dotenv; from simulators.turnstile.__main__ import main; load_dotenv(".env"); main()' --prepare
+```
+
+Use **Iniciar AcademIA.cmd** para iniciar e encerrar o simulador junto dos
+serviços nativos. Para executar somente a catraca em um terminal, rode o
+mesmo comando de preparação sem a opção `--prepare`. `GET /health` informa a
+prontidão, e `GET /openapi.json` descreve os contratos de entrada. A
+inicialização normal abre apenas o armazenamento já preparado.
+
+#### Ensaio HTTP e retorno
+
+1. Envie `POST /commands` com Bearer de comando e JSON conforme GATE-08. O
+   retorno HTTP 202 contém `schema_version=1`, `request_id` e `status=ACCEPTED`.
+   A aceitação registra o comando e aguarda uma operação de passagem separada.
+2. Simule a passagem com `POST /commands/{request_id}/passages`, usando o
+   mesmo Bearer e JSON com `schema_version=1` e um UUID `event_id`. O simulador
+   verifica a decisão `ALLOW` e a expiração. O evento enviado ao destino contém
+   aquele UUID, o ID do comando, a direção do comando, o instante UTC e
+   `simulated=true`. O envio usa o Bearer de retorno.
+3. O simulador confirma a passagem com HTTP 201 e `status=RECORDED` somente
+   após o destino devolver HTTP 201 ou 200, com `schema_version=1`,
+   o mesmo `event_id` e `status=RECORDED`.
+4. Receber novamente o mesmo comando devolve HTTP 200. Repetir uma passagem
+   confirmada devolve o recibo existente com HTTP 200, sem novo envio.
+   Reutilizar o ID com conteúdo divergente, tentar outro evento para o mesmo
+   comando ou simular passagem de um comando `DENY` retorna 409.
+   Comando expirado para nova operação retorna 410.
+5. Se o retorno falhar, a API devolve 502 ou 504. Basta reenviar o mesmo
+   `event_id` para entregar o evento já registrado com o instante original,
+   inclusive após o fim da validade. Uma nova passagem exige autorização válida
+   no instante da ocorrência. O destino deduplica pelos mesmos identificadores.
+
+Para testar falha do equipamento, configure `ACADEMIA_TURNSTILE_FAULT` como
+`UNAVAILABLE` (HTTP 503) ou `TIMEOUT` (HTTP 504 após uma espera controlada),
+reinicie e envie um comando. Esses modos impedem registrar o comando. O
+padrão `NONE` mantém o fluxo normal.
+
+O [ensaio automatizado](docs/testes/comandos.md#acs-07--simulador-de-catraca)
+usa um receptor HTTP de teste. A rota de recepção do AcademIA integra a
+entrega do ACS-03. Frequência e lotação dependem da passagem confirmada pelo
+motor de acesso e ficam sob responsabilidade do AcademIA.
+### 11. Exemplo de caminhos locais do iniciador
 
 Fonte versionada: [iniciador.local.example.json](iniciador.local.example.json).
 
@@ -19578,10 +19658,10 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 
 | Fonte | SHA-256 |
 |---|---|
-| `.env.example` | `ad8c3a0f16fc5930df873185a8d43689433a4cbd57d7dddc82d4dcde06550e6a` |
+| `.env.example` | `ebafe2fe9209f7600cba996f8444b6344fd70b8799911764deeb31aa2c45df5a` |
 | `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
-| `backend/pyproject.toml` | `9f5b1af7063990c52448d4835b8a003dc34d8491e6abb37698fc2f4d602137d5` |
+| `backend/pyproject.toml` | `101deb54bb790584c556d5671c71b89471c3f0f1e9a39c885c22e8c764403b23` |
 | `database/README.md` | `17071351c0ec8c3dfef2478799eee05f964fbd33ab0bac9c509508722f0b9fe8` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/agenda.md` | `d0e60a63783476b414eb495fbdb9d17b9d6c6e4a29606423e5a6bcd8a3ceb883` |
@@ -19613,7 +19693,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
-| `docs/arquitetura/fluxos-atualizados.md` | `23b042d6cf3c36bbdf6596a12a810e90ca940491ccaa471650eaf4f06927fb24` |
+| `docs/arquitetura/fluxos-atualizados.md` | `2537d6b74c06fc3466a220837106a0180f8f20a222408a9e63a1e01f3897b0d8` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
@@ -19635,10 +19715,11 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `99674a5f04b76ba6958d93d6299bfdcddd87f6f3a5b9ad3cfc3f5196ab027678` |
+| `docs/especificacao/compilacao-spec.json` | `4e7320a8eadd0e135458bd3965ef9429710acc2090fe40efae82181a46b95002` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `94a7d7c65bd4f890f4f1d3f52425591f2b747e0d4844186f5d30079377af8d39` |
-| `docs/instalacao/iniciar-com-dois-cliques.md` | `8ecb3eaeaf95c7c6debaa65b4ef072fd17e838e34a9d1a26ed897b323453a9ca` |
+| `docs/especificacao/visao-geral.md` | `70bb5aa5c8ef646883ea61c797fbd3ec5dcd771c0d3b36031da27e76d62e84f1` |
+| `docs/instalacao/catraca-ficticia.md` | `5a854443c5bbf9c3cf3d000859f44ac658f2c98dcd26b3841917305425bed3ed` |
+| `docs/instalacao/iniciar-com-dois-cliques.md` | `1cdffb0e3d72d5a807f1e30acf2477240ff21c59419a03ea67a4d844e0c44e68` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -19650,7 +19731,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `4539c2a9e68b584e582f95d88f66158c465cdffb94c06d7f621afd70efc3d235` |
+| `docs/prompts/README.md` | `76d9cf8547aed7ccda1f4cc6c9cedcb8e8ad175e60953e273a38280c03985d8a` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |

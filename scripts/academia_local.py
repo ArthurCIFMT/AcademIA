@@ -67,8 +67,10 @@ class Controller:
         self.running = False
         self.backend_env: dict[str, str] = {}
         self.frontend_env: dict[str, str] = {}
+        self.turnstile_env: dict[str, str] = {}
         self.config: dict[str, str] = {}
-        self.site = self.mailbox = self.api = ""
+        self.site = self.mailbox = self.api = self.turnstile = ""
+        self.turnstile_port: int | None = None
         self.stop_file = self.runtime / "api-encerrar"
 
     def configure(self) -> None:
@@ -77,7 +79,7 @@ class Controller:
         defaults = read_env(self.root / ".env.example")
         self.backend_env = {**os.environ, **defaults, **read_env(self.root / ".env")}
         # Segredos do backend não são repassados ao Vite ou ao Mailpit.
-        self.frontend_env = {
+        public_env = {
             k: v
             for k, v in os.environ.items()
             if not k.startswith(("ACADEMIA_", "GROQ_", "GEMINI_", "MP_"))
@@ -86,7 +88,7 @@ class Controller:
             **read_env(self.root / "frontend/.env.example"),
             **read_env(self.root / "frontend/.env.local"),
         }
-        self.frontend_env.update(front)
+        self.frontend_env = {**public_env, **front}
         if front.get("VITE_API_BASE_URL") != "/api":
             raise LaunchError(
                 "Configure VITE_API_BASE_URL=/api para o iniciador local."
@@ -103,6 +105,39 @@ class Controller:
             raise LaunchError(
                 "As portas do frontend, API e Mailpit precisam ser distintas."
             )
+        self.turnstile_port = None
+        self.turnstile = ""
+        self.turnstile_env = {}
+        prefix = "ACADEMIA_TURNSTILE_"
+        command_token = self.backend_env.get(prefix + "COMMAND_TOKEN")
+        callback_token = self.backend_env.get(prefix + "CALLBACK_TOKEN")
+        if command_token or callback_token:
+            if (
+                not command_token
+                or not callback_token
+                or command_token == callback_token
+            ):
+                raise LaunchError(
+                    "Configure dois tokens distintos para a catraca fictícia."
+                )
+            self.turnstile, self.turnstile_port = local_url(
+                self.backend_env.get(prefix + "URL", "http://127.0.0.1:8011")
+            )
+            if self.turnstile_port in {
+                self.site_port,
+                self.api_port,
+                self.mail_port,
+                self.smtp_port,
+            }:
+                raise LaunchError("A porta da catraca precisa ser distinta.")
+            self.turnstile_env = {
+                **public_env,
+                **{k: v for k, v in self.backend_env.items() if k.startswith(prefix)},
+            }
+            if not self.turnstile_env.get(prefix + "CALLBACK_URL"):
+                self.turnstile_env[prefix + "CALLBACK_URL"] = (
+                    self.api + "/api/v1/acesso/catraca/passagens"
+                )
         config_file = self.root / "iniciador.local.json"
         if not config_file.is_file():
             raise LaunchError(
@@ -163,9 +198,15 @@ class Controller:
                     raise LaunchError(f"Falha em {name}. Use o botão Abrir registros.")
             else:
                 env = self.backend_env if name == "backend" else self.frontend_env
+                if name == "turnstile":
+                    env = self.turnstile_env
                 if name == "mailpit":
                     env = {k: v for k, v in env.items() if not k.startswith("MP_")}
-                cwd = self.root / ("frontend" if name == "frontend" else "backend")
+                working_dirs = {
+                    "frontend": self.root / "frontend",
+                    "turnstile": self.root,
+                }
+                cwd = working_dirs.get(name, self.root / "backend")
                 self.processes[name] = subprocess.Popen(
                     args,
                     cwd=cwd,
@@ -211,7 +252,10 @@ class Controller:
         if self.running:
             return
         self.configure()
-        for port in (self.site_port, self.api_port, self.mail_port, self.smtp_port):
+        ports = [self.site_port, self.api_port, self.mail_port, self.smtp_port]
+        if self.turnstile_port is not None:
+            ports.append(self.turnstile_port)
+        for port in ports:
             if is_open(port):
                 raise LaunchError(
                     f"A porta {port} já está em uso. Feche a execução anterior; "
@@ -277,6 +321,12 @@ class Controller:
                 ],
             )
             self.wait_ready("backend", self.api + "/health", health=True)
+            if self.turnstile_port is not None:
+                self.notify("Iniciando a catraca fictícia…")
+                self.command(
+                    "turnstile", [str(self.python), "-m", "simulators.turnstile"]
+                )
+                self.wait_ready("turnstile", self.turnstile + "/health", health=True)
             self.notify("Iniciando o site…")
             self.command(
                 "frontend",
@@ -300,16 +350,15 @@ class Controller:
     def stop(self) -> None:
         self.notify("Encerrando os serviços iniciados por este painel…")
         errors = []
-        if "backend" in self.processes:
-            self.stop_file.parent.mkdir(parents=True, exist_ok=True)
-            self.stop_file.touch()
-        for name in ("frontend", "backend", "mailpit"):
+        for name in ("frontend", "turnstile", "backend", "mailpit"):
             proc = self.processes.get(name)
             if proc is None:
                 continue
             try:
                 if proc.poll() is None:
                     if name == "backend":
+                        self.stop_file.parent.mkdir(parents=True, exist_ok=True)
+                        self.stop_file.touch()
                         try:
                             proc.wait(timeout=25)
                         except subprocess.TimeoutExpired:

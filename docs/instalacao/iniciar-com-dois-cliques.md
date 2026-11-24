@@ -2,8 +2,7 @@
 
 Na pasta do projeto, dê dois cliques em **Iniciar AcademIA.cmd**. Não é preciso
 digitar comandos nem abrir os PowerShells dos serviços. O pequeno painel inicia
-PostgreSQL, Mailpit, API e frontend e abre o site no navegador padrão quando o
-proxy e a API respondem corretamente. A primeira inicialização pode demorar.
+PostgreSQL, Mailpit, API, frontend e a [catraca fictícia quando configurada](catraca-ficticia.md). O navegador padrão abre quando os serviços respondem corretamente. A primeira inicialização pode demorar.
 
 ## Uso diário
 
@@ -43,6 +42,8 @@ encerre o painel. Depois da manutenção, abra novamente o iniciador.
 - A API recebe pedido de shutdown e tem tempo de encerramento antes de um
   eventual encerramento forçado apenas de sua árvore. O Qdrant continua local,
   aberto somente pelo único processo da API; não existe servidor Qdrant extra.
+- A catraca fictícia usa a porta local própria e o armazenamento previamente
+  preparado. Suas credenciais ficam no ambiente do simulador e do backend.
 - Usa a caixa persistente backend/data/mailpit.db, sem relay para e-mails externos.
   As configurações MP_* de relay do ambiente não são herdadas pelo Mailpit.
 

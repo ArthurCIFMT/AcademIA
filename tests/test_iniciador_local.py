@@ -200,6 +200,56 @@ def test_spawn_does_not_put_credentials_on_command_line_and_clears_mailpit_relay
     assert all(not kwargs.get("shell", False) for _, kwargs in calls)
 
 
+def enable_turnstile(prepared: Any, port: int = 8011) -> None:
+    with (prepared.root / ".env").open("a", encoding="utf-8") as source:
+        source.write(
+            f"ACADEMIA_TURNSTILE_URL=http://127.0.0.1:{port}\n"
+            "ACADEMIA_TURNSTILE_COMMAND_TOKEN=teste_sintetico_comando_1234567890\n"
+            "ACADEMIA_TURNSTILE_CALLBACK_TOKEN=teste_sintetico_retorno_1234567890\n"
+        )
+
+
+def test_turnstile_has_separate_environment_and_uses_project_root(
+    launcher: ModuleType, prepared: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    enable_turnstile(prepared)
+    prepared.configure()
+    assert prepared.turnstile_port == 8011
+    env = prepared.turnstile_env
+    assert env["ACADEMIA_TURNSTILE_CALLBACK_URL"] == (
+        prepared.api + "/api/v1/acesso/catraca/passagens"
+    )
+    for key in ("GROQ_API_KEY", "GEMINI_API_KEY", "ACADEMIA_DATABASE_URL"):
+        assert key not in env
+    for key in (
+        "ACADEMIA_TURNSTILE_COMMAND_TOKEN",
+        "ACADEMIA_TURNSTILE_CALLBACK_TOKEN",
+    ):
+        assert key in env and key not in prepared.frontend_env
+
+    calls: list[dict[str, Any]] = []
+
+    def popen(args: list[str], **kwargs: Any) -> ProcessDouble:
+        calls.append(kwargs)
+        return ProcessDouble()
+
+    monkeypatch.setattr(launcher.subprocess, "Popen", popen)
+    prepared.command("turnstile", ["python", "-m", "simulators.turnstile"])
+    assert calls[0]["cwd"] == prepared.root
+    assert calls[0]["env"] == env
+    simulator = prepared.processes["turnstile"]
+    prepared.stop()
+    assert simulator.terminated and not prepared.processes
+
+
+def test_turnstile_port_collision_is_rejected(
+    launcher: ModuleType, prepared: Any
+) -> None:
+    enable_turnstile(prepared, port=8000)
+    with pytest.raises(launcher.LaunchError, match="porta da catraca"):
+        prepared.configure()
+
+
 def test_stop_without_panel_does_not_leave_a_delayed_shutdown(
     launcher: ModuleType, tmp_path: Path
 ) -> None:
