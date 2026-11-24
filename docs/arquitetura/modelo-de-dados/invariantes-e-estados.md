@@ -73,7 +73,8 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   A candidata pendente fica indisponível para identificação.
 - Evento unique(origem,event_id), comando/retorno correlacionados e idempotentes.
   Unique parcial presenca(cliente_id) WHERE saida_evento_id IS NULL.
-  Apenas passagem confirmada muda frequência; replay não muda lotação.
+  Apenas passagem confirmada muda frequência. Replays são idempotentes, e a
+  reconciliação ordena ocorrências por instante, direção (entrada primeiro) e UUID.
 - Matrícula manual sem FK obrigatória para pagamento. Plano ativo ao contratar.
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
   Limites contratados congelados. O [GATE-08](../preparacao-gate-08.md) registra

@@ -549,6 +549,7 @@ Unicidades: origem+event_id_externo.
 | payload_hash | char(64) | required | — |
 | direcao | varchar(10) | ENTRADA ou SAIDA | — |
 | resultado_identificacao | varchar(24) | exigido para IDENTIFICACAO | — |
+| resultado_presenca | varchar(24) | classificação derivada de passagem confirmada | — |
 | similaridade | double | opcional, escala 0–1 | — |
 
 ## decisao_acesso — MOD-07
@@ -589,11 +590,11 @@ Uma confirmação auditada por tentativa facial não identificada.
 
 ## presenca — MOD-07
 
-Uma presença aberta por cliente, apenas passagem simulada confirmada muda lotação
+Uma presença aberta por cliente. Mudanças na lotação derivam de [passagens simuladas confirmadas](../frequencia-lotacao.md).
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
-| id | uuid | pk | — |
+| id | uuid | pk, igual ao ID da entrada | — |
 | cliente_id | uuid | required | cliente.usuario_id |
 | entrada_evento_id | uuid | required unique | evento_acesso.id |
 | saida_evento_id | uuid | unique | evento_acesso.id |

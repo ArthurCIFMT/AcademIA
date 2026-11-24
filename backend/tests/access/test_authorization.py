@@ -28,6 +28,7 @@ from app.database.connection import (
     create_session_factory,
 )
 from app.main import create_app
+from app.modules.access.attendance.service import current_occupancy
 from app.modules.access.authorization.http import authorization_router
 from app.modules.access.authorization.service import (
     academy_window,
@@ -364,6 +365,10 @@ def test_live_authorization_and_confirmed_passage(
                 or 0
             )
 
+    def occupancy() -> int:
+        with sessions.begin() as db:
+            return current_occupancy(db)
+
     def auth_path(event: UUID) -> str:
         return f"/api/v1/atendimento/acessos/{event}/autorizacao"
 
@@ -402,7 +407,7 @@ def test_live_authorization_and_confirmed_passage(
             assert first.json()["resultado"] == "ALLOW"
             command = first.json()["comando"]
             assert command["estado"] == "FALHOU" and command["falha_envio"] == "TIMEOUT"
-            assert passages() == 0
+            assert passages() == 0 and occupancy() == 0
 
         with serve(lambda _: create_simulator(cfg, clock=lambda: current)) as simulator:
             settings.turnstile_url = simulator
@@ -416,7 +421,7 @@ def test_live_authorization_and_confirmed_passage(
                 and denied["comando"]["estado"] == "ACEITO"
             )
             exit_command = api.post(auth_path(exit_id), headers=staff).json()["comando"]
-            assert passages() == 0
+            assert passages() == 0 and occupancy() == 0
             event = {"schema_version": 1, "event_id": str(uuid4())}
             returned = event | {
                 "request_id": command["request_id"],
@@ -451,7 +456,7 @@ def test_live_authorization_and_confirmed_passage(
                 )
                 assert trigger(command["request_id"], event).status_code == 201
                 assert trigger(command["request_id"], event).status_code == 200
-                assert passages() == 1
+                assert passages() == 1 and occupancy() == 1
                 assert (
                     api.post(RETURN_URL, json=returned, headers=callback).status_code
                     == 200
@@ -464,16 +469,29 @@ def test_live_authorization_and_confirmed_passage(
                     ).status_code
                     == 409
                 )
-                current += timedelta(seconds=31)
+                current += timedelta(seconds=1)
                 assert (
                     trigger(
                         exit_command["request_id"], event | {"event_id": str(uuid4())}
+                    ).status_code
+                    == 201
+                )
+                assert passages() == 2 and occupancy() == 0
+                with sessions.begin() as db:
+                    late_exit = identified(db, client, current, direction="SAIDA")
+                late_command = api.post(auth_path(late_exit), headers=staff).json()[
+                    "comando"
+                ]
+                current += timedelta(seconds=31)
+                assert (
+                    trigger(
+                        late_command["request_id"], event | {"event_id": str(uuid4())}
                     ).status_code
                     == 410
                 )
                 expired = returned | {
                     "event_id": str(uuid4()),
-                    "request_id": exit_command["request_id"],
+                    "request_id": late_command["request_id"],
                     "direction": "EXIT",
                 }
                 assert (
@@ -481,7 +499,7 @@ def test_live_authorization_and_confirmed_passage(
                     == 410
                 )
             viewed = api.post(auth_path(event_id), headers=staff).json()
-            assert viewed["comando"]["estado"] == "CONFIRMADO" and passages() == 1
+            assert viewed["comando"]["estado"] == "CONFIRMADO" and passages() == 2
             with sessions.begin() as db:
                 same_day = identified(db, client, current)
             limited = api.post(auth_path(same_day), headers=staff).json()
@@ -491,4 +509,4 @@ def test_live_authorization_and_confirmed_passage(
                 next_day = identified(db, client, current)
             allowed = api.post(auth_path(next_day), headers=staff).json()
             assert allowed["motivo"] == "ENTRADA_PERMITIDA"
-            assert passages() == 1
+            assert passages() == 2 and occupancy() == 0

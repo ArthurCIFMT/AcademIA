@@ -1787,3 +1787,25 @@ facial e o envio do motivo e da confirmação pelo atendente. TypeScript,
 ESLint, build, Ruff, mypy e DOC também passaram. A migration 0023 foi aplicada
 com os registros existentes preservados e os **16 testes do iniciador**
 passaram. [Contrato da confirmação manual](../arquitetura/confirmacao-manual.md)
+
+## ACS-05 — Frequência e lotação
+
+A partir de `backend/`, com o PostgreSQL de testes local e o ambiente privado:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+A rodada com o Python 3.12 do backend e dotenv aprovou **79 testes**, incluindo
+sequência fora de ordem, entrada repetida, saída sem entrada, paginação,
+reconciliação idempotente, downgrade/upgrade com dados e confirmação concorrente
+em conexões PostgreSQL separadas. O callback autenticado foi exercitado contra
+um servidor HTTP real do simulador, incluindo entrada, replay e saída.
+Os dois ensaios opcionais com CompreFace foram omitidos nessa rodada
+após falharem por indisponibilidade da instância com Docker Desktop pausado.
+
+Ruff, mypy e **16 testes do iniciador** passaram. Com a migration 0024 aplicada
+ao banco local e os totais anteriores de cadastros e eventos preservados, o
+iniciador respondeu no site, na API e na catraca fictícia e encerrou seus
+serviços normalmente. [Contrato de frequência e lotação](../arquitetura/frequencia-lotacao.md)

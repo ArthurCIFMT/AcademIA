@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| ACS-05 | CONCLUIDO | [Frequência e lotação](../arquitetura/frequencia-lotacao.md). 79 testes de backend e 16 do iniciador aprovados. Dois ensaios opcionais do CompreFace indisponíveis. [Comandos e evidência](../testes/comandos.md#acs-05--frequência-e-lotação). |
 | ACS-04 | CONCLUIDO | [Confirmação manual auditada](../arquitetura/confirmacao-manual.md). 78 testes de backend, 133 de frontend e 16 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-04--confirmação-manual-de-identidade). |
 | ACS-03 | CONCLUIDO | [Motor e passagem simulada](../arquitetura/autorizacao-acesso.md). 70 testes de backend e 16 do iniciador aprovados. [Comandos e evidência](../testes/comandos.md#acs-03--motor-de-autorização-e-passagens). |
 | ACS-07 | CONCLUIDO | [Catraca fictícia](../instalacao/catraca-ficticia.md). 37 testes de contrato e iniciador, com dois servidores HTTP reais no ensaio e ciclo nativo confirmado. [Comandos e evidência](../testes/comandos.md#acs-07--simulador-de-catraca). |
@@ -371,8 +372,8 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [ACS-07](06-acesso/ACS-07.md) | [API externa fictícia de catraca](../instalacao/catraca-ficticia.md) | MOD-07 | FND-06, GATE-08 | CONCLUIDO |
 | [ACS-03](06-acesso/ACS-03.md) | [Motor de autorização e retorno](../arquitetura/autorizacao-acesso.md) | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | CONCLUIDO |
 | [ACS-04](06-acesso/ACS-04.md) | [Confirmação manual auditada](../arquitetura/confirmacao-manual.md) | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | CONCLUIDO |
-| [ACS-05](06-acesso/ACS-05.md) | Frequência e lotação consistentes | MOD-07 | ACS-03 | PRONTO |
-| [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | BLOQUEADO |
+| [ACS-05](06-acesso/ACS-05.md) | [Frequência e lotação consistentes](../arquitetura/frequencia-lotacao.md) | MOD-07 | ACS-03 | CONCLUIDO |
+| [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | PRONTO |
 
 ## Pós-MVP — complementares
 
@@ -380,7 +381,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [AUL-01](07-complementares/AUL-01.md) | [Agenda de aulas por ocorrências](../arquitetura/agenda.md) | MOD-09 | IAM-03, IAM-04 | CONCLUIDO |
 | [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
-| [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | BLOQUEADO |
+| [DSH-01](07-complementares/DSH-01.md) | Dashboard administrativo base | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | PRONTO |
 
 ## Financeiro tardio
 

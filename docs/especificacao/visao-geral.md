@@ -68,8 +68,9 @@ opcional ao cadastro de clientes. A revisão 0018 entrega as ocorrências da
 agenda. A revisão 0019 entrega planos e matrículas. A revisão 0020 entrega a
 referência facial. A revisão 0021 registra eventos de identificação, a 0022
 adiciona a decisão de acesso e o comando da catraca, e a 0023 registra a
-confirmação manual. O modelo lógico tem 43 tabelas e 344 colunas, incluindo
-quatro tabelas futuras. O físico tem 39 tabelas, 320 colunas e 64 FKs.
+confirmação manual. A revisão 0024 acrescenta a projeção de frequência e lotação.
+O modelo lógico tem 43 tabelas e 345 colunas, incluindo três tabelas futuras.
+O físico tem 40 tabelas, 325 colunas e 67 FKs.
 A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -153,7 +154,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-04 — Exercícios/fichas | [Catálogo](../../docs/arquitetura/catalogo-exercicios.md), [editor manual](../../docs/arquitetura/fichas-manuais.md), [publicação/parecer](../../docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](../../docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
-| MOD-07 — Biometria/acesso | [Referência facial](../../docs/arquitetura/biometria.md) e [identificação](../../docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](../../docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](../../docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](../../docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04 |
+| MOD-07 — Biometria/acesso | [Referência facial](../../docs/arquitetura/biometria.md) e [identificação](../../docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](../../docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](../../docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](../../docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](../../docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05 |
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |

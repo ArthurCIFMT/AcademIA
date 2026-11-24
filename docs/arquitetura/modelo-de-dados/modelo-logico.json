@@ -1978,6 +1978,12 @@
           "ref": null
         },
         {
+          "name": "resultado_presenca",
+          "type": "varchar(24)",
+          "flags": "",
+          "ref": null
+        },
+        {
           "name": "similaridade",
           "type": "double",
           "flags": "",

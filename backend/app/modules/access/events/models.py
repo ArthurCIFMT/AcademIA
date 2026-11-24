@@ -7,8 +7,10 @@ from sqlalchemy import (
     DateTime,
     Float,
     ForeignKey,
+    Index,
     String,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -49,6 +51,26 @@ class AccessEvent(Base):
             )""",
             name="ck_evento_acesso_manual",
         ),
+        CheckConstraint(
+            """resultado_presenca IS NULL OR (
+                tipo = 'PASSAGEM_SIMULADA' AND origem = 'CATRACA_SIMULADA'
+                AND cliente_id IS NOT NULL
+                AND resultado_presenca IN (
+                    'ENTRADA_REGISTRADA', 'SAIDA_REGISTRADA',
+                    'ENTRADA_REPETIDA', 'SAIDA_SEM_ENTRADA'
+                )
+            )""",
+            name="ck_evento_acesso_resultado_presenca",
+        ),
+        Index(
+            "ix_evento_acesso_passagem_cliente",
+            "cliente_id",
+            "ocorrido_em",
+            "id",
+            postgresql_where=text(
+                "tipo = 'PASSAGEM_SIMULADA' AND origem = 'CATRACA_SIMULADA'"
+            ),
+        ),
     )
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
@@ -62,4 +84,5 @@ class AccessEvent(Base):
     payload_hash: Mapped[str] = mapped_column(CHAR(64))
     direcao: Mapped[str] = mapped_column(String(10))
     resultado_identificacao: Mapped[str | None] = mapped_column(String(24))
+    resultado_presenca: Mapped[str | None] = mapped_column(String(24))
     similaridade: Mapped[float | None] = mapped_column(Float)

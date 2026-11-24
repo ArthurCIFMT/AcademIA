@@ -36,7 +36,8 @@ identificação deve ser recente, com janela inicial de 60 segundos.
   já confirmado continua idempotente após a expiração.
 - A passagem confirmada é um evento `PASSAGEM_SIMULADA`, separado de
   `IDENTIFICACAO`, e é gravada atomicamente com CONFIRMADO no comando.
-  A contagem de presença, frequência e lotação tem entrega própria.
+  A mesma transação atualiza a [projeção de frequência e lotação](frequencia-lotacao.md).
+  O limite diário continua contando entradas confirmadas e reservas da autorização.
 
 ## Execução local
 

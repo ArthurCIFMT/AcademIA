@@ -61,6 +61,7 @@ O downgrade remove os vínculos locais. Os exemplos do provedor devem ser tratad
 A revisão `0021` adiciona o registro idempotente de [identificações faciais](../docs/arquitetura/reconhecimento-facial.md). O downgrade remove os eventos dessa tabela.
 A revisão `0022` adiciona a [decisão de acesso e o comando da catraca](../docs/arquitetura/autorizacao-acesso.md).
 A revisão `0023` acrescenta a [confirmação manual de identidade](../docs/arquitetura/confirmacao-manual.md).
+A revisão `0024` cria e preenche a projeção de [frequência e lotação](../docs/arquitetura/frequencia-lotacao.md) a partir das passagens confirmadas. O downgrade preserva os eventos e comandos originais.
 O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.

@@ -8,6 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.contracts.time import academy_date
+from app.modules.access.attendance.service import reconcile_client
 from app.modules.access.authorization.contracts import DecisionReason, DecisionView
 from app.modules.access.authorization.models import AccessDecision, TurnstileCommand
 from app.modules.access.events.models import AccessEvent
@@ -315,4 +316,5 @@ def record_passage(
     command.passagem_evento_id = passed.id
     command.estado = "CONFIRMADO"
     command.falha_envio = None
+    reconcile_client(db, client)
     return True

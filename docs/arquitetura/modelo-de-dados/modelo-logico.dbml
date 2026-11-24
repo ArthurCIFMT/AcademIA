@@ -441,6 +441,7 @@ Table evento_acesso {
   payload_hash char(64) [not null]
   direcao varchar(10) [not null]
   resultado_identificacao varchar(24)
+  resultado_presenca varchar(24)
   similaridade double
   indexes {
     (origem, event_id_externo) [unique]
