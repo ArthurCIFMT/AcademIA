@@ -2,7 +2,14 @@ from datetime import date
 from decimal import Decimal
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, ForeignKey, Index, Numeric, String
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    Index,
+    Numeric,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -57,6 +64,7 @@ class Membership(Base):
                 ELSE false END""",
             name="ck_matricula_limites",
         ),
+        UniqueConstraint("id", "cliente_id", name="uq_matricula_cliente_id"),
         Index("ix_matricula_cliente_periodo", "cliente_id", "inicio", "fim"),
         Index("ix_matricula_plano", "plano_id"),
     )

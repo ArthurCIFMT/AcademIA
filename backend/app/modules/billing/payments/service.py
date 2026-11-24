@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 from app.contracts.time import academy_date
 from app.events.contracts import AuditEvent
 from app.modules.audit.service import record_audit
+from app.modules.billing.charges.service import charge_accepts_payment
 from app.modules.billing.payments.models import Payment
 from app.modules.billing.payments.schemas import (
     CorrectPayment,
@@ -57,6 +58,7 @@ def _views(db: Session, rows: Sequence[Payment]) -> list[PaymentView]:
             {
                 "id": row.id,
                 "cliente_id": row.cliente_id,
+                "cobranca_id": row.cobranca_id,
                 "valor": row.valor,
                 "pago_em": row.pago_em,
                 "metodo": row.metodo,
@@ -157,7 +159,15 @@ def record_payment(
     if data.pago_em > academy_date(now):
         raise PaymentError(422)
     previous = _payment(db, client_id, replaced_id) if replaced_id is not None else None
+    if (
+        previous
+        and data.cobranca_id is not None
+        and data.cobranca_id != previous.cobranca_id
+    ):
+        raise PaymentError(422)
+    charge_id = previous.cobranca_id if previous else data.cobranca_id
     values = {
+        "cobranca_id": charge_id,
         "origem": "MANUAL",
         "cliente_id": client_id,
         "registrado_por_id": actor_id,
@@ -178,6 +188,9 @@ def record_payment(
         ):
             raise PaymentError(409)
         return _views(db, [existing])[0], False
+    if previous is None and charge_id is not None:
+        if not charge_accepts_payment(db, client_id, charge_id):
+            raise PaymentError(422)
     if previous is not None:
         if previous.estado != "CONFIRMADO" or not isinstance(data, CorrectPayment):
             raise PaymentError(409)

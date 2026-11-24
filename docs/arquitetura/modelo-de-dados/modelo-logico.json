@@ -1866,7 +1866,9 @@
           "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        ["id", "cliente_id"]
+      ]
     },
     {
       "name": "biometria",
@@ -2170,7 +2172,7 @@
     {
       "name": "cobranca",
       "owner": "MOD-08",
-      "note": "",
+      "note": "Competência no primeiro dia do mês; matrícula opcional do mesmo cliente; saldo derivado dos pagamentos confirmados.",
       "columns": [
         {
           "name": "id",
@@ -2213,9 +2215,66 @@
           "type": "varchar(25)",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "revisao",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        ["id", "cliente_id"]
+      ]
+    },
+    {
+      "name": "cobranca_revisao",
+      "owner": "MOD-08",
+      "note": "Histórico append-only da cobrança, com autoria e estado gravado em cada revisão.",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "flags": "pk",
+          "ref": null
+        },
+        {
+          "name": "cobranca_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "cobranca.id"
+        },
+        {
+          "name": "revisao",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "autor_id",
+          "type": "uuid",
+          "flags": "required",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "registrado_em",
+          "type": "timestamptz",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "dados",
+          "type": "jsonb",
+          "flags": "required",
+          "ref": null
+        }
+      ],
+      "unique": [
+        [
+          "cobranca_id",
+          "revisao"
+        ]
+      ]
     },
     {
       "name": "pagamento",

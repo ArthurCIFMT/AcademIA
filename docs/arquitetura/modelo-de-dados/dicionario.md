@@ -605,11 +605,25 @@ Uma presença aberta por cliente. Mudanças na lotação derivam de [passagens s
 |---|---|---|---|
 | id | uuid | pk | — |
 | cliente_id | uuid | required | cliente.usuario_id |
-| matricula_id | uuid | opcional | matricula.id |
-| competencia | date | required | — |
-| valor | numeric(12,2) | required | — |
+| matricula_id | uuid | opcional, mesmo cliente | matricula.id |
+| competencia | date | primeiro dia do mês | — |
+| valor | numeric(12,2) | maior ou igual a zero | — |
 | vencimento | date | required | — |
-| estado | varchar(25) | required | — |
+| estado | varchar(25) | ABERTA ou CANCELADA | — |
+| revisao | integer | maior ou igual a um | — |
+
+## cobranca_revisao — MOD-08
+
+Histórico append-only. A combinação de cobrança e número de revisão é única.
+
+| Campo | Tipo | Regras | Referência |
+|---|---|---|---|
+| id | uuid | pk | — |
+| cobranca_id | uuid | required | cobranca.id |
+| revisao | integer | maior ou igual a um | — |
+| autor_id | uuid | required | funcionario.usuario_id |
+| registrado_em | timestamptz | required | — |
+| dados | jsonb | campos da cobrança na revisão | — |
 
 ## pagamento — MOD-08
 
@@ -618,7 +632,7 @@ Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
 | id | uuid | pk | — |
-| cobranca_id | uuid | opcional | cobranca.id |
+| cobranca_id | uuid | opcional, mesmo cliente | cobranca.id |
 | cliente_id | uuid | required | cliente.usuario_id |
 | plano_id | uuid | opcional | plano.id |
 | origem | varchar(25) | required | — |

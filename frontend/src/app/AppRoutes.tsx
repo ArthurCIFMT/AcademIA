@@ -8,6 +8,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { AdminClassSchedule, PublicClassSchedule } from "../features/classes/ClassSchedule";
+import { AdminBilling, ClientBilling } from "../features/billing/Billing";
 import { FacialRecognition } from "../features/biometrics/FacialRecognition";
 import { MembershipsPage, PlansPage } from "../features/memberships/Memberships";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
@@ -94,7 +95,7 @@ function AccessDenied() {
 type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
   | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes" | "admin-plans" | "memberships" | "facial-recognition"
-  | "own-attendance" | "staff-attendance" | "occupancy" | "manual-payments";
+  | "own-attendance" | "staff-attendance" | "occupancy" | "manual-payments" | "admin-billing" | "client-billing";
 
 function AreaContent({ feature, role, session, retrySession }: {
   feature?: Feature; role: Role; session: Session; retrySession: () => Promise<void>;
@@ -118,6 +119,8 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "training-editor": return <WorkoutEditorPage key={userId} csrf={csrf} userId={userId} />;
     case "assessments": return <AssessmentPage key={userId} csrf={csrf} />;
     case "my-assignments": return <MyAssignmentsPage />;
+    case "admin-billing": return <AdminBilling key={userId} clientsPath={paths.adminClients} csrf={csrf} />;
+    case "client-billing": return <ClientBilling key={userId} />;
     case "manual-payments": return <ManualPayments key={userId} back={paths.adminClients} csrf={csrf} />;
     case "own-attendance": return <Attendance key={userId} />;
     case "staff-attendance": return <StaffAttendance key={userId}
@@ -160,7 +163,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: Fe
   const activePath = feature === "assistant" ? paths.clientAssistant
     : feature === "training-review" ? paths.reviews
     : feature === "training-editor" || feature === "assessments" ? paths.assignedClients
-      : feature === "manual-payments" ? paths.adminClients
+      : feature === "manual-payments" || feature === "admin-billing" ? paths.adminClients
       : feature === "staff-attendance" ? (role === "ADMINISTRADOR" ? paths.adminClients : paths.attendantClients)
         : pathname.replace(/\/+$/, "").toLowerCase();
   return (
@@ -209,6 +212,8 @@ export function AppRoutes() {
         <Route path={paths.attendantMemberships} element={<AreaPage requiredRole="ATENDENTE" feature="memberships" />} />
         <Route path={paths.staff} element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
         <Route path={paths.adminClients} element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
+        <Route path={paths.adminClients + "/:clientId/cobrancas"}
+          element={<AreaPage requiredRole="ADMINISTRADOR" feature="admin-billing" />} />
         <Route path={paths.adminClients + "/:clientId/pagamentos"}
           element={<AreaPage requiredRole="ADMINISTRADOR" feature="manual-payments" />} />
         <Route path={paths.attendantClients} element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
@@ -223,6 +228,7 @@ export function AppRoutes() {
         <Route path={paths.clientTraining} element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
         <Route path={paths.clientOnboarding} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
         <Route path={paths.clientClasses} element={<AreaPage requiredRole="CLIENTE" feature="client-classes" />} />
+        <Route path={paths.clientBilling} element={<AreaPage requiredRole="CLIENTE" feature="client-billing" />} />
         <Route path={paths.clientAttendance} element={<AreaPage requiredRole="CLIENTE" feature="own-attendance" />} />
         {(["ATENDENTE", "ADMINISTRADOR"] as const).map(role =>
           <Route key={role} path={clientAttendanceBase(role) + "/:clientId"}

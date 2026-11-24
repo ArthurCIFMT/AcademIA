@@ -154,7 +154,10 @@ export function ClientDirectory({
                       Consultar {item.nome}
                     </Button>
                       {attendanceBase && <Link to={attendanceBase + "/" + encodeURIComponent(item.id)}>Frequência de {item.nome}</Link>}
-                      {paymentsBase && <Link to={paymentsBase + "/" + encodeURIComponent(item.id) + "/pagamentos"}>Pagamentos de {item.nome}</Link>}
+                      {paymentsBase && <>
+                        <Link to={paymentsBase + "/" + encodeURIComponent(item.id) + "/cobrancas"}>Cobranças de {item.nome}</Link>
+                        <Link to={paymentsBase + "/" + encodeURIComponent(item.id) + "/pagamentos"}>Pagamentos de {item.nome}</Link>
+                      </>}
                     </div>
                   </li>
                 ))}

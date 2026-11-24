@@ -87,6 +87,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   No [registro manual](../pagamentos-manuais.md), o valor é positivo, a referência
   é única entre lançamentos confirmados e a correção preserva o registro anterior.
   O vínculo de substituição exige o mesmo cliente.
+  [Cobranças](../cobrancas.md) usam matrícula e pagamentos do mesmo cliente.
+  Cada edição preserva uma revisão com autoria. O saldo considera pagamentos
+  confirmados com data registrada. A inadimplência acadêmica é informativa.
 - Aulas: `fim > inicio`, estado AGENDADA ou CANCELADA e revisão positiva.
   Cancelar preserva o registro administrativo e retira a ocorrência da agenda pública.
   [Contrato da agenda](../agenda.md).

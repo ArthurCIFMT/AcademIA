@@ -6,11 +6,9 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
 
 from app.contracts.time import UtcTimestamp
+from app.modules.billing.money import Amount
 
 Method = Literal["PIX", "DINHEIRO", "CARTAO", "TRANSFERENCIA", "OUTRO"]
-Amount = Annotated[
-    str, StringConstraints(pattern=r"^(0|[1-9][0-9]{0,9})(\.[0-9]{1,2})?$")
-]
 Reference = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=150)
 ]
@@ -24,6 +22,7 @@ class RegisterPayment(BaseModel):
     pago_em: date
     metodo: Method
     referencia_externa: Reference
+    cobranca_id: UUID | None = None
 
     @field_validator("valor")
     @classmethod
@@ -50,6 +49,7 @@ class PaymentView(BaseModel):
 
     id: UUID
     cliente_id: UUID
+    cobranca_id: UUID | None
     valor: Decimal = Field(gt=0)
     pago_em: date
     metodo: Method

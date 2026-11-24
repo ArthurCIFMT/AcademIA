@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { ApiError } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { charge, type Charge } from "../billing/api";
+import { money, monthLabel } from "../billing/format";
 import { DirectoryPager, DirectoryTag, useDirectoryFocus } from "../clients/directory-ui";
 import { listPayments, methods, postPayment, type ManualPayment, type PaymentPage } from "./api";
 
@@ -16,8 +18,9 @@ const dates = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }
 const civil = (iso: string) => iso.split("-").reverse().join("/");
 const titles = { register: "Novo registro", correct: "Corrigir pagamento", void: "Anular registro" } as const;
 
-function PaymentForm({ draft, clientId, csrf, close, saved }: {
+function PaymentForm({ draft, clientId, csrf, close, saved, chargeId }: {
   draft: Draft; clientId: string; csrf: string; close: () => void; saved: (message: string) => void;
+  chargeId?: string;
 }) {
   const [requestId, setRequestId] = useState(() => crypto.randomUUID());
   const [busy, setBusy] = useState(false);
@@ -42,7 +45,7 @@ function PaymentForm({ draft, clientId, csrf, close, saved }: {
         const payment = {
           solicitacao_id: requestId, valor: read("valor").replace(",", "."),
           metodo: read("metodo"), referencia_externa: read("referencia_externa"),
-          pago_em: read("pago_em"),
+          pago_em: read("pago_em"), cobranca_id: chargeId,
         };
         if (draft.kind === "correct") {
           await postPayment(clientId, "/" + draft.row.id + "/correcao", { ...payment, motivo }, csrf);
@@ -111,6 +114,7 @@ function PaymentCard({ row, edit }: { row: ManualPayment; edit: (draft: Draft) =
     <p>Pago em <time dateTime={row.pago_em}>{civil(row.pago_em)}</time> · Referência {row.referencia_externa}</p>
     <p className="directory-meta">Registro de {row.registrado_por_nome ?? "funcionário"} em{" "}
       <time dateTime={row.confirmado_em}>{time.format(new Date(row.confirmado_em))}</time>.</p>
+    {row.cobranca_id && <p className="directory-meta">Vinculado a uma cobrança.</p>}
     {row.substitui_id && <p>Correção de um registro anterior.</p>}
     {row.anulado_em && <p>Anulação por {row.anulado_por_nome ?? "funcionário"} em{" "}
       <time dateTime={row.anulado_em}>{time.format(new Date(row.anulado_em))}</time>. {row.motivo_anulacao}</p>}
@@ -169,8 +173,44 @@ function PaymentHistory({ clientId, back, csrf }: { clientId: string; back: stri
   </section>;
 }
 
+function LinkedPayment({ clientId, chargeId, back, csrf }: {
+  clientId: string; chargeId: string; back: string; csrf: string;
+}) {
+  const [item, setItem] = useState<Charge | null>();
+  const [notice, setNotice] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    void charge(clientId, chargeId, controller.signal).then(
+      data => { if (!controller.signal.aborted) setItem(data); },
+      () => { if (!controller.signal.aborted) setItem(null); },
+    );
+    return () => controller.abort();
+  }, [clientId, chargeId]);
+  const backToCharges = back + "/" + encodeURIComponent(clientId) + "/cobrancas";
+
+  return <section className="directory" aria-labelledby="linked-payment-title">
+    <h2 id="linked-payment-title">Pagamento da cobrança</h2>
+    <Link to={backToCharges}>Voltar às cobranças</Link>
+    {notice ? <StatusMessage state="success" title={notice} />
+      : item === undefined ? <StatusMessage state="loading" title="Consultando cobrança…" />
+      : item === null ? <StatusMessage state="error" title="Cobrança indisponível para este cliente." />
+      : item.situacao === "CANCELADA" || item.situacao === "QUITADA"
+        ? <StatusMessage state="empty" title="A cobrança não possui saldo em aberto." />
+        : <>
+          <p>Competência {monthLabel(item.competencia)} · Saldo {money(item.saldo)}</p>
+          <PaymentForm draft={{ kind: "register" }} clientId={clientId} csrf={csrf} chargeId={item.id}
+            close={() => setNotice("Registro cancelado.")} saved={setNotice} />
+        </>}
+  </section>;
+}
+
 export function ManualPayments({ back, csrf }: { back: string; csrf: string }) {
   const { clientId } = useParams();
+  const [params] = useSearchParams();
+  const chargeId = params.get("cobranca");
   if (!clientId) return <StatusMessage state="error" title="Cliente indisponível." />;
+  if (chargeId) return <LinkedPayment key={clientId + "/" + chargeId}
+    clientId={clientId} chargeId={chargeId} back={back} csrf={csrf} />;
   return <PaymentHistory key={clientId} clientId={clientId} back={back} csrf={csrf} />;
 }

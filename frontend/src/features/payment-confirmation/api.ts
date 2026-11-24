@@ -21,6 +21,7 @@ export type ManualPayment = PaymentFields & {
   confirmado_em: string;
   registrado_por_nome: string | null;
   substitui_id: string | null;
+  cobranca_id?: string | null;
   anulado_em: string | null;
   anulado_por_nome: string | null;
   motivo_anulacao: string | null;

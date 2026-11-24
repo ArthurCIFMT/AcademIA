@@ -417,6 +417,9 @@ Table matricula {
   estado varchar(20) [not null]
   modalidade_contratada varchar(80) [not null]
   limites_snapshot jsonb [not null]
+  indexes {
+    (id, cliente_id) [unique]
+  }
   Note: 'Owner MOD-08. Fim civil inclusive no fuso da academia; sem FK obrigatória para pagamento'
 }
 
@@ -494,6 +497,24 @@ Table cobranca {
   valor numeric(12,2) [not null]
   vencimento date [not null]
   estado varchar(25) [not null]
+  revisao integer [not null]
+  indexes {
+    (id, cliente_id) [unique]
+  }
+  Note: 'Competência no primeiro dia do mês; matrícula opcional do mesmo cliente; saldo derivado dos pagamentos confirmados.'
+}
+
+Table cobranca_revisao {
+  id uuid [pk]
+  cobranca_id uuid [not null]
+  revisao integer [not null]
+  autor_id uuid [not null]
+  registrado_em timestamptz [not null]
+  dados jsonb [not null]
+  indexes {
+    (cobranca_id, revisao) [unique]
+  }
+  Note: 'Histórico append-only da cobrança, com autoria e estado gravado em cada revisão.'
 }
 
 Table pagamento {
@@ -634,7 +655,11 @@ Ref: presenca.entrada_evento_id > evento_acesso.id
 Ref: presenca.saida_evento_id > evento_acesso.id
 Ref: cobranca.cliente_id > cliente.usuario_id
 Ref: cobranca.matricula_id > matricula.id
+Ref: cobranca.(matricula_id, cliente_id) > matricula.(id, cliente_id)
+Ref: cobranca_revisao.cobranca_id > cobranca.id
+Ref: cobranca_revisao.autor_id > funcionario.usuario_id
 Ref: pagamento.cobranca_id > cobranca.id
+Ref: pagamento.(cobranca_id, cliente_id) > cobranca.(id, cliente_id)
 Ref: pagamento.cliente_id > cliente.usuario_id
 Ref: pagamento.plano_id > plano.id
 Ref: pagamento.registrado_por_id > funcionario.usuario_id

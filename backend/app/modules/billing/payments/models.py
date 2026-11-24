@@ -52,11 +52,18 @@ class Payment(Base):
             ["academia.pagamento.id", "academia.pagamento.cliente_id"],
             name="fk_pagamento_substituido_cliente",
         ),
+        ForeignKeyConstraint(
+            ["cobranca_id", "cliente_id"],
+            ["academia.cobranca.id", "academia.cobranca.cliente_id"],
+            name="fk_pagamento_cobranca_cliente",
+        ),
         Index("ix_pagamento_cliente", "cliente_id"),
+        Index("ix_pagamento_cobranca", "cobranca_id"),
     )
 
     id: Mapped[UUID] = mapped_column(primary_key=True)
     cliente_id: Mapped[UUID] = mapped_column(ForeignKey("academia.cliente.usuario_id"))
+    cobranca_id: Mapped[UUID | None]
     plano_id: Mapped[UUID | None] = mapped_column(ForeignKey("academia.plano.id"))
     origem: Mapped[str] = mapped_column(String(25))
     referencia_externa: Mapped[str | None] = mapped_column(String(150))

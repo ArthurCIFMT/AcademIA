@@ -63,6 +63,7 @@ A revisão `0022` adiciona a [decisão de acesso e o comando da catraca](../docs
 A revisão `0023` acrescenta a [confirmação manual de identidade](../docs/arquitetura/confirmacao-manual.md).
 A revisão `0024` cria e preenche a projeção de [frequência e lotação](../docs/arquitetura/frequencia-lotacao.md) a partir das passagens confirmadas. O downgrade preserva os eventos e comandos originais.
 A revisão `0025` acrescenta a tabela de [pagamentos manuais](../docs/arquitetura/pagamentos-manuais.md), com auditoria e cadeia de correções. Seu downgrade remove a tabela de pagamentos.
+A revisão `0026` cria [cobranças e revisões](../docs/arquitetura/cobrancas.md), incluindo o vínculo opcional com pagamentos. O downgrade remove cobranças, revisões e vínculos, preservando os lançamentos de pagamento.
 O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.

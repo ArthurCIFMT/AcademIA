@@ -16,6 +16,7 @@ export const paths = {
   publicClasses: "/aulas",
   clientClasses: "/area/cliente/aulas",
   clientAttendance: "/area/cliente/frequencia",
+  clientBilling: "/area/cliente/cobrancas",
   assignedClients: "/area/instrutor/clientes",
   reviews: "/area/instrutor/revisoes",
   instructorExercises: "/area/instrutor/exercicios",
@@ -42,6 +43,7 @@ const tasks: Record<Role, MenuItem[]> = {
   CLIENTE: [
     { path: paths.clientTraining, label: "Meus treinos" },
     { path: paths.clientAttendance, label: "Minha frequência" },
+    { path: paths.clientBilling, label: "Minhas cobranças" },
     { path: paths.clientAssistant, label: "Assistente" },
     { path: paths.clientOnboarding, label: "Meus dados de treino" },
     { path: paths.equipmentCatalog, label: "Equipamentos disponíveis" },

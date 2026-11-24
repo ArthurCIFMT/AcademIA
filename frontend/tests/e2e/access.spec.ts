@@ -143,6 +143,34 @@ test("cliente móvel, atendente e administrador conferem matrícula, passagem e 
     await admin.getByLabel("Motivo", { exact: true }).fill("Anulação de teste.");
     await admin.getByRole("button", { name: "Confirmar anulação" }).click();
     await expect(admin.getByText("Anulado", { exact: true })).toHaveCount(2);
+
+    await menu(admin, "Gerenciar clientes");
+    await admin.getByRole("link", { name: "Cobranças de " + name, exact: true }).click();
+    await admin.getByRole("button", { name: "Nova cobrança" }).click();
+    await admin.getByLabel("Competência", { exact: true }).fill(today.slice(0, 7));
+    await admin.getByLabel("Vencimento", { exact: true }).fill(today);
+    await admin.getByLabel("Valor em reais", { exact: true }).fill("95,50");
+    const membership = admin.getByRole("combobox", { name: /Matrícula vinculada/ });
+    await expect(membership.getByRole("option", { name: /Musculação/ })).toBeAttached();
+    await membership.selectOption({ index: 1 });
+    await admin.getByRole("button", { name: "Salvar cobrança" }).click();
+    await expect(admin.getByText("Cobrança salva.", { exact: true })).toBeVisible();
+
+    await client.goto("/area/cliente");
+    await expect(client.getByRole("heading", { name: "Área do cliente" })).toBeVisible();
+    await menu(client, "Minhas cobranças");
+    await expect(client.getByText("Em aberto", { exact: true })).toBeVisible();
+    await expect(client.getByRole("button", { name: "Editar" })).toHaveCount(0);
+    await admin.getByRole("link", { name: "Registrar pagamento", exact: true }).click();
+    await admin.getByLabel("Valor em reais", { exact: true }).fill("95,50");
+    await admin.getByRole("combobox", { name: "Forma de pagamento" }).selectOption("PIX");
+    await admin.getByLabel("Referência do comprovante", { exact: true }).fill("FIN01-EXEMPLO-EDGE");
+    await admin.getByRole("button", { name: "Salvar registro" }).click();
+    await expect(admin.getByText("Pagamento registrado.", { exact: true })).toBeVisible();
+    await admin.getByRole("link", { name: "Voltar às cobranças", exact: true }).click();
+    await expect(admin.getByText("Quitada", { exact: true })).toBeVisible();
+    await client.reload();
+    await expect(client.getByText("Quitada", { exact: true })).toBeVisible();
   } finally {
     await simulator.dispose();
     await Promise.all([adminContext.close(), staffContext.close(), clientContext.close()]);

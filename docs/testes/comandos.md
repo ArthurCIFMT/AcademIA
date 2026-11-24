@@ -1896,3 +1896,30 @@ catraca fictícia. A transação de teste foi revertida. A migration 0025 foi ap
 banco local com os totais anteriores preservados. O iniciador passou nos 16 testes
 e no ciclo completo de abertura e encerramento.
 [Contrato do registro manual](../arquitetura/pagamentos-manuais.md)
+
+## FIN-01 — Cobranças e consulta financeira
+
+No `backend/`, com PostgreSQL local de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/billing tests/access tests/memberships tests/dashboard tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+Passaram 98 testes de backend. Os cenários cobriram vínculo à matrícula do mesmo
+cliente, valores e datas inválidos, CSRF e papéis, consulta própria, revisões,
+cancelamento e reabertura, saldo parcial, quitação, anulação e correção de
+pagamento. Tentativas pendentes ou recusadas e confirmações sem data ficaram
+fora do saldo. A regressão de matrícula passou com cobrança vencida presente.
+O downgrade/upgrade preservou pagamentos anteriores. Dois ensaios opcionais
+do CompreFace ficaram fora dessa rodada.
+
+Na pasta `frontend/`, `node node_modules/vitest/vitest.mjs run --maxWorkers=1`
+aprovou 153 testes. Ruff, mypy, ESLint, TypeScript e build passaram. A jornada
+do ACS-06, executada separadamente no Edge, mostrou uma cobrança em aberto no
+celular do cliente e sua quitação após um pagamento manual vinculado pelo
+administrador. A transação de teste foi revertida.
+
+A migração 0026 foi aplicada ao banco local e os totais anteriores foram
+preservados. O iniciador passou nos 16 testes e no ciclo real de abertura e
+encerramento. [Contrato de cobranças](../arquitetura/cobrancas.md)

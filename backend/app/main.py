@@ -25,6 +25,7 @@ from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
 from app.modules.assignments.http import install_assignments
+from app.modules.billing.charges.http import charges_router
 from app.modules.billing.payments.http import manual_payments_router
 from app.modules.classes.http import classes_router
 from app.modules.dashboard.http import dashboard_router
@@ -87,6 +88,9 @@ def create_app(
     app.include_router(classes_router(get_sessions))
     app.include_router(memberships_router(get_sessions))
     app.include_router(manual_payments_router(get_sessions))
+    app.include_router(
+        charges_router(get_sessions, policy=settings.billing_overdue_policy)
+    )
     if biometrics_provider is None:
         try:
             face_settings = CompreFaceSettings()

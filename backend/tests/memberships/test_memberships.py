@@ -144,7 +144,7 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
     connection, config = migration
     command.upgrade(config, "0024" if financial_state is None else "head")
     tables = inspect(connection).get_table_names(schema="academia")
-    assert "cobranca" not in tables
+    assert ("cobranca" in tables) == (financial_state is not None)
     assert ("pagamento" in tables) == (financial_state is not None)
     sessions = create_session_factory(connection)
     password = Passwords().hash(_PASSWORD)
@@ -223,16 +223,31 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
         assert plan.status_code == 201, plan.text
         plan_url = _PLANS + "/" + plan.json()["id"]
         if financial_state is not None:
+            charge_id = uuid4()
+            connection.execute(
+                text("""
+                    INSERT INTO academia.cobranca (
+                        id, cliente_id, competencia, vencimento, valor, estado, revisao
+                    ) VALUES (:id, :client, :month, :due, 10.00, 'ABERTA', 1)
+                """),
+                {
+                    "id": charge_id,
+                    "client": client_id,
+                    "month": today.replace(day=1),
+                    "due": today - timedelta(days=1),
+                },
+            )
             connection.execute(
                 text("""
                     INSERT INTO academia.pagamento
-                        (id, cliente_id, plano_id, origem, estado, valor)
-                    VALUES (:id, :client, :plan, 'ENSAIO', :state, 10.00)
+                        (id, cliente_id, plano_id, cobranca_id, origem, estado, valor)
+                    VALUES (:id, :client, :plan, :charge, 'ENSAIO', :state, 10.00)
                 """),
                 {
                     "id": uuid4(),
                     "client": client_id,
                     "plan": UUID(plan.json()["id"]),
+                    "charge": charge_id,
                     "state": financial_state,
                 },
             )

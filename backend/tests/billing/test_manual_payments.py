@@ -252,6 +252,7 @@ def test_payment_migration_roundtrip_and_invalid_manual_data(
     assert not inspect(migration).has_table("pagamento", schema="academia")
     command.upgrade(config, "0025")
     assert inspect(migration).has_table("pagamento", schema="academia")
+    command.upgrade(config, "head")
     with sessions.begin() as db:
         assert db.get(ClientProfile, ids["cliente"]) is not None
         with pytest.raises(IntegrityError), db.begin_nested():

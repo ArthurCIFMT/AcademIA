@@ -48,6 +48,23 @@ def membership_situation(
     return "VIGENTE"
 
 
+def membership_belongs_to_client(
+    db: Session, membership_id: UUID, client_id: UUID
+) -> bool:
+    return bool(
+        db.scalar(
+            select(
+                select(Membership.id)
+                .where(
+                    Membership.id == membership_id,
+                    Membership.cliente_id == client_id,
+                )
+                .exists()
+            )
+        )
+    )
+
+
 def has_registered_membership(db: Session, client_id: UUID) -> bool:
     """Consulta o vínculo cadastrado, independentemente da vigência de entrada."""
     return bool(

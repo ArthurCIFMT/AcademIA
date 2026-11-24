@@ -70,8 +70,9 @@ referência facial. A revisão 0021 registra eventos de identificação, a 0022
 adiciona a decisão de acesso e o comando da catraca, e a 0023 registra a
 confirmação manual. A revisão 0024 acrescenta a projeção de frequência e lotação.
 A revisão 0025 acrescenta pagamentos manuais e seu histórico de correções.
-O modelo lógico tem 43 tabelas e 352 colunas, incluindo duas tabelas futuras.
-O físico tem 41 tabelas, 340 colunas e 72 FKs.
+A revisão 0026 acrescenta cobranças, revisões e vínculo opcional com pagamento.
+O modelo lógico tem 44 tabelas e 359 colunas, incluindo uma tabela futura.
+O físico tem 43 tabelas, 355 colunas e 77 FKs.
 A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -156,7 +157,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [Referência facial](../../docs/arquitetura/biometria.md) e [identificação](../../docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](../../docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](../../docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](../../docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](../../docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05. ACS-06 entrega as consultas protegidas, telas de frequência e lotação e autorização na tela de reconhecimento |
-| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. [Pagamento manual opcional](../../docs/arquitetura/pagamentos-manuais.md) entregue pelo MEM-00. Cobrança e gateway têm etapas próprias |
+| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. [Pagamento manual opcional](../../docs/arquitetura/pagamentos-manuais.md) entregue pelo MEM-00. [Cobranças e consulta financeira](../../docs/arquitetura/cobrancas.md) entregues pelo FIN-01. Gateway em FIN-02 |
 | MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |
 | MOD-11 — Indicadores | [Painel administrativo](../../docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |

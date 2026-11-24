@@ -45,7 +45,7 @@ Registro e substituição usam `solicitacao_id`, `valor`, `pago_em`, `metodo` e
 cliente na rota de ajuste retornam HTTP 404. Duplicidade e estado incompatível
 retornam HTTP 409, e dados inválidos retornam HTTP 422.
 
-A migration `0025` cria a base `pagamento`. O relacionamento opcional com
-`cobranca` está planejado para a fase de cobranças. Pagamentos mantêm seu
-próprio histórico. Matrícula, renovação e acesso continuam independentes da
-confirmação financeira.
+A migration `0025` cria a base `pagamento`. O FIN-01 acrescenta o vínculo
+opcional `cobranca_id` com a [cobrança](cobrancas.md) do mesmo cliente. A
+correção preserva o vínculo. Matrícula, renovação e acesso continuam
+independentes da confirmação financeira.
