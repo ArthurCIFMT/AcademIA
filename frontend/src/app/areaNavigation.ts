@@ -15,6 +15,7 @@ export const paths = {
   equipmentCatalog: "/equipamentos",
   publicClasses: "/aulas",
   clientClasses: "/area/cliente/aulas",
+  clientAttendance: "/area/cliente/frequencia",
   assignedClients: "/area/instrutor/clientes",
   reviews: "/area/instrutor/revisoes",
   instructorExercises: "/area/instrutor/exercicios",
@@ -31,11 +32,16 @@ export const paths = {
   corpus: "/tecnico/corpus",
 };
 
+export const occupancyPath = (role: Role) => areas[role].path + "/lotacao";
+export const clientAttendanceBase = (role: "ATENDENTE" | "ADMINISTRADOR") =>
+  areas[role].path + "/clientes/frequencia";
+
 type MenuItem = { path: string; label: string };
 
 const tasks: Record<Role, MenuItem[]> = {
   CLIENTE: [
     { path: paths.clientTraining, label: "Meus treinos" },
+    { path: paths.clientAttendance, label: "Minha frequência" },
     { path: paths.clientAssistant, label: "Assistente" },
     { path: paths.clientOnboarding, label: "Meus dados de treino" },
     { path: paths.equipmentCatalog, label: "Equipamentos disponíveis" },
@@ -63,7 +69,8 @@ const tasks: Record<Role, MenuItem[]> = {
 };
 
 export function areaMenu(role: Role, maintenance: boolean) {
-  const items = [{ path: areas[role].path, label: "Início da área" }, ...tasks[role]];
+  const items = [{ path: areas[role].path, label: "Início da área" }, ...tasks[role],
+    { path: occupancyPath(role), label: "Lotação atual" }];
   if (role === "ADMINISTRADOR" && maintenance) {
     items.push({ path: paths.corpus, label: "Curadoria técnica do RAG" });
   }

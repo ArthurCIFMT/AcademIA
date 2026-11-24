@@ -172,7 +172,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-04 — Exercícios/fichas | [Catálogo](docs/arquitetura/catalogo-exercicios.md), [editor manual](docs/arquitetura/fichas-manuais.md), [publicação/parecer](docs/arquitetura/publicacao-e-parecer.md) e [consulta/exportação](docs/arquitetura/ficha-do-cliente.md) | Fluxo manual e [publicação de geração IA](docs/arquitetura/geracao-persistente.md) entregues; [interface de solicitação/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue |
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
-| MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05 |
+| MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05. ACS-06 entrega as consultas protegidas, telas de frequência e lotação e autorização na tela de reconhecimento |
 | MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
@@ -12950,7 +12950,9 @@ Fonte versionada: [docs/arquitetura/autorizacao-acesso.md](docs/arquitetura/auto
 
 O motor consome o identificador interno de uma tentativa de reconhecimento
 gravada por ACS-02. A sessão de atendente e o CSRF protegem a operação.
-O cliente e a direção vêm da identificação persistida. O [ACS-04](docs/arquitetura/confirmacao-manual.md)
+O cliente e a direção vêm da identificação persistida. Na tela de reconhecimento,
+o atendente solicita a autorização após a identificação positiva e acompanha o
+[estado da passagem](docs/arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). O [ACS-04](docs/arquitetura/confirmacao-manual.md)
 vincula uma confirmação manual auditada à falha facial e usa o mesmo motor.
 
 | Operação | Contrato |
@@ -13070,12 +13072,33 @@ a meia-noite. A ausência de uma saída confirmada mantém a visita aberta.
 O PostgreSQL impede mais de uma presença aberta por cliente. O identificador
 da presença é o evento de entrada e permanece estável ao associar a saída.
 
-O MOD-07 fornece consultas internas tipadas de lotação e frequência.
-O histórico seleciona visitas pela hora da entrada, em intervalo inclusivo no
-início e exclusivo no fim, e retorna início, eventual saída e total paginado.
-A ordem é da entrada mais recente para a mais antiga, com desempate pelo UUID.
-ACS-06 define as rotas e telas de frequência, e DSH-01 consome os indicadores
-no painel administrativo.
+#### Consultas e telas — ACS-06
+
+| Consulta autenticada | Permissão e retorno |
+|---|---|
+| `GET /api/v1/acesso/lotacao` | Qualquer perfil autenticado. Retorna somente `total_presentes`. |
+| `GET /api/v1/cliente/frequencia` | Perfil de cliente. O sistema deriva a identidade da sessão. |
+| `GET /api/v1/clientes/{client_id}/frequencia` | Administrador ou atendente. A consulta aceita cadastro existente, inclusive inativo para preservar o histórico. |
+
+As respostas têm `Cache-Control: no-store`. O histórico contém nome do cliente,
+datas do recorte, paginação, total e a lista de visitas com ID, entrada e eventual
+saída em ISO 8601 UTC. O parâmetro `de` e o parâmetro `ate` são datas civis
+inclusivas em São Paulo, com seleção pela data de entrada. Sem parâmetros de data,
+a API consulta os últimos 30 dias, incluindo hoje. A ordem é decrescente pela
+entrada e pelo ID. A página começa em 1, e o limite padrão é 20, com máximo de 100.
+O estado sem visitas retorna lista vazia e total zero.
+
+No menu da área, **Lotação atual** mostra o total e permite nova consulta por
+**Atualizar lotação**. **Minha frequência** abre o histórico do próprio cliente.
+Atendente e administrador usam o link **Frequência de …** na lista de clientes.
+O backend valida cada consulta. Exibição dos horários da academia, filtros,
+estado vazio e paginação usam a mesma interface em desktop e celular.
+
+Na área de atendimento, após **Cliente identificado**, o botão **Solicitar autorização**
+chama o motor existente. **Consultar passagem** atualiza o estado do comando. Após
+a confirmação externa pela catraca fictícia, uma nova consulta ao histórico e à lotação
+reflete o evento. A interface conserva o fluxo auditado de identificação manual.
+DSH-01 consome indicadores no painel administrativo.
 
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis
@@ -14292,7 +14315,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [ACS-03](docs/prompts/06-acesso/ACS-03.md) | [Motor de autorização e retorno](docs/arquitetura/autorizacao-acesso.md) | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | CONCLUIDO |
 | [ACS-04](docs/prompts/06-acesso/ACS-04.md) | [Confirmação manual auditada](docs/arquitetura/confirmacao-manual.md) | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | CONCLUIDO |
 | [ACS-05](docs/prompts/06-acesso/ACS-05.md) | [Frequência e lotação consistentes](docs/arquitetura/frequencia-lotacao.md) | MOD-07 | ACS-03 | CONCLUIDO |
-| [ACS-06](docs/prompts/06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | PRONTO |
+| [ACS-06](docs/prompts/06-acesso/ACS-06.md) | [Interfaces de acesso, frequência e lotação](docs/arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06) | MOD-07 | ACS-05, IAM-04 | CONCLUIDO |
 
 #### Pós-MVP — complementares
 
@@ -19854,7 +19877,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/agenda.md` | `d0e60a63783476b414eb495fbdb9d17b9d6c6e4a29606423e5a6bcd8a3ceb883` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
-| `docs/arquitetura/autorizacao-acesso.md` | `96d1802a88093f0657b2555608a66b2ce794b52fe160b82c989aecd94b9e30b0` |
+| `docs/arquitetura/autorizacao-acesso.md` | `941024e9506a7a88989341df936c1f58ff8ec7d09d0e0cbdb85d7bd1de7bd40f` |
 | `docs/arquitetura/autorizacao.md` | `0d2c30f9bad725e0506c2df986dc44c1bd704bae63d3facd71f3bda1e9db2b01` |
 | `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
 | `docs/arquitetura/biometria.md` | `09ef5cf736b910697ff74d98b128b2805cbe411805e529923f6d433efdd355ac` |
@@ -19883,7 +19906,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
 | `docs/arquitetura/fluxos-atualizados.md` | `b9db082e9613771d2092eb8a2d87002f67d5c4a7f82abf76e0a20efd059bc5c8` |
-| `docs/arquitetura/frequencia-lotacao.md` | `37182d4d4287eb94e931ce45a4e03edf6a4b41c65d606d4475f627b85cc08300` |
+| `docs/arquitetura/frequencia-lotacao.md` | `b4a1629608263d02668d2cc6de46a61d479c21c41cc821ca7a22f258fbf40e4d` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
@@ -19907,7 +19930,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
 | `docs/especificacao/compilacao-spec.json` | `bf489254fab5e3a934dd0c1578c18718b7c915c1166e2379b7206509a5f522ba` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `db5f97a2bfd8b6ea3df60dc0cffcc184260e3b7ad01d6d4e6882c85d0d12665a` |
+| `docs/especificacao/visao-geral.md` | `a081387c1abfdf16a31658f0b69db176dcb35c0604669db3f7f1b71dd3a7d38f` |
 | `docs/instalacao/catraca-ficticia.md` | `b432d1a97d369a25802f23e4bb91ab107d384ce6ed739296d30946d253d8fa9b` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `1cdffb0e3d72d5a807f1e30acf2477240ff21c59419a03ea67a4d844e0c44e68` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
@@ -19921,7 +19944,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `93a44ecb4c63f0c7310324a7e60a770ec26ea8db3cd21a21649a979cf4c665ff` |
+| `docs/prompts/README.md` | `caeca67cbfefd9ce94d1ccd8127ed5b7a44efd00e2cdafb701679cf3ee41be6b` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |

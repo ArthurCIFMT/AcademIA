@@ -20,6 +20,7 @@ from app.modules.access.events.contracts import AccessEventsSettings
 from app.modules.access.events.http import identification_router
 from app.modules.access.integrations.turnstile.contracts import AccessSettings
 from app.modules.access.manual.http import manual_access_router
+from app.modules.access.queries.http import access_queries_router
 from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
@@ -110,6 +111,7 @@ def create_app(
         )
     app.include_router(authorization_router(get_sessions, access_settings))
     app.include_router(manual_access_router(get_sessions, access_settings))
+    app.include_router(access_queries_router(get_sessions))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

@@ -1809,3 +1809,36 @@ Ruff, mypy e **16 testes do iniciador** passaram. Com a migration 0024 aplicada
 ao banco local e os totais anteriores de cadastros e eventos preservados, o
 iniciador respondeu no site, na API e na catraca fictícia e encerrou seus
 serviços normalmente. [Contrato de frequência e lotação](../arquitetura/frequencia-lotacao.md)
+
+## ACS-06 — Interface de frequência e lotação
+
+Na pasta `backend/`, com o PostgreSQL local de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+$env:ACADEMIA_E2E_ACCESS = '1'
+uv run --locked --env-file ../.env pytest -o addopts= -s tests/access/test_browser_access.py
+Remove-Item Env:ACADEMIA_E2E_ACCESS
+```
+
+O cenário ACS-06 usa Edge (canal `msedge`), três sessões independentes,
+API, PostgreSQL e simulador de catraca em HTTP. A referência e o resultado da
+biometria são sintéticos. O administrador cria um plano e consulta a frequência;
+o atendente matricula, solicita a autorização e consulta a passagem; o cliente
+acompanha frequência e lotação na largura de 375 px. A lotação segue 0 → 1 → 0
+após entrada e saída confirmadas, e repetir a entrada mantém uma única visita.
+Uma tentativa de consulta alheia pelo cliente é recusada. Os dados usam a
+transação do teste, com rollback ao final.
+
+Foram executadas as oito jornadas da [regressão de navegador](aceitacao-mvp.md)
+no Edge 158.0.4370.33, com revisão 0024 e rollback confirmado. Primeiro acesso
+via Mailpit, onboarding, ficha manual, avaliação, publicação/adaptação e
+recuperação de senha passaram. IA, embeddings e corpus usaram fixtures, sem
+chamadas a provedores reais. O ensaio de acesso não valida reconhecimento
+facial de pessoas pelo CompreFace.
+
+Passaram 81 testes de backend e 137 de frontend. Dois ensaios reais do
+CompreFace ficaram fora da rodada. O teste Edge foi executado separadamente,
+com um cenário aprovado. Ruff, mypy, ESLint, TypeScript e build passaram.
+Os 16 testes do iniciador e o ciclo completo de abertura/encerramento passaram
+com o banco local na revisão 0024.

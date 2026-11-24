@@ -25,12 +25,33 @@ a meia-noite. A ausência de uma saída confirmada mantém a visita aberta.
 O PostgreSQL impede mais de uma presença aberta por cliente. O identificador
 da presença é o evento de entrada e permanece estável ao associar a saída.
 
-O MOD-07 fornece consultas internas tipadas de lotação e frequência.
-O histórico seleciona visitas pela hora da entrada, em intervalo inclusivo no
-início e exclusivo no fim, e retorna início, eventual saída e total paginado.
-A ordem é da entrada mais recente para a mais antiga, com desempate pelo UUID.
-ACS-06 define as rotas e telas de frequência, e DSH-01 consome os indicadores
-no painel administrativo.
+## Consultas e telas — ACS-06
+
+| Consulta autenticada | Permissão e retorno |
+|---|---|
+| `GET /api/v1/acesso/lotacao` | Qualquer perfil autenticado. Retorna somente `total_presentes`. |
+| `GET /api/v1/cliente/frequencia` | Perfil de cliente. O sistema deriva a identidade da sessão. |
+| `GET /api/v1/clientes/{client_id}/frequencia` | Administrador ou atendente. A consulta aceita cadastro existente, inclusive inativo para preservar o histórico. |
+
+As respostas têm `Cache-Control: no-store`. O histórico contém nome do cliente,
+datas do recorte, paginação, total e a lista de visitas com ID, entrada e eventual
+saída em ISO 8601 UTC. O parâmetro `de` e o parâmetro `ate` são datas civis
+inclusivas em São Paulo, com seleção pela data de entrada. Sem parâmetros de data,
+a API consulta os últimos 30 dias, incluindo hoje. A ordem é decrescente pela
+entrada e pelo ID. A página começa em 1, e o limite padrão é 20, com máximo de 100.
+O estado sem visitas retorna lista vazia e total zero.
+
+No menu da área, **Lotação atual** mostra o total e permite nova consulta por
+**Atualizar lotação**. **Minha frequência** abre o histórico do próprio cliente.
+Atendente e administrador usam o link **Frequência de …** na lista de clientes.
+O backend valida cada consulta. Exibição dos horários da academia, filtros,
+estado vazio e paginação usam a mesma interface em desktop e celular.
+
+Na área de atendimento, após **Cliente identificado**, o botão **Solicitar autorização**
+chama o motor existente. **Consultar passagem** atualiza o estado do comando. Após
+a confirmação externa pela catraca fictícia, uma nova consulta ao histórico e à lotação
+reflete o evento. A interface conserva o fluxo auditado de identificação manual.
+DSH-01 consome indicadores no painel administrativo.
 
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis

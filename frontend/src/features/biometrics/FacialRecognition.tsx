@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "r
 
 import { ApiError, requestApi } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { AccessAuthorization } from "../attendance/AccessAuthorization";
 import { ManualAccessForm } from "../manual-access/ManualAccessForm";
 import { PhotoInputs, supportedPhoto, toBase64 } from "./PhotoInputs";
 import "./biometrics.css";
@@ -112,7 +113,8 @@ export function FacialRecognition({ csrf }: { csrf: string }) {
       {receipt.similaridade !== null && <p>Similaridade {percent.format(receipt.similaridade)}</p>}
       <p>A autorização de entrada é uma etapa separada.</p>
     </StatusMessage>}
-    {receipt?.id && receipt.resultado !== "IDENTIFICADO" &&
-      <ManualAccessForm key={receipt.id} failureId={receipt.id} csrf={csrf} />}
+    {receipt?.id && (receipt.resultado === "IDENTIFICADO"
+      ? <AccessAuthorization key={receipt.id} eventId={receipt.id} csrf={csrf} />
+      : <ManualAccessForm key={receipt.id} failureId={receipt.id} csrf={csrf} />)}
   </section>;
 }

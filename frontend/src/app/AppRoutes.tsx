@@ -1,5 +1,7 @@
 import { Link, Navigate, Outlet, Route, Routes, useLocation, useMatch, useOutletContext } from "react-router-dom";
 
+import { Attendance, StaffAttendance } from "../features/attendance/Attendance";
+import { Occupancy } from "../features/occupancy/Occupancy";
 import { AssessmentPage } from "../features/assessments/AssessmentPage";
 import { AssignmentPage, MyAssignmentsPage } from "../features/assignments/AssignmentPages";
 import { LoginForm } from "../features/auth/LoginForm";
@@ -21,7 +23,7 @@ import { StaffDirectory } from "../features/staff/StaffDirectory";
 import { ServiceStatus } from "../features/status/ServiceStatus";
 import { roles, type Role, type Session } from "../lib/api/auth";
 import { Button, StatusMessage } from "../ui/primitives";
-import { areas, paths } from "./areaNavigation";
+import { areas, clientAttendanceBase, occupancyPath, paths } from "./areaNavigation";
 import { AssistantPage } from "./AssistantPage";
 import { AreaFrame, PublicFrame, PublicLayout } from "./Frames";
 
@@ -89,7 +91,8 @@ function AccessDenied() {
 
 type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
-  | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes" | "admin-plans" | "memberships" | "facial-recognition";
+  | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes" | "admin-plans" | "memberships" | "facial-recognition"
+  | "own-attendance" | "staff-attendance" | "occupancy";
 
 function AreaContent({ feature, role, session, retrySession }: {
   feature?: Feature; role: Role; session: Session; retrySession: () => Promise<void>;
@@ -113,7 +116,12 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "training-editor": return <WorkoutEditorPage key={userId} csrf={csrf} userId={userId} />;
     case "assessments": return <AssessmentPage key={userId} csrf={csrf} />;
     case "my-assignments": return <MyAssignmentsPage />;
-    case "clients": return <ClientDirectory key={userId} session={session} onAccessChange={retrySession} />;
+    case "own-attendance": return <Attendance key={userId} />;
+    case "staff-attendance": return <StaffAttendance key={userId}
+      back={role === "ADMINISTRADOR" ? paths.adminClients : paths.attendantClients} />;
+    case "occupancy": return <Occupancy key={userId} />;
+    case "clients": return <ClientDirectory key={userId} session={session} onAccessChange={retrySession}
+      attendanceBase={role === "ADMINISTRADOR" || role === "ATENDENTE" ? clientAttendanceBase(role) : undefined} />;
     case "corpus": return <CorpusPage key={userId} csrf={csrf} />;
     default: return role === "ADMINISTRADOR" || role === "INSTRUTOR"
       ? <PendingNotices key={userId} /> : <p>Escolha uma tarefa no menu da área.</p>;
@@ -143,7 +151,8 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: Fe
   const activePath = feature === "assistant" ? paths.clientAssistant
     : feature === "training-review" ? paths.reviews
     : feature === "training-editor" || feature === "assessments" ? paths.assignedClients
-      : pathname.replace(/\/+$/, "").toLowerCase();
+      : feature === "staff-attendance" ? (role === "ADMINISTRADOR" ? paths.adminClients : paths.attendantClients)
+        : pathname.replace(/\/+$/, "").toLowerCase();
   return (
     <AreaFrame role={role} allowed={allowed} activePath={activePath} maintenance={maintenance} signOut={signOut}>
       {role && (feature !== "corpus" || maintenance)
@@ -202,6 +211,11 @@ export function AppRoutes() {
         <Route path={paths.clientTraining} element={<AreaPage requiredRole="CLIENTE" feature="my-training" />} />
         <Route path={paths.clientOnboarding} element={<AreaPage requiredRole="CLIENTE" feature="onboarding" />} />
         <Route path={paths.clientClasses} element={<AreaPage requiredRole="CLIENTE" feature="client-classes" />} />
+        <Route path={paths.clientAttendance} element={<AreaPage requiredRole="CLIENTE" feature="own-attendance" />} />
+        {(["ATENDENTE", "ADMINISTRADOR"] as const).map(role =>
+          <Route key={role} path={clientAttendanceBase(role) + "/:clientId"}
+            element={<AreaPage requiredRole={role} feature="staff-attendance" />} />)}
+        {roles.map(role => <Route key={role} path={occupancyPath(role)} element={<AreaPage requiredRole={role} feature="occupancy" />} />)}
         {roles.map(role => <Route key={role} path={areas[role].path} element={<AreaPage requiredRole={role} />} />)}
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

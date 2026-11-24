@@ -2,7 +2,9 @@
 
 O motor consome o identificador interno de uma tentativa de reconhecimento
 gravada por ACS-02. A sessão de atendente e o CSRF protegem a operação.
-O cliente e a direção vêm da identificação persistida. O [ACS-04](confirmacao-manual.md)
+O cliente e a direção vêm da identificação persistida. Na tela de reconhecimento,
+o atendente solicita a autorização após a identificação positiva e acompanha o
+[estado da passagem](frequencia-lotacao.md#consultas-e-telas--acs-06). O [ACS-04](confirmacao-manual.md)
 vincula uma confirmação manual auditada à falha facial e usa o mesmo motor.
 
 | Operação | Contrato |

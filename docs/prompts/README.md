@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| ACS-06 | CONCLUIDO | [Telas de frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). 81 testes de backend, 137 de frontend, 16 do iniciador e nove jornadas no Edge. [Comandos e evidência](../testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
 | ACS-05 | CONCLUIDO | [Frequência e lotação](../arquitetura/frequencia-lotacao.md). 79 testes de backend e 16 do iniciador aprovados. Dois ensaios opcionais do CompreFace indisponíveis. [Comandos e evidência](../testes/comandos.md#acs-05--frequência-e-lotação). |
 | ACS-04 | CONCLUIDO | [Confirmação manual auditada](../arquitetura/confirmacao-manual.md). 78 testes de backend, 133 de frontend e 16 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-04--confirmação-manual-de-identidade). |
 | ACS-03 | CONCLUIDO | [Motor e passagem simulada](../arquitetura/autorizacao-acesso.md). 70 testes de backend e 16 do iniciador aprovados. [Comandos e evidência](../testes/comandos.md#acs-03--motor-de-autorização-e-passagens). |
@@ -373,7 +374,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | [ACS-03](06-acesso/ACS-03.md) | [Motor de autorização e retorno](../arquitetura/autorizacao-acesso.md) | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | CONCLUIDO |
 | [ACS-04](06-acesso/ACS-04.md) | [Confirmação manual auditada](../arquitetura/confirmacao-manual.md) | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | CONCLUIDO |
 | [ACS-05](06-acesso/ACS-05.md) | [Frequência e lotação consistentes](../arquitetura/frequencia-lotacao.md) | MOD-07 | ACS-03 | CONCLUIDO |
-| [ACS-06](06-acesso/ACS-06.md) | Interfaces de acesso, frequência e lotação | MOD-07 | ACS-05, IAM-04 | PRONTO |
+| [ACS-06](06-acesso/ACS-06.md) | [Interfaces de acesso, frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06) | MOD-07 | ACS-05, IAM-04 | CONCLUIDO |
 
 ## Pós-MVP — complementares
 

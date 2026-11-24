@@ -35,9 +35,11 @@ function message(failure: unknown) {
 export function ClientDirectory({
   session,
   onAccessChange,
+  attendanceBase,
 }: {
   session: Session;
   onAccessChange: () => Promise<void>;
+  attendanceBase?: string;
 }) {
   const [filter, setFilter] = useState({ term: "", page: 1 });
   const [directory, setDirectory] = useState<ClientPage | null>(null);
@@ -148,7 +150,9 @@ export function ClientDirectory({
                     <div className="directory-actions"><Button variant="secondary" disabled={busy}
                       onClick={() => void run(async () => setForm(await getClient(item.id)))}>
                       Consultar {item.nome}
-                    </Button></div>
+                    </Button>
+                      {attendanceBase && <Link to={attendanceBase + "/" + encodeURIComponent(item.id)}>Frequência de {item.nome}</Link>}
+                    </div>
                   </li>
                 ))}
               </ul>
