@@ -237,12 +237,10 @@ def test_only_active_compatible_memberships_can_authorize(
         # Registro financeiro sintético, isolado na transação do teste.
         db.execute(
             text("""
-            CREATE TABLE academia.pagamento (cliente_id uuid, estado text)
-        """)
-        )
-        db.execute(
-            text("INSERT INTO academia.pagamento VALUES (:id, 'CONFIRMADO')"),
-            {"id": client},
+            INSERT INTO academia.pagamento (id, cliente_id, origem, estado, valor)
+            VALUES (:id, :cliente, 'ENSAIO', 'CONFIRMADO', 10.00)
+            """),
+            {"id": uuid4(), "cliente": client},
         )
         assert decision(client) == "SEM_MATRICULA_VIGENTE"
         membership(db, attendee, client, today - timedelta(days=10))

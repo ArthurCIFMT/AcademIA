@@ -1869,3 +1869,30 @@ intermitente em uma asserção de foco do histórico de treinos, aprovada na
 rodada serial. Lint, Ruff, mypy, TypeScript e build passaram.
 O iniciador passou nos 16 testes e no ciclo local de abertura e encerramento.
 [Contrato do painel](../arquitetura/painel-administrativo.md)
+
+## MEM-00 — Pagamentos manuais
+
+No `backend/`, com o PostgreSQL local de teste:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/billing tests/access tests/memberships tests/dashboard tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+Passaram 95 testes de backend. A bateria incluiu valor em string decimal, CSRF,
+permissões, isolamento por cliente, duplicidade de referência, reenvio idempotente,
+correção com rollback, anulação, auditoria e upgrade/downgrade. A regressão de
+matrícula cobriu o banco na revisão 0024 sem pagamentos e a 0025 com pagamentos
+pendentes ou recusados. A regressão de acesso verificou pagamento confirmado
+sem matrícula. Dois ensaios opcionais do CompreFace ficaram fora da rodada.
+
+Na pasta `frontend/`, `node node_modules/vitest/vitest.mjs run --maxWorkers=1`
+aprovou 148 testes. A asserção de foco intermitente da regressão de treinos passou
+a aguardar o efeito do React. Lint, Ruff, mypy, TypeScript e build passaram.
+
+A jornada do ACS-06 foi executada separadamente no Edge. O administrador
+registrou, corrigiu e anulou um pagamento sintético após o fluxo de matrícula e
+catraca fictícia. A transação de teste foi revertida. A migration 0025 foi aplicada ao
+banco local com os totais anteriores preservados. O iniciador passou nos 16 testes
+e no ciclo completo de abertura e encerramento.
+[Contrato do registro manual](../arquitetura/pagamentos-manuais.md)

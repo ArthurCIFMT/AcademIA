@@ -506,7 +506,17 @@ Table pagamento {
   valor numeric(12,2) [not null]
   estado varchar(25) [not null]
   confirmado_em timestamptz
-  Note: 'Owner MOD-08. Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir'
+  metodo varchar(25)
+  pago_em date
+  registrado_por_id uuid
+  substitui_id uuid [unique]
+  anulado_por_id uuid
+  anulado_em timestamptz
+  motivo_anulacao varchar(240)
+  indexes {
+    (id, cliente_id) [unique]
+  }
+  Note: 'Owner MOD-08. Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id'
 }
 
 Table aula_ocorrencia {
@@ -627,6 +637,10 @@ Ref: cobranca.matricula_id > matricula.id
 Ref: pagamento.cobranca_id > cobranca.id
 Ref: pagamento.cliente_id > cliente.usuario_id
 Ref: pagamento.plano_id > plano.id
+Ref: pagamento.registrado_por_id > funcionario.usuario_id
+Ref: pagamento.substitui_id > pagamento.id
+Ref: pagamento.anulado_por_id > funcionario.usuario_id
+Ref: pagamento.(substitui_id, cliente_id) > pagamento.(id, cliente_id)
 Ref: notificacao.destinatario_id > usuario.id
 Ref: auditoria.ator_id > usuario.id
 

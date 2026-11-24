@@ -2220,7 +2220,7 @@
     {
       "name": "pagamento",
       "owner": "MOD-08",
-      "note": "Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir",
+      "note": "Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id",
       "columns": [
         {
           "name": "id",
@@ -2275,9 +2275,53 @@
           "type": "timestamptz",
           "flags": "",
           "ref": null
+        },
+        {
+          "name": "metodo",
+          "type": "varchar(25)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "pago_em",
+          "type": "date",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "registrado_por_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "substitui_id",
+          "type": "uuid",
+          "flags": "unique",
+          "ref": "pagamento.id"
+        },
+        {
+          "name": "anulado_por_id",
+          "type": "uuid",
+          "flags": "",
+          "ref": "funcionario.usuario_id"
+        },
+        {
+          "name": "anulado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "motivo_anulacao",
+          "type": "varchar(240)",
+          "flags": "",
+          "ref": null
         }
       ],
-      "unique": []
+      "unique": [
+        ["id", "cliente_id"]
+      ]
     },
     {
       "name": "aula_ocorrencia",

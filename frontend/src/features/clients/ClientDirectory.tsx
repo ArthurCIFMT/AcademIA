@@ -36,10 +36,12 @@ export function ClientDirectory({
   session,
   onAccessChange,
   attendanceBase,
+  paymentsBase,
 }: {
   session: Session;
   onAccessChange: () => Promise<void>;
   attendanceBase?: string;
+  paymentsBase?: string;
 }) {
   const [filter, setFilter] = useState({ term: "", page: 1 });
   const [directory, setDirectory] = useState<ClientPage | null>(null);
@@ -152,6 +154,7 @@ export function ClientDirectory({
                       Consultar {item.nome}
                     </Button>
                       {attendanceBase && <Link to={attendanceBase + "/" + encodeURIComponent(item.id)}>Frequência de {item.nome}</Link>}
+                      {paymentsBase && <Link to={paymentsBase + "/" + encodeURIComponent(item.id) + "/pagamentos"}>Pagamentos de {item.nome}</Link>}
                     </div>
                   </li>
                 ))}

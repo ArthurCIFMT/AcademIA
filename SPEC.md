@@ -87,8 +87,9 @@ agenda. A revisão 0019 entrega planos e matrículas. A revisão 0020 entrega a
 referência facial. A revisão 0021 registra eventos de identificação, a 0022
 adiciona a decisão de acesso e o comando da catraca, e a 0023 registra a
 confirmação manual. A revisão 0024 acrescenta a projeção de frequência e lotação.
-O modelo lógico tem 43 tabelas e 345 colunas, incluindo três tabelas futuras.
-O físico tem 40 tabelas, 325 colunas e 67 FKs.
+A revisão 0025 acrescenta pagamentos manuais e seu histórico de correções.
+O modelo lógico tem 43 tabelas e 352 colunas, incluindo duas tabelas futuras.
+O físico tem 41 tabelas, 340 colunas e 72 FKs.
 A [comparação visual da revisão 0016](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -173,7 +174,7 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05. ACS-06 entrega as consultas protegidas, telas de frequência e lotação e autorização na tela de reconhecimento |
-| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. Financeiro permanece em fase posterior |
+| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. [Pagamento manual opcional](docs/arquitetura/pagamentos-manuais.md) entregue pelo MEM-00. Cobrança e gateway têm etapas próprias |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
 | MOD-11 — Indicadores | [Painel administrativo](docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |
@@ -1966,7 +1967,7 @@ triagem, parecer posterior ou seleção de recursos disponíveis.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
-Modelo lógico do escopo completo: 43 tabelas/345 colunas, incluindo três tabelas futuras. O físico na revisão 0024 tem 40 tabelas/325 colunas/67 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
+Modelo lógico do escopo completo: 43 tabelas/352 colunas, incluindo duas tabelas futuras. O físico na revisão 0025 tem 41 tabelas/340 colunas/72 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
 
 ### 1. Modelo DBML completo
 
@@ -2481,7 +2482,17 @@ Table pagamento {
   valor numeric(12,2) [not null]
   estado varchar(25) [not null]
   confirmado_em timestamptz
-  Note: 'Owner MOD-08. Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir'
+  metodo varchar(25)
+  pago_em date
+  registrado_por_id uuid
+  substitui_id uuid [unique]
+  anulado_por_id uuid
+  anulado_em timestamptz
+  motivo_anulacao varchar(240)
+  indexes {
+    (id, cliente_id) [unique]
+  }
+  Note: 'Owner MOD-08. Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id'
 }
 
 Table aula_ocorrencia {
@@ -2602,6 +2613,10 @@ Ref: cobranca.matricula_id > matricula.id
 Ref: pagamento.cobranca_id > cobranca.id
 Ref: pagamento.cliente_id > cliente.usuario_id
 Ref: pagamento.plano_id > plano.id
+Ref: pagamento.registrado_por_id > funcionario.usuario_id
+Ref: pagamento.substitui_id > pagamento.id
+Ref: pagamento.anulado_por_id > funcionario.usuario_id
+Ref: pagamento.(substitui_id, cliente_id) > pagamento.(id, cliente_id)
 Ref: notificacao.destinatario_id > usuario.id
 Ref: auditoria.ator_id > usuario.id
 
@@ -3227,7 +3242,7 @@ Uma presença aberta por cliente. Mudanças na lotação derivam de [passagens s
 
 #### pagamento — MOD-08
 
-Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir
+Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -3239,7 +3254,14 @@ Múltiplas tentativas; confirmação financeira não cria matrícula; compra de 
 | referencia_externa | varchar(150) | opcional | — |
 | valor | numeric(12,2) | required | — |
 | estado | varchar(25) | required | — |
-| confirmado_em | timestamptz | opcional | — |
+| confirmado_em | timestamptz | exigido para registro manual | — |
+| metodo | varchar(25) | exigido para registro manual | — |
+| pago_em | date | exigido para registro manual | — |
+| registrado_por_id | uuid | exigido para registro manual | funcionario.usuario_id |
+| substitui_id | uuid | opcional, único, mesmo cliente | pagamento.id |
+| anulado_por_id | uuid | exigido na anulação manual | funcionario.usuario_id |
+| anulado_em | timestamptz | exigido na anulação manual | — |
+| motivo_anulacao | varchar(240) | exigido na anulação manual | — |
 
 #### aula_ocorrencia — MOD-09
 
@@ -3390,6 +3412,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
   opcional só para lançamentos que não representam compra de plano.
   Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
+  No [registro manual](docs/arquitetura/pagamentos-manuais.md), o valor é positivo, a referência
+  é única entre lançamentos confirmados e a correção preserva o registro anterior.
+  O vínculo de substituição exige o mesmo cliente.
 - Aulas: `fim > inicio`, estado AGENDADA ou CANCELADA e revisão positiva.
   Cancelar preserva o registro administrativo e retira a ocorrência da agenda pública.
   [Contrato da agenda](docs/arquitetura/agenda.md).
@@ -12801,7 +12826,60 @@ A autorização de entrada combina essa consulta com conta, identidade,
 modalidade e uso diário no motor do ACS-03. A contagem das passagens confirmadas
 pertence ao módulo de acesso e continua por cliente e dia civil, inclusive em
 caso de renovação. [Decisões do GATE-08](docs/arquitetura/preparacao-gate-08.md).
-### 12. Cadastro e substituição da referência facial
+### 12. Registro manual, anulação e correção financeira
+
+Fonte versionada: [docs/arquitetura/pagamentos-manuais.md](docs/arquitetura/pagamentos-manuais.md).
+
+Um administrador com conta e perfil ativos abre **Gerenciar clientes** e
+escolhe **Pagamentos de …** no cadastro correspondente. O registro contém
+valor em reais, data do pagamento, meio, referência do comprovante e autoria
+obtida da sessão. A interface recebe a referência textual. O armazenamento
+consiste no identificador informado e nos dados do lançamento.
+
+O valor é positivo, com até duas casas decimais e precisão de 12 dígitos.
+A API recebe dinheiro como string decimal e o PostgreSQL usa `numeric(12,2)`.
+A data civil do pagamento deve ser igual ou anterior a hoje em São Paulo. A
+confirmação do registro e a anulação usam instantes em UTC.
+
+| Estado | Significado |
+|---|---|
+| `CONFIRMADO` | Lançamento ativo registrado pelo administrador. |
+| `ANULADO` | Lançamento retirado do conjunto de confirmações, preservando valor, data, autoria, referência e motivo. |
+
+**Corrigir** anula o lançamento anterior e cria o substituto do mesmo cliente
+na mesma transação. Se a nova gravação falhar, o lançamento anterior continua
+confirmado. **Anular** registra um motivo e encerra o lançamento. A anulação é
+uma operação do registro interno da academia.
+
+Uma referência pode identificar apenas um pagamento manual confirmado no
+sistema. A verificação ignora diferenças entre maiúsculas e minúsculas. Após
+anulação, a referência pode ser usada no lançamento correto. Reenvio do mesmo
+UUID com cliente, autoria e dados iguais devolve o registro existente. Repetir
+uma correção ou anulação com conteúdo divergente gera conflito. Auditoria e
+alteração financeira são gravadas na mesma transação.
+
+#### Contrato REST
+
+Rotas relativas a `/api/v1/admin/clientes/{client_id}/pagamentos`, com sessão
+administrativa e `Cache-Control: no-store`. Escritas exigem CSRF.
+
+| Método e sufixo | Operação |
+|---|---|
+| `GET` | Histórico paginado de registros manuais, com estados, datas e autoria. |
+| `POST` | Registrar confirmação, com HTTP 201 ou 200 no reenvio idempotente. |
+| `POST /{payment_id}/correcao` | Substituir registro, com HTTP 201 ou 200 no reenvio idempotente. |
+| `POST /{payment_id}/anulacao` | Anular com motivo, com HTTP 200. |
+
+Registro e substituição usam `solicitacao_id`, `valor`, `pago_em`, `metodo` e
+`referencia_externa`. Correção e anulação requerem `motivo`. IDs de outro
+cliente na rota de ajuste retornam HTTP 404. Duplicidade e estado incompatível
+retornam HTTP 409, e dados inválidos retornam HTTP 422.
+
+A migration `0025` cria a base `pagamento`. O relacionamento opcional com
+`cobranca` está planejado para a fase de cobranças. Pagamentos mantêm seu
+próprio histórico. Matrícula, renovação e acesso continuam independentes da
+confirmação financeira.
+### 13. Cadastro e substituição da referência facial
 
 Fonte versionada: [docs/arquitetura/biometria.md](docs/arquitetura/biometria.md).
 
@@ -12873,7 +12951,7 @@ a coleção de testes separada. A URL aceita HTTPS ou HTTP de loopback.
 e `ACADEMIA_COMPREFACE_MAX_IMAGE_BYTES` têm os valores iniciais em `.env.example`.
 O iniciador lê essas variáveis. A instância já provisionada do CompreFace é
 ligada separadamente conforme o [GATE-08](docs/arquitetura/preparacao-gate-08.md#execução-local-da-instância-dedicada).
-### 13. Identificação facial e eventos idempotentes
+### 14. Identificação facial e eventos idempotentes
 
 Fonte versionada: [docs/arquitetura/reconhecimento-facial.md](docs/arquitetura/reconhecimento-facial.md).
 
@@ -12944,7 +13022,7 @@ ID externo. Um lock transacional por chave serializa reenvios concorrentes.
 O banco guarda o resumo criptográfico usado para deduplicar e o resultado
 normalizado, sem foto, vetores, sujeito do provedor ou credenciais.
 Autorização, passagem e contagem de frequência ou lotação são etapas próprias.
-### 14. Motor de autorização e confirmação de passagem
+### 15. Motor de autorização e confirmação de passagem
 
 Fonte versionada: [docs/arquitetura/autorizacao-acesso.md](docs/arquitetura/autorizacao-acesso.md).
 
@@ -12997,7 +13075,7 @@ comandos usa `ACADEMIA_TURNSTILE_URL` e só aceita loopback. A configuração
 de modalidade, janela, validade e timeout está no `.env.example`.
 O [guia da catraca](docs/instalacao/catraca-ficticia.md) descreve a operação
 nativa com o iniciador e como provocar uma passagem simulada.
-### 15. Confirmação manual auditada
+### 16. Confirmação manual auditada
 
 Fonte versionada: [docs/arquitetura/confirmacao-manual.md](docs/arquitetura/confirmacao-manual.md).
 
@@ -13043,7 +13121,7 @@ A passagem permanece no contrato autenticado da catraca. O vínculo pelo
 comando e pela decisão qualifica a origem manual, e o mesmo evento de passagem
 é contabilizado uma só vez. A falha biométrica e a confirmação continuam
 consultáveis tecnicamente no histórico vinculado.
-### 16. Frequência e lotação a partir de passagens confirmadas
+### 17. Frequência e lotação a partir de passagens confirmadas
 
 Fonte versionada: [docs/arquitetura/frequencia-lotacao.md](docs/arquitetura/frequencia-lotacao.md).
 
@@ -13103,7 +13181,7 @@ O [painel administrativo](docs/arquitetura/painel-administrativo.md) consome a l
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis
 para reconstrução em nova aplicação da migration.
-### 17. Indicadores consolidados e permissões do painel administrativo
+### 18. Indicadores consolidados e permissões do painel administrativo
 
 Fonte versionada: [docs/arquitetura/painel-administrativo.md](docs/arquitetura/painel-administrativo.md).
 
@@ -13142,7 +13220,7 @@ do contrato.
 
 O MOD-11 calcula os indicadores sob demanda pelas portas de leitura do MOD-01,
 MOD-07 e MOD-08. O escopo financeiro pertence ao FIN-03.
-### 18. Exercícios e recursos
+### 19. Exercícios e recursos
 
 Fonte versionada: [docs/arquitetura/catalogo-exercicios.md](docs/arquitetura/catalogo-exercicios.md).
 
@@ -13196,7 +13274,7 @@ e dos vínculos de cada grupo. O SQL sintético original continua restrito a
 é uma operação explícita para `academia_dev`, acrescentando equipamentos e
 exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
 não cria fichas e não substitui evidências bibliográficas do RAG.
-### 19. Editor manual
+### 20. Editor manual
 
 Fonte versionada: [docs/arquitetura/fichas-manuais.md](docs/arquitetura/fichas-manuais.md).
 
@@ -13277,7 +13355,7 @@ expirado com motivo e data, remove itens antes dos dias e preserva os
 metadados. Consultas de conteúdo expirado retornam a identificação e
 uma lista vazia de dias. A estrutura preserva referências futuras de
 execuções de treino por versão.
-### 20. Publicação, parecer e retenção
+### 21. Publicação, parecer e retenção
 
 Fonte versionada: [docs/arquitetura/publicacao-e-parecer.md](docs/arquitetura/publicacao-e-parecer.md).
 
@@ -13401,7 +13479,7 @@ cópia da ficha na execução IA que possa restaurar conteúdo expirado.
 geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
 tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
 falha exata. A tela lê o ledger atual antes do reenvio.
-### 21. Consulta e exportação
+### 22. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
 
@@ -13488,7 +13566,7 @@ retido. Não alterar a retenção nem remover pareceres/validações históricos
 [Testes e roteiro de navegador](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino).
 A validação usa PostgreSQL real de teste, clientes sintéticos, frontend React,
 FastAPI e Edge em 390 px. O esquema temporário é removido ao final.
-### 22. Auditoria e eventos
+### 23. Auditoria e eventos
 
 Fonte versionada: [docs/arquitetura/auditoria-e-eventos.md](docs/arquitetura/auditoria-e-eventos.md).
 
@@ -13514,7 +13592,7 @@ persistir seu efeito. Ao confirmar, o evento fica entregue. Se a transação
 falhar, o efeito é desfeito e o evento continua pendente para nova tentativa.
 Para efeitos externos, o consumidor da integração precisa usar a chave de
 idempotência do evento. O envio de avisos pertence a NTF-01.
-### 23. Avisos e e-mail
+### 24. Avisos e e-mail
 
 Fonte versionada: [docs/arquitetura/notificacoes.md](docs/arquitetura/notificacoes.md).
 
@@ -13608,7 +13686,7 @@ Use esse comando no lugar do processo temporário; não inicie dois servidores n
 mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
 **Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
 anterior; não redefina senhas diretamente no banco.
-### 24. Integrações de treino e acesso
+### 25. Integrações de treino e acesso
 
 Fonte versionada: [docs/arquitetura/fluxos-atualizados.md](docs/arquitetura/fluxos-atualizados.md).
 
@@ -13674,7 +13752,7 @@ e limites; o sistema registra responsável e histórico, inclusive nas renovaç�
 Ausência de pagamento, pagamento pendente/recusado ou falha do serviço financeiro
 não impedem essa operação nem invalidam automaticamente uma matrícula vigente.
 
-Financeiro permanece na fase tardia. MEM-00 é opcional para registrar pagamentos,
+Financeiro permanece na fase tardia. O [registro de pagamentos manuais](docs/arquitetura/pagamentos-manuais.md) do MEM-00 é opcional,
 sem criar pré-requisito para MEM-01. Gateway/webhook futuro atualiza situação
 financeira, sem matricular automaticamente ou introduzir bloqueio de acesso.
 
@@ -13793,7 +13871,7 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
-### 25. Preparação do GATE-08
+### 26. Preparação do GATE-08
 
 Fonte versionada: [docs/arquitetura/preparacao-gate-08.md](docs/arquitetura/preparacao-gate-08.md).
 
@@ -13938,7 +14016,7 @@ docker compose -p academia-compreface --env-file "$p/.env" -f "$p/compose.yaml" 
 
 O iniciador de dois cliques do AcademIA continua com a configuração
 existente. A conexão do backend ao provedor é responsabilidade de ACS-01.
-### 26. Curadoria, versões e revogação do corpus
+### 27. Curadoria, versões e revogação do corpus
 
 Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
 
@@ -14368,7 +14446,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [MEM-00](docs/prompts/06-acesso/MEM-00.md) | Registro manual opcional de pagamento | MOD-08 | MEM-01, IAM-04 | PRONTO |
+| [MEM-00](docs/prompts/06-acesso/MEM-00.md) | [Registro manual opcional de pagamento](docs/arquitetura/pagamentos-manuais.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
 | [FIN-01](docs/prompts/08-financeiro/FIN-01.md) | Cobranças e consulta financeira | MOD-08 | MEM-01, IAM-04 | PRONTO |
 | [FIN-02](docs/prompts/08-financeiro/FIN-02.md) | Compra e confirmação por gateway | MOD-08 | FIN-01, NTF-01, GATE-09 | BLOQUEADO |
 | [FIN-03](docs/prompts/08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | BLOQUEADO |
@@ -14399,8 +14477,8 @@ com avaliação posterior, bloqueio de saúde, equipamentos disponíveis, reten�
 MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
 AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
-MEM-00 é opcional nessa fase, com caminho preservado; matrícula/acesso não dependem
-dele nem de pagamento confirmado.
+MEM-00 entrega [registro manual opcional](docs/arquitetura/pagamentos-manuais.md).
+Matrícula e acesso acadêmico seguem a política independente do financeiro.
 INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
 ### 4. Requisitos por etapa
 
@@ -19084,6 +19162,7 @@ A revisão `0021` adiciona o registro idempotente de [identificações faciais](
 A revisão `0022` adiciona a [decisão de acesso e o comando da catraca](docs/arquitetura/autorizacao-acesso.md).
 A revisão `0023` acrescenta a [confirmação manual de identidade](docs/arquitetura/confirmacao-manual.md).
 A revisão `0024` cria e preenche a projeção de [frequência e lotação](docs/arquitetura/frequencia-lotacao.md) a partir das passagens confirmadas. O downgrade preserva os eventos e comandos originais.
+A revisão `0025` acrescenta a tabela de [pagamentos manuais](docs/arquitetura/pagamentos-manuais.md), com auditoria e cadeia de correções. Seu downgrade remove a tabela de pagamentos.
 O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
@@ -19911,7 +19990,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `101deb54bb790584c556d5671c71b89471c3f0f1e9a39c885c22e8c764403b23` |
-| `database/README.md` | `1065ad7aa668cde622e2c29f735cab13aaa65327ff0e8d1fba0b668037982998` |
+| `database/README.md` | `6a21202faa668d6cbd96cca7f6b94328c03becc42e9742b5bd77f1b819b5b41e` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/agenda.md` | `d0e60a63783476b414eb495fbdb9d17b9d6c6e4a29606423e5a6bcd8a3ceb883` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
@@ -19944,21 +20023,22 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
-| `docs/arquitetura/fluxos-atualizados.md` | `b9db082e9613771d2092eb8a2d87002f67d5c4a7f82abf76e0a20efd059bc5c8` |
+| `docs/arquitetura/fluxos-atualizados.md` | `b6ed025d16b81daeb029f6581d9c389b272e1de1f06effaf00b92005513d9c15` |
 | `docs/arquitetura/frequencia-lotacao.md` | `f5d92ddbdcfd7d60f54211e0bfd8f852fffab3b89375da7f336c6cabb724d767` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
 | `docs/arquitetura/matriculas.md` | `7f3ae0e6275b70a128cb693fbc2a8e5b97391d1ca17233b26d49ecf9911f03ca` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `758db8d9bb7a7f1fc98bd31768a8de26d80aa611701d6b2c87c4a5593d5fafd9` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `8e499f4d0289aadf6c37bd391b67919f0c09ca091c6da784f90ac5bccf499ce1` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `474622ef424bfe35bedbb3f8f820b515043c7924432c78095b4d88eafa0f3b13` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `1b983bd0a249817db533c9b4a67e1bb34ccaea0d138f77d9d103652cdd196f87` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `ecf9153601489a09fee804fa5bc3229f4208ef69ac9c5857a4e33544b885a028` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `3d55b95c7dfd38b96bd1b60873611e0a8fc1259f2365e76d2500eaa1af9ac949` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `567e4428c065e8f3c5aacb6c60791bcc21cbe582870acfe4b6c61e0b7a7915f3` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
 | `docs/arquitetura/onboarding.md` | `27f7fad51f650505cd72ea4ef64a61ff3c7481b401485f16678b0e28e0af60d1` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
+| `docs/arquitetura/pagamentos-manuais.md` | `e747ca01c8748c3191b5db2abf930d1027c1c20819aa97c07f55b74b60cff3fd` |
 | `docs/arquitetura/painel-administrativo.md` | `88d60b0071ecfc1ade091daf32341b56dd1af83f7a047659cc038fc35515fdfb` |
 | `docs/arquitetura/preparacao-gate-08.md` | `19bdcc97c037db147843fe756107e9329727509ae067c9e441058b0aa50c29e0` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `7023dc870367f5e9436e8328dc6cec2b689cef745f08b83901c45c8fb2826425` |
@@ -19968,9 +20048,9 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
 | `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `f833c4cd8c71acc84771d3c9dfdf200bf62821b91edcd265bb0a439a32ea8240` |
+| `docs/especificacao/compilacao-spec.json` | `944cff8d9f09cb706e662582a6b765ca434eca769309d672517980914fb4b95b` |
 | `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `5e4d711509d380bb320ebba59e3b348de2d4ef96c61e1ece559a1788f474d732` |
+| `docs/especificacao/visao-geral.md` | `36f612ff3fc4958ef8f4bbcfc3a38da1dc7fbbd1c0384b2fd930e7d65b01e0d4` |
 | `docs/instalacao/catraca-ficticia.md` | `b432d1a97d369a25802f23e4bb91ab107d384ce6ed739296d30946d253d8fa9b` |
 | `docs/instalacao/iniciar-com-dois-cliques.md` | `1cdffb0e3d72d5a807f1e30acf2477240ff21c59419a03ea67a4d844e0c44e68` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
@@ -19984,7 +20064,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `a0635670564cdbc26be031098b27f16c3a2b70bac3d321c5425b6a57f5d95e4e` |
+| `docs/prompts/README.md` | `99466f471aadb643c1e69c2c93cdc33ad565a378796cfd30a81bfc64fe574e06` |
 | `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |

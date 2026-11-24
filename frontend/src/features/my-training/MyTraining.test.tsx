@@ -76,7 +76,7 @@ test("histórico recarrega versão escolhida e retira conteúdo que deixou de es
   fireEvent.change(screen.getByLabelText("Versão da ficha"), { target: { value: older.id } });
   await screen.findByRole("heading", { name: "Treino histórico" });
   expect(screen.getByText("Ficha vigente · Versão 2")).toBeTruthy();
-  expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 1 · Histórica" }));
+  await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 1 · Histórica" })));
   click("Atualizar fichas");
   await screen.findByText("A versão selecionada deixou de estar disponível.");
   expect(screen.queryByText("Treino histórico")).toBeNull();
@@ -84,7 +84,7 @@ test("histórico recarrega versão escolhida e retira conteúdo que deixou de es
   expect(request.mock.calls.map(([url]) => url)).toContain(root + "/versao-1/ficha");
   click("Ver ficha vigente");
   await screen.findByText("Movimento sintético");
-  expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 2 · Vigente" }));
+  await waitFor(() => expect(document.activeElement).toBe(screen.getByRole("heading", { name: "Versão 2 · Vigente" })));
 });
 
 test("troca o dia sem nova consulta e diferencia carga zero de dado ausente", async () => {

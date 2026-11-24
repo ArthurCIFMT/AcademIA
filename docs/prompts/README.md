@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| MEM-00 | CONCLUIDO | [Pagamentos manuais](../arquitetura/pagamentos-manuais.md). 95 testes de backend, 148 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#mem-00--pagamentos-manuais). |
 | DSH-01 | CONCLUIDO | [Painel administrativo](../arquitetura/painel-administrativo.md). 83 testes de backend, 143 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#dsh-01--painel-administrativo). |
 | ACS-06 | CONCLUIDO | [Telas de frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). 81 testes de backend, 137 de frontend, 16 do iniciador e nove jornadas no Edge. [Comandos e evidência](../testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
 | ACS-05 | CONCLUIDO | [Frequência e lotação](../arquitetura/frequencia-lotacao.md). 79 testes de backend e 16 do iniciador aprovados. Dois ensaios opcionais do CompreFace indisponíveis. [Comandos e evidência](../testes/comandos.md#acs-05--frequência-e-lotação). |
@@ -389,7 +390,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [MEM-00](06-acesso/MEM-00.md) | Registro manual opcional de pagamento | MOD-08 | MEM-01, IAM-04 | PRONTO |
+| [MEM-00](06-acesso/MEM-00.md) | [Registro manual opcional de pagamento](../arquitetura/pagamentos-manuais.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
 | [FIN-01](08-financeiro/FIN-01.md) | Cobranças e consulta financeira | MOD-08 | MEM-01, IAM-04 | PRONTO |
 | [FIN-02](08-financeiro/FIN-02.md) | Compra e confirmação por gateway | MOD-08 | FIN-01, NTF-01, GATE-09 | BLOQUEADO |
 | [FIN-03](08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | BLOQUEADO |
@@ -420,8 +421,8 @@ com avaliação posterior, bloqueio de saúde, equipamentos disponíveis, reten�
 MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
 AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
-MEM-00 é opcional nessa fase, com caminho preservado; matrícula/acesso não dependem
-dele nem de pagamento confirmado.
+MEM-00 entrega [registro manual opcional](../arquitetura/pagamentos-manuais.md).
+Matrícula e acesso acadêmico seguem a política independente do financeiro.
 INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
 
 ## Leitura antes da implementação

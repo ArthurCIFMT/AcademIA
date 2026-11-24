@@ -18,6 +18,7 @@ import { WorkoutEditorPage } from "../features/training-editor/WorkoutEditor";
 import { Dashboard } from "../features/dashboard/Dashboard";
 import { ExerciseCatalog } from "../features/exercises/ExerciseCatalog";
 import { InviteOnboardingPage, OwnOnboardingPage } from "../features/onboarding/OnboardingPages";
+import { ManualPayments } from "../features/payment-confirmation/ManualPayments";
 import { PendingNotices } from "../features/notifications/PendingNotices";
 import { ClientDirectory } from "../features/clients/ClientDirectory";
 import { StaffDirectory } from "../features/staff/StaffDirectory";
@@ -93,7 +94,7 @@ function AccessDenied() {
 type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
   | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes" | "admin-plans" | "memberships" | "facial-recognition"
-  | "own-attendance" | "staff-attendance" | "occupancy";
+  | "own-attendance" | "staff-attendance" | "occupancy" | "manual-payments";
 
 function AreaContent({ feature, role, session, retrySession }: {
   feature?: Feature; role: Role; session: Session; retrySession: () => Promise<void>;
@@ -117,12 +118,14 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "training-editor": return <WorkoutEditorPage key={userId} csrf={csrf} userId={userId} />;
     case "assessments": return <AssessmentPage key={userId} csrf={csrf} />;
     case "my-assignments": return <MyAssignmentsPage />;
+    case "manual-payments": return <ManualPayments key={userId} back={paths.adminClients} csrf={csrf} />;
     case "own-attendance": return <Attendance key={userId} />;
     case "staff-attendance": return <StaffAttendance key={userId}
       back={role === "ADMINISTRADOR" ? paths.adminClients : paths.attendantClients} />;
     case "occupancy": return <Occupancy key={userId} />;
     case "clients": return <ClientDirectory key={userId} session={session} onAccessChange={retrySession}
-      attendanceBase={role === "ADMINISTRADOR" || role === "ATENDENTE" ? clientAttendanceBase(role) : undefined} />;
+      attendanceBase={role === "ADMINISTRADOR" || role === "ATENDENTE" ? clientAttendanceBase(role) : undefined}
+      paymentsBase={role === "ADMINISTRADOR" ? paths.adminClients : undefined} />;
     case "corpus": return <CorpusPage key={userId} csrf={csrf} />;
     default:
       if (role === "ADMINISTRADOR") return <div className="area-overview" key={userId}>
@@ -157,6 +160,7 @@ function AreaPage({ requiredRole, feature }: { requiredRole?: Role; feature?: Fe
   const activePath = feature === "assistant" ? paths.clientAssistant
     : feature === "training-review" ? paths.reviews
     : feature === "training-editor" || feature === "assessments" ? paths.assignedClients
+      : feature === "manual-payments" ? paths.adminClients
       : feature === "staff-attendance" ? (role === "ADMINISTRADOR" ? paths.adminClients : paths.attendantClients)
         : pathname.replace(/\/+$/, "").toLowerCase();
   return (
@@ -205,6 +209,8 @@ export function AppRoutes() {
         <Route path={paths.attendantMemberships} element={<AreaPage requiredRole="ATENDENTE" feature="memberships" />} />
         <Route path={paths.staff} element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
         <Route path={paths.adminClients} element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
+        <Route path={paths.adminClients + "/:clientId/pagamentos"}
+          element={<AreaPage requiredRole="ADMINISTRADOR" feature="manual-payments" />} />
         <Route path={paths.attendantClients} element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
         <Route path={paths.assignments} element={<AreaPage requiredRole="ADMINISTRADOR" feature="assignments" />} />
         <Route path={paths.assignedClients} element={<AreaPage requiredRole="INSTRUTOR" feature="my-assignments" />} />

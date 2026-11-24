@@ -62,7 +62,7 @@ e limites; o sistema registra responsável e histórico, inclusive nas renovaç�
 Ausência de pagamento, pagamento pendente/recusado ou falha do serviço financeiro
 não impedem essa operação nem invalidam automaticamente uma matrícula vigente.
 
-Financeiro permanece na fase tardia. MEM-00 é opcional para registrar pagamentos,
+Financeiro permanece na fase tardia. O [registro de pagamentos manuais](pagamentos-manuais.md) do MEM-00 é opcional,
 sem criar pré-requisito para MEM-01. Gateway/webhook futuro atualiza situação
 financeira, sem matricular automaticamente ou introduzir bloqueio de acesso.
 

@@ -613,7 +613,7 @@ Uma presença aberta por cliente. Mudanças na lotação derivam de [passagens s
 
 ## pagamento — MOD-08
 
-Múltiplas tentativas; confirmação financeira não cria matrícula; compra de plano exige plano_id, lançamento manual legado pode omitir
+Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -625,7 +625,14 @@ Múltiplas tentativas; confirmação financeira não cria matrícula; compra de 
 | referencia_externa | varchar(150) | opcional | — |
 | valor | numeric(12,2) | required | — |
 | estado | varchar(25) | required | — |
-| confirmado_em | timestamptz | opcional | — |
+| confirmado_em | timestamptz | exigido para registro manual | — |
+| metodo | varchar(25) | exigido para registro manual | — |
+| pago_em | date | exigido para registro manual | — |
+| registrado_por_id | uuid | exigido para registro manual | funcionario.usuario_id |
+| substitui_id | uuid | opcional, único, mesmo cliente | pagamento.id |
+| anulado_por_id | uuid | exigido na anulação manual | funcionario.usuario_id |
+| anulado_em | timestamptz | exigido na anulação manual | — |
+| motivo_anulacao | varchar(240) | exigido na anulação manual | — |
 
 ## aula_ocorrencia — MOD-09
 

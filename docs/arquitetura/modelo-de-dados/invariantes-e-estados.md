@@ -84,6 +84,9 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
   opcional só para lançamentos que não representam compra de plano.
   Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
+  No [registro manual](../pagamentos-manuais.md), o valor é positivo, a referência
+  é única entre lançamentos confirmados e a correção preserva o registro anterior.
+  O vínculo de substituição exige o mesmo cliente.
 - Aulas: `fim > inicio`, estado AGENDADA ou CANCELADA e revisão positiva.
   Cancelar preserva o registro administrativo e retira a ocorrência da agenda pública.
   [Contrato da agenda](../agenda.md).

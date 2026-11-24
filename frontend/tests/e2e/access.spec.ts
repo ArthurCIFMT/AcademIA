@@ -120,6 +120,29 @@ test("cliente móvel, atendente e administrador conferem matrícula, passagem e 
     await admin.setViewportSize({ width: 375, height: 812 });
     await expect(admin.getByRole("combobox", { name: "Dia para detalhar" })).toBeVisible();
     expect(await admin.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+
+    await menu(admin, "Gerenciar clientes");
+    await admin.getByRole("link", { name: "Pagamentos de " + name, exact: true }).click();
+    await admin.getByRole("button", { name: "Registrar pagamento" }).click();
+    await admin.getByLabel("Valor em reais", { exact: true }).fill("149,90");
+    await admin.getByLabel("Data do pagamento", { exact: true }).fill(today);
+    await admin.getByRole("combobox", { name: "Forma de pagamento" }).selectOption("PIX");
+    await admin.getByLabel("Referência do comprovante", { exact: true }).fill("MEM00-EXEMPLO-EDGE");
+    await admin.getByRole("button", { name: "Salvar registro" }).click();
+    await expect(admin.getByText("Pagamento registrado.", { exact: true })).toBeVisible();
+    await expect(admin.getByText("Confirmado", { exact: true })).toBeVisible();
+
+    await admin.getByRole("button", { name: "Corrigir", exact: true }).click();
+    await admin.getByLabel("Valor em reais", { exact: true }).fill("129,90");
+    await admin.getByLabel("Motivo", { exact: true }).fill("Correção de valor de teste.");
+    await admin.getByRole("button", { name: "Salvar registro" }).click();
+    await expect(admin.getByText("Correção registrada. O pagamento anterior permanece no histórico.")).toBeVisible();
+    await expect(admin.getByText("Anulado", { exact: true })).toHaveCount(1);
+
+    await admin.getByRole("button", { name: "Anular", exact: true }).click();
+    await admin.getByLabel("Motivo", { exact: true }).fill("Anulação de teste.");
+    await admin.getByRole("button", { name: "Confirmar anulação" }).click();
+    await expect(admin.getByText("Anulado", { exact: true })).toHaveCount(2);
   } finally {
     await simulator.dispose();
     await Promise.all([adminContext.close(), staffContext.close(), clientContext.close()]);

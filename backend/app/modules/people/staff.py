@@ -46,6 +46,19 @@ def registered_employee_count(db: Session) -> int:
     return db.scalar(select(func.count()).select_from(EmployeeProfile)) or 0
 
 
+def registered_employee_names(db: Session, staff_ids: set[UUID]) -> dict[UUID, str]:
+    if not staff_ids:
+        return {}
+    return {
+        user_id: name
+        for user_id, name in db.execute(
+            select(EmployeeProfile.usuario_id, EmployeeProfile.nome).where(
+                EmployeeProfile.usuario_id.in_(staff_ids)
+            )
+        )
+    }
+
+
 def staff_title(roles: set[StaffRole]) -> str:
     return " / ".join(STAFF_TITLES[role] for role in STAFF_ROLES if role in roles)
 

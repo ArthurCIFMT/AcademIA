@@ -142,9 +142,10 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
 ) -> None:
     monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA Teste")
     connection, config = migration
-    command.upgrade(config, "head")
+    command.upgrade(config, "0024" if financial_state is None else "head")
     tables = inspect(connection).get_table_names(schema="academia")
-    assert not {"pagamento", "cobranca"}.intersection(tables)
+    assert "cobranca" not in tables
+    assert ("pagamento" in tables) == (financial_state is not None)
     sessions = create_session_factory(connection)
     password = Passwords().hash(_PASSWORD)
     ids = {}
@@ -195,25 +196,6 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
         "plano_revisao": 1,
         "inicio": today.isoformat(),
     }
-    if financial_state is not None:
-        # Relação sintética no banco de teste, revertida junto com o cenário.
-        connection.execute(
-            text("""
-            CREATE TABLE academia.pagamento
-            (cliente_id uuid, plano_id uuid, estado text)
-        """)
-        )
-        connection.execute(
-            text("""
-                INSERT INTO academia.pagamento (cliente_id, plano_id, estado)
-                VALUES (:client, :plan, :state)
-            """),
-            {
-                "client": client_id,
-                "plan": UUID(str(first_request["plano_id"])),
-                "state": financial_state,
-            },
-        )
     app = create_app(
         identity_sessions=sessions, auth_settings=AuthSettings(origin=_ORIGIN)
     )
@@ -240,6 +222,20 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
         plan = await api.post(_PLANS, json=plan_data, headers=admin)
         assert plan.status_code == 201, plan.text
         plan_url = _PLANS + "/" + plan.json()["id"]
+        if financial_state is not None:
+            connection.execute(
+                text("""
+                    INSERT INTO academia.pagamento
+                        (id, cliente_id, plano_id, origem, estado, valor)
+                    VALUES (:id, :client, :plan, 'ENSAIO', :state, 10.00)
+                """),
+                {
+                    "id": uuid4(),
+                    "client": client_id,
+                    "plan": UUID(plan.json()["id"]),
+                    "state": financial_state,
+                },
+            )
         attendant = await _login(api, Role.ATENDENTE)
         assert (await api.get(_PLANS)).status_code == 403
         assert (await api.get(_ACTIVE)).json()["itens"] == [plan.json()]
