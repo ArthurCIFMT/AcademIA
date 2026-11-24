@@ -18,6 +18,7 @@ from app.modules.identity.settings import AuthSettings
 from app.modules.knowledge.embeddings.runtime import close_encoder
 from app.modules.knowledge.http import corpus_router
 from app.modules.knowledge.vector.runtime import close_vector_store
+from app.modules.memberships.http import memberships_router
 from app.modules.notifications.http import notification_router
 from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
@@ -65,6 +66,7 @@ def create_app(
     app.include_router(chat_router(get_sessions))
     app.include_router(equipment_router(get_sessions))
     app.include_router(classes_router(get_sessions))
+    app.include_router(memberships_router(get_sessions))
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

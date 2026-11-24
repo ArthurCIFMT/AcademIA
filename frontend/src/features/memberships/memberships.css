@@ -1,0 +1,12 @@
+.membership-form select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--ac-touch-target);
+  padding: var(--ac-space-2);
+  border: 1px solid var(--ac-control-border);
+  border-radius: var(--ac-radius-control);
+  background: var(--ac-surface);
+  color: var(--ac-text);
+  font: inherit;
+}

@@ -19,11 +19,13 @@ export const paths = {
   reviews: "/area/instrutor/revisoes",
   instructorExercises: "/area/instrutor/exercicios",
   attendantClients: "/area/atendimento/clientes",
+  attendantMemberships: "/area/atendimento/matriculas",
   adminClients: "/area/administracao/clientes",
   staff: "/area/administracao/funcionarios",
   assignments: "/area/administracao/designacoes",
   equipment: "/area/administracao/equipamentos",
   adminClasses: "/area/administracao/aulas",
+  adminPlans: "/area/administracao/planos",
   adminExercises: "/area/administracao/exercicios",
   corpus: "/tecnico/corpus",
 };
@@ -43,7 +45,10 @@ const tasks: Record<Role, MenuItem[]> = {
     { path: paths.reviews, label: "Revisões pendentes" },
     { path: paths.instructorExercises, label: "Catálogo de exercícios" },
   ],
-  ATENDENTE: [{ path: paths.attendantClients, label: "Clientes e convites" }],
+  ATENDENTE: [
+    { path: paths.attendantClients, label: "Clientes e convites" },
+    { path: paths.attendantMemberships, label: "Matrículas" },
+  ],
   ADMINISTRADOR: [
     { path: paths.adminClients, label: "Gerenciar clientes" },
     { path: paths.staff, label: "Gerenciar funcionários" },
@@ -51,6 +56,7 @@ const tasks: Record<Role, MenuItem[]> = {
     { path: paths.equipment, label: "Gerenciar equipamentos" },
     { path: paths.adminExercises, label: "Catálogo de exercícios" },
     { path: paths.adminClasses, label: "Gerenciar aulas" },
+    { path: paths.adminPlans, label: "Gerenciar planos" },
   ],
 };
 

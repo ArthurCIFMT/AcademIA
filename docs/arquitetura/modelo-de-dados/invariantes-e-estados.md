@@ -101,7 +101,7 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 | Parecer | PENDENTE → ACEITO/REJEITADO; decisões históricas atribuíveis |
 | Documento | PENDENTE → APROVADO → REVOGADO; ativação exige ingestão completa |
 | Ingestão | PROCESSANDO → CONCLUIDA/FALHA/REVOGADA; FALHA retoma PROCESSANDO; PENDENTE_TRATAMENTO exige revisão; reparo de CONCLUIDA retorna PROCESSANDO |
-| Matrícula | ATIVA → VENCIDA/ENCERRADA; renovação preserva histórico |
+| Matrícula | Estado persistido ATIVA ou ENCERRADA. Para ATIVA, situação FUTURA, VIGENTE ou VENCIDA deriva do dia civil. A renovação cria outro período. |
 | Acesso | RECEBIDO → IDENTIFICADO/DESCONHECIDO → ALLOW/DENY; passagem é evento separado |
 | Comando | CRIADO → ACEITO/FALHOU/EXPIRADO; aceito não implica passagem |
 | Aviso | PENDENTE → ENVIADO/FALHOU; reenvio controlado, sem duplicar pendência |

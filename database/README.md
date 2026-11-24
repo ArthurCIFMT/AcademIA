@@ -54,6 +54,8 @@ mantêm seus dados e começam com CPF nulo. O downgrade 0017 → 0016 remove
 essa coluna e os CPFs preenchidos.
 A revisão `0018` cria a tabela da [agenda de aulas](../docs/arquitetura/agenda.md).
 O downgrade 0018 → 0017 remove a tabela e as ocorrências nela cadastradas.
+A revisão `0019` adiciona [planos e matrículas](../docs/arquitetura/matriculas.md).
+O downgrade 0019 → 0018 remove essas duas tabelas e os dados nelas cadastrados.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da

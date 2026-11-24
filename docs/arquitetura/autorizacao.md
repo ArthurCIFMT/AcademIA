@@ -10,6 +10,8 @@ inativo retira apenas as permissões daquele perfil.
 | Administrar contas, papéis, funcionários e designações | Administrador ativo |
 | Manter inventário e disponibilidade de equipamentos | Administrador ativo |
 | Manter agenda de aulas e consultar seu histórico | Administrador ativo |
+| Gerenciar planos ativos e inativos | Administrador ativo |
+| Consultar planos ativos, matricular e renovar clientes, consultar histórico | Atendente ativo |
 | Consultar ocorrências públicas da agenda | Visitante ou usuário autenticado |
 | Manter catálogo de exercícios | Administrador ou instrutor ativo |
 | Manter literatura e curadoria RAG | Responsável técnico com identidade administrativa ativa; HTTP/tela só em manutenção explicitamente habilitada |

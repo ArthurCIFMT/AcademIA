@@ -1595,3 +1595,37 @@ dados compatíveis com a revisão 0007 e o SMTP com deduplicação por Message-I
 como no iniciador. O [executor de aceitação do MVP](aceitacao-mvp.md) passou
 nas oito jornadas do Edge com a revisão 0018, rollback confirmado e zero
 chamadas a LLM externo. Lint, tipagem, build, Ruff, mypy e DOC/SPEC passaram.
+
+## MEM-01 — Planos e matrículas
+
+Backend, a partir de `backend/`, com o PostgreSQL nativo e o banco separado de
+teste disponíveis. No ambiente Windows desta entrega, a execução usou o Python
+3.12 de `.venv/Scripts/`, carregando `../.env` por `dotenv`.
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/memberships tests/classes tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+A bateria passou com 36 testes. Incluiu fronteiras civis de São Paulo, permissões
+e CSRF, plano inativo, revisão superada, replay e renovação com histórico e
+limites preservados, auditoria, round trip da migration e paridade do metadata.
+A integração executou matrícula e renovação sem módulo financeiro e com registros
+sintéticos pendente e recusado, revertidos com o teste. O gateway ficou ausente
+durante todo o ensaio.
+
+Frontend, a partir de `frontend/`, com o Node 24 do ambiente local.
+
+```powershell
+node node_modules/vitest/vitest.mjs run
+node node_modules/typescript/bin/tsc --noEmit
+node node_modules/eslint/bin/eslint.js .
+node node_modules/vite/bin/vite.js build
+```
+
+A suíte completa passou com 125 testes. As novas jornadas de componente
+exercitam desativação do plano, matrícula pelo atendente, renovação antecipada
+e recusa da tela ao cliente. Ruff, mypy, lint, tipos e build aprovados.
+A revisão 0019 foi aplicada no banco local de desenvolvimento, com contagens
+de clientes, funcionários e aulas preservadas. A checagem de schema e os 14
+[testes do iniciador](iniciador-local-20261120.md) passaram com a nova revisão.

@@ -17,6 +17,8 @@ class Operation(StrEnum):
     MANAGE_EMPLOYEES = "manage_employees"
     MANAGE_EQUIPMENT = "manage_equipment"
     MANAGE_CLASSES = "manage_classes"
+    MANAGE_PLANS = "manage_plans"
+    MANAGE_MEMBERSHIPS = "manage_memberships"
     MANAGE_EXERCISES = "manage_exercises"
     MANAGE_CORPUS = "manage_corpus"
     MANAGE_CLIENTS = "manage_clients"
@@ -42,6 +44,8 @@ _ADMINISTRATIVE = {
     Operation.MANAGE_EXERCISES: frozenset({Role.ADMINISTRADOR, Role.INSTRUTOR}),
     Operation.MANAGE_EQUIPMENT: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_CLASSES: frozenset({Role.ADMINISTRADOR}),
+    Operation.MANAGE_PLANS: frozenset({Role.ADMINISTRADOR}),
+    Operation.MANAGE_MEMBERSHIPS: frozenset({Role.ATENDENTE}),
     Operation.MANAGE_EMPLOYEES: frozenset({Role.ADMINISTRADOR}),
     Operation.MANAGE_CLIENTS: frozenset({Role.ADMINISTRADOR, Role.ATENDENTE}),
     Operation.MANAGE_ASSIGNMENTS: frozenset({Role.ADMINISTRADOR}),

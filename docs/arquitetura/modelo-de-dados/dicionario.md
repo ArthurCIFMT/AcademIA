@@ -500,6 +500,7 @@ Unicidades: execucao_id+fragmento_id.
 | janela_limite | varchar(25) | opcional | — |
 | preco_base | numeric(12,2) | opcional | — |
 | ativo | boolean | required | — |
+| revision | integer | required, maior ou igual a 1 | — |
 
 ## matricula — MOD-08
 

@@ -1796,6 +1796,12 @@
           "type": "boolean",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "flags": "required",
+          "ref": null
         }
       ],
       "unique": []

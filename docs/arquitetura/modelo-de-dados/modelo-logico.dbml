@@ -404,6 +404,7 @@ Table plano {
   janela_limite varchar(25)
   preco_base numeric(12,2)
   ativo boolean [not null]
+  revision integer [not null]
 }
 
 Table matricula {

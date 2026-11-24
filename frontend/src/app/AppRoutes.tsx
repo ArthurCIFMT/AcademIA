@@ -6,6 +6,7 @@ import { LoginForm } from "../features/auth/LoginForm";
 import { RequestRecoveryPage, ResetPasswordPage } from "../features/auth/RecoveryPages";
 import { useSession, type SessionController } from "../features/auth/useSession";
 import { AdminClassSchedule, PublicClassSchedule } from "../features/classes/ClassSchedule";
+import { MembershipsPage, PlansPage } from "../features/memberships/Memberships";
 import { EquipmentCatalogPage, EquipmentInventoryPage } from "../features/equipment/EquipmentPages";
 import { TrainingQueuePage, TrainingReviewPage } from "../features/training-review/TrainingReview";
 import { CorpusPage } from "../features/corpus/CorpusPage";
@@ -27,6 +28,8 @@ function SessionBoundary() {
   const isOnboarding = useMatch(paths.clientOnboarding) !== null;
   const isEquipmentAdmin = useMatch(paths.equipment) !== null;
   const isClassesAdmin = useMatch(paths.adminClasses) !== null;
+  const isPlans = useMatch(paths.adminPlans) !== null;
+  const isMemberships = useMatch(paths.attendantMemberships) !== null;
   const isAdminExercises = useMatch(paths.adminExercises) !== null;
   const isInstructorExercises = useMatch(paths.instructorExercises) !== null;
   const isWorkoutEditor = useMatch("/area/instrutor/clientes/:clientId/treinos") !== null;
@@ -35,7 +38,7 @@ function SessionBoundary() {
   const isCorpus = useMatch("/area/administracao/corpus") !== null || isTechnicalCorpus;
   const isAIGeneration = useMatch(paths.clientGeneration) !== null;
   const isChat = useMatch(paths.clientAssistant) !== null;
-  const session = useSession(isChat || isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isClassesAdmin || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
+  const session = useSession(isChat || isAIGeneration || isCorpus || isOnboarding || isEquipmentAdmin || isClassesAdmin || isPlans || isMemberships || isAdminExercises || isInstructorExercises || isWorkoutEditor || isTrainingReview);
   const { state } = session;
 
   if (state.status === "checking") return <PublicFrame><StatusMessage state="loading" title="Verificando sessão…" /></PublicFrame>;
@@ -84,7 +87,7 @@ function AccessDenied() {
 
 type Feature = "assistant" | "staff" | "clients" | "assignments" | "my-assignments"
   | "onboarding" | "assessments" | "equipment" | "exercises" | "training-editor" | "training-review"
-  | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes";
+  | "training-queue" | "my-training" | "corpus" | "admin-classes" | "client-classes" | "admin-plans" | "memberships";
 
 function AreaContent({ feature, role, session, retrySession }: {
   feature?: Feature; role: Role; session: Session; retrySession: () => Promise<void>;
@@ -94,6 +97,8 @@ function AreaContent({ feature, role, session, retrySession }: {
     case "equipment": return <EquipmentInventoryPage key={userId} csrf={csrf} />;
     case "admin-classes": return <AdminClassSchedule key={userId} csrf={csrf} />;
     case "client-classes": return <PublicClassSchedule inClientArea />;
+    case "admin-plans": return <PlansPage key={userId} csrf={csrf} />;
+    case "memberships": return <MembershipsPage key={userId} csrf={csrf} />;
     case "exercises": return <ExerciseCatalog key={userId} csrf={csrf} />;
     case "onboarding": return <OwnOnboardingPage key={userId} csrf={csrf} />;
     case "staff": return <StaffDirectory key={userId} session={session} onAccessChange={retrySession} />;
@@ -177,6 +182,8 @@ export function AppRoutes() {
         <Route path={paths.corpus} element={<AreaPage requiredRole="ADMINISTRADOR" feature="corpus" />} />
         <Route path={paths.equipment} element={<AreaPage requiredRole="ADMINISTRADOR" feature="equipment" />} />
         <Route path={paths.adminClasses} element={<AreaPage requiredRole="ADMINISTRADOR" feature="admin-classes" />} />
+        <Route path={paths.adminPlans} element={<AreaPage requiredRole="ADMINISTRADOR" feature="admin-plans" />} />
+        <Route path={paths.attendantMemberships} element={<AreaPage requiredRole="ATENDENTE" feature="memberships" />} />
         <Route path={paths.staff} element={<AreaPage requiredRole="ADMINISTRADOR" feature="staff" />} />
         <Route path={paths.adminClients} element={<AreaPage requiredRole="ADMINISTRADOR" feature="clients" />} />
         <Route path={paths.attendantClients} element={<AreaPage requiredRole="ATENDENTE" feature="clients" />} />
