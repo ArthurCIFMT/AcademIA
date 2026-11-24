@@ -19,6 +19,7 @@ export const paths = {
   reviews: "/area/instrutor/revisoes",
   instructorExercises: "/area/instrutor/exercicios",
   attendantClients: "/area/atendimento/clientes",
+  attendantRecognition: "/area/atendimento/reconhecimento",
   attendantMemberships: "/area/atendimento/matriculas",
   adminClients: "/area/administracao/clientes",
   staff: "/area/administracao/funcionarios",
@@ -48,6 +49,7 @@ const tasks: Record<Role, MenuItem[]> = {
   ATENDENTE: [
     { path: paths.attendantClients, label: "Clientes e convites" },
     { path: paths.attendantMemberships, label: "Matrículas" },
+    { path: paths.attendantRecognition, label: "Reconhecimento facial" },
   ],
   ADMINISTRADOR: [
     { path: paths.adminClients, label: "Gerenciar clientes" },

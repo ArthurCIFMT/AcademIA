@@ -71,6 +71,7 @@ módulos antes de INF-01, conforme orientação do professor.
 |---|---|---|
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
+| ACS-02 | CONCLUIDO | [Reconhecimento facial](../arquitetura/reconhecimento-facial.md). 43 testes de backend incluindo comparação real e concorrência, 131 de frontend e 14 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). |
 | ACS-01 | CONCLUIDO | [Referência facial](../arquitetura/biometria.md). 32 testes de backend, incluindo cadastro e troca com CompreFace real, 128 de frontend e 14 do iniciador. [Comandos e evidência](../testes/comandos.md#acs-01--referência-facial). |
 | FND-01 | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
 | FND-02A | CONCLUIDO | Preparação delegada em 2026-11-04; [evidências](../arquitetura/preparacao-implementacao.md). |
@@ -363,7 +364,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [MEM-01](06-acesso/MEM-01.md) | [Planos e matrícula manual sem pagamento obrigatório](../arquitetura/matriculas.md) | MOD-08 | FND-05, PES-02, IAM-04, GATE-08 | CONCLUIDO |
 | [ACS-01](06-acesso/ACS-01.md) | [Cadastro e substituição da referência biométrica](../arquitetura/biometria.md) | MOD-07 | PES-02, IAM-04, NTF-01, MEM-01, GATE-08 | CONCLUIDO |
-| [ACS-02](06-acesso/ACS-02.md) | Captura facial e integração real de reconhecimento | MOD-07 | FND-06, ACS-01 | PRONTO |
+| [ACS-02](06-acesso/ACS-02.md) | [Captura facial e integração real de reconhecimento](../arquitetura/reconhecimento-facial.md) | MOD-07 | FND-06, ACS-01 | CONCLUIDO |
 | [ACS-07](06-acesso/ACS-07.md) | API externa fictícia de catraca | MOD-07 | FND-06, GATE-08 | PRONTO |
 | [ACS-03](06-acesso/ACS-03.md) | Motor de autorização de entrada | MOD-07, MOD-08 | ACS-02, MEM-01, ACS-07 | BLOQUEADO |
 | [ACS-04](06-acesso/ACS-04.md) | Liberação manual auditada | MOD-07, MOD-12 | ACS-03, FND-08, IAM-04, GATE-08 | BLOQUEADO |

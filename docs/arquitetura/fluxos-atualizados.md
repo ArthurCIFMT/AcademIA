@@ -78,6 +78,7 @@ a referência anterior conforme política. Cliente não troca sua própria biome
 CompreFace é a escolha confirmada em DEC-015. O
 [GATE-08](preparacao-gate-08.md) registra a instância local, as regras aprovadas,
 o contrato e o ensaio real de prontidão do CompreFace 1.2.0 com FaceNet.
+[Captura e eventos normalizados](reconhecimento-facial.md).
 
 - Validar exatamente um rosto antes de cadastrar ou reconhecer, usando detecção
   do provedor com limiar definido; limitar a resposta a um resultado não comprova

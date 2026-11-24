@@ -1921,7 +1921,7 @@
     {
       "name": "evento_acesso",
       "owner": "MOD-07",
-      "note": "Unicidade origem+event_id; desconhecido tem cliente nulo",
+      "note": "Unicidade origem+event_id. Em identificações, somente IDENTIFICADO tem cliente",
       "columns": [
         {
           "name": "id",
@@ -1963,6 +1963,24 @@
           "name": "payload_hash",
           "type": "char(64)",
           "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "direcao",
+          "type": "varchar(10)",
+          "flags": "required",
+          "ref": null
+        },
+        {
+          "name": "resultado_identificacao",
+          "type": "varchar(24)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "similaridade",
+          "type": "double",
+          "flags": "",
           "ref": null
         }
       ],

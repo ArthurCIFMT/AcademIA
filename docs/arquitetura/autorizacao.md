@@ -13,6 +13,8 @@ inativo retira apenas as permissões daquele perfil.
 | Gerenciar planos ativos e inativos | Administrador ativo |
 | Consultar planos ativos, matricular e renovar clientes, consultar histórico | Atendente ativo |
 | Consultar estado e manter referência facial | Atendente ativo. Escrita exige cliente elegível e matrícula registrada |
+| Solicitar identificação por foto | Atendente ativo |
+| Comunicar resultado de identificação facial | Serviço externo com token exclusivo configurado no backend |
 | Consultar ocorrências públicas da agenda | Visitante ou usuário autenticado |
 | Manter catálogo de exercícios | Administrador ou instrutor ativo |
 | Manter literatura e curadoria RAG | Responsável técnico com identidade administrativa ativa; HTTP/tela só em manutenção explicitamente habilitada |

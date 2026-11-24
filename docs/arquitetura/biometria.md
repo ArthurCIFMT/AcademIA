@@ -42,9 +42,9 @@ armazenar foto, imagem codificada, credenciais ou IDs do provedor.
    continua registrada.
 
 `active_client_for_subject` devolve apenas o cliente associado ao identificador
-de uma referência `ATIVA`. A captura de reconhecimento, a prova de identidade
-e a autorização do acesso são entregas posteriores. Confiança de detecção e
-similaridade são medidas diferentes.
+de uma referência `ATIVA`. O [ACS-02](reconhecimento-facial.md) usa essa leitura
+na captura de reconhecimento. A autorização de acesso pertence a outra etapa.
+Confiança de detecção e similaridade são medidas diferentes.
 
 ## Rotas e configuração
 

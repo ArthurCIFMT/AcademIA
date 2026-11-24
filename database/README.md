@@ -58,6 +58,7 @@ A revisão `0019` adiciona [planos e matrículas](../docs/arquitetura/matriculas
 O downgrade 0019 → 0018 remove essas duas tabelas e os dados nelas cadastrados.
 A revisão `0020` adiciona as [referências faciais](../docs/arquitetura/biometria.md).
 O downgrade remove os vínculos locais. Os exemplos do provedor devem ser tratados separadamente.
+A revisão `0021` adiciona o registro idempotente de [identificações faciais](../docs/arquitetura/reconhecimento-facial.md). O downgrade remove os eventos dessa tabela.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
 Ao usar autogeração, importe os modelos no ambiente Alembic e revise o SQL da

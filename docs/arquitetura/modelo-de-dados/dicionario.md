@@ -534,7 +534,7 @@ Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO
 
 ## evento_acesso — MOD-07
 
-Unicidade origem+event_id; desconhecido tem cliente nulo
+Unicidade origem+event_id. Em identificações, somente IDENTIFICADO tem cliente
 
 Unicidades: origem+event_id_externo.
 
@@ -547,6 +547,9 @@ Unicidades: origem+event_id_externo.
 | tipo | varchar(25) | required | — |
 | ocorrido_em | timestamptz | required | — |
 | payload_hash | char(64) | required | — |
+| direcao | varchar(10) | ENTRADA ou SAIDA | — |
+| resultado_identificacao | varchar(24) | exigido para IDENTIFICACAO | — |
+| similaridade | double | opcional, escala 0–1 | — |
 
 ## decisao_acesso — MOD-07
 

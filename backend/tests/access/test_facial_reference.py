@@ -1,6 +1,5 @@
 import os
 from base64 import b64encode
-from collections.abc import Iterator
 from datetime import UTC, date, datetime, timedelta
 from io import BytesIO
 from pathlib import Path
@@ -8,23 +7,18 @@ from uuid import UUID, uuid4
 
 import httpx
 import pytest
-from alembic import command
-from alembic.config import Config
 from PIL import Image
 from sqlalchemy import Connection, select, text
 
 from app.contracts.time import academy_date
-from app.database.connection import (
-    check_database,
-    create_database_engine,
-    create_session_factory,
-)
+from app.database.connection import create_session_factory
 from app.main import create_app
 from app.modules.access.biometrics.images import clean_face_image
 from app.modules.access.biometrics.models import FacialReference
 from app.modules.access.biometrics.provider import (
     CompreFace,
     CompreFaceSettings,
+    FaceCandidate,
     FacialProvider,
     FacialProviderError,
     RejectedFace,
@@ -43,29 +37,6 @@ _ROOT = Path(__file__).resolve().parents[3]
 _ORIGIN = "https://academia.example.test"
 _PASSWORD = "segredo-sintetico-acs01"
 _NOW = datetime.now(UTC)
-
-
-@pytest.fixture
-def anyio_backend() -> str:
-    return "asyncio"
-
-
-@pytest.fixture
-def migration() -> Iterator[Connection]:
-    engine = create_database_engine("test")
-    try:
-        with engine.connect() as connection:
-            outer = connection.begin()
-            try:
-                check_database(connection, "test")
-                config = Config(str(_ROOT / "database/alembic.ini"))
-                config.attributes.update(connection=connection, database_target="test")
-                command.upgrade(config, "head")
-                yield connection
-            finally:
-                outer.rollback()
-    finally:
-        engine.dispose()
 
 
 def _jpeg(image: Image.Image) -> str:
@@ -181,6 +152,10 @@ class ProviderDouble:
         if self.reject:
             raise RejectedFace
 
+    def recognize(self, image: bytes) -> list[FaceCandidate]:
+        self.validate_photo(image)
+        return []
+
     def add_example(self, subject: str, image: bytes) -> UUID:
         self.examples[subject] = uuid4()
         if self.fail_after_create:
@@ -197,9 +172,11 @@ class ProviderDouble:
             del self.examples[subject]
 
 
-def _sample(box: tuple[float, float, float, float]) -> str:
+def _sample(
+    box: tuple[float, float, float, float], filename: str = "accessories_id1.jpg"
+) -> str:
     location = (
-        _ROOT / "backend/data/compreface-v1.2.0/amostras-sinteticas/accessories_id1.jpg"
+        _ROOT / "backend/data/compreface-v1.2.0/amostras-sinteticas" / Path(filename)
     )
     with Image.open(location) as panel:
         x, y = panel.size

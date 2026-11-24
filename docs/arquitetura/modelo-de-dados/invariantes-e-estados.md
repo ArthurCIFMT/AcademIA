@@ -103,7 +103,7 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
 | Documento | PENDENTE → APROVADO → REVOGADO; ativação exige ingestão completa |
 | Ingestão | PROCESSANDO → CONCLUIDA/FALHA/REVOGADA; FALHA retoma PROCESSANDO; PENDENTE_TRATAMENTO exige revisão; reparo de CONCLUIDA retorna PROCESSANDO |
 | Matrícula | Estado persistido ATIVA ou ENCERRADA. Para ATIVA, situação FUTURA, VIGENTE ou VENCIDA deriva do dia civil. A renovação cria outro período. |
-| Acesso | RECEBIDO → IDENTIFICADO/DESCONHECIDO → ALLOW/DENY; passagem é evento separado |
+| Acesso | ACS-02 guarda uma identificação por origem e ID. Só IDENTIFICADO recebe cliente. Autorização ALLOW/DENY e passagem confirmada são etapas próprias |
 | Comando | CRIADO → ACEITO/FALHOU/EXPIRADO; aceito não implica passagem |
 | Aviso | PENDENTE → ENVIADO/FALHOU; reenvio controlado, sem duplicar pendência |
 

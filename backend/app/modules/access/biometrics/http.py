@@ -4,12 +4,15 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from fastapi.routing import APIRoute
-from pydantic import BaseModel, ConfigDict, StringConstraints
 from sqlalchemy.orm import Session, sessionmaker
 from starlette.types import Message
 
 from app.contracts.errors import ErrorResponse
-from app.modules.access.biometrics.images import MAX_IMAGE_BASE64, InvalidFaceImage
+from app.modules.access.biometrics.images import (
+    MAX_IMAGE_BASE64,
+    InvalidFaceImage,
+    PhotoUpload,
+)
 from app.modules.access.biometrics.provider import FacialProvider, RejectedFace
 from app.modules.access.biometrics.service import (
     BiometricsError,
@@ -21,13 +24,6 @@ from app.policies.access import Actor, Operation
 from app.policies.http import AuthenticatedActor, require_permission
 
 _MAX_BODY = MAX_IMAGE_BASE64 + 1024
-
-
-class PhotoUpload(BaseModel):
-    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
-    imagem_base64: Annotated[
-        str, StringConstraints(min_length=1, max_length=MAX_IMAGE_BASE64)
-    ]
 
 
 class BoundPhotoRoute(APIRoute):

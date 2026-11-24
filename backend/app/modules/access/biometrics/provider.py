@@ -29,6 +29,8 @@ class FacialProvider(Protocol):
 
     def validate_photo(self, image: bytes) -> None: ...
 
+    def recognize(self, image: bytes) -> list["FaceCandidate"]: ...
+
     def add_example(self, subject: str, image: bytes) -> UUID: ...
 
     def list_examples(self, subject: str) -> list[UUID]: ...
@@ -90,6 +92,19 @@ class DetectedFace(BaseModel):
 
 class DetectionResult(BaseModel):
     result: list[DetectedFace]
+
+
+class FaceCandidate(BaseModel):
+    subject: Annotated[str, Field(min_length=1, max_length=120)]
+    similarity: Annotated[float, Field(strict=True, ge=0, le=1, allow_inf_nan=False)]
+
+
+class RecognizedFace(DetectedFace):
+    subjects: Annotated[list[FaceCandidate], Field(max_length=2)]
+
+
+class RecognitionResult(BaseModel):
+    result: list[RecognizedFace]
 
 
 class FaceExample(BaseModel):
@@ -165,6 +180,31 @@ class CompreFace:
             image=image,
             params={"limit": "0", "det_prob_threshold": str(self._threshold)},
         )
+        faces = self._face_response(response, DetectionResult).result
+        if len(faces) != 1 or faces[0].box.probability < self._threshold:
+            raise RejectedFace
+
+    def recognize(self, image: bytes) -> list[FaceCandidate]:
+        self.validate_photo(image)
+        response = self._request(
+            "POST",
+            "/recognition/recognize",
+            image=image,
+            params={
+                "limit": "0",
+                "prediction_count": "2",
+                "detect_faces": "true",
+                "det_prob_threshold": str(self._threshold),
+            },
+        )
+        faces = self._face_response(response, RecognitionResult).result
+        if len(faces) != 1 or faces[0].box.probability < self._threshold:
+            raise RejectedFace
+        return faces[0].subjects
+
+    def _face_response[T: BaseModel](
+        self, response: httpx.Response, schema: type[T]
+    ) -> T:
         if response.status_code == 400:
             try:
                 payload = response.json()
@@ -172,9 +212,7 @@ class CompreFace:
                 raise FacialProviderError from None
             if isinstance(payload, dict) and payload.get("code") == 28:
                 raise RejectedFace
-        faces = self._decode(response, DetectionResult).result
-        if len(faces) != 1 or faces[0].box.probability < self._threshold:
-            raise RejectedFace
+        return self._decode(response, schema)
 
     @staticmethod
     def _decode[T: BaseModel](response: httpx.Response, schema: type[T]) -> T:

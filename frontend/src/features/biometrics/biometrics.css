@@ -2,6 +2,18 @@
   margin-block: var(--ac-space-4);
 }
 
-.facial-reference input[type="file"] {
+.facial-recognition select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-block-size: var(--ac-touch-target);
+  padding: var(--ac-space-2);
+  border: 1px solid var(--ac-control-border);
+  border-radius: var(--ac-radius-control);
+  background: var(--ac-surface);
+  color: var(--ac-text);
+  font: inherit;
+}
+
+:is(.facial-reference, .facial-recognition) input[type="file"] {
   max-inline-size: 100%;
 }

@@ -1669,3 +1669,36 @@ sem matrícula, envio protegido e recuperação sem reenviar foto. Ruff,
 mypy, lint, tipos e build passaram. A migration 0020 foi aplicada em
 desenvolvimento com registros anteriores preservados. A checagem de schema
 e os 14 testes do iniciador também passaram.
+
+## ACS-02 — Reconhecimento facial e eventos
+
+Execute no backend com PostgreSQL de teste separado:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts= tests/access tests/memberships tests/contracts tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+uv run --locked mypy
+```
+
+A rodada usou o Python 3.12 de `.venv` com dotenv no Windows. Para o caso
+real, habilite `ACADEMIA_TEST_COMPREFACE=1` e injete no processo as chaves
+da coleção vazia e isolada de ACS-02. A detecção usa o serviço de ensaio do
+GATE-08. A chave de reconhecimento vem de uma coleção dedicada ao ACS-02,
+com credenciais privadas e amostras sintéticas no mesmo diretório do ensaio.
+O teste verifica que a coleção está vazia e limpa o exemplo criado ao final.
+A primeira rodada detectou uma correspondência ambígua na coleção anterior,
+que continha uma referência adicional. Os registros daquela coleção foram
+preservados.
+
+A rodada final aprovou **43 testes**. A comparação real com CompreFace
+1.2.0/FaceNet reconheceu uma apresentação sintética diferente do cadastro,
+recusou outra identidade por baixa similaridade e recusou uma imagem sem
+rosto. Testes controlados confirmaram falha do provedor e ambiguidade sem
+identificação, sessão e CSRF, autenticação da origem externa, reenvio,
+conflito e concorrência com uma única execução de reconhecimento. A
+migration foi verificada por round trip e comparação de metadata.
+
+No frontend, `node node_modules/vitest/vitest.mjs run --maxWorkers=2` aprovou
+**131 testes**, com cenário de erro e reenvio usando o mesmo ID, e com acesso
+restrito a atendentes. TypeScript, ESLint, build, Ruff e mypy também passaram.
+A configuração do iniciador continua nativa. A checagem de schema e seus
+14 testes passaram com a revisão 0021 aplicada no banco local.

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { ApiError, requestApi } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
 import { DirectoryTag } from "../clients/directory-ui";
+import { PhotoInputs, supportedPhoto, toBase64 } from "./PhotoInputs";
 import "./biometrics.css";
 
 type ReferenceStatus = {
@@ -13,24 +14,8 @@ type ReferenceStatus = {
   pendencia: "ENVIO" | "TROCA" | null;
 };
 
-const maxPhotoBytes = 4 * 1024 * 1024;
-const formats = ["image/jpeg", "image/png"];
-
 async function readStatus(path: string, options: RequestInit): Promise<ReferenceStatus> {
   return (await requestApi(path, options)).json() as Promise<ReferenceStatus>;
-}
-
-function toBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const data = typeof reader.result === "string" ? reader.result.split(",", 2)[1] : undefined;
-      if (data) resolve(data);
-      else reject(new Error("Foto inválida."));
-    };
-    reader.onerror = () => reject(new Error("Erro ao ler a foto."));
-    reader.readAsDataURL(file);
-  });
 }
 
 function errorText(error: unknown) {
@@ -77,7 +62,7 @@ export function ClientBiometrics({ clientId, csrf }: { clientId: string; csrf: s
     if (!file) return;
     setError("");
     setNotice("");
-    if ((file.type && !formats.includes(file.type)) || file.size > maxPhotoBytes || !file.size) {
+    if (!supportedPhoto(file)) {
       setError("Selecione um arquivo JPG ou PNG de até 4 MB.");
       setPhoto(undefined);
       return;
@@ -136,8 +121,7 @@ export function ClientBiometrics({ clientId, csrf }: { clientId: string; csrf: s
         : <form className="directory-form" onSubmit={event => { event.preventDefault(); void submit(false); }}>
           <fieldset className="directory-fieldset" disabled={busy}>
             <p className="directory-meta">Use JPG ou PNG de até 4 MB com um único rosto.</p>
-            <label>Selecionar foto <input type="file" accept="image/jpeg,image/png" onChange={choose} /></label>
-            <label>Tirar foto no celular <input type="file" accept="image/*" capture="user" onChange={choose} /></label>
+            <PhotoInputs onChange={choose} />
             {photo && <p role="status">Foto selecionada.</p>}
             <Button type="submit" pending={busy} disabled={!photo}>
               {status.cadastrada ? "Substituir foto" : "Cadastrar foto"}

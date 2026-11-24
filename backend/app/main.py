@@ -15,6 +15,8 @@ from app.modules.access.biometrics.provider import (
     CompreFaceSettings,
     FacialProvider,
 )
+from app.modules.access.events.contracts import AccessEventsSettings
+from app.modules.access.events.http import identification_router
 from app.modules.ai.chat.http import chat_router
 from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
@@ -52,6 +54,7 @@ def create_app(
     identity_sessions: sessionmaker[Session] | None = None,
     auth_settings: AuthSettings | None = None,
     biometrics_provider: FacialProvider | None = None,
+    access_events_settings: AccessEventsSettings | None = None,
 ) -> FastAPI:
     settings = Settings()
     app = FastAPI(
@@ -85,6 +88,16 @@ def create_app(
             if face_settings.url is not None:
                 biometrics_provider = CompreFace(face_settings)
     app.include_router(biometrics_router(get_sessions, biometrics_provider))
+    if access_events_settings is None:
+        try:
+            access_events_settings = AccessEventsSettings()
+        except ValidationError:
+            logging.getLogger(__name__).warning(
+                "Configuração da identificação inválida."
+            )
+    app.include_router(
+        identification_router(get_sessions, biometrics_provider, access_events_settings)
+    )
     app.include_router(exercise_router(get_sessions))
     app.include_router(workout_router(get_sessions))
     app.include_router(review_queue_router(get_sessions))

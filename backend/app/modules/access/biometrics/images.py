@@ -1,11 +1,20 @@
 from base64 import b64decode
 from io import BytesIO
+from typing import Annotated
 
 from PIL import Image, ImageOps
+from pydantic import BaseModel, ConfigDict, StringConstraints
 
 MAX_IMAGE_BYTES = 4 * 1024 * 1024
 MAX_IMAGE_BASE64 = (MAX_IMAGE_BYTES + 2) // 3 * 4
 MAX_DIMENSION = 4096
+
+
+class PhotoUpload(BaseModel):
+    model_config = ConfigDict(extra="forbid", hide_input_in_errors=True)
+    imagem_base64: Annotated[
+        str, StringConstraints(min_length=1, max_length=MAX_IMAGE_BASE64)
+    ]
 
 
 class InvalidFaceImage(ValueError):
