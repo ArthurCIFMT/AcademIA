@@ -18,6 +18,7 @@ Table usuario {
   estado varchar(20) [not null]
   criado_em timestamptz [not null]
   revision integer [not null]
+  endereco varchar(300)
 }
 
 Table usuario_papel {
@@ -431,6 +432,7 @@ Table biometria {
   estado varchar(25) [not null]
   cadastrada_por uuid [not null]
   criada_em timestamptz [not null]
+  foto_perfil bytea
   Note: 'Owner MOD-07. Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar'
 }
 
@@ -522,6 +524,8 @@ Table pagamento {
   cobranca_id uuid
   cliente_id uuid [not null]
   plano_id uuid
+  plano_nome_snapshot varchar(100)
+  simulado_em timestamptz
   origem varchar(25) [not null]
   referencia_externa varchar(150)
   valor numeric(12,2) [not null]
@@ -537,7 +541,7 @@ Table pagamento {
   indexes {
     (id, cliente_id) [unique]
   }
-  Note: 'Owner MOD-08. Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id'
+  Note: 'Owner MOD-08. Registro manual e compra simulada; compra exige plano_id, nome contratado e instante; correções manuais preservam vínculo do cliente'
 }
 
 Table aula_ocorrencia {

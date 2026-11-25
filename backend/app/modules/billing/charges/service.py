@@ -23,7 +23,7 @@ from app.modules.billing.charges.schemas import (
     RevisionView,
     UpdateCharge,
 )
-from app.modules.billing.payments.models import Payment
+from app.modules.billing.payments.models import CONFIRMED_PAYMENT, Payment
 from app.modules.identity.roles import effective_roles
 from app.modules.memberships.service import membership_belongs_to_client
 from app.modules.people.assignment_directory import AssignmentDirectory, ClientReference
@@ -31,13 +31,9 @@ from app.modules.people.staff import registered_employee_names
 from app.policies.access import Actor, Operation, allows
 
 ZERO = Decimal("0.00")
-_PAID = (
-    Payment.estado == "CONFIRMADO",
-    Payment.confirmado_em.is_not(None),
-)
 _total_paid = (
     select(func.sum(Payment.valor))
-    .where(Payment.cobranca_id == Charge.id, *_PAID)
+    .where(Payment.cobranca_id == Charge.id, *CONFIRMED_PAYMENT)
     .correlate(Charge)
     .scalar_subquery()
 )

@@ -1,5 +1,17 @@
 # Cadastro e manutenção de clientes
 
+## Perfil próprio
+
+`GET /api/v1/meu-perfil` lê a identidade autenticada e os dados cadastrais
+dos seus perfis ativos. `PATCH /api/v1/meu-perfil/endereco` recebe apenas
+`endereco`, um endereço em texto de até 300 caracteres. O campo é opcional
+na conta e pode ser limpo com `null`. A escrita exige sessão e CSRF e
+usa o titular da sessão. O mesmo endereço acompanha os papéis acumulados.
+As respostas usam `Cache-Control: no-store`.
+Quando existe miniatura de referência ativa, `GET /api/v1/meu-perfil/foto`
+retorna JPEG somente ao titular. A tela de perfil mantém as iniciais quando
+o arquivo não está disponível.
+
 PES-02 monta as rotas no ponto de composição `backend/app/main.py` e liga
 a tela às áreas administrativa e de atendimento em `frontend/src/app/AppRoutes.tsx`.
 O módulo reutiliza o cliente HTTP da SPA e a tela pública de primeiro acesso.

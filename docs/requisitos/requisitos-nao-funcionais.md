@@ -17,8 +17,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 | RNF-07 | O sistema deve possuir testes unitários, de integração e de contrato da API, com atenção especial à IA e ao evento facial externo. |
 | RNF-08 | Configurações e segredos devem vir de ambiente, sem valores sensíveis versionados. |
 | RNF-09 | Convites e recuperação devem usar adaptador de SMTP ou API de provedor de e-mail. |
-| RNF-10 | A aplicação deve funcionar localmente antes de ser containerizada. |
-| RNF-11 | Dockerfiles e Docker Compose devem ser implementados somente após o MVP e a maioria dos módulos. |
+| RNF-10 | A aplicação acadêmica deve ser instalável e executável localmente no Windows. |
+| RNF-11 | A aplicação usa serviços locais nativos. Docker é reservado à instância local dedicada de CompreFace. |
 | RNF-12 | A fase final de infraestrutura deve definir firewall/restrição de rede, exposição mínima de portas e isolamento dos serviços internos. |
 | RNF-13 | A busca vetorial deve alcançar latência p95 de até dois segundos no ambiente e volume de teste documentados. |
 | RNF-14 | Interfaces destinadas ao cliente devem ser responsivas para uso em celular. |
@@ -36,8 +36,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 responsabilidade exclusiva do backend. A solução concreta será decidida na fase
 final e deve cobrir, no mínimo:
 
-- somente endpoints necessários expostos externamente;
-- PostgreSQL e banco vetorial em rede não pública;
+- serviços da aplicação acessíveis apenas em loopback;
+- PostgreSQL em loopback e Qdrant em diretório persistente local;
 - administração de identidade restrita;
 - limites de origem, tamanho de requisição e taxa quando aplicáveis;
 - documentação das regras para o ambiente acadêmico.

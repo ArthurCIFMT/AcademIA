@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.contracts.time import UtcTimestamp
 from app.events.contracts import AuditEvent
-from app.modules.access.biometrics.images import clean_face_image
+from app.modules.access.biometrics.images import clean_face_image, profile_thumbnail
 from app.modules.access.biometrics.models import FacialReference
 from app.modules.access.biometrics.provider import FacialProvider, FacialProviderError
 from app.modules.audit.service import record_audit
@@ -47,6 +47,15 @@ def active_client_for_subject(db: Session, subject: str) -> UUID | None:
     return db.scalar(
         select(FacialReference.cliente_id).where(
             FacialReference.subject_externo == subject,
+            FacialReference.estado == "ATIVA",
+        )
+    )
+
+
+def read_profile_photo(db: Session, client_id: UUID) -> bytes | None:
+    return db.scalar(
+        select(FacialReference.foto_perfil).where(
+            FacialReference.cliente_id == client_id,
             FacialReference.estado == "ATIVA",
         )
     )
@@ -131,6 +140,7 @@ class ReferenceService:
                 pending.image_id = str(
                     self._provider.add_example(pending.subject_externo, image)
                 )
+                pending.foto_perfil = profile_thumbnail(image)
                 pending.estado = "PRONTA"
             step = "descarte_anterior"
             with self._sessions.begin() as db:

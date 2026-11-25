@@ -32,7 +32,8 @@ function mount(path: string, ...replies: Array<Response | Error>) {
     if (reply instanceof Error) request.mockRejectedValueOnce(reply);
     else request.mockResolvedValueOnce(reply);
   }
-  vi.stubGlobal("fetch", request);
+  vi.stubGlobal("fetch", (url: string, options: RequestInit) =>
+    url.endsWith("/notificacoes/pendentes") ? Promise.resolve(Response.json([])) : request(url, options));
   render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>);
   return request;
 }

@@ -9,6 +9,7 @@ from app.modules.access.attendance.service import (
     confirmed_visits_by_hour,
     current_occupancy,
 )
+from app.modules.billing.reporting import financial_overview
 from app.modules.dashboard.contracts import (
     Available,
     DashboardOverview,
@@ -73,4 +74,5 @@ def overview(sessions: sessionmaker[Session], *, at: datetime) -> DashboardOverv
         funcionarios=read("funcionarios", registered_employee_count),
         lotacao=read("lotacao", current_occupancy),
         frequencia=read("frequencia", lambda db: frequency(db, at)),
+        financeiro=read("financeiro", lambda db: financial_overview(db, at=at)),
     )

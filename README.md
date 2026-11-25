@@ -22,8 +22,9 @@ O [prompt mestre](docs/prompts/00-prompt-mestre.md) orienta planejamento e os
 
 **MVP acadêmico concluído**, com TST-01 aprovado e PG-01 fechado.
 [Evidências e limites do aceite](docs/testes/aceitacao-mvp.md).
-A revisão manual do aplicativo local é o próximo passo; funcionalidades
-pós-MVP permanecem no roteiro.
+A revisão manual pode ser feita no aplicativo local. As entregas pós-MVP incluem
+o acesso biométrico e os registros financeiros didáticos. A instalação acadêmica
+continua local, com Docker reservado ao CompreFace.
 
 O [manifesto](docs/prompts/README.md) registra capacidades entregues, pendentes,
 dependências e evidências. O resumo por módulo está no

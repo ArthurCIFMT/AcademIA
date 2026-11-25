@@ -1,6 +1,13 @@
 # Referência facial — ACS-01
 
-O atendente autorizado seleciona o cliente na área **Atendimento → Matrículas**
+O cadastro mostra o nome e a prévia local do arquivo selecionado, o estado
+de envio e a confirmação da referência. A consulta exibe a data registrada
+na API. A referência exige JPG ou PNG de até 4 MB, com lado de até 4096 px.
+CompreFace configurado indica que o adaptador está habilitado. Uma falha de
+comunicação durante o envio exibe o aviso de serviço indisponível.
+
+O atendente autorizado seleciona **Matrícula e acesso** nos dados do cliente,
+na área **Atendimento → Clientes e convites**,
 e envia ou captura a foto. O backend exige perfil de cliente habilitado e uma
 matrícula registrada pelo atendente. A data de vigência será avaliada no motor
 de acesso. Uma matrícula com início futuro permite preparar a referência.
@@ -14,13 +21,21 @@ limitar a quantidade devolvida pelo detector. A similaridade inicial de 0,95
 pertence ao reconhecimento de uma nova captura.
 [Contrato do CompreFace 1.2.0](https://github.com/exadel-inc/CompreFace/blob/v1.2.0/docs/Rest-API-description.md).
 
-Os bytes da foto transitam somente em memória no backend. A instância local
+Os bytes da foto original transitam somente em memória no backend. A instância local
 segue a configuração do GATE-08 e conserva a representação facial necessária,
 com armazenamento da imagem bruta desativado no provedor. O banco da aplicação
 guarda um identificador opaco por foto, o identificador do exemplo no provedor,
-estado, atendente e horário. A resposta ao navegador contém apenas o status.
+estado, atendente e horário. A resposta de cadastro contém apenas o status.
 Auditoria e aviso interno para administradores registram a operação, sem
 armazenar foto, imagem codificada, credenciais ou IDs do provedor.
+
+Ao confirmar um novo cadastro, o AcademIA guarda uma miniatura JPEG com lado
+máximo de 192 px no próprio registro facial. A API do perfil só apresenta a
+miniatura da referência ativa ao titular autenticado. Alteração ou remoção da
+referência altera a foto consultável na mesma transação. Uma recuperação de
+envio ambíguo pode ativar a referência sem miniatura quando os bytes originais
+já tiverem sido descartados. Esses casos, assim como cadastros anteriores à
+migration, mostram as iniciais em Meu perfil.
 
 ## Troca e recuperação
 

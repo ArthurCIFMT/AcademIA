@@ -4,6 +4,13 @@ export type Indicator<T> = { estado: "DISPONIVEL"; valor: T } | { estado: "INDIS
 type Week = { inicio: string; visitas: number };
 type Day = { data: string; visitas: number; por_hora: { hora: number; visitas: number }[] };
 export type Frequency = { semanas: Week[]; dias: Day[] };
+export type FinancialTotals = { cobrado: string; recebido: string; pendente: string; vencido: string };
+export type FinancialOverview = {
+  competencia_atual: string;
+  mes: FinancialTotals;
+  ano: FinancialTotals;
+  total: FinancialTotals;
+};
 
 export type DashboardOverview = {
   consultado_em: string;
@@ -12,6 +19,7 @@ export type DashboardOverview = {
   funcionarios: Indicator<number>;
   lotacao: Indicator<number>;
   frequencia: Indicator<Frequency>;
+  financeiro?: Indicator<FinancialOverview>;
 };
 
 export async function loadDashboard(signal: AbortSignal) {

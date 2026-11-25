@@ -8,9 +8,10 @@ from app.modules.identity.models import AccountState, Role, User, UserRole
 from app.modules.people.profiles import ClientProfile
 
 
-def lock_onboarding_client(session: Session, client_id: UUID) -> date | None:
-    """Serializa escritas do onboarding e mudanças no perfil do cliente."""
-    return session.scalar(
+def onboarding_birth(
+    session: Session, client_id: UUID, *, lock: bool = False
+) -> date | None:
+    query = (
         select(ClientProfile.data_nascimento)
         .join(User, User.id == ClientProfile.usuario_id)
         .join(UserRole, UserRole.usuario_id == User.id)
@@ -20,5 +21,12 @@ def lock_onboarding_client(session: Session, client_id: UUID) -> date | None:
             ClientProfile.ativo.is_(True),
             UserRole.papel == Role.CLIENTE,
         )
-        .with_for_update(of=(User, ClientProfile), key_share=True)
     )
+    if lock:
+        query = query.with_for_update(of=(User, ClientProfile), key_share=True)
+    return session.scalar(query)
+
+
+def lock_onboarding_client(session: Session, client_id: UUID) -> date | None:
+    """Serializa escritas do onboarding e mudanças no perfil do cliente."""
+    return onboarding_birth(session, client_id, lock=True)

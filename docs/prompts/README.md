@@ -51,13 +51,13 @@ instrutor e conferência técnica de corpus/casos pelo responsável permanecem.
 | GATE-03 | Academia única ou múltipla | ADR aceito | FECHADO |
 | GATE-04 | Provedores, banco vetorial, livro/corpus, política de triagem, resumo, limites por rota e métricas de MRF01–MRF15; fluxo semântico autorizado | ADRs e requisitos aprovados | FECHADO |
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | FECHADO |
-| GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | FECHADO |
+| GATE-06 | Serviços e comandos locais | Guia local aceito | FECHADO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](../arquitetura/preparacao-gate-08.md) | FECHADO |
-| GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
+| GATE-09 | Financeiro simulado local, independente da matrícula | [RF-31](../requisitos/requisitos-funcionais.md#rf-31--simular-compra-de-plano-e-matricular-cliente-pelo-atendente) e FIN-02. Decisão do responsável para a entrega acadêmica | FECHADO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
-| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](../testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
-| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes da validação final da instalação local | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](../testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
+| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | [Escopo, qualidade visual e evidências](../arquitetura/rastreabilidade.md#escopo-de-admissão-do-pg-02) | FECHADO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](../arquitetura/preparacao-implementacao.md).
 Isso registra decisões e não instalação/ensaio. Gates de fases posteriores não impedem o trabalho
@@ -72,6 +72,13 @@ módulos antes de INF-01, conforme orientação do professor.
 | P00 | CONCLUIDO | Commits a17b993 e 528a25c: repositório e regras iniciais. |
 | MEM-01 | CONCLUIDO | [Planos e matrículas](../arquitetura/matriculas.md). 36 testes de backend e 125 de frontend aprovados, com migration 0019 no PostgreSQL local e checagem do iniciador. [Comandos e evidência](../testes/comandos.md#mem-01--planos-e-matrículas). |
 | FIN-01 | CONCLUIDO | [Cobranças e consulta financeira](../arquitetura/cobrancas.md). 98 testes de backend, 153 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#fin-01--cobranças-e-consulta-financeira). |
+| FIN-02 | CONCLUIDO | [Compra simulada](../arquitetura/compra-simulada.md), com histórico e revisão 0027 aplicada localmente após backup. [Testes e migração](../testes/comandos.md#fin-02--compra-simulada-de-plano). |
+| FIN-03 | CONCLUIDO | [Financeiro simulado no painel administrativo](../arquitetura/painel-administrativo.md#financeiro-simulado). [Testes e verificação no Edge](../testes/comandos.md#fin-03--indicadores-financeiros-simulados). |
+| INF-01 | CONCLUIDO | [Instalação local](../instalacao/instalacao-local.md) com lockfiles, build e verificação de inicialização. [Comandos e evidência](../testes/comandos.md#inf-01--pré-requisitos-e-build-local). |
+| INF-02 | CONCLUIDO | Abertura e encerramento reais pelo iniciador, com proxy, PostgreSQL, Mailpit e simulador local. [Comandos e evidência](../testes/comandos.md#inf-02--comunicação-e-prontidão-dos-serviços-locais) de 59 testes de backend e 16 do iniciador. |
+| INF-03 | CONCLUIDO | PostgreSQL limitado ao loopback e diagnóstico de prontidão protegido. Persistência verificada em dois reinícios. [Comandos e evidência](../testes/comandos.md#inf-03--segurança-e-persistência-locais) dos 56 testes de backend e 20 do iniciador. |
+| INF-04 | CONCLUIDO | Instalação isolada, migrations repetidas, dois ciclos do iniciador, restauração de backups sintéticos e jornadas no Edge. [Comandos e evidências](../testes/comandos.md#inf-04--instalação-local-e-teste-integrado). |
+| VAL-01 | CONCLUIDO | [Matriz final](../arquitetura/rastreabilidade.md) com escopo acadêmico e [conferência do modelo](../testes/comandos.md#val-01--conferência-documental-e-do-modelo). Regressão de migrations com asserção antiga registrada para VAL-02. |
 | MEM-00 | CONCLUIDO | [Pagamentos manuais](../arquitetura/pagamentos-manuais.md). 95 testes de backend, 148 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#mem-00--pagamentos-manuais). |
 | DSH-01 | CONCLUIDO | [Painel administrativo](../arquitetura/painel-administrativo.md). 83 testes de backend, 143 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#dsh-01--painel-administrativo). |
 | ACS-06 | CONCLUIDO | [Telas de frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). 81 testes de backend, 137 de frontend, 16 do iniciador e nove jornadas no Edge. [Comandos e evidência](../testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
@@ -139,7 +146,7 @@ ou link de relatório. A numeração das seções não substitui as dependência
 ### Correção e execução parcial AI-06 — 2026-11-12
 
 [Runner](../testes/avaliacao-ia.md), [correção](../testes/ai06-correcao-fundamentacao.md),
-[relatórios](../testes/comandos.md#correção-com-livro-e-prompt-v3--2026-11-12) e
+[relatórios](../testes/comandos.md#correção-com-livro-e-prompt-v3--2026-11-12-histórico-da-amostra-v2) e
 [consolidação](../testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json). Livro Nahas incorporado ao catálogo,
 fontTools para CFF e política de quatro páginas físicas válidas. Prompt academia-ia-v3,
 duas consultas fixas e apresentação factual após validação; o LLM continua gerando os itens.
@@ -348,7 +355,7 @@ UX-08 padronizou [cadastros, catálogos e operação administrativa](../testes/u
 UX-09 concluiu o [aceite visual e a regressão integrada](../testes/ux09-aceite-visual.md)
 das telas da trilha.
 
-Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
+Esta sequência antecede matrícula, biometria, agenda, dashboard e validação local final.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
 da pasta 10. Aceites funcionais anteriores permanecem históricos; o acabamento
 visual exige seu próprio aceite em UX-09. Módulos novos depois dele reutilizam
@@ -384,7 +391,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [AUL-01](07-complementares/AUL-01.md) | [Agenda de aulas por ocorrências](../arquitetura/agenda.md) | MOD-09 | IAM-03, IAM-04 | CONCLUIDO |
-| [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
+| [AUL-02](07-complementares/AUL-02.md) | Reserva e capacidade, fora da entrega local | MOD-09 | AUL-01, GATE-07 | DISPENSADO |
 | [DSH-01](07-complementares/DSH-01.md) | [Dashboard administrativo base](../arquitetura/painel-administrativo.md) | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | CONCLUIDO |
 
 ## Financeiro tardio
@@ -393,24 +400,24 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [MEM-00](06-acesso/MEM-00.md) | [Registro manual opcional de pagamento](../arquitetura/pagamentos-manuais.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
 | [FIN-01](08-financeiro/FIN-01.md) | [Cobranças e consulta financeira](../arquitetura/cobrancas.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
-| [FIN-02](08-financeiro/FIN-02.md) | Compra e confirmação por gateway | MOD-08 | FIN-01, NTF-01, GATE-09 | BLOQUEADO |
-| [FIN-03](08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | BLOQUEADO |
+| [FIN-02](08-financeiro/FIN-02.md) | Simulação local de compra de plano | MOD-08 | FIN-01, GATE-09 | CONCLUIDO |
+| [FIN-03](08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | CONCLUIDO |
 
 ## Infraestrutura final
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [INF-01](09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | PRONTO |
-| [INF-02](09-infraestrutura/INF-02.md) | Compose dos serviços selecionados | MOD-00 | INF-01 | BLOQUEADO |
-| [INF-03](09-infraestrutura/INF-03.md) | Rede, volumes e restrição de exposição | MOD-00 | INF-02 | BLOQUEADO |
-| [INF-04](09-infraestrutura/INF-04.md) | Instalação e teste integrado em Docker | MOD-00 | INF-03, TST-01 | BLOQUEADO |
+| [INF-01](09-infraestrutura/INF-01.md) | Pré-requisitos e build para instalação local | MOD-00 | PG-01, PG-03 | CONCLUIDO |
+| [INF-02](09-infraestrutura/INF-02.md) | Comunicação e prontidão dos serviços locais | MOD-00 | INF-01 | CONCLUIDO |
+| [INF-03](09-infraestrutura/INF-03.md) | Segurança e persistência locais | MOD-00 | INF-02 | CONCLUIDO |
+| [INF-04](09-infraestrutura/INF-04.md) | Instalação local e teste integrado | MOD-00 | INF-03, TST-01 | CONCLUIDO |
 
 ## Validação final
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [VAL-01](10-validacao-final/VAL-01.md) | Rastreabilidade e escopo final | MOD-00–MOD-12 | PG-02 | BLOQUEADO |
-| [VAL-02](10-validacao-final/VAL-02.md) | Aceitação e regressão dos módulos finais | MOD-00–MOD-12 conforme escopo | VAL-01 | BLOQUEADO |
+| [VAL-01](10-validacao-final/VAL-01.md) | Rastreabilidade e escopo final | MOD-00–MOD-12 | PG-02 | CONCLUIDO |
+| [VAL-02](10-validacao-final/VAL-02.md) | Aceitação e regressão dos módulos finais | MOD-00–MOD-12 conforme escopo | VAL-01 | PRONTO |
 | [VAL-03](10-validacao-final/VAL-03.md) | Documentação e roteiro de demonstração acadêmica | MOD-00 | VAL-02, INF-04 | BLOQUEADO |
 
 ## Fronteira do MVP
@@ -421,10 +428,10 @@ com avaliação posterior, bloqueio de saúde, equipamentos disponíveis, reten�
 15 versões, saída em português, ficha manual e adaptação versionada.
 MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
-AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
+AUL-02 é opcional e depende de requisito complementar. Financeiro é simulado.
 MEM-00 entrega [registro manual opcional](../arquitetura/pagamentos-manuais.md).
 Matrícula e acesso acadêmico seguem a política independente do financeiro.
-INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
+INF-01 exige PG-01 e PG-03. Os testes ocorrem desde a fundação.
 
 ## Leitura antes da implementação
 
@@ -440,10 +447,16 @@ A revisão manual permanece disponível no aplicativo local. ACS-06, AUL-01 e
 DSH-01 completaram o marco PG-03. Consulte o estado dos cartões antes de executar
 as entregas de financeiro e de infraestrutura.
 
-PG-02 não depende dos próprios cartões VAL. Reservas e financeiro opcionais/adiados
-exigem registro explícito de escopo/dispensa; não omitir requisitos silenciosamente.
+PG-02 foi fechado para a entrega local definida na
+[matriz de rastreabilidade](../arquitetura/rastreabilidade.md).
+Reservas estão dispensadas nesta entrega e financeiro está restrito à
+simulação. A regressão final do escopo selecionado segue em VAL-02.
 
 ## Manutenção após revisão manual
+
+2026-11-24: [revisão local e financeiro simulado](../testes/comandos.md#revisão-local-e-financeiro-simulado--2026-11-24).
+Os cartões INF agora validam a instalação local. O FIN-02 especifica a compra
+simulada. As telas financeiras existentes identificam os valores como fictícios.
 
 2026-11-19: [correções de cargos, caixa local e carga de catálogo](../testes/revisao-manual-20261119.md).
 Escopo solicitado pelo responsável após abrir o aplicativo: convites explicados,

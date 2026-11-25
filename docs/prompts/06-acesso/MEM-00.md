@@ -31,13 +31,13 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Registrar confirmação manual de pagamento com cliente, valor, data, método,
-   referência/comprovante e funcionário responsável, sem checkout nem gateway.
+   referência fictícia e funcionário responsável, sem transação financeira.
 2. Definir estados e correções auditáveis; preservar confirmação anterior e impedir
    que simples declaração do cliente seja tratada como confirmação operacional.
 3. Expor consulta financeira autorizada e impedir duplicidade de registro; não
    exigir consulta desse contrato para matricular ou autorizar acesso acadêmico.
 4. Compatibilizar com os contratos financeiros de FIN-01/FIN-02 quando existirem,
-   sem obrigar a executar este cartão para implementar a integração por gateway.
+   sem condicionar a matrícula ou autorização de entrada.
 
 ## Critérios de aceite
 

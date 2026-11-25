@@ -218,6 +218,31 @@ def scenario(sessions: sessionmaker[Session], tmp_path: Path) -> Iterator[Scenar
 
 
 @pytest.mark.integration
+def test_configured_retrieval_parameters_reach_the_runtime(
+    scenario: Scenario, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    people, service, _ = scenario
+    bridge = service.evidence
+    assert isinstance(bridge, RagEvidence)
+    index, encoder = bridge.retriever.index, bridge.retriever.encoder
+    config = Config.load()
+    values = config.model_dump()
+    values["retrieval"].update(top_k=2, min_score_inicial=0.95)
+    configured = Config.model_validate(values)
+    monkeypatch.setattr(Config, "load", lambda: configured)
+    monkeypatch.setattr("app.modules.ai.generation.get_vector_store", lambda: index)
+    monkeypatch.setattr("app.modules.ai.generation.get_encoder", lambda: encoder)
+    monkeypatch.setattr(service, "evidence", None)
+
+    actor = people["cliente"]
+    assert service.generate(actor, actor.user_id, request()).estado == "PUBLICADA"
+    runtime = service.evidence
+    assert isinstance(runtime, RagEvidence)
+    assert runtime.top_k == 2
+    assert runtime.retriever.min_score == 0.95
+
+
+@pytest.mark.integration
 def test_real_database_publication_pending_replay_and_no_duplicate_content(
     sessions: sessionmaker[Session], scenario: Scenario
 ) -> None:

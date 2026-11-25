@@ -76,7 +76,11 @@ def test_approved_decision_table(case: dict[str, object]) -> None:
         else None
     )
     analyst = Double(signals, error)
-    policy = Policy(max_summary_chars=1) if entry.get("contexto_excedido") else Policy()
+    policy = Policy(
+        version=1,
+        fonte_regras="onboarding-e-triagem-v1",
+        max_summary_chars=1 if entry.get("contexto_excedido") else 2400,
+    )
     result = evaluate(
         Engine(analyst, policy=policy),
         data=entry.get("dados", {}),
@@ -98,6 +102,28 @@ def test_missing_analyzer_never_invents_eligibility() -> None:
     result = evaluate(Engine())
     assert result.estado is None and result.estado_tecnico == "AGUARDANDO_ANALISE"
     assert not result.geracao_permitida
+
+
+def test_v2_keeps_isolated_medication_uncertainty_in_assisted_analysis() -> None:
+    analyst = Double()
+    result = evaluate(Engine(analyst), data={**BASE, "usa_medicamentos": "NAO_SEI"})
+    assert result.regra_versao == 2 and result.geracao_permitida
+    assert analyst.received[0].dados.usa_medicamentos == "NAO_SEI"
+
+
+def test_v2_identifies_the_field_and_refuses_combined_uncertainty() -> None:
+    analyst = Double()
+    result = evaluate(
+        Engine(analyst),
+        data={
+            **BASE,
+            "usa_medicamentos": "NAO_SEI",
+            "restricao_exercicio_declarada": "NAO_SEI",
+        },
+    )
+    assert result.estado == "DADOS_INSUFICIENTES"
+    assert result.motivos == ["PENDENCIA_RESTRICAO"]
+    assert not analyst.received
 
 
 def test_summary_preserves_fields_and_excludes_identity() -> None:

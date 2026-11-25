@@ -333,6 +333,15 @@ async def test_register_replace_and_preserve_consistency(
             assert added.status_code == 200, added.text
             assert added.json()["cadastrada"] and not added.json()["pendencia"]
             assert added.headers["cache-control"] == "no-store"
+            assert (await api.get("/api/v1/meu-perfil/foto")).status_code == 404
+            await _login(api, Role.CLIENTE)
+            photo = await api.get("/api/v1/meu-perfil/foto")
+            assert photo.status_code == 200
+            assert photo.headers["content-type"] == "image/jpeg"
+            assert photo.headers["cache-control"] == "no-store"
+            assert photo.content.startswith(b"\xff\xd8")
+            assert (await api.get("/api/v1/meu-perfil")).json()["foto_disponivel"]
+            attendant = await _login(api, Role.ATENDENTE)
             old = migration.execute(
                 select(FacialReference.subject_externo, FacialReference.image_id)
             ).one()
@@ -373,6 +382,13 @@ async def test_register_replace_and_preserve_consistency(
                 replaced.json()["cadastrada"] and replaced.json()["pendencia"] is None
             )
             assert provider.list_examples(old.subject_externo) == []
+            await _login(api, Role.CLIENTE)
+            updated_photo = await api.get("/api/v1/meu-perfil/foto")
+            if double:
+                assert updated_photo.status_code == 404
+            else:
+                assert updated_photo.status_code == 200
+                assert updated_photo.content != photo.content
             with sessions.begin() as db:
                 current = db.scalars(select(FacialReference)).one()
                 assert current.subject_externo != old.subject_externo

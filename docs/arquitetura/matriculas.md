@@ -1,5 +1,17 @@
 # Planos e matrículas — MEM-01
 
+O atendente trabalha em **Clientes e convites → Matrícula e acesso**, com o
+cliente selecionado. A leitura da última compra simulada retorna plano,
+estado e instante pelo contrato de cobrança próprio. Ausência de compra
+permite registrar matrícula normalmente. A seção de referência indica
+**Biometria pendente** quando o cadastro facial já é elegível e ainda não
+há referência confirmada. O fluxo de chegada permanece na tela de
+reconhecimento e só gera frequência após passagem confirmada.
+
+O plano pode ter um preço fictício em reais para a
+[compra simulada](compra-simulada.md). O preço é opcional na API e no cadastro
+administrativo. Uma edição que omite o campo preserva o preço atual.
+
 MOD-08 mantém os planos da academia e os períodos contratados pelo cliente.
 Na área administrativa, **Gerenciar planos** permite criar, editar e desativar
 planos. Na área de atendimento, **Matrículas** permite buscar o cliente pelo

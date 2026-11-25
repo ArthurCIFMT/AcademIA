@@ -11,7 +11,8 @@ A seleção técnica foi delegada pelo responsável em 2026-11-04.
 GATE-01–GATE-06 ficam fechados quanto às decisões documentais.
 O estado dos serviços entregues está no [manifesto](../../prompts/README.md).
 Chave pessoal e ensaios reais de IA/RAG pertencem às entregas correspondentes.
-GATE-07/08/09 continuam nas fases posteriores; marcos de aplicação não estão concluídos.
+GATE-08 está fechado pelo ensaio de prontidão do CompreFace. GATE-09 está fechado
+pela decisão de financeiro simulado. Consulte o manifesto para reservas e marcos.
 
 - [ADR-006 — Modelo Groq vigente](ADR-006-modelo-groq-vigente.md): ACEITA; migração explícita para GPT-OSS 120B.
 

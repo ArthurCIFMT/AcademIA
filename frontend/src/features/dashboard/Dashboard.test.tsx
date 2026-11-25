@@ -16,6 +16,12 @@ const overview: DashboardOverview = {
   clientes_matriculados: ready(7),
   funcionarios: ready(5),
   lotacao: ready(3),
+  financeiro: ready({
+    competencia_atual: "2026-11-01",
+    mes: { cobrado: "130.50", recebido: "90.00", pendente: "30.50", vencido: "10.00" },
+    ano: { cobrado: "430.50", recebido: "390.00", pendente: "30.50", vencido: "10.00" },
+    total: { cobrado: "630.50", recebido: "590.00", pendente: "30.50", vencido: "10.00" },
+  }),
   frequencia: ready({
     semanas: [{ inicio: "2026-11-16", visitas: 11 }, { inicio: "2026-11-23", visitas: 3 }],
     dias: [
@@ -55,11 +61,18 @@ test("exibe os indicadores e permite escolher o dia do gráfico horário", async
   fireEvent.change(screen.getByRole("combobox", { name: "Dia para detalhar" }), { target: { value: "2026-11-22" } });
   expect(within(screen.getByRole("list", { name: "Visitas por faixa de uma hora" })).getByText("18h")).toBeTruthy();
   expect(screen.getByRole("heading", { name: "Avisos pendentes" })).toBeTruthy();
+  const finance = within(screen.getByRole("region", { name: "Financeiro simulado" }));
+  const month = within(finance.getByRole("region", { name: "Mês atual · novembro de 2026" }));
+  expect(month.getByText("Cobrado").nextElementSibling?.textContent?.replace(/\s/g, " ")).toBe("R$ 130,50");
+  expect(month.getByText("Recebido").nextElementSibling?.textContent?.replace(/\s/g, " ")).toBe("R$ 90,00");
+  expect(month.getByText("Saldo vencido").nextElementSibling?.textContent?.replace(/\s/g, " ")).toBe("R$ 10,00");
+  expect(within(finance.getByRole("region", { name: "Ano atual · 2026" })).getByText(/390,00/)).toBeTruthy();
+  expect(within(finance.getByRole("region", { name: "Total registrado" })).getByText(/590,00/)).toBeTruthy();
 });
 
 test("preserva zeros e separa a falha de outros indicadores ao atualizar", async () => {
   const snapshots = [
-    { ...overview, frequencia: unavailable, lotacao: ready(0), funcionarios: unavailable },
+    { ...overview, frequencia: unavailable, financeiro: unavailable, lotacao: ready(0), funcionarios: unavailable },
     { ...overview, lotacao: ready(0), frequencia: ready({
       semanas: [{ inicio: "2026-11-23", visitas: 0 }],
       dias: [{ data: "2026-11-23", visitas: 0, por_hora: [] }],
@@ -67,6 +80,7 @@ test("preserva zeros e separa a falha de outros indicadores ao atualizar", async
   ];
   const fetch = openArea("ADMINISTRADOR", () => Response.json(snapshots.shift()));
   await screen.findByText("Frequência temporariamente indisponível.");
+  expect(screen.getByText("Financeiro temporariamente indisponível.")).toBeTruthy();
   expect(screen.getByText("Funcionários cadastrados").nextElementSibling?.textContent).toBe("Indisponível");
   expect(screen.getByText("Pessoas presentes agora").nextElementSibling?.textContent).toBe("0");
   expect(screen.getByText("Clientes ativos").nextElementSibling?.textContent).toBe("12");

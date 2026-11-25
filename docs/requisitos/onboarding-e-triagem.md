@@ -1,4 +1,4 @@
-# Onboarding e triagem acadêmica — especificação v1
+# Onboarding e triagem acadêmica
 
 Status: DEFINIDO por delegação do responsável em 2026-11-04.
 Contrato: [JSON Schema](schemas/onboarding-v1.schema.json).
@@ -15,7 +15,8 @@ FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; dat
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 A idade atual aparece no cadastro administrativo em anos completos. O backend
 usa a mesma regra ao concluir uma versão do onboarding, com a data civil de São
-Paulo, e guarda a idade daquele momento. O cliente vê o valor na consulta da
+Paulo, e guarda a idade daquele momento. Durante o preenchimento, o cliente vê
+a idade atual no editor e pelo convite válido. O cliente vê o valor histórico na consulta da
 versão concluída. A triagem recebe esse valor sem repetir a data de nascimento
 no prompt. Autogeração inicial limitada a adultos (18+), porque o
 corpus selecionado é delimitado a esse contexto. Cadastro de menor não é proibido,
@@ -67,7 +68,7 @@ só para resumir. Campos de saúde identificáveis nunca vão ao índice compart
 | 2 | Sem onboarding concluído/schema inválido | DADOS_INSUFICIENTES; solicitar preenchimento |
 | 3 | Idade menor que 18 | BLOQUEADO_POR_SEGURANCA / ESCOPO_ETARIO |
 | 4 | Qualquer condição/limitação declarada GRAVE, restricao_exercicio_declarada=SIM ou evento_saude_importante_recente=SIM | BLOQUEADO_POR_SEGURANCA / ALERTA_GRAVE_DECLARADO |
-| 5 | Flag necessária ou gravidade de ocorrência=NAO_SEI, contradição ou contexto excedido | DADOS_INSUFICIENTES com motivo objetivo |
+| 5 | Informação essencial desconhecida, contradição ou contexto excedido | DADOS_INSUFICIENTES com motivo objetivo |
 | 6 | Campos explícitos não bloqueantes | Recuperar evidências pertinentes e fazer até uma análise assistida |
 | 7 | LLM sinaliza indício grave na descrição livre | BLOQUEADO_POR_SEGURANCA / ALERTA_GRAVE_TEXTO; não diagnosticar |
 | 8 | LLM sinaliza dúvida/contradição/lacuna de suporte | DADOS_INSUFICIENTES; não presumir saudável |
@@ -80,6 +81,21 @@ Erro/quota/timeout do provedor é falha técnica da execução, nunca elegibilid
 Declaração de medicamento/condição não grave não bloqueia por si só: a adaptação
 solicitada exige evidência pertinente e ausência de conflito. Sem suporte, abster-se.
 Texto livre com gravidade incerta não ganha liberação presumida.
+
+### Política de incerteza na triagem v2
+
+Condições de saúde, dor/lesão/limitação, orientação para restringir exercício,
+evento de saúde importante recente e gravidade de condição ou limitação
+declarada exigem esclarecimento quando marcados como `NAO_SEI`. A ausência
+de resposta obrigatória continua sendo erro de dados.
+
+O único desconhecido admitido na triagem preliminar é a resposta sobre
+medicação, quando as outras quatro perguntas têm negativa explícita e as
+observações estão vazias. O resumo preserva a incerteza. O caso pode seguir
+à análise assistida, que ainda pode apontar lacuna ou contraindicação. A
+regra se aplica ao fluxo acadêmico e preserva o requisito de evidência na
+geração e adaptação. Quando a pendência é essencial, a API identifica a
+pergunta e a tela de IA oferece acesso à etapa de saúde.
 
 ## Alteração e versão
 

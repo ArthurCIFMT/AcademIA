@@ -486,7 +486,7 @@ test("E2E-08 recuperação e perfis de cliente/funcionário independentes", asyn
   const mobile = staffPage.locator(".site-mobile-menu");
   const summary = mobile.locator("summary");
   await expect(switcher.getByRole("link", { name: "Administração" })).toHaveCount(0);
-  await expect(summary).toHaveText("Menu · Início da área");
+  await expect(summary).toHaveText("Menu · Clientes e convites");
   await summary.press("Enter");
   await expect(mobile.getByRole("link", { name: "Clientes e convites" })).toBeVisible();
   await staffPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-atendimento-celular.png", fullPage: true });
@@ -497,6 +497,11 @@ test("E2E-08 recuperação e perfis de cliente/funcionário independentes", asyn
   expect(await staffPage.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await switcher.getByRole("link", { name: "Cliente", exact: true }).tap();
   await expect(staffPage.getByRole("heading", { name: "Área do cliente" })).toBeVisible();
+  const shortcuts = staffPage.getByRole("navigation", { name: "Atalhos da área" });
+  await shortcuts.getByRole("link", { name: "Assistente" }).tap();
+  await expect(summary).toHaveText("Menu · Assistente");
+  await staffPage.goBack();
+  await expect(summary).toHaveText("Menu · Meus treinos");
   await summary.tap();
   await expect(mobile.getByRole("link", { name: "Meus treinos" })).toBeVisible();
   await staffPage.screenshot({ path: process.env.ACADEMIA_E2E_OUTPUT + "/ux03-cliente-celular.png", fullPage: true });
@@ -505,6 +510,16 @@ test("E2E-08 recuperação e perfis de cliente/funcionário independentes", asyn
   await expect(summary).toBeFocused();
   await expect(mobile.getByRole("link", { name: "Meus treinos" })).toBeHidden();
   expect((await session(staffPage)).roles).toEqual(expect.arrayContaining(["CLIENTE", "ATENDENTE"]));
+  await staffPage.goto("/area/cliente/perfil");
+  const address = staffPage.getByRole("textbox", { name: "Endereço (opcional)" });
+  await expect(address).toBeEmpty();
+  await address.fill("Endereço sintético E2E");
+  await staffPage.getByRole("button", { name: "Salvar endereço" }).press("Enter");
+  await expect(staffPage.getByText("Endereço salvo.")).toBeVisible();
+  await staffPage.reload();
+  await expect(address).toHaveValue("Endereço sintético E2E");
+  await staffPage.goto("/area/atendimento/perfil");
+  await expect(address).toHaveValue("Endereço sintético E2E");
   await staffPage.goto("/area/administracao/funcionarios");
   await expect(staffPage.getByRole("heading", { name: "Acesso não permitido" })).toBeVisible();
   await expect(staffPage.getByRole("button", { name: "Cadastrar funcionário" })).toHaveCount(0);

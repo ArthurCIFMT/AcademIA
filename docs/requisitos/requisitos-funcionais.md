@@ -81,6 +81,7 @@ Aplicar permissões de cliente, administrador, atendente e instrutor.
 - CA-05.2: administrador acessa as operações previstas.
 - CA-05.3: chamada direta a API proibida também é rejeitada.
 - CA-05.4: Papéis acumulados seguem a matriz de conta/perfis do ADR-002; alterar papel ou inativar perfil é refletido na próxima requisição, sem confiar em permissão enviada pelo frontend.
+- CA-05.5: Conta autenticada consulta o próprio cadastro em **Meu perfil**, em qualquer área habilitada. O endereço é opcional e só o titular pode mantê-lo, inclusive quando a conta tem mais de um papel.
 
 ### RF-06 — Recuperar acesso por e-mail
 
@@ -89,7 +90,7 @@ Permitir recuperação de conta vinculada a e-mail.
 - CA-06.1: solicitação válida inicia o envio da recuperação.
 - CA-06.2: token expirado ou utilizado é recusado.
 - CA-06.3: após recuperação, o usuário autentica com a nova credencial.
-- Observação: infraestrutura SMTP em contêiner pertence à fase final de Docker.
+- Observação: convites e recuperação usam a caixa local do Mailpit.
 - CA-06.4: Resposta pública não revela se o e-mail existe; falha de envio é observável sem expor token/senha. Redefinir senha revoga sessões anteriores conforme ADR-002.
 
 ### RF-07 — Cadastrar funcionário
@@ -166,6 +167,7 @@ Concluir o formulário somente após o preenchimento obrigatório.
 - CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
   versionado que preserva alertas relevantes; chat geral não exige onboarding.
 - CA-13.4: NAO_SEI pode concluir o formulário estruturalmente válido, mas mantém estado DADOS_INSUFICIENTES na triagem quando a informação for necessária; conclusão não equivale a autorização de geração.
+- CA-13.5: durante o preenchimento, a conta e o convite válido mostram a idade atual derivada do cadastro. A consulta histórica mantém a idade registrada na conclusão.
 
 ### RF-14 — Consultar o próprio onboarding
 
@@ -318,7 +320,7 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
   configurado, inicialmente 0,95 na escala 0–1 do CompreFace (95% na apresentação).
   Essa pontuação não constitui medida de acurácia do sistema.
 - CA-21.5: Mesmo com rosto conhecido, conta/perfil cliente inativo, matrícula inexistente/futura/vencida, modalidade incompatível ou limite excedido resultam em negação com código de motivo.
-- CA-21.6: Matrícula válida pode autorizar o fluxo sem pagamento registrado ou gateway disponível; reconhecimento sozinho nunca concede autorização.
+- CA-21.6: Matrícula válida pode autorizar o fluxo sem pagamento simulado registrado; reconhecimento sozinho nunca concede autorização.
 
 ### RF-22 — Inserir referência biométrica do cliente
 
@@ -330,6 +332,7 @@ matrícula registrada pelo atendente, sem exigir pagamento confirmado.
 - CA-22.2: nova referência substitui a anterior conforme política definida.
 - CA-22.3: somente funcionário autorizado altera a referência.
 - CA-22.4: Falha externa na substituição é registrada sem declarar troca concluída ou perder silenciosamente a referência anterior; troca concluída descarta o exemplo antigo e mantém uma referência ativa com autor/data auditáveis.
+- CA-22.5: a ficha de atendimento agrupa cadastro facial e matrícula. A miniatura de referência ativa aparece apenas no próprio perfil, quando disponível. Capturas de entrada/saída não originam miniaturas.
 
 ### RF-23 — Registrar entrada, saída e frequência
 
@@ -368,7 +371,7 @@ Manter controle básico de cobranças por cliente.
 - CA-26.1: usuário autorizado registra competência, vencimento e situação.
 - CA-26.2: atualização persiste.
 - CA-26.3: cobrança pertence ao cliente correto.
-- CA-26.4: Valor decimal não-negativo, competência e vencimento válidos são registrados no cliente correto; tentativa de pagamento/webhook não é receita confirmada por si só.
+- CA-26.4: Valor decimal não negativo, competência e vencimento válidos são registrados no cliente correto; tentativa pendente ou recusada não conta como recebimento simulado.
 
 ### RF-27 — Consultar situação de cobrança
 
@@ -379,25 +382,25 @@ Permitir consulta autorizada da situação financeira já registrada.
   situação; ausência de cobrança retorna estado vazio, não dados de terceiro.
 - CA-27.3: cliente não consulta cobrança de terceiro.
 
-### RF-31 — Comprar plano e matricular cliente pelo atendente
+### RF-31 — Simular compra de plano e matricular cliente pelo atendente
 
-Permitir compra de plano na fase financeira e vínculo ao cliente por matrícula
-registrada pelo atendente. No escopo acadêmico, matrícula não exige pagamento
-confirmado; não confundir compra, matrícula e autorização biométrica.
+Permitir simulação local de compra de plano e matrícula independente pelo
+atendente. A simulação não movimenta dinheiro nem coleta credenciais financeiras.
 
 - CA-31.1: atendente autorizado cria ou renova matrícula sem exigir pagamento
   confirmado, comprovante ou existência do módulo financeiro.
 - CA-31.2: matrícula possui início, término e estado consultáveis.
 - CA-31.3: matrícula vencida deixa de ser válida sem apagar o histórico.
-- CA-31.4: registro de pagamentos, gateway e checkout são capacidades posteriores;
-  não são pré-condições da matrícula manual no escopo acadêmico.
+- CA-31.4: registro manual e compra simulada são capacidades financeiras
+  independentes da matrícula manual.
 - CA-31.5: usuário sem permissão não matricula; ausência de pagamento, pendência
-  financeira ou indisponibilidade do gateway não bloqueiam a ação do atendente.
+  financeira ou falha da simulação não bloqueiam a ação do atendente.
 - CA-31.6: matrícula manual registra responsável, início, término e plano ativo;
   falta de pagamento não invalida automaticamente uma matrícula vigente.
-- CA-31.7: Na fase financeira FIN-02, cliente autenticado escolhe plano ativo e inicia compra vinculada ao próprio cliente/plano, com valor e referência externa identificados; plano inativo não origina nova compra.
-- CA-31.8: Somente confirmação autenticada da API financeira registra sucesso; retorno visual do navegador e pagamento pendente/recusado não confirmam. Callback duplicado ou fora de ordem não duplica crédito nem regride estado final indevidamente.
+- CA-31.7: Em FIN-02, cliente autenticado escolhe plano ativo e inicia uma compra simulada vinculada ao próprio cliente/plano, com valor e identificador local. Plano inativo não origina nova compra simulada.
+- CA-31.8: O simulador local grava resultado confirmado, pendente ou recusado no backend. Repetir a mesma operação não duplica recebimento nem regride estado final. A interface identifica a simulação e não solicita cartão, chave Pix ou dados bancários.
 - CA-31.9: Após compra, matrícula/renovação continua ação do atendente. Pagamento confirmado não cria matrícula, referência facial ou autorização sozinho; exceção acadêmica sem pagamento de CA-31.1 continua válida.
+- CA-31.10: atendente autorizado consulta a última compra simulada na ficha do cliente. A consulta disponibiliza o status da simulação sem condicionar matrícula ao pagamento.
 
 ## Dashboard, aulas e equipamentos
 
@@ -417,7 +420,7 @@ Apresentar indicadores provenientes dos módulos implementados.
 
 - CA-29.1: exibe ao menos clientes ativos, histórico semanal de frequência e
   lotação atual.
-- CA-29.2: quando disponíveis, exibe faturamento/receita mensal, anual e total.
+- CA-29.2: quando disponíveis, exibe faturamento e recebimentos simulados por mês, ano e total, com indicação de simulação acadêmica.
 - Observação: sem despesas cadastradas, o sistema não denomina receita como lucro.
 
 ### RF-30 — Gerenciar agenda de aulas

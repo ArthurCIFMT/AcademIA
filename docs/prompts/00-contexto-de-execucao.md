@@ -85,7 +85,8 @@ permanecem; parecer do instrutor é funcionalidade posterior, sem bloquear consu
   captura facial → decisão → simulador externo. Financeiro continua tardio e não
   bloqueia matrícula nem acesso acadêmico com matrícula válida.
 - Consulte `docs/arquitetura/fluxos-atualizados.md` para os contratos e estados.
-- Docker é fase final, depois do MVP e da maioria dos módulos.
+- A instalação é local. Docker fica restrito à instância dedicada do CompreFace.
+- O financeiro usa simulação local e registros didáticos, sem gateway.
 
 ### Arquitetura permanente
 

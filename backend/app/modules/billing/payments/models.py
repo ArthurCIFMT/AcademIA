@@ -38,6 +38,18 @@ _MANUAL_PAYMENT = """origem <> 'MANUAL' OR (
 )"""
 _MANUAL_CONFIRMED = "origem = 'MANUAL' AND estado = 'CONFIRMADO'"
 _REPLACEMENT = "substitui_id IS NULL OR (origem = 'MANUAL' AND substitui_id <> id)"
+_SIMULATED_PAYMENT = """(
+    origem = 'SIMULACAO'
+    AND plano_id IS NOT NULL
+    AND plano_nome_snapshot IS NOT NULL AND btrim(plano_nome_snapshot) <> ''
+    AND simulado_em IS NOT NULL
+    AND (
+        (estado = 'CONFIRMADO' AND confirmado_em = simulado_em
+         AND confirmado_em IS NOT NULL AND pago_em IS NOT NULL)
+        OR (estado IN ('PENDENTE', 'RECUSADO') AND confirmado_em IS NULL
+            AND pago_em IS NULL)
+    )
+) OR (origem <> 'SIMULACAO' AND plano_nome_snapshot IS NULL AND simulado_em IS NULL)"""
 
 
 class Payment(Base):
@@ -46,6 +58,7 @@ class Payment(Base):
         CheckConstraint("valor >= 0", name="ck_pagamento_valor"),
         CheckConstraint(_MANUAL_PAYMENT, name="ck_pagamento_manual"),
         CheckConstraint(_REPLACEMENT, name="ck_pagamento_substituicao"),
+        CheckConstraint(_SIMULATED_PAYMENT, name="ck_pagamento_simulacao"),
         UniqueConstraint("id", "cliente_id", name="uq_pagamento_cliente_id"),
         ForeignKeyConstraint(
             ["substitui_id", "cliente_id"],
@@ -65,6 +78,8 @@ class Payment(Base):
     cliente_id: Mapped[UUID] = mapped_column(ForeignKey("academia.cliente.usuario_id"))
     cobranca_id: Mapped[UUID | None]
     plano_id: Mapped[UUID | None] = mapped_column(ForeignKey("academia.plano.id"))
+    plano_nome_snapshot: Mapped[str | None] = mapped_column(String(100))
+    simulado_em: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     origem: Mapped[str] = mapped_column(String(25))
     referencia_externa: Mapped[str | None] = mapped_column(String(150))
     valor: Mapped[Decimal] = mapped_column(Numeric(12, 2))
@@ -88,4 +103,17 @@ Index(
     func.lower(Payment.referencia_externa),
     unique=True,
     postgresql_where=text(_MANUAL_CONFIRMED),
+)
+
+Index(
+    "ix_pagamento_historico_simulacao",
+    Payment.cliente_id,
+    Payment.simulado_em,
+    Payment.id,
+    postgresql_where=text("origem = 'SIMULACAO'"),
+)
+
+CONFIRMED_PAYMENT = (
+    Payment.estado == "CONFIRMADO",
+    Payment.confirmado_em.is_not(None),
 )

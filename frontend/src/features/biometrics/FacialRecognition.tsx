@@ -4,7 +4,7 @@ import { ApiError, requestApi } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
 import { AccessAuthorization } from "../attendance/AccessAuthorization";
 import { ManualAccessForm } from "../manual-access/ManualAccessForm";
-import { PhotoInputs, supportedPhoto, toBase64 } from "./PhotoInputs";
+import { PhotoInputs, SelectedPhoto, supportedPhoto, toBase64 } from "./PhotoInputs";
 import "./biometrics.css";
 
 type Direction = "ENTRADA" | "SAIDA";
@@ -75,7 +75,7 @@ export function FacialRecognition({ csrf }: { csrf: string }) {
     } catch (reason) {
       if (!controller.signal.aborted) {
         setError(reason instanceof ApiError && reason.status === 422
-          ? "A imagem não pôde ser lida. Selecione uma foto JPG ou PNG válida."
+          ? "A captura foi recusada. Use um JPG ou PNG válido de até 4096 px por lado."
           : "Não foi possível confirmar o resultado. Tente novamente com a mesma captura.");
       }
     } finally {
@@ -100,7 +100,7 @@ export function FacialRecognition({ csrf }: { csrf: string }) {
           </select>
         </label>
         <PhotoInputs onChange={choose} />
-        {photo && <p role="status">Foto selecionada.</p>}
+        {photo && <SelectedPhoto file={photo} />}
         <Button type="submit" disabled={!photo} pending={busy} pendingLabel="Identificando…">
           Identificar cliente
         </Button>
@@ -109,9 +109,9 @@ export function FacialRecognition({ csrf }: { csrf: string }) {
     {error && <StatusMessage state="error" title={error} />}
     {receipt && <StatusMessage state={receipt.resultado === "IDENTIFICADO" ? "success" : "conflict"}
       title={messages[receipt.resultado]}>
-      {receipt.cliente_nome && <p>{receipt.cliente_nome}</p>}
-      {receipt.similaridade !== null && <p>Similaridade {percent.format(receipt.similaridade)}</p>}
-      <p>A autorização de entrada é uma etapa separada.</p>
+      {receipt.cliente_nome && <><span>{receipt.cliente_nome}</span><br /></>}
+      {receipt.similaridade !== null && <><span>Similaridade {percent.format(receipt.similaridade)}</span><br /></>}
+      <span>A autorização de entrada é uma etapa separada.</span>
     </StatusMessage>}
     {receipt?.id && (receipt.resultado === "IDENTIFICADO"
       ? <AccessAuthorization key={receipt.id} eventId={receipt.id} csrf={csrf} />

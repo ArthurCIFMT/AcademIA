@@ -1,4 +1,4 @@
-# INF-04 — Instalação e teste integrado em Docker
+# INF-04 — Instalação local e teste integrado
 
 ## Metadados
 
@@ -10,7 +10,7 @@
 
 ## Objetivo e contexto
 
-Entregar instalação e teste integrado em docker, respeitando os critérios abaixo.
+Validar instalação local reproduzível e executar as jornadas acadêmicas.
 Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
@@ -21,7 +21,6 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 - `docs/instalacao/**`
 - `frontend/tests/e2e/**`
 - `backend/tests/acceptance/**`
-- `infra/**`
 - `docs/testes/**`
 
 Documentação, migrations e caminhos equivalentes seguem o contrato comum.
@@ -29,8 +28,8 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Reproduzir instalação em ambiente limpo identificado, com inicialização e migrations.
-2. Reexecutar cenário crítico do MVP e integrações selecionadas no Compose.
-3. Documentar backup/restauração e diferenças entre setup local e containerizado.
+2. Reexecutar cenário crítico do MVP e integrações selecionadas no ambiente local.
+3. Documentar backup/restauração dos dados locais, Qdrant e arquivos privados.
 4. Ampliar os comandos INF registrados em INF-01 com instalação limpa, persistência
    e integração; manter verificações anteriores reproduzíveis.
 
@@ -39,7 +38,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 - Outra instalação reproduz a aplicação a partir do repositório e instruções.
 - Dados sobrevivem reinício; migrations não duplicam estruturas.
 - Consulta/chat antes do parecer, avaliação posterior e isolamento passam no
-  ambiente containerizado; simulador continua identificado como fictício.
+  ambiente local. Catraca e valores financeiros são identificados como simulados.
 
 ## Testes obrigatórios
 

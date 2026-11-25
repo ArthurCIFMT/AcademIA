@@ -189,7 +189,11 @@ class Controller:
                     args,
                     stdout=log,
                     stderr=subprocess.STDOUT,
-                    env=self.backend_env,
+                    env=(
+                        self.backend_env
+                        if name == "verificar-banco"
+                        else self.frontend_env
+                    ),
                     creationflags=HIDDEN,
                     timeout=50,
                     check=False,
@@ -264,11 +268,21 @@ class Controller:
         try:
             self.notify("Iniciando o banco de dados…")
             from sqlalchemy import make_url
+            from sqlalchemy.exc import ArgumentError
 
-            url = make_url(self.backend_env["ACADEMIA_DATABASE_URL"])
-            if url.database != "academia_dev" or url.host != "127.0.0.1":
+            try:
+                url = make_url(self.backend_env.get("ACADEMIA_DATABASE_URL", ""))
+            except (ArgumentError, ValueError):
+                raise LaunchError("Configure a URL do PostgreSQL local.") from None
+            if (
+                url.drivername != "postgresql+psycopg"
+                or url.database != "academia_dev"
+                or url.host != "127.0.0.1"
+                or url.query.keys() & {"host", "hostaddr", "port", "service", "dbname"}
+            ):
                 raise LaunchError("O iniciador exige o banco academia_dev local.")
-            if not is_open(url.port or 5432):
+            port = url.port or 5432
+            if not is_open(port):
                 self.command(
                     "postgres",
                     [
@@ -277,6 +291,8 @@ class Controller:
                         self.config["postgres_data"],
                         "-l",
                         str(self.runtime / "postgres-servidor.log"),
+                        "-o",
+                        f"-h 127.0.0.1 -p {port}",
                         "-w",
                         "start",
                     ],
@@ -410,20 +426,31 @@ def check_database() -> None:
     from alembic.runtime.migration import MigrationContext
     from alembic.script import ScriptDirectory
     from app.database.connection import create_database_engine
+    from sqlalchemy import text
+    from sqlalchemy.exc import SQLAlchemyError
 
-    engine = create_database_engine("dev")
     try:
-        with engine.connect() as connection:
-            current = MigrationContext.configure(connection).get_current_heads()
-            expected = ScriptDirectory.from_config(
-                Config(str(ROOT / "database/alembic.ini"))
-            ).get_heads()
-            if set(current) != set(expected):
-                raise LaunchError(
-                    "Migrations pendentes; procure o responsável técnico."
-                )
-    finally:
-        engine.dispose()
+        engine = create_database_engine("dev")
+        try:
+            with engine.connect() as connection:
+                addresses = connection.scalar(text("SHOW listen_addresses"))
+                if not addresses or any(
+                    address.strip() not in {"127.0.0.1", "::1", "localhost"}
+                    for address in addresses.split(",")
+                ):
+                    raise LaunchError("O PostgreSQL deve escutar somente em loopback.")
+                current = MigrationContext.configure(connection).get_current_heads()
+                expected = ScriptDirectory.from_config(
+                    Config(str(ROOT / "database/alembic.ini"))
+                ).get_heads()
+                if set(current) != set(expected):
+                    raise LaunchError(
+                        "Migrations pendentes; procure o responsável técnico."
+                    )
+        finally:
+            engine.dispose()
+    except (SQLAlchemyError, ValueError):
+        raise LaunchError("Não foi possível verificar o PostgreSQL local.") from None
 
 
 def run_api(stop_file: Path) -> None:
@@ -627,7 +654,10 @@ def main() -> None:
             parser.error("Falta stop-file.")
         run_api(args.stop_file)
     elif args.check_database:
-        check_database()
+        try:
+            check_database()
+        except LaunchError as error:
+            sys.exit(str(error))
     else:
         panel(open_browser=not args.no_browser)
 

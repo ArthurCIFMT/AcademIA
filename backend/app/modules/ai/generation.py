@@ -174,9 +174,11 @@ class GenerationService:
                                 store,
                                 get_encoder(),
                                 annotations=tuple(load_health_config().anotacoes),
+                                min_score=config.retrieval.min_score_inicial,
                             ),
                             service.sessions,
                             store.check,
+                            top_k=config.retrieval.top_k,
                         )
                     return service.evidence.retrieve(context, purpose, query, scope)
                 except (EmbeddingError, VectorError, OSError, ValueError):

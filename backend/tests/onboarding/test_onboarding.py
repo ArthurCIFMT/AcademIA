@@ -202,7 +202,11 @@ async def test_own_draft_completion_and_version_confirmation(
 
         assert (await client.get(_API)).status_code == 401
         csrf = await login("cliente")
-        assert (await client.get(_API)).json() == {"rascunho": None, "concluido": None}
+        assert (await client.get(_API)).json() == {
+            "rascunho": None,
+            "concluido": None,
+            "idade_atual": age_at(_BIRTH, academy_date(utc_now())),
+        }
         body = {
             "versao_base": None,
             "revisao": None,
@@ -285,6 +289,7 @@ async def test_own_draft_completion_and_version_confirmation(
         assert (await client.get(_API)).json() == {
             "rascunho": None,
             "concluido": latest,
+            "idade_atual": age_at(_BIRTH, academy_date(utc_now())),
         }
         stale = await client.post(
             _API + "/atualizacoes",
@@ -298,7 +303,11 @@ async def test_own_draft_completion_and_version_confirmation(
 
         other_csrf = await login("outro")
         assert (await client.get(old_path)).status_code == 404
-        assert (await client.get(_API)).json() == {"rascunho": None, "concluido": None}
+        assert (await client.get(_API)).json() == {
+            "rascunho": None,
+            "concluido": None,
+            "idade_atual": age_at(_BIRTH, academy_date(utc_now())),
+        }
         forged = await client.patch(
             _API + "/rascunho",
             json={**body, "cliente_id": str(people.client)},
@@ -578,6 +587,7 @@ async def test_invite_from_mailpit_resumes_and_completes_only_the_linked_draft(
         assert (await guest.get(invite_url)).status_code == 401
         draft = (await guest.get(_DRAFT)).json()
         assert draft["dados"] == {} and draft["numero"] == 1
+        assert draft["idade_atual"] == age_at(_BIRTH, academy_date(utc_now()))
         patch = {"revisao": draft["revisao"], "dados": {"altura_cm": 175}}
         assert (
             await guest.patch(
@@ -590,7 +600,11 @@ async def test_invite_from_mailpit_resumes_and_completes_only_the_linked_draft(
         saved = await guest.patch(_DRAFT, json=patch)
         assert saved.status_code == 200
         assert (await guest.get(_DRAFT)).json() == saved.json()
-        assert (await another.get(_API)).json() == {"rascunho": None, "concluido": None}
+        assert (await another.get(_API)).json() == {
+            "rascunho": None,
+            "concluido": None,
+            "idade_atual": age_at(_BIRTH, academy_date(utc_now())),
+        }
         with sessions.begin() as session:
             row = session.get(OnboardingInvitation, UUID(result["id"]))
             assert row is not None

@@ -5,6 +5,7 @@ export type PlanFields = {
   modalidade: string;
   duracao_dias: number;
   limite_acessos: number | null;
+  preco_base: string | null;
   ativo: boolean;
 };
 export type Plan = PlanFields & { id: string; revisao: number };

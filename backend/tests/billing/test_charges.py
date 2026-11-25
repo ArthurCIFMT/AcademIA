@@ -293,8 +293,12 @@ def test_charge_migration_keeps_manual_history_and_enforces_ownership(
     command.upgrade(cfg, "0026")
 
     with sessions.begin() as db:
-        legacy = db.get_one(Payment, legacy_id)
-        assert (legacy.valor, legacy.estado, legacy.cobranca_id) == (
+        legacy = db.execute(
+            select(Payment.valor, Payment.estado, Payment.cobranca_id).where(
+                Payment.id == legacy_id
+            )
+        ).one()
+        assert tuple(legacy) == (
             Decimal("25"),
             "RECUSADO",
             None,

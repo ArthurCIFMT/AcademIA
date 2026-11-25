@@ -56,15 +56,15 @@ substituir evidência pela memória do modelo. Regras de bloqueio continuam prev
 Fluxo confirmado: cliente cadastrado → atendente autorizado registra matrícula
 sem exigir pagamento → captura/cadastro da foto de referência → nova captura para acesso.
 
-A matrícula manual (MEM-01) deve funcionar sem registro financeiro, comprovante,
-gateway ou execução de MEM-00. Atendente escolhe plano ativo, validade, modalidade
+A matrícula manual (MEM-01) funciona independentemente de cobranças e pagamentos
+simulados. Atendente escolhe plano ativo, validade, modalidade
 e limites; o sistema registra responsável e histórico, inclusive nas renovações.
 Ausência de pagamento, pagamento pendente/recusado ou falha do serviço financeiro
 não impedem essa operação nem invalidam automaticamente uma matrícula vigente.
 
-Financeiro permanece na fase tardia. O [registro de pagamentos manuais](pagamentos-manuais.md) do MEM-00 é opcional,
-sem criar pré-requisito para MEM-01. Gateway/webhook futuro atualiza situação
-financeira, sem matricular automaticamente ou introduzir bloqueio de acesso.
+O [registro de pagamentos manuais](pagamentos-manuais.md) do MEM-00 é opcional
+e didático. A compra simulada de FIN-02 atualiza a situação financeira sem
+matricular automaticamente ou introduzir bloqueio de acesso.
 
 Conta ativa, matrícula válida e referência facial são estados diferentes. Um
 cadastro não significa autorização de entrada. Matrícula contém plano, validade,
@@ -107,13 +107,13 @@ e [limiar de similaridade](https://github.com/exadel-inc/CompreFace/blob/master/
 
 A distribuição oficial do serviço usa Docker/Compose. Em 22/11/2026 o
 responsável autorizou uma instância local dedicada do CompreFace em Docker.
-O AcademIA e o simulador continuam com execução nativa nesta fase. A
-containerização da aplicação permanece na etapa INF-01–INF-04.
+O AcademIA e o simulador executam nativamente. Os cartões INF-01–INF-04 validam
+a instalação local.
 
 ## Catraca fictícia — serviço externo de teste
 
 O serviço simulador representa o equipamento, não o reconhecimento facial.
-Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
+Fica separado em simulators/turnstile/ e executa localmente,
 com REST/JSON e OpenAPI. A [execução e os testes locais](../instalacao/catraca-ficticia.md)
 mostram como enviar comandos e simular a passagem. O [motor do AcademIA](autorizacao-acesso.md)
 registra sua própria decisão e recebe a passagem autenticada.

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ApiError } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { healthFeedback, onboardingForReason } from "../onboarding/triageFeedback";
 import { cancel, followup, generate, type Followup, type Receipt } from "./api";
 import { GenerationDetails } from "./GenerationDetails";
 import { requestIdPattern } from "./requestId";
@@ -140,7 +141,7 @@ export function AITrainingPage({ csrf }: { csrf: string }) {
   const current = id && data?.id === id ? data.value : null;
   const result = current?.execucao ?? (receipt?.id === id ? receipt.value : null);
   const error = (mutationError?.id === id ? mutationError.message : "") || (readError?.id === id ? readError.message : "");
-  const reason = result ? reasons.get(result.motivo) : undefined;
+  const reason = result ? healthFeedback(result.motivo) ?? reasons.get(result.motivo) : undefined;
   const generation = current?.geracao;
   const training = generation?.contexto.treino;
   const expired = training?.ficha.estado_publicacao === "CONTEUDO_EXPIRADO";
@@ -150,7 +151,7 @@ export function AITrainingPage({ csrf }: { csrf: string }) {
     <h3>Gere uma ficha de treino</h3>
     <p>A ficha usa seus dados de treino, os exercícios disponíveis e referências de atividade física. Seu instrutor pode avaliá-la após a publicação.</p>
     <div className="assistant-row">
-      <Link to="/area/cliente/onboarding">Conferir meus dados de treino</Link>
+      <Link to={onboardingForReason(result?.motivo)}>Conferir meus dados de treino</Link>
       <Link to="/area/cliente/treinos">Meus treinos e histórico</Link>
     </div>
     <div className="assistant-panel">

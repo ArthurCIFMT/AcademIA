@@ -63,7 +63,7 @@ test("registra valor em reais, mantém a chave durante erro e exibe a confirmaç
   fill("Valor em reais", "149,90");
   fill("Data do pagamento", existing.pago_em);
   fireEvent.change(screen.getByRole("combobox", { name: "Forma de pagamento" }), { target: { value: "PIX" } });
-  fill("Referência do comprovante", existing.referencia_externa);
+  fill("Referência fictícia do pagamento", existing.referencia_externa);
   click("Salvar registro");
   await screen.findByText("Não foi possível confirmar a operação. Tente novamente.");
   click("Salvar registro");

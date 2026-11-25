@@ -1,7 +1,7 @@
 <!-- Gerado por python scripts/gerar_spec.py --write. Edite as fontes versionadas; use --check para detectar divergência. -->
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-22.
+Versão documental: 1.0. Revisão: 2026-11-25.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -89,8 +89,11 @@ adiciona a decisão de acesso e o comando da catraca, e a 0023 registra a
 confirmação manual. A revisão 0024 acrescenta a projeção de frequência e lotação.
 A revisão 0025 acrescenta pagamentos manuais e seu histórico de correções.
 A revisão 0026 acrescenta cobranças, revisões e vínculo opcional com pagamento.
-O modelo lógico tem 44 tabelas e 359 colunas, incluindo uma tabela futura.
-O físico tem 43 tabelas, 355 colunas e 77 FKs.
+A revisão 0027 acrescenta o nome contratado e o instante ao recibo simulado.
+A revisão 0028 acrescenta o endereço opcional da conta. A 0029 acrescenta
+a miniatura privada da referência facial.
+O modelo lógico tem 44 tabelas e 363 colunas, incluindo uma tabela futura.
+O físico tem 43 tabelas, 359 colunas e 77 FKs.
 A [comparação visual da revisão 0016](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -130,8 +133,11 @@ IA/RAG seguem [ADR-004](docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md):
 Qdrant especializado separado do PostgreSQL, embeddings E5 multilíngues e
 adaptador do LLM gratuito configurado. São decisões aprovadas; os ensaios reais
 de qualidade/latência pertencem às entregas de RAG/IA.
-Execução local e containerização tardia seguem
+Execução local e Docker reservado ao CompreFace seguem
 [ADR-005](docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md).
+
+O [guia de instalação local](docs/instalacao/instalacao-local.md) consolida
+pré-requisitos, lockfiles e o preparo explícito de schema, catálogo e corpus.
 
 O [iniciador Windows](docs/instalacao/iniciar-com-dois-cliques.md) permite
 abrir/encerrar o ambiente local preparado com dois cliques, preservando os
@@ -164,10 +170,14 @@ preenchimento de [fichas manuais](docs/arquitetura/fichas-manuais.md) e
 esclarece estados de [dúvida e geração](docs/arquitetura/chat-e-adaptacao.md).
 Chat e geração seguem fluxos distintos. Triagem do onboarding e evidência
 específica de saúde continuam necessárias quando aplicáveis à ficha automática.
+A revisão manual seguinte reorganiza a navegação por papel, reúne matrícula
+e cadastro facial no atendimento e entrega Meu perfil. O onboarding mostra
+a idade atual durante a edição. A política de triagem v2 distingue dúvidas
+complementares das pendências essenciais antes de chamar o LLM.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|
-| MOD-00 — Plataforma | [Stack/contratos](docs/arquitetura/contratos-rest.md), configuração, persistência e execução | Fundação entregue; infraestrutura final planejada |
+| MOD-00 — Plataforma | [Stack/contratos](docs/arquitetura/contratos-rest.md), configuração, persistência e execução | INF-01–INF-04 verificaram build, comunicação, segurança, instalação limpa, persistência e integração local. [Guia local](docs/instalacao/instalacao-local.md#verificação-em-uma-instalação-limpa). |
 | MOD-01 — Identidade/pessoas | [Autenticação](docs/arquitetura/autenticacao.md), [clientes](docs/arquitetura/clientes.md) e [funcionários](docs/arquitetura/funcionarios.md) | Entregue nos cartões IAM/PES correspondentes |
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](docs/arquitetura/onboarding.md) | Entregue |
@@ -175,10 +185,10 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-05 — Conhecimento | [Curadoria e versões](docs/arquitetura/corpus.md), [conexão vetorial](docs/arquitetura/banco-vetorial.md), [extração](docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [Referência facial](docs/arquitetura/biometria.md) e [identificação](docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05. ACS-06 entrega as consultas protegidas, telas de frequência e lotação e autorização na tela de reconhecimento |
-| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01 entregue. [Pagamento manual opcional](docs/arquitetura/pagamentos-manuais.md) entregue pelo MEM-00. [Cobranças e consulta financeira](docs/arquitetura/cobrancas.md) entregues pelo FIN-01. Gateway em FIN-02 |
+| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](docs/arquitetura/matriculas.md) | MEM-01, MEM-00, FIN-01 e [compra simulada de plano](docs/arquitetura/compra-simulada.md) entregues. FIN-03 fornece a leitura dos agregados financeiros. |
 | MOD-09 — Agenda | [Agenda por ocorrência](docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](docs/arquitetura/equipamentos.md) | Entregue |
-| MOD-11 — Indicadores | [Painel administrativo](docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |
+| MOD-11 — Indicadores | [Painel administrativo](docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. FIN-03 mostra valores cobrados, recebidos e saldos simulados. |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](docs/arquitetura/auditoria-e-eventos.md) e [notificações](docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
 O MVP acadêmico foi concluído: AI-06 aprovado na amostra v4, TST-01 concluído e PG-01 fechado. Por autorização
@@ -213,7 +223,7 @@ históricas, sem declaração de correção. Não unir versões/modelos nem repe
 resposta concluída para escolher melhor. Treino manual, saúde ausente, bloqueios,
 recursos e isolamento continuam obrigatórios. TST-01/PG-01 foram fechados pela
 [consolidação própria](docs/testes/tst01-consolidacao.json); aprovação de AI-06
-não aprova outros provedores. A revisão manual do aplicativo é o próximo passo.
+não aprova outros provedores. A revisão manual do aplicativo local está disponível.
 
 A [reserva 20B](docs/testes/ai06-reserva.md) e a
 [integração Gemini](docs/testes/ai06-gemini.md) permanecem candidatas explícitas
@@ -259,9 +269,10 @@ UX-06 reorganizou [fichas e histórico do cliente no celular](docs/testes/ux06-f
 UX-07 reorganizou a [área de trabalho do instrutor](docs/testes/ux07-area-do-instrutor.md).
 UX-08 padronizou [cadastros, catálogos e operação administrativa](docs/testes/ux08-cadastros-e-catalogos.md).
 UX-09 concluiu o [aceite visual e a regressão integrada](docs/testes/ux09-aceite-visual.md)
-das telas existentes. As próximas entregas pós-MVP aplicam os mesmos critérios
-às suas próprias interfaces, inclusive matrícula e biometria. PG-02 permanece
-aberto enquanto houver outras dependências do escopo final.
+das telas existentes. Entregas pós-MVP aplicam os mesmos critérios às suas
+interfaces, incluindo a matrícula e a biometria já entregues. PG-02 foi
+fechado após a revisão de [escopo e evidências](docs/arquitetura/rastreabilidade.md#escopo-de-admissão-do-pg-02).
+A validação final do conjunto segue no VAL-02.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
 fichas do cliente, instrutor, cadastros e
@@ -279,7 +290,7 @@ Os detalhes e critérios completos estão nas fontes da seção 2.
 2. **Treino manual:** instrutor designado → catálogo e equipamentos elegíveis →
    rascunho → conferência/publicação → consulta móvel e exportação próprias.
    Falhas de IA/RAG não impedem esse fluxo.
-3. **Geração assistida planejada:** snapshot concluído → resumo minimizado,
+3. **Geração assistida:** snapshot concluído → resumo minimizado,
    preservando ausências e alertas → regras/busca e análise assistida →
    decisão do backend → catálogo/recursos e evidências → geração JSON →
    validações → publicação pelo MOD-04 com parecer PENDENTE.
@@ -288,7 +299,7 @@ Os detalhes e critérios completos estão nas fontes da seção 2.
    Rejeição mantém consulta; rejeitar uma versão posterior remove o conteúdo
    da rejeitada anterior. Limite independente de quinze versões publicadas
    completas inclui a vigente e preserva metadados/auditoria e execuções existentes.
-5. **Chat/adaptação planejados:** dúvida usa recuperação semântica e resposta com
+5. **Chat/adaptação:** dúvida usa recuperação semântica e resposta com
    fontes ou abstenção. Conversa informativa não altera ficha. Adaptação explícita
    exige contexto confirmado/versionado, nova triagem e publicação de nova versão.
 6. **Acesso pós-MVP:** atendente matricula sem pagamento obrigatório → referência
@@ -432,10 +443,9 @@ documentos aprovados. Provisionar esses recursos e validar sua integridade
 pertence às etapas de RAG; arquivo diferente não se torna aprovado por ter o
 mesmo título. Serviços/provedores continuam sujeitos ao ensaio real previsto.
 
-As pendências pós-MVP estão explicitadas no roteiro incorporado. O SPEC não
-inventa a versão/hospedagem de CompreFace nem parâmetros de reserva, acesso ou
-gateway ainda não decididos. Uma reconstrução pode concluir o MVP antes desses
-gates e tratar o escopo posterior quando suas decisões forem fechadas.
+As pendências pós-MVP estão no manifesto e no roteiro incorporado. A biometria
+usa a instância local do GATE-08. O financeiro segue a simulação do GATE-09.
+Reservas continuam opcionais e dependem do GATE-07.
 
 Este arquivo é gerado de fontes versionadas. No projeto de origem, editar os
 documentos especializados e a visão geral/roteiro, atualizar o SPEC com
@@ -532,6 +542,7 @@ Aplicar permissões de cliente, administrador, atendente e instrutor.
 - CA-05.2: administrador acessa as operações previstas.
 - CA-05.3: chamada direta a API proibida também é rejeitada.
 - CA-05.4: Papéis acumulados seguem a matriz de conta/perfis do ADR-002; alterar papel ou inativar perfil é refletido na próxima requisição, sem confiar em permissão enviada pelo frontend.
+- CA-05.5: Conta autenticada consulta o próprio cadastro em **Meu perfil**, em qualquer área habilitada. O endereço é opcional e só o titular pode mantê-lo, inclusive quando a conta tem mais de um papel.
 
 ##### RF-06 — Recuperar acesso por e-mail
 
@@ -540,7 +551,7 @@ Permitir recuperação de conta vinculada a e-mail.
 - CA-06.1: solicitação válida inicia o envio da recuperação.
 - CA-06.2: token expirado ou utilizado é recusado.
 - CA-06.3: após recuperação, o usuário autentica com a nova credencial.
-- Observação: infraestrutura SMTP em contêiner pertence à fase final de Docker.
+- Observação: convites e recuperação usam a caixa local do Mailpit.
 - CA-06.4: Resposta pública não revela se o e-mail existe; falha de envio é observável sem expor token/senha. Redefinir senha revoga sessões anteriores conforme ADR-002.
 
 ##### RF-07 — Cadastrar funcionário
@@ -617,6 +628,7 @@ Concluir o formulário somente após o preenchimento obrigatório.
 - CA-13.3: instrutor e orquestrador identificam snapshot concluído; geração usa resumo
   versionado que preserva alertas relevantes; chat geral não exige onboarding.
 - CA-13.4: NAO_SEI pode concluir o formulário estruturalmente válido, mas mantém estado DADOS_INSUFICIENTES na triagem quando a informação for necessária; conclusão não equivale a autorização de geração.
+- CA-13.5: durante o preenchimento, a conta e o convite válido mostram a idade atual derivada do cadastro. A consulta histórica mantém a idade registrada na conclusão.
 
 ##### RF-14 — Consultar o próprio onboarding
 
@@ -769,7 +781,7 @@ Associar a identidade externa e executar separadamente as regras de autorizaçã
   configurado, inicialmente 0,95 na escala 0–1 do CompreFace (95% na apresentação).
   Essa pontuação não constitui medida de acurácia do sistema.
 - CA-21.5: Mesmo com rosto conhecido, conta/perfil cliente inativo, matrícula inexistente/futura/vencida, modalidade incompatível ou limite excedido resultam em negação com código de motivo.
-- CA-21.6: Matrícula válida pode autorizar o fluxo sem pagamento registrado ou gateway disponível; reconhecimento sozinho nunca concede autorização.
+- CA-21.6: Matrícula válida pode autorizar o fluxo sem pagamento simulado registrado; reconhecimento sozinho nunca concede autorização.
 
 ##### RF-22 — Inserir referência biométrica do cliente
 
@@ -781,6 +793,7 @@ matrícula registrada pelo atendente, sem exigir pagamento confirmado.
 - CA-22.2: nova referência substitui a anterior conforme política definida.
 - CA-22.3: somente funcionário autorizado altera a referência.
 - CA-22.4: Falha externa na substituição é registrada sem declarar troca concluída ou perder silenciosamente a referência anterior; troca concluída descarta o exemplo antigo e mantém uma referência ativa com autor/data auditáveis.
+- CA-22.5: a ficha de atendimento agrupa cadastro facial e matrícula. A miniatura de referência ativa aparece apenas no próprio perfil, quando disponível. Capturas de entrada/saída não originam miniaturas.
 
 ##### RF-23 — Registrar entrada, saída e frequência
 
@@ -819,7 +832,7 @@ Manter controle básico de cobranças por cliente.
 - CA-26.1: usuário autorizado registra competência, vencimento e situação.
 - CA-26.2: atualização persiste.
 - CA-26.3: cobrança pertence ao cliente correto.
-- CA-26.4: Valor decimal não-negativo, competência e vencimento válidos são registrados no cliente correto; tentativa de pagamento/webhook não é receita confirmada por si só.
+- CA-26.4: Valor decimal não negativo, competência e vencimento válidos são registrados no cliente correto; tentativa pendente ou recusada não conta como recebimento simulado.
 
 ##### RF-27 — Consultar situação de cobrança
 
@@ -830,25 +843,25 @@ Permitir consulta autorizada da situação financeira já registrada.
   situação; ausência de cobrança retorna estado vazio, não dados de terceiro.
 - CA-27.3: cliente não consulta cobrança de terceiro.
 
-##### RF-31 — Comprar plano e matricular cliente pelo atendente
+##### RF-31 — Simular compra de plano e matricular cliente pelo atendente
 
-Permitir compra de plano na fase financeira e vínculo ao cliente por matrícula
-registrada pelo atendente. No escopo acadêmico, matrícula não exige pagamento
-confirmado; não confundir compra, matrícula e autorização biométrica.
+Permitir simulação local de compra de plano e matrícula independente pelo
+atendente. A simulação não movimenta dinheiro nem coleta credenciais financeiras.
 
 - CA-31.1: atendente autorizado cria ou renova matrícula sem exigir pagamento
   confirmado, comprovante ou existência do módulo financeiro.
 - CA-31.2: matrícula possui início, término e estado consultáveis.
 - CA-31.3: matrícula vencida deixa de ser válida sem apagar o histórico.
-- CA-31.4: registro de pagamentos, gateway e checkout são capacidades posteriores;
-  não são pré-condições da matrícula manual no escopo acadêmico.
+- CA-31.4: registro manual e compra simulada são capacidades financeiras
+  independentes da matrícula manual.
 - CA-31.5: usuário sem permissão não matricula; ausência de pagamento, pendência
-  financeira ou indisponibilidade do gateway não bloqueiam a ação do atendente.
+  financeira ou falha da simulação não bloqueiam a ação do atendente.
 - CA-31.6: matrícula manual registra responsável, início, término e plano ativo;
   falta de pagamento não invalida automaticamente uma matrícula vigente.
-- CA-31.7: Na fase financeira FIN-02, cliente autenticado escolhe plano ativo e inicia compra vinculada ao próprio cliente/plano, com valor e referência externa identificados; plano inativo não origina nova compra.
-- CA-31.8: Somente confirmação autenticada da API financeira registra sucesso; retorno visual do navegador e pagamento pendente/recusado não confirmam. Callback duplicado ou fora de ordem não duplica crédito nem regride estado final indevidamente.
+- CA-31.7: Em FIN-02, cliente autenticado escolhe plano ativo e inicia uma compra simulada vinculada ao próprio cliente/plano, com valor e identificador local. Plano inativo não origina nova compra simulada.
+- CA-31.8: O simulador local grava resultado confirmado, pendente ou recusado no backend. Repetir a mesma operação não duplica recebimento nem regride estado final. A interface identifica a simulação e não solicita cartão, chave Pix ou dados bancários.
 - CA-31.9: Após compra, matrícula/renovação continua ação do atendente. Pagamento confirmado não cria matrícula, referência facial ou autorização sozinho; exceção acadêmica sem pagamento de CA-31.1 continua válida.
+- CA-31.10: atendente autorizado consulta a última compra simulada na ficha do cliente. A consulta disponibiliza o status da simulação sem condicionar matrícula ao pagamento.
 
 #### Dashboard, aulas e equipamentos
 
@@ -868,7 +881,7 @@ Apresentar indicadores provenientes dos módulos implementados.
 
 - CA-29.1: exibe ao menos clientes ativos, histórico semanal de frequência e
   lotação atual.
-- CA-29.2: quando disponíveis, exibe faturamento/receita mensal, anual e total.
+- CA-29.2: quando disponíveis, exibe faturamento e recebimentos simulados por mês, ano e total, com indicação de simulação acadêmica.
 - Observação: sem despesas cadastradas, o sistema não denomina receita como lucro.
 
 ##### RF-30 — Gerenciar agenda de aulas
@@ -1046,7 +1059,9 @@ Fonte versionada: [docs/requisitos/regras-de-negocio.md](docs/requisitos/regras-
 
 - RN-01/RN-02/RN-03: [ADR-002](docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md)
   já define identidade, unicidade e alcance de conta/perfis; não é pendência.
-- RN-13: [triagem v1](docs/requisitos/onboarding-e-triagem.md) definida; ensaio real de IA futuro.
+- RN-13: [triagem acadêmica](docs/requisitos/onboarding-e-triagem.md) e bloqueios exercitados na
+  [avaliação acadêmica de IA](docs/testes/ai06-enxuto.md), com casos locais
+  controlados e amostra delimitada de integração com o LLM.
 - RN-26: NTF-01 já prevê instrutor designado para ficha e administrador para
   alterações críticas, aviso interno persistente + e-mail, com falha/reenvio
   idempotente. Não depender de sucesso do e-mail para preservar pendência.
@@ -1055,8 +1070,8 @@ Fonte versionada: [docs/requisitos/regras-de-negocio.md](docs/requisitos/regras-
   e identificação manual sem dispensar os critérios de acesso. CompreFace,
   matrícula sem pagamento obrigatório e catraca fictícia integram essa trilha.
 - RN-25: reservas/capacidade são escopo futuro (GATE-07); agenda básica permanece.
-- Financeiro/compra: FIN-02/GATE-09 são tardios. Compra confirmada pode preceder
-  matrícula pelo atendente; o caminho acadêmico sem confirmação financeira continua.
+- Financeiro/compra: FIN-02/GATE-09 usam simulação local. Uma confirmação de
+  simulação pode preceder a matrícula, que permanece independente.
 - Exercícios: nome/variação normalizado (trim, espaços internos colapsados e lowercase)
   é único na academia, inclusive inativos. Reativar/editar registro existente evita
   duplicar identidade do movimento; descrições/prescrições históricas são snapshots.
@@ -1086,8 +1101,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 | RNF-07 | O sistema deve possuir testes unitários, de integração e de contrato da API, com atenção especial à IA e ao evento facial externo. |
 | RNF-08 | Configurações e segredos devem vir de ambiente, sem valores sensíveis versionados. |
 | RNF-09 | Convites e recuperação devem usar adaptador de SMTP ou API de provedor de e-mail. |
-| RNF-10 | A aplicação deve funcionar localmente antes de ser containerizada. |
-| RNF-11 | Dockerfiles e Docker Compose devem ser implementados somente após o MVP e a maioria dos módulos. |
+| RNF-10 | A aplicação acadêmica deve ser instalável e executável localmente no Windows. |
+| RNF-11 | A aplicação usa serviços locais nativos. Docker é reservado à instância local dedicada de CompreFace. |
 | RNF-12 | A fase final de infraestrutura deve definir firewall/restrição de rede, exposição mínima de portas e isolamento dos serviços internos. |
 | RNF-13 | A busca vetorial deve alcançar latência p95 de até dois segundos no ambiente e volume de teste documentados. |
 | RNF-14 | Interfaces destinadas ao cliente devem ser responsivas para uso em celular. |
@@ -1105,8 +1120,8 @@ recursos/serviços e ensaios reais são configurados nas implementações.
 responsabilidade exclusiva do backend. A solução concreta será decidida na fase
 final e deve cobrir, no mínimo:
 
-- somente endpoints necessários expostos externamente;
-- PostgreSQL e banco vetorial em rede não pública;
+- serviços da aplicação acessíveis apenas em loopback;
+- PostgreSQL em loopback e Qdrant em diretório persistente local;
 - administração de identidade restrita;
 - limites de origem, tamanho de requisição e taxa quando aplicáveis;
 - documentação das regras para o ambiente acadêmico.
@@ -1279,7 +1294,7 @@ Seleção não comprova indexação nem qualidade real.
 | MRF12 | Isolamento e proteção do contexto | MOD-01; MOD-03; MOD-04; MOD-05; MOD-06 | Cliente; instrutor autorizado | Aplicar autorização, minimização e resistência a instruções indevidas. | **CA-MRF12.1:** Backend resolve cliente e designação; trocar IDs não muda escopo autorizado.<br>**CA-MRF12.2:** Histórico, resumo, fichas e cache de A nunca entram no contexto de B; dados privados não são indexados como literatura compartilhada.<br>**CA-MRF12.3:** PDF/mensagem é dado, não instrução para mudar permissões; modelo não executa SQL, navegação livre ou escrita direta no domínio.<br>**CA-MRF12.4:** Conteúdo excluído por retenção/rejeição não volta ao contexto ativo por cache/exportação; conversa histórica não restaura ficha excluída. |
 | MRF13 | Avaliação de qualidade e tempo | MOD-00; MOD-05; MOD-06; MOD-04; MOD-10 | Equipe técnica; instrutor/curador avaliador | Testar dúvidas, resumos, triagem, geração e falhas no provedor real. | **CA-MRF13.1:** Casos rotulados cobrem elegível, grave, incompleto, contraditório, fonte ausente, recurso ausente, PT/EN, injeção, falha e clientes distintos.<br>**CA-MRF13.2:** Avaliar se resumo preserva alertas, recuperação é pertinente, resposta tem suporte e ficha respeita restrições; critérios/limiares aceitos antes do ensaio.<br>**CA-MRF13.3:** Medir p50/p95 total por rota, busca separada, chamadas e tokens no mesmo ambiente/configuração; não prometer velocidade de LLM gratuito sem benchmark.<br>**CA-MRF13.4:** Bloqueios críticos do conjunto impedem publicação; JSON válido não basta; doubles não comprovam integração/modelo real.<br>**CA-MRF13.5:** Testar retenção/rejeições/concorrência; revisar os 32 casos documentais antes de reutilizá-los como aceite. |
 | MRF14 | Chat e adaptação controlada | MOD-06; MOD-04; MOD-03 | Cliente; instrutor designado | Responder dúvidas com contexto curto; pedido explícito de adaptação segue fluxo de ficha. | **CA-MRF14.1:** Dúvida geral funciona sem ficha/onboarding; carregar somente pergunta, janela recente limitada e trechos pertinentes.<br>**CA-MRF14.2:** Chat informativo não publica mudança silenciosa; adaptação exige solicitação explícita, snapshot, nova triagem, evidência e validações de geração.<br>**CA-MRF14.3:** Nova versão preserva partes não relacionadas e inicia parecer PENDENTE; falha/abstenção mantém vigente.<br>**CA-MRF14.4:** Dados de saúde recém-relatados que afetem elegibilidade exigem confirmação/atualização versionada antes de gerar; não são incorporados silenciosamente no cadastro.<br>**CA-MRF14.5:** Erros são controlados e mensagens isoladas; conversa completa/anamnese inteira não são reenviadas a cada resposta. O histórico consultável permanece após nova ficha, com contexto anterior identificado; isso não amplia a janela enviada ao modelo nem restaura suporte expurgado/revogado. |
-| MRF15 | Provedores, operação e retenção | MOD-00; MOD-05; MOD-06; MOD-12 | Equipe técnica; provedores LLM/embeddings | Usar adaptadores substituíveis e configuração compatível com modelo gratuito escolhido. | **CA-MRF15.1:** LLM e embeddings têm portas/configuração; opção gratuita é prioridade, mas modelo, limites de uso, contexto e execução local/API exigem ADR e ensaio.<br>**CA-MRF15.2:** Segredos vêm de ambiente; logs não copiam anamnese/biometria nem raciocínio interno.<br>**CA-MRF15.3:** Timeout/quota/indisponibilidade têm estados claros e orçamento de tentativas; nenhuma falha da IA impede ficha manual.<br>**CA-MRF15.4:** Retenção de mensagens/execuções/evidências é definida separadamente das 15 fichas; execução local antecede Docker. |
+| MRF15 | Provedores, operação e retenção | MOD-00; MOD-05; MOD-06; MOD-12 | Equipe técnica; provedores LLM/embeddings | Usar adaptadores substituíveis e configuração compatível com modelo gratuito escolhido. | **CA-MRF15.1:** LLM e embeddings têm portas/configuração; opção gratuita é prioridade, mas modelo, limites de uso, contexto e execução local/API exigem ADR e ensaio.<br>**CA-MRF15.2:** Segredos vêm de ambiente; logs não copiam anamnese/biometria nem raciocínio interno.<br>**CA-MRF15.3:** Timeout/quota/indisponibilidade têm estados claros e orçamento de tentativas; nenhuma falha da IA impede ficha manual.<br>**CA-MRF15.4:** Retenção de mensagens/execuções/evidências é definida separadamente das 15 fichas. Embeddings e índice Qdrant executam localmente no ambiente acadêmico. |
 
 #### Contratos e execução
 
@@ -1309,7 +1324,8 @@ academia única foi escolhida expressamente. Escolhas registradas sem exigir nov
 Decisão: monólito modular em Python 3.12, FastAPI, Pydantic 2, SQLAlchemy 2.x,
 Alembic e psycopg 3; uv para ambiente/lockfile; Ruff e mypy; pytest + HTTPX.
 Frontend: Node 24 LTS, npm, React + TypeScript estrito + Vite, React Router,
-React Hook Form + Zod para formulários; Vitest/Testing Library e Playwright.
+formulários com componentes React e validação do backend; Vitest/Testing Library
+e Playwright.
 Fixar versões exatas compatíveis nos lockfiles durante FND-04/FND-07; não instalar
 nada nem inventar comandos de teste executados nesta preparação documental.
 
@@ -1404,11 +1420,12 @@ Data: 2026-11-04
 Origem: responsável delegou a seleção de frameworks, campos e regras técnicas;
 academia única foi escolhida expressamente. Escolhas registradas sem exigir nova aprovação.
 
-Decisão: Qdrant especializado por qdrant-client em modo local persistente no MVP,
+Decisão: Qdrant especializado por qdrant-client em modo local persistente,
 sem servidor/Docker inicial; um singleton por processo e diretório local ignorado.
 Não é mock nem PostgreSQL vetorial. Consultas/buscas por porta do módulo knowledge.
-Na fase Docker, modo servidor Qdrant com testes de contrato e reindexação; não
-compartilhar arquivo local entre vários processos. Configurar modo/path/url por ambiente.
+Para a entrega acadêmica, manter um único processo e configurar o diretório
+persistente por ambiente. Modo servidor e reindexação por migração de infraestrutura
+ficam fora do escopo atual.
 
 Embeddings locais: intfloat/multilingual-e5-small, sentence-transformers, CPU,
 384 dimensões normalizadas, cosseno. Prefixos query: e passage:. Baixar pesos só
@@ -1456,7 +1473,7 @@ Data: 2026-11-04
 Origem: responsável delegou a seleção de frameworks, campos e regras técnicas;
 academia única foi escolhida expressamente. Escolhas registradas sem exigir nova aprovação.
 
-Decisão: execução inicial sem Docker. PostgreSQL 17 nativo no Windows, host
+Decisão: execução local nativa no Windows. PostgreSQL 17, host
 127.0.0.1:5432, bancos separados academia_dev e academia_test; usuário da aplicação
 não-superusuário e configuração por ambiente. FND-05 cria/aplica migrations e
 verifica banco real; não substituir integração por SQLite.
@@ -1464,7 +1481,7 @@ FastAPI/Uvicorn em 127.0.0.1:8000, um worker. Vite em 127.0.0.1:5173, proxy /api
 Qdrant local persistente só é aberto pelo backend (comandos de ingestão offline
 exigem backend parado ou exclusão mútua). Banco de teste em diretório temporário.
 Mailpit binário nativo Windows: SMTP 127.0.0.1:1025 e interface 127.0.0.1:8025,
-sem relay externo. Fornecedor de e-mail real pode ser adaptado depois.
+sem relay externo.
 Cargas/pesos, fotos e uploads são privados, via armazenamento local protegido;
 imagens públicas de equipamentos são expostas por rota controlada, sem caminho livre.
 
@@ -1475,10 +1492,13 @@ já instalados ou testes aprovados. Ausência de recurso impede só seu ensaio d
 
 CompreFace e catraca são pós-MVP. O [GATE-08](docs/arquitetura/preparacao-gate-08.md) registra
 a instância dedicada do CompreFace em Docker, autorizada em 22/11/2026, e o
-ensaio de prontidão. A API da catraca será executada nativamente nesta fase.
+ensaio de prontidão. A API da catraca é executada nativamente.
 Reservas de aulas ficam dispensadas no MVP e pendentes de escopo futuro
-(GATE-07). Pagamentos automáticos continuam tardios (GATE-09).
-A containerização do AcademIA permanece na etapa final.
+(GATE-07). O GATE-09 define financeiro simulado e sem gateway.
+Os cartões INF validam a instalação local e o CompreFace conserva seu Docker dedicado.
+O [guia de segurança local](docs/instalacao/instalacao-local.md#segurança-e-persistência-locais)
+registra as regras do firewall do Windows, os diretórios persistentes e a
+verificação de prontidão do iniciador.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).
@@ -1968,7 +1988,7 @@ triagem, parecer posterior ou seleção de recursos disponíveis.
 
 ## 17. Modelo de dados, relacionamentos e invariantes
 
-Modelo lógico do escopo completo: 44 tabelas/359 colunas, incluindo uma tabela futura. O físico na revisão 0026 tem 43 tabelas/355 colunas/77 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.
+Modelo lógico do escopo completo: 44 tabelas, 363 colunas e 76 referências, incluindo uma tabela futura. O schema físico na revisão 0029 tem 43 tabelas, 359 colunas e 77 constraints de chave estrangeira. A origem e a evolução do MER constam na visão geral e na comparação visual histórica da revisão 0016.
 
 ### 1. Modelo DBML completo
 
@@ -1995,6 +2015,7 @@ Table usuario {
   estado varchar(20) [not null]
   criado_em timestamptz [not null]
   revision integer [not null]
+  endereco varchar(300)
 }
 
 Table usuario_papel {
@@ -2408,6 +2429,7 @@ Table biometria {
   estado varchar(25) [not null]
   cadastrada_por uuid [not null]
   criada_em timestamptz [not null]
+  foto_perfil bytea
   Note: 'Owner MOD-07. Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO/PRONTA; descarte antes de publicar'
 }
 
@@ -2499,6 +2521,8 @@ Table pagamento {
   cobranca_id uuid
   cliente_id uuid [not null]
   plano_id uuid
+  plano_nome_snapshot varchar(100)
+  simulado_em timestamptz
   origem varchar(25) [not null]
   referencia_externa varchar(150)
   valor numeric(12,2) [not null]
@@ -2514,7 +2538,7 @@ Table pagamento {
   indexes {
     (id, cliente_id) [unique]
   }
-  Note: 'Owner MOD-08. Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id'
+  Note: 'Owner MOD-08. Registro manual e compra simulada; compra exige plano_id, nome contratado e instante; correções manuais preservam vínculo do cliente'
 }
 
 Table aula_ocorrencia {
@@ -2681,6 +2705,7 @@ Singleton id=1
 | estado | varchar(20) | required | — |
 | criado_em | timestamptz | required | — |
 | revision | integer | required | — |
+| endereco | varchar(300) | opcional, alterável somente pelo próprio usuário | — |
 
 #### usuario_papel — MOD-01
 
@@ -3186,6 +3211,7 @@ Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO
 | estado | varchar(25) | required | — |
 | cadastrada_por | uuid | required | funcionario.usuario_id |
 | criada_em | timestamptz | required | — |
+| foto_perfil | bytea | miniatura privada opcional da referência facial | — |
 
 #### evento_acesso — MOD-07
 
@@ -3282,7 +3308,8 @@ Histórico append-only. A combinação de cobrança e número de revisão é ún
 
 #### pagamento — MOD-08
 
-Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id.
+Registro manual e compra simulada. A compra exige plano_id, nome contratado e instante.
+Correções manuais preservam o vínculo com o cliente.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -3290,6 +3317,8 @@ Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo
 | cobranca_id | uuid | opcional, mesmo cliente | cobranca.id |
 | cliente_id | uuid | required | cliente.usuario_id |
 | plano_id | uuid | opcional | plano.id |
+| plano_nome_snapshot | varchar(100) | exigido para compra simulada | — |
+| simulado_em | timestamptz | exigido para compra simulada | — |
 | origem | varchar(25) | required | — |
 | referencia_externa | varchar(150) | opcional | — |
 | valor | numeric(12,2) | required | — |
@@ -3447,10 +3476,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
   Limites contratados congelados. O [GATE-08](docs/arquitetura/preparacao-gate-08.md) registra
   o limite por dia civil no fuso da academia e a renovação sem sobreposição.
-- Cobrança permite múltiplas tentativas; referência externa única por provedor quando
-  existir. Compra de plano exige pagamento.plano_id com plano ativo na contratação;
-  valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
-  opcional só para lançamentos que não representam compra de plano.
+- Cobrança permite múltiplos lançamentos vinculados. A
+  [compra simulada](docs/arquitetura/compra-simulada.md) exige plano ativo com preço; plano,
+  nome, preço e instante contratados permanecem no recibo. O UUID identifica
+  uma operação idempotente. Pendente ou recusado não tem data de confirmação.
   Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
   No [registro manual](docs/arquitetura/pagamentos-manuais.md), o valor é positivo, a referência
   é única entre lançamentos confirmados e a correção preserva o registro anterior.
@@ -3683,7 +3712,8 @@ FUNCIONARIO: nome, e-mail, cargo (2–80), admissão e papéis operacionais; dat
 separados da conta. Academia: nome/endereço/descrição em configuração singleton.
 A idade atual aparece no cadastro administrativo em anos completos. O backend
 usa a mesma regra ao concluir uma versão do onboarding, com a data civil de São
-Paulo, e guarda a idade daquele momento. O cliente vê o valor na consulta da
+Paulo, e guarda a idade daquele momento. Durante o preenchimento, o cliente vê
+a idade atual no editor e pelo convite válido. O cliente vê o valor histórico na consulta da
 versão concluída. A triagem recebe esse valor sem repetir a data de nascimento
 no prompt. Autogeração inicial limitada a adultos (18+), porque o
 corpus selecionado é delimitado a esse contexto. Cadastro de menor não é proibido,
@@ -3735,7 +3765,7 @@ só para resumir. Campos de saúde identificáveis nunca vão ao índice compart
 | 2 | Sem onboarding concluído/schema inválido | DADOS_INSUFICIENTES; solicitar preenchimento |
 | 3 | Idade menor que 18 | BLOQUEADO_POR_SEGURANCA / ESCOPO_ETARIO |
 | 4 | Qualquer condição/limitação declarada GRAVE, restricao_exercicio_declarada=SIM ou evento_saude_importante_recente=SIM | BLOQUEADO_POR_SEGURANCA / ALERTA_GRAVE_DECLARADO |
-| 5 | Flag necessária ou gravidade de ocorrência=NAO_SEI, contradição ou contexto excedido | DADOS_INSUFICIENTES com motivo objetivo |
+| 5 | Informação essencial desconhecida, contradição ou contexto excedido | DADOS_INSUFICIENTES com motivo objetivo |
 | 6 | Campos explícitos não bloqueantes | Recuperar evidências pertinentes e fazer até uma análise assistida |
 | 7 | LLM sinaliza indício grave na descrição livre | BLOQUEADO_POR_SEGURANCA / ALERTA_GRAVE_TEXTO; não diagnosticar |
 | 8 | LLM sinaliza dúvida/contradição/lacuna de suporte | DADOS_INSUFICIENTES; não presumir saudável |
@@ -3748,6 +3778,21 @@ Erro/quota/timeout do provedor é falha técnica da execução, nunca elegibilid
 Declaração de medicamento/condição não grave não bloqueia por si só: a adaptação
 solicitada exige evidência pertinente e ausência de conflito. Sem suporte, abster-se.
 Texto livre com gravidade incerta não ganha liberação presumida.
+
+##### Política de incerteza na triagem v2
+
+Condições de saúde, dor/lesão/limitação, orientação para restringir exercício,
+evento de saúde importante recente e gravidade de condição ou limitação
+declarada exigem esclarecimento quando marcados como `NAO_SEI`. A ausência
+de resposta obrigatória continua sendo erro de dados.
+
+O único desconhecido admitido na triagem preliminar é a resposta sobre
+medicação, quando as outras quatro perguntas têm negativa explícita e as
+observações estão vazias. O resumo preserva a incerteza. O caso pode seguir
+à análise assistida, que ainda pode apontar lacuna ou contraindicação. A
+regra se aplica ao fluxo acadêmico e preserva o requisito de evidência na
+geração e adaptação. Quando a pendência é essencial, a API identifica a
+pergunta e a tela de IA oferece acesso à etapa de saúde.
 
 #### Alteração e versão
 
@@ -4784,8 +4829,12 @@ Ordem de decisão implementada:
 3. Idade ausente/inválida: insuficiência; menor de 18: bloqueio ESCOPO_ETARIO.
 4. GRAVE declarado em condição/limitação, restrição ou evento importante=SIM:
    bloquear ALERTA_GRAVE_DECLARADO, antes de considerar flags desconhecidas.
-5. Flag necessária/gravidade=NAO_SEI: insuficiência; contexto excessivo também
-   impede análise. Ausente não é preenchido com saudável, zero ou média.
+5. Na política v2, incerteza sobre condição, limitação, restrição ou evento
+   recente, ou gravidade desconhecida, retorna insuficiência e identifica o
+   campo. Se apenas a medicação for desconhecida, as quatro respostas essenciais
+   forem negativas e não houver observação, a análise recebe `NAO_SEI` como foi
+   informado. Contexto excessivo também impede análise. Dados ausentes ficam
+   explícitos no contrato.
 6. Sem bloqueio, fazer até uma análise assistida, quando configurada. A porta recebe
    resumo, evidências fornecidas pelo chamador autorizado e referência da política.
 7. Alerta grave no texto sinalizado pela análise: bloquear ALERTA_GRAVE_TEXTO.
@@ -4885,8 +4934,11 @@ Fonte versionada: [docs/requisitos/schemas/triagem-v1.schema.json](docs/requisit
         "type": "integer"
       },
       "version": {
-        "const": 1,
-        "default": 1,
+        "default": 2,
+        "enum": [
+          1,
+          2
+        ],
         "title": "Version",
         "type": "integer"
       },
@@ -4917,8 +4969,11 @@ Fonte versionada: [docs/requisitos/schemas/triagem-v1.schema.json](docs/requisit
         "type": "integer"
       },
       "fonte_regras": {
-        "const": "onboarding-e-triagem-v1",
-        "default": "onboarding-e-triagem-v1",
+        "default": "onboarding-e-triagem-v2",
+        "enum": [
+          "onboarding-e-triagem-v1",
+          "onboarding-e-triagem-v2"
+        ],
         "title": "Fonte Regras",
         "type": "string"
       }
@@ -5774,6 +5829,11 @@ Fonte versionada: [docs/requisitos/schemas/triagem-v1.schema.json](docs/requisit
             "ESCOPO_ETARIO",
             "ALERTA_GRAVE_DECLARADO",
             "DADO_DESCONHECIDO",
+            "PENDENCIA_CONDICOES",
+            "PENDENCIA_LIMITACOES",
+            "PENDENCIA_RESTRICAO",
+            "PENDENCIA_EVENTO",
+            "PENDENCIA_MEDICACAO",
             "CONTEXTO_EXCEDIDO",
             "ANALISE_PENDENTE",
             "ALERTA_GRAVE_TEXTO",
@@ -5949,6 +6009,11 @@ Fonte versionada: [docs/requisitos/schemas/triagem-v1.schema.json](docs/requisit
             "ESCOPO_ETARIO",
             "ALERTA_GRAVE_DECLARADO",
             "DADO_DESCONHECIDO",
+            "PENDENCIA_CONDICOES",
+            "PENDENCIA_LIMITACOES",
+            "PENDENCIA_RESTRICAO",
+            "PENDENCIA_EVENTO",
+            "PENDENCIA_MEDICACAO",
             "CONTEXTO_EXCEDIDO",
             "ANALISE_PENDENTE",
             "ALERTA_GRAVE_TEXTO",
@@ -6298,7 +6363,10 @@ Status: DEFINIDA por delegação em 2026-11-04.
 Valores canônicos: [configuração v2](docs/requisitos/schemas/configuracao-ia-v2.json).
 [Triagem e onboarding](docs/requisitos/onboarding-e-triagem.md), [ADR](docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md).
 
-A configuração fixa modelos, limite por rota, chunking/busca, retenção e metas.
+A configuração registra modelos, limites por rota, chunking/busca, retenção e
+metas. O backend usa `retrieval.top_k` e `retrieval.min_score_inicial` do perfil
+selecionado a partir da próxima inicialização. Os parâmetros de chunking e
+os tetos permanecem fixados pelo contrato de ingestão e recuperação.
 GROQ_API_KEY é credencial pessoal de ambiente, não criada/versionada por esta entrega.
 O perfil principal usa JSON Schema estrito (ADR-012); validar também no backend e encerrar
 erro sem segunda geração automática. No máximo uma análise + uma geração em ficha.
@@ -7073,8 +7141,8 @@ Métrica cosseno, normalização e prefixos query:/passage: são parte do espaç
 versionado, conforme a configuração canônica. Não mudar modelo/dimensão por
 fallback. Alterações de configuração seguem o protocolo da SPEC e a decisão
 aprovada; parâmetros futuros não significam autorização para trocar a arquitetura.
-ACADEMIA_VECTOR_URL não é usada para abrir servidor: se informada, gera erro de
-configuração. Modo servidor e migração/reindexação ficam para a infraestrutura final.
+`ACADEMIA_VECTOR_URL`, se informada, gera erro de configuração. A instalação
+acadêmica mantém o Qdrant no diretório local conforme a ADR-004.
 
 Cada coleção guarda nos próprios metadados um schema_version e o embedding_space:
 modelo, revisão, dimensão, métrica, normalização e prefixos, mais SHA-256 da
@@ -7117,10 +7185,10 @@ processo para não substituir a configuração de uma conexão já em uso.
 A verificação de conexão não repete automaticamente operações. Nova ação explícita
 pode tentar reconectar; não existe fallback para memória, PostgreSQL, outro modelo
 ou coleções de teste. Erros públicos não incluem caminhos, segredos ou exceções
-brutas do SDK. Falhas futuras de busca deverão manter a distinção entre ausência
+brutas do SDK. As falhas de busca mantêm a distinção entre ausência
 de evidência e indisponibilidade. Rotas de treino manual continuam independentes.
 
-#### Execução e verificação local antes do Docker
+#### Execução e verificação local
 
 Com a API parada, a partir de backend/ e com o ambiente do projeto configurado:
 
@@ -7135,11 +7203,11 @@ code/message em português e exit code 1. JSON usa escapes ASCII, compatíveis c
 UTF-8 e pipes do Windows. Não imprime caminho físico. Execute novamente depois
 para comprovar reabertura; não apagar meta.json ou arquivos de lock manualmente.
 
-Durante a API em execução, futuros consumidores internos usam a porta singleton;
-a CLI em outro processo será recusada enquanto a mesma pasta estiver ocupada.
+Durante a execução da API, os consumidores internos compartilham a instância
+do processo. A CLI em outro processo será recusada enquanto a pasta estiver ocupada.
 Para inspecionar simultaneamente sem interferir no acervo, configure diretório
 exclusivo de teste em ACADEMIA_VECTOR_PATH. Diretórios padrão ficam fora do Git.
-Variáveis de URL/chave de um servidor remoto não são necessárias neste MVP.
+O runtime acadêmico usa o diretório local, sem URL ou chave de servidor vetorial.
 
 #### Curadoria e próximos passos
 
@@ -9643,6 +9711,11 @@ Fonte versionada: [docs/requisitos/schemas/execucao-ia-v1.schema.json](docs/requ
                 "ESCOPO_ETARIO",
                 "ALERTA_GRAVE_DECLARADO",
                 "DADO_DESCONHECIDO",
+                "PENDENCIA_CONDICOES",
+                "PENDENCIA_LIMITACOES",
+                "PENDENCIA_RESTRICAO",
+                "PENDENCIA_EVENTO",
+                "PENDENCIA_MEDICACAO",
                 "CONTEXTO_EXCEDIDO",
                 "ANALISE_PENDENTE",
                 "ALERTA_GRAVE_TEXTO",
@@ -12338,6 +12411,18 @@ login. Links de primeiro acesso continuam com finalidade separada.
 
 Fonte versionada: [docs/arquitetura/clientes.md](docs/arquitetura/clientes.md).
 
+#### Perfil próprio
+
+`GET /api/v1/meu-perfil` lê a identidade autenticada e os dados cadastrais
+dos seus perfis ativos. `PATCH /api/v1/meu-perfil/endereco` recebe apenas
+`endereco`, um endereço em texto de até 300 caracteres. O campo é opcional
+na conta e pode ser limpo com `null`. A escrita exige sessão e CSRF e
+usa o titular da sessão. O mesmo endereço acompanha os papéis acumulados.
+As respostas usam `Cache-Control: no-store`.
+Quando existe miniatura de referência ativa, `GET /api/v1/meu-perfil/foto`
+retorna JPEG somente ao titular. A tela de perfil mantém as iniciais quando
+o arquivo não está disponível.
+
 PES-02 monta as rotas no ponto de composição `backend/app/main.py` e liga
 a tela às áreas administrativa e de atendimento em `frontend/src/app/AppRoutes.tsx`.
 O módulo reutiliza o cliente HTTP da SPA e a tela pública de primeiro acesso.
@@ -12539,7 +12624,7 @@ A migration registra as tabelas no ambiente Alembic.
 
 | Rota | Operação |
 |---|---|
-| GET /api/v1/onboarding/meu | Retorna o rascunho atual e a última versão concluída, cada qual como objeto ou `null`. |
+| GET /api/v1/onboarding/meu | Retorna `idade_atual`, o rascunho atual e a última versão concluída. Os objetos de versão podem ser `null`. |
 | PATCH /api/v1/onboarding/meu/rascunho | Recebe `versao_base`, `revisao` e `dados` parciais. Cria ou atualiza o rascunho. |
 | POST /api/v1/onboarding/meu/conclusao | Recebe `versao_base` e `revisao`. Valida o rascunho completo e o conclui. |
 | POST /api/v1/onboarding/meu/atualizacoes | Recebe `versao_base`, `confirmado: true`, `dados` completos e a `revisao` do rascunho, se houver. Retorna 201 com a nova versão concluída. |
@@ -12568,8 +12653,10 @@ etapa própria. A transação usa o bloqueio do cadastro e compara versão e
 revisão. Uma base superada retorna 409. A conclusão grava data e responsável
 e congela em `idade_snapshot` os anos completos calculados automaticamente a
 partir do cadastro, pela data civil de São Paulo. A consulta própria exibe a
-idade registrada na conclusão. Uma nova conclusão recalcula a idade para sua
-versão. A triagem usa o valor registrado, e o banco armazena o instante em UTC.
+idade registrada na conclusão. O editor autenticado e o editor por convite
+exibem `idade_atual` calculada a cada leitura, sem enviar o nascimento.
+Uma nova conclusão recalcula a idade para sua versão. A triagem usa o valor
+registrado, e o banco armazena o instante em UTC.
 
 A migration 0006 permite um rascunho por cliente. Os gatilhos protegem
 versões concluídas e avaliações de alteração ou exclusão. O serviço
@@ -12809,6 +12896,18 @@ já usados pelo iniciador.
 
 Fonte versionada: [docs/arquitetura/matriculas.md](docs/arquitetura/matriculas.md).
 
+O atendente trabalha em **Clientes e convites → Matrícula e acesso**, com o
+cliente selecionado. A leitura da última compra simulada retorna plano,
+estado e instante pelo contrato de cobrança próprio. Ausência de compra
+permite registrar matrícula normalmente. A seção de referência indica
+**Biometria pendente** quando o cadastro facial já é elegível e ainda não
+há referência confirmada. O fluxo de chegada permanece na tela de
+reconhecimento e só gera frequência após passagem confirmada.
+
+O plano pode ter um preço fictício em reais para a
+[compra simulada](docs/arquitetura/compra-simulada.md). O preço é opcional na API e no cadastro
+administrativo. Uma edição que omite o campo preserva o preço atual.
+
 MOD-08 mantém os planos da academia e os períodos contratados pelo cliente.
 Na área administrativa, **Gerenciar planos** permite criar, editar e desativar
 planos. Na área de atendimento, **Matrículas** permite buscar o cliente pelo
@@ -12875,7 +12974,7 @@ Fonte versionada: [docs/arquitetura/pagamentos-manuais.md](docs/arquitetura/paga
 
 Um administrador com conta e perfil ativos abre **Gerenciar clientes** e
 escolhe **Pagamentos de …** no cadastro correspondente. O registro contém
-valor em reais, data do pagamento, meio, referência do comprovante e autoria
+valor simulado em reais, data, meio simulado, referência fictícia e autoria
 obtida da sessão. A interface recebe a referência textual. O armazenamento
 consiste no identificador informado e nos dados do lançamento.
 
@@ -12925,6 +13024,10 @@ independentes da confirmação financeira.
 ### 13. Cobranças, histórico e consulta financeira
 
 Fonte versionada: [docs/arquitetura/cobrancas.md](docs/arquitetura/cobrancas.md).
+
+Os valores representam registros didáticos de cobrança e recebimento.
+O cliente acessa a [compra simulada de plano](docs/arquitetura/compra-simulada.md) pela área
+financeira. Seus recibos têm histórico próprio.
 
 Em **Administração → Gerenciar clientes → Cobranças de …**, o administrador
 registra a competência, o vencimento e o valor. A matrícula é opcional e a
@@ -12982,11 +13085,62 @@ Reenvio da criação devolve o registro existente sem repetir a auditoria.
 Revisão desatualizada e UUID conflitante retornam HTTP 409. Dados inválidos
 e vínculo de matrícula com outro cliente retornam HTTP 422. A migração `0026`
 adiciona vínculos com integridade de cliente e mantém os dados da revisão anterior.
-### 14. Cadastro e substituição da referência facial
+### 14. Compra de plano simulada e histórico
+
+Fonte versionada: [docs/arquitetura/compra-simulada.md](docs/arquitetura/compra-simulada.md).
+
+Em **Administração → Gerenciar planos**, o administrador informa o preço
+simulado em reais. Deixar o campo vazio mantém o plano disponível para
+matrícula manual, de acordo com seu estado. No catálogo da simulação aparecem
+apenas planos ativos com preço, incluindo os de valor zero.
+
+Em **Cliente → Simular compra de plano**, ou pelo link de **Minhas cobranças**,
+o cliente escolhe o plano e o resultado de demonstração: confirmado, pendente
+ou recusado. O backend lê o preço do cadastro e grava um recibo com plano,
+nome e valor no instante da operação. O histórico continua consultável após
+alteração de preço ou inativação do plano.
+
+Cada recibo usa a tabela de pagamentos já existente e a origem `SIMULACAO`.
+Somente um resultado confirmado tem data de pagamento e confirmação. Cada
+simulação registra o resultado escolhido uma vez. Se a demonstração precisar
+de outro resultado, o cliente inicia nova simulação. Cobranças lançadas pelo
+administrador continuam consultáveis separadamente. A compra simulada gera
+o próprio recibo financeiro e a matrícula continua a cargo do atendente.
+
+#### Contratos REST
+
+As rotas abaixo usam `/api/v1/cliente/compra-simulada` como base. A sessão
+identifica o cliente. A resposta usa `Cache-Control: no-store` e a escrita
+exige CSRF.
+
+| Método e sufixo | Operação |
+|---|---|
+| `GET /planos` | Oferta paginada de planos ativos com preço. |
+| `GET` | Histórico paginado do cliente autenticado. |
+| `GET /{purchase_id}` | Detalhe de recibo próprio. ID ausente ou de terceiro retorna 404. |
+| `POST` | Grava o resultado da simulação. Recebe `solicitacao_id`, `plano_id` e `resultado`. |
+
+A criação devolve 201. O mesmo ID e conteúdo devolvem 200 com o recibo original.
+Reutilizar um ID com dados divergentes ou selecionar um plano que deixou de
+estar disponível retorna 409. Valores são strings decimais e datas de eventos
+usam UTC. O painel converte o instante para São Paulo.
+
+A revisão `0027` acrescenta o nome do plano no recibo, o instante da simulação,
+uma constraint de estados e um índice de histórico por cliente. A reversão
+preserva lançamentos anteriores e interrompe se já houver recibos simulados,
+para proteger os campos do histórico.
+### 15. Cadastro e substituição da referência facial
 
 Fonte versionada: [docs/arquitetura/biometria.md](docs/arquitetura/biometria.md).
 
-O atendente autorizado seleciona o cliente na área **Atendimento → Matrículas**
+O cadastro mostra o nome e a prévia local do arquivo selecionado, o estado
+de envio e a confirmação da referência. A consulta exibe a data registrada
+na API. A referência exige JPG ou PNG de até 4 MB, com lado de até 4096 px.
+CompreFace configurado indica que o adaptador está habilitado. Uma falha de
+comunicação durante o envio exibe o aviso de serviço indisponível.
+
+O atendente autorizado seleciona **Matrícula e acesso** nos dados do cliente,
+na área **Atendimento → Clientes e convites**,
 e envia ou captura a foto. O backend exige perfil de cliente habilitado e uma
 matrícula registrada pelo atendente. A data de vigência será avaliada no motor
 de acesso. Uma matrícula com início futuro permite preparar a referência.
@@ -13000,13 +13154,21 @@ limitar a quantidade devolvida pelo detector. A similaridade inicial de 0,95
 pertence ao reconhecimento de uma nova captura.
 [Contrato do CompreFace 1.2.0](https://github.com/exadel-inc/CompreFace/blob/v1.2.0/docs/Rest-API-description.md).
 
-Os bytes da foto transitam somente em memória no backend. A instância local
+Os bytes da foto original transitam somente em memória no backend. A instância local
 segue a configuração do GATE-08 e conserva a representação facial necessária,
 com armazenamento da imagem bruta desativado no provedor. O banco da aplicação
 guarda um identificador opaco por foto, o identificador do exemplo no provedor,
-estado, atendente e horário. A resposta ao navegador contém apenas o status.
+estado, atendente e horário. A resposta de cadastro contém apenas o status.
 Auditoria e aviso interno para administradores registram a operação, sem
 armazenar foto, imagem codificada, credenciais ou IDs do provedor.
+
+Ao confirmar um novo cadastro, o AcademIA guarda uma miniatura JPEG com lado
+máximo de 192 px no próprio registro facial. A API do perfil só apresenta a
+miniatura da referência ativa ao titular autenticado. Alteração ou remoção da
+referência altera a foto consultável na mesma transação. Uma recuperação de
+envio ambíguo pode ativar a referência sem miniatura quando os bytes originais
+já tiverem sido descartados. Esses casos, assim como cadastros anteriores à
+migration, mostram as iniciais em Meu perfil.
 
 #### Troca e recuperação
 
@@ -13054,7 +13216,7 @@ a coleção de testes separada. A URL aceita HTTPS ou HTTP de loopback.
 e `ACADEMIA_COMPREFACE_MAX_IMAGE_BYTES` têm os valores iniciais em `.env.example`.
 O iniciador lê essas variáveis. A instância já provisionada do CompreFace é
 ligada separadamente conforme o [GATE-08](docs/arquitetura/preparacao-gate-08.md#execução-local-da-instância-dedicada).
-### 15. Identificação facial e eventos idempotentes
+### 16. Identificação facial e eventos idempotentes
 
 Fonte versionada: [docs/arquitetura/reconhecimento-facial.md](docs/arquitetura/reconhecimento-facial.md).
 
@@ -13125,7 +13287,7 @@ ID externo. Um lock transacional por chave serializa reenvios concorrentes.
 O banco guarda o resumo criptográfico usado para deduplicar e o resultado
 normalizado, sem foto, vetores, sujeito do provedor ou credenciais.
 Autorização, passagem e contagem de frequência ou lotação são etapas próprias.
-### 16. Motor de autorização e confirmação de passagem
+### 17. Motor de autorização e confirmação de passagem
 
 Fonte versionada: [docs/arquitetura/autorizacao-acesso.md](docs/arquitetura/autorizacao-acesso.md).
 
@@ -13178,7 +13340,7 @@ comandos usa `ACADEMIA_TURNSTILE_URL` e só aceita loopback. A configuração
 de modalidade, janela, validade e timeout está no `.env.example`.
 O [guia da catraca](docs/instalacao/catraca-ficticia.md) descreve a operação
 nativa com o iniciador e como provocar uma passagem simulada.
-### 17. Confirmação manual auditada
+### 18. Confirmação manual auditada
 
 Fonte versionada: [docs/arquitetura/confirmacao-manual.md](docs/arquitetura/confirmacao-manual.md).
 
@@ -13224,7 +13386,7 @@ A passagem permanece no contrato autenticado da catraca. O vínculo pelo
 comando e pela decisão qualifica a origem manual, e o mesmo evento de passagem
 é contabilizado uma só vez. A falha biométrica e a confirmação continuam
 consultáveis tecnicamente no histórico vinculado.
-### 18. Frequência e lotação a partir de passagens confirmadas
+### 19. Frequência e lotação a partir de passagens confirmadas
 
 Fonte versionada: [docs/arquitetura/frequencia-lotacao.md](docs/arquitetura/frequencia-lotacao.md).
 
@@ -13284,7 +13446,7 @@ O [painel administrativo](docs/arquitetura/painel-administrativo.md) consome a l
 A migration `0024` preenche a projeção a partir de passagens já confirmadas.
 Seu downgrade elimina a projeção. Os eventos e comandos continuam disponíveis
 para reconstrução em nova aplicação da migration.
-### 19. Indicadores consolidados e permissões do painel administrativo
+### 20. Indicadores consolidados e permissões do painel administrativo
 
 Fonte versionada: [docs/arquitetura/painel-administrativo.md](docs/arquitetura/painel-administrativo.md).
 
@@ -13322,8 +13484,33 @@ falha. Identidades, referências faciais e conteúdo de exceções ficam fora
 do contrato.
 
 O MOD-11 calcula os indicadores sob demanda pelas portas de leitura do MOD-01,
-MOD-07 e MOD-08. O escopo financeiro pertence ao FIN-03.
-### 20. Exercícios e recursos
+MOD-07 e MOD-08. O painel financeiro recebe somente os agregados do MOD-08.
+
+#### Financeiro simulado
+
+O painel mostra mês atual, ano atual e total registrado, com calendário de
+São Paulo. O total de cobrados e saldos inclui competências futuras já
+registradas. O mês e o ano comparam a competência da cobrança e a data civil
+do pagamento com o respectivo período.
+
+| Indicador | Regra |
+|---|---|
+| Cobrado | Valor das cobranças administrativas vigentes, pelo mês de competência. |
+| Recebido | Lançamentos manuais e compras simuladas confirmadas e vigentes, pela data de pagamento. Inclui confirmações sem cobrança vinculada e pagamentos preservados após cancelamento de cobrança. |
+| Saldo a vencer | Saldo das cobranças abertas com vencimento hoje ou depois, pela competência da cobrança. |
+| Saldo vencido | Saldo das cobranças abertas com vencimento anterior a hoje, pela competência da cobrança. |
+
+O saldo de cada cobrança desconta os pagamentos confirmados vinculados a ela
+e tem piso de zero. Pagamentos anulados, substituídos, pendentes, recusados ou
+com confirmação posterior à consulta ficam fora das somas. Uma simulação
+pendente fica no histórico da compra. Ela não gera saldo de cobrança.
+
+Em `GET /api/v1/admin/dashboard`, o indicador `financeiro` retorna
+`competencia_atual` e os blocos `mes`, `ano` e `total` quando disponível.
+Cada bloco tem `cobrado`, `recebido`, `pendente` e `vencido` em strings
+decimais. Sem lançamentos, o resultado ativo retorna valores zero. Se a leitura
+financeira falhar, os demais indicadores permanecem disponíveis.
+### 21. Exercícios e recursos
 
 Fonte versionada: [docs/arquitetura/catalogo-exercicios.md](docs/arquitetura/catalogo-exercicios.md).
 
@@ -13377,7 +13564,7 @@ e dos vínculos de cada grupo. O SQL sintético original continua restrito a
 é uma operação explícita para `academia_dev`, acrescentando equipamentos e
 exercícios pelos serviços dos módulos. Ela não sobrescreve os dados do usuário,
 não cria fichas e não substitui evidências bibliográficas do RAG.
-### 21. Editor manual
+### 22. Editor manual
 
 Fonte versionada: [docs/arquitetura/fichas-manuais.md](docs/arquitetura/fichas-manuais.md).
 
@@ -13458,7 +13645,7 @@ expirado com motivo e data, remove itens antes dos dias e preserva os
 metadados. Consultas de conteúdo expirado retornam a identificação e
 uma lista vazia de dias. A estrutura preserva referências futuras de
 execuções de treino por versão.
-### 22. Publicação, parecer e retenção
+### 23. Publicação, parecer e retenção
 
 Fonte versionada: [docs/arquitetura/publicacao-e-parecer.md](docs/arquitetura/publicacao-e-parecer.md).
 
@@ -13582,7 +13769,7 @@ cópia da ficha na execução IA que possa restaurar conteúdo expirado.
 geração e mudanças posteriores, sem criar parecer paralelo. No aviso existente,
 tentativa_anterior=null permite envio inicial; 1/2 solicita repetir a tentativa
 falha exata. A tela lê o ledger atual antes do reenvio.
-### 23. Consulta e exportação
+### 24. Consulta e exportação
 
 Fonte versionada: [docs/arquitetura/ficha-do-cliente.md](docs/arquitetura/ficha-do-cliente.md).
 
@@ -13669,7 +13856,7 @@ retido. Não alterar a retenção nem remover pareceres/validações históricos
 [Testes e roteiro de navegador](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino).
 A validação usa PostgreSQL real de teste, clientes sintéticos, frontend React,
 FastAPI e Edge em 390 px. O esquema temporário é removido ao final.
-### 24. Auditoria e eventos
+### 25. Auditoria e eventos
 
 Fonte versionada: [docs/arquitetura/auditoria-e-eventos.md](docs/arquitetura/auditoria-e-eventos.md).
 
@@ -13695,7 +13882,7 @@ persistir seu efeito. Ao confirmar, o evento fica entregue. Se a transação
 falhar, o efeito é desfeito e o evento continua pendente para nova tentativa.
 Para efeitos externos, o consumidor da integração precisa usar a chave de
 idempotência do evento. O envio de avisos pertence a NTF-01.
-### 25. Avisos e e-mail
+### 26. Avisos e e-mail
 
 Fonte versionada: [docs/arquitetura/notificacoes.md](docs/arquitetura/notificacoes.md).
 
@@ -13789,7 +13976,7 @@ Use esse comando no lugar do processo temporário; não inicie dois servidores n
 mesmas portas. Se um link venceu ou a mensagem antiga foi perdida, use
 **Reenviar convite** no cadastro, com Mailpit aberto. O novo link invalida o
 anterior; não redefina senhas diretamente no banco.
-### 26. Integrações de treino e acesso
+### 27. Integrações de treino e acesso
 
 Fonte versionada: [docs/arquitetura/fluxos-atualizados.md](docs/arquitetura/fluxos-atualizados.md).
 
@@ -13849,15 +14036,15 @@ substituir evidência pela memória do modelo. Regras de bloqueio continuam prev
 Fluxo confirmado: cliente cadastrado → atendente autorizado registra matrícula
 sem exigir pagamento → captura/cadastro da foto de referência → nova captura para acesso.
 
-A matrícula manual (MEM-01) deve funcionar sem registro financeiro, comprovante,
-gateway ou execução de MEM-00. Atendente escolhe plano ativo, validade, modalidade
+A matrícula manual (MEM-01) funciona independentemente de cobranças e pagamentos
+simulados. Atendente escolhe plano ativo, validade, modalidade
 e limites; o sistema registra responsável e histórico, inclusive nas renovações.
 Ausência de pagamento, pagamento pendente/recusado ou falha do serviço financeiro
 não impedem essa operação nem invalidam automaticamente uma matrícula vigente.
 
-Financeiro permanece na fase tardia. O [registro de pagamentos manuais](docs/arquitetura/pagamentos-manuais.md) do MEM-00 é opcional,
-sem criar pré-requisito para MEM-01. Gateway/webhook futuro atualiza situação
-financeira, sem matricular automaticamente ou introduzir bloqueio de acesso.
+O [registro de pagamentos manuais](docs/arquitetura/pagamentos-manuais.md) do MEM-00 é opcional
+e didático. A compra simulada de FIN-02 atualiza a situação financeira sem
+matricular automaticamente ou introduzir bloqueio de acesso.
 
 Conta ativa, matrícula válida e referência facial são estados diferentes. Um
 cadastro não significa autorização de entrada. Matrícula contém plano, validade,
@@ -13900,13 +14087,13 @@ e [limiar de similaridade](https://github.com/exadel-inc/CompreFace/blob/master/
 
 A distribuição oficial do serviço usa Docker/Compose. Em 22/11/2026 o
 responsável autorizou uma instância local dedicada do CompreFace em Docker.
-O AcademIA e o simulador continuam com execução nativa nesta fase. A
-containerização da aplicação permanece na etapa INF-01–INF-04.
+O AcademIA e o simulador executam nativamente. Os cartões INF-01–INF-04 validam
+a instalação local.
 
 #### Catraca fictícia — serviço externo de teste
 
 O serviço simulador representa o equipamento, não o reconhecimento facial.
-Fica separado em simulators/turnstile/, executado localmente sem Docker nesta fase,
+Fica separado em simulators/turnstile/ e executa localmente,
 com REST/JSON e OpenAPI. A [execução e os testes locais](docs/instalacao/catraca-ficticia.md)
 mostram como enviar comandos e simular a passagem. O [motor do AcademIA](docs/arquitetura/autorizacao-acesso.md)
 registra sua própria decisão e recebe a passagem autenticada.
@@ -13974,7 +14161,7 @@ tentativas e registros/snapshots de execuções não entram na contagem. Conteú
 excedente é removido também de exportação/cache/contexto ativo. Auditoria guarda
 identificação, autoria, parecer, datas e motivo, sem reexpor a prescrição excluída.
 Preservar execuções existentes não exige criar agora um módulo de execução de treino.
-### 27. Preparação do GATE-08
+### 28. Preparação do GATE-08
 
 Fonte versionada: [docs/arquitetura/preparacao-gate-08.md](docs/arquitetura/preparacao-gate-08.md).
 
@@ -13996,8 +14183,8 @@ MEM-01 e ACS-07. Os testes integrados de cada módulo pertencem ao seu cartão.
   passagens confirmadas. A alternativa manual registra responsável e motivo.
 - Em 22/11/2026 o responsável autorizou Docker apenas para uma instância
   local dedicada do CompreFace, cuja distribuição oficial usa Compose. O
-  AcademIA e a catraca fictícia continuam com execução nativa nesta fase.
-  Os cartões INF-01–INF-04 seguem na etapa final.
+  AcademIA e a catraca fictícia têm execução nativa. Os cartões INF-01–INF-04
+  validam a instalação acadêmica local.
 - O responsável aprovou, em 22/11/2026, as três regras abaixo para matrícula
   e acesso. Aplicá-las nos cartões correspondentes.
 
@@ -14119,7 +14306,7 @@ docker compose -p academia-compreface --env-file "$p/.env" -f "$p/compose.yaml" 
 
 O iniciador de dois cliques do AcademIA continua com a configuração
 existente. A conexão do backend ao provedor é responsabilidade de ACS-01.
-### 28. Curadoria, versões e revogação do corpus
+### 29. Curadoria, versões e revogação do corpus
 
 Fonte versionada: [docs/arquitetura/corpus.md](docs/arquitetura/corpus.md).
 
@@ -14323,7 +14510,7 @@ executado. A redução de uma tarefa por contexto não elimina seus critérios.
 | Biometria | [GATE-08](docs/arquitetura/preparacao-gate-08.md) fechado com CompreFace 1.2.0 e FaceNet. Limiar inicial de similaridade 0,95 | Integração e ensaio do fluxo completo em ACS-01/02 |
 | Matrícula/acesso | Matrícula pelo atendente sem pagamento obrigatório, limite diário, renovação sem sobreposição e identificação manual sob as mesmas regras | MEM-01 implementa os planos e as matrículas. ACS-03/04 implementam autorização e alternativa manual |
 | Catraca | API externa fictícia com contrato de comando e passagem definido no GATE-08 | Implementação em ACS-07 e integração em ACS-03/05 |
-| Pagamentos automáticos | Fase tardia e independente da matrícula acadêmica | GATE-09: provedor/sandbox, callbacks e regras específicas |
+| Financeiro simulado | GATE-09: simulação local independente da matrícula | Implementar compra simulada e indicadores em FIN-02/03 |
 | IA/RAG real | Modelos/configuração/corpus iniciais definidos | Provisionar recursos e executar avaliação de relevância, qualidade e latência nos cartões próprios |
 
 Essas pendências não impedem a reconstrução do fluxo manual nem as etapas
@@ -14353,8 +14540,8 @@ Após reproduzir o MVP funcional, executar UX-01–UX-09 conforme o manifesto e 
 cartões incorporados. Não tratar CSS/acabamento como consequência automática de
 outros prompts. A especificação de experiência traz RNF-19/RNF-20, jornadas,
 limites e critérios mensuráveis; UX-01 materializa a referência visual antes da
-migração das telas. Ao continuar o repositório, esta trilha é a prioridade visual
-recomendada após a revisão manual, sem depender dos módulos ainda não entregues.
+migração das telas. No repositório atual, UX-09 já concluiu a trilha e o
+manifesto indica os próximos cartões elegíveis.
 
 Cada entrega mantém componentes comuns, contratos, autorizações e estados reais.
 UX-09 comprova as telas existentes em navegador; telas de módulos posteriores
@@ -14390,13 +14577,13 @@ Fonte versionada: [docs/prompts/README.md](docs/prompts/README.md).
 | GATE-03 | Academia única ou múltipla | ADR aceito | FECHADO |
 | GATE-04 | Provedores, banco vetorial, livro/corpus, política de triagem, resumo, limites por rota e métricas de MRF01–MRF15; fluxo semântico autorizado | ADRs e requisitos aprovados | FECHADO |
 | GATE-05 | Branches, commits, push e integração | Política Git aceita | FECHADO |
-| GATE-06 | Serviços e comandos locais antes do Docker | Guia local aceito | FECHADO |
+| GATE-06 | Serviços e comandos locais | Guia local aceito | FECHADO |
 | GATE-07 | Escopo e regras de reservas | RF complementar aceito ou dispensa | ABERTO |
 | GATE-08 | CompreFace confirmado; hospedagem/versão/contrato/ensaio, matrícula sem pagamento, simulador e alternativa manual | [Regras e ensaio real de prontidão](docs/arquitetura/preparacao-gate-08.md) | FECHADO |
-| GATE-09 | Gateway/sandbox e política de pagamentos | Contrato aceito antes de FIN-02 | ABERTO |
+| GATE-09 | Financeiro simulado local, independente da matrícula | [RF-31](docs/requisitos/requisitos-funcionais.md#rf-31--simular-compra-de-plano-e-matricular-cliente-pelo-atendente) e FIN-02. Decisão do responsável para a entrega acadêmica | FECHADO |
 | PG-01 | MVP funcionando localmente | TST-01 e evidências críticas aprovados | FECHADO |
-| PG-03 | Maioria dos módulos implementada antes do Docker | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](docs/testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
-| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | Manifesto, decisões, qualidade visual e matriz de aceite com escopo explícito | ABERTO |
+| PG-03 | Maioria dos módulos implementada antes da validação final da instalação local | PG-01 (inclui EQP-01), ACS-06, AUL-01 e [DSH-01 concluído](docs/testes/comandos.md#dsh-01--painel-administrativo) | FECHADO |
+| PG-02 | Módulos funcionais selecionados e infraestrutura aplicável concluídos ou dispensados; UX-09 concluído; exclui VAL-01–VAL-03 | [Escopo, qualidade visual e evidências](docs/arquitetura/rastreabilidade.md#escopo-de-admissão-do-pg-02) | FECHADO |
 
 Gates iniciais foram fechados por delegação em [preparação técnica](docs/arquitetura/preparacao-implementacao.md).
 Isso registra decisões e não instalação/ensaio. Gates de fases posteriores não impedem o trabalho
@@ -14506,7 +14693,7 @@ UX-08 padronizou [cadastros, catálogos e operação administrativa](docs/testes
 UX-09 concluiu o [aceite visual e a regressão integrada](docs/testes/ux09-aceite-visual.md)
 das telas da trilha.
 
-Esta sequência pode anteceder matrícula, biometria, agenda, dashboard e Docker.
+Esta sequência antecede matrícula, biometria, agenda, dashboard e validação local final.
 A pasta 11-experiencia-interface organiza o material e não impõe execução depois
 da pasta 10. Aceites funcionais anteriores permanecem históricos; o acabamento
 visual exige seu próprio aceite em UX-09. Módulos novos depois dele reutilizam
@@ -14542,7 +14729,7 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
 | [AUL-01](docs/prompts/07-complementares/AUL-01.md) | [Agenda de aulas por ocorrências](docs/arquitetura/agenda.md) | MOD-09 | IAM-03, IAM-04 | CONCLUIDO |
-| [AUL-02](docs/prompts/07-complementares/AUL-02.md) | Reserva e capacidade de aulas opcionais | MOD-09 | AUL-01, GATE-07 | BLOQUEADO |
+| [AUL-02](docs/prompts/07-complementares/AUL-02.md) | Reserva e capacidade, fora da entrega local | MOD-09 | AUL-01, GATE-07 | DISPENSADO |
 | [DSH-01](docs/prompts/07-complementares/DSH-01.md) | [Dashboard administrativo base](docs/arquitetura/painel-administrativo.md) | MOD-11 | PES-02, PES-01, ACS-05, MEM-01, IAM-04 | CONCLUIDO |
 
 #### Financeiro tardio
@@ -14551,24 +14738,24 @@ o padrão e passam por suas próprias verificações visuais na entrega.
 |---|---|---|---|---|
 | [MEM-00](docs/prompts/06-acesso/MEM-00.md) | [Registro manual opcional de pagamento](docs/arquitetura/pagamentos-manuais.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
 | [FIN-01](docs/prompts/08-financeiro/FIN-01.md) | [Cobranças e consulta financeira](docs/arquitetura/cobrancas.md) | MOD-08 | MEM-01, IAM-04 | CONCLUIDO |
-| [FIN-02](docs/prompts/08-financeiro/FIN-02.md) | Compra e confirmação por gateway | MOD-08 | FIN-01, NTF-01, GATE-09 | BLOQUEADO |
-| [FIN-03](docs/prompts/08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | BLOQUEADO |
+| [FIN-02](docs/prompts/08-financeiro/FIN-02.md) | Simulação local de compra de plano | MOD-08 | FIN-01, GATE-09 | CONCLUIDO |
+| [FIN-03](docs/prompts/08-financeiro/FIN-03.md) | Indicadores financeiros | MOD-08, MOD-11 | FIN-02, DSH-01 | CONCLUIDO |
 
 #### Infraestrutura final
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [INF-01](docs/prompts/09-infraestrutura/INF-01.md) | Dockerfiles da aplicação | MOD-00 | PG-01, PG-03 | PRONTO |
-| [INF-02](docs/prompts/09-infraestrutura/INF-02.md) | Compose dos serviços selecionados | MOD-00 | INF-01 | BLOQUEADO |
-| [INF-03](docs/prompts/09-infraestrutura/INF-03.md) | Rede, volumes e restrição de exposição | MOD-00 | INF-02 | BLOQUEADO |
-| [INF-04](docs/prompts/09-infraestrutura/INF-04.md) | Instalação e teste integrado em Docker | MOD-00 | INF-03, TST-01 | BLOQUEADO |
+| [INF-01](docs/prompts/09-infraestrutura/INF-01.md) | Pré-requisitos e build para instalação local | MOD-00 | PG-01, PG-03 | CONCLUIDO |
+| [INF-02](docs/prompts/09-infraestrutura/INF-02.md) | Comunicação e prontidão dos serviços locais | MOD-00 | INF-01 | CONCLUIDO |
+| [INF-03](docs/prompts/09-infraestrutura/INF-03.md) | Segurança e persistência locais | MOD-00 | INF-02 | CONCLUIDO |
+| [INF-04](docs/prompts/09-infraestrutura/INF-04.md) | Instalação local e teste integrado | MOD-00 | INF-03, TST-01 | CONCLUIDO |
 
 #### Validação final
 
 | ID / texto | Entrega | Módulos | Depende de | Estado |
 |---|---|---|---|---|
-| [VAL-01](docs/prompts/10-validacao-final/VAL-01.md) | Rastreabilidade e escopo final | MOD-00–MOD-12 | PG-02 | BLOQUEADO |
-| [VAL-02](docs/prompts/10-validacao-final/VAL-02.md) | Aceitação e regressão dos módulos finais | MOD-00–MOD-12 conforme escopo | VAL-01 | BLOQUEADO |
+| [VAL-01](docs/prompts/10-validacao-final/VAL-01.md) | Rastreabilidade e escopo final | MOD-00–MOD-12 | PG-02 | CONCLUIDO |
+| [VAL-02](docs/prompts/10-validacao-final/VAL-02.md) | Aceitação e regressão dos módulos finais | MOD-00–MOD-12 conforme escopo | VAL-01 | PRONTO |
 | [VAL-03](docs/prompts/10-validacao-final/VAL-03.md) | Documentação e roteiro de demonstração acadêmica | MOD-00 | VAL-02, INF-04 | BLOQUEADO |
 
 #### Fronteira do MVP
@@ -14579,10 +14766,10 @@ com avaliação posterior, bloqueio de saúde, equipamentos disponíveis, reten�
 15 versões, saída em português, ficha manual e adaptação versionada.
 MEM/ACS e demais módulos entram após esse aceite.
 A matriz detalhada do MVP está na estratégia de testes e nos cartões.
-AUL-02 é opcional e depende de requisito complementar. Financeiro permanece tardio.
+AUL-02 é opcional e depende de requisito complementar. Financeiro é simulado.
 MEM-00 entrega [registro manual opcional](docs/arquitetura/pagamentos-manuais.md).
 Matrícula e acesso acadêmico seguem a política independente do financeiro.
-INF-01 exige PG-01 e PG-03; testes ocorrem desde a fundação, antes de Docker.
+INF-01 exige PG-01 e PG-03. Os testes ocorrem desde a fundação.
 ### 4. Requisitos por etapa
 
 Fonte versionada: [docs/arquitetura/rastreabilidade-prompts.md](docs/arquitetura/rastreabilidade-prompts.md).
@@ -15368,16 +15555,18 @@ As suites disponíveis e seus comandos constam no [registro de comandos](docs/te
 - TST-01 configura/executa o roteiro E2E do MVP.
 - RAG-05 mede recuperação e AI-06 executa o conjunto de avaliação da IA.
 - VAL-02 reúne aceitação dos módulos finais, sem substituir testes anteriores.
-- Docker, Compose e Testcontainers ficam para depois do MVP e da maioria dos módulos.
+- Os testes acadêmicos usam serviços locais. A instância dedicada de CompreFace
+  do GATE-08 permanece como exceção em Docker.
 
 #### Banco e integrações
 
 Use banco de teste separado do banco de desenvolvimento. Testes devem limpar apenas
 dados de teste identificados, sem apagar bancos compartilhados. Cubra rollback,
 unicidade, concorrência e idempotência quando exigidos pela regra.
-Use adapters falsos para unitários de e-mail/LLM/facial/pagamento; integre o serviço
-real ou sandbox no aceite correspondente, registrando evidência e limitações.
-Não dispare cobranças reais nem envie mensagens a pessoas reais nos testes.
+Use adaptadores controlados para unitários de e-mail, LLM e biometria. Nos
+aceites correspondentes, registre a evidência das integrações selecionadas.
+O financeiro usa cenários sintéticos locais, e a caixa do Mailpit recebe os
+e-mails da demonstração.
 
 #### IA e corpus
 
@@ -15413,7 +15602,8 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
   irrelevante, incompatível ou conflitante impede gerar/publicar adaptação.
 - Cliente sem instrutor designado mantém consulta/chat; pendência de revisão é explícita.
 - Atendente autorizado matricula/renova sem pagamento ou comprovante; matrícula
-  funciona com estado financeiro ausente, pendente/recusado e gateway indisponível.
+  funciona com estado financeiro ausente, simulação pendente/recusada e falha da
+  operação financeira simulada.
 - Cliente com matrícula válida usa o fluxo facial sem consulta financeira obrigatória;
   usuário sem permissão, matrícula ausente/vencida e limites inválidos continuam recusados.
 - Cadastro biométrico exige matrícula; nova captura é comparada pelo CompreFace
@@ -15511,7 +15701,205 @@ Registrar resultado e limitações atuais; código/documentação não afetados 
 exigem repetição integral da regressão ou alteração artificial no iniciador.
 Na revisão documental desta política, executar DOC/SPEC e diff; os 14 testes e
 ensaios anteriores continuam históricos, sem nova execução alegada.
-### 2. Avaliação e segurança de IA/RAG
+### 2. Matriz de rastreabilidade e escopo da entrega acadêmica
+
+Fonte versionada: [docs/arquitetura/rastreabilidade.md](docs/arquitetura/rastreabilidade.md).
+
+Veja também a [rastreabilidade dos cartões](docs/arquitetura/rastreabilidade-prompts.md), que liga
+cada prompt aos requisitos e módulos. Associação de prompt não comprova execução.
+
+#### Cobertura por módulo
+
+A tabela indica cobertura e colaboração. O proprietário de cada dado/workflow é
+definido em modulos.md; participar de um requisito não transfere seu ownership.
+
+| Módulo | Requisitos funcionais | Regras de negócio | Macrorequisitos |
+|---|---|---|---|
+| MOD-00 | Transversal | RN-23, RN-32, RN-33 | Critérios técnicos transversais |
+| MOD-01 | RF-01–RF-08 | RN-01–RN-05, RN-11, RN-28 | MRF12 |
+| MOD-02 | RF-34; apoio a RF-35 pela designação | RN-11, RN-31, RN-33 | Apoio a MRF10 |
+| MOD-03 | RF-09–RF-14 | RN-11, RN-13, RN-21, RN-23, RN-32, RN-33 | MRF03, MRF08 |
+| MOD-04 | RF-15–RF-17, RF-19, RF-35, RF-38 | RN-14–RN-20, RN-31, RN-33, RN-37–RN-39 | MRF05–MRF07, MRF09, MRF10 |
+| MOD-05 | — | RN-15, RN-23, RN-29, RN-30, RN-39 | MRF01, MRF02, MRF11, MRF15 |
+| MOD-06 | RF-15, RF-18, RF-19 | RN-12–RN-19, RN-29, RN-30, RN-37–RN-39 | MRF04–MRF06, MRF08–MRF14 |
+| MOD-07 | RF-20–RF-25, RF-36, RF-37 | RN-06–RN-10, RN-24, RN-26, RN-34–RN-36 | — |
+| MOD-08 | RF-26, RF-27, RF-31 | RN-22, RN-24, RN-35, RN-36 | — |
+| MOD-09 | RF-30 | RN-25 | — |
+| MOD-10 | RF-32, RF-33; apoio a RF-15/RF-19 | RN-04, RN-33, RN-37 | MRF05, MRF09, MRF13, MRF14 |
+| MOD-11 | RF-28, RF-29 | RN-23, RN-28, RN-34 | — |
+| MOD-12 | Transversal | RN-03, RN-09, RN-23, RN-26–RN-28, RN-31–RN-33 | MRF11–MRF13, MRF15 |
+
+
+#### Escopo de admissão do PG-02
+
+| Precondição | Verificação |
+|---|---|
+| Núcleo acadêmico | PG-01 concluído, com a regressão de consulta/chat antes do parecer, avaliação posterior e isolamento reexecutada no INF-04. [Jornadas no Edge](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). |
+| Módulos complementares selecionados | Matrículas, biometria, catraca fictícia, frequência, agenda e painel concluídos conforme manifesto. [CompreFace real em ACS-02](docs/testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). [Agenda](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). [Frequência e lotação](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
+| Financeiro | Registro manual didático, cobranças, compra e indicadores simulados. Matrícula continua independente. [FIN-02](docs/testes/comandos.md#fin-02--compra-simulada-de-plano). [FIN-03](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). |
+| Qualidade visual | UX-09 concluído. Verificações de módulos posteriores constam nos cartões de agenda, acesso e financeiro, com a jornada de acesso/checkout em INF-04. [Aceite UX-09](docs/testes/ux09-aceite-visual.md). [Integração no Edge](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). |
+| Infraestrutura local | INF-01–INF-04 concluídos. PostgreSQL, Qdrant, Mailpit, arquivos persistentes e iniciador local exercitados no Windows. [Rede e persistência](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais). [Instalação e restauração](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). |
+| Itens futuros | Reservas/capacidade ficam dispensadas nesta entrega, conforme RN-25 e o ADR-005. Pagamento real e containerização integral permanecem fora do escopo. [Decisão e limites](docs/requisitos/contexto-e-escopo.md#escopo-da-entrega-acadêmica-local). |
+
+PG-02 comprova prontidão para iniciar a validação final. A regressão do conjunto
+atual, incluindo a pendência da verificação histórica de migrations, fica em VAL-02.
+[Conferência e pendências encontradas](docs/testes/comandos.md#val-01--conferência-documental-e-do-modelo).
+
+#### Matriz de aceite do escopo selecionado
+
+Cada linha liga seu requisito a cartões concluídos e à execução documentada.
+Os intervalos das RNs e RNFs agrupam critérios que compartilham a mesma evidência.
+`Entregue` indica capacidade com evidência em um recorte identificado. A matriz
+registra a rodada que verificou cada caso. Ela inclui resultados históricos e
+evidência de regressão. Os limites conhecidos ficam explícitos na própria linha
+ou nas notas abaixo.
+
+##### Requisitos funcionais
+
+| ID | Implementação e cartões | Evidência ou motivo de dispensa | Estado |
+|---|---|---|---|
+| RF-01 | PES-02/UX-08 · cadastro e perfil cliente | [Validação e identidade](docs/testes/comandos.md#cadastro-e-manutenção-de-clientes). [CPF opcional e duplicidade](docs/testes/comandos.md#cadastro-de-clientes-com-cpf-opcional--revisão-0017). | Entregue |
+| RF-02 | PES-02/UX-08 · busca autorizada e detalhe | [Lista e consulta](docs/testes/comandos.md#cadastro-e-manutenção-de-clientes). [Idade calculada](docs/testes/comandos.md#idade-no-cadastro-e-no-onboarding). | Entregue |
+| RF-03 | PES-02/ACS-01 · edição, estado e referência facial | [Edição e estados](docs/testes/comandos.md#cadastro-e-manutenção-de-clientes). [CPF](docs/testes/comandos.md#cadastro-de-clientes-com-cpf-opcional--revisão-0017). [Referência com matrícula](docs/testes/comandos.md#acs-01--referência-facial). | Entregue |
+| RF-04 | IAM-01/02/04 · sessão, contas e perfis | [Sessão](docs/testes/comandos.md#verificações-de-identidade). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-08. | Entregue |
+| RF-05 | IAM-03/04/UX-03 · papéis, políticas na API e perfil próprio | [Autorização](docs/testes/comandos.md#verificações-de-autorização). [Navegação e perfil próprio](docs/testes/comandos.md#revisão-dos-fluxos-após-val-01). | Entregue |
+| RF-06 | IAM-05/NTF-01 · recuperação com Mailpit e revogação | [Token e envio](docs/testes/comandos.md#recuperação-de-acesso). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-08. | Entregue |
+| RF-07 | PES-01/UX-08 · cadastro de funcionário | [Cadastro e unicidade](docs/testes/comandos.md#cadastro-e-manutenção-de-funcionários). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-01. | Entregue |
+| RF-08 | PES-01/UX-08 · manutenção e inativação de funcionário | [Atualização e permissão](docs/testes/comandos.md#cadastro-e-manutenção-de-funcionários). | Entregue |
+| RF-09 | ONB-01/NTF-01 · convite e falha SMTP | [Convite, validade e envio](docs/testes/comandos.md#convite-inicial-de-onboarding). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-01. | Entregue |
+| RF-10 | ONB-01/03/UX-04 · link vinculado ao cliente | [Vínculo e expiração](docs/testes/comandos.md#convite-inicial-de-onboarding). [Formulário](docs/testes/comandos.md#formulário-responsivo-do-onboarding). | Entregue |
+| RF-11 | ONB-02/03/UX-04 · campos físicos e rascunho | [Persistência](docs/testes/comandos.md#persistência-do-onboarding). [Idade derivada do cadastro](docs/testes/comandos.md#idade-no-cadastro-e-no-onboarding). | Entregue |
+| RF-12 | ONB-02/04 · dados de saúde e acesso por designação | [Contexto do cliente](docs/testes/comandos.md#persistência-do-onboarding). [Restrições ao instrutor](docs/testes/comandos.md#avaliação-profissional-por-designação). | Entregue |
+| RF-13 | ONB-02/03/AI-01 · conclusão e snapshot de origem | [Conclusão](docs/testes/comandos.md#persistência-do-onboarding). [Dados insuficientes e triagem](docs/testes/comandos.md#triagem-acadêmica-e-preparação-ai-01). | Entregue |
+| RF-14 | ONB-02/03/UX-04 · consulta do próprio onboarding | [Consulta e retomada](docs/testes/comandos.md#formulário-responsivo-do-onboarding). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-01 e E2E-02. | Entregue |
+| RF-15 | AI-01–AI-04/TRN-02 · triagem, geração com catálogo e treino manual | [Bloqueios](docs/testes/comandos.md#triagem-acadêmica-e-preparação-ai-01). [Publicação validada](docs/testes/comandos.md#geração-persistente-ai-03). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| RF-16 | TRN-04/UX-06 · ficha própria por dia e exportação | [Consulta e exportação móveis](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-03 e E2E-05. | Entregue |
+| RF-17 | TRN-03/04/AI-03 · versões, retenção e histórico | [Versões e publicação](docs/testes/comandos.md#publicação-e-parecer-posterior). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-04 e E2E-05. | Entregue |
+| RF-18 | AI-05/UX-05 · dúvida em português com evidências e histórico | [Chat](docs/testes/comandos.md#chat-e-adaptação-ai-05). [Histórico após nova ficha](docs/testes/comandos.md#histórico-do-chat-e-regressão-completa-do-mvp--2026-11-19). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| RF-19 | AI-05/UX-05 · adaptação explícita e versionada | [Triagem, confirmação e nova versão](docs/testes/comandos.md#chat-e-adaptação-ai-05). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-04. [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| RF-20 | ACS-02 · DTO de identificação e origem confiável | [Contrato, conflito e deduplicação](docs/testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). | Entregue |
+| RF-21 | ACS-02/03/04/MEM-01 · limiar e decisão de acesso | [Identidade e score](docs/testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). [Matrícula, modalidade e limite](docs/testes/comandos.md#acs-03--motor-de-autorização-e-passagens). [Alternativa manual](docs/testes/comandos.md#acs-04--confirmação-manual-de-identidade). | Entregue |
+| RF-22 | ACS-01 · cadastro, substituição e miniatura privada | [Cadastro e substituição com CompreFace real](docs/testes/comandos.md#acs-01--referência-facial). [Matrícula e acesso com miniatura privada](docs/testes/comandos.md#revisão-dos-fluxos-após-val-01). | Entregue |
+| RF-23 | ACS-03/05/06 · passagem confirmada e histórico | [Entrada, saída e deduplicação](docs/testes/comandos.md#acs-05--frequência-e-lotação). [Jornada da catraca](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RF-24 | ACS-05 · cálculo de presença | [Total e consistência](docs/testes/comandos.md#acs-05--frequência-e-lotação). [Lotação 0 → 1 → 0](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). | Entregue |
+| RF-25 | ACS-06 · lotação em consulta móvel | [Verificação no Edge](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). | Entregue |
+| RF-26 | FIN-01/MEM-00/FIN-02 · cobrança e recebimento simulado | [CRUD, vínculo e valor](docs/testes/comandos.md#fin-01--cobranças-e-consulta-financeira). [Estados da simulação](docs/testes/comandos.md#fin-02--compra-simulada-de-plano). | Entregue |
+| RF-27 | FIN-01 · consulta própria e administrativa | [Permissões e visualização](docs/testes/comandos.md#fin-01--cobranças-e-consulta-financeira). [Consulta no Edge](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RF-28 | DSH-01/FIN-03 · painel, frequência e faturamento | [Acesso e falha parcial](docs/testes/comandos.md#dsh-01--painel-administrativo). [Agregados financeiros](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). | Entregue |
+| RF-29 | DSH-01/FIN-03 · indicadores operacionais e financeiros | [Clientes, frequência e lotação](docs/testes/comandos.md#dsh-01--painel-administrativo). [Mês, ano e total simulados](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). | Entregue |
+| RF-30 | AUL-01 · agenda administrativa, pública e do cliente | [CRUD, cancelamento e três telas](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). | Entregue |
+| RF-31 | MEM-01/FIN-02 · compra simulada e matrícula pelo atendente | [Matrícula e renovação independentes](docs/testes/comandos.md#mem-01--planos-e-matrículas). [Catálogo, recibo e idempotência](docs/testes/comandos.md#fin-02--compra-simulada-de-plano). [Jornada do recibo](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RF-32 | EQP-01/UX-08 · manutenção de equipamentos, imagem e estado | [Cadastro, imagem e disponibilidade](docs/testes/comandos.md#inventário-e-catálogo-de-equipamentos). [Aceite UX-09](docs/testes/ux09-aceite-visual.md). | Entregue |
+| RF-33 | EQP-01/UX-08 · consulta pública responsiva | [Catálogo e filtros](docs/testes/comandos.md#inventário-e-catálogo-de-equipamentos). [Aceite UX-09](docs/testes/ux09-aceite-visual.md). | Entregue |
+| RF-34 | PES-03/ONB-04/UX-07 · designação e substituição com histórico | [Designações e permissões](docs/testes/comandos.md#designação-de-instrutor). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-01. | Entregue |
+| RF-35 | TRN-03/AI-04/UX-07/NTF-01 · fila, aviso, parecer e retenção | [Parecer, autoria e rejeição](docs/testes/comandos.md#publicação-e-parecer-posterior). [Acompanhamento](docs/testes/comandos.md#acompanhamento-e-interface-ai-04). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-03 a E2E-05. | Entregue |
+| RF-36 | ACS-02 · nova captura com CompreFace | [Comparação real histórica e falhas controladas](docs/testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). | Entregue |
+| RF-37 | ACS-07/03/06 · simulador separado e callback | [Comando, reenvio e contrato](docs/testes/comandos.md#acs-07--simulador-de-catraca). [Decisão e retorno](docs/testes/comandos.md#acs-03--motor-de-autorização-e-passagens). [Jornada no Edge](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RF-38 | TRN-01/EQP-01/UX-08 · exercícios e recursos elegíveis | [Catálogo, autorização e combinações](docs/testes/comandos.md#catálogo-de-exercícios). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-06. | Entregue |
+
+##### Regras de negócio
+
+| ID | Implementação e cartões | Evidência ou motivo de dispensa | Estado |
+|---|---|---|---|
+| RN-01–RN-03 | PES-01/02/IAM-02 · identidade, conta, perfis e histórico | [Funcionários](docs/testes/comandos.md#cadastro-e-manutenção-de-funcionários). [Clientes](docs/testes/comandos.md#cadastro-e-manutenção-de-clientes). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-08. | Entregue |
+| RN-04–RN-05 | IAM-03 · autorização e escopo próprio | [Políticas](docs/testes/comandos.md#verificações-de-autorização). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-02. | Entregue |
+| RN-06–RN-07 | ACS-02/03 · identificação separada e limiar | [Comparação](docs/testes/comandos.md#acs-02--reconhecimento-facial-e-eventos). [Autorização](docs/testes/comandos.md#acs-03--motor-de-autorização-e-passagens). | Entregue |
+| RN-08–RN-09 | ACS-04 · confirmação manual auditada | [Ator, motivo e mesmas regras de entrada](docs/testes/comandos.md#acs-04--confirmação-manual-de-identidade). | Entregue |
+| RN-10 | ACS-01 · separação da referência facial | [Cadastro e atualização](docs/testes/comandos.md#acs-01--referência-facial). | Entregue |
+| RN-11 | IAM-03/ONB-04 · acesso à saúde por necessidade funcional | [Atribuição e revogação](docs/testes/comandos.md#avaliação-profissional-por-designação). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-02. | Entregue |
+| RN-12 | TRN-03/AI-05 · consulta/chat antes do parecer | [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-03 a E2E-05. | Entregue |
+| RN-13 | AI-01/03 · triagem e bloqueio determinístico | [Casos graves e dados insuficientes](docs/testes/comandos.md#triagem-acadêmica-e-preparação-ai-01). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| RN-14 | TRN-02/03 · ficha manual e nova versão profissional | [Editor e recursos](docs/testes/comandos.md#editor-de-ficha-manual). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-07. | Entregue |
+| RN-15 | RAG-05/AI-05 · evidência pertinente para adaptação | [Relatório RAG-05](docs/testes/rag05-avaliacao.json). [Abstenção e restrições](docs/testes/comandos.md#chat-e-adaptação-ai-05). | Entregue |
+| RN-16–RN-19 | TRN-03/04/AI-05 · imutabilidade, retenção, adaptação e falha de IA | [Publicação, exclusão e auditoria](docs/testes/comandos.md#publicação-e-parecer-posterior). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-04, E2E-05 e E2E-07. Preservação de históricos no escopo vigente. | Recorte acadêmico |
+| RN-20–RN-21 | TRN-01/ONB-04 · exercício inativo e avaliação atribuível | [Histórico de exercícios](docs/testes/comandos.md#catálogo-de-exercícios). [Autor e data](docs/testes/comandos.md#avaliação-profissional-por-designação). | Entregue |
+| RN-22 | MEM-01 · matrícula de plano ativo | [Plano, estado e renovação](docs/testes/comandos.md#mem-01--planos-e-matrículas). | Entregue |
+| RN-23 | FND-06/NTF-01/INF-03 · dados sensíveis e logs | [SMTP sem tokens em registros de entrega](docs/testes/comandos.md#notificações). [Falha local sem segredos](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais). | Entregue |
+| RN-24 | MEM-01/ACS-03/FIN-02 · financeiro independente do acesso | [Matrícula com e sem registro financeiro](docs/testes/comandos.md#mem-01--planos-e-matrículas). [Autorização](docs/testes/comandos.md#acs-03--motor-de-autorização-e-passagens). | Entregue |
+| RN-25 | AUL-02 · capacidade somente se houver reservas | [Escopo vigente](docs/requisitos/contexto-e-escopo.md#escopo-da-entrega-acadêmica-local). AUL-01 mantém a agenda. | Dispensado nesta entrega |
+| RN-26 | NTF-01/PES-01/ACS-01 · avisos críticos | [Projeção e destinatários](docs/testes/comandos.md#notificações). [Alterações de permissão](docs/testes/comandos.md#cadastro-e-manutenção-de-funcionários). [Biometria](docs/testes/comandos.md#acs-01--referência-facial). Alterações em arquivos de configuração são feitas fora da aplicação e não têm evidência de aviso automatizado. | Evidência parcial |
+| RN-27 | FND-08/TRN-03 · auditoria protegida | [Auditoria após expurgo e parecer](docs/testes/comandos.md#publicação-e-parecer-posterior). [Regressão do MVP](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RN-28 | IAM-03/TRN-04 · autorização da exportação | [Exportação e titularidade](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-05. | Entregue |
+| RN-29–RN-30 | AI-01/05/06 · contexto isolado e respostas informativas | [Isolamento e limites](docs/testes/comandos.md#chat-e-adaptação-ai-05). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| RN-31 | TRN-02/03/ONB-04 · autoria e decisão atribuíveis | [Autor da ficha e do parecer](docs/testes/comandos.md#publicação-e-parecer-posterior). | Entregue |
+| RN-32–RN-33 | FND-05/06/08 e módulos de domínio · UTC e integridade histórica | [Retenção e histórico](docs/testes/comandos.md#publicação-e-parecer-posterior). [Datas e fuso](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). [Paridade e restauração da revisão](docs/testes/comandos.md#val-01--conferência-documental-e-do-modelo). | Entregue |
+| RN-34 | ACS-06/DSH-01 · relatórios sem dados biométricos | [Consulta agregada](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). [DTO e isolamento dos indicadores](docs/testes/comandos.md#dsh-01--painel-administrativo). | Entregue |
+| RN-35–RN-36 | MEM-01/ACS-03/04 · matrícula, autorização e dispositivo | [Motivos de negativa, validação e passagem](docs/testes/comandos.md#acs-03--motor-de-autorização-e-passagens). [Mesmo motor no fluxo manual](docs/testes/comandos.md#acs-04--confirmação-manual-de-identidade). | Entregue |
+| RN-37 | EQP-01/TRN-01/AI-03 · restrição de recursos | [Disponibilidade e alternativas](docs/testes/comandos.md#catálogo-de-exercícios). [Revalidação da publicação](docs/testes/comandos.md#geração-persistente-ai-03). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-06. | Entregue |
+| RN-38 | TRN-03 · máximo de 15 versões completas | [Retenção e recusa de reversão indevida](docs/testes/comandos.md#publicação-e-parecer-posterior). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-05. | Entregue |
+| RN-39 | RAG-05/AI-06/UX-09 · português com fontes multilíngues | [Relatório RAG-05](docs/testes/rag05-avaliacao.json). [AI-06 v4](docs/testes/ai06-enxuto.md). [Aceite UX-09](docs/testes/ux09-aceite-visual.md). | Entregue |
+
+##### Requisitos não funcionais
+
+| ID | Implementação e cartões | Evidência ou motivo de dispensa | Estado |
+|---|---|---|---|
+| RNF-01 | FND-07/UX-02 · React, TypeScript e Vite | [Instalação pelo lockfile, build e frontend](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RNF-02–RNF-03 | FND-04/05/INF-04 · Python e PostgreSQL | [Ambiente limpo e migration](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RNF-04 | FND-06 · REST, JSON e OpenAPI | [Contrato, API pelo proxy e regressão](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Entregue |
+| RNF-05 | RAG-02/05 · Qdrant local e porta vetorial | [Persistência e isolamento do índice](docs/testes/comandos.md#conexão-vetorial-local). [Relatório RAG-05](docs/testes/rag05-avaliacao.json). | Entregue |
+| RNF-06 | FND-06/ACS-07/AI-02 · JSON nas fronteiras | [Comando e callback](docs/testes/comandos.md#acs-07--simulador-de-catraca). [Schemas da IA](docs/testes/comandos.md#orquestrador-e-contratos-ai-02). | Entregue |
+| RNF-07 | TST-01/INF-04 · suítes unitária, integração, API e E2E | [Suítes executadas](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). [Asserção histórica de migration pendente de atualização em VAL-02](docs/testes/comandos.md#val-01--conferência-documental-e-do-modelo). | Evidência com pendência |
+| RNF-08 | FND-04/INF-03 · ambiente e confidencialidade | [Isolamento de credenciais e arquivos](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais). | Entregue |
+| RNF-09 | NTF-01/IAM-05/ONB-01 · e-mail local | [SMTP real em loopback](docs/testes/comandos.md#notificações). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-01 e E2E-08. | Entregue |
+| RNF-10–RNF-12 | INF-01–INF-04/GATE-08 · instalação, rede e armazenamento locais | [Loopback e firewall](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais). [Instalação e reinício](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). [CompreFace dedicado](docs/arquitetura/preparacao-gate-08.md). | Entregue |
+| RNF-13 | RAG-05 · p95 da busca ≤ 2 s no conjunto fixado | [Relatório RAG-05](docs/testes/rag05-avaliacao.json). Busca p95 2,12 ms em 28 consultas com sete trechos. | Recorte medido |
+| RNF-14 | UX-09/ACS-06/AUL-01/FIN-03 · interface móvel | [Aceite UX-09](docs/testes/ux09-aceite-visual.md). [Agenda](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). [Visitas e lotação](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). [Painel financeiro](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). | Entregue |
+| RNF-15 | FND-06/NTF-01/INF-03 · diagnósticos com minimização | [Falha do PostgreSQL](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais). [Entrega SMTP e proteção de links](docs/testes/comandos.md#notificações). | Entregue |
+| RNF-16 | FND-05/06 · UTC e ISO 8601 | [Fusos e intervalos](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). [Agregação em São Paulo](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). | Entregue |
+| RNF-17 | FND-08/AI-03/ACS-07/FIN-02 · idempotência | [Repetição de geração](docs/testes/comandos.md#geração-persistente-ai-03). [Reenvio e confirmação](docs/testes/comandos.md#acs-07--simulador-de-catraca). [Recibo sem duplicação](docs/testes/comandos.md#fin-02--compra-simulada-de-plano). | Entregue |
+| RNF-18 | AI-02/05/06 · orçamento, etapas fixas e medições | [Limites e chamadas](docs/testes/comandos.md#orquestrador-e-contratos-ai-02). [AI-06 v4](docs/testes/ai06-enxuto.md). Percentis da amostra real são descritivos. | Recorte medido |
+| RNF-19–RNF-20 | UX-01–UX-09 e interfaces posteriores · componentes e qualidade visual | [Aceite UX-09](docs/testes/ux09-aceite-visual.md). [Agenda](docs/testes/comandos.md#aul-01--agenda-de-aulas-por-ocorrências). [Acesso móvel](docs/testes/comandos.md#acs-06--interface-de-frequência-e-lotação). [Painel financeiro](docs/testes/comandos.md#fin-03--indicadores-financeiros-simulados). [Checkout no Edge](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado). | Amostra de navegador |
+
+##### Macrorequisitos de IA e RAG
+
+| ID | Implementação e cartões | Evidência ou motivo de dispensa | Estado |
+|---|---|---|---|
+| MRF01 | RAG-01/03/04 · curadoria, extração, chunks, E5 e armazenamento | [Corpus](docs/testes/comandos.md#corpus-documental). [Extração](docs/testes/comandos.md#extração-pdf-e-txt). [Indexação](docs/testes/comandos.md#indexação-e-embeddings-locais). | Entregue |
+| MRF02 | RAG-02/05 · busca, filtros, similaridade e abstenção | [Índice](docs/testes/comandos.md#conexão-vetorial-local). [Relatório RAG-05](docs/testes/rag05-avaliacao.json). | Entregue |
+| MRF03 | ONB-02/04/AI-01 · onboarding e resumo minimizado | [Dados versionados](docs/testes/comandos.md#persistência-do-onboarding). [Resumo e ausências](docs/testes/comandos.md#triagem-acadêmica-e-preparação-ai-01). | Entregue |
+| MRF04 | AI-02/03/05 · máquina de estados e orçamento | [Fluxo fixo e contratos](docs/testes/comandos.md#orquestrador-e-contratos-ai-02). [Execução persistente](docs/testes/comandos.md#geração-persistente-ai-03). | Entregue |
+| MRF05 | AI-02/03/TRN-01 · geração estruturada sobre catálogo elegível | [Validação e publicação](docs/testes/comandos.md#geração-persistente-ai-03). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| MRF06 | AI-02/03/TRN-03 · validação técnica e parecer separado | [Falha e consistência](docs/testes/comandos.md#geração-persistente-ai-03). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-03 e E2E-06. | Entregue |
+| MRF07 | TRN-03/04/UX-06 · ficha móvel, exportação e retenção | [Entrega própria](docs/testes/comandos.md#consulta-móvel-e-exportação-do-treino). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-05. | Entregue |
+| MRF08 | AI-01/03 · triagem e evidências por snapshot | [Política e estados](docs/testes/comandos.md#triagem-acadêmica-e-preparação-ai-01). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-03. | Entregue |
+| MRF09 | TRN-01/EQP-01/AI-03 · catálogo viável e validação pré-publicação | [Recursos](docs/testes/comandos.md#catálogo-de-exercícios). [Mudança de inventário](docs/testes/comandos.md#geração-persistente-ai-03). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-06. | Entregue |
+| MRF10 | TRN-02/03/AI-04/NTF-01 · edição, avisos e parecer | [Parecer posterior](docs/testes/comandos.md#publicação-e-parecer-posterior). [Avisos persistentes](docs/testes/comandos.md#notificações). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-07. | Entregue |
+| MRF11 | RAG-05/AI-02/05/06 · proveniência, referência e idioma | [Relatório RAG-05](docs/testes/rag05-avaliacao.json). [Citações e fontes](docs/testes/comandos.md#chat-e-adaptação-ai-05). [AI-06 v4](docs/testes/ai06-enxuto.md). | Entregue |
+| MRF12 | IAM-03/AI-01/05 · isolamento, minimização e retenção | [Contextos segregados](docs/testes/comandos.md#chat-e-adaptação-ai-05). [Histórico consultável e janela limitada](docs/testes/comandos.md#histórico-do-chat-e-regressão-completa-do-mvp--2026-11-19). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-02 e E2E-05. | Entregue |
+| MRF13 | RAG-05/AI-06 · avaliação real e determinística | [Relatório RAG-05](docs/testes/rag05-avaliacao.json). [AI-06 v4](docs/testes/ai06-enxuto.md). [Amostra aceita](docs/requisitos/escopo-ia-academico.md#avaliação-e-retrabalho). | Recorte medido |
+| MRF14 | AI-05/UX-05 · chat e adaptação e revisão de histórico | [Dúvida, confirmação e adaptação](docs/testes/comandos.md#chat-e-adaptação-ai-05). [Regressão do histórico](docs/testes/comandos.md#histórico-do-chat-e-regressão-completa-do-mvp--2026-11-19). [Jornadas do MVP](docs/testes/aceitacao-mvp.md#o-que-as-jornadas-demonstram), E2E-04. | Entregue |
+| MRF15 | AI-02/03/06/RAG-02 · perfis explícitos, falhas e retenção operacional | [Adaptadores e orçamento](docs/testes/comandos.md#orquestrador-e-contratos-ai-02). [Retenção e auditoria](docs/testes/comandos.md#geração-persistente-ai-03). [AI-06 v4](docs/testes/ai06-enxuto.md). Reservas têm qualificação própria. | Recorte acadêmico |
+
+#### Correspondência entre MER, modelo e migrations
+
+| Fonte | Conferência |
+|---|---|
+| [MER original](docs/arquitetura/modelo-de-dados/original/README.md) | Preservado pelo hash de referência. Suas 18 entidades são conceituais. O [relatório comparativo](docs/arquitetura/revisao-mer.md) registra os desdobramentos de identidade, designação, versões, equipamentos, IA e acesso. |
+| [Modelo lógico DBML](docs/arquitetura/modelo-de-dados/modelo-logico.dbml), [JSON](docs/arquitetura/modelo-de-dados/modelo-logico.json) e [dicionário](docs/arquitetura/modelo-de-dados/dicionario.md) | 44 tabelas, 363 colunas e 76 referências lógicas. `academia` fica planejada como configuração singleton. |
+| [Migrations e PostgreSQL](database/README.md) | Revisão `0027` com 43 tabelas, 357 colunas e 77 constraints de chave estrangeira no schema `academia`. Foi comparado ao metadata do ORM antes e depois do round trip. A 0027 acrescenta os dois campos do recibo simulado. |
+| [Diagrama físico histórico](docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md) | Retrato da revisão 0016, mantido como evidência da normalização. |
+
+As contagens de referências lógicas e constraints físicas usam critérios próprios.
+Após VAL-01, as migrations 0028 e 0029 acrescentaram endereço e miniatura.
+O modelo físico passa a 359 colunas, com as mesmas tabelas e referências.
+O Qdrant é armazenamento vetorial separado. Os ensaios de paridade da revisão
+`0027` e a divergência na expectativa do teste legado constam no
+[registro de execução](docs/testes/comandos.md#val-01--conferência-documental-e-do-modelo).
+
+#### Limites e pendências
+
+- O aceite facial real de ACS-01/02 usou amostras sintéticas externas ao Git.
+  As jornadas INF-04 usaram resposta facial controlada e catraca HTTP fictícia.
+  O limiar configurado é pontuação de correspondência do provedor.
+- AI-06 qualifica a amostra e o perfil avaliados. A manutenção posterior do
+  contrato e do corpus tem [evidência própria](docs/testes/reparo-ia-20261119.md).
+  As demais fontes e os quatro PDFs pendentes permanecem sem promoção automática.
+- A agenda usa ocorrências sem reservas, e a aplicação preserva os registros
+  históricos existentes. Um módulo de registro de execução de treinos exige
+  escopo próprio. [Fluxos vigentes](docs/arquitetura/fluxos-atualizados.md).
+- A avaliação visual cobre o Windows/Edge e as larguras declaradas. A revisão
+  manual do responsável permanece disponível. [Escopo da avaliação](docs/testes/ux09-aceite-visual.md).
+### 3. Avaliação e segurança de IA/RAG
 
 Fonte versionada: [docs/testes/rag-ia-semantico.md](docs/testes/rag-ia-semantico.md).
 
@@ -15618,7 +16006,7 @@ GET não abre chamada de modelo, a janela nova não contém perguntas de context
 antigo, outro cliente não obtém histórico/turno e fonte revogada/expurgo continuam
 ocultando resposta e fontes. Ver tests/ai/test_chat_history.py,
 test_chat_integration.py e TrainingChat.test.tsx; [relatório](docs/testes/historico-chat-mvp-20261119.md).
-### 3. Regras permanentes de trabalho
+### 4. Regras permanentes de trabalho
 
 Fonte versionada: [AGENTS.md](AGENTS.md).
 
@@ -15652,10 +16040,9 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 
 #### Estágio atual
 
-O MVP acadêmico está concluído, com TST-01 aprovado e PG-01 fechado.
-A evolução permanece incremental; a revisão manual continua e a reformulação
-visual UX-01–UX-09 está planejada. O primeiro cartão dessa trilha é UX-01; não
-executar todos juntos nem considerar a reformulação já implementada.
+O MVP acadêmico está concluído, com TST-01 aprovado, PG-01 fechado e UX-09
+concluído. A evolução permanece incremental, uma entrega por vez. Use os estados
+do manifesto para escolher o próximo cartão elegível.
 O manifesto em
 `docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
 alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos
@@ -15713,7 +16100,7 @@ necessária para sua entrega.
 - O atendente autorizado pode matricular e renovar o cliente sem pagamento
   confirmado. Matrícula e acesso acadêmico não dependem do módulo financeiro.
 - Reconhecimento facial usa CompreFace; a catraca será uma API externa fictícia.
-- Qdrant local persistente por qdrant-client no MVP (um processo, sem Docker);
+- Qdrant local persistente por qdrant-client (um processo, sem servidor separado);
   banco vetorial especializado separado do PostgreSQL. Embeddings locais E5-small
   multilíngue, 384 dimensões, prefixos query:/passage: e cosseno; ADR-004.
 - Equipamentos entram no MVP: administrador mantém disponibilidade e cada variação
@@ -15726,8 +16113,10 @@ necessária para sua entrega.
   permitidas com recuperação multilíngue e explicação/tradução fiel rastreável.
 - Dados de exemplo de equipamentos e exercícios usam fixtures/seeds sintéticos
   de testes, conforme o escopo da entrega de implementação.
-- Deixar pagamentos e cobrança automatizada para uma fase posterior.
-- Containerizar a aplicação somente depois do MVP e da maioria dos módulos.
+- Financeiro acadêmico simulado, com registros locais. Compra simulada e
+  indicadores seguem os cartões financeiros, sem transação real ou gateway.
+- Executar a aplicação localmente no Windows. Docker fica restrito à instância
+  dedicada do CompreFace já autorizada. As integrações de IA mantêm seus contratos.
 
 #### Limites entre módulos
 
@@ -15927,6 +16316,11 @@ Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
 `npm run lint`, `npm run typecheck` e `npm run build`. Ver
 [guia do frontend](frontend/README.md) para inicialização.
 
+INF, conforme o [guia de instalação local](docs/instalacao/instalacao-local.md):
+`uv sync --locked --check` em `backend/`, `npm ci` e `npm run build` em
+`frontend/`, e verificação de `/health` e `/openapi.json` com backend em
+loopback. Veja a evidência e os detalhes de ambiente em `docs/testes/comandos.md`.
+
 A inicialização está no [guia do backend](backend/README.md) e no
 [guia do banco](database/README.md). Os demais
 comandos entram em `docs/testes/comandos.md` nos prompts que configuram cada suite.
@@ -15972,7 +16366,7 @@ principal; consultar docs/testes/reparo-ia-20261119.md. O preparo local incorpor
 somente as páginas 24/25 do guia brasileiro para dúvidas aeróbicas. Não confundir
 seleção validada com extração integral ou extrapolar para adaptação clínica.
 Relatórios antigos de AI-06/TST-01 conservam a identidade da versão exercitada.
-### 4. Runner, métricas, revisão e limites da avaliação IA
+### 5. Runner, métricas, revisão e limites da avaliação IA
 
 Fonte versionada: [docs/testes/avaliacao-ia.md](docs/testes/avaliacao-ia.md).
 
@@ -16153,7 +16547,7 @@ não foram refeitos. Não se alterou código/modelo/parâmetros para fechar a ro
 AI-06 CONCLUIDO; TST-01 foi concluído na [consolidação própria](docs/testes/tst01-consolidacao.json),
 sem repetir o ensaio real aprovado.
 Percentis são descritivos; aprovação não qualifica reservas ou corrige falhas v3.
-### 5. Curadoria e perfis sintéticos comuns de academia
+### 6. Curadoria e perfis sintéticos comuns de academia
 
 Fonte versionada: [docs/testes/preparacao-ai06.md](docs/testes/preparacao-ai06.md).
 
@@ -16248,7 +16642,7 @@ Esta preparação registra o estado anterior à correção. A [correção vigent
 incorpora o original do livro e quatro páginas explicitamente extraídas/indexáveis,
 com prompt v3 e sem promover a extração integral. Resultados atuais e bloqueio
 TPD estão na [consolidação](docs/testes/historico/ai06-2026-11-12-pre-academico/ai06-consolidacao.json); a preparação isolada não aprova AI-06.
-### 6. Corpus de avaliação com trechos revisados do livro
+### 7. Corpus de avaliação com trechos revisados do livro
 
 Fonte versionada: [docs/testes/ai06-corpus-v2.json](docs/testes/ai06-corpus-v2.json).
 
@@ -16369,7 +16763,7 @@ Fonte versionada: [docs/testes/ai06-corpus-v2.json](docs/testes/ai06-corpus-v2.j
   ]
 }
 ````
-### 7. Catálogo e inventário sintéticos para avaliação
+### 8. Catálogo e inventário sintéticos para avaliação
 
 Fonte versionada: [docs/testes/ai06-catalogo-v1.json](docs/testes/ai06-catalogo-v1.json).
 
@@ -16466,7 +16860,7 @@ Fonte versionada: [docs/testes/ai06-catalogo-v1.json](docs/testes/ai06-catalogo-
   ]
 }
 ````
-### 8. Matriz local completa e cinco cenários reais mínimos
+### 9. Matriz local completa e cinco cenários reais mínimos
 
 Fonte versionada: [docs/testes/ai06-casos-v4.json](docs/testes/ai06-casos-v4.json).
 
@@ -16997,7 +17391,7 @@ Fonte versionada: [docs/testes/ai06-casos-v4.json](docs/testes/ai06-casos-v4.jso
   }
 }
 ````
-### 9. Métricas reais e limitações observadas no AI-06
+### 10. Métricas reais e limitações observadas no AI-06
 
 Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
 
@@ -17087,7 +17481,7 @@ Fonte versionada: [docs/testes/ai06-resumo.json](docs/testes/ai06-resumo.json).
   }
 }
 ````
-### 10. Critérios de aceite da avaliação ainda não atendidos
+### 11. Consolidação aprovada da amostra acadêmica AI-06
 
 Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolidacao.json).
 
@@ -17125,7 +17519,7 @@ Fonte versionada: [docs/testes/ai06-consolidacao.json](docs/testes/ai06-consolid
   "nota": "AI-06 aprovado não substitui o E2E/aceite do MVP em TST-01."
 }
 ````
-### 11. Correções de fundamentação e idioma e reprodução
+### 12. Correções de fundamentação e idioma e reprodução
 
 Fonte versionada: [docs/testes/ai06-correcao-fundamentacao.md](docs/testes/ai06-correcao-fundamentacao.md).
 
@@ -17224,7 +17618,7 @@ revisão vinculada. Registra consumo de todas as partes, inclusive tentativa
 interrompida/consumo desconhecido, separadamente das métricas dos casos concluídos.
 Pausas de amostragem não entram na latência do pedido; geração usa 60 s entre
 casos no lote para respeitar a janela gratuita, sem alterar o tempo da aplicação.
-### 12. Execução E2E local e limites do aceite MVP
+### 13. Execução E2E local e limites do aceite MVP
 
 Fonte versionada: [docs/testes/aceitacao-mvp.md](docs/testes/aceitacao-mvp.md).
 
@@ -17384,7 +17778,7 @@ TST-01 CONCLUIDO e PG-01 FECHADO. AI-06 mantém seus limites de cinco exemplos e
 percentis descritivos; reservas não qualificadas, fontes pendentes e módulos de
 matrícula/CompreFace/catraca, agenda, indicadores, financeiro e Docker permanecem
 fora do aceite deste MVP. Não iniciar essas funcionalidades nesta entrega.
-### 13. Oito jornadas E2E e critérios rastreados
+### 14. Oito jornadas E2E e critérios rastreados
 
 Fonte versionada: [docs/testes/tst01-cenarios.json](docs/testes/tst01-cenarios.json).
 
@@ -17574,7 +17968,7 @@ Fonte versionada: [docs/testes/tst01-cenarios.json](docs/testes/tst01-cenarios.j
   ]
 }
 ````
-### 14. Resultado do navegador e aceite real pendente
+### 15. Resultado histórico de navegador anterior à consolidação do MVP
 
 Fonte versionada: [docs/testes/tst01-resultado.json](docs/testes/tst01-resultado.json).
 
@@ -17924,7 +18318,7 @@ Fonte versionada: [docs/testes/tst01-resultado.json](docs/testes/tst01-resultado
   "estado": "LOCAL_APROVADO_ACEITE_REAL_PENDENTE"
 }
 ````
-### 15. Retomada AI-06 e avaliação separada do candidato de reserva
+### 16. Retomada AI-06 e avaliação separada do candidato de reserva
 
 Fonte versionada: [docs/testes/ai06-reserva.md](docs/testes/ai06-reserva.md).
 
@@ -18023,7 +18417,7 @@ localmente na [ADR-009](docs/arquitetura/decisoes/ADR-009-gemini-api.md). O [ens
 é separado e não qualificado por indisponibilidade. A identidade do código foi
 ampliada; os oito casos não concluídos mencionados acima são retrato da versão
 anterior. O aceite atual exige conjunto completo consistente da nova composição.
-### 16. Ensaio separado Gemini e critérios de qualificação
+### 17. Ensaio separado Gemini e critérios de qualificação
 
 Fonte versionada: [docs/testes/ai06-gemini.md](docs/testes/ai06-gemini.md).
 
@@ -18125,7 +18519,7 @@ geração. A consolidação principal anterior agora identifica incompatibilidad
 os hashes atuais, mantendo evidências antigas sem aprovar código novo. Para
 concluir AI-06 na implementação atual, executar um conjunto completo consistente
 do perfil escolhido, sem juntar os três chats Gemini às fichas antigas da Groq.
-### 17. Avaliação com amostra acadêmica v3
+### 18. Avaliação com amostra acadêmica v3
 
 Fonte versionada: [docs/testes/ai06-academico.md](docs/testes/ai06-academico.md).
 
@@ -18240,7 +18634,7 @@ usar a revisão parcial acima para aprovar a união. O merge rejeita substituiç
 de resposta concluída/falha de qualidade, mudança de código/configuração/casos e
 mistura de modelos. A falha de quota e seu consumo permanecem nas tentativas.
 Não repetir o lote inteiro, trocar provedor ou executar E2E de novo sem motivo.
-### 18. Demonstração mínima, resultados e limites
+### 19. Demonstração mínima, resultados e limites
 
 Fonte versionada: [docs/testes/ai06-enxuto.md](docs/testes/ai06-enxuto.md).
 
@@ -18430,7 +18824,7 @@ Verificações finais: 20 testes focais de relatórios/retomada aprovados; audit
 reproduziu união/consolidação, preservação de L09/L13, revisão/hashes e consumo
 de todas as partes. SPEC/DOC verificados. Nenhuma credencial, saída privada ou
 novo código funcional acompanha esta entrega.
-### 19. Reexecução focal de 14 testes críticos para o aceite
+### 20. Reexecução focal de 14 testes críticos para o aceite
 
 Fonte versionada: [docs/testes/tst01-criticos.json](docs/testes/tst01-criticos.json).
 
@@ -18750,7 +19144,7 @@ Fonte versionada: [docs/testes/tst01-criticos.json](docs/testes/tst01-criticos.j
   "nota": "Reexecução focal atual, sem novas chamadas LLM. Não representa reexecução integral dos 458 testes históricos."
 }
 ````
-### 20. Aceite reproduzível do MVP PG-01 com evidências vinculadas
+### 21. Aceite reproduzível do MVP PG-01 com evidências vinculadas
 
 Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consolidacao.json).
 
@@ -18789,7 +19183,7 @@ Fonte versionada: [docs/testes/tst01-consolidacao.json](docs/testes/tst01-consol
   }
 }
 ````
-### 21. Plano de validação visual e usabilidade
+### 22. Plano de validação visual e usabilidade
 
 Fonte versionada: [docs/testes/reformulacao-visual.md](docs/testes/reformulacao-visual.md).
 
@@ -18870,7 +19264,7 @@ UX-09 concluído com falha obrigatória ou somente com mockups/testes unitários
 Relatórios AI-06/TST-01 históricos conservam seus hashes; não são alterados para
 parecer que exercitaram uma interface nova. Falhas de API ou requisito novo
 descobertos são registrados para uma entrega funcional própria.
-### 22. Correção do histórico e regressão completa de unitários/integração do MVP
+### 23. Correção do histórico e regressão completa de unitários/integração do MVP
 
 Fonte versionada: [docs/testes/historico-chat-mvp-20261119.md](docs/testes/historico-chat-mvp-20261119.md).
 
@@ -18974,7 +19368,7 @@ entidades conceituais, 43 tabelas planejadas e 32 implementadas. O schema é
 justificável pelo escopo; propostas de reduzir duplicação de triagem/consumo,
 FK redundante e tabela conversa não foram aplicadas. A imagem original,
 DBML/JSON lógico e migrations permanecem intactos.
-### 23. Backup, migração com dados legados e regressão da normalização 0016
+### 24. Backup, migração com dados legados e regressão da normalização 0016
 
 Fonte versionada: [docs/testes/otimizacao-modelagem-20261119.md](docs/testes/otimizacao-modelagem-20261119.md).
 
@@ -19115,7 +19509,7 @@ Na raiz verificar documentação/SPEC com os comandos de AGENTS.md.
 [Recibo estruturado](docs/testes/otimizacao-modelagem-20261119.json): contagens, hashes dos
 relatórios/fontes, limites e backup sem conteúdo privado. Artefatos brutos,
 dumps, pesos, chaves, logs e scripts temporários continuam fora do Git.
-### 24. Verificação do iniciador Windows e seus limites
+### 25. Verificação do iniciador Windows e seus limites
 
 Fonte versionada: [docs/testes/iniciador-local-20261120.md](docs/testes/iniciador-local-20261120.md).
 
@@ -19267,6 +19661,9 @@ A revisão `0023` acrescenta a [confirmação manual de identidade](docs/arquite
 A revisão `0024` cria e preenche a projeção de [frequência e lotação](docs/arquitetura/frequencia-lotacao.md) a partir das passagens confirmadas. O downgrade preserva os eventos e comandos originais.
 A revisão `0025` acrescenta a tabela de [pagamentos manuais](docs/arquitetura/pagamentos-manuais.md), com auditoria e cadeia de correções. Seu downgrade remove a tabela de pagamentos.
 A revisão `0026` cria [cobranças e revisões](docs/arquitetura/cobrancas.md), incluindo o vínculo opcional com pagamentos. O downgrade remove cobranças, revisões e vínculos, preservando os lançamentos de pagamento.
+A revisão `0027` preserva o histórico da [compra simulada](docs/arquitetura/compra-simulada.md) no pagamento. O downgrade é interrompido quando existem recibos simulados, para proteger o histórico.
+A revisão `0028` acrescenta o endereço opcional à identidade para a consulta e edição no [perfil próprio](docs/arquitetura/clientes.md#perfil-próprio).
+A revisão `0029` adiciona a miniatura privada opcional do cadastro facial. As referências anteriores continuam válidas e podem permanecer sem miniatura.
 O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.
@@ -19866,7 +20263,249 @@ ACADEMIA_API_PROXY_TARGET=http://127.0.0.1:8000
 VITE_TEST_MAILBOX_URL=http://127.0.0.1:8025
 VITE_CORPUS_MAINTENANCE_ENABLED=false
 ````
-### 9. Iniciador Windows com painel, serviços próprios e encerramento
+### 9. Pré-requisitos, instalação local e verificação da API
+
+Fonte versionada: [docs/instalacao/instalacao-local.md](docs/instalacao/instalacao-local.md).
+
+Prepare o ambiente uma vez. Depois use [Iniciar AcademIA e Encerrar
+AcademIA](iniciar-com-dois-cliques.md) na raiz do projeto.
+
+#### Pré-requisitos
+
+| Ferramenta | Uso no projeto |
+|---|---|
+| Python 3.12 com Tcl/Tk | API e ambiente `backend/.venv`. O painel de dois cliques usa Tkinter. |
+| uv | Instala e verifica as dependências Python registradas em `backend/uv.lock`. |
+| Node.js 24 LTS e npm 11 | O Node executa o frontend. O projeto registra npm 11.6.2 em `frontend/package.json` e usa `package-lock.json` para instalar as dependências. |
+| PostgreSQL 17 nativo | Bancos `academia_dev` e `academia_test`, com usuários próprios, no loopback. |
+| Mailpit nativo para Windows | SMTP e caixa web de teste, ambos locais. |
+
+#### Preparação inicial
+
+1. Na raiz, copie `.env.example` para `.env` e
+   `iniciador.local.example.json` para `iniciador.local.json`. Em `frontend/`,
+   copie `.env.example` para `.env.local`. Preserve os arquivos privados que
+   já existirem. Informe no JSON os quatro caminhos de ferramentas e do
+   cluster inicializado. Ele deve apontar à pasta que contém `PG_VERSION`.
+2. Instale as dependências com os lockfiles, seguindo a seção
+   [Dependências e build](docs/instalacao/instalacao-local.md#dependências-e-build). A instalação em uma
+   máquina nova pode requerer acesso aos repositórios de pacotes.
+3. Com o PostgreSQL aberto em loopback, crie os bancos e preencha as URLs
+   privadas seguindo o [guia do banco](database/README.md). Em
+   `backend/`, siga a seção [Migrations](docs/instalacao/instalacao-local.md#migrations). Para atualizar um
+   ambiente que já tem dados, encerre a aplicação e guarde um backup.
+4. Crie o [primeiro administrador](docs/instalacao/primeiro-administrador.md). Para a
+   demonstração, carregue o [catálogo sintético](database/seeds/README.md)
+   em uma operação própria. Para usar as funções de IA, prepare os pesos e o
+   [corpus RAG](docs/instalacao/preparar-rag-local.md) com a API parada e configure o perfil de
+   provedor no `.env` privado.
+5. Dê dois cliques em `Iniciar AcademIA.cmd`. O painel inicia os serviços
+   preparados e abre o site. Convites e recuperação aparecem na caixa local
+   do Mailpit. As integrações da [catraca fictícia](docs/instalacao/catraca-ficticia.md) e do
+   [CompreFace](docs/arquitetura/preparacao-gate-08.md) têm preparação própria.
+
+#### Dependências e build
+
+```powershell
+# Em backend/
+uv sync --locked
+
+# Em frontend/
+npm ci
+npm run build
+```
+
+#### Migrations
+
+Com o PostgreSQL ativo e o `.env` configurado, execute em `backend/`:
+
+```powershell
+uv run --locked --env-file ../.env alembic -c ../database/alembic.ini upgrade head
+uv run --locked --env-file ../.env alembic -c ../database/alembic.ini current
+```
+
+A abertura diária usa as dependências instaladas e confere a revisão do
+PostgreSQL antes de iniciar a API. Migrations, carga de exemplo e preparo do
+corpus são etapas explícitas. Configure os caminhos do PostgreSQL, do Node e
+do Mailpit no JSON privado. Credenciais ficam apenas no `.env` do backend.
+Os arquivos privados, os ambientes, os backups, a caixa de e-mail e os dados
+locais estão excluídos pelo Git.
+
+#### Verificação em uma instalação limpa
+
+Use outra pasta com os fontes da revisão que deseja demonstrar, sem copiar
+`.venv`, `node_modules`, dados ou configuração privada de outra instalação.
+Em um cluster PostgreSQL novo, mantenha bancos e usuários próprios para
+`academia_dev` e `academia_test`. O último deve começar vazio e pode ficar
+no mesmo cluster. Ao testar na mesma máquina, feche a instalação anterior
+e use uma porta livre para o cluster novo. Preencha os arquivos privados
+a partir dos exemplos.
+
+1. Execute [a instalação dos lockfiles](docs/instalacao/instalacao-local.md#dependências-e-build). Aplique
+   `upgrade head` em `academia_dev`, confira `current` e repita o
+   `upgrade head`. A segunda execução deve manter a revisão e as estruturas.
+2. Crie o [administrador](docs/instalacao/primeiro-administrador.md) e carregue o
+   [catálogo de exemplo](database/seeds/README.md) explicitamente.
+   Se usar a catraca fictícia, prepare seu armazenamento antes de abrir o
+   iniciador. [Configuração da catraca](docs/instalacao/catraca-ficticia.md).
+3. Abra o iniciador e confira o site, `/api/health` pelo proxy e o login.
+   Encerre, abra novamente e confira a mesma conta e o catálogo. As etapas
+   de [prontidão](docs/instalacao/instalacao-local.md#comunicação-e-prontidão-local) indicam os endereços.
+4. Encerre os serviços do iniciador antes de rodar os ensaios com
+   `academia_test` e uma caixa Mailpit de teste. A regressão no Edge usa
+   cenários sintéticos para o LLM e o reconhecimento facial.
+   [Aceitação do MVP e seus limites](docs/testes/aceitacao-mvp.md).
+
+[Comandos e evidências da instalação limpa](docs/testes/comandos.md#inf-04--instalação-local-e-teste-integrado).
+
+#### Verificação básica da API
+
+Na pasta `backend/`, com configuração local e porta 8000 livre, execute:
+
+```powershell
+uv run --locked --env-file ../.env uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8000 --workers 1 --no-access-log
+```
+
+De outro terminal, consulte os endpoints e use Ctrl+C no terminal da API para
+encerrar. O exemplo de ambiente também serve para conferir a inicialização
+e as rotas técnicas. Use a configuração com PostgreSQL para verificar rotas
+que dependem da sessão.
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:8000/health
+(Invoke-RestMethod http://127.0.0.1:8000/openapi.json).info.title
+```
+
+O primeiro comando retorna `status=ok` e o segundo retorna `AcademIA` com
+o nome padrão. O [registro de testes](docs/testes/comandos.md) reúne os comandos
+e resultados de instalação, build e inicialização.
+
+#### Comunicação e prontidão local
+
+Com a configuração de exemplo, os serviços usam estes endereços no mesmo PC.
+Antes de iniciar, mantenha livres as portas do site, da API, do Mailpit e da
+catraca, se habilitada. O painel pode reutilizar o PostgreSQL já aberto e
+preserva esse processo ao encerrar.
+
+| Serviço | Verificação no endereço padrão |
+|---|---|
+| Site e proxy | `http://127.0.0.1:5173/` abre a interface. `/api/health` no mesmo endereço confirma o proxy para a API. |
+| API | `http://127.0.0.1:8000/health` retorna `status=ok`. |
+| PostgreSQL | Porta `5432`. O painel verifica a conexão ao `academia_dev` e a revisão das migrations antes de abrir a API. |
+| Mailpit | SMTP na porta `1025` e caixa de entrada em `http://127.0.0.1:8025/`. |
+| Catraca fictícia | `http://127.0.0.1:8011/health` após a [configuração da simulação](docs/instalacao/catraca-ficticia.md). A API envia comandos e recebe confirmações em loopback. |
+| Qdrant | O único processo da API abre o índice sob demanda em `ACADEMIA_VECTOR_PATH`, por padrão `backend/data/qdrant`. O diretório deve ser exclusivo do processo durante o uso. |
+
+O endpoint `/health` confirma que a API responde. A prontidão do corpus
+depende do [preparo do RAG](docs/instalacao/preparar-rag-local.md). Encerre a API antes de
+rodar a CLI ou preparar o índice no mesmo diretório.
+
+O [ensaio INF-02](docs/testes/comandos.md#inf-02--comunicação-e-prontidão-dos-serviços-locais)
+registra verificações de inicialização, envio SMTP, retorno da catraca,
+persistência do Qdrant e encerramento.
+
+#### Segurança e persistência locais
+
+##### Rede e firewall
+
+- Use os [endereços de loopback acima](docs/instalacao/instalacao-local.md#comunicação-e-prontidão-local). O
+  iniciador vincula o PostgreSQL que abre a `127.0.0.1`. Antes de reutilizar
+  um servidor preexistente, verifica se ele está configurado para ouvir
+  somente em loopback. Para início manual do banco, configure
+  `listen_addresses = '127.0.0.1'` e autenticação local por senha
+  (`scram-sha-256` no `pg_hba.conf`). Use contas sem privilégios
+  administrativos e mantenha desenvolvimento e testes separados.
+- Mantenha o firewall do Windows ativo e com conexões de entrada não
+  solicitadas bloqueadas. As portas locais do AcademIA dispensam exceções de
+  entrada, redirecionamento de portas e túneis. A aplicação usa um proxy
+  local de mesma origem, com sessões e permissões validadas pelo backend.
+  Mantenha as rotas de administração e curadoria sujeitas a suas
+  [permissões e configurações](docs/arquitetura/autorizacao.md).
+- O Qdrant local dispensa porta HTTP própria. O CompreFace publica apenas
+  `127.0.0.1:18080` e mantém seu banco na rede interna do Docker dedicado.
+  A administração dessa instância é feita localmente pelo responsável técnico.
+  [Configuração do CompreFace](docs/arquitetura/preparacao-gate-08.md#execução-local-da-instância-dedicada).
+
+Para conferir o host sem alterar regras, use `netsh advfirewall show
+allprofiles state` e `netstat -ano` com o sistema aberto. Confira os
+endereços **locais** na coluna de escuta das portas do projeto. `127.0.0.1`
+e `::1` são loopback. `0.0.0.0` e `[::]` indicam escuta em todas as
+interfaces. As regras do Windows são administradas fora do iniciador.
+
+##### Dados que sobrevivem à reinicialização
+
+| Dados | Local padrão ou fonte da configuração |
+|---|---|
+| PostgreSQL | Cluster indicado por `postgres_data` em `iniciador.local.json`. Mantenha o `academia_dev` e suas migrations. |
+| Qdrant, corpus e extrações | Caminhos `ACADEMIA_VECTOR_PATH`, `ACADEMIA_CORPUS_DIR` e `ACADEMIA_EXTRACTION_DIR` sob `backend/` quando relativos. |
+| Mailpit e catraca | `backend/data/mailpit.db` e o arquivo `ACADEMIA_TURNSTILE_STORE_PATH`, relativo à raiz quando o caminho é relativo. |
+| Equipamentos | `ACADEMIA_EQUIPMENT_IMAGES_DIR` sob `backend/` quando relativo. A pasta é usada quando houver imagem cadastrada. |
+| CompreFace | Volume persistente do projeto Docker dedicado. Referências no PostgreSQL dependem do mesmo conjunto facial e da configuração correspondente. |
+
+Guarde `.env`, a configuração privada, os diretórios e os backups em
+locais restritos às contas que precisam acessá-los. Use as ACLs do Windows
+para revisar esse acesso. O Git ignora os caminhos locais padrão.
+
+##### Backup e restauração
+
+1. Registre a revisão do código, a revisão Alembic, a coleção do Qdrant e a
+   revisão do modelo de embeddings. Encerre o iniciador e as ferramentas de
+   ingestão ou manutenção. Para o dump, deixe ativo apenas o PostgreSQL.
+   Trabalhe em uma pasta privada fora do Git.
+2. Use os executáveis da mesma instalação do PostgreSQL. Substitua a pasta
+   do exemplo por uma pasta privada existente e ajuste portas/usuário ao seu
+   ambiente. Informe a senha somente quando o programa solicitar.
+
+   ```powershell
+   $arquivoAcademia = 'C:\backups-privados\academia-dev.dump'
+   pg_dump --host 127.0.0.1 --port 5432 --username academia_dev_app --format custom --file $arquivoAcademia academia_dev
+   pg_restore --list $arquivoAcademia
+   Get-FileHash -LiteralPath $arquivoAcademia -Algorithm SHA256
+   ```
+
+   Confira o código de saída de cada comando. Guarde o hash junto ao
+   inventário privado do backup.
+3. Com os serviços correspondentes parados, copie o diretório inteiro do
+   Qdrant, os diretórios de corpus/extrações e os arquivos de uploads,
+   Mailpit e catraca. Inclua a configuração privada com acesso restrito.
+   Se usar reconhecimento facial, preserve separadamente o volume e a
+   configuração do CompreFace da mesma instalação.
+4. Teste o dump em um banco **novo e vazio** com proprietário próprio. O
+   comando a seguir usa um banco de verificação previamente criado.
+   `--no-owner` atribui os objetos ao usuário que executa a restauração.
+
+   ```powershell
+   pg_restore --host 127.0.0.1 --port 5432 --username academia_dev_app --exit-on-error --no-owner --dbname academia_restore $arquivoAcademia
+   ```
+
+   Compare a revisão Alembic, o catálogo e os identificadores de referência.
+   O runtime exige o nome `academia_dev`. Para testar a aplicação com uma
+   restauração integral, use essa base num cluster separado, com a origem
+   e o proxy configurados para a instalação de recuperação.
+5. Restaure Qdrant e arquivos em **outro diretório** e confira hashes e
+   referências. Com a API parada, use a
+   [verificação do Qdrant](docs/arquitetura/banco-vetorial.md#execução-e-verificação-local)
+   apontando `ACADEMIA_VECTOR_PATH` para a cópia. Compare a coleção, o
+   espaço de embeddings e a contagem de pontos. Confira o acervo e os
+   arquivos antes de abrir a instalação recuperada. Preserve o original
+   enquanto valida a cópia.
+
+[Procedimento de referência do banco](database/README.md#backup-e-restauração-da-revisão-0016).
+
+##### Diagnóstico de prontidão
+
+No início, o painel verifica o PostgreSQL e a revisão Alembic antes de abrir
+a API. Um problema de conexão, exposição ou migrations aparece nessa etapa.
+As sondagens HTTP seguintes cobrem Mailpit, API, catraca configurada e o
+proxy do site. Os registros ficam em `backend/data/iniciador`.
+
+`/health` indica que a API responde. O Qdrant abre sob demanda e suas
+falhas aparecem no fluxo de IA ou na verificação offline. A catraca
+fictícia pode responder enquanto o CompreFace está desligado. A verificação
+facial usa o [procedimento próprio](docs/arquitetura/preparacao-gate-08.md).
+
+[Evidências do INF-03](docs/testes/comandos.md#inf-03--segurança-e-persistência-locais).
+### 10. Iniciador Windows com painel, serviços próprios e encerramento
 
 Fonte versionada: [docs/instalacao/iniciar-com-dois-cliques.md](docs/instalacao/iniciar-com-dois-cliques.md).
 
@@ -19904,6 +20543,9 @@ encerre o painel. Depois da manutenção, abra novamente o iniciador.
   Não abre a aplicação na rede pública nem altera firewall/configuração do Windows.
 - Verifica a revisão do banco antes de iniciar a API. Uma migration pendente
   exige manutenção técnica explícita, não uma alteração automática de dados.
+- Ao abrir o PostgreSQL, vincula a escuta a `127.0.0.1`. A verificação de
+  prontidão exige que o PostgreSQL preexistente também escute em loopback.
+  Em falha de conexão, o diagnóstico omite a URL e os detalhes do driver.
 - Mantém um único painel por projeto. Portas ocupadas provocam uma mensagem;
   o iniciador não tenta matar processos encontrados pelo número da porta.
 - Se o PostgreSQL já estava ligado, o reutiliza após conferir a conexão e não
@@ -19918,22 +20560,17 @@ encerre o painel. Depois da manutenção, abra novamente o iniciador.
   As configurações MP_* de relay do ambiente não são herdadas pelo Mailpit.
 
 O painel é uma conveniência para desenvolvimento/teste local. Não é um instalador
-universal nem substitui a containerização futura. A disponibilidade das IAs ainda
+universal. A disponibilidade das IAs ainda
 depende de corpus/pesos preparados, chaves do perfil e quota do provedor.
 Nenhuma chamada ao LLM é feita para abrir ou encerrar o ambiente.
 
 #### Preparação técnica em outra máquina
 
-Nesta máquina, os caminhos já estão configurados em iniciador.local.json.
-Esse arquivo é privado/ignorado pelo Git, pois os diretórios variam entre PCs.
-
-Em uma instalação nova, preparar primeiro os [serviços](database/README.md),
-o [backend](backend/README.md), o [frontend](frontend/README.md) e o
-[RAG local](docs/instalacao/preparar-rag-local.md), conforme os guias existentes. Copiar
-iniciador.local.example.json para iniciador.local.json e ajustar os quatro
-caminhos absolutos de ferramentas/cluster. O Python é encontrado automaticamente
-em backend/.venv/Scripts; precisa incluir Tkinter (verificado nesta instalação).
-Não colocar credenciais nesse JSON; elas continuam somente no .env local.
+Siga o [guia de instalação local](docs/instalacao/instalacao-local.md) para conferir
+pré-requisitos, instalar dependências e preparar os dados. Em
+iniciador.local.json, informe os quatro caminhos absolutos das ferramentas
+e do cluster. O painel encontra o Python em backend/.venv/Scripts e usa o
+Tkinter desse ambiente. O JSON de caminhos e o .env ficam fora do Git.
 
 O script versionado é scripts/academia_local.py. Os .cmd usam caminhos relativos
 à própria pasta, com aspas para espaços e acentos; o site abre no navegador
@@ -19947,11 +20584,14 @@ padrão. Os caminhos de URLs/portas vêm dos ambientes já documentados.
 | Porta em uso | Encerre a execução anterior pelo painel/comando apropriado. O iniciador preserva processos externos. |
 | Falta configuração/caminho | Conferir iniciador.local.json e instalação inicial; não é preciso decorar os comandos diários. |
 | Migrations pendentes | Pedir ao responsável técnico a atualização seguindo o guia do banco. |
+| Falha em verificar-banco | Abra os registros e confira o diagnóstico de `verificar-banco.log`. Na configuração local, verifique escuta em loopback, credenciais e revisão. |
 | IA retorna erro/quota | O ambiente pode estar ligado normalmente; conferir a resposta e o provedor. Não há retry ou fallback automático novo. |
 | Links de e-mail expirados | Reenviar convite pela aplicação; não redefinir senha diretamente no banco. |
 
 Logs ficam em backend/data/iniciador e a caixa de e-mail em backend/data; tudo
 fora do Git. Compartilhar logs somente após conferir se contêm dados privados.
+As regras do host e os meios de preservar dados estão no
+[guia de segurança local](docs/instalacao/instalacao-local.md#segurança-e-persistência-locais).
 As [evidências de verificação](docs/testes/iniciador-local-20261120.md) distinguem
 testes funcionais do iniciador e a limitação da inspeção visual automática.
 
@@ -19983,7 +20623,7 @@ Não se trata de autoalteração do código durante a abertura do painel: a manu
    pela tarefa, realizá-la separadamente com os cuidados pertinentes e deixar o
    iniciador pronto. Migrations aprovadas continuam explícitas e reproduzíveis;
    não introduzir instalação, reset, seed ou upgrade silencioso ao abrir o painel.
-   CompreFace/serviços externos e Docker só entram quando seus cartões permitirem.
+   O CompreFace conserva a instância Docker local dedicada do GATE-08.
 5. Preservar autenticação, loopback/isolamento, credenciais só no backend,
    Mailpit sem relay e encerramento apenas de processos próprios. Abertura
    repetida não duplica serviços; falha deve ser informada sem encerrar terceiros
@@ -20003,7 +20643,7 @@ Mudanças apenas documentais ou sem efeito na execução local não precisam alt
 o código do iniciador nem repetir o ciclo completo. O agente registra essa
 avaliação e faz as verificações correspondentes ao escopo. Autorizações funcionais
 não dispensam as permissões técnicas exigidas pelo ambiente de trabalho.
-### 10. Inicialização e ensaio da catraca fictícia
+### 11. Inicialização e ensaio da catraca fictícia
 
 Fonte versionada: [docs/instalacao/catraca-ficticia.md](docs/instalacao/catraca-ficticia.md).
 
@@ -20056,10 +20696,11 @@ inicialização normal abre apenas o armazenamento já preparado.
    Reutilizar o ID com conteúdo divergente, tentar outro evento para o mesmo
    comando ou simular passagem de um comando `DENY` retorna 409.
    Comando expirado para nova operação retorna 410.
-5. Se o retorno falhar, a API devolve 502 ou 504. Basta reenviar o mesmo
-   `event_id` para entregar o evento já registrado com o instante original,
-   inclusive após o fim da validade. Uma nova passagem exige autorização válida
-   no instante da ocorrência. O destino deduplica pelos mesmos identificadores.
+5. Para falha temporária (502/504), reenvie o mesmo `event_id` com o instante
+   original. Após a validade, o reenvio ainda recupera um recibo já gravado
+   pelo AcademIA. Se o AcademIA nunca confirmou a passagem e o prazo terminou,
+   o simulador retorna 410 `CALLBACK_EXPIRED`. Para tentar uma nova passagem,
+   solicite nova autorização. Frequência e lotação só mudam após confirmação.
 
 Para testar falha do equipamento, configure `ACADEMIA_TURNSTILE_FAULT` como
 `UNAVAILABLE` (HTTP 503) ou `TIMEOUT` (HTTP 504 após uma espera controlada),
@@ -20071,7 +20712,7 @@ usa um receptor HTTP de teste. O [ACS-03](docs/arquitetura/autorizacao-acesso.md
 integra a rota de recepção real do AcademIA. O primeiro registro precisa
 chegar antes da expiração. Depois disso, o destino ainda reconhece reenvios
 idênticos de eventos já confirmados.
-### 11. Exemplo de caminhos locais do iniciador
+### 12. Exemplo de caminhos locais do iniciador
 
 Fonte versionada: [iniciador.local.example.json](iniciador.local.example.json).
 
@@ -20094,30 +20735,31 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `eabef37eb495472bf3da881d1082231dba2e7bb9715c75fc99969777e97c3027` |
-| `AGENTS.md` | `ec404716ff3d62641f28e066e31cf8ac5b1841e81b72e6b1ee2b22a9e1cbc03b` |
+| `AGENTS.md` | `a126cb71fe92c317024c4368897d14a1a48b093e874f7f14ae8f2a5dd1d6c2af` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `101deb54bb790584c556d5671c71b89471c3f0f1e9a39c885c22e8c764403b23` |
-| `database/README.md` | `3c0e5948f4d498f2e291d6c330f0ced20176ce86ee25a66529b69219cf14cdf3` |
+| `database/README.md` | `4f9b03aca946846fb6add9b3b828a2ab59e8fa9b051365a537f719e23b614c69` |
 | `docs/analises/2026-11-19-tamanho-modelagem.md` | `81e9420e88c48398545f53025230b11a4d7c5a4bdd638473479633bf0cbb02a2` |
 | `docs/arquitetura/agenda.md` | `d0e60a63783476b414eb495fbdb9d17b9d6c6e4a29606423e5a6bcd8a3ceb883` |
 | `docs/arquitetura/auditoria-e-eventos.md` | `f0650c577005a182d82bb5b2114005f541a1e6eccf84cb0110d28b4f3eb816ce` |
 | `docs/arquitetura/autenticacao.md` | `52dca2c4632000a003c8824b4117c8f45c433f70a29e2567985e039ec848d282` |
 | `docs/arquitetura/autorizacao-acesso.md` | `941024e9506a7a88989341df936c1f58ff8ec7d09d0e0cbdb85d7bd1de7bd40f` |
 | `docs/arquitetura/autorizacao.md` | `0d2c30f9bad725e0506c2df986dc44c1bd704bae63d3facd71f3bda1e9db2b01` |
-| `docs/arquitetura/banco-vetorial.md` | `dab978f65974694c7ddb64aff71650de08fbfd1b7fdc44722db0f18b2437ac1b` |
-| `docs/arquitetura/biometria.md` | `09ef5cf736b910697ff74d98b128b2805cbe411805e529923f6d433efdd355ac` |
+| `docs/arquitetura/banco-vetorial.md` | `2caddf1c7bb22d36abeaff819e3c4fdb01f938062248dd3d4b9d986b274d4ef5` |
+| `docs/arquitetura/biometria.md` | `9e953a9dca898fb7ea7e2dee7289012b2c55f889f489823aa1a939dc5efa49cb` |
 | `docs/arquitetura/catalogo-exercicios.md` | `5890ceb1d06f7a4242974d48735a65d93b47f7c9dbb2c7132da10dfad96c74f4` |
 | `docs/arquitetura/chat-e-adaptacao.md` | `6fc01e490f47806403411dd9729f7040e9d569ef48a5c5f70228a8a01ee10e8d` |
-| `docs/arquitetura/clientes.md` | `4348ff17792db0f940a80a635d78f9de1cedb9bd9c3c0a3889a297d94b98f781` |
-| `docs/arquitetura/cobrancas.md` | `6671f44509866199a7ae4826b2833380ed393702f1f99a779e864cc6df28eae6` |
+| `docs/arquitetura/clientes.md` | `71a5bd6e227c772e41ab3fb00c8231d25a5f08baba7a4cb66480177053cb4eb5` |
+| `docs/arquitetura/cobrancas.md` | `85aabb7cc941ec09079eeba98e5a9908a095d0921d775d1bb7e738993ff6e8fe` |
+| `docs/arquitetura/compra-simulada.md` | `0691bef3231d992f12ac24645436c1f4b23b4f271f79851b834228b8f3419efe` |
 | `docs/arquitetura/confirmacao-manual.md` | `bde88217918c55471d89a2ec24d7e8d5db25d9eca409513dee19d1c9cbba1120` |
 | `docs/arquitetura/contratos-rest.md` | `894d3aafcaec68a6c578b256800693e52eba23ee249579ba95782f34549b4e7b` |
 | `docs/arquitetura/corpus.md` | `3b4c1a245942ca90d5685ae1ca29965589fa506a55d059502b7b42519bb06202` |
-| `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `f2190013548b075ec697f31662f3bd026e273946a4042ef0dae5067aa52a1272` |
+| `docs/arquitetura/decisoes/ADR-001-stack-e-arquitetura.md` | `66262e75b51ca8f90f3f394b3cfb01e068796ae8cddbdfa1ade1eea8cbcc7381` |
 | `docs/arquitetura/decisoes/ADR-002-identidade-e-papeis.md` | `4ccbdc03d1def8c78173f8b4c380d57ad7835db83e501af6719285cb83085810` |
 | `docs/arquitetura/decisoes/ADR-003-academia-git-e-tempo.md` | `db91793bc6bf10d5e8f245a2a7a49eb8ecf537dd145fe1a0d2bdd8027f72d8d4` |
-| `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `4c379b244070313f8a013a59415b782cf1af595ff2cfa700e59533c4852afc8e` |
-| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `93349b137d1d5fdb14cda476743b994ce5cec777b4b558a5076f0eeb3b85acbb` |
+| `docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md` | `a55216f12b0d294a56d826075d5ceae5b298f79b070bce68d7c0a1c275f77081` |
+| `docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md` | `0aa860ab0157114f6bf1d045d58c32b7312b25ab03534b4b209e620812627a16` |
 | `docs/arquitetura/decisoes/ADR-006-modelo-groq-vigente.md` | `8fed154fd5b1522a5f41b8b8919ef2dc44e210ad26ff946b6861af38f63632d7` |
 | `docs/arquitetura/decisoes/ADR-007-livro-e-fundamentacao.md` | `d60b68a1a88861712dba9f88ed2ef15c292f843ba4df9ff50a82e608521c9297` |
 | `docs/arquitetura/decisoes/ADR-008-reserva-llm-explicita.md` | `6d4e1255d93c2a9dfdae95367caae95b9596692d1ee1c31f24ace391ea92ad2f` |
@@ -20131,36 +20773,38 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/arquitetura/extracao-documental.md` | `0ffd9a5e0ad6dbe743cf061c7c6daaaab5a5bb7be78af95d8942f48b1fc3b710` |
 | `docs/arquitetura/ficha-do-cliente.md` | `f1a41ed7a539cfa2b3cf9844b3650d55edacbc27730cff4c3bf6e5d014825ad7` |
 | `docs/arquitetura/fichas-manuais.md` | `6d0dc7eb8652ce57bce739bb2dbeda1aa72e3fda334d9cadf57a314e6aaf42c4` |
-| `docs/arquitetura/fluxos-atualizados.md` | `b6ed025d16b81daeb029f6581d9c389b272e1de1f06effaf00b92005513d9c15` |
+| `docs/arquitetura/fluxos-atualizados.md` | `eb53dc26efa8885cd2b3ab06b7ded9955b5d6a73dc027b02c82f10c3228994e5` |
 | `docs/arquitetura/frequencia-lotacao.md` | `f5d92ddbdcfd7d60f54211e0bfd8f852fffab3b89375da7f336c6cabb724d767` |
 | `docs/arquitetura/funcionarios.md` | `94717fc30fd3072402243a89df754272805a05c85bf6e06af04b0a2e8e5725e2` |
 | `docs/arquitetura/geracao-persistente.md` | `80c3c62f301dd84e8e087386bb991a9619d7bc41add872678c45eb2237fe7638` |
 | `docs/arquitetura/indexacao-documental.md` | `e2b16ee247c71351fe407c4b7cddc297264036342fc728003ccba870f794f98b` |
-| `docs/arquitetura/matriculas.md` | `7f3ae0e6275b70a128cb693fbc2a8e5b97391d1ca17233b26d49ecf9911f03ca` |
+| `docs/arquitetura/matriculas.md` | `417d97e4b9fc2636c06b053d139349ca789f030901f4e369cbe1eee71ca524e5` |
 | `docs/arquitetura/modelo-de-dados/dados-rag-ia.md` | `ee81193be06dd71a85917284681a570631e71806528bcbabdc4bd9e490a38f5f` |
-| `docs/arquitetura/modelo-de-dados/dicionario.md` | `fb9ab0a02f906141479e2fd961494ef3d973bfa554b520737fd7093c0951c320` |
-| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `dd4342de6df2fba343357c2d4d51f3ed425ac448b45ed026e3997505656b490e` |
-| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `14f38b8f28561569d380fc0602f3b14c91a2d8c041f335ab9dcbdc57b512bcb5` |
+| `docs/arquitetura/modelo-de-dados/dicionario.md` | `46b22f6b27e8316322dccaef387b96443cf91f681d2a4085a3da9d8c1d105e03` |
+| `docs/arquitetura/modelo-de-dados/invariantes-e-estados.md` | `14034eadf03c0de3bbffe6a440040e2dc61e25728d18ff1b5da36b85e7d5b377` |
+| `docs/arquitetura/modelo-de-dados/modelo-logico.dbml` | `f91e05a33f9216531e2734efb113870a544e2c483cc4646097e2e0ca2e7b748f` |
 | `docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md` | `4bd6d62ca9083fdeb546eb6c9c0fe8a177edfc15769959b7738501f47b7db2e1` |
 | `docs/arquitetura/modulos.md` | `567e4428c065e8f3c5aacb6c60791bcc21cbe582870acfe4b6c61e0b7a7915f3` |
 | `docs/arquitetura/notificacoes.md` | `77f3666708b92de685803ca6bd0bd479c28b5e1ecc0f756479d69973f2e81323` |
-| `docs/arquitetura/onboarding.md` | `27f7fad51f650505cd72ea4ef64a61ff3c7481b401485f16678b0e28e0af60d1` |
+| `docs/arquitetura/onboarding.md` | `1252838871ac8da2b320df8dd8762636d28033ed1d68aec7b17305d85f48935c` |
 | `docs/arquitetura/orquestracao-ia.md` | `2cfc3ca6f3a54ba0005f8b4851a93a3a47a8adf603b990f87dc34798ac4d5eb3` |
-| `docs/arquitetura/pagamentos-manuais.md` | `50619711217a48adbea7dcb612a6945f5072ffd5830de56a6dc53942fcc61531` |
-| `docs/arquitetura/painel-administrativo.md` | `88d60b0071ecfc1ade091daf32341b56dd1af83f7a047659cc038fc35515fdfb` |
-| `docs/arquitetura/preparacao-gate-08.md` | `19bdcc97c037db147843fe756107e9329727509ae067c9e441058b0aa50c29e0` |
+| `docs/arquitetura/pagamentos-manuais.md` | `e339cdfa2d97a69e29f5548e85e1105d511cceb5b58249f3c698a3718c80c695` |
+| `docs/arquitetura/painel-administrativo.md` | `53cfd923a7207505638a3ee4826f906a5cb6cafc8a820cb6e9adc8a7fcc2d945` |
+| `docs/arquitetura/preparacao-gate-08.md` | `1e0c11ad05071a163701d5ec01e18cf62f53499bec9fad4c0a2dc224f8ac03b4` |
 | `docs/arquitetura/publicacao-e-parecer.md` | `7023dc870367f5e9436e8328dc6cec2b689cef745f08b83901c45c8fb2826425` |
 | `docs/arquitetura/rag-semantico.md` | `ad30475e87b4f0ec4064e49d7d067883d83b8b8b032fc310de35ad5867d5fd30` |
 | `docs/arquitetura/rastreabilidade-prompts.md` | `eedca2de2fc1cf8d20173bc8b0766a33589299cdd5cdb202ece4b14a7ef3ddca` |
+| `docs/arquitetura/rastreabilidade.md` | `0b4e13ec0b28174323f454cc7987366a46485620f19f5480c0d786c0623a3127` |
 | `docs/arquitetura/reconhecimento-facial.md` | `50a37f9d9aaacfa435de580547743c49baf1559a29d3917aacb1a1efc8367430` |
 | `docs/arquitetura/recuperacao-semantica.md` | `4e636ae714918fbac7d37de018a1f7b98599c528d2eab501013fb8d13d38eab4` |
 | `docs/arquitetura/solicitacao-e-acompanhamento-ia.md` | `50a8362c88bba5ec371bab4111f3db8f805db2f2555fb2e27359859ca9481359` |
-| `docs/arquitetura/triagem-academica.md` | `430cca25c667de680e55c9ef4626112452a8e6545178e2648ec23aed85bd6783` |
-| `docs/especificacao/compilacao-spec.json` | `fca71cdac1629c5c1e3e779d10f80ba0d5a1150e774b8a44f146e73558ffcda4` |
-| `docs/especificacao/roteiro-reconstrucao.md` | `c0a7ed61adaa0517693056db18ecf4d8c59673a7f4e5c68200fe8b13eb81a313` |
-| `docs/especificacao/visao-geral.md` | `556912dadb1373435e2f58afea972798f965c0a06b754d87402c8c61656bb08b` |
-| `docs/instalacao/catraca-ficticia.md` | `b432d1a97d369a25802f23e4bb91ab107d384ce6ed739296d30946d253d8fa9b` |
-| `docs/instalacao/iniciar-com-dois-cliques.md` | `1cdffb0e3d72d5a807f1e30acf2477240ff21c59419a03ea67a4d844e0c44e68` |
+| `docs/arquitetura/triagem-academica.md` | `2b563a4b74bb5d37b138abeabd7ade4bf4c718021b9342c0fdb9c4d0a240ca59` |
+| `docs/especificacao/compilacao-spec.json` | `682060004bc321a18971d54cfddbe489d1ea4a883a7dc1b13e0245d702ebc5be` |
+| `docs/especificacao/roteiro-reconstrucao.md` | `c4bd979c2a323d12648d5f8185deadbb021f9b8a61caa25f8f1c4dfd6dbf3591` |
+| `docs/especificacao/visao-geral.md` | `b88dc4500d6750f385a911ba670dd21b956e943612dd17bffc730619b3eb9b82` |
+| `docs/instalacao/catraca-ficticia.md` | `ef50f62fea629101ace34e0ccc8663c943fd1b97f1ee1b4d68db3260de194bc8` |
+| `docs/instalacao/iniciar-com-dois-cliques.md` | `4eabaa44ef6cfbc5c308522ced17c4ac2110f4cb3abd980d410092271099e524` |
+| `docs/instalacao/instalacao-local.md` | `fbcf734192b3b3ff1b040039da43a44214580d9fa6c050cfbff916e6481cac4c` |
 | `docs/instalacao/preparar-rag-local.md` | `84ca5c4e62a31328770afb9a3d50c265fbd1d25d901b5d1fb7417e77ecb1d7b4` |
 | `docs/instalacao/primeiro-administrador.md` | `76eaa000dccf9dffd493eb7d8d36f3f2b54b1aad27d5da6c512ed365f29bee01` |
 | `docs/prompts/11-experiencia-interface/UX-01.md` | `0bc321c8654b85591b2e23829d2aee835e3023093a7d1a159fd277de9490a2fe` |
@@ -20172,15 +20816,15 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `a6dcd7e6fd33ed35b4baa2868b4a9fcdf7330d13e975046fbb3e8d171189ff77` |
-| `docs/requisitos/configuracao-ia-rag.md` | `35f3b9f17300eac44a57f17d21058f025cb2ecb8090ee8d6e7bcd1bce568d076` |
+| `docs/prompts/README.md` | `d6f99b39fdbaed129d931168787184241fd864164a2091bbf3b263b7b5b37efb` |
+| `docs/requisitos/configuracao-ia-rag.md` | `7332e835125bb1f274b8501a878779b8f33806454c07596764c15d628d66ac99` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |
-| `docs/requisitos/macrorequisitos-ia-rag.md` | `64127bd6c096deba401feb16ab2743542303c2e2ec7604a17f4d0776dfc58fe3` |
-| `docs/requisitos/onboarding-e-triagem.md` | `053c3a217b7c90b786a053184a6e59ea685318c728ac192738a051c249d8e866` |
-| `docs/requisitos/regras-de-negocio.md` | `785ad8c8e5934f1c2a8bd5881ae4c1c897d7843a76e6d1f242f996abd19170f3` |
-| `docs/requisitos/requisitos-funcionais.md` | `43c00ad1bddcf20fb0fd23636f98f572c0db33c919844805bec5bbb7a72ce7db` |
-| `docs/requisitos/requisitos-nao-funcionais.md` | `c3f876b05f3cb86c853a8d905857dcaa11871375fcea5ca515d8c14f0f6e77d8` |
+| `docs/requisitos/macrorequisitos-ia-rag.md` | `8a1b99e611d77dbae3f294713ba5ab66c6a1911906dc6d67db50cf71ce2807f3` |
+| `docs/requisitos/onboarding-e-triagem.md` | `214cb0b312c280abf334133fadb331a1e04c84da46b8f1a24f71f42e96ab20bd` |
+| `docs/requisitos/regras-de-negocio.md` | `1a88c699df9dc58b054de8c2345f9c3fb88116123961e64ade58d0963db26dbc` |
+| `docs/requisitos/requisitos-funcionais.md` | `56466f8ff229788f66201cab4b5df1e2284a2379bab70a871a4fe5ef19d6fcc2` |
+| `docs/requisitos/requisitos-nao-funcionais.md` | `786b11ca631cde3c31a61286d519f7bc970cbeb545bd01c168575663b48dfb73` |
 | `docs/requisitos/schemas/acompanhamento-ia-v1.schema.json` | `127f462c1421f1ffddde2fbfdc815ddee8a53dfe713be607a3d17b6f1207e594` |
 | `docs/requisitos/schemas/chat-ia-v1.schema.json` | `7b5cb6057dd147853625ea4fb5319209d027ca7546fa53339d470eaf93e59ec4` |
 | `docs/requisitos/schemas/configuracao-ia-reserva-gemini-v2.json` | `94aadd81685f9edeab19351388e1fb1968af11a18dc44e2ef027f8c51aab2115` |
@@ -20188,12 +20832,12 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/requisitos/schemas/configuracao-ia-v2.json` | `494cb1696d58a8a3465b6cd56a60630cacd7df46721be23dc588825a2618d304` |
 | `docs/requisitos/schemas/embedding-e5-v1.json` | `b174934522dcaf9f284fcc3d7345e02a83677bdb64e0fbe884d95d1e3a81b0a1` |
 | `docs/requisitos/schemas/escopo-evidencia-v1.schema.json` | `598db8996953bf37e731cf174eb901b8837e4c2cd447c68f373c915534fc911e` |
-| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `701f010c395b67e68ec7408c6ccf8b6dd2070937f3793c44de4e0ed52209938b` |
+| `docs/requisitos/schemas/execucao-ia-v1.schema.json` | `86146505c5f2d0e4f497113b75a6e908557d83a2283c9309a64239bed10a6b8e` |
 | `docs/requisitos/schemas/onboarding-v1.schema.json` | `d9461943764df3a4f670173781380ba901688e7fb6489e2b025909514aa2c6be` |
 | `docs/requisitos/schemas/recuperacao-v1.schema.json` | `5057b3ff3fb127d06b57def109815030a771caeec5cf056f19a7d490e4bcc012` |
 | `docs/requisitos/schemas/selecao-indexacao-v1.schema.json` | `083ba0dc5b6abce80bb583688088df18ef715f9fe396aca658d9c29d21068f6f` |
 | `docs/requisitos/schemas/suporte-saude-ia-v1.schema.json` | `1955b521c3334b0d7d5e1da78c172239bda2c6e669516df81f1f822b0b9a072a` |
-| `docs/requisitos/schemas/triagem-v1.schema.json` | `7534f71cfddb84a3dfef845a7922df7f7f4980bdfd59936d4b6a89abf0ffab3f` |
+| `docs/requisitos/schemas/triagem-v1.schema.json` | `b7ebb72001c833df1351f79eeb46a6b257498a3176091b9e0bd66254ebbdc37a` |
 | `docs/testes/aceitacao-mvp.md` | `b9625ce93cebfc2592339ede1b5ef6634a6122c6710caaa69e9e41359a63addd` |
 | `docs/testes/ai01-cobertura.json` | `7ebd777792ca5df7422bc98c0a112f1054315ee5d394e1a32009f684382da258` |
 | `docs/testes/ai06-academico.md` | `9a4dcb52bae138263fed9ae8ee31d6c1a9f2e64ce3e5549a854a2f21744c783c` |
@@ -20208,7 +20852,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/testes/ai06-resumo.json` | `db11e31c9651991709836cfdbe9afd2a839fb7f20cd10d4d9d57c0b2a6e01b14` |
 | `docs/testes/avaliacao-ia.md` | `aadadadd52a6ec11595b6468b0549299901d274f384dcb3aed460c5d94bbfa4f` |
 | `docs/testes/casos-triagem-v1.json` | `e033aaff8185d061b3025b44896e541cec8ffba9e378d963daea63909d3671ce` |
-| `docs/testes/estrategia.md` | `7fb7b138c7b729e30fa0b9a2e0f8b117958160cbd7ec1abddab9ac1ff84c5f18` |
+| `docs/testes/estrategia.md` | `79367ac2c68fd91f22eea3b2d90bd7dfc9bd80c783898b04b02aa82130de9d9c` |
 | `docs/testes/extracao-corpus-rag03.json` | `62668dfb030b0ea6d43487e8a64204d4ab40cb072407157c93023f2f16e7d154` |
 | `docs/testes/historico-chat-mvp-20261119.md` | `efa4a40fe2e6dce5254a3abd5d09f7e72fefe1ec416088088c1a587e3d4566b0` |
 | `docs/testes/iniciador-local-20261120.md` | `6fed6a3e6ea1cfbc30b2da181e118b326699ce915dc4d6e0cc75b632199fec61` |

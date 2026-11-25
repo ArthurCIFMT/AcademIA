@@ -1,5 +1,9 @@
 # Cobranças e consulta financeira — FIN-01
 
+Os valores representam registros didáticos de cobrança e recebimento.
+O cliente acessa a [compra simulada de plano](compra-simulada.md) pela área
+financeira. Seus recibos têm histórico próprio.
+
 Em **Administração → Gerenciar clientes → Cobranças de …**, o administrador
 registra a competência, o vencimento e o valor. A matrícula é opcional e a
 seleção lista apenas matrículas desse cliente. Edição, cancelamento e reabertura

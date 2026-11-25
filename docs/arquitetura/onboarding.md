@@ -10,7 +10,7 @@ A migration registra as tabelas no ambiente Alembic.
 
 | Rota | Operação |
 |---|---|
-| GET /api/v1/onboarding/meu | Retorna o rascunho atual e a última versão concluída, cada qual como objeto ou `null`. |
+| GET /api/v1/onboarding/meu | Retorna `idade_atual`, o rascunho atual e a última versão concluída. Os objetos de versão podem ser `null`. |
 | PATCH /api/v1/onboarding/meu/rascunho | Recebe `versao_base`, `revisao` e `dados` parciais. Cria ou atualiza o rascunho. |
 | POST /api/v1/onboarding/meu/conclusao | Recebe `versao_base` e `revisao`. Valida o rascunho completo e o conclui. |
 | POST /api/v1/onboarding/meu/atualizacoes | Recebe `versao_base`, `confirmado: true`, `dados` completos e a `revisao` do rascunho, se houver. Retorna 201 com a nova versão concluída. |
@@ -39,8 +39,10 @@ etapa própria. A transação usa o bloqueio do cadastro e compara versão e
 revisão. Uma base superada retorna 409. A conclusão grava data e responsável
 e congela em `idade_snapshot` os anos completos calculados automaticamente a
 partir do cadastro, pela data civil de São Paulo. A consulta própria exibe a
-idade registrada na conclusão. Uma nova conclusão recalcula a idade para sua
-versão. A triagem usa o valor registrado, e o banco armazena o instante em UTC.
+idade registrada na conclusão. O editor autenticado e o editor por convite
+exibem `idade_atual` calculada a cada leitura, sem enviar o nascimento.
+Uma nova conclusão recalcula a idade para sua versão. A triagem usa o valor
+registrado, e o banco armazena o instante em UTC.
 
 A migration 0006 permite um rascunho por cliente. Os gatilhos protegem
 versões concluídas e avaliações de alteração ou exclusão. O serviço

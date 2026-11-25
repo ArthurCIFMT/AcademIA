@@ -7,7 +7,7 @@ import type { Membership, Plan } from "./api";
 
 const plan: Plan = {
   id: "plano-teste", nome: "Mensal", modalidade: "Musculação", duracao_dias: 30,
-  limite_acessos: 2, ativo: true, revisao: 1,
+  limite_acessos: 2, preco_base: null, ativo: true, revisao: 1,
 };
 const historyPath = "/api/v1/atendimento/clientes/cliente-teste/matriculas";
 const paths = {
@@ -50,13 +50,14 @@ test("administra plano e pode desativá-lo pela tela", async () => {
   vi.stubGlobal("fetch", mockFetch);
   mount(paths.admin);
   fireEvent.click(await screen.findByRole("button", { name: "Editar plano Mensal" }));
+  fireEvent.change(screen.getByLabelText("Preço simulado em reais"), { target: { value: "149,90" } });
   fireEvent.click(screen.getByRole("checkbox", { name: "Plano ativo" }));
   fireEvent.click(screen.getByRole("button", { name: "Salvar plano" }));
   expect(await screen.findByText("Plano salvo.")).toBeTruthy();
   expect(await screen.findByText("Inativo")).toBeTruthy();
   expect(writes).toEqual([{
     nome: plan.nome, modalidade: plan.modalidade, duracao_dias: 30,
-    limite_acessos: 2, ativo: false, revisao: 1,
+    limite_acessos: 2, preco_base: "149.90", ativo: false, revisao: 1,
   }]);
 });
 

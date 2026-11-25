@@ -195,6 +195,7 @@ class VersionInfo(BaseModel):
 class DraftView(VersionInfo):
     estado: Literal["RASCUNHO"] = "RASCUNHO"
     dados: DraftData
+    idade_atual: int
 
 
 class SnapshotView(VersionInfo):
@@ -208,3 +209,4 @@ class SnapshotView(VersionInfo):
 class OwnOnboarding(BaseModel):
     rascunho: DraftView | None
     concluido: SnapshotView | None
+    idade_atual: int

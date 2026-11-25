@@ -31,6 +31,7 @@ from app.modules.onboarding.service import (
     OnboardingError,
     complete_draft,
     draft_view,
+    read_current_age,
     save_draft,
 )
 from app.policies.access import Operation
@@ -147,7 +148,7 @@ def invitation_router(get_sessions: Callable[[], sessionmaker[Session]]) -> APIR
             _, draft = require_restricted_draft(
                 session, request.cookies.get(RESTRICTED_COOKIE, "")
             )
-            return draft_view(draft)
+            return draft_view(draft, read_current_age(session, draft.cliente_id))
 
     @router.patch(RESTRICTED_PATH + "/rascunho", response_model_exclude_unset=True)
     def edit_draft(

@@ -97,7 +97,7 @@ RAG verifica ferramentas/recuperação sem exigir o orquestrador LLM.
 | DB | `uv run --locked --env-file ../.env pytest -m database` em `backend/` | Disponível no FND-05 com PostgreSQL de teste |
 | RAG | `uv run --locked --env-file ../.env pytest -o addopts='' tests/knowledge/test_retrieval.py tests/knowledge/test_retrieval_evaluation.py` em backend/; exige flag E5 real e pesos locais | Disponível no RAG-05; configuração abaixo |
 | IA | `uv run --locked --env-file ../.env python -m tests.ai.evaluation --mode deterministic --output ./data/avaliacao/det-N`; modo real/revisão no guia | AI-06: [runner e pré-condições](avaliacao-ia.md) |
-| INF | PENDENTE | INF-01 configura build/smoke; INF-04 amplia integração |
+| INF | `uv sync --locked` em `backend/`. `npm ci` e `npm run build` em `frontend/`. Seguir a [instalação limpa](../instalacao/instalacao-local.md#verificação-em-uma-instalação-limpa) e os comandos do [INF-04](#inf-04--instalação-local-e-teste-integrado). | [INF-01](#inf-01--pré-requisitos-e-build-local) verificou build e API. [INF-02](#inf-02--comunicação-e-prontidão-dos-serviços-locais) verificou serviços e proxy. [INF-03](#inf-03--segurança-e-persistência-locais) verificou loopback, prontidão e persistência. |
 
 Após cada configuração, substituir PENDENTE por comando exato, diretório de execução
 e requisitos de ambiente. Atualizar a seção Comandos de AGENTS.md.
@@ -1923,3 +1923,336 @@ administrador. A transação de teste foi revertida.
 A migração 0026 foi aplicada ao banco local e os totais anteriores foram
 preservados. O iniciador passou nos 16 testes e no ciclo real de abertura e
 encerramento. [Contrato de cobranças](../arquitetura/cobrancas.md)
+
+## Revisão local e financeiro simulado — 2026-11-24
+
+A regressão no PostgreSQL `academia_test` usou a configuração padrão
+de desenvolvimento, apenas a URL do banco de testes e as integrações
+externas opcionais desativadas. A partir de `backend/`:
+
+```powershell
+python -m pytest -o addopts='' tests/ai tests/knowledge tests/contracts/turnstile tests/access/test_authorization.py tests/billing
+```
+
+405 testes passaram e 9 foram pulados. O banco de teste voltou ao estado
+inicial. Os novos casos validam 410 para primeira passagem expirada e o
+uso de `top_k` e do limiar de similaridade do perfil de IA pela busca real
+com Qdrant local e vetores sintéticos. Ruff e mypy passaram.
+
+Vitest passou 10 testes das telas financeiras. ESLint dos arquivos
+alterados, TypeScript, build local e os 16 testes do iniciador passaram.
+O iniciador preserva a configuração e os comandos existentes. A rodada
+não repetiu jornadas no navegador, LLM real ou CompreFace real.
+
+O verificador documental agora valida seções Markdown e detectou
+uma âncora ausente no cenário sintético. SPEC, rastreabilidade e
+documentos do repositório passaram nas verificações.
+
+## FIN-02 — Compra simulada de plano
+
+Backend em `backend/`, com PostgreSQL `academia_test` e integrações opcionais
+desativadas:
+
+```powershell
+python -m pytest -o addopts='' tests/billing tests/memberships tests/access/test_authorization.py tests/database
+```
+
+47 testes passaram. A API cobre autenticação, CSRF, catálogo de planos ativos
+com preço, os três resultados, reenvio idempotente, separação entre clientes,
+preço e nome históricos, auditoria e matrícula independente. A revisão 0027
+foi revertida e reaplicada sem recibos no banco de teste. A constraint rejeita
+confirmação preenchida em um lançamento pendente. O banco de teste foi revertido.
+
+Em `frontend/`, `node node_modules/vitest/vitest.mjs run --maxWorkers=1`
+teve 155 testes aprovados. Rodada final de checkout, planos e cobranças
+teve 11 testes aprovados. ESLint, TypeScript, build local, Ruff e verificação
+de tipos Python passaram. A rodada usou o frontend de teste e a API de
+integração com PostgreSQL. O iniciador passou nos seus 16 testes.
+
+O backup privado do `academia_dev` em formato custom foi conferido com
+`pg_restore --list` antes da aplicação da 0027. Os totais de planos,
+matrículas, pagamentos e cobranças permaneceram iguais. A verificação de
+versão do iniciador foi executada no banco atualizado. O dump permanece em
+`backend/data/backups/`, fora do Git. O contrato está em
+[Compra simulada](../arquitetura/compra-simulada.md).
+
+## FIN-03 — Indicadores financeiros simulados
+
+No `backend/`, com o PostgreSQL `academia_test` e dados sintéticos:
+
+```powershell
+python -m pytest -o addopts='' tests/dashboard tests/billing tests/access/test_attendance.py
+```
+
+25 testes passaram. Os cenários incluem centavos, calendário de São Paulo,
+pagamento corrigido, cobrança cancelada, pagamento acima do saldo, reenvio
+idempotente, simulação recusada ou pendente, falha parcial e permissão.
+OpenAPI, Ruff e mypy foram verificados. O banco de teste foi revertido.
+
+Em `frontend/`, `node node_modules/vitest/vitest.mjs run --maxWorkers=1`
+aprovou 155 testes. ESLint, TypeScript e build passaram. No Edge isolado, o
+build local com respostas sintéticas mostrou os três períodos e os valores
+em viewport de 390 px sem rolagem horizontal no painel. A tela também aceita
+respostas do painel anteriores à inclusão do indicador financeiro.
+
+Os 16 testes do iniciador passaram. Comandos, serviços, configuração e
+migrations de inicialização continuam compatíveis. Veja as
+[regras dos agregados](../arquitetura/painel-administrativo.md#financeiro-simulado).
+
+## INF-01 — Pré-requisitos e build local
+
+Verificação em Windows em 2026-11-25. Python 3.12.14 com Tk 8.6, uv 0.13.7,
+Node 24.22.3, npm 11.6.2, PostgreSQL 17.11 e Mailpit 1.32.0.
+
+- Em `backend/`, `uv sync --locked --offline --check` verificou o ambiente
+  existente sem alterações. Ruff, formato e mypy passaram. A suíte
+  `python -m pytest tests/contracts -q` aprovou 18 casos, com seis de
+  integração fora da seleção padrão.
+- Em uma cópia temporária de `frontend/`, `npm ci --offline --no-audit --no-fund`
+  instalou 246 pacotes a partir de `package-lock.json` e do cache local.
+  `npm run lint` e `npm run build` passaram, incluindo TypeScript.
+  `npm test -- --maxWorkers=1` aprovou 155 testes. A primeira cópia não
+  incluía os dois arquivos de contrato de onboarding lidos em `docs/`.
+  A rodada aprovada preservou esses caminhos relativos.
+- Uvicorn foi iniciado pelo ambiente do lockfile em porta temporária de
+  loopback. `GET /health` e `GET /openapi.json` responderam 200.
+  Com o PostgreSQL local configurado, `GET /api/v1/admin/dashboard`
+  respondeu 401 sem sessão. A revisão `0027` em `academia_dev` foi
+  conferida por leitura. Os processos da verificação foram encerrados.
+- Os 16 testes do iniciador passaram. Seus executáveis e caminhos
+  configurados foram conferidos. Os exemplos versionados mantêm campos
+  sensíveis vazios, e o Git ignora dez caminhos representativos de
+  credenciais, dados e artefatos. Os lockfiles permaneceram iguais.
+
+O [guia de instalação](../instalacao/instalacao-local.md) separa as
+migrations, a carga sintética e o preparo do corpus.
+
+## INF-02 — Comunicação e prontidão dos serviços locais
+
+Verificação no Windows em 2026-11-25. O teste acionou os métodos de abertura e
+encerramento usados pelo painel de dois cliques com as configurações locais.
+O site, o proxy `/api/health`, a API direta, o OpenAPI, o Mailpit e o
+`/health` da catraca responderam HTTP 200. A revisão de `academia_dev` foi
+conferida por leitura e permaneceu em `0027`. O teste verificou as portas
+após o encerramento. Em uma segunda execução, o iniciador preservou o
+processo do PostgreSQL aberto antes dele. O processo de teste foi então
+encerrado pela rotina que o iniciou.
+
+Em `backend/`, com a configuração local de teste, PostgreSQL
+`academia_test` e Mailpit em loopback com uma caixa temporária. Carregue
+os valores de `.env.example` e sobreponha apenas
+`ACADEMIA_TEST_DATABASE_URL` a partir do `.env` privado:
+
+```powershell
+$env:ACADEMIA_TEST_MAILPIT = '1'
+.venv/Scripts/python.exe -m pytest -o addopts='' tests/contracts tests/knowledge/test_vector.py tests/notifications/test_smtp.py tests/access/test_authorization.py::test_live_authorization_and_confirmed_passage
+```
+
+Foram aprovados 59 testes. A execução usou o Python do ambiente do lockfile,
+passou apenas a URL privada do banco de teste e desabilitou integrações
+opcionais externas. O Mailpit recebeu uma única cópia do e-mail sintético
+apesar do reenvio. A API enviou comandos à catraca e recebeu a confirmação de
+passagem por HTTP com registros sintéticos em PostgreSQL. Os testes do Qdrant
+verificaram a persistência após reabertura e a liberação do diretório temporário
+no encerramento do FastAPI. O rollback de `academia_test` foi conferido.
+
+Na raiz, os 16 testes do iniciador passaram:
+
+```powershell
+backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml tests/test_iniciador_local.py -o addopts=''
+```
+
+O ensaio cobre os processos e a comunicação em loopback. A janela do painel,
+o reconhecimento facial pelo CompreFace e a qualidade do corpus ficam fora
+desta rodada. Veja o [guia de prontidão](../instalacao/instalacao-local.md#comunicação-e-prontidão-local).
+
+## INF-03 — Segurança e persistência locais
+
+No Windows em 2026-11-25, foram feitos dois ciclos pelos mesmos métodos de
+inicialização e encerramento do painel. Durante a execução, `netstat -ano`
+confirmou todas as seis portas nativas somente em `127.0.0.1`. API, proxy,
+Mailpit e catraca responderam HTTP 200. A revisão `0027` e as referências de
+matrícula consultadas em `academia_dev` coincidiram nos dois ciclos. O
+conteúdo das caixas SQLite do Mailpit e da catraca e os metadados do Qdrant
+permaneceram iguais. As portas ficaram livres ao encerrar.
+
+Uma sondagem de PostgreSQL para uma porta de loopback sem servidor, com
+credenciais sintéticas, saiu com código 1 e diagnóstico sem senha, URL ou
+traceback. A inspeção do Compose privado do CompreFace confirmou uma única
+porta publicada em loopback e volume dedicado. O CompreFace ficou desligado
+nesta rodada. As ACLs foram inspecionadas em seis caminhos privados ativos,
+sem permissões de concessão para Todos, Usuários ou Usuários Autenticados.
+Nove caminhos privados representativos foram verificados com `git check-ignore`.
+`netsh advfirewall show allprofiles state` e `firewallpolicy` confirmaram os
+três perfis ligados e entrada bloqueada por padrão, sem alterar regras.
+
+Na raiz:
+
+```powershell
+backend/.venv/Scripts/python.exe -m pytest -c backend/pyproject.toml tests/test_iniciador_local.py -o addopts=''
+```
+
+**20 testes passaram**, incluindo rejeição de escuta ampla, proteção do
+ambiente do processo e diagnóstico sem dados do driver. Ruff, formato e
+mypy passaram nos dois arquivos Python afetados.
+
+Em `backend/`:
+
+```powershell
+.venv/Scripts/python.exe -m pytest -o addopts='' tests/contracts tests/knowledge/test_vector.py
+```
+
+**56 testes passaram**, incluindo persistência de dados sintéticos após
+reabertura do Qdrant e reinício do simulador. Nenhum backup de dados reais foi
+restaurado. O ensaio real verificou reinicialização com o mesmo armazenamento.
+[Procedimentos de segurança e persistência](../instalacao/instalacao-local.md#segurança-e-persistência-locais).
+
+## INF-04 — Instalação local e teste integrado
+
+### Comandos
+
+Use uma cópia dos fontes, um cluster PostgreSQL criado com `initdb` em
+diretório próprio, um `academia_test` vazio e um Mailpit com caixa isolada.
+As credenciais desse ambiente são sintéticas. Siga o
+[guia de instalação limpa](../instalacao/instalacao-local.md#verificação-em-uma-instalação-limpa).
+Use os executáveis locais de PostgreSQL, Mailpit, Python, Node e Edge.
+
+Em `frontend/`, rode `npm ci`, `npm run lint`, `npm run build` e
+`npm test -- --maxWorkers=1`. Em `backend/`:
+
+```powershell
+uv sync --locked
+uv run --locked --env-file ../.env alembic -c ../database/alembic.ini upgrade head
+uv run --locked --env-file ../.env alembic -c ../database/alembic.ini current
+uv run --locked --env-file ../.env alembic -c ../database/alembic.ini upgrade head
+```
+
+Faça o bootstrap e a carga de catálogo conforme o guia, depois encerre o
+iniciador e rode o Mailpit de teste junto ao PostgreSQL. Em `backend/`:
+
+```powershell
+$env:ACADEMIA_E2E = '1'
+uv run --locked --env-file ../.env python -m tests.acceptance --output ./data/e2e/inf04-N
+$env:ACADEMIA_TEST_MAILPIT = '1'
+$env:ACADEMIA_E2E_ACCESS = '1'
+$infraSuites = @(
+  'tests/contracts', 'tests/billing', 'tests/dashboard', 'tests/knowledge/test_vector.py',
+  'tests/access/test_authorization.py::test_live_authorization_and_confirmed_passage',
+  'tests/training/test_catalog.py::test_client_reads_and_exports_without_waiting_for_review',
+  'tests/training/test_catalog.py::test_publication_pending_review_and_rejection_replacement',
+  'tests/ai/test_chat_integration.py::test_chat_citations_isolation_inert_output_and_replay',
+  'tests/acceptance/test_reporting.py', 'tests/notifications/test_smtp.py',
+  'tests/access/test_browser_access.py'
+)
+uv run --locked --env-file ../.env pytest -o addopts='' @infraSuites
+```
+
+Use um diretório novo por rodada. Node 24 precisa estar no PATH. Para as
+opções de navegador, banco e relatórios, veja a
+[aceitação do MVP](aceitacao-mvp.md#instalação-e-execução).
+O [procedimento de backup e restauração](../instalacao/instalacao-local.md#backup-e-restauração)
+cobre PostgreSQL, o diretório Qdrant e os arquivos locais.
+
+### Evidência de execução
+
+Em 2026-11-25, uma cópia isolada dos fontes atuais foi instalada no Windows,
+sem copiar bancos, configurações privadas ou ambientes da instalação diária.
+`uv sync --locked --offline` criou o ambiente Python 3.12.14. Node 24.22.3
+e npm 11.6.2 instalaram 246 pacotes com `npm ci --offline`. A primeira
+tentativa do npm usou o cache padrão. A segunda usou o cache já preparado
+para o projeto. Os lockfiles permaneceram iguais. ESLint, build com
+TypeScript e **155 testes de frontend** passaram na cópia.
+
+O PostgreSQL 17.11 foi inicializado com `initdb`, autenticação SCRAM e porta
+própria em loopback. A primeira aplicação das migrations chegou à revisão
+`0027`. Reaplicar `upgrade head` preservou a revisão, 43 tabelas e 77
+chaves estrangeiras. Após bootstrap e carga sintética, dois ciclos do
+iniciador validaram API, proxy, login administrativo, catraca fictícia e
+persistência da conta e do catálogo. Ao encerrar, as portas do ensaio
+ficaram livres. O ensaio acionou os mesmos métodos do painel.
+
+O dump custom do `academia_dev` da cópia foi conferido com `pg_restore
+--list`, restaurado em um terceiro banco e comparado por revisão,
+estruturas e identificadores do administrador e dos equipamentos.
+Um ensaio separado copiou e restaurou um Qdrant sintético, corpus e arquivo
+privado em outro diretório. Reabertura, vetor, referência e conteúdo dos
+arquivos foram conferidos.
+
+- **Oito jornadas do MVP** passaram no Edge 158.0.4370.33, incluindo
+  consulta e chat antes do parecer, avaliação posterior e isolamento.
+  O runner confirmou rollback de `academia_test`.
+- **94 testes** de contrato, integração e regressão passaram na primeira
+  rodada. O teste de acesso no Edge falhou porque o link da compra existia
+  no menu e na tela de cobranças. Após limitar a seleção ao menu, **a
+  jornada adicional passou** e o rollback foi reconfirmado. A jornada
+  verifica passagem simulada, lotação, recibo persistente, indicação do
+  valor fictício e identificação do financeiro simulado no painel.
+
+Os arquivos privados do ensaio ficaram fora do repositório. A rodada usou
+LLM, corpus e reconhecimento facial sintéticos, com PostgreSQL, Qdrant,
+Mailpit, catraca fictícia e navegador reais. O INF-04 verifica a integração
+local, sem substituir as evidências de AI-06 e GATE-08.
+
+## VAL-01 — Conferência documental e do modelo
+
+Em 2026-11-25, a [matriz de rastreabilidade](../arquitetura/rastreabilidade.md)
+reuniu evidências para os 38 RF, 39 RN, 20 RNF e 15 MRF, incluindo as
+condições, recortes de validação e pendências. O PG-02 foi conferido com as
+evidências de UX-09, INF-04 e dos módulos complementares. AUL-02 está
+dispensado da entrega local. GATE-07 continua aplicável à eventual expansão.
+
+- O verificador documental confirma o hash do MER original, os links e as
+  dependências. O JSON lógico registra 44 tabelas, 361 colunas e 76 relações
+  declaradas. O PostgreSQL da instalação isolada de INF-04 retornou a revisão
+  0027, 43 tabelas, 357 colunas e 77 constraints de chave estrangeira no
+  schema `academia`. A conferência leu o catálogo do PostgreSQL.
+- Em `academia_test` isolado, Alembic fez a ida e volta 0027 → 0013 → 0027.
+  `compare_metadata` retornou lista vazia antes e depois da ida e volta.
+  O schema de teste foi revertido.
+- O teste `test_checkout_schema_roundtrip_with_no_simulations` passou.
+  `test_migration_roundtrip_and_metadata` falhou na asserção final
+  do número da revisão. Ele atualiza a `head` e espera literalmente 0026,
+  enquanto a revisão vigente é 0027. A falha foi reproduzida e permanece
+  registrada para correção no escopo de testes de VAL-02.
+
+Verificação documental na raiz:
+
+```powershell
+python scripts/verificar_documentacao.py
+python scripts/gerar_spec.py --check
+git diff --check
+```
+
+Reprodução da conferência de testes a partir de `backend/`, com PostgreSQL
+e `academia_test` isolados:
+
+```powershell
+uv run --locked --env-file ../.env pytest -o addopts='' tests/ai/test_generation.py::test_migration_roundtrip_and_metadata tests/billing/test_checkout.py::test_checkout_schema_roundtrip_with_no_simulations
+```
+
+O iniciador teve a compatibilidade conferida pelas evidências de INF-04.
+A revisão é documental e usa as rodadas existentes para UX, IA e CompreFace.
+
+## Revisão dos fluxos após VAL-01
+
+O relato manual identificou etapas intermediárias nos menus, falta de retorno
+visível ao selecionar a foto e idade disponível apenas depois de concluir o
+onboarding. A triagem anterior tratava de forma genérica a resposta `Não sei`.
+O ensaio inicial do CompreFace registrou HTTP 503 durante a inicialização da
+instância. Com a instância pronta, o ensaio de referência e reconhecimento com
+imagens sintéticas passou.
+
+| Fluxo | Critérios | Evidência local |
+|---|---|---|
+| Navegação e perfil | CA-05.5, RN-04 e RN-05 | Testes de sessão e de perfil. No Edge, E2E-08 verifica papéis acumulados, menu no celular, teclado, voltar, recarga e persistência do mesmo endereço nas duas áreas. PostgreSQL verifica edição e isolamento do titular. |
+| Referência facial | CA-22.2 e CA-22.5, RF-36, RN-10 | Testes `test_facial_reference.py` e `test_identification.py` com CompreFace real em coleção de teste e cenários controlados de falha. Verificam cadastro, substituição, reconhecimento, acesso privado à miniatura e descarte da anterior. Referências antigas sem miniatura mostram iniciais até o próximo cadastro. |
+| Matrícula, compra e frequência | CA-22.5, RF-23, RF-31, RN-08, RN-09, RN-35 e RN-36 | PostgreSQL, contrato REST e jornada Edge com reconhecimento controlado e simulador HTTP. A compra é consultada pelo atendente, e a matrícula também é registrada sem pagamento. A passagem confirmada muda a frequência. |
+| Onboarding e triagem | CA-13.5, RF-15, RF-19, MRF03, MRF08, MRF14 | Testes de rascunho, versão concluída e convite, E2E-01 e suíte determinística de triagem. A idade deriva do cadastro durante o preenchimento e fica congelada no histórico concluído. A medicação desconhecida isolada pode seguir para análise. Pendências essenciais e casos graves continuam tratados. E2E-03 e E2E-07 cobrem bloqueios e indisponibilidade com IA controlada. |
+| Schema e iniciador | RN-32 e RN-33 | Ida e volta 0029 → 0027 → 0029 com contas e referência sintéticas, sem divergência de metadados. O banco local recebeu backup antes de migrar de 0027 para 0029. O ciclo real do iniciador conferiu site, proxy, OpenAPI e encerramento. |
+
+As oito jornadas do MVP passaram no Edge com rollback confirmado. O build,
+o lint e a checagem de tipos do frontend passaram, assim como os 20 testes do
+iniciador. A avaliação determinística da IA passou com 133 testes, incluindo
+a recuperação vetorial com pesos E5 locais. A avaliação usou cenários sintéticos
+e não executou chamadas a LLM real. O aceite de VAL-02 depende de execução própria
+e inclui revisar a asserção legada de migration que ainda espera a revisão 0026.

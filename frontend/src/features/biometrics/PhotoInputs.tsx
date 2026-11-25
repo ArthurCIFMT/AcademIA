@@ -1,4 +1,4 @@
-import type { ChangeEvent } from "react";
+import { useEffect, useRef, type ChangeEvent } from "react";
 
 export function supportedPhoto(file: File) {
   return (!file.type || ["image/jpeg", "image/png"].includes(file.type))
@@ -23,4 +23,22 @@ export function PhotoInputs({ onChange }: { onChange: (event: ChangeEvent<HTMLIn
     <label>Selecionar foto <input type="file" accept="image/jpeg,image/png" onChange={onChange} /></label>
     <label>Tirar foto no celular <input type="file" accept="image/*" capture="user" onChange={onChange} /></label>
   </>;
+}
+
+export function SelectedPhoto({ file }: { file: File }) {
+  const preview = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    const image = preview.current;
+    if (!image || typeof URL.createObjectURL !== "function") return;
+    const url = URL.createObjectURL(file);
+    image.src = url;
+    return () => {
+      image.removeAttribute("src");
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
+  return <figure className="face-preview">
+    {typeof URL.createObjectURL === "function" && <img ref={preview} alt="Prévia da foto selecionada" />}
+    <figcaption role="status">Foto selecionada para envio · {file.name}</figcaption>
+  </figure>;
 }

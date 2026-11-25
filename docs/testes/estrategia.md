@@ -28,16 +28,18 @@ As suites disponíveis e seus comandos constam no [registro de comandos](comando
 - TST-01 configura/executa o roteiro E2E do MVP.
 - RAG-05 mede recuperação e AI-06 executa o conjunto de avaliação da IA.
 - VAL-02 reúne aceitação dos módulos finais, sem substituir testes anteriores.
-- Docker, Compose e Testcontainers ficam para depois do MVP e da maioria dos módulos.
+- Os testes acadêmicos usam serviços locais. A instância dedicada de CompreFace
+  do GATE-08 permanece como exceção em Docker.
 
 ## Banco e integrações
 
 Use banco de teste separado do banco de desenvolvimento. Testes devem limpar apenas
 dados de teste identificados, sem apagar bancos compartilhados. Cubra rollback,
 unicidade, concorrência e idempotência quando exigidos pela regra.
-Use adapters falsos para unitários de e-mail/LLM/facial/pagamento; integre o serviço
-real ou sandbox no aceite correspondente, registrando evidência e limitações.
-Não dispare cobranças reais nem envie mensagens a pessoas reais nos testes.
+Use adaptadores controlados para unitários de e-mail, LLM e biometria. Nos
+aceites correspondentes, registre a evidência das integrações selecionadas.
+O financeiro usa cenários sintéticos locais, e a caixa do Mailpit recebe os
+e-mails da demonstração.
 
 ## IA e corpus
 
@@ -73,7 +75,8 @@ cliente, instrutor não designado, bloqueio de saúde e conteúdo publicado imut
   irrelevante, incompatível ou conflitante impede gerar/publicar adaptação.
 - Cliente sem instrutor designado mantém consulta/chat; pendência de revisão é explícita.
 - Atendente autorizado matricula/renova sem pagamento ou comprovante; matrícula
-  funciona com estado financeiro ausente, pendente/recusado e gateway indisponível.
+  funciona com estado financeiro ausente, simulação pendente/recusada e falha da
+  operação financeira simulada.
 - Cliente com matrícula válida usa o fluxo facial sem consulta financeira obrigatória;
   usuário sem permissão, matrícula ausente/vencida e limites inválidos continuam recusados.
 - Cadastro biométrico exige matrícula; nova captura é comparada pelo CompreFace

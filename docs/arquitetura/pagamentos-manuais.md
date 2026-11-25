@@ -2,7 +2,7 @@
 
 Um administrador com conta e perfil ativos abre **Gerenciar clientes** e
 escolhe **Pagamentos de …** no cadastro correspondente. O registro contém
-valor em reais, data do pagamento, meio, referência do comprovante e autoria
+valor simulado em reais, data, meio simulado, referência fictícia e autoria
 obtida da sessão. A interface recebe a referência textual. O armazenamento
 consiste no identificador informado e nos dados do lançamento.
 

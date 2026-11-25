@@ -1,6 +1,8 @@
 # Revisão antes da implementação — preparação técnica
 
 Data: 2026-11-04. Preparação por delegação do responsável, após a revisão c6d1c82.
+Registro histórico. Consulte o [manifesto atual](../prompts/README.md) e o
+[SPEC](../../SPEC.md) para stack, escopo e progresso vigentes.
 [Prontidão e evidências](../arquitetura/preparacao-implementacao.md) é o índice vigente.
 
 ## Resultado

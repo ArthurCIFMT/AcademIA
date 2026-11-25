@@ -5,7 +5,7 @@ Data: 2026-11-04
 Origem: responsável delegou a seleção de frameworks, campos e regras técnicas;
 academia única foi escolhida expressamente. Escolhas registradas sem exigir nova aprovação.
 
-Decisão: execução inicial sem Docker. PostgreSQL 17 nativo no Windows, host
+Decisão: execução local nativa no Windows. PostgreSQL 17, host
 127.0.0.1:5432, bancos separados academia_dev e academia_test; usuário da aplicação
 não-superusuário e configuração por ambiente. FND-05 cria/aplica migrations e
 verifica banco real; não substituir integração por SQLite.
@@ -13,7 +13,7 @@ FastAPI/Uvicorn em 127.0.0.1:8000, um worker. Vite em 127.0.0.1:5173, proxy /api
 Qdrant local persistente só é aberto pelo backend (comandos de ingestão offline
 exigem backend parado ou exclusão mútua). Banco de teste em diretório temporário.
 Mailpit binário nativo Windows: SMTP 127.0.0.1:1025 e interface 127.0.0.1:8025,
-sem relay externo. Fornecedor de e-mail real pode ser adaptado depois.
+sem relay externo.
 Cargas/pesos, fotos e uploads são privados, via armazenamento local protegido;
 imagens públicas de equipamentos são expostas por rota controlada, sem caminho livre.
 
@@ -24,10 +24,13 @@ já instalados ou testes aprovados. Ausência de recurso impede só seu ensaio d
 
 CompreFace e catraca são pós-MVP. O [GATE-08](../preparacao-gate-08.md) registra
 a instância dedicada do CompreFace em Docker, autorizada em 22/11/2026, e o
-ensaio de prontidão. A API da catraca será executada nativamente nesta fase.
+ensaio de prontidão. A API da catraca é executada nativamente.
 Reservas de aulas ficam dispensadas no MVP e pendentes de escopo futuro
-(GATE-07). Pagamentos automáticos continuam tardios (GATE-09).
-A containerização do AcademIA permanece na etapa final.
+(GATE-07). O GATE-09 define financeiro simulado e sem gateway.
+Os cartões INF validam a instalação local e o CompreFace conserva seu Docker dedicado.
+O [guia de segurança local](../../instalacao/instalacao-local.md#segurança-e-persistência-locais)
+registra as regras do firewall do Windows, os diretórios persistentes e a
+verificação de prontidão do iniciador.
 
 Fontes: [PostgreSQL Windows](https://www.postgresql.org/download/windows/),
 [Mailpit nativo](https://mailpit.axllent.org/docs/install/).

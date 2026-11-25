@@ -68,6 +68,7 @@ def test_dashboard_openapi_is_wired_to_the_application(
         "funcionarios",
         "lotacao",
         "frequencia",
+        "financeiro",
     }
 
 
@@ -208,6 +209,12 @@ def test_dashboard_counts_and_recovers_from_failed_indicator(
     empty = service.overview(sessions, at=AT).model_dump(mode="json")
     for key in ("clientes_ativos", "clientes_matriculados", "funcionarios", "lotacao"):
         assert empty[key] == {"estado": "DISPONIVEL", "valor": 0}
+    assert empty["financeiro"]["valor"]["mes"] == {
+        "cobrado": "0.00",
+        "recebido": "0.00",
+        "pendente": "0.00",
+        "vencido": "0.00",
+    }
 
     with sessions.begin() as db:
         ids = seed_people(db)
@@ -276,3 +283,14 @@ def test_dashboard_counts_and_recovers_from_failed_indicator(
             "clientes_ativos": {"estado": "INDISPONIVEL"},
         }
         assert "detalhe-sintetico-privado" not in partial.text + caplog.text
+
+        monkeypatch.setattr(
+            service, "financial_overview", lambda db, *, at: failed_read(db)
+        )
+        finance_failure = http.get(ROUTE)
+        assert finance_failure.status_code == 200
+        assert finance_failure.json() == {
+            **partial.json(),
+            "financeiro": {"estado": "INDISPONIVEL"},
+        }
+        assert "detalhe-sintetico-privado" not in finance_failure.text + caplog.text

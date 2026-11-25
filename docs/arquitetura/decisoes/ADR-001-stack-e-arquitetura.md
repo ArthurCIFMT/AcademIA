@@ -8,7 +8,8 @@ academia única foi escolhida expressamente. Escolhas registradas sem exigir nov
 Decisão: monólito modular em Python 3.12, FastAPI, Pydantic 2, SQLAlchemy 2.x,
 Alembic e psycopg 3; uv para ambiente/lockfile; Ruff e mypy; pytest + HTTPX.
 Frontend: Node 24 LTS, npm, React + TypeScript estrito + Vite, React Router,
-React Hook Form + Zod para formulários; Vitest/Testing Library e Playwright.
+formulários com componentes React e validação do backend; Vitest/Testing Library
+e Playwright.
 Fixar versões exatas compatíveis nos lockfiles durante FND-04/FND-07; não instalar
 nada nem inventar comandos de teste executados nesta preparação documental.
 

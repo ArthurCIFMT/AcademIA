@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import { Button, StatusMessage } from "../../ui/primitives";
 import { SourceList } from "../ai-training/SourceList";
+import { healthFeedback, onboardingForReason } from "../onboarding/triageFeedback";
 import type { Diff, Turn } from "./api";
 
 const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo" });
@@ -36,7 +37,7 @@ export function ChatTurn({ turn, onCompare, announce = false }: {
   turn: Turn; onCompare: (turn: Turn) => Promise<void>; announce?: boolean;
 }) {
   const question = turn.finalidade === "DUVIDA";
-  const status = reasons[turn.motivo] ?? (question && turn.estado === "ABSTENCAO"
+  const status = healthFeedback(turn.motivo) ?? reasons[turn.motivo] ?? (question && turn.estado === "ABSTENCAO"
     ? "As fontes consultadas não sustentaram uma resposta para esta pergunta."
     : states[turn.estado] ?? "Consulte o estado salvo");
   return <article className="assistant-panel chat-turn">
@@ -57,7 +58,7 @@ export function ChatTurn({ turn, onCompare, announce = false }: {
         <SourceList sources={turn.fontes} />
       </details>}
       {["DADOS_INSUFICIENTES", "BLOQUEADA"].includes(turn.estado) && !question &&
-        <p><Link to="/area/cliente/onboarding">Conferir meus dados de treino</Link></p>}
+        <p><Link to={onboardingForReason(turn.motivo)}>Conferir meus dados de treino</Link></p>}
       {turn.versao_publicada_id && <div className="assistant-row">
         <Link to={"/area/cliente/treino-ia?solicitacao=" + encodeURIComponent(turn.solicitacao_id)}>Consultar versão e parecer</Link>
         <Button variant="secondary" onClick={() => void onCompare(turn)}>Comparar versões</Button>

@@ -74,6 +74,12 @@
           "type": "integer",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "endereco",
+          "type": "varchar(300)",
+          "flags": "",
+          "ref": null
         }
       ],
       "unique": []
@@ -1916,6 +1922,12 @@
           "type": "timestamptz",
           "flags": "required",
           "ref": null
+        },
+        {
+          "name": "foto_perfil",
+          "type": "bytea",
+          "flags": "",
+          "ref": null
         }
       ],
       "unique": []
@@ -2279,7 +2291,7 @@
     {
       "name": "pagamento",
       "owner": "MOD-08",
-      "note": "Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id",
+      "note": "Registro manual e compra simulada; compra exige plano_id, nome contratado e instante; correções manuais preservam vínculo do cliente",
       "columns": [
         {
           "name": "id",
@@ -2304,6 +2316,18 @@
           "type": "uuid",
           "flags": "",
           "ref": "plano.id"
+        },
+        {
+          "name": "plano_nome_snapshot",
+          "type": "varchar(100)",
+          "flags": "",
+          "ref": null
+        },
+        {
+          "name": "simulado_em",
+          "type": "timestamptz",
+          "flags": "",
+          "ref": null
         },
         {
           "name": "origem",

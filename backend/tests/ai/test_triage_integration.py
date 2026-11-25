@@ -178,7 +178,7 @@ def test_authorized_snapshot_catalog_and_minimal_audit(
                 select(AuditRecord).where(AuditRecord.acao == "ai.triage.checked")
             )
         )
-        assert len(logs) == 3 and all(log.motivo == "policy_v1" for log in logs)
+        assert len(logs) == 3 and all(log.motivo == "policy_v2" for log in logs)
 
 
 @pytest.mark.integration

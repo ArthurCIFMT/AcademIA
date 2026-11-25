@@ -124,6 +124,38 @@ async def _login(api: httpx.AsyncClient, email: str) -> dict[str, str]:
     return {"X-CSRF-Token": response.json()["csrf_token"]}
 
 
+@pytest.mark.integration
+@pytest.mark.anyio
+async def test_own_address_is_optional_and_private(api: httpx.AsyncClient) -> None:
+    route = "/api/v1/meu-perfil"
+    assert (await api.get(route)).status_code == 401
+    staff = await _login(api, _ATTENDANT)
+    initial = await api.get(route)
+    assert initial.headers["cache-control"] == "no-store"
+    assert initial.json()["endereco"] is None
+    assert (
+        await api.patch(f"{route}/endereco", json={"endereco": "A"})
+    ).status_code == 403
+    assert (
+        await api.patch(
+            f"{route}/endereco", headers=staff, json={"endereco": "A", "email": _ADMIN}
+        )
+    ).status_code == 422
+    assert (
+        await api.patch(
+            f"{route}/endereco", headers=staff, json={"endereco": "  Rua de teste  "}
+        )
+    ).json()["endereco"] == "Rua de teste"
+    assert (await api.get(route)).json()["endereco"] == "Rua de teste"
+    await _login(api, _ADMIN)
+    assert (await api.get(route)).json()["endereco"] is None
+    staff = await _login(api, _ATTENDANT)
+    assert (await api.get(route)).json()["endereco"] == "Rua de teste"
+    assert (
+        await api.patch(f"{route}/endereco", headers=staff, json={"endereco": None})
+    ).json()["endereco"] is None
+
+
 def _form(email: str) -> dict[str, object]:
     return {"email": email, "nome": "Pessoa Sintética", "data_nascimento": _BIRTH}
 

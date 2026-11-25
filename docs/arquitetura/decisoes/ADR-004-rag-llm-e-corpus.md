@@ -5,11 +5,12 @@ Data: 2026-11-04
 Origem: responsável delegou a seleção de frameworks, campos e regras técnicas;
 academia única foi escolhida expressamente. Escolhas registradas sem exigir nova aprovação.
 
-Decisão: Qdrant especializado por qdrant-client em modo local persistente no MVP,
+Decisão: Qdrant especializado por qdrant-client em modo local persistente,
 sem servidor/Docker inicial; um singleton por processo e diretório local ignorado.
 Não é mock nem PostgreSQL vetorial. Consultas/buscas por porta do módulo knowledge.
-Na fase Docker, modo servidor Qdrant com testes de contrato e reindexação; não
-compartilhar arquivo local entre vários processos. Configurar modo/path/url por ambiente.
+Para a entrega acadêmica, manter um único processo e configurar o diretório
+persistente por ambiente. Modo servidor e reindexação por migração de infraestrutura
+ficam fora do escopo atual.
 
 Embeddings locais: intfloat/multilingual-e5-small, sentence-transformers, CPU,
 384 dimensões normalizadas, cosseno. Prefixos query: e passage:. Baixar pesos só

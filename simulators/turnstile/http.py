@@ -39,6 +39,8 @@ def deliver_callback(settings: Settings, passage: Passage) -> None:
         raise RejectedOperation(504, "CALLBACK_TIMEOUT") from None
     except httpx.HTTPError:
         raise RejectedOperation(502, "CALLBACK_UNAVAILABLE") from None
+    if response.status_code == 410:
+        raise RejectedOperation(410, "CALLBACK_EXPIRED")
     if response.status_code not in {200, 201}:
         raise RejectedOperation(502, "CALLBACK_REJECTED")
     try:
@@ -113,7 +115,7 @@ def create_app(
             401: {"description": "Credencial inválida"},
             404: {"description": "Comando não encontrado"},
             409: {"description": "Negação ou passagem conflitante"},
-            410: {"description": "Comando expirado"},
+            410: {"description": "Comando expirado ou primeira passagem fora do prazo"},
             502: {"description": "Retorno indisponível, recusado ou inválido"},
             504: {"description": "Timeout no retorno"},
         },

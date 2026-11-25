@@ -10,6 +10,16 @@ from app.contracts.structured import StrictModel, digest
 from app.modules.ai.schemas.execution import Stage
 
 
+class RetrievalConfig(StrictModel):
+    chunk_tokens: Literal[300]
+    overlap_tokens: Literal[48]
+    top_k: Annotated[int, Field(strict=True, ge=1, le=5)]
+    max_top_k: Literal[8]
+    min_score_inicial: Annotated[float, Field(ge=0, le=1)]
+    metric: Literal["cosine"]
+    max_chunks_pacote: Literal[5]
+
+
 class Config(StrictModel):
     versao: Literal[2]
     provider: Literal["groq", "gemini"]
@@ -21,7 +31,7 @@ class Config(StrictModel):
     temperature: float
     concurrency: Literal[1]
     embedding: dict[str, object]
-    retrieval: dict[str, object]
+    retrieval: RetrievalConfig
     limits: dict[str, object]
     retention: dict[str, object]
     quality: dict[str, object]

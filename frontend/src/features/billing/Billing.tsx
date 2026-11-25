@@ -40,7 +40,7 @@ function Revisions({ clientId, item, close }: { clientId: string; item: Charge; 
   </>;
 }
 
-function BillingPage({ admin }: { admin?: AdminContext }) {
+function BillingPage({ admin, checkoutPath }: { admin?: AdminContext; checkoutPath?: string }) {
   const clientId = admin?.clientId;
   const load = useCallback((page: number, signal: AbortSignal) => charges(clientId, page, signal), [clientId]);
   const { result, reload } = useBillingPage(load);
@@ -57,6 +57,8 @@ function BillingPage({ admin }: { admin?: AdminContext }) {
 
   return <section className="directory" aria-labelledby="billing-title">
     <h2 id="billing-title" ref={heading} tabIndex={-1}>{title}</h2>
+    <p className="directory-meta">Os valores desta tela são simulados para a demonstração acadêmica.</p>
+    {checkoutPath && <Link to={checkoutPath}>Simular compra de plano</Link>}
     {admin && <Link to={admin.clientsPath}>Voltar à lista de clientes</Link>}
     {admin && result && <p>{result.cliente_nome}</p>}
     {notice && <StatusMessage state="success" title={notice} />}
@@ -97,8 +99,8 @@ function BillingPage({ admin }: { admin?: AdminContext }) {
   </section>;
 }
 
-export function ClientBilling() {
-  return <BillingPage />;
+export function ClientBilling({ checkoutPath }: { checkoutPath: string }) {
+  return <BillingPage checkoutPath={checkoutPath} />;
 }
 
 export function AdminBilling({ clientsPath, csrf }: { clientsPath: string; csrf: string }) {

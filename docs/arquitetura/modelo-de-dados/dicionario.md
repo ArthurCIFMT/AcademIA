@@ -26,6 +26,7 @@ Singleton id=1
 | estado | varchar(20) | required | — |
 | criado_em | timestamptz | required | — |
 | revision | integer | required | — |
+| endereco | varchar(300) | opcional, alterável somente pelo próprio usuário | — |
 
 ## usuario_papel — MOD-01
 
@@ -531,6 +532,7 @@ Unicidade parcial por cliente para referência ATIVA e para candidata PREPARANDO
 | estado | varchar(25) | required | — |
 | cadastrada_por | uuid | required | funcionario.usuario_id |
 | criada_em | timestamptz | required | — |
+| foto_perfil | bytea | miniatura privada opcional da referência facial | — |
 
 ## evento_acesso — MOD-07
 
@@ -627,7 +629,8 @@ Histórico append-only. A combinação de cobrança e número de revisão é ún
 
 ## pagamento — MOD-08
 
-Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo cliente; compra de plano exige plano_id.
+Registro manual e compra simulada. A compra exige plano_id, nome contratado e instante.
+Correções manuais preservam o vínculo com o cliente.
 
 | Campo | Tipo | Regras | Referência |
 |---|---|---|---|
@@ -635,6 +638,8 @@ Registro manual e futuras tentativas de gateway; correções vinculadas ao mesmo
 | cobranca_id | uuid | opcional, mesmo cliente | cobranca.id |
 | cliente_id | uuid | required | cliente.usuario_id |
 | plano_id | uuid | opcional | plano.id |
+| plano_nome_snapshot | varchar(100) | exigido para compra simulada | — |
+| simulado_em | timestamptz | exigido para compra simulada | — |
 | origem | varchar(25) | required | — |
 | referencia_externa | varchar(150) | opcional | — |
 | valor | numeric(12,2) | required | — |

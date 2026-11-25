@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Button, StatusMessage } from "../../ui/primitives";
 import { loadDashboard, type DashboardOverview, type Frequency, type Indicator } from "./api";
+import { FinancialPanel } from "./FinancialPanel";
 import "./dashboard.css";
 
 const number = new Intl.NumberFormat("pt-BR");
@@ -104,6 +105,7 @@ export function Dashboard() {
           <Metric label="Funcionários cadastrados" result={result.funcionarios} />
           <Metric label="Pessoas presentes agora" result={result.lotacao} />
         </dl>
+        {result.financeiro && <FinancialPanel result={result.financeiro} />}
         <div className="dashboard-activity">
           {result.frequencia.estado === "DISPONIVEL" ? <Activity data={result.frequencia.valor} />
             : <StatusMessage state="error" title="Frequência temporariamente indisponível." />}

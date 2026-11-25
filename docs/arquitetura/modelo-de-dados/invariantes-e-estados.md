@@ -79,10 +79,10 @@ Módulos e ownership preservados. Cada entrega cria apenas suas próprias tabela
   Datas civis início<=hoje<=fim no fuso da academia; ausente/futura/vencida inválida.
   Limites contratados congelados. O [GATE-08](../preparacao-gate-08.md) registra
   o limite por dia civil no fuso da academia e a renovação sem sobreposição.
-- Cobrança permite múltiplas tentativas; referência externa única por provedor quando
-  existir. Compra de plano exige pagamento.plano_id com plano ativo na contratação;
-  valor contratado permanece no pagamento, sem depender de preço futuro. O campo é
-  opcional só para lançamentos que não representam compra de plano.
+- Cobrança permite múltiplos lançamentos vinculados. A
+  [compra simulada](../compra-simulada.md) exige plano ativo com preço; plano,
+  nome, preço e instante contratados permanecem no recibo. O UUID identifica
+  uma operação idempotente. Pendente ou recusado não tem data de confirmação.
   Confirmação não matricula nem cadastra face. Dinheiro decimal e não-negativo.
   No [registro manual](../pagamentos-manuais.md), o valor é positivo, a referência
   é única entre lançamentos confirmados e a correção preserva o registro anterior.

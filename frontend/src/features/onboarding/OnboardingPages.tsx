@@ -75,19 +75,21 @@ function mutationError(error: unknown, invite: boolean) {
   return "Não foi possível confirmar a operação. Seus dados continuam nesta tela. Tente novamente.";
 }
 
-function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
+function Editor({ initial, scope, onSaved, onComplete, onReload, onBack, currentAge, openHealth = false }: {
   initial: Draft | null;
   scope: Scope;
   onSaved?: (draft: Draft) => void;
   onComplete: (snapshot: Snapshot | null) => void;
   onReload: () => void;
   onBack?: () => void;
+  currentAge?: number | null;
+  openHealth?: boolean;
 }) {
   const base = scope.kind === "own" ? scope.base : null;
   const [data, setData] = useState<FormData>(() => initial?.dados ?? base?.dados ?? {});
   const [revision, setRevision] = useState(initial?.revisao ?? null);
   const [draftNumber, setDraftNumber] = useState(initial?.numero ?? null);
-  const [step, setStep] = useState<OnboardingStep>("rotina");
+  const [step, setStep] = useState<OnboardingStep>(openHealth ? "saude" : "rotina");
   const [invalid, setInvalid] = useState<OnboardingValidationError | null>(null);
   const [focusRequest, setFocusRequest] = useState<{ field?: string } | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -174,6 +176,7 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
 
   return (
     <form ref={formRef} className="onboarding-form" autoComplete="off" noValidate onSubmit={handleSubmit}>
+      {typeof currentAge === "number" && <p>Idade atual · {ageFormat.format(currentAge)}</p>}
       <p>
         {base && <>Versão vigente {base.numero}. </>}
         {draftNumber === null ? "Nenhum rascunho salvo." : `Rascunho da versão ${draftNumber} · revisão ${revision}.`}
@@ -249,12 +252,12 @@ function Editor({ initial, scope, onSaved, onComplete, onReload, onBack }: {
   );
 }
 
-function OwnForm({ initialDraft, initialSnapshot, csrf, reload }: {
-  initialDraft: Draft | null; initialSnapshot: Snapshot | null; csrf: string; reload: () => void;
+function OwnForm({ initialDraft, initialSnapshot, csrf, reload, currentAge, openHealth }: {
+  initialDraft: Draft | null; initialSnapshot: Snapshot | null; csrf: string; reload: () => void; currentAge: number; openHealth: boolean;
 }) {
   const [snapshot, setSnapshot] = useState(initialSnapshot);
   const [draft, setDraft] = useState(initialDraft);
-  const [editing, setEditing] = useState(initialSnapshot === null);
+  const [editing, setEditing] = useState(initialSnapshot === null || openHealth);
 
   if (!editing && snapshot) {
     return (
@@ -267,18 +270,21 @@ function OwnForm({ initialDraft, initialSnapshot, csrf, reload }: {
     );
   }
   return <Editor
-    initial={draft} scope={{ kind: "own", csrf, base: snapshot }}
+    initial={draft} scope={{ kind: "own", csrf, base: snapshot }} currentAge={currentAge} openHealth={openHealth}
     onSaved={setDraft} onReload={reload} onBack={snapshot ? () => setEditing(false) : undefined}
     onComplete={(next) => { setSnapshot(next); setDraft(null); setEditing(false); }}
   />;
 }
 
 export function OwnOnboardingPage({ csrf }: { csrf: string }) {
+  const { search } = useLocation();
+  const openHealth = new URLSearchParams(search).get("etapa") === "saude";
   return (
     <>
       <h3>Meu onboarding</h3>
       <Loader load={ownOnboarding}>{(value, reload) =>
-        <OwnForm initialDraft={value.rascunho} initialSnapshot={value.concluido} csrf={csrf} reload={reload} />
+        <OwnForm key={openHealth ? "saude" : "padrao"} initialDraft={value.rascunho} initialSnapshot={value.concluido}
+          csrf={csrf} reload={reload} currentAge={value.idade_atual} openHealth={openHealth} />
       }</Loader>
     </>
   );
@@ -292,7 +298,7 @@ function RestrictedForm({ initial, reload }: { initial: Draft; reload: () => voi
       <Link to="/login">Entrar para consultar meus dados</Link>
     </>
   );
-  return <Editor initial={initial} scope={{ kind: "invite", draftId: initial.id }}
+  return <Editor initial={initial} scope={{ kind: "invite", draftId: initial.id }} currentAge={initial.idade_atual}
     onReload={reload} onComplete={() => setDone(true)} />;
 }
 

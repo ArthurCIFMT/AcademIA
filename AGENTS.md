@@ -30,10 +30,9 @@ controle de acesso, agenda, equipamentos, indicadores e geração assistida por 
 
 ## Estágio atual
 
-O MVP acadêmico está concluído, com TST-01 aprovado e PG-01 fechado.
-A evolução permanece incremental; a revisão manual continua e a reformulação
-visual UX-01–UX-09 está planejada. O primeiro cartão dessa trilha é UX-01; não
-executar todos juntos nem considerar a reformulação já implementada.
+O MVP acadêmico está concluído, com TST-01 aprovado, PG-01 fechado e UX-09
+concluído. A evolução permanece incremental, uma entrega por vez. Use os estados
+do manifesto para escolher o próximo cartão elegível.
 O manifesto em
 `docs/prompts/README.md` registra o estado das entregas. Antes de implementar ou
 alterar um módulo, consulte a visão geral/invariantes de `SPEC.md` e os capítulos
@@ -91,7 +90,7 @@ necessária para sua entrega.
 - O atendente autorizado pode matricular e renovar o cliente sem pagamento
   confirmado. Matrícula e acesso acadêmico não dependem do módulo financeiro.
 - Reconhecimento facial usa CompreFace; a catraca será uma API externa fictícia.
-- Qdrant local persistente por qdrant-client no MVP (um processo, sem Docker);
+- Qdrant local persistente por qdrant-client (um processo, sem servidor separado);
   banco vetorial especializado separado do PostgreSQL. Embeddings locais E5-small
   multilíngue, 384 dimensões, prefixos query:/passage: e cosseno; ADR-004.
 - Equipamentos entram no MVP: administrador mantém disponibilidade e cada variação
@@ -104,8 +103,10 @@ necessária para sua entrega.
   permitidas com recuperação multilíngue e explicação/tradução fiel rastreável.
 - Dados de exemplo de equipamentos e exercícios usam fixtures/seeds sintéticos
   de testes, conforme o escopo da entrega de implementação.
-- Deixar pagamentos e cobrança automatizada para uma fase posterior.
-- Containerizar a aplicação somente depois do MVP e da maioria dos módulos.
+- Financeiro acadêmico simulado, com registros locais. Compra simulada e
+  indicadores seguem os cartões financeiros, sem transação real ou gateway.
+- Executar a aplicação localmente no Windows. Docker fica restrito à instância
+  dedicada do CompreFace já autorizada. As integrações de IA mantêm seus contratos.
 
 ## Limites entre módulos
 
@@ -304,6 +305,11 @@ A saída deve ser nova; consulte docs/testes/aceitacao-mvp.md.
 Frontend, a partir de `frontend/` com Node 24 e npm 11: `npm ci`, `npm test`,
 `npm run lint`, `npm run typecheck` e `npm run build`. Ver
 [guia do frontend](frontend/README.md) para inicialização.
+
+INF, conforme o [guia de instalação local](docs/instalacao/instalacao-local.md):
+`uv sync --locked --check` em `backend/`, `npm ci` e `npm run build` em
+`frontend/`, e verificação de `/health` e `/openapi.json` com backend em
+loopback. Veja a evidência e os detalhes de ambiente em `docs/testes/comandos.md`.
 
 A inicialização está no [guia do backend](backend/README.md) e no
 [guia do banco](database/README.md). Os demais

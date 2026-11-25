@@ -16,6 +16,7 @@ from app.modules.access.biometrics.provider import (
     CompreFaceSettings,
     FacialProvider,
 )
+from app.modules.access.biometrics.service import read_profile_photo
 from app.modules.access.events.contracts import AccessEventsSettings
 from app.modules.access.events.http import identification_router
 from app.modules.access.integrations.turnstile.contracts import AccessSettings
@@ -26,6 +27,10 @@ from app.modules.ai.http import generation_router
 from app.modules.ai.triage.http import triage_router
 from app.modules.assignments.http import install_assignments
 from app.modules.billing.charges.http import charges_router
+from app.modules.billing.payments.checkout_http import (
+    attendant_checkout_router,
+    simulated_checkout_router,
+)
 from app.modules.billing.payments.http import manual_payments_router
 from app.modules.classes.http import classes_router
 from app.modules.dashboard.http import dashboard_router
@@ -39,6 +44,7 @@ from app.modules.memberships.http import memberships_router
 from app.modules.notifications.http import notification_router
 from app.modules.onboarding.http import onboarding_router
 from app.modules.people.clients_http import client_router
+from app.modules.people.own_profile import own_profile_router
 from app.modules.people.staff_http import staff_router
 from app.modules.training.http import exercise_router
 from app.modules.training.review_http import review_queue_router
@@ -80,6 +86,7 @@ def create_app(
     app.include_router(staff_router(get_sessions))
     app.include_router(dashboard_router(get_sessions))
     app.include_router(client_router(get_sessions))
+    app.include_router(own_profile_router(get_sessions, read_profile_photo))
     app.include_router(onboarding_router(get_sessions))
     app.include_router(triage_router(get_sessions))
     app.include_router(generation_router(get_sessions))
@@ -88,6 +95,8 @@ def create_app(
     app.include_router(classes_router(get_sessions))
     app.include_router(memberships_router(get_sessions))
     app.include_router(manual_payments_router(get_sessions))
+    app.include_router(simulated_checkout_router(get_sessions))
+    app.include_router(attendant_checkout_router(get_sessions))
     app.include_router(
         charges_router(get_sessions, policy=settings.billing_overdue_policy)
     )

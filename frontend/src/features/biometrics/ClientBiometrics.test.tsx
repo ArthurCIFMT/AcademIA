@@ -35,8 +35,10 @@ test("envia a foto por JSON e exibe somente o estado da referência", async () =
   fireEvent.change(screen.getByLabelText("Selecionar foto"), {
     target: { files: [new File(["foto"], "teste.jpg", { type: "image/jpeg" })] },
   });
+  expect(screen.getByText("Foto selecionada para envio · teste.jpg")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Cadastrar foto" }));
-  expect(await screen.findByText("Referência facial cadastrada.")).toBeTruthy();
+  expect(await screen.findByText("Foto enviada. Referência facial cadastrada.")).toBeTruthy();
+  expect(screen.queryByText(/Foto selecionada para envio/)).toBeNull();
   expect(screen.queryByRole("img")).toBeNull();
 });
 

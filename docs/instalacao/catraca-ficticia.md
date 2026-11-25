@@ -49,10 +49,11 @@ inicialização normal abre apenas o armazenamento já preparado.
    Reutilizar o ID com conteúdo divergente, tentar outro evento para o mesmo
    comando ou simular passagem de um comando `DENY` retorna 409.
    Comando expirado para nova operação retorna 410.
-5. Se o retorno falhar, a API devolve 502 ou 504. Basta reenviar o mesmo
-   `event_id` para entregar o evento já registrado com o instante original,
-   inclusive após o fim da validade. Uma nova passagem exige autorização válida
-   no instante da ocorrência. O destino deduplica pelos mesmos identificadores.
+5. Para falha temporária (502/504), reenvie o mesmo `event_id` com o instante
+   original. Após a validade, o reenvio ainda recupera um recibo já gravado
+   pelo AcademIA. Se o AcademIA nunca confirmou a passagem e o prazo terminou,
+   o simulador retorna 410 `CALLBACK_EXPIRED`. Para tentar uma nova passagem,
+   solicite nova autorização. Frequência e lotação só mudam após confirmação.
 
 Para testar falha do equipamento, configure `ACADEMIA_TURNSTILE_FAULT` como
 `UNAVAILABLE` (HTTP 503) ou `TIMEOUT` (HTTP 504 após uma espera controlada),

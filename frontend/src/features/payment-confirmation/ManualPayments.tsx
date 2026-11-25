@@ -86,7 +86,7 @@ function PaymentForm({ draft, clientId, csrf, close, saved, chargeId }: {
             {Object.entries(methods).map(([key, value]) => <option key={key} value={key}>{value}</option>)}
           </select>
         </label>
-        <label className="ac-field">Referência do comprovante
+        <label className="ac-field">Referência fictícia do pagamento
           <input className="ac-field-control" name="referencia_externa" required maxLength={150}
             defaultValue={previous?.referencia_externa} />
         </label>
@@ -153,6 +153,7 @@ function PaymentHistory({ clientId, back, csrf }: { clientId: string; back: stri
 
   return <section className="directory" aria-labelledby="payments-title">
     <h2 id="payments-title" ref={heading} tabIndex={-1}>{draft ? titles[draft.kind] : "Pagamentos manuais"}</h2>
+    <p className="directory-meta">Simulação acadêmica. Use somente referências fictícias.</p>
     <Link to={back}>Voltar à lista de clientes</Link>
     {data && <p>{data.cliente_nome}</p>}
     {notice && <StatusMessage state="success" title={notice} />}

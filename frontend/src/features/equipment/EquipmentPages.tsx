@@ -38,12 +38,12 @@ function EquipmentPhoto({ item }: { item: Equipment }) {
     : <p className="equipment-photo-fallback">{source ? "Foto indisponível" : "Foto não cadastrada"}</p>;
 }
 
-export function EquipmentCatalogPage() {
+export function EquipmentCatalogPage({ inClientArea = false }: { inClientArea?: boolean }) {
   const { page, error, reload } = useEquipmentPage(equipmentCatalog);
   return (
     <section className="directory" aria-labelledby="equipment-catalog-title">
       <h2 id="equipment-catalog-title">Equipamentos disponíveis</h2>
-      <p><Link to="/">Voltar ao início</Link></p>
+      {!inClientArea && <p><Link to="/">Voltar ao início</Link></p>}
       {page ? (
         <>
           {page.itens.length ? (

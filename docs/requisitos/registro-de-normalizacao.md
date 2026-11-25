@@ -8,7 +8,7 @@ prompts de implementação.
 |---|---|---|
 | RF-03/CA-03.4 | “Cliente habilitado” passou a “elegível à biometria”. | Conta, matrícula, biometria e autorização são estados distintos. |
 | RF-05 | “Perfil” passou a papéis acumuláveis. | Uma identidade pode ser cliente, administrador, atendente e/ou instrutor. |
-| RF-06/CA-06.4 | SMTP em Docker saiu do critério funcional. | Containerização é requisito não funcional tardio. |
+| RF-06/CA-06.4 | SMTP em Docker saiu do critério funcional. | Mailpit é executado localmente. |
 | RF-15/RF-16/RF-17/RF-19/RF-35 | Publicação tecnicamente validada independe do aceite posterior do instrutor. | Correção explícita do responsável: cliente vê treino e usa chat antes do parecer. |
 | RF-21/CA-21.4 | Limiar inicial de correspondência de 95%, separado da detecção/qualidade. | Não equivale à acurácia de 95%; a métrica é mapeada pelo adapter facial. |
 | RF-24/RF-25 | Mantidos separados. | Cálculo de domínio e exibição são capacidades testáveis distintas. |

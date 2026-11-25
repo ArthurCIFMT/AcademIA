@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 import { ApiError, type Session } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { ClientMemberships } from "../memberships/Memberships";
 import { changeClient, getClient, listClients, type ClientDetail, type ClientPage } from "./api";
 import { DirectoryPager, DirectoryTag, FirstAccessInvite, useDirectoryFocus } from "./directory-ui";
 
@@ -37,22 +38,46 @@ export function ClientDirectory({
   onAccessChange,
   attendanceBase,
   paymentsBase,
+  membershipAccess = false,
 }: {
   session: Session;
   onAccessChange: () => Promise<void>;
   attendanceBase?: string;
   paymentsBase?: string;
+  membershipAccess?: boolean;
 }) {
-  const [filter, setFilter] = useState({ term: "", page: 1 });
+  const [query, setQuery] = useSearchParams();
+  const [filter, setFilter] = useState(() => {
+    const page = Number(query.get("pagina"));
+    return { term: membershipAccess ? (query.get("busca") ?? "").slice(0, 254) : "",
+      page: membershipAccess && Number.isInteger(page) && page > 0 && page <= 1_000_000 ? page : 1 };
+  });
+  const [returnClient] = useState(() => membershipAccess ? query.get("cliente") : null);
+  const [returnToMembership] = useState(() => query.get("aba") !== "cadastro");
   const [directory, setDirectory] = useState<ClientPage | null>(null);
   const [listError, setListError] = useState("");
   const [form, setForm] = useState<ClientDetail | null | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const [membershipTab, setMembershipTab] = useState(false);
   const pending = useRef(false);
   const heading = useDirectoryFocus(form !== undefined);
   const birthDateRange = clientBirthDateRange();
+
+  useEffect(() => {
+    if (!returnClient) return;
+    const controller = new AbortController();
+    void getClient(returnClient, controller.signal).then(
+      item => {
+        if (controller.signal.aborted) return;
+        setForm(item);
+        setMembershipTab(returnToMembership);
+      },
+      () => { if (!controller.signal.aborted) setError("Não foi possível retomar o cadastro do cliente."); },
+    );
+    return () => controller.abort();
+  }, [returnClient, returnToMembership]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -89,6 +114,18 @@ export function ClientDirectory({
     setError("");
     setNotice("");
     setForm(next);
+    setMembershipTab(false);
+    if (membershipAccess && query.has("cliente")) {
+      const filterQuery = new URLSearchParams({ busca: filter.term, pagina: String(filter.page) });
+      setQuery(filterQuery, { replace: true });
+    }
+  }
+
+  function showClient(id: string, showMembership: boolean) {
+    void run(async () => {
+      setForm(await getClient(id));
+      setMembershipTab(showMembership);
+    });
   }
 
   function save(event: FormEvent<HTMLFormElement>) {
@@ -123,7 +160,7 @@ export function ClientDirectory({
   return (
     <section className="directory" aria-labelledby="clients-title">
       <h3 id="clients-title" ref={heading} tabIndex={-1}>
-        {form === undefined ? "Clientes" : form ? "Editar cliente" : "Novo cliente"}
+        {form === undefined ? "Clientes" : form ? membershipTab ? "Matrícula e acesso" : "Editar cliente" : "Novo cliente"}
       </h3>
       {notice && <StatusMessage state="success" title={notice} />}
       {error && <StatusMessage state="error" title={error} />}
@@ -150,9 +187,13 @@ export function ClientDirectory({
                     <p className="directory-meta">{ageFormat.format(item.idade)} · {item.email}</p>
                     <DirectoryTag tone={item.ativo ? "positive" : "attention"}>{item.ativo ? "Perfil ativo" : "Perfil inativo"}</DirectoryTag>
                     <div className="directory-actions"><Button variant="secondary" disabled={busy}
-                      onClick={() => void run(async () => setForm(await getClient(item.id)))}>
+                      onClick={() => showClient(item.id, false)}>
                       Consultar {item.nome}
                     </Button>
+                      {membershipAccess && <Button variant="secondary" disabled={busy}
+                        onClick={() => showClient(item.id, true)} aria-label={"Matrícula e acesso de " + item.nome}>
+                        Matrícula e acesso
+                      </Button>}
                       {attendanceBase && <Link to={attendanceBase + "/" + encodeURIComponent(item.id)}>Frequência de {item.nome}</Link>}
                       {paymentsBase && <>
                         <Link to={paymentsBase + "/" + encodeURIComponent(item.id) + "/cobrancas"}>Cobranças de {item.nome}</Link>
@@ -178,10 +219,21 @@ export function ClientDirectory({
             <h4>{form.nome}</h4>
             <p>Idade atual · {ageFormat.format(form.idade)}</p>
             <p className="directory-meta">{form.email} · {accountLabels[form.estado_conta]}</p>
+            {membershipAccess && <nav className="directory-actions" aria-label="Dados do cliente em atendimento">
+              <Button variant="secondary" aria-pressed={!membershipTab} onClick={() => setMembershipTab(false)}>Cadastro</Button>
+              <Button variant="secondary" aria-pressed={membershipTab} onClick={() => setMembershipTab(true)}>Matrícula e acesso</Button>
+              {attendanceBase && <Link to={attendanceBase + "/" + encodeURIComponent(form.id)
+                + "?" + new URLSearchParams({ origem: "cliente", aba: membershipTab ? "matricula" : "cadastro",
+                  busca: filter.term, pagina: String(filter.page) })}>Frequência</Link>}
+            </nav>}
             {session.roles.includes("ADMINISTRADOR") && <Link to={"/area/administracao/designacoes?cliente=" + encodeURIComponent(form.id)}>
               Gerenciar instrutor responsável
             </Link>}
           </div>}
+          {form && membershipTab ? <>
+            <ClientMemberships key={form.id} client={form} csrf={session.csrf_token} showCheckout />
+            <Button variant="secondary" onClick={() => openForm(undefined)}>Voltar à lista</Button>
+          </> : <>
           <form key={form ? form.id + "/" + form.revisao : "new"} className="directory-form" onSubmit={save}>
             <fieldset className="directory-fieldset" disabled={busy}>
               <fieldset className="directory-group">
@@ -216,6 +268,7 @@ export function ClientDirectory({
                 setForm(await changeClient("/" + encodeURIComponent(form.id) + "/convite", "POST",
                   { revisao: form.revisao }, session.csrf_token));
               }) : undefined} />}
+          </>}
         </>
       )}
     </section>

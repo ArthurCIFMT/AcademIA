@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
+from decimal import Decimal
 from uuid import UUID, uuid4
 
 from sqlalchemy import ColumnElement, Select, func, select
@@ -115,7 +116,7 @@ def valid_membership(
     )
 
 
-def _plan_values(data: PlanFields) -> dict[str, str | int | bool | None]:
+def _plan_values(data: PlanFields) -> dict[str, str | int | bool | Decimal | None]:
     return {
         "nome": data.nome,
         "modalidade": data.modalidade,
@@ -135,11 +136,13 @@ def _page[T](
 
 
 def list_plans(
-    db: Session, *, active_only: bool, page: int, limit: int
+    db: Session, *, active_only: bool, page: int, limit: int, priced_only: bool = False
 ) -> MembershipPage[PlanView]:
     query = select(Plan).order_by(Plan.nome, Plan.id)
     if active_only:
         query = query.where(Plan.ativo.is_(True))
+    if priced_only:
+        query = query.where(Plan.preco_base.is_not(None))
     items, total = _page(db, query, page, limit)
     return MembershipPage(
         itens=[PlanView.model_validate(item) for item in items],
@@ -147,6 +150,23 @@ def list_plans(
         limite=limit,
         total=total,
     )
+
+
+@dataclass(frozen=True)
+class OfferedPlan:
+    nome: str
+    preco: Decimal
+
+
+def active_plan_offer(db: Session, plan_id: UUID) -> OfferedPlan | None:
+    offer = db.execute(
+        select(Plan.nome, Plan.preco_base)
+        .where(Plan.id == plan_id, Plan.ativo.is_(True))
+        .with_for_update(read=True)
+    ).one_or_none()
+    if offer is None or offer.preco_base is None:
+        return None
+    return OfferedPlan(offer.nome, offer.preco_base)
 
 
 def _audit(
@@ -175,6 +195,9 @@ def create_plan(
     db: Session, data: CreatePlan, *, actor_id: UUID, correlation: UUID
 ) -> PlanView:
     values = _plan_values(data)
+    values["preco_base"] = (
+        Decimal(data.preco_base) if data.preco_base is not None else None
+    )
     row = db.scalar(
         insert(Plan)
         .values(id=data.solicitacao_id, revision=1, **values)
@@ -199,6 +222,10 @@ def update_plan(
     if row.revision != data.revisao:
         raise MembershipError(409)
     values = _plan_values(data)
+    if "preco_base" in data.model_fields_set:
+        values["preco_base"] = (
+            Decimal(data.preco_base) if data.preco_base is not None else None
+        )
     if any(getattr(row, key) != value for key, value in values.items()):
         for key, value in values.items():
             setattr(row, key, value)

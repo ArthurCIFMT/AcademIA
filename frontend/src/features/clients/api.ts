@@ -46,8 +46,8 @@ export async function listClients(search: string, page: number, signal: AbortSig
   return (await requestApi(base + "?" + query, { signal })).json() as Promise<ClientPage>;
 }
 
-export async function getClient(id: string): Promise<ClientDetail> {
-  return (await requestApi(base + "/" + encodeURIComponent(id), {})).json() as Promise<ClientDetail>;
+export async function getClient(id: string, signal?: AbortSignal): Promise<ClientDetail> {
+  return (await requestApi(base + "/" + encodeURIComponent(id), { signal })).json() as Promise<ClientDetail>;
 }
 
 export async function changeClient(

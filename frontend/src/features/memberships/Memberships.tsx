@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 
-import { ApiError } from "../../lib/api/auth";
+import { ApiError, requestApi } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
+import { money } from "../billing/format";
 import { ClientBiometrics } from "../biometrics/ClientBiometrics";
 import { listClients, type ClientSummary } from "../clients/api";
 import { DirectoryPager, DirectoryTag } from "../clients/directory-ui";
@@ -79,6 +80,7 @@ function PlanForm({ plan, csrf, close, saved }: {
       await savePlan({
         nome: String(data.get("nome")).trim(), modalidade: String(data.get("modalidade")).trim(),
         duracao_dias: Number(data.get("duracao")), limite_acessos: limit ? Number(limit) : null,
+        preco_base: String(data.get("preco") ?? "").trim().replace(",", ".") || null,
         ativo: data.has("ativo"),
       }, csrf, requestId, plan);
       saved();
@@ -101,6 +103,10 @@ function PlanForm({ plan, csrf, close, saved }: {
       <label>Duração em dias <input name="duracao" type="number" required min={1} max={2147483647} defaultValue={plan?.duracao_dias} /></label>
       <label>Entradas por dia <input name="limite" type="number" min={1} max={2147483647} defaultValue={plan?.limite_acessos ?? ""} /></label>
       <p className="directory-meta">Deixe as entradas por dia em branco para acesso sem limite diário.</p>
+      <label>Preço simulado em reais <input name="preco" inputMode="decimal"
+        pattern="(0|[1-9][0-9]{0,9})([.,][0-9]{1,2})?" maxLength={13}
+        defaultValue={plan?.preco_base?.replace(".", ",") ?? ""} /></label>
+      <p className="directory-meta">Para oferecer este plano na compra simulada, informe um preço.</p>
       <label className="directory-choice"><input type="checkbox" name="ativo" defaultChecked={plan?.ativo ?? true} /> Plano ativo</label>
       <div className="directory-actions">
         <Button type="submit">{busy ? "Salvando…" : "Salvar plano"}</Button>
@@ -125,6 +131,7 @@ export function PlansPage({ csrf }: { csrf: string }) {
           <h3>{plan.nome}</h3>
           <DirectoryTag tone={plan.ativo ? "positive" : "neutral"}>{plan.ativo ? "Ativo" : "Inativo"}</DirectoryTag>
           <p>{plan.modalidade} · {plan.duracao_dias} dias · {accessLimit(plan.limite_acessos)}</p>
+          {plan.preco_base != null && <p>Preço simulado · {money(plan.preco_base)}</p>}
           <Button variant="secondary" onClick={() => { setNotice(""); setEdit(plan); }}
             aria-label={"Editar plano " + plan.nome}>Editar</Button>
         </li>)}</ul>
@@ -208,7 +215,35 @@ function EnrollForm({ client, csrf, latestEnd, saved }: {
   </form>;
 }
 
-function ClientMemberships({ client, csrf }: { client: ClientSummary; csrf: string }) {
+type PurchaseSummary = { plano: string; estado: "CONFIRMADO" | "RECUSADO" | "PENDENTE"; simulado_em: string };
+const simulationLabels: Record<PurchaseSummary["estado"], string> = {
+  CONFIRMADO: "Confirmada", RECUSADO: "Recusada", PENDENTE: "Pendente",
+};
+
+function LatestPurchase({ clientId }: { clientId: string }) {
+  const [purchase, setPurchase] = useState<PurchaseSummary | null>();
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    const request = new AbortController();
+    void requestApi("/v1/atendimento/clientes/" + encodeURIComponent(clientId) + "/ultima-compra-simulada",
+      { signal: request.signal, cache: "no-store" })
+      .then(response => response.json() as Promise<PurchaseSummary | null>)
+      .then(result => { if (!request.signal.aborted) setPurchase(result); })
+      .catch(() => { if (!request.signal.aborted) setError(true); });
+    return () => request.abort();
+  }, [clientId]);
+  return <div className="directory-card">
+    <h4>Última compra simulada</h4>
+    {error ? <p>Não foi possível consultar a compra simulada.</p> : purchase === undefined
+      ? <p>Consultando compra simulada…</p> : purchase === null
+        ? <p>Nenhuma compra simulada registrada. A matrícula pode ser feita normalmente.</p>
+        : <p>{purchase.plano} · {simulationLabels[purchase.estado]} · {new Date(purchase.simulado_em).toLocaleDateString("pt-BR")}</p>}
+  </div>;
+}
+
+export function ClientMemberships({ client, csrf, showCheckout = false }: {
+  client: ClientSummary; csrf: string; showCheckout?: boolean;
+}) {
   const load = useCallback((page: number, signal: AbortSignal) =>
     listMemberships(client.id, page, signal), [client.id]);
   const history = usePage(load);
@@ -218,6 +253,7 @@ function ClientMemberships({ client, csrf }: { client: ClientSummary; csrf: stri
   const latestEnd = firstPage?.itens[0]?.fim;
   return <>
     <h3>Matrículas de {client.nome}</h3>
+    {showCheckout && <LatestPurchase clientId={client.id} />}
     {notice && <p role="status">{notice}</p>}
     {eligible && firstPage && <EnrollForm key={latestEnd ?? "first"} client={client} csrf={csrf} latestEnd={latestEnd}
       saved={message => { setNotice(message); history.reload(1); }} />}

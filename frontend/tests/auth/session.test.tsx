@@ -21,10 +21,12 @@ function mount(path: string) {
 }
 
 function mockRequests(...responses: Response[]) {
-  const fetchMock = vi.fn();
-  for (const response of responses) fetchMock.mockResolvedValueOnce(response);
-  vi.stubGlobal("fetch", fetchMock);
-  return fetchMock;
+  const authFetch = vi.fn();
+  for (const response of responses) authFetch.mockResolvedValueOnce(response);
+  vi.stubGlobal("fetch", (url: string, options: RequestInit) => url.startsWith(base)
+    ? authFetch(url, options)
+    : Promise.resolve(new Response(null, { status: 503 })));
+  return authFetch;
 }
 
 function fillCredentials() {
@@ -66,15 +68,49 @@ test("envia login em JSON e abre somente áreas dos papéis retornados", async (
   fillCredentials();
 
   expect(await screen.findByRole("heading", { name: "Área de atendimento" })).toBeTruthy();
+  expect(screen.getByRole("link", { name: "Clientes e convites" }).getAttribute("aria-current")).toBe("page");
   expect(screen.queryByRole("link", { name: "Administração" })).toBeNull();
   fireEvent.click(screen.getByRole("link", { name: "Cliente" }));
   expect(await screen.findByRole("heading", { name: "Área do cliente" })).toBeTruthy();
+  expect(screen.getByRole("link", { name: "Meus treinos" }).getAttribute("aria-current")).toBe("page");
   expect(fetchMock).toHaveBeenLastCalledWith(base + "login", expect.objectContaining({
     method: "POST",
     credentials: "same-origin",
     headers: { Accept: "application/json", "Content-Type": "application/json" },
     body: JSON.stringify({ email: "cliente@example.test", senha: "senha-sintetica" }),
   }));
+});
+
+test("cliente abre o catálogo mantendo a navegação da conta", async () => {
+  mockRequests(session());
+  mount("/area/cliente");
+  await screen.findByRole("heading", { name: "Área do cliente" });
+  fireEvent.click(screen.getByRole("link", { name: "Equipamentos disponíveis" }));
+  expect(await screen.findByRole("heading", { name: "Equipamentos disponíveis" })).toBeTruthy();
+  expect(screen.getByRole("navigation", { name: "Seções da área" })).toBeTruthy();
+  expect(screen.getByRole("button", { name: "Sair" })).toBeTruthy();
+});
+
+test("meu perfil guarda endereço na conta e confirma o envio", async () => {
+  const profile = { email: "teste@example.test", endereco: null, nome_cliente: "Cliente sintético" };
+  const api = vi.fn(async (url: string, options: RequestInit) => {
+    if (url === base + "session") return session();
+    if (url === "/api/v1/meu-perfil") return Response.json(profile);
+    if (url === "/api/v1/meu-perfil/endereco") {
+      expect(options.method).toBe("PATCH");
+      expect(options.headers).toMatchObject({ "X-CSRF-Token": "csrf-sintetico" });
+      expect(JSON.parse(String(options.body))).toEqual({ endereco: "Rua sintética" });
+      return Response.json({ ...profile, endereco: "Rua sintética" });
+    }
+    return new Response(null, { status: 503 });
+  });
+  vi.stubGlobal("fetch", api);
+  mount("/area/cliente");
+  fireEvent.click(await screen.findByRole("link", { name: "Meu perfil" }));
+  expect(await screen.findByText("teste@example.test")).toBeTruthy();
+  fireEvent.change(screen.getByLabelText("Endereço (opcional)"), { target: { value: "Rua sintética" } });
+  fireEvent.click(screen.getByRole("button", { name: "Salvar endereço" }));
+  expect(await screen.findByText("Endereço salvo.")).toBeTruthy();
 });
 
 test("rejeita credenciais inválidas sem abrir sessão ou repetir a requisição", async () => {

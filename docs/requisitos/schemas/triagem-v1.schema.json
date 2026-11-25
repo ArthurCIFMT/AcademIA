@@ -10,8 +10,11 @@
         "type": "integer"
       },
       "version": {
-        "const": 1,
-        "default": 1,
+        "default": 2,
+        "enum": [
+          1,
+          2
+        ],
         "title": "Version",
         "type": "integer"
       },
@@ -42,8 +45,11 @@
         "type": "integer"
       },
       "fonte_regras": {
-        "const": "onboarding-e-triagem-v1",
-        "default": "onboarding-e-triagem-v1",
+        "default": "onboarding-e-triagem-v2",
+        "enum": [
+          "onboarding-e-triagem-v1",
+          "onboarding-e-triagem-v2"
+        ],
         "title": "Fonte Regras",
         "type": "string"
       }
@@ -899,6 +905,11 @@
             "ESCOPO_ETARIO",
             "ALERTA_GRAVE_DECLARADO",
             "DADO_DESCONHECIDO",
+            "PENDENCIA_CONDICOES",
+            "PENDENCIA_LIMITACOES",
+            "PENDENCIA_RESTRICAO",
+            "PENDENCIA_EVENTO",
+            "PENDENCIA_MEDICACAO",
             "CONTEXTO_EXCEDIDO",
             "ANALISE_PENDENTE",
             "ALERTA_GRAVE_TEXTO",
@@ -1074,6 +1085,11 @@
             "ESCOPO_ETARIO",
             "ALERTA_GRAVE_DECLARADO",
             "DADO_DESCONHECIDO",
+            "PENDENCIA_CONDICOES",
+            "PENDENCIA_LIMITACOES",
+            "PENDENCIA_RESTRICAO",
+            "PENDENCIA_EVENTO",
+            "PENDENCIA_MEDICACAO",
             "CONTEXTO_EXCEDIDO",
             "ANALISE_PENDENTE",
             "ALERTA_GRAVE_TEXTO",

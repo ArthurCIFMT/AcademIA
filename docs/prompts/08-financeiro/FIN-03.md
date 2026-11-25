@@ -19,6 +19,8 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 ## Escopo permitido
 
 - `backend/app/modules/dashboard/**`
+- Leitura agregada no módulo financeiro, incluindo a regra compartilhada de
+  confirmação de pagamentos, pela fronteira de MOD-08.
 - `backend/tests/dashboard/**`
 - `frontend/src/features/dashboard/**`
 
@@ -28,12 +30,13 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 
 1. Adicionar valores cobrados, recebidos, pendentes e vencidos por período.
 2. Exibir mensal, anual e total com regra temporal explícita.
-3. Respeitar tentativas e estornos definidos para não contar webhook ou tentativa como receita.
+3. Exibir valores como simulados. Contar somente recebimentos confirmados
+   e vigentes, com as correções do registro manual.
 
 ## Critérios de aceite
 
 - Totais conferem com pagamentos confirmados de fixture e não duplicam tentativa.
-- Faturamento e receita recebida são identificados separadamente.
+- Faturamento e recebimentos simulados são identificados separadamente.
 - Datas nas bordas do período e permissões produzem resultados corretos.
 
 ## Testes obrigatórios

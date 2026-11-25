@@ -57,6 +57,7 @@ export async function firstAccess(page: Page, email: string) {
   expect(page.url()).not.toContain("token=");
 }
 export async function completeOnboarding(page: Page) {
+  await expect(page.getByText(/Idade atual · \d+ anos/)).toBeVisible();
   await page.getByLabel("Objetivo principal").selectOption("CONDICIONAMENTO");
   await page.getByLabel("Experiência com exercícios").selectOption("INICIANTE");
   await page.getByLabel("Nível de atividade atual").selectOption("LEVE");

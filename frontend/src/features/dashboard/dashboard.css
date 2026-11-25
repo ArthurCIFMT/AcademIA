@@ -46,6 +46,45 @@
   align-items: start;
 }
 
+.dashboard-finance-periods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--ac-space-3);
+  margin-block-start: var(--ac-space-4);
+}
+
+.dashboard-finance-period {
+  min-inline-size: 0;
+  padding: var(--ac-space-3);
+  border: 1px solid var(--ac-border);
+  border-radius: var(--ac-radius-panel);
+}
+
+.dashboard-finance-period h4,
+.dashboard-finance-period dl,
+.dashboard-finance-period dd {
+  margin: 0;
+}
+
+.dashboard-finance-period dl {
+  display: grid;
+  gap: var(--ac-space-2);
+  margin-block-start: var(--ac-space-3);
+}
+
+.dashboard-finance-period dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ac-space-1) var(--ac-space-2);
+}
+
+.dashboard-finance-period dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
 .dashboard-bars {
   list-style: none;
   display: grid;

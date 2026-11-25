@@ -1,4 +1,4 @@
-# Painel administrativo — DSH-01
+# Painel administrativo — DSH-01 e FIN-03
 
 O início da **Área administrativa** apresenta os indicadores da academia e
 mantém os avisos pendentes. O botão **Atualizar indicadores** faz uma nova
@@ -34,4 +34,29 @@ falha. Identidades, referências faciais e conteúdo de exceções ficam fora
 do contrato.
 
 O MOD-11 calcula os indicadores sob demanda pelas portas de leitura do MOD-01,
-MOD-07 e MOD-08. O escopo financeiro pertence ao FIN-03.
+MOD-07 e MOD-08. O painel financeiro recebe somente os agregados do MOD-08.
+
+## Financeiro simulado
+
+O painel mostra mês atual, ano atual e total registrado, com calendário de
+São Paulo. O total de cobrados e saldos inclui competências futuras já
+registradas. O mês e o ano comparam a competência da cobrança e a data civil
+do pagamento com o respectivo período.
+
+| Indicador | Regra |
+|---|---|
+| Cobrado | Valor das cobranças administrativas vigentes, pelo mês de competência. |
+| Recebido | Lançamentos manuais e compras simuladas confirmadas e vigentes, pela data de pagamento. Inclui confirmações sem cobrança vinculada e pagamentos preservados após cancelamento de cobrança. |
+| Saldo a vencer | Saldo das cobranças abertas com vencimento hoje ou depois, pela competência da cobrança. |
+| Saldo vencido | Saldo das cobranças abertas com vencimento anterior a hoje, pela competência da cobrança. |
+
+O saldo de cada cobrança desconta os pagamentos confirmados vinculados a ela
+e tem piso de zero. Pagamentos anulados, substituídos, pendentes, recusados ou
+com confirmação posterior à consulta ficam fora das somas. Uma simulação
+pendente fica no histórico da compra. Ela não gera saldo de cobrança.
+
+Em `GET /api/v1/admin/dashboard`, o indicador `financeiro` retorna
+`competencia_atual` e os blocos `mes`, `ano` e `total` quando disponível.
+Cada bloco tem `cobrado`, `recebido`, `pendente` e `vencido` em strings
+decimais. Sem lançamentos, o resultado ativo retorna valores zero. Se a leitura
+financeira falhar, os demais indicadores permanecem disponíveis.

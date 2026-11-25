@@ -18,8 +18,8 @@ MEM-01 e ACS-07. Os testes integrados de cada módulo pertencem ao seu cartão.
   passagens confirmadas. A alternativa manual registra responsável e motivo.
 - Em 22/11/2026 o responsável autorizou Docker apenas para uma instância
   local dedicada do CompreFace, cuja distribuição oficial usa Compose. O
-  AcademIA e a catraca fictícia continuam com execução nativa nesta fase.
-  Os cartões INF-01–INF-04 seguem na etapa final.
+  AcademIA e a catraca fictícia têm execução nativa. Os cartões INF-01–INF-04
+  validam a instalação acadêmica local.
 - O responsável aprovou, em 22/11/2026, as três regras abaixo para matrícula
   e acesso. Aplicá-las nos cartões correspondentes.
 

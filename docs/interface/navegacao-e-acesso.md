@@ -3,20 +3,24 @@
 A estrutura da SPA usa os [componentes de UX-02](componentes.md). O cabeçalho
 oferece saída e mostra a troca de área quando a conta tem mais de um papel
 efetivo. O menu ao lado do conteúdo reúne as tarefas da área atual. Em telas
-de até 47 rem, o mesmo conjunto de links aparece num menu recolhível no topo,
-com o nome da seção ativa no controle.
+de até 47 rem, duas tarefas frequentes ficam em destaque. O menu recolhível
+mostra todas as seções e indica a seção ativa no controle.
 
-| Área | Tarefas no menu |
-|---|---|
-| Cliente | Treinos, assistente, geração com IA, dados de treino e catálogo de equipamentos. |
-| Instrutor | Clientes designados, revisões pendentes e catálogo de exercícios. |
-| Atendimento | Clientes e convites. |
-| Administração | Clientes, funcionários, designações e catálogos. |
+| Área | Destino inicial | Outras tarefas |
+|---|---|---|
+| Cliente | Meus treinos | Assistente, dados de treino, frequência, cobranças simuladas, equipamentos e agenda. |
+| Instrutor | Meus clientes | Revisões pendentes e catálogo de exercícios. |
+| Atendimento | Clientes e convites | Matrícula e referência na ficha do cliente, reconhecimento de chegada e lotação. |
+| Administração | Painel | Clientes, funcionários, designações e catálogos. |
 
 A [lista de rotas e papéis](../../frontend/src/app/areaNavigation.ts) organiza
 as tarefas que já existem. A curadoria mantém a entrada condicionada ao papel
 administrativo e à configuração explícita de manutenção. A área inicial
 segue a prioridade já estabelecida em [autenticação](../arquitetura/autenticacao.md).
+A troca de área abre sua tarefa inicial diretamente. O catálogo de equipamentos
+tem uma rota autenticada na área do cliente e outra rota pública para visitantes.
+O cabeçalho oferece **Meu perfil** em cada área autenticada. O perfil é pessoal
+e o endereço acompanha a conta ao alternar papéis.
 
 Uma subpágina de avaliação ou editor manual marca **Meus clientes**. Uma revisão
 de ficha marca **Revisões pendentes**. Rotas principais usam `aria-current="page"`

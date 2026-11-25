@@ -71,6 +71,15 @@ test.each([
   expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
 });
 
+test("indica a resposta pendente e abre a etapa de saúde sem repetir a geração", async () => {
+  const execucao = { ...receipt("DADOS_INSUFICIENTES"), motivo: "PENDENCIA_LIMITACOES" };
+  const fetcher = mount(async () => Response.json({ execucao, geracao: null }), "?solicitacao=" + id);
+  expect((await screen.findByRole("alert")).textContent).toMatch(/dor, lesão ou limitação/);
+  expect(screen.getByRole("link", { name: "Conferir meus dados de treino" }).getAttribute("href"))
+    .toBe("/area/cliente/onboarding?etapa=saude");
+  expect(fetcher.mock.calls.every(([, init]) => init.method !== "POST")).toBe(true);
+});
+
 test("cancelamento em voo não abre segunda geração", async () => {
   let state = "EM_EXECUCAO";
   let finish: (response: Response) => void = () => {};

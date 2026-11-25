@@ -103,7 +103,7 @@
     },
     {
       "titulo": "17. Modelo de dados, relacionamentos e invariantes",
-      "nota": "Modelo lógico do escopo completo: 44 tabelas/359 colunas, incluindo uma tabela futura. O físico na revisão 0026 tem 43 tabelas/355 colunas/77 FKs. A origem e a evolução do MER estão no capítulo 10 e na comparação visual da revisão 0016.",
+      "nota": "Modelo lógico do escopo completo: 44 tabelas, 363 colunas e 76 referências, incluindo uma tabela futura. O schema físico na revisão 0029 tem 43 tabelas, 359 colunas e 77 constraints de chave estrangeira. A origem e a evolução do MER constam na visão geral e na comparação visual histórica da revisão 0016.",
       "fontes": [
         {
           "arquivo": "docs/arquitetura/modelo-de-dados/modelo-logico.dbml",
@@ -393,6 +393,10 @@
           "titulo": "Cobranças, histórico e consulta financeira"
         },
         {
+          "arquivo": "docs/arquitetura/compra-simulada.md",
+          "titulo": "Compra de plano simulada e histórico"
+        },
+        {
           "arquivo": "docs/arquitetura/biometria.md",
           "titulo": "Cadastro e substituição da referência facial"
         },
@@ -523,6 +527,10 @@
           "titulo": "Estratégia incremental"
         },
         {
+          "arquivo": "docs/arquitetura/rastreabilidade.md",
+          "titulo": "Matriz de rastreabilidade e escopo da entrega acadêmica"
+        },
+        {
           "arquivo": "docs/testes/rag-ia-semantico.md",
           "titulo": "Avaliação e segurança de IA/RAG"
         },
@@ -564,7 +572,7 @@
         },
         {
           "arquivo": "docs/testes/ai06-consolidacao.json",
-          "titulo": "Critérios de aceite da avaliação ainda não atendidos",
+          "titulo": "Consolidação aprovada da amostra acadêmica AI-06",
           "tipo": "codigo",
           "linguagem": "json"
         },
@@ -584,7 +592,7 @@
         },
         {
           "arquivo": "docs/testes/tst01-resultado.json",
-          "titulo": "Resultado do navegador e aceite real pendente",
+          "titulo": "Resultado histórico de navegador anterior à consolidação do MVP",
           "tipo": "codigo",
           "linguagem": "json"
         },
@@ -676,6 +684,10 @@
           "titulo": "Exemplo de ambiente do frontend",
           "tipo": "codigo",
           "linguagem": "dotenv"
+        },
+        {
+          "arquivo": "docs/instalacao/instalacao-local.md",
+          "titulo": "Pré-requisitos, instalação local e verificação da API"
         },
         {
           "arquivo": "docs/instalacao/iniciar-com-dois-cliques.md",

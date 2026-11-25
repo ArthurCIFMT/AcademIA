@@ -17,3 +17,15 @@
 :is(.facial-reference, .facial-recognition) input[type="file"] {
   max-inline-size: 100%;
 }
+.face-preview {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.face-preview img {
+  display: block;
+  width: min(100%, 12rem);
+  max-height: 12rem;
+  object-fit: contain;
+  margin-block-end: var(--ac-space-2);
+}

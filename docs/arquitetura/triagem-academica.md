@@ -52,8 +52,12 @@ Ordem de decisão implementada:
 3. Idade ausente/inválida: insuficiência; menor de 18: bloqueio ESCOPO_ETARIO.
 4. GRAVE declarado em condição/limitação, restrição ou evento importante=SIM:
    bloquear ALERTA_GRAVE_DECLARADO, antes de considerar flags desconhecidas.
-5. Flag necessária/gravidade=NAO_SEI: insuficiência; contexto excessivo também
-   impede análise. Ausente não é preenchido com saudável, zero ou média.
+5. Na política v2, incerteza sobre condição, limitação, restrição ou evento
+   recente, ou gravidade desconhecida, retorna insuficiência e identifica o
+   campo. Se apenas a medicação for desconhecida, as quatro respostas essenciais
+   forem negativas e não houver observação, a análise recebe `NAO_SEI` como foi
+   informado. Contexto excessivo também impede análise. Dados ausentes ficam
+   explícitos no contrato.
 6. Sem bloqueio, fazer até uma análise assistida, quando configurada. A porta recebe
    resumo, evidências fornecidas pelo chamador autorizado e referência da política.
 7. Alerta grave no texto sinalizado pela análise: bloquear ALERTA_GRAVE_TEXTO.

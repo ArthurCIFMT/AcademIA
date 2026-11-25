@@ -19,7 +19,10 @@ from app.modules.onboarding.schemas import (
     OwnOnboarding,
     SnapshotView,
 )
-from app.modules.people.onboarding_directory import lock_onboarding_client
+from app.modules.people.onboarding_directory import (
+    lock_onboarding_client,
+    onboarding_birth,
+)
 
 DRAFT = "RASCUNHO"
 COMPLETED = "CONCLUIDO"
@@ -65,7 +68,7 @@ def _versions(
     return draft, completed
 
 
-def draft_view(row: OnboardingVersion) -> DraftView:
+def draft_view(row: OnboardingVersion, idade_atual: int) -> DraftView:
     return DraftView(
         id=row.id,
         numero=row.numero,
@@ -74,6 +77,7 @@ def draft_view(row: OnboardingVersion) -> DraftView:
         estado=DRAFT,
         schema_version=1,
         dados=DraftData.model_validate(row.dados),
+        idade_atual=idade_atual,
     )
 
 
@@ -98,11 +102,20 @@ def _snapshot(row: OnboardingVersion) -> SnapshotView:
     )
 
 
+def read_current_age(session: Session, client_id: UUID) -> int:
+    birth = onboarding_birth(session, client_id)
+    if birth is None:
+        raise OnboardingError(404)
+    return age_at(birth, academy_date(utc_now()))
+
+
 def get_own(session: Session, client_id: UUID) -> OwnOnboarding:
     draft, completed = _versions(session, client_id)
+    age = read_current_age(session, client_id)
     return OwnOnboarding(
-        rascunho=draft_view(draft) if draft else None,
+        rascunho=draft_view(draft, age) if draft else None,
         concluido=_snapshot(completed) if completed else None,
+        idade_atual=age,
     )
 
 
@@ -185,7 +198,7 @@ def start_initial_draft(
 def save_draft(
     session: Session, client_id: UUID, author_id: UUID, change: DraftChange
 ) -> DraftView:
-    _, draft, completed = _editing(
+    birth, draft, completed = _editing(
         session, client_id, change.versao_base, change.revisao
     )
     patch = change.dados.model_dump(mode="json", exclude_unset=True)
@@ -199,7 +212,7 @@ def save_draft(
         if merged != draft.dados:
             draft.dados = merged
             draft.revision += 1
-    return draft_view(draft)
+    return draft_view(draft, age_at(birth, academy_date(utc_now())))
 
 
 def _finalize(

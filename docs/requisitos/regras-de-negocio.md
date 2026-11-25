@@ -46,7 +46,9 @@
 
 - RN-01/RN-02/RN-03: [ADR-002](../arquitetura/decisoes/ADR-002-identidade-e-papeis.md)
   já define identidade, unicidade e alcance de conta/perfis; não é pendência.
-- RN-13: [triagem v1](onboarding-e-triagem.md) definida; ensaio real de IA futuro.
+- RN-13: [triagem acadêmica](onboarding-e-triagem.md) e bloqueios exercitados na
+  [avaliação acadêmica de IA](../testes/ai06-enxuto.md), com casos locais
+  controlados e amostra delimitada de integração com o LLM.
 - RN-26: NTF-01 já prevê instrutor designado para ficha e administrador para
   alterações críticas, aviso interno persistente + e-mail, com falha/reenvio
   idempotente. Não depender de sucesso do e-mail para preservar pendência.
@@ -55,8 +57,8 @@
   e identificação manual sem dispensar os critérios de acesso. CompreFace,
   matrícula sem pagamento obrigatório e catraca fictícia integram essa trilha.
 - RN-25: reservas/capacidade são escopo futuro (GATE-07); agenda básica permanece.
-- Financeiro/compra: FIN-02/GATE-09 são tardios. Compra confirmada pode preceder
-  matrícula pelo atendente; o caminho acadêmico sem confirmação financeira continua.
+- Financeiro/compra: FIN-02/GATE-09 usam simulação local. Uma confirmação de
+  simulação pode preceder a matrícula, que permanece independente.
 - Exercícios: nome/variação normalizado (trim, espaços internos colapsados e lowercase)
   é único na academia, inclusive inativos. Reativar/editar registro existente evita
   duplicar identidade do movimento; descrições/prescrições históricas são snapshots.

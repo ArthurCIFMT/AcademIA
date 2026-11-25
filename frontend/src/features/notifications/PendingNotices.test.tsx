@@ -19,12 +19,18 @@ function openArea(path: string, ...responses: Response[]) {
   const other = vi.fn();
   responses.forEach((response) => other.mockResolvedValueOnce(response));
   const count = { estado: "DISPONIVEL", valor: 0 };
-  const fetchMock = vi.fn((url: string) => url === "/api/v1/admin/dashboard"
-    ? Promise.resolve(Response.json({
+  const fetchMock = vi.fn((url: string) => {
+    if (url === "/api/v1/admin/dashboard") return Promise.resolve(Response.json({
       consultado_em: "2026-11-24T02:30:00Z",
       clientes_ativos: count, clientes_matriculados: count, funcionarios: count, lotacao: count,
       frequencia: { estado: "DISPONIVEL", valor: { semanas: [], dias: [] } },
-    })) : other());
+    }));
+    if (url.startsWith("/api/v1/designacoes/minhas?")) {
+      return Promise.resolve(Response.json({ itens: [], pagina: 1, limite: 20, total: 0 }));
+    }
+    if (url !== endpoint && !url.includes("/auth/")) return Promise.resolve(new Response(null, { status: 404 }));
+    return other();
+  });
   vi.stubGlobal("fetch", fetchMock);
   render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>);
   return fetchMock;
@@ -66,12 +72,12 @@ test("mostra acesso recusado e evita repetição automática", async () => {
     new Response(null, { status: 403 }));
 
   expect((await screen.findByRole("alert")).textContent).toContain("Acesso aos avisos indisponível");
-  expect(fetchMock).toHaveBeenCalledTimes(2);
+  expect(fetchMock.mock.calls.filter(([url]) => url === endpoint)).toHaveLength(1);
 });
 
 test("não consulta pendências administrativas para uma conta de cliente", async () => {
   const fetchMock = openArea("/area/cliente", session(["CLIENTE"]));
-  expect(await screen.findByRole("heading", { name: "Área do cliente" })).toBeTruthy();
+  expect(await screen.findByRole("heading", { name: "Meus treinos" })).toBeTruthy();
   expect(screen.queryByRole("heading", { name: "Avisos pendentes" })).toBeNull();
-  expect(fetchMock).toHaveBeenCalledTimes(1);
+  expect(fetchMock.mock.calls.some(([url]) => url === endpoint)).toBe(false);
 });

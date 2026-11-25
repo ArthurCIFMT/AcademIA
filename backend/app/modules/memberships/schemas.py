@@ -1,8 +1,11 @@
 from datetime import date
+from decimal import Decimal
 from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+
+from app.modules.billing.money import Amount
 
 PositiveInt = Annotated[int, Field(strict=True, ge=1, le=2_147_483_647)]
 LimitWindow = Literal["DIA_CIVIL"]
@@ -23,6 +26,7 @@ class PlanFields(MembershipInput):
     ]
     duracao_dias: PositiveInt
     limite_acessos: PositiveInt | None = None
+    preco_base: Amount | None = None
     ativo: Annotated[bool, Field(strict=True)]
 
     @field_validator("nome", "modalidade")
@@ -46,6 +50,11 @@ class PlanView(PlanFields):
 
     id: UUID
     revisao: int = Field(validation_alias="revision")
+
+    @field_validator("preco_base", mode="before")
+    @classmethod
+    def serialized_price(cls, value: object) -> object:
+        return format(value, ".2f") if isinstance(value, Decimal) else value
 
 
 class CreateMembership(MembershipInput):

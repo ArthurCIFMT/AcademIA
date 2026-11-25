@@ -64,6 +64,9 @@ A revisão `0023` acrescenta a [confirmação manual de identidade](../docs/arqu
 A revisão `0024` cria e preenche a projeção de [frequência e lotação](../docs/arquitetura/frequencia-lotacao.md) a partir das passagens confirmadas. O downgrade preserva os eventos e comandos originais.
 A revisão `0025` acrescenta a tabela de [pagamentos manuais](../docs/arquitetura/pagamentos-manuais.md), com auditoria e cadeia de correções. Seu downgrade remove a tabela de pagamentos.
 A revisão `0026` cria [cobranças e revisões](../docs/arquitetura/cobrancas.md), incluindo o vínculo opcional com pagamentos. O downgrade remove cobranças, revisões e vínculos, preservando os lançamentos de pagamento.
+A revisão `0027` preserva o histórico da [compra simulada](../docs/arquitetura/compra-simulada.md) no pagamento. O downgrade é interrompido quando existem recibos simulados, para proteger o histórico.
+A revisão `0028` acrescenta o endereço opcional à identidade para a consulta e edição no [perfil próprio](../docs/arquitetura/clientes.md#perfil-próprio).
+A revisão `0029` adiciona a miniatura privada opcional do cadastro facial. As referências anteriores continuam válidas e podem permanecer sem miniatura.
 O downgrade remove o vínculo de confirmação e o motivo detalhado.
 Veja a [instalação do primeiro administrador](../docs/instalacao/primeiro-administrador.md).
 As tabelas dos módulos seguem as migrations das suas entregas. Modelos relacionais herdam de `app.database.base.Base`.

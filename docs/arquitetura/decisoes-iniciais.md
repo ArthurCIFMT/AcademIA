@@ -23,7 +23,7 @@
 | DEC-008 | Cliente deve ser designado a instrutor. | Vínculo histórico com responsável principal. |
 | DEC-009 | Cliente consulta treino e conversa com IA sem aceite prévio. | Parecer posterior do instrutor é separado da publicação tecnicamente validada. |
 | DEC-010 | Atendente matricula/renova sem exigir pagamento confirmado. | Financeiro tardio e independente da matrícula e do acesso acadêmico. |
-| DEC-011 | Docker fica depois do MVP. | Desenvolvimento local é requisito anterior. |
+| DEC-011 | Instalação local acadêmica. | Docker é reservado ao CompreFace dedicado. |
 | DEC-012 | Repositório remoto é `ArthurCIFMT/AcademIA`. | Entregas autorizadas devem ser sincronizadas. |
 | DEC-013 | Reconhecimento facial real e catraca fictícia por API externa. | Não há hardware; mocks isolados não comprovam reconhecimento. |
 | DEC-014 | Cadastro da foto após matrícula pelo atendente. | Referência vinculada ao cliente matriculado e autor da operação. |
@@ -61,16 +61,16 @@ Formulário e regras estão em [onboarding/triagem](../requisitos/onboarding-e-t
 LLM requer chave pessoal durante a integração; serviços/modelos ainda não foram
 instalados/testados. Isso não reabre a decisão técnica nem bloqueia scaffold.
 
-GATE-07 (reservas), GATE-08 (execução/ensaio facial e limites de acesso) e
-GATE-09 (gateway) continuam decisões das fases posteriores, não do início.
+O manifesto acompanha GATE-07 (reservas), GATE-08 (biometria e acesso)
+e GATE-09 (financeiro simulado).
 
 ## Restrições permanentes
 
 Gates complementares no manifesto: GATE-07 (reservas), GATE-08 (API facial real,
-matrícula manual independente de pagamento, simulador de catraca, limites e alternativa de acesso), GATE-09 (pagamento/sandbox). São decisões da fase
+matrícula manual independente de pagamento, simulador de catraca, limites e alternativa de acesso), GATE-09 (simulação financeira local). São decisões da fase
 correspondente e não precisam bloquear a redação dos prompts.
 
-- Containerização não pode ser antecipada por prompts de fundação ou MVP.
+- A aplicação roda localmente. Docker fica restrito ao CompreFace dedicado.
 - Matrícula pelo atendente não exige pagamento nem registro financeiro, manual ou
   automatizado. O acesso acadêmico verifica matrícula e regras próprias; pagamento
   não é um pré-requisito. Eventual bloqueio financeiro futuro exige decisão explícita.

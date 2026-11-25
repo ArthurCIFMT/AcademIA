@@ -2,6 +2,7 @@
 
 import importlib.util
 import json
+from contextlib import nullcontext
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 from typing import Any
@@ -112,6 +113,64 @@ def test_occupied_port_does_not_kill_or_start_any_process(
     assert calls == [] and not prepared.processes
 
 
+def test_start_rejects_postgres_address_override(
+    launcher: ModuleType, prepared: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    with (prepared.root / ".env").open("a", encoding="utf-8") as source:
+        source.write(
+            "ACADEMIA_DATABASE_URL="
+            "postgresql+psycopg://teste@127.0.0.1/academia_dev?host=example.test\n"
+        )
+    calls = []
+    monkeypatch.setattr(launcher, "is_open", lambda port: False)
+    monkeypatch.setattr(prepared, "command", lambda *args, **kwargs: calls.append(args))
+
+    with pytest.raises(launcher.LaunchError, match="academia_dev local"):
+        prepared.start()
+    assert calls == []
+
+
+def test_database_check_refuses_postgres_listening_on_all_addresses(
+    launcher: ModuleType, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.syspath_prepend(str(ROOT / "backend"))
+    from app.database import connection
+
+    def listen_addresses(statement: Any) -> str:
+        assert statement.text == "SHOW listen_addresses"
+        return "*"
+
+    engine = SimpleNamespace(
+        connect=lambda: nullcontext(SimpleNamespace(scalar=listen_addresses)),
+        dispose=lambda: None,
+    )
+    monkeypatch.setattr(connection, "create_database_engine", lambda target: engine)
+
+    with pytest.raises(launcher.LaunchError, match="somente em loopback"):
+        launcher.check_database()
+
+
+def test_failed_database_check_sanitizes_diagnostic(
+    launcher: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.syspath_prepend(str(ROOT / "backend"))
+    from app.database import connection
+    from sqlalchemy.exc import OperationalError
+
+    def unavailable(target: str) -> None:
+        raise OperationalError(None, None, Exception("valor privado de teste"))
+
+    monkeypatch.setattr(connection, "create_database_engine", unavailable)
+    monkeypatch.setattr(launcher.sys, "argv", ["academia_local.py", "--check-database"])
+
+    with pytest.raises(SystemExit) as failure:
+        launcher.main()
+    assert failure.value.code == "Não foi possível verificar o PostgreSQL local."
+    assert "valor privado" not in capsys.readouterr().err
+
+
 class ProcessDouble:
     def __init__(self) -> None:
         self.pid = 12345
@@ -198,6 +257,22 @@ def test_spawn_does_not_put_credentials_on_command_line_and_clears_mailpit_relay
     assert "GROQ_API_KEY" not in calls[0][1]["env"]
     assert "MP_SMTP_RELAY_CONFIG" not in calls[2][1]["env"]
     assert all(not kwargs.get("shell", False) for _, kwargs in calls)
+
+
+def test_postgres_management_only_passes_app_secrets_to_readiness_probe(
+    launcher: ModuleType, prepared: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    environments = []
+
+    def run(args: list[str], *, env: dict[str, str], **kwargs: Any) -> Any:
+        environments.append(env)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(launcher.subprocess, "run", run)
+    for command in ("postgres", "verificar-banco", "postgres-encerrar"):
+        prepared.command(command, ["programa.exe"], wait=True)
+    for key in ("ACADEMIA_DATABASE_URL", "GROQ_API_KEY"):
+        assert [key in env for env in environments] == [False, True, False]
 
 
 def enable_turnstile(prepared: Any, port: int = 8011) -> None:

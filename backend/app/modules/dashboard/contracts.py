@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, NonNegativeInt
 
 from app.contracts.time import UtcTimestamp
+from app.modules.billing.reporting import FinancialOverview
 
 
 class Available[T](BaseModel):
@@ -46,3 +47,4 @@ class DashboardOverview(BaseModel):
     funcionarios: Indicator[NonNegativeInt]
     lotacao: Indicator[NonNegativeInt]
     frequencia: Indicator[Frequency]
+    financeiro: Indicator[FinancialOverview]

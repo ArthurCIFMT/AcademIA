@@ -47,8 +47,8 @@ Métrica cosseno, normalização e prefixos query:/passage: são parte do espaç
 versionado, conforme a configuração canônica. Não mudar modelo/dimensão por
 fallback. Alterações de configuração seguem o protocolo da SPEC e a decisão
 aprovada; parâmetros futuros não significam autorização para trocar a arquitetura.
-ACADEMIA_VECTOR_URL não é usada para abrir servidor: se informada, gera erro de
-configuração. Modo servidor e migração/reindexação ficam para a infraestrutura final.
+`ACADEMIA_VECTOR_URL`, se informada, gera erro de configuração. A instalação
+acadêmica mantém o Qdrant no diretório local conforme a ADR-004.
 
 Cada coleção guarda nos próprios metadados um schema_version e o embedding_space:
 modelo, revisão, dimensão, métrica, normalização e prefixos, mais SHA-256 da
@@ -91,10 +91,10 @@ processo para não substituir a configuração de uma conexão já em uso.
 A verificação de conexão não repete automaticamente operações. Nova ação explícita
 pode tentar reconectar; não existe fallback para memória, PostgreSQL, outro modelo
 ou coleções de teste. Erros públicos não incluem caminhos, segredos ou exceções
-brutas do SDK. Falhas futuras de busca deverão manter a distinção entre ausência
+brutas do SDK. As falhas de busca mantêm a distinção entre ausência
 de evidência e indisponibilidade. Rotas de treino manual continuam independentes.
 
-## Execução e verificação local antes do Docker
+## Execução e verificação local
 
 Com a API parada, a partir de backend/ e com o ambiente do projeto configurado:
 
@@ -109,11 +109,11 @@ code/message em português e exit code 1. JSON usa escapes ASCII, compatíveis c
 UTF-8 e pipes do Windows. Não imprime caminho físico. Execute novamente depois
 para comprovar reabertura; não apagar meta.json ou arquivos de lock manualmente.
 
-Durante a API em execução, futuros consumidores internos usam a porta singleton;
-a CLI em outro processo será recusada enquanto a mesma pasta estiver ocupada.
+Durante a execução da API, os consumidores internos compartilham a instância
+do processo. A CLI em outro processo será recusada enquanto a pasta estiver ocupada.
 Para inspecionar simultaneamente sem interferir no acervo, configure diretório
 exclusivo de teste em ACADEMIA_VECTOR_PATH. Diretórios padrão ficam fora do Git.
-Variáveis de URL/chave de um servidor remoto não são necessárias neste MVP.
+O runtime acadêmico usa o diretório local, sem URL ou chave de servidor vetorial.
 
 ## Curadoria e próximos passos
 

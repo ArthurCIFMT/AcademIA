@@ -1,6 +1,6 @@
 # SPEC — Especificação completa do AcademIA para reconstrução
 
-Versão documental: 1.0. Revisão: 2026-11-22.
+Versão documental: 1.0. Revisão: 2026-11-25.
 Natureza: especificação de uma aplicação web acadêmica para uma única academia.
 Esta revisão consolida a especificação existente e incorpora seu conteúdo
 para transporte a outra IA. Requisitos e decisões conservam IDs e autoridade.
@@ -71,8 +71,11 @@ adiciona a decisão de acesso e o comando da catraca, e a 0023 registra a
 confirmação manual. A revisão 0024 acrescenta a projeção de frequência e lotação.
 A revisão 0025 acrescenta pagamentos manuais e seu histórico de correções.
 A revisão 0026 acrescenta cobranças, revisões e vínculo opcional com pagamento.
-O modelo lógico tem 44 tabelas e 359 colunas, incluindo uma tabela futura.
-O físico tem 43 tabelas, 355 colunas e 77 FKs.
+A revisão 0027 acrescenta o nome contratado e o instante ao recibo simulado.
+A revisão 0028 acrescenta o endereço opcional da conta. A 0029 acrescenta
+a miniatura privada da referência facial.
+O modelo lógico tem 44 tabelas e 363 colunas, incluindo uma tabela futura.
+O físico tem 43 tabelas, 359 colunas e 77 FKs.
 A [comparação visual da revisão 0016](../../docs/arquitetura/modelo-de-dados/visualizacao-otimizada/README.md)
 separa o conceito original, o físico daquela revisão e o escopo completo.
 Análises datadas, relatórios de preparação e documentos marcados como substituídos
@@ -112,8 +115,11 @@ IA/RAG seguem [ADR-004](../../docs/arquitetura/decisoes/ADR-004-rag-llm-e-corpus
 Qdrant especializado separado do PostgreSQL, embeddings E5 multilíngues e
 adaptador do LLM gratuito configurado. São decisões aprovadas; os ensaios reais
 de qualidade/latência pertencem às entregas de RAG/IA.
-Execução local e containerização tardia seguem
+Execução local e Docker reservado ao CompreFace seguem
 [ADR-005](../../docs/arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md).
+
+O [guia de instalação local](../../docs/instalacao/instalacao-local.md) consolida
+pré-requisitos, lockfiles e o preparo explícito de schema, catálogo e corpus.
 
 O [iniciador Windows](../../docs/instalacao/iniciar-com-dois-cliques.md) permite
 abrir/encerrar o ambiente local preparado com dois cliques, preservando os
@@ -146,10 +152,14 @@ preenchimento de [fichas manuais](../../docs/arquitetura/fichas-manuais.md) e
 esclarece estados de [dúvida e geração](../../docs/arquitetura/chat-e-adaptacao.md).
 Chat e geração seguem fluxos distintos. Triagem do onboarding e evidência
 específica de saúde continuam necessárias quando aplicáveis à ficha automática.
+A revisão manual seguinte reorganiza a navegação por papel, reúne matrícula
+e cadastro facial no atendimento e entrega Meu perfil. O onboarding mostra
+a idade atual durante a edição. A política de triagem v2 distingue dúvidas
+complementares das pendências essenciais antes de chamar o LLM.
 
 | Módulo | Especificação da capacidade | Estado neste marco |
 |---|---|---|
-| MOD-00 — Plataforma | [Stack/contratos](../../docs/arquitetura/contratos-rest.md), configuração, persistência e execução | Fundação entregue; infraestrutura final planejada |
+| MOD-00 — Plataforma | [Stack/contratos](../../docs/arquitetura/contratos-rest.md), configuração, persistência e execução | INF-01–INF-04 verificaram build, comunicação, segurança, instalação limpa, persistência e integração local. [Guia local](../../docs/instalacao/instalacao-local.md#verificação-em-uma-instalação-limpa). |
 | MOD-01 — Identidade/pessoas | [Autenticação](../../docs/arquitetura/autenticacao.md), [clientes](../../docs/arquitetura/clientes.md) e [funcionários](../../docs/arquitetura/funcionarios.md) | Entregue nos cartões IAM/PES correspondentes |
 | MOD-02 — Designação | [Vínculo cliente–instrutor e histórico](../../docs/arquitetura/designacoes.md) | Entregue |
 | MOD-03 — Onboarding/avaliações | [Convite, preenchimento, snapshots e avaliações](../../docs/arquitetura/onboarding.md) | Entregue |
@@ -157,10 +167,10 @@ específica de saúde continuam necessárias quando aplicáveis à ficha automá
 | MOD-05 — Conhecimento | [Curadoria e versões](../../docs/arquitetura/corpus.md), [conexão vetorial](../../docs/arquitetura/banco-vetorial.md), [extração](../../docs/arquitetura/extracao-documental.md), [ingestão e recuperação semântica](../../docs/arquitetura/rag-semantico.md) | Curadoria, extração, indexação e recuperação semântica com E5 CPU entregues; avaliação inicial delimitada; quatro fontes com revisão técnica pendente; livro Nahas com política/seleção explícitas de quatro páginas válidas, sem declarar extração integral |
 | MOD-06 — Orquestrador/IA | [Triagem resumida, geração, chat e adaptação](../../docs/arquitetura/funcionamento-ia-rag.md) | Triagem, API de preparação, [orquestrador fixo e adaptador Groq](../../docs/arquitetura/orquestracao-ia.md) entregues com schemas e portas; [persistência/publicação IA e API próprias](../../docs/arquitetura/geracao-persistente.md) entregues; [interface de geração/acompanhamento](../../docs/arquitetura/solicitacao-e-acompanhamento-ia.md) entregue; [chat/adaptação públicos](../../docs/arquitetura/chat-e-adaptacao.md) entregues com confirmação de snapshot e comparação de versões |
 | MOD-07 — Biometria/acesso | [Referência facial](../../docs/arquitetura/biometria.md) e [identificação](../../docs/arquitetura/reconhecimento-facial.md) | Cadastro, troca, identificação e [catraca fictícia](../../docs/instalacao/catraca-ficticia.md) entregues. [Motor de autorização e retorno](../../docs/arquitetura/autorizacao-acesso.md) implementados pelo ACS-03. [Confirmação manual](../../docs/arquitetura/confirmacao-manual.md) entregue pelo ACS-04. [Projeção de frequência e lotação](../../docs/arquitetura/frequencia-lotacao.md) entregue pelo ACS-05. ACS-06 entrega as consultas protegidas, telas de frequência e lotação e autorização na tela de reconhecimento |
-| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01 entregue. [Pagamento manual opcional](../../docs/arquitetura/pagamentos-manuais.md) entregue pelo MEM-00. [Cobranças e consulta financeira](../../docs/arquitetura/cobrancas.md) entregues pelo FIN-01. Gateway em FIN-02 |
+| MOD-08 — Matrícula/financeiro | [Planos e matrícula independente de pagamento](../../docs/arquitetura/matriculas.md) | MEM-01, MEM-00, FIN-01 e [compra simulada de plano](../../docs/arquitetura/compra-simulada.md) entregues. FIN-03 fornece a leitura dos agregados financeiros. |
 | MOD-09 — Agenda | [Agenda por ocorrência](../../docs/arquitetura/agenda.md) | AUL-01 entregue. Reserva depende do GATE-07 |
 | MOD-10 — Equipamentos | [Inventário e disponibilidade](../../docs/arquitetura/equipamentos.md) | Entregue |
-| MOD-11 — Indicadores | [Painel administrativo](../../docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. Faturamento pertence a FIN-03 |
+| MOD-11 — Indicadores | [Painel administrativo](../../docs/arquitetura/painel-administrativo.md) | DSH-01 entrega clientes, matrículas, funcionários, frequência e lotação. FIN-03 mostra valores cobrados, recebidos e saldos simulados. |
 | MOD-12 — Auditoria/avisos | [Auditoria/eventos](../../docs/arquitetura/auditoria-e-eventos.md) e [notificações](../../docs/arquitetura/notificacoes.md) | Base transversal entregue |
 
 O MVP acadêmico foi concluído: AI-06 aprovado na amostra v4, TST-01 concluído e PG-01 fechado. Por autorização
@@ -195,7 +205,7 @@ históricas, sem declaração de correção. Não unir versões/modelos nem repe
 resposta concluída para escolher melhor. Treino manual, saúde ausente, bloqueios,
 recursos e isolamento continuam obrigatórios. TST-01/PG-01 foram fechados pela
 [consolidação própria](../testes/tst01-consolidacao.json); aprovação de AI-06
-não aprova outros provedores. A revisão manual do aplicativo é o próximo passo.
+não aprova outros provedores. A revisão manual do aplicativo local está disponível.
 
 A [reserva 20B](../testes/ai06-reserva.md) e a
 [integração Gemini](../testes/ai06-gemini.md) permanecem candidatas explícitas
@@ -241,9 +251,10 @@ UX-06 reorganizou [fichas e histórico do cliente no celular](../testes/ux06-fic
 UX-07 reorganizou a [área de trabalho do instrutor](../testes/ux07-area-do-instrutor.md).
 UX-08 padronizou [cadastros, catálogos e operação administrativa](../testes/ux08-cadastros-e-catalogos.md).
 UX-09 concluiu o [aceite visual e a regressão integrada](../testes/ux09-aceite-visual.md)
-das telas existentes. As próximas entregas pós-MVP aplicam os mesmos critérios
-às suas próprias interfaces, inclusive matrícula e biometria. PG-02 permanece
-aberto enquanto houver outras dependências do escopo final.
+das telas existentes. Entregas pós-MVP aplicam os mesmos critérios às suas
+interfaces, incluindo a matrícula e a biometria já entregues. PG-02 foi
+fechado após a revisão de [escopo e evidências](../../docs/arquitetura/rastreabilidade.md#escopo-de-admissão-do-pg-02).
+A validação final do conjunto segue no VAL-02.
 
 A sequência cobre plano/protótipos, componentes, navegação, onboarding, assistente,
 fichas do cliente, instrutor, cadastros e
@@ -261,7 +272,7 @@ Os detalhes e critérios completos estão nas fontes da seção 2.
 2. **Treino manual:** instrutor designado → catálogo e equipamentos elegíveis →
    rascunho → conferência/publicação → consulta móvel e exportação próprias.
    Falhas de IA/RAG não impedem esse fluxo.
-3. **Geração assistida planejada:** snapshot concluído → resumo minimizado,
+3. **Geração assistida:** snapshot concluído → resumo minimizado,
    preservando ausências e alertas → regras/busca e análise assistida →
    decisão do backend → catálogo/recursos e evidências → geração JSON →
    validações → publicação pelo MOD-04 com parecer PENDENTE.
@@ -270,7 +281,7 @@ Os detalhes e critérios completos estão nas fontes da seção 2.
    Rejeição mantém consulta; rejeitar uma versão posterior remove o conteúdo
    da rejeitada anterior. Limite independente de quinze versões publicadas
    completas inclui a vigente e preserva metadados/auditoria e execuções existentes.
-5. **Chat/adaptação planejados:** dúvida usa recuperação semântica e resposta com
+5. **Chat/adaptação:** dúvida usa recuperação semântica e resposta com
    fontes ou abstenção. Conversa informativa não altera ficha. Adaptação explícita
    exige contexto confirmado/versionado, nova triagem e publicação de nova versão.
 6. **Acesso pós-MVP:** atendente matricula sem pagamento obrigatório → referência
@@ -414,10 +425,9 @@ documentos aprovados. Provisionar esses recursos e validar sua integridade
 pertence às etapas de RAG; arquivo diferente não se torna aprovado por ter o
 mesmo título. Serviços/provedores continuam sujeitos ao ensaio real previsto.
 
-As pendências pós-MVP estão explicitadas no roteiro incorporado. O SPEC não
-inventa a versão/hospedagem de CompreFace nem parâmetros de reserva, acesso ou
-gateway ainda não decididos. Uma reconstrução pode concluir o MVP antes desses
-gates e tratar o escopo posterior quando suas decisões forem fechadas.
+As pendências pós-MVP estão no manifesto e no roteiro incorporado. A biometria
+usa a instância local do GATE-08. O financeiro segue a simulação do GATE-09.
+Reservas continuam opcionais e dependem do GATE-07.
 
 Este arquivo é gerado de fontes versionadas. No projeto de origem, editar os
 documentos especializados e a visão geral/roteiro, atualizar o SPEC com

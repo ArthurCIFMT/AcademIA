@@ -18,8 +18,11 @@ class RagEvidence:
         retriever: Retriever,
         sessions: sessionmaker[Session],
         status: Callable[[], CollectionStatus],
+        *,
+        top_k: int = 5,
     ) -> None:
         self.retriever, self.sessions, self.status = retriever, sessions, status
+        self.top_k = top_k
 
     def retrieve(
         self, context: Context, purpose: Purpose, query: str, scope: Scope | None = None
@@ -29,6 +32,7 @@ class RagEvidence:
                 contexto_id=context.client_id,
                 finalidade=purpose,
                 consulta=query,
+                top_k=self.top_k,
                 escopo_saude=scope,
             )
         )

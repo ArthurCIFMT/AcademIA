@@ -2,7 +2,7 @@ import { useEffect, useRef, useSyncExternalStore, type MouseEvent, type ReactNod
 import { Link, NavLink, Outlet, useLocation, useNavigationType } from "react-router-dom";
 import type { Role } from "../lib/api/auth";
 import { Button, NavigationDisclosure } from "../ui/primitives";
-import { areaMenu, areas } from "./areaNavigation";
+import { areaHome, areaMenu, areaShortcuts, areas, ownProfilePath } from "./areaNavigation";
 import "./frames.css";
 
 const mobileMenuQuery = "(max-width: 47rem)";
@@ -77,22 +77,27 @@ function SectionMenu({ role, activePath, maintenance, focusMain }: {
     }
   }
 
-  const links = (
+  const links = (entries: typeof items, disclosure = false) => (
     <ul className="site-sections">
-      {items.map(item => <li key={item.path}>
+      {entries.map(item => <li key={item.path}>
         <Link to={item.path} aria-current={item.path !== activePath ? undefined
           : item.path === pathname.replace(/\/+$/, "").toLowerCase() ? "page" : "location"}
-          onClick={mobile ? closeOnFollow : undefined}>{item.label}</Link>
+          onClick={disclosure ? closeOnFollow : undefined}>{item.label}</Link>
       </li>)}
     </ul>
   );
   return (
     <aside className="site-sidebar">
-      {mobile ? <div className="site-mobile-menu">
-        <NavigationDisclosure key={pathname} label={"Menu · " + active} navigationLabel="Seções da área">
-          {links}
-        </NavigationDisclosure>
-      </div> : <nav aria-label="Seções da área">{links}</nav>}
+      {mobile ? <>
+        <nav className="site-shortcuts" aria-label="Atalhos da área">
+          {links(areaShortcuts[role].flatMap(path => items.filter(item => item.path === path)))}
+        </nav>
+        <div className="site-mobile-menu">
+          <NavigationDisclosure key={pathname} label={"Menu · " + active} navigationLabel="Seções da área">
+            {links(items, true)}
+          </NavigationDisclosure>
+        </div>
+      </> : <nav aria-label="Seções da área">{links(items)}</nav>}
     </aside>
   );
 }
@@ -107,14 +112,17 @@ export function AreaFrame({ role, allowed, activePath, maintenance, signOut, chi
       <SkipLink focusMain={() => main.current?.focus()} />
       <header className="site-bar">
         <div className="site-bar-inner">
-          <Brand to={role ? areas[role].path : "/area"} />
+          <Brand to={role ? areaHome[role] : "/area"} />
           <div className="site-account">
             {(allowed.length > 1 || (!role && allowed.length > 0)) &&
               <nav aria-label="Áreas disponíveis">
                 <ul className="site-areas">{allowed.map(item => <li key={item}>
-                  <NavLink to={areas[item].path}>{areas[item].label}</NavLink>
+                  <NavLink to={areaHome[item]} aria-current={item === role ? "location" : undefined}>
+                    {areas[item].label}
+                  </NavLink>
                 </li>)}</ul>
               </nav>}
+            {role && <NavLink className="site-account-profile" to={ownProfilePath(role)}>Meu perfil</NavLink>}
             <Button variant="secondary" onClick={() => void signOut()}>Sair</Button>
           </div>
         </div>

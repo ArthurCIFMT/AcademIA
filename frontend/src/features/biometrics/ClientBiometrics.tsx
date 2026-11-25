@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { ApiError, requestApi } from "../../lib/api/auth";
 import { Button, StatusMessage } from "../../ui/primitives";
 import { DirectoryTag } from "../clients/directory-ui";
-import { PhotoInputs, supportedPhoto, toBase64 } from "./PhotoInputs";
+import { PhotoInputs, SelectedPhoto, supportedPhoto, toBase64 } from "./PhotoInputs";
 import "./biometrics.css";
 
 type ReferenceStatus = {
@@ -21,10 +21,10 @@ async function readStatus(path: string, options: RequestInit): Promise<Reference
 function errorText(error: unknown) {
   const status = error instanceof ApiError ? error.status : null;
   if (status === 422 || status === 413) {
-    return "Use uma foto JPG ou PNG, de até 4 MB, com um único rosto nítido e bem iluminado.";
+    return "A foto foi recusada. Use um JPG ou PNG de até 4 MB e 4096 px por lado, com um único rosto visível.";
   }
   if (status === 409) return "Confira a matrícula e veja se há uma operação pendente.";
-  if (status === 503) return "O CompreFace não confirmou a operação. Confira o estado antes de tentar novamente.";
+  if (status === 503) return "O CompreFace está indisponível ou não confirmou o cadastro. Confira a referência antes de reenviar.";
   return "Não foi possível confirmar a operação. Confira o estado da referência.";
 }
 
@@ -87,7 +87,7 @@ export function ClientBiometrics({ clientId, csrf }: { clientId: string; csrf: s
       if (controller.signal.aborted) return;
       setPhoto(undefined);
       setStatus(result);
-      setNotice(recover ? "Pendência verificada." : "Referência facial cadastrada.");
+      setNotice(recover ? "Pendência verificada." : "Foto enviada. Referência facial cadastrada.");
     } catch (reason) {
       if (!controller.signal.aborted) {
         setError(errorText(reason));
@@ -109,8 +109,9 @@ export function ClientBiometrics({ clientId, csrf }: { clientId: string; csrf: s
       <Button variant="secondary" onClick={reload}>Tentar de novo</Button>
     </> : !status ? <StatusMessage state="loading" title="Consultando referência facial…" /> : <>
       <DirectoryTag tone={status.cadastrada ? "positive" : "neutral"}>
-        {status.cadastrada ? "Referência cadastrada" : "Sem referência cadastrada"}
+        {status.cadastrada ? "Referência cadastrada" : status.elegivel ? "Biometria pendente" : "Sem referência cadastrada"}
       </DirectoryTag>
+      {status.atualizada_em && <p>Confirmada em {new Date(status.atualizada_em).toLocaleString("pt-BR")}.</p>}
       {!status.elegivel && <p>O cadastro facial exige um cliente habilitado com matrícula registrada.</p>}
       {!status.disponivel && <p>O CompreFace precisa estar configurado para cadastrar uma foto.</p>}
       {status.pendencia && <StatusMessage state="conflict" title="Há uma operação facial pendente.">
@@ -122,8 +123,8 @@ export function ClientBiometrics({ clientId, csrf }: { clientId: string; csrf: s
           <fieldset className="directory-fieldset" disabled={busy}>
             <p className="directory-meta">Use JPG ou PNG de até 4 MB com um único rosto.</p>
             <PhotoInputs onChange={choose} />
-            {photo && <p role="status">Foto selecionada.</p>}
-            <Button type="submit" pending={busy} disabled={!photo}>
+            {photo && <SelectedPhoto file={photo} />}
+            <Button type="submit" pending={busy} pendingLabel="Enviando foto…" disabled={!photo}>
               {status.cadastrada ? "Substituir foto" : "Cadastrar foto"}
             </Button>
           </fieldset>

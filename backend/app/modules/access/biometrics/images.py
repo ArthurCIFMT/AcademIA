@@ -39,3 +39,11 @@ def clean_face_image(encoded: str, *, max_bytes: int) -> bytes:
                 return output.getvalue()
     except (ValueError, OSError, SyntaxError, Image.DecompressionBombError):
         raise InvalidFaceImage from None
+
+
+def profile_thumbnail(image: bytes) -> bytes:
+    with Image.open(BytesIO(image), formats=["JPEG"]) as source:
+        source.thumbnail((192, 192))
+        with BytesIO() as output:
+            source.save(output, format="JPEG", quality=80)
+            return output.getvalue()

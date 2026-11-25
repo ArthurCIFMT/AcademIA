@@ -57,7 +57,8 @@ de onboarding resumido e geração de fichas pelo LLM. Não restringir IA ao cha
 As escolhas iniciais foram fechadas por delegação: [ADRs aceitos](../arquitetura/decisoes/README.md),
 [formulário/triagem](../requisitos/onboarding-e-triagem.md),
 [parâmetros](../requisitos/configuracao-ia-rag.md) e [modelo lógico](../arquitetura/modelo-de-dados/modelo-logico.dbml).
-GATE-01–GATE-06 fechados documentalmente; recursos/ensaios ainda futuros.
+Consulte o manifesto para o progresso das entregas e as evidências dos ensaios.
+GATE-08 e UX-09 estão concluídos.
 
 ## 3. Contexto e objetivo do produto
 
@@ -73,8 +74,8 @@ GATE-01–GATE-06 fechados documentalmente; recursos/ensaios ainda futuros.
 - Uma identidade pode acumular papéis e possuir perfis de cliente e funcionário.
 
 Priorize um fluxo funcional demonstrável antes de infraestrutura comercial.
-Mantenha pagamentos automáticos em fase tardia. Docker e Compose entram somente
-após o MVP e a maioria dos demais módulos, conforme orientação do professor.
+Planeje instalação e demonstração locais. A etapa financeira usa simulação
+acadêmica, com o CompreFace como único serviço em Docker local.
 Toda implementação deve ser reproduzível localmente e sincronizada ao repositório
 GitHub configurado quando sua execução/publicação estiver autorizada.
 
@@ -90,11 +91,11 @@ GitHub configurado quando sua execução/publicação estiver autorizada.
 | Identidade | Autenticação integrada, sessão opaca/Argon2id | GATE-02 |
 | IA | Orquestrador, RAG semântico e banco vetorial especializado | Dúvidas, triagem resumida e geração; provedor gratuito/livro/parâmetros em GATE-04 |
 | Serviços de IA | Portas para LLM e embeddings | Groq/GPT-OSS 120B + E5-small local; ADRs 004/006/012 |
-| E-mail | SMTP ou API por adapter | Execução local antes do Docker |
+| E-mail | SMTP por adaptador | Caixa local do Mailpit |
 | Execução local | Aplicação/dependências sem Compose inicial; início e encerramento com dois cliques mantidos por etapa | GATE-06; contrato do iniciador |
-| Infraestrutura final | Docker Compose, volumes, redes e restrição de exposição | PG-01 e PG-03 |
-| Matrícula/financeiro | Atendente matricula sem pagamento obrigatório; financeiro tardio e independente | GATE-08/GATE-09 |
-| Biometria | CompreFace confirmado; versão, hospedagem, contrato e ensaio ainda pendentes | GATE-08 |
+| Infraestrutura final | Instalação local reproduzível, persistência e restrição a loopback | PG-01 e PG-03 |
+| Matrícula/financeiro | Atendente matricula de forma independente; financeiro simulado | GATE-08/GATE-09 |
+| Biometria | CompreFace 1.2.0, FaceNet e ensaio de prontidão concluído em instância local dedicada | GATE-08 |
 | Catraca acadêmica | Serviço externo fictício com comandos e passagem simulada | GATE-08 |
 
 FastAPI/Pydantic/SQLAlchemy/Alembic e Qdrant local foram aceitos; autenticação
@@ -213,12 +214,12 @@ modalidade e limites → comando autenticado à API externa fictícia de catraca
 confirmação de passagem simulada → frequência/lotação.
 
 Reconhecimento é real; apenas o equipamento físico é substituído por um serviço
-fictício. Usar CompreFace (DEC-015); fechar contrato e hospedagem em GATE-08.
+fictício. Usar o contrato e a instância local do CompreFace definidos em GATE-08.
 Foto válida exige um rosto; subjects[].similarity é diferente da confiança de
 detecção/qualidade. Limiar inicial 0,95 na escala 0–1 não é acurácia de 95%.
 Guardar subject/image_id e manter x-api-key somente no backend. A distribuição
-oficial usa Docker: instância externa ou decisão de execução com o professor
-deve resolver GATE-06/08, sem antecipar containerização do AcademIA.
+oficial usa Docker. Use a instância dedicada já autorizada e mantenha o
+AcademIA, o Qdrant e a catraca fictícia na instalação local nativa.
 Tentativa, decisão e passagem são conceitos distintos. Eventos duplicados,
 desconhecidos, negados, fora de ordem e falhas precisam de comportamento definido.
 A alternativa manual registra responsável e motivo e segue política explícita.
@@ -238,8 +239,8 @@ Planeje também ocorrências de aula, lotação e indicadores.
 Reservas/capacidade dependem de GATE-07 e requisito complementar aprovado.
 Dashboard usa dados de módulos entregues e diferencia erro parcial de ausência de
 dados. Sem despesas, não apresente receita/faturamento como lucro.
-Gateway posterior registra pagamento por evento idempotente; atendente continua
-responsável por matricular/renovar independentemente desse registro. Webhook não
+O simulador local registra resultado idempotente; atendente continua
+responsável por matricular/renovar independentemente desse registro. A simulação não
 matricula automaticamente nem bloqueia matrícula/acesso por falta de pagamento.
 
 ## 8. Dados, invariantes e análise do MER
@@ -337,13 +338,13 @@ Mantenha o MVP definido e apresente marcos internos para torná-lo executável:
 | Avaliação integrada | Fila/aviso, parecer posterior por versão e cliente com acesso anterior ao parecer |
 | Chat e aceite | Adaptação versionada e teste ponta a ponta do MVP |
 
-Biometria/catraca, matrícula mínima, aulas e dashboard são extensões
-planejadas; pagamentos automáticos continuam tardios. Caso recomende reduzir o MVP,
+Biometria/catraca, matrícula mínima, aulas e dashboard são extensões do MVP.
+Financeiro usa simulação acadêmica. Caso recomende reduzir o MVP,
 apresente a opção e seu impacto sem retirar requisito aprovado silenciosamente.
 Relação exercício–equipamento foi confirmada e é necessária no MVP. Reserva,
 multiacademia e sessões executadas de treino continuam condicionadas a confirmação.
 
-Docker/Compose requer PG-01 e PG-03. Escolhas de IA não devem bloquear cadastro
+A validação final da instalação local requer PG-01 e PG-03. A IA não deve bloquear cadastro
 e treino manual; matrícula pelo atendente e acesso acadêmico não dependem do
 financeiro, inclusive de confirmação manual de pagamento.
 A entrega final ainda exige rastreabilidade, regressão e roteiro acadêmico.

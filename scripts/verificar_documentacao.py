@@ -57,7 +57,7 @@ def cells(line: str) -> list[str]:
     return [part.strip() for part in re.split(r"(?<!\\)\|", line.strip().strip("|"))]
 
 
-def no_code(text: str) -> str:
+def no_code(text: str, *, keep_inline: bool = False) -> str:
     """Remove código preservando linhas para não validar exemplos futuros em crases."""
     lines = []
     fence = None
@@ -70,6 +70,8 @@ def no_code(text: str) -> str:
             if marker and marker.group(1)[0] == fence[0] and len(marker.group(1)) >= len(fence):
                 fence = None
             lines.append("\n" if line.endswith("\n") else "")
+        elif keep_inline:
+            lines.append(line)
         else:
             lines.append(re.sub(r"(`+)([^\n]*?)\1", lambda m: " " * len(m.group(0)), line))
     return "".join(lines)
@@ -108,6 +110,27 @@ def link_targets(text: str):
             yield re.sub(r"\\([() <>])", r"\1", target), text.count("\n", 0, match.start()) + 1
     for match in re.finditer(r"^\s{0,3}\[[^\]\n]+\]:\s*(<[^>]+>|\S+)", text, re.MULTILINE):
         yield match.group(1).strip("<>"), text.count("\n", 0, match.start()) + 1
+
+
+def markdown_anchors(text: str) -> set[str]:
+    content = no_code(text, keep_inline=True)
+    anchors = set(re.findall(r'<(?:a|span)\s+(?:id|name)=["\x27]([^"\x27]+)', content))
+    headings = set()
+    for match in re.finditer(r"^ {0,3}#{1,6}[ \t]+(.+)$", content, re.MULTILINE):
+        heading = re.sub(r"\[([^\]]+)\]\([^)]+\)|<[^>]+>", r"\1", match.group(1))
+        heading = html.unescape(re.sub(r"\s+#+\s*$", "", heading.strip())).lower()
+        slug = "".join(
+            "-" if char == " " else char
+            for char in heading
+            if char.isalnum() or char in " _-"
+        )
+        anchor = slug
+        suffix = 0
+        while anchor in headings:
+            suffix += 1
+            anchor = f"{slug}-{suffix}"
+        headings.add(anchor)
+    return anchors | headings
 
 
 def id_parts(identifier: str):
@@ -198,6 +221,7 @@ class Audit:
     def check_links(self):
         count = 0
         files = 0
+        anchor_cache: dict[Path, set[str]] = {}
         for folder, dirs, names in os.walk(self.root, followlinks=False):
             dirs[:] = [name for name in dirs if name not in IGNORED_DIRS]
             for name in names:
@@ -207,19 +231,23 @@ class Audit:
                 files += 1
                 for raw, line in link_targets(read_text(path)):
                     raw = html.unescape(raw)
-                    if raw.startswith("#") or raw.startswith("//"):
-                        continue
                     parsed = urlsplit(raw)
-                    if parsed.scheme:
+                    if parsed.scheme or parsed.netloc:
                         continue
                     target = unquote(parsed.path)
-                    if not target:
+                    if not target and not parsed.fragment:
                         continue
                     # Um / inicial em link do repositório aponta à sua raiz.
                     dest = self.root / target.lstrip("/") if target.startswith("/") else path.parent / target
+                    dest = (dest if target else path).resolve()
                     count += 1
-                    if not dest.resolve().exists():
+                    if not dest.exists():
                         self.issue("LINK_LOCAL_QUEBRADO", raw, path, line)
+                    elif parsed.fragment and dest.is_file() and dest.suffix.lower() == ".md":
+                        if dest not in anchor_cache:
+                            anchor_cache[dest] = markdown_anchors(read_text(dest))
+                        if unquote(parsed.fragment) not in anchor_cache[dest]:
+                            self.issue("ANCORA_MARKDOWN_AUSENTE", raw, path, line)
         self.metrics.update(arquivos_markdown=files, links_locais=count)
 
     def check_requirements(self):

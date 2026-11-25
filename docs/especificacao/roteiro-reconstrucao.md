@@ -69,7 +69,7 @@ executado. A redução de uma tarefa por contexto não elimina seus critérios.
 | Biometria | [GATE-08](../arquitetura/preparacao-gate-08.md) fechado com CompreFace 1.2.0 e FaceNet. Limiar inicial de similaridade 0,95 | Integração e ensaio do fluxo completo em ACS-01/02 |
 | Matrícula/acesso | Matrícula pelo atendente sem pagamento obrigatório, limite diário, renovação sem sobreposição e identificação manual sob as mesmas regras | MEM-01 implementa os planos e as matrículas. ACS-03/04 implementam autorização e alternativa manual |
 | Catraca | API externa fictícia com contrato de comando e passagem definido no GATE-08 | Implementação em ACS-07 e integração em ACS-03/05 |
-| Pagamentos automáticos | Fase tardia e independente da matrícula acadêmica | GATE-09: provedor/sandbox, callbacks e regras específicas |
+| Financeiro simulado | GATE-09: simulação local independente da matrícula | Implementar compra simulada e indicadores em FIN-02/03 |
 | IA/RAG real | Modelos/configuração/corpus iniciais definidos | Provisionar recursos e executar avaliação de relevância, qualidade e latência nos cartões próprios |
 
 Essas pendências não impedem a reconstrução do fluxo manual nem as etapas
@@ -99,8 +99,8 @@ Após reproduzir o MVP funcional, executar UX-01–UX-09 conforme o manifesto e 
 cartões incorporados. Não tratar CSS/acabamento como consequência automática de
 outros prompts. A especificação de experiência traz RNF-19/RNF-20, jornadas,
 limites e critérios mensuráveis; UX-01 materializa a referência visual antes da
-migração das telas. Ao continuar o repositório, esta trilha é a prioridade visual
-recomendada após a revisão manual, sem depender dos módulos ainda não entregues.
+migração das telas. No repositório atual, UX-09 já concluiu a trilha e o
+manifesto indica os próximos cartões elegíveis.
 
 Cada entrega mantém componentes comuns, contratos, autorizações e estados reais.
 UX-09 comprova as telas existentes em navegador; telas de módulos posteriores

@@ -23,7 +23,7 @@ class VectorSettings(BaseSettings):
     embedding_model: str = "intfloat/multilingual-e5-small"
     model_revision: str | None = REVISION
     dimension: Annotated[int, Field(ge=1, le=65536)] = 384
-    # Modo servidor será implementado na fase de infraestrutura, sem fallback.
+    # Mantém o erro explícito para ambientes antigos que informem URL de servidor.
     url: SecretStr | None = Field(default=None, repr=False)
 
     @property

@@ -1,7 +1,15 @@
 from datetime import datetime
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, DateTime, ForeignKey, Index, String, text
+from sqlalchemy import (
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    Index,
+    LargeBinary,
+    String,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
@@ -38,3 +46,4 @@ class FacialReference(Base):
         ForeignKey("academia.funcionario.usuario_id")
     )
     criada_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    foto_perfil: Mapped[bytes | None] = mapped_column(LargeBinary, deferred=True)

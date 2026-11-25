@@ -14,7 +14,6 @@ import pytest
 import uvicorn
 from fastapi import FastAPI, Header, HTTPException, Response
 from fastapi.testclient import TestClient
-
 from simulators.turnstile.contracts import CALLBACK_PATH, Command, Passage, Settings
 from simulators.turnstile.http import create_app
 from simulators.turnstile.store import RejectedOperation, Store
@@ -344,6 +343,34 @@ def test_real_http_callback_preserves_identity_after_an_uncertain_timeout(
                 and event.direction == "EXIT"
                 and event.simulated
             )
+
+
+@pytest.mark.integration
+def test_callback_distinguishes_expiry_from_temporary_failure(
+    settings: Settings,
+) -> None:
+    receiver = FastAPI()
+    arrivals: list[Passage] = []
+    current = NOW
+
+    @receiver.post(CALLBACK_PATH)
+    def receive_passage(data: Passage) -> None:
+        arrivals.append(data)
+        raise HTTPException(410 if current >= NOW + timedelta(seconds=20) else 503)
+
+    with live_server(receiver) as callback:
+        config = settings.model_copy(update={"callback_url": callback + CALLBACK_PATH})
+        with TestClient(create_app(config, clock=lambda: current)) as api:
+            command = command_payload()
+            trigger = passage_payload()
+            assert api.post("/commands", json=command, headers=AUTH).status_code == 202
+            unavailable = api.post(passage_route(command), json=trigger, headers=AUTH)
+            assert unavailable.status_code == 502
+            current += timedelta(seconds=21)
+            expired = api.post(passage_route(command), json=trigger, headers=AUTH)
+            assert expired.status_code == 410
+            assert expired.json()["detail"] == "CALLBACK_EXPIRED"
+            assert len(arrivals) == 2 and arrivals[0] == arrivals[1]
 
 
 @pytest.mark.integration

@@ -23,6 +23,27 @@ from app.modules.knowledge.retrieval.contracts import Evidence
 from app.modules.onboarding.schemas import Condition, Limitation, OnboardingData
 
 
+def missing_health_answer(data: OnboardingData) -> Reason | None:
+    required: tuple[tuple[str, Reason], ...] = (
+        (data.possui_condicoes_saude, "PENDENCIA_CONDICOES"),
+        (data.possui_dor_lesao_limitacao, "PENDENCIA_LIMITACOES"),
+        (data.restricao_exercicio_declarada, "PENDENCIA_RESTRICAO"),
+        (data.evento_saude_importante_recente, "PENDENCIA_EVENTO"),
+    )
+    for value, reason in required:
+        if value == "NAO_SEI":
+            return reason
+    if any(item.gravidade_declarada == "NAO_SEI" for item in data.condicoes_saude):
+        return "PENDENCIA_CONDICOES"
+    if any(item.gravidade_declarada == "NAO_SEI" for item in data.limitacoes):
+        return "PENDENCIA_LIMITACOES"
+    if data.usa_medicamentos == "NAO_SEI" and (
+        data.observacoes.strip() or any(value != "NAO" for value, _ in required)
+    ):
+        return "PENDENCIA_MEDICACAO"
+    return None
+
+
 class Engine:
     def __init__(
         self,
@@ -105,17 +126,13 @@ class Engine:
             or parsed.evento_saude_importante_recente == "SIM"
         ):
             return result("BLOQUEADO_POR_SEGURANCA", "ALERTA_GRAVE_DECLARADO")
-        flags = [
-            parsed.possui_condicoes_saude,
-            parsed.usa_medicamentos,
-            parsed.possui_dor_lesao_limitacao,
-            parsed.restricao_exercicio_declarada,
-            parsed.evento_saude_importante_recente,
-        ]
-        if "NAO_SEI" in flags or any(
-            item.gravidade_declarada == "NAO_SEI" for item in occurrences
+        pending = missing_health_answer(parsed)
+        if self.policy.version == 1 and (
+            pending or parsed.usa_medicamentos == "NAO_SEI"
         ):
-            return result("DADOS_INSUFICIENTES", "DADO_DESCONHECIDO")
+            pending = "DADO_DESCONHECIDO"
+        if pending:
+            return result("DADOS_INSUFICIENTES", pending)
         if summary is None:
             return result("DADOS_INSUFICIENTES", "CONTEXTO_EXCEDIDO")
         if self.analyst is None:

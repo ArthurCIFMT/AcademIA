@@ -1,4 +1,4 @@
-# INF-03 — Rede, volumes e restrição de exposição
+# INF-03 — Segurança e persistência locais
 
 ## Metadados
 
@@ -10,7 +10,7 @@
 
 ## Objetivo e contexto
 
-Entregar rede, volumes e restrição de exposição, respeitando os critérios abaixo.
+Verificar restrição a loopback, diretórios persistentes e acesso aos arquivos locais.
 Leia o [contexto de execução](../00-contexto-de-execucao.md) e o
 [contrato operacional](../00-contrato-operacional.md), que integram este prompt.
 Consulte também requisitos citados, modelo lógico e ADRs aceitos.
@@ -18,8 +18,6 @@ A redação deste cartão não fecha gates nem autoriza escolher tecnologia pend
 
 ## Escopo permitido
 
-- `compose.yaml`
-- `infra/**`
 - `docs/instalacao/**`
 
 Documentação, migrations e caminhos equivalentes seguem o contrato comum.
@@ -27,7 +25,7 @@ Documentação, migrations e caminhos equivalentes seguem o contrato comum.
 ## Implementação e entregáveis
 
 1. Restringir portas, redes de bancos e administração conforme ambiente.
-2. Configurar volumes persistentes e healthchecks verificáveis.
+2. Verificar diretórios persistentes e healthchecks do iniciador local.
 3. Documentar regras de firewall/aplicação da plataforma; não alterar firewall do computador sem autorização.
 
 ## Critérios de aceite
@@ -46,7 +44,7 @@ Execute também lint/tipos/build afetados e `git diff --check`.
 
 ## Fora do escopo e interrupção
 
-Desligar firewall do host ou executar remoção ampla de volumes.
+Expor serviços à rede ou apagar dados locais.
 Dependência/gate aberto ou contrato material ausente impede executar a parte afetada.
 Informe a informação que falta; não improvise dados para obter aceite.
 

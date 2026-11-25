@@ -33,10 +33,9 @@
   conforme RF-17; auditoria e registros de treinos executados são preservados.
 - Interface e respostas ao usuário são em português; fontes estrangeiras são
   permitidas com recuperação e explicação/tradução em português avaliadas.
-- Cobrança e integração automática de pagamentos ficam para fase tardia.
-- Dockerfiles e Docker Compose ficam para depois do MVP e da maioria dos módulos.
-- O código deve permanecer executável localmente antes da containerização.
-- Toda implementação deve existir localmente e no repositório GitHub configurado.
+- Cobranças, pagamentos e indicadores financeiros são registros de simulação acadêmica.
+- Execução no Windows, com serviços locais e Docker reservado ao CompreFace dedicado.
+- O Git é usado para versionamento. Publicação no GitHub segue a autorização vigente.
 
 ## Identidade e papéis
 
@@ -79,11 +78,11 @@ real → motor verifica conta, matrícula, validade, modalidade e limites → AP
 fictícia simula catraca → passagem simulada confirmada gera frequência.
 Financeiro permanece tardio e independente: nenhum pagamento/comprovante é
 obrigatório para matricular. Acesso depende da matrícula e das regras do plano.
-Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
+Veja [fluxos e integração](../arquitetura/fluxos-atualizados.md).
 
 ## Fora do MVP inicial
 
-- Pagamento automático, estornos e conciliação financeira.
+- Transação de dinheiro real, gateway, estorno bancário e conciliação financeira.
 - Implantação comercial, alta disponibilidade e escalabilidade distribuída.
 - Containerização completa da aplicação.
 - Diagnóstico médico realizado pela IA.
@@ -91,6 +90,20 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 - Fluxos de desbloqueio da triagem por documento médico.
 - Reconhecimento facial implementado pela própria aplicação; o reconhecimento é
   responsabilidade de um serviço externo.
+
+## Escopo da entrega acadêmica local
+
+A entrega inclui o MVP, as telas revisadas, planos e matrícula manual,
+biometria com CompreFace, catraca fictícia, frequência e lotação, agenda por
+ocorrências, painel administrativo e financeiro simulado. A matrícula continua
+independente de pagamento. A instalação é local no Windows, com Docker
+reservado ao CompreFace. [Evidências e rastreabilidade](../arquitetura/rastreabilidade.md).
+
+Reserva e controle de capacidade ficam dispensados nesta entrega. A agenda de
+eventos permanece disponível conforme RF-30 e AUL-01. A condição de RN-25
+continua registrada para eventual oferta de aulas com reservas. O cartão
+AUL-02 mantém seus requisitos de aprovação de escopo pelo GATE-07.
+[Decisão sobre extensões opcionais](../arquitetura/decisoes/ADR-005-servicos-locais-e-entrega.md).
 
 ## Glossário
 
@@ -116,10 +129,9 @@ Veja [fluxos e integração propostos](../arquitetura/fluxos-atualizados.md).
 ## Decisões iniciais fechadas por delegação
 
 Uma academia, FastAPI/Pydantic/SQLAlchemy/Alembic, autenticação integrada, Qdrant
-local persistente, embeddings E5-small e Groq/Llama estão definidos nos
+local persistente, embeddings E5-small e Groq/GPT-OSS 120B estão definidos nos
 [ADRs aceitos](../arquitetura/decisoes/README.md).
 [Campos/triagem](onboarding-e-triagem.md), [configuração IA](configuracao-ia-rag.md)
 e [modelo lógico](../arquitetura/modelo-de-dados/modelo-logico.dbml) são fontes vigentes.
-Serviços de IA, pesos e chave do provedor serão configurados nas respectivas entregas, sem prometer
-qualidade/velocidade não testadas. Reservas, detalhes de acesso e gateway continuam
-tardios. Ver [prontidão](../arquitetura/preparacao-implementacao.md).
+O manifesto identifica entregas e evidências de serviços de IA, acesso e simulação
+financeira. Reservas continuam opcionais. Ver [prontidão](../arquitetura/preparacao-implementacao.md).

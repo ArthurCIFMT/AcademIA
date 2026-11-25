@@ -4,7 +4,10 @@ Status: DEFINIDA por delegação em 2026-11-04.
 Valores canônicos: [configuração v2](schemas/configuracao-ia-v2.json).
 [Triagem e onboarding](onboarding-e-triagem.md), [ADR](../arquitetura/decisoes/ADR-004-rag-llm-e-corpus.md).
 
-A configuração fixa modelos, limite por rota, chunking/busca, retenção e metas.
+A configuração registra modelos, limites por rota, chunking/busca, retenção e
+metas. O backend usa `retrieval.top_k` e `retrieval.min_score_inicial` do perfil
+selecionado a partir da próxima inicialização. Os parâmetros de chunking e
+os tetos permanecem fixados pelo contrato de ingestão e recuperação.
 GROQ_API_KEY é credencial pessoal de ambiente, não criada/versionada por esta entrega.
 O perfil principal usa JSON Schema estrito (ADR-012); validar também no backend e encerrar
 erro sem segunda geração automática. No máximo uma análise + uma geração em ficha.

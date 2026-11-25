@@ -56,6 +56,7 @@ class User(Base):
     estado: Mapped[str] = mapped_column(String(20))
     criado_em: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     revision: Mapped[int]
+    endereco: Mapped[str | None] = mapped_column(String(300))
 
 
 class UserRole(Base):
