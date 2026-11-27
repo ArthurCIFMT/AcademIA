@@ -10,8 +10,9 @@ from alembic import command
 from alembic.autogenerate import compare_metadata
 from alembic.config import Config as AlembicConfig
 from alembic.migration import MigrationContext
+from alembic.script import ScriptDirectory
 from pydantic import SecretStr
-from sqlalchemy import Connection, func, select, text
+from sqlalchemy import Connection, func, select
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.database.base import Base
@@ -470,20 +471,28 @@ def test_migration_roundtrip_and_metadata(
     migration: tuple[Connection, AlembicConfig],
 ) -> None:
     connection, config = migration
+    expected_head = ScriptDirectory.from_config(config).get_current_head()
+    assert expected_head is not None
+
+    def assert_current_schema() -> None:
+        context = MigrationContext.configure(
+            connection,
+            opts={
+                "include_schemas": True,
+                "include_name": lambda name, kind, parents: (
+                    kind != "schema" or name == "academia"
+                ),
+            },
+        )
+        assert context.get_current_revision() == expected_head
+        assert not compare_metadata(context, Base.metadata)
+
     command.upgrade(config, "head")
-    context = MigrationContext.configure(
-        connection,
-        opts={
-            "include_schemas": True,
-            "include_name": lambda name, kind, parents: (
-                kind != "schema" or name == "academia"
-            ),
-        },
-    )
-    assert not compare_metadata(context, Base.metadata)
+    assert_current_schema()
     command.downgrade(config, "0013")
+    assert MigrationContext.configure(connection).get_current_revision() == "0013"
     command.upgrade(config, "head")
-    assert connection.scalar(text("SELECT version_num FROM alembic_version")) == "0026"
+    assert_current_schema()
 
 
 @pytest.mark.integration

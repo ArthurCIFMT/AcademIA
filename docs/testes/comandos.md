@@ -2256,3 +2256,22 @@ iniciador. A avaliação determinística da IA passou com 133 testes, incluindo
 a recuperação vetorial com pesos E5 locais. A avaliação usou cenários sintéticos
 e não executou chamadas a LLM real. O aceite de VAL-02 depende de execução própria
 e inclui revisar a asserção legada de migration que ainda espera a revisão 0026.
+
+## Revisão 10 — Ida e volta das migrations
+
+O [prompt 10](../prompts/revisao-manual/10-revisao-alembic.md) corrige a falha
+reproduzida em PostgreSQL de teste. A asserção antiga comparava `0029` com
+`0026`. O teste agora obtém o head único do grafo do Alembic, confirma o
+downgrade para `0013` e verifica revisão e metadados do schema `academia`
+antes e depois da ida e volta.
+
+A partir de `backend/`, usando o Python do ambiente provisionado e
+`ACADEMIA_TEST_DATABASE_URL` apontando para PostgreSQL descartável:
+
+```powershell
+& ./.venv/Scripts/python.exe -m pytest -o addopts='' --tb=short tests/ai/test_generation.py::test_migration_roundtrip_and_metadata
+& ./.venv/Scripts/python.exe -m pytest -o addopts='' --tb=short -m database
+```
+
+Passaram o teste focal e os 20 testes de migrations. O rollback foi confirmado
+após as duas execuções. Ruff e a verificação de formatação do arquivo passaram.
