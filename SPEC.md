@@ -16347,17 +16347,15 @@ Uma tarefa só está concluída quando:
 
 #### Relatório final do agente
 
-Responda preferencialmente em até oito linhas, informando:
+Ao final de cada pedido, implementação de prompt ou revisão, responda em até
+8 linhas, informando apenas os itens abaixo.
 
-- o que foi implementado;
-- arquivos alterados;
-- testes executados e resultados;
-- pendências ou riscos;
-- próximo passo desbloqueado;
-- situação do iniciador quando a implementação afetar a execução local.
+1. Arquivos alterados.
+2. Testes executados.
+3. Resultado dos testes.
+4. Pendências, se houver.
 
-O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
-segurança, decisões arquiteturais ou testes não executados.
+Não explique a solução em detalhes, a menos que o responsável peça.
 
 #### Regressão da revisão manual de IA
 
@@ -20735,7 +20733,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | Fonte | SHA-256 |
 |---|---|
 | `.env.example` | `eabef37eb495472bf3da881d1082231dba2e7bb9715c75fc99969777e97c3027` |
-| `AGENTS.md` | `a126cb71fe92c317024c4368897d14a1a48b093e874f7f14ae8f2a5dd1d6c2af` |
+| `AGENTS.md` | `d3795706c90cf7cc1ef8110442a86ea29dcab45fb6070c1cfe964b7fc81d5f1a` |
 | `backend/README.md` | `25e6a33a662e6a1a41489d93a1a597cff89182efa4b5a48faeed95c69e92a7b7` |
 | `backend/pyproject.toml` | `101deb54bb790584c556d5671c71b89471c3f0f1e9a39c885c22e8c764403b23` |
 | `database/README.md` | `4f9b03aca946846fb6add9b3b828a2ab59e8fa9b051365a537f719e23b614c69` |

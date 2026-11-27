@@ -337,17 +337,15 @@ Uma tarefa só está concluída quando:
 
 ## Relatório final do agente
 
-Responda preferencialmente em até oito linhas, informando:
+Ao final de cada pedido, implementação de prompt ou revisão, responda em até
+8 linhas, informando apenas os itens abaixo.
 
-- o que foi implementado;
-- arquivos alterados;
-- testes executados e resultados;
-- pendências ou riscos;
-- próximo passo desbloqueado;
-- situação do iniciador quando a implementação afetar a execução local.
+1. Arquivos alterados.
+2. Testes executados.
+3. Resultado dos testes.
+4. Pendências, se houver.
 
-O limite de linhas não se aplica quando for necessário explicar falhas, riscos de
-segurança, decisões arquiteturais ou testes não executados.
+Não explique a solução em detalhes, a menos que o responsável peça.
 
 ## Regressão da revisão manual de IA
 
