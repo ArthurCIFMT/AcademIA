@@ -1,9 +1,9 @@
 # Revisão manual do AcademIA
 
-As 11 etapas da tabela estão concluídas. Use os cartões como roteiros de regressão
-para preparar ou repetir seu teste manual com contas sintéticas. Escolha o cartão
-do fluxo em avaliação. Se houver regressão reproduzida, aplique apenas a correção
-autorizada nele, em uma rodada própria.
+Os cartões 01 a 11 estão concluídos e podem ser reutilizados como roteiros de
+regressão. O cartão 12 está pronto para checagens recorrentes de segurança.
+Escolha o cartão do fluxo em avaliação e use contas sintéticas. Se houver
+regressão reproduzida, aplique apenas a correção autorizada, em rodada própria.
 
 | Cartão | Fluxo | Estado |
 |---|---|---|
@@ -18,6 +18,7 @@ autorizada nele, em uma rodada própria.
 | 09 | [Conferência integrada antes do VAL-02](09-revisao-final.md) | CONCLUÍDO |
 | 10 | [Verificação da revisão do Alembic](10-revisao-alembic.md) | CONCLUÍDO |
 | 11 | [Matrícula sem módulo financeiro](11-matricula-sem-financeiro.md) | CONCLUÍDO |
+| 12 | [Segurança básica do site](12-seguranca-basica.md) | PRONTO |
 
 O registro dos fluxos está em `docs/testes/comandos.md`, nas seções de revisão
 após VAL-01, Revisão 10 e Revisão 11. A [nota da auditoria](auditoria-2026-11-27.md)
@@ -28,7 +29,7 @@ manifesto oficial.
 ## Regras comuns de execução
 
 - Leia o AGENTS.md, os trechos do SPEC e o contrato operacional aplicáveis ao
-  cartão. Use 01 e 09 apenas para diagnóstico e verificação. Se encontrarem uma
+  cartão. Use 01, 09 e 12 apenas para diagnóstico e verificação. Se encontrarem uma
   falha, retorne ao cartão de correção correspondente.
 - Rode as verificações nas pastas indicadas, com os ambientes já provisionados.
   As integrações usam a URL de `academia_test`; o teste de convites requer

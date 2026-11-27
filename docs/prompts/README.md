@@ -456,6 +456,8 @@ simulação. A regressão final do escopo selecionado segue em VAL-02.
 
 O [pacote de revisão manual](revisao-manual/README.md) reúne os onze cartões concluídos, reutilizáveis como roteiros de regressão, e a nota da auditoria de 27/11/2026. As correções de integração estão registradas nas revisões 10 e 11. A aceitação integral permanece em VAL-02.
 
+O [cartão 12 de segurança básica](revisao-manual/12-seguranca-basica.md) pode ser executado novamente após mudanças em autenticação, permissões, dados sensíveis, erros ou configuração.
+
 2026-11-24: [revisão local e financeiro simulado](../testes/comandos.md#revisão-local-e-financeiro-simulado--2026-11-24).
 Os cartões INF agora validam a instalação local. O FIN-02 especifica a compra
 simulada. As telas financeiras existentes identificam os valores como fictícios.
