@@ -2275,3 +2275,26 @@ A partir de `backend/`, usando o Python do ambiente provisionado e
 
 Passaram o teste focal e os 20 testes de migrations. O rollback foi confirmado
 após as duas execuções. Ruff e a verificação de formatação do arquivo passaram.
+
+## Revisão 11 — Matrícula sem módulo financeiro
+
+O [prompt 11](../prompts/revisao-manual/11-matricula-sem-financeiro.md) corrige a
+fixture que montava `0024` e recebia HTTP 500 no login. Os três cenários agora
+montam o head vigente. Somente na variante sem financeiro, a transação de
+teste remove `pagamento`, `cobranca_revisao` e `cobranca` com `RESTRICT` e
+confere sua ausência. As variantes pendente e recusado usam as tabelas reais
+do PostgreSQL de teste.
+
+A partir de `backend/`, usando o Python do ambiente provisionado e a URL de
+PostgreSQL descartável em `ACADEMIA_TEST_DATABASE_URL`:
+
+```powershell
+& ./.venv/Scripts/python.exe -m pytest -o addopts='' --tb=short tests/memberships/test_memberships.py
+& ./.venv/Scripts/python.exe -m pytest -o addopts='' --tb=short tests/access/test_authorization.py tests/billing/test_checkout.py
+```
+
+Passaram 14 testes de matrícula, incluindo as três variantes, e 16 de acesso
+e compra simulada. O grupo de acesso foi repetido com
+`ACADEMIA_AUTH_ALLOW_LOCAL_HTTP=true` apenas no processo de teste para o
+simulador em loopback. O rollback foi confirmado em ambos os grupos. Ruff e
+a verificação de formatação passaram. A aceitação integral segue em VAL-02.

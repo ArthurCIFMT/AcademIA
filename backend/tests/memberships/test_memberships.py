@@ -142,10 +142,16 @@ async def test_attendant_enrolls_and_renews_without_financial_dependency(
 ) -> None:
     monkeypatch.setenv("ACADEMIA_APP_NAME", "AcademIA Teste")
     connection, config = migration
-    command.upgrade(config, "0024" if financial_state is None else "head")
-    tables = inspect(connection).get_table_names(schema="academia")
-    assert ("cobranca" in tables) == (financial_state is not None)
-    assert ("pagamento" in tables) == (financial_state is not None)
+    command.upgrade(config, "head")
+    financial_tables = {"pagamento", "cobranca_revisao", "cobranca"}
+    if financial_state is None:
+        check_database(connection, "test")
+        connection.exec_driver_sql("DROP TABLE academia.pagamento RESTRICT")
+        connection.exec_driver_sql("DROP TABLE academia.cobranca_revisao RESTRICT")
+        connection.exec_driver_sql("DROP TABLE academia.cobranca RESTRICT")
+    tables = set(inspect(connection).get_table_names(schema="academia"))
+    expected_financial_tables = set() if financial_state is None else financial_tables
+    assert tables & financial_tables == expected_financial_tables
     sessions = create_session_factory(connection)
     password = Passwords().hash(_PASSWORD)
     ids = {}
