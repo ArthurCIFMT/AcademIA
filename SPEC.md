@@ -20814,7 +20814,7 @@ as especificações essenciais selecionadas estão incorporadas neste arquivo.
 | `docs/prompts/11-experiencia-interface/UX-07.md` | `a5fd80a0ed179202359d505d5a3d42d27de09716d36ccca7fee277d0b82ccfce` |
 | `docs/prompts/11-experiencia-interface/UX-08.md` | `7ef8bd454104ef32235de534e5160d11a3ba904edbbf31053c3732f49fe2230a` |
 | `docs/prompts/11-experiencia-interface/UX-09.md` | `5e59efaeb9efe3b5b1955a5933e4b5c5e917393d99ec66e5cb18b11dffd9a9bd` |
-| `docs/prompts/README.md` | `d6f99b39fdbaed129d931168787184241fd864164a2091bbf3b263b7b5b37efb` |
+| `docs/prompts/README.md` | `fa2f4cd31d13eb2322d7a1311f8ad48814c52562c39cd617b0fadc7b9c4c2d73` |
 | `docs/requisitos/configuracao-ia-rag.md` | `7332e835125bb1f274b8501a878779b8f33806454c07596764c15d628d66ac99` |
 | `docs/requisitos/escopo-ia-academico.md` | `5e792a54bb7563fa7541353e6ecb4ef09e3559bbfaef37141ecccb180e02c0cc` |
 | `docs/requisitos/experiencia-e-interface.md` | `1686b13a1948112efe64d7eb9292d8cdf1159a4e8d3941ef98ddf63b5357a694` |

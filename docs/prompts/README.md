@@ -454,6 +454,8 @@ simulação. A regressão final do escopo selecionado segue em VAL-02.
 
 ## Manutenção após revisão manual
 
+O [pacote de revisão manual](revisao-manual/README.md) reúne as etapas anteriores, a nota da auditoria de 27/11/2026 e os dois prompts pendentes para corrigir os testes de integração.
+
 2026-11-24: [revisão local e financeiro simulado](../testes/comandos.md#revisão-local-e-financeiro-simulado--2026-11-24).
 Os cartões INF agora validam a instalação local. O FIN-02 especifica a compra
 simulada. As telas financeiras existentes identificam os valores como fictícios.
