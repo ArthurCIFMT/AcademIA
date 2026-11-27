@@ -2298,3 +2298,10 @@ e compra simulada. O grupo de acesso foi repetido com
 `ACADEMIA_AUTH_ALLOW_LOCAL_HTTP=true` apenas no processo de teste para o
 simulador em loopback. O rollback foi confirmado em ambos os grupos. Ruff e
 a verificação de formatação passaram. A aceitação integral segue em VAL-02.
+
+## Revisão 12 — Segurança básica do site
+
+O [cartão 12](../prompts/revisao-manual/12-seguranca-basica.md) foi executado
+em PostgreSQL isolado com contas sintéticas. Os cinco itens foram aprovados
+no recorte da rodada. Consulte a [evidência da execução](revisao-seguranca-basica-20261127.md)
+e o [checklist manual final](checklist-manual-final.md).
