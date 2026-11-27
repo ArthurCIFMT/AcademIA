@@ -78,7 +78,7 @@ módulos antes de INF-01, conforme orientação do professor.
 | INF-02 | CONCLUIDO | Abertura e encerramento reais pelo iniciador, com proxy, PostgreSQL, Mailpit e simulador local. [Comandos e evidência](../testes/comandos.md#inf-02--comunicação-e-prontidão-dos-serviços-locais) de 59 testes de backend e 16 do iniciador. |
 | INF-03 | CONCLUIDO | PostgreSQL limitado ao loopback e diagnóstico de prontidão protegido. Persistência verificada em dois reinícios. [Comandos e evidência](../testes/comandos.md#inf-03--segurança-e-persistência-locais) dos 56 testes de backend e 20 do iniciador. |
 | INF-04 | CONCLUIDO | Instalação isolada, migrations repetidas, dois ciclos do iniciador, restauração de backups sintéticos e jornadas no Edge. [Comandos e evidências](../testes/comandos.md#inf-04--instalação-local-e-teste-integrado). |
-| VAL-01 | CONCLUIDO | [Matriz final](../arquitetura/rastreabilidade.md) com escopo acadêmico e [conferência do modelo](../testes/comandos.md#val-01--conferência-documental-e-do-modelo). Regressão de migrations com asserção antiga registrada para VAL-02. |
+| VAL-01 | CONCLUIDO | [Matriz final](../arquitetura/rastreabilidade.md) com escopo acadêmico e [conferência do modelo](../testes/comandos.md#val-01--conferência-documental-e-do-modelo). A asserção antiga foi corrigida e revalidada na [revisão 10](../testes/comandos.md#revisão-10--ida-e-volta-das-migrations). |
 | MEM-00 | CONCLUIDO | [Pagamentos manuais](../arquitetura/pagamentos-manuais.md). 95 testes de backend, 148 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#mem-00--pagamentos-manuais). |
 | DSH-01 | CONCLUIDO | [Painel administrativo](../arquitetura/painel-administrativo.md). 83 testes de backend, 143 de frontend, jornada no Edge e 16 testes do iniciador. [Comandos e evidência](../testes/comandos.md#dsh-01--painel-administrativo). |
 | ACS-06 | CONCLUIDO | [Telas de frequência e lotação](../arquitetura/frequencia-lotacao.md#consultas-e-telas--acs-06). 81 testes de backend, 137 de frontend, 16 do iniciador e nove jornadas no Edge. [Comandos e evidência](../testes/comandos.md#acs-06--interface-de-frequência-e-lotação). |
@@ -454,7 +454,7 @@ simulação. A regressão final do escopo selecionado segue em VAL-02.
 
 ## Manutenção após revisão manual
 
-O [pacote de revisão manual](revisao-manual/README.md) reúne as etapas anteriores, a nota da auditoria de 27/11/2026 e os dois prompts pendentes para corrigir os testes de integração.
+O [pacote de revisão manual](revisao-manual/README.md) reúne os onze cartões concluídos, reutilizáveis como roteiros de regressão, e a nota da auditoria de 27/11/2026. As correções de integração estão registradas nas revisões 10 e 11. A aceitação integral permanece em VAL-02.
 
 2026-11-24: [revisão local e financeiro simulado](../testes/comandos.md#revisão-local-e-financeiro-simulado--2026-11-24).
 Os cartões INF agora validam a instalação local. O FIN-02 especifica a compra

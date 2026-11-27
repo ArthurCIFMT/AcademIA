@@ -1,12 +1,14 @@
 # 01 — Revisão inicial e reprodução
 
+**Estado da entrega: CONCLUÍDO.** Diagnóstico e reprodução registrados na revisão dos fluxos após VAL-01.
+
 ## Tarefa
 
 Conferir os relatos da revisão manual e preparar os cartões de mudança. Classificar o que já é reproduzível, o que depende do ambiente e o que exige mudança de requisito.
 
 ## Escopo e contexto
 
-- Revisão somente leitura dentro do repositório. Use o README local e o contrato operacional vigente. Consulte UX-03, MEM-01, ACS-01/02/03/04, ONB-02/03, AI-01/05, GATE-08 e VAL-01/02.
+- Revisão somente leitura dentro do repositório. Use o README deste pacote e o contrato operacional vigente. Consulte UX-03, MEM-01, ACS-01/02/03/04, ONB-02/03, AI-01/05, GATE-08 e VAL-01/02.
 - É permitido reproduzir pelo harness isolado com dados sintéticos se houver ambiente de teste preparado. Preserve o banco e a configuração de desenvolvimento. Não altere arquivos, migrations, manifesto, firewall, papéis de usuários ou contratos.
 - Consulte `docs/testes/comandos.md` para os comandos de cada ensaio. Inspecione código, evidências registradas e saídas sanitizadas. Não exponha fotos, dados de saúde, e-mails reais ou credenciais.
 
@@ -26,4 +28,13 @@ Conferir os relatos da revisão manual e preparar os cartões de mudança. Class
 
 ## Testes e entrega
 
-Registre os ensaios realmente executados e o perfil utilizado. Entregue a matriz dos relatos em texto e avance para 02 quando a revisão independente estiver concluída.
+Na interface, reproduza com contas sintéticas nos papéis envolvidos. Anote a revisão, o papel, a rota, o viewport e o resultado observado. Use os cartões 02 a 08 para selecionar a verificação focal do relato.
+
+Como checagem inicial, rode apenas os seletores relacionados ao relato. Em `frontend/` e `backend/`, respectivamente:
+
+```powershell
+npm test -- tests/auth/session.test.tsx
+uv run --locked pytest -o addopts='' tests/people/test_clients.py::test_own_address_is_optional_and_private tests/ai/test_triage.py
+```
+
+O primeiro verifica restauração de sessão, troca de papéis e perfil. O segundo verifica titularidade do endereço e decisões de triagem. Use PostgreSQL isolado para o teste de perfil. Registre separadamente cenário aprovado, falha reproduzida e dependência indisponível. Encaminhe cada falha ao cartão correspondente.

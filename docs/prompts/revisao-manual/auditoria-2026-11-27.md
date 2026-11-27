@@ -9,4 +9,12 @@ A auditoria da revisão `ec2d05a` cobriu 196 critérios de 38 requisitos funcion
 
 O ensaio adicional em `0029` comprovou criação e renovação com HTTP 201, tentativa direta pelo cliente com HTTP 403, dois registros no histórico e zero consultas financeiras no fluxo observado. Ele usou tabelas financeiras presentes e sem registros. O cenário de ausência dessas tabelas ainda requer correção da fixture.
 
-Este registro é um extrato para orientar as correções. As duas falhas permanecem pendentes até nova execução dos testes. O aceite do VAL-02 tem execução própria. As demais observações da auditoria, incluindo o recorte de IA e a RN-26, seguem fora destes dois cartões.
+As duas falhas foram corrigidas e revalidadas em commits separados. A revisão 10
+(`4387486`) aprovou o roundtrip e os 20 testes de migrations. A revisão 11
+(`cfb069e`) aprovou as três variantes de matrícula, inclusive com as tabelas
+financeiras ausentes, e a regressão de acesso e compra simulada. Os resultados
+estão em `docs/testes/comandos.md`.
+
+As contagens acima continuam sendo as da auditoria original. O aceite do VAL-02
+tem execução própria. As observações sobre verificação de IA com provedor real
+e a RN-26 pertencem aos seus respectivos escopos.

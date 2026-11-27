@@ -1,12 +1,16 @@
 # 04 — Envio e reconhecimento facial
 
+**Estado da entrega: CONCLUÍDO.** Envio corrigido e cadastro e reconhecimento confirmados com CompreFace real.
+
+Ao reusar o cartão, execute primeiro a verificação focal. A correção fica limitada aos caminhos abaixo e depende de uma regressão reproduzida.
+
 ## Tarefa
 
 Reproduzir e corrigir a falha percebida no envio de foto, distinguindo seleção, registro da referência, nova captura e disponibilidade do CompreFace.
 
 ## Escopo permitido
 
-- `frontend/src/features/biometrics/`, `backend/app/modules/access/biometrics/` e código de integração direta de reconhecimento em `backend/app/modules/access/`.
+- `frontend/src/features/biometrics/` e `backend/app/modules/access/biometrics/`. Em `backend/app/modules/access/events/{http.py,service.py}`, apenas a integração direta da captura e do resultado de identificação.
 - Testes focais em `backend/tests/access/`, testes de componentes e `frontend/tests/e2e/access.spec.ts`. Documentação de biometria, CompreFace e comandos de teste afetados.
 - Verificar impacto no iniciador conforme AGENTS.md. Uma mudança estritamente necessária ao preparo local pertence ao escopo transversal. Preserve os serviços e configurações do usuário.
 
@@ -26,4 +30,18 @@ Mostre nome e, se apropriado, uma prévia local temporária antes do envio. Use 
 
 ## Testes e entrega
 
-FE de seleção, envio e erros. Contrato e integração de `test_facial_reference.py` e testes focais de identificação. Use o ensaio real de ACS-01/02 em coleção de teste sintética e o Edge/Playwright previsto em `docs/testes/comandos.md`. Se o provedor estiver indisponível, registre o bloqueio e o restante que passou. O aceite real habilita 05 e 08 conforme suas dependências.
+Em `backend/` com PostgreSQL isolado e em `frontend/`, respectivamente:
+
+```powershell
+uv run --locked pytest -o addopts='' tests/access/test_facial_reference.py tests/access/test_identification.py -k 'not real'
+npm test -- src/features/biometrics/ClientBiometrics.test.tsx src/features/biometrics/FacialRecognition.test.tsx
+```
+
+Confira indicação da seleção, confirmação após recarga, recusa de imagem inválida, retomada de pendência e preservação da referência anterior quando a troca falhar. Para verificar o serviço real, prepare a coleção sintética isolada de ACS-01/02 conforme `docs/testes/comandos.md` e rode, em `backend/`:
+
+```powershell
+$env:ACADEMIA_TEST_COMPREFACE = '1'
+uv run --locked pytest -o addopts='' 'tests/access/test_facial_reference.py::test_register_replace_and_preserve_consistency[real]' 'tests/access/test_identification.py::test_capture_and_authenticated_replay[real]'
+```
+
+Exija cadastro e reconhecimento com outra captura sintética, seguidos da limpeza prevista pelo ensaio. Se a instância de teste estiver indisponível, registre o motivo e separe esse resultado da prova com dublês. Para o fluxo visual com catraca simulada, use o comando Edge do cartão 05.

@@ -1,5 +1,9 @@
 # 02 — Navegação por papel
 
+**Estado da entrega: CONCLUÍDO.** Navegação corrigida e jornadas de sessão e navegação aprovadas.
+
+Ao reusar o cartão, execute primeiro a verificação focal. A correção fica limitada aos caminhos abaixo e depende de uma regressão reproduzida.
+
 ## Tarefa
 
 Reduzir cliques entre tarefas, manter a área autenticada e fazer o destino ativo e o retorno previsíveis no desktop e celular.
@@ -7,7 +11,7 @@ Reduzir cliques entre tarefas, manter a área autenticada e fazer o destino ativ
 ## Escopo permitido
 
 - `frontend/src/app/{AppRoutes.tsx,areaNavigation.ts,Frames.tsx,frames.css}`.
-- Componentes de navegação diretamente usados pelas áreas e adaptação de rota do catálogo em `frontend/src/features/equipment/`, se necessária.
+- `frontend/src/ui/primitives.tsx` apenas para foco ou comportamento do menu compartilhado, se demonstrado, e `frontend/src/features/equipment/EquipmentPages.tsx` apenas para a rota do catálogo.
 - `frontend/tests/auth/session.test.tsx`, testes de navegação e partes afetadas em `frontend/tests/e2e/{mvp,access}.spec.ts`.
 - `docs/interface/navegacao-e-acesso.md`, requisitos de interface, testes e fontes do SPEC diretamente afetados.
 
@@ -27,4 +31,10 @@ Mantenha navegação direta no desktop e atalhos para as tarefas mais usadas no 
 
 ## Testes e entrega
 
-FE da sessão/navegação e E2E das jornadas afetadas, com teclado, viewport móvel e desktop. Rodar lint, tipos e build do frontend conforme `docs/testes/comandos.md`. Registrar divergências de cliques e resultados por papel. Próximo 03.
+Em `frontend/`:
+
+```powershell
+npm test -- tests/auth/session.test.tsx src/features/equipment/EquipmentPages.test.tsx
+```
+
+O teste de sessão deve passar para acesso por URL, troca de papel, catálogo autenticado, logout e perda de acesso. No runner de Edge do README, confira E2E-08 para conta com dois papéis, recarga e teclado, e E2E-06 para o catálogo público. Confira os demais destinos iniciais com contas sintéticas dos quatro papéis. Registre o destino inicial, o estado do item ativo e a quantidade de cliques até a tarefa no desktop e no celular. Se corrigir a interface, rode também `npm run lint`, `npm run typecheck` e `npm run build`.

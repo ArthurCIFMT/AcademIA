@@ -1,5 +1,9 @@
 # 11 — Corrigir o teste de matrícula sem módulo financeiro
 
+**Estado da entrega: CONCLUÍDO.** Três variantes de matrícula e regressão de acesso e compra aprovadas no commit `cfb069e`.
+
+Ao reusar o cartão, execute primeiro a verificação focal. A correção fica limitada aos caminhos abaixo e depende de uma regressão reproduzida.
+
 ## Tarefa
 
 Corrigir a montagem de `test_attendant_enrolls_and_renews_without_financial_dependency` para testar a independência da matrícula com o schema atual de identidade e pessoas, inclusive quando as tabelas financeiras estiverem ausentes.
@@ -15,8 +19,8 @@ As migrations, o backend da aplicação, as regras de matrícula e cobrança, a 
 
 Depende da [auditoria de 27/11](auditoria-2026-11-27.md). Leia RF-31, especialmente CA-31.1 e CA-31.5, RN-22, RN-24, MEM-01, FIN-02 e VAL-02. A variante sem financeiro monta `0024`, e o login do código atual consulta `usuario.endereco`, introduzida em `0028`. O HTTP 500 ocorre antes da matrícula. No schema atual, a auditoria já confirmou criação e renovação sem pagamento e sem consultas a tabelas financeiras.
 
-1. Reproduza a variante antiga em um banco de teste descartável. Monte o head vigente nos três cenários. Mantenha o login real da API e os papéis diferentes.
-2. Na variante sem módulo financeiro, isole a ausência na fixture de teste. Depois de aplicar o head e confirmar o destino com `check_database`, remova somente as tabelas financeiras de `academia` dentro da transação que será revertida. Confira as dependências declaradas e remova dependentes antes da tabela referenciada. No schema auditado, são `pagamento`, `cobranca_revisao` e `cobranca`. Use nomes explícitos, sem `CASCADE`, e confirme a ausência por inspeção.
+1. Use a reprodução publicada como referência histórica. Execute a fixture vigente no head atual para as três variantes. Mantenha o login real da API e os papéis diferentes.
+2. Na variante sem módulo financeiro, isole a ausência na fixture de teste. Verifique que a fixture aplica o head, confirma o destino com `check_database` e remove somente as tabelas financeiras de `academia` dentro da transação que será revertida. Confira as dependências declaradas e remova dependentes antes da tabela referenciada. No schema auditado, são `pagamento`, `cobranca_revisao` e `cobranca`. Use nomes explícitos, sem `CASCADE`, e confirme a ausência por inspeção.
 3. Mantenha as variantes com pagamento pendente e recusado usando as tabelas financeiras reais no schema atual. Se a montagem sem tabelas encontrar dependência inesperada, registre a falha e o vínculo em vez de suprimir a exceção ou alterar migrations. Um cenário com zero pagamentos complementa a prova, mas não substitui o cenário sem tabelas financeiras.
 
 ## Critérios de aceite
@@ -32,6 +36,7 @@ A partir de `backend/`, configure `ACADEMIA_TEST_DATABASE_URL` para o PostgreSQL
 
 ```powershell
 uv run --locked pytest -o addopts='' --tb=short tests/memberships/test_memberships.py
+$env:ACADEMIA_AUTH_ALLOW_LOCAL_HTTP = 'true'
 uv run --locked pytest -o addopts='' --tb=short tests/access/test_authorization.py tests/billing/test_checkout.py
 ```
 

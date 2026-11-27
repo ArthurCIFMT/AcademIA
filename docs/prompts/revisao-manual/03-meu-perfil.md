@@ -1,14 +1,19 @@
 # 03 — Meu perfil e endereço
 
+**Estado da entrega: CONCLUÍDO.** Perfil próprio e endereço entregues. O endereço opcional é definido na migration `0028`.
+
+Ao reusar o cartão, execute primeiro a verificação focal. A correção fica limitada aos caminhos abaixo e depende de uma regressão reproduzida.
+
 ## Tarefa
 
 Entregar uma página autenticada de perfil para cliente, atendente, instrutor e administrador, com dados cadastrais próprios e endereço opcional editável pelo titular.
 
 ## Escopo permitido
 
-- Nova feature em `frontend/src/features/profile/` e integração de rota/menu em `frontend/src/app/`.
-- Serviço, DTOs e rota de perfil próprio em `backend/app/modules/people/` e composição em `backend/app/main.py`.
-- Migration nova em `database/migrations/versions/`, modelo lógico, dicionário, requisitos e contratos afetados. Testes do perfil e navegação correspondente.
+- Nova feature em `frontend/src/features/profile/` e integração da rota e do link de perfil em `frontend/src/app/{AppRoutes.tsx,Frames.tsx}`.
+- Serviço, DTOs e rota em `backend/app/modules/people/own_profile.py`. Em `backend/app/main.py`, apenas o registro dessa rota. Em `backend/app/modules/identity/models.py`, apenas o campo `endereco`.
+- Se uma regressão demonstrar necessidade de ajuste de schema, use uma migration nova e atualize o modelo lógico, o dicionário e o contrato de perfil. Use a `0028_own_profile_address.py` para conferência histórica e preserve seu conteúdo.
+- `backend/tests/people/test_clients.py`, `frontend/tests/auth/session.test.tsx` e o caso de perfil no E2E-08.
 
 Mantenha a API de sessão, os papéis, a recuperação de senha e a edição administrativa atual. Foto pertence ao cartão 08. O endereço não entra em cadastros administrativos, relatórios, onboarding ou IA.
 
@@ -27,4 +32,11 @@ Use uma única associação à identidade `USUARIO`. Mudar de papel mantém o me
 
 ## Testes e entrega
 
-BE do DTO e autorização, INT com PostgreSQL de teste, contrato OpenAPI, FE do formulário e E2E com dois usuários e papéis acumulados. Verificar migration com contas já existentes. Rodar suites relacionadas, lint, tipos, build e DOC/SPEC conforme o projeto. Avance em 04. O cartão 08 depende do aceite deste cartão.
+Em `backend/` com PostgreSQL isolado e em `frontend/`, respectivamente:
+
+```powershell
+uv run --locked pytest -o addopts='' tests/people/test_clients.py::test_own_address_is_optional_and_private
+npm test -- tests/auth/session.test.tsx
+```
+
+Confira a tentativa de edição pelo titular, omissão do endereço e rejeição do identificador ou campo extra no DTO. No Edge, use E2E-08 para salvar, recarregar e trocar de papel. No checklist visual, abra **Meu perfil** com os quatro papéis e verifique que uma conta sem endereço carrega normalmente. A rotina do Alembic no cartão 10 comprova o schema. Para defeito específico de compatibilidade, verifique uma conta sintética criada antes da `0028` em banco de teste.

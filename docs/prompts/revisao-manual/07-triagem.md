@@ -1,12 +1,16 @@
 # 07 — Triagem e respostas “Não sei”
 
+**Estado da entrega: CONCLUÍDO.** Política v2 e regressão determinística aprovadas na revisão.
+
+Ao reusar o cartão, execute primeiro a verificação focal. A correção fica limitada aos caminhos abaixo e depende de uma regressão reproduzida.
+
 ## Tarefa
 
 Diferenciar incerteza essencial de informação complementar, evitando uma interrupção genérica por toda ocorrência de `NAO_SEI`. Manter os bloqueios de segurança e a origem dos dados.
 
 ## Escopo permitido
 
-- `backend/app/modules/ai/triage/`, ajustes diretamente necessários em `backend/app/modules/ai/orchestration/` e schemas de onboarding se o contrato aprovado exigir.
+- `backend/app/modules/ai/policies/triage.py` para a política e sua versão e `backend/app/modules/ai/triage/` para decisão, motivos e contratos. Em `backend/app/modules/ai/orchestration/`, somente a propagação do resultado de triagem, se a quebra estiver reproduzida.
 - `frontend/src/features/ai-training/`, `training-chat/` e `onboarding/` somente para mostrar pendência e abrir a etapa correspondente.
 - Testes focais em `backend/tests/ai/`, `backend/tests/onboarding/`, FE dos estados e jornada E2E-03. Atualizações de política/especificação, RF-12/13/15/19, RN-13/15/16 e MRF03/08/14 afetados.
 
@@ -27,4 +31,16 @@ Preserve `NAO_SEI` no snapshot e no resumo da IA. Quando o dado for essencial, r
 
 ## Testes e entrega
 
-Cubra a matriz de triagem com casos sintéticos em `test_triage.py`, `test_triage_integration.py`, testes de geração e jornadas afetadas. Rode a regressão determinística de IA conforme `docs/testes/comandos.md`. Ensaio real, se necessário, deve usar o protocolo e o orçamento aprovados do AI-06. Preserve os relatórios anteriores. Próximo 08 ou outra etapa elegível.
+Em `backend/` com PostgreSQL isolado:
+
+```powershell
+uv run --locked pytest -o addopts='' tests/ai/test_triage.py tests/ai/test_triage_integration.py tests/ai/test_generation.py::test_persistent_service_blocks_grave_or_unknown_before_network
+```
+
+Em `frontend/`:
+
+```powershell
+npm test -- src/features/ai-training/AITraining.test.tsx src/features/training-chat/TrainingChat.test.tsx tests/onboarding/Onboarding.test.tsx
+```
+
+Confira na política v2 a medicação desconhecida isolada com respostas essenciais negativas e observações vazias. Depois exercite desconhecido essencial, evento grave e falha técnica. A primeira variante segue para análise com incerteza explícita. Os demais casos retornam o bloqueio, a pendência ou a falha correspondentes. E2E-03 confirma a experiência de bloqueio e E2E-04 confirma a revisão de dados. Se a política mudar, rode a avaliação determinística documentada, com modelos controlados e E5 local. Um ensaio com provedor real segue o orçamento aprovado de AI-06.
